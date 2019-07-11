@@ -55,11 +55,11 @@ public final class BankdataConstants {
         public static final String ACCOUNTS = "/openbanking-account/v1/accounts";
         public static final String AIS_PRODUCT = "/openbanking-account";
         public static final String PIS_PRODUCT = "/openbanking-payment";
-        public static final String DOMESTIC_PAYMENT =
+        public static final String FETCH_DOMESTIC_PAYMENT =
                 PIS_PRODUCT + "/v1/payments/domestic-credit-transfers/{paymentId}";
-        public static final String SEPA_PAYMENT =
+        public static final String FETCH_SEPA_PAYMENT =
                 PIS_PRODUCT + "/v1/payments/sepa-credit-transfers/{paymentId}";
-        public static final String CROSS_BORDER_PAYMENT =
+        public static final String FETCH_CROSS_BORDER_PAYMENT =
                 PIS_PRODUCT + "/v1/payments/cross-border-credit-transfers/{paymentId}";
         public static final String INITIATE_DOMESTIC_PAYMENT =
                 PIS_PRODUCT + "/v1/payments/domestic-credit-transfers";

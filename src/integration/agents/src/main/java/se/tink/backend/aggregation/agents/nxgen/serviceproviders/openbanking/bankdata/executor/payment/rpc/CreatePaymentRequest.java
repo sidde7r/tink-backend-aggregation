@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
-public class CreateCrossBorderPaymentRequest {
+public class CreatePaymentRequest {
 
     private CreditorEntity creditorAccount;
     private DebtorEntity debtorAccount;
@@ -20,11 +20,12 @@ public class CreateCrossBorderPaymentRequest {
     private CreditorAddressEntity creditorAddress;
     private String chargeBearer;
     private String remittanceInformationUnstructured;
+    private String endToEndIdentification;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date requestedExecutionDate;
 
-    private CreateCrossBorderPaymentRequest(Builder builder) {
+    private CreatePaymentRequest(CreatePaymentRequest.Builder builder) {
         this.creditorAccount = builder.creditorAccount;
         this.debtorAccount = builder.debtorAccount;
         this.instructedAmount = builder.instructedAmount;
@@ -34,6 +35,7 @@ public class CreateCrossBorderPaymentRequest {
         this.creditorAddress = builder.creditorAddress;
         this.chargeBearer = builder.chargeBearer;
         this.remittanceInformationUnstructured = builder.remittanceInformationUnstructured;
+        this.endToEndIdentification = builder.endToEndIdentification;
     }
 
     public String toData() {
@@ -50,52 +52,61 @@ public class CreateCrossBorderPaymentRequest {
         private CreditorAddressEntity creditorAddress;
         private String chargeBearer;
         private String remittanceInformationUnstructured;
+        private String endToEndIdentification;
 
-        public Builder withCreditor(CreditorEntity creditorAmount) {
+        public CreatePaymentRequest.Builder withCreditor(CreditorEntity creditorAmount) {
             this.creditorAccount = creditorAmount;
             return this;
         }
 
-        public Builder withDebtor(DebtorEntity debtorAccount) {
+        public CreatePaymentRequest.Builder withDebtor(DebtorEntity debtorAccount) {
             this.debtorAccount = debtorAccount;
             return this;
         }
 
-        public Builder withAmount(AmountEntity instructedAmount) {
+        public CreatePaymentRequest.Builder withAmount(AmountEntity instructedAmount) {
             this.instructedAmount = instructedAmount;
             return this;
         }
 
-        public Builder withRequestedExecutionDate(Date requestedExecutionDate) {
+        public CreatePaymentRequest.Builder withRequestedExecutionDate(
+                Date requestedExecutionDate) {
             this.requestedExecutionDate = requestedExecutionDate;
             return this;
         }
 
-        public CreateCrossBorderPaymentRequest build() {
-            return new CreateCrossBorderPaymentRequest(this);
+        public CreatePaymentRequest build() {
+            return new CreatePaymentRequest(this);
         }
 
-        public Builder withCreditorName(String creditorName) {
+        public CreatePaymentRequest.Builder withCreditorName(String creditorName) {
             this.creditorName = creditorName;
             return this;
         }
 
-        public Builder withCreditorAgent(String creditorAgent) {
+        public CreatePaymentRequest.Builder withCreditorAgent(String creditorAgent) {
             this.creditorAgent = creditorAgent;
             return this;
         }
 
-        public Builder withCreditorAddress(CreditorAddressEntity creditorAddress) {
+        public CreatePaymentRequest.Builder withCreditorAddress(
+                CreditorAddressEntity creditorAddress) {
             this.creditorAddress = creditorAddress;
             return this;
         }
 
-        public Builder withChargeBearer(String chargeBearer) {
+        public CreatePaymentRequest.Builder withChargeBearer(String chargeBearer) {
             this.chargeBearer = chargeBearer;
             return this;
         }
 
-        public Builder withRemittanceInformationUnstructured(
+        public CreatePaymentRequest.Builder withEndToEndIdentification(
+                String endToEndIdentification) {
+            this.endToEndIdentification = endToEndIdentification;
+            return this;
+        }
+
+        public CreatePaymentRequest.Builder withRemittanceInformationUnstructured(
                 String remittanceInformationUnstructured) {
             this.remittanceInformationUnstructured = remittanceInformationUnstructured;
             return this;

@@ -34,10 +34,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.AuthorizePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.AuthorizePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.BankdataErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreateCrossBorderPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreateDomesticPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreateSepaPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.FetchCrossBorderPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.FetchDomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.FetchSepaPaymentResponse;
@@ -111,94 +109,21 @@ public final class BankdataApiClient {
         return createRequest(url).addBearerToken(authToken);
     }
 
-    public CreatePaymentResponse createDomesticPayment(
-            CreateDomesticPaymentRequest createDomesticPaymentRequest) throws PaymentException {
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest paymentRequest, PaymentType type) throws PaymentException {
         final String requestId = UUID.randomUUID().toString();
+        final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
+
+        URL url = new URL(configuration.getBaseUrl() + productType);
 
         try {
             CreatePaymentResponse response =
-                    client.request(
-                                    new URL(
-                                            configuration.getBaseUrl()
-                                                    + Endpoints.INITIATE_DOMESTIC_PAYMENT))
+                    client.request(url)
                             .addBearerToken(getTokenFromSession(StorageKeys.INITIAL_TOKEN))
                             .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                             .header(HeaderKeys.X_REQUEST_ID, requestId)
                             .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                            .body(
-                                    createDomesticPaymentRequest.toData(),
-                                    MediaType.APPLICATION_JSON_TYPE)
-                            .post(CreatePaymentResponse.class);
-
-            URL transactionDetailsURL =
-                    new URL(
-                            configuration.getBaseUrl()
-                                    + Endpoints.PIS_PRODUCT
-                                    + response.getDetailsLink());
-            response.setPaymentStatus(
-                    getPaymentDetails(transactionDetailsURL).getTransactionStatus());
-
-            return response;
-        } catch (HttpResponseException e) {
-            handleHttpResponseException(e);
-            throw e;
-        }
-    }
-
-    public CreatePaymentResponse createCrossBorderPayment(
-            CreateCrossBorderPaymentRequest createCrossBorderPaymentRequest)
-            throws PaymentException {
-
-        final String requestId = UUID.randomUUID().toString();
-
-        try {
-            CreatePaymentResponse response =
-                    client.request(
-                                    new URL(
-                                            configuration.getBaseUrl()
-                                                    + Endpoints.INITIATE_CROSS_BORDER_PAYMENT))
-                            .addBearerToken(getTokenFromSession(StorageKeys.INITIAL_TOKEN))
-                            .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                            .header(HeaderKeys.X_REQUEST_ID, requestId)
-                            .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                            .body(
-                                    createCrossBorderPaymentRequest.toData(),
-                                    MediaType.APPLICATION_JSON_TYPE)
-                            .post(CreatePaymentResponse.class);
-
-            URL transactionDetailsURL =
-                    new URL(
-                            configuration.getBaseUrl()
-                                    + Endpoints.PIS_PRODUCT
-                                    + response.getDetailsLink());
-            response.setPaymentStatus(
-                    getPaymentDetails(transactionDetailsURL).getTransactionStatus());
-
-            return response;
-        } catch (HttpResponseException e) {
-            handleHttpResponseException(e);
-            throw e;
-        }
-    }
-
-    public CreatePaymentResponse createSepaPayment(
-            CreateSepaPaymentRequest createSepaPaymentRequest) throws PaymentException {
-
-        final String requestId = UUID.randomUUID().toString();
-
-        try {
-            CreatePaymentResponse response =
-                    client.request(
-                                    new URL(
-                                            configuration.getBaseUrl()
-                                                    + Endpoints.INITIATE_SEPA_PAYMENT))
-                            .addBearerToken(getTokenFromSession(StorageKeys.INITIAL_TOKEN))
-                            .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                            .header(HeaderKeys.X_REQUEST_ID, requestId)
-                            .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                            .body(
-                                    createSepaPaymentRequest.toData(),
-                                    MediaType.APPLICATION_JSON_TYPE)
+                            .body(paymentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                             .post(CreatePaymentResponse.class);
 
             URL transactionDetailsURL =
@@ -229,7 +154,7 @@ public final class BankdataApiClient {
     public FetchDomesticPaymentResponse fetchDomesticPayment(String paymentId) {
         final String requestId = UUID.randomUUID().toString();
         URL url =
-                new URL(configuration.getBaseUrl() + Endpoints.DOMESTIC_PAYMENT)
+                new URL(configuration.getBaseUrl() + Endpoints.FETCH_DOMESTIC_PAYMENT)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
         return createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
@@ -242,7 +167,7 @@ public final class BankdataApiClient {
     public FetchCrossBorderPaymentResponse fetchCrossBorderPayment(String paymentId) {
         final String requestId = UUID.randomUUID().toString();
         URL url =
-                new URL(configuration.getBaseUrl() + Endpoints.CROSS_BORDER_PAYMENT)
+                new URL(configuration.getBaseUrl() + Endpoints.FETCH_CROSS_BORDER_PAYMENT)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
         return createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
@@ -255,7 +180,7 @@ public final class BankdataApiClient {
     public FetchSepaPaymentResponse fetchSepaPayment(String paymentId) {
         final String requestId = UUID.randomUUID().toString();
         URL url =
-                new URL(configuration.getBaseUrl() + Endpoints.SEPA_PAYMENT)
+                new URL(configuration.getBaseUrl() + Endpoints.FETCH_SEPA_PAYMENT)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
         return createRequestInSession(url, StorageKeys.INITIAL_TOKEN)

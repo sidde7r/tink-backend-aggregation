@@ -14,9 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorAddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.DebtorEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreateCrossBorderPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreateDomesticPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreateSepaPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.TypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -54,23 +52,16 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor {
                                                 .getCreditorAndDebtorAccountType()))
                         .orElse(PaymentType.UNDEFINED);
 
-        switch (type) {
-            case DOMESTIC:
-                return createDomesticPayment(paymentRequest);
-            case SEPA:
-                if (paymentRequest.getPayment().isSepa()) {
-                    // Will never be SEPA since DK is not in our SEPA list of countries [isSepa()]
-                    return createSepaPayment(paymentRequest);
-                } else {
-                    return createCrossBorderPayment(paymentRequest);
-                }
-            default:
-                throw new IllegalStateException(ErrorMessages.UNSUPPORTED_PAYMENT_TYPE);
-        }
+        return createPayment(paymentRequest, type);
     }
 
-    private PaymentResponse createSepaPayment(PaymentRequest paymentRequest)
+    private PaymentResponse createPayment(PaymentRequest paymentRequest, PaymentType type)
             throws PaymentException {
+        AmountEntity amountEntity =
+                new AmountEntity(
+                        paymentRequest.getPayment().getAmount().getCurrency(),
+                        paymentRequest.getPayment().getAmount().getValue().toString());
+
         CreditorAddressEntity creditorAddress =
                 new CreditorAddressEntity(
                         PaymentRequests.STREET,
@@ -79,16 +70,11 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor {
                         PaymentRequests.POSTAL_CODE,
                         PaymentRequests.COUNTRY);
 
-        CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest);
         DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest);
+        CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest);
 
-        AmountEntity amountEntity =
-                new AmountEntity(
-                        paymentRequest.getPayment().getAmount().getCurrency(),
-                        paymentRequest.getPayment().getAmount().getValue().toString());
-
-        CreateSepaPaymentRequest createSepaPaymentRequest =
-                new CreateSepaPaymentRequest.Builder()
+        CreatePaymentRequest createPaymentRequest =
+                new CreatePaymentRequest.Builder()
                         .withCreditor(creditorEntity)
                         .withDebtor(debtorEntity)
                         .withAmount(amountEntity)
@@ -104,80 +90,11 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor {
                         .build();
 
         return apiClient
-                .createSepaPayment(createSepaPaymentRequest)
+                .createPayment(createPaymentRequest, type)
                 .toTinkPayment(
                         paymentRequest.getPayment().getDebtor().getAccountNumber(),
                         paymentRequest.getPayment().getCreditor().getAccountNumber(),
-                        PaymentType.SEPA);
-    }
-
-    private PaymentResponse createDomesticPayment(PaymentRequest paymentRequest)
-            throws PaymentException {
-        AmountEntity amountEntity =
-                new AmountEntity(
-                        paymentRequest.getPayment().getAmount().getCurrency(),
-                        paymentRequest.getPayment().getAmount().getValue().toString());
-
-        DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest);
-        CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest);
-
-        CreateDomesticPaymentRequest createDomesticPaymentRequest =
-                new CreateDomesticPaymentRequest.Builder()
-                        .withCreditor(creditorEntity)
-                        .withDebtor(debtorEntity)
-                        .withAmount(amountEntity)
-                        .withRequestedExecutionDate(
-                                DateUtils.convertToDateViaInstant(
-                                        paymentRequest.getPayment().getExecutionDate()))
-                        .build();
-
-        return apiClient
-                .createDomesticPayment(createDomesticPaymentRequest)
-                .toTinkPayment(
-                        paymentRequest.getPayment().getDebtor().getAccountNumber(),
-                        paymentRequest.getPayment().getCreditor().getAccountNumber(),
-                        PaymentType.DOMESTIC);
-    }
-
-    private PaymentResponse createCrossBorderPayment(PaymentRequest paymentRequest)
-            throws PaymentException {
-        AmountEntity amountEntity =
-                new AmountEntity(
-                        paymentRequest.getPayment().getAmount().getCurrency(),
-                        paymentRequest.getPayment().getAmount().getValue().toString());
-
-        CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest);
-        DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest);
-
-        CreditorAddressEntity creditorAddress =
-                new CreditorAddressEntity(
-                        PaymentRequests.STREET,
-                        PaymentRequests.BUILDING,
-                        PaymentRequests.CITY,
-                        PaymentRequests.POSTAL_CODE,
-                        PaymentRequests.COUNTRY);
-
-        CreateCrossBorderPaymentRequest createCrossBorderPaymentRequest =
-                new CreateCrossBorderPaymentRequest.Builder()
-                        .withCreditor(creditorEntity)
-                        .withDebtor(debtorEntity)
-                        .withAmount(amountEntity)
-                        .withRequestedExecutionDate(
-                                DateUtils.convertToDateViaInstant(
-                                        paymentRequest.getPayment().getExecutionDate()))
-                        .withChargeBearer(PaymentRequests.CHARGE_BEARER)
-                        .withCreditorAgent(PaymentRequests.AGENT)
-                        .withCreditorAddress(creditorAddress)
-                        .withCreditorName(PaymentRequests.CREDITOR_NAME)
-                        .withRemittanceInformationUnstructured(PaymentRequests.REMITTANCE)
-                        .build();
-
-        return apiClient
-                .createCrossBorderPayment(createCrossBorderPaymentRequest)
-                .toTinkPayment(
-                        paymentRequest.getPayment().getDebtor().getAccountNumber(),
-                        paymentRequest.getPayment().getCreditor().getAccountNumber(),
-                        PaymentType.INTERNATIONAL);
+                        type);
     }
 
     @Override
