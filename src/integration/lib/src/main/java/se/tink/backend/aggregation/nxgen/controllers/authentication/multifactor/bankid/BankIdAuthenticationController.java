@@ -96,8 +96,12 @@ public class BankIdAuthenticationController<T>
 
             switch (status) {
                 case DONE:
-                    persistentStorage.put(
-                            PersistentStorageKeys.ACCESS_TOKEN, authenticator.getAcessToken());
+                    authenticator
+                            .getAcessToken()
+                            .ifPresent(
+                                    token ->
+                                            persistentStorage.put(
+                                                    PersistentStorageKeys.ACCESS_TOKEN, token));
                     return;
                 case WAITING:
                     log.info("Waiting for BankID");
