@@ -15,8 +15,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngAgent extends NextGenerationAgent {
@@ -89,18 +87,7 @@ public class IngAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
     protected IngSessionHandler constructSessionHandler() {
         return new IngSessionHandler();
-    }
-
-    @Override
-    protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
     }
 }
