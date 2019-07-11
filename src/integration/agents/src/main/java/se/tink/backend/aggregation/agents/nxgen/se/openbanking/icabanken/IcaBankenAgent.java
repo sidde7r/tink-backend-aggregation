@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class IcaBankenAgent extends NextGenerationAgent {
@@ -36,11 +35,6 @@ public final class IcaBankenAgent extends NextGenerationAgent {
         apiClient = new IcaBankenApiClient(client, sessionStorage);
         clientName = request.getProvider().getPayload();
         credentialsRequest = request.getCredentials();
-    }
-
-    private void configureHttpClient(TinkHttpClient client) {
-        client.setEidasProxy(
-                icaBankenConfiguration.getEidasUrl(), icaBankenConfiguration.getCertificateId());
     }
 
     @Override
@@ -80,7 +74,8 @@ public final class IcaBankenAgent extends NextGenerationAgent {
                                                 ErrorMessages.MISSING_CONFIGURATION));
 
         apiClient.setConfiguration(icaBankenConfiguration);
-        configureHttpClient(client);
+        client.setEidasProxy(
+                configuration.getEidasProxy(), icaBankenConfiguration.getCertificateId());
     }
 
     @Override

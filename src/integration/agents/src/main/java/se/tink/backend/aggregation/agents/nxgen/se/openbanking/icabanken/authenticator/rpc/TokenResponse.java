@@ -24,11 +24,11 @@ public class TokenResponse {
         return accessToken;
     }
 
-    public String getRefreshToken() {
+    private String getRefreshToken() {
         return refreshToken;
     }
 
-    public Long getExpiresIn() {
+    private Long getExpiresIn() {
         return Long.parseLong(expiresIn);
     }
 

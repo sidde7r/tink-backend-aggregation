@@ -32,18 +32,16 @@ public class FetchTransactionsResponse implements PaginatorResponse {
     }
 
     private List<Transaction> getBookedTransactions() {
-
         return transactions.getBooked().stream()
                 .map(this::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 
     private List<Transaction> getPendingTransactions() {
-        List<PendingEntity> list = transactions.getPending();
-        if (list == null) {
-            return Collections.emptyList();
-        }
-        return list.stream().map(this::toTinkTransaction).collect(Collectors.toList());
+        return Optional.ofNullable(transactions.getPending()).orElse(Collections.emptyList())
+                .stream()
+                .map(this::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     private Transaction toTinkTransaction(BookedEntity transaction) {
