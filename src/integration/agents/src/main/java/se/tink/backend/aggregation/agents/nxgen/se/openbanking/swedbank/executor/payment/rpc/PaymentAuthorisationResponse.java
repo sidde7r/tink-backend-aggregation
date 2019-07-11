@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executo
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 @JsonObject
 public class PaymentAuthorisationResponse {
@@ -11,7 +12,7 @@ public class PaymentAuthorisationResponse {
     @JsonProperty("_links")
     private LinksEntity links;
 
-    public LinksEntity getLinks() {
-        return links;
+    public URL getAuthorizationUrl() {
+        return new URL(links.getScaRedirect().getUrl());
     }
 }

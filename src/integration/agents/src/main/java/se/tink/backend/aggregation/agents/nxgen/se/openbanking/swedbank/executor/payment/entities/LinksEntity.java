@@ -12,4 +12,8 @@ public class LinksEntity {
     public LinkEntity getScaStatus() {
         return scaStatus;
     }
+
+    public LinkEntity getScaRedirect() {
+        return scaRedirect;
+    }
 }

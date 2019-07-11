@@ -235,15 +235,6 @@ public final class SwedbankApiClient {
                 .post(PaymentAuthorisationResponse.class);
     }
 
-    public PaymentAuthorisationResponse getPaymentAuthorisationStatus(String url) {
-        return createRequest(new URL(Urls.BASE + url))
-                .addBearerToken(getTokenFromSession())
-                .queryParam(QueryKeys.BIC, BICSandbox.SWEDEN)
-                .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
-                .get(PaymentAuthorisationResponse.class);
-    }
-
     private String getRequestId() {
         return java.util.UUID.randomUUID().toString();
     }

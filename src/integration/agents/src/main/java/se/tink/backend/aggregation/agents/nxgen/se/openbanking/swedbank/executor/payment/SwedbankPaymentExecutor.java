@@ -3,11 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executo
 import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.enums.SwedbankPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.util.AccountTypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -26,10 +28,13 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class SwedbankPaymentExecutor implements PaymentExecutor {
     private SwedbankApiClient apiClient;
+    private final SwedbankPaymentAuthenticator paymentAuthenticator;
     private List<PaymentResponse> createdPaymentsList;
 
-    public SwedbankPaymentExecutor(SwedbankApiClient apiClient) {
+    public SwedbankPaymentExecutor(
+            SwedbankApiClient apiClient, SwedbankPaymentAuthenticator paymentAuthenticator) {
         this.apiClient = apiClient;
+        this.paymentAuthenticator = paymentAuthenticator;
         createdPaymentsList = new ArrayList<>();
     }
 
@@ -71,30 +76,23 @@ public class SwedbankPaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
-        PaymentStatus paymentStatus;
-        String nextStep;
-        switch (paymentMultiStepRequest.getStep()) {
-            case AuthenticationStepConstants.STEP_INIT:
-                PaymentAuthorisationResponse paymentAuthorisationResponse =
-                        apiClient.startPaymentAuthorisation(
-                                paymentMultiStepRequest.getPayment().getUniqueId());
-                PaymentAuthorisationResponse scaAuthorisationStatus =
-                        apiClient.getPaymentAuthorisationStatus(
-                                paymentAuthorisationResponse.getLinks().getScaStatus().getUrl());
-                GetPaymentResponse getPaymentResponse =
-                        apiClient.getPayment(paymentMultiStepRequest.getPayment().getUniqueId());
-                paymentStatus = PaymentStatus.PAID;
-                nextStep = AuthenticationStepConstants.STEP_FINALIZE;
-                break;
-
-            default:
-                throw new IllegalStateException(
-                        String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
-        }
-
         Payment payment = paymentMultiStepRequest.getPayment();
+
+        PaymentAuthorisationResponse paymentAuthorisationResponse =
+                apiClient.startPaymentAuthorisation(payment.getUniqueId());
+
+        paymentAuthenticator.openThirdPartyApp(paymentAuthorisationResponse.getAuthorizationUrl());
+
+        GetPaymentStatusResponse getPaymentStatusResponse =
+                apiClient.getPaymentStatus(payment.getUniqueId());
+
+        PaymentStatus paymentStatus =
+                SwedbankPaymentStatus.fromString(getPaymentStatusResponse.getTransactionStatus())
+                        .getTinkPaymentStatus();
+
         payment.setStatus(paymentStatus);
-        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
+        return new PaymentMultiStepResponse(
+                payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
     }
 
     @Override
