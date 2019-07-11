@@ -103,24 +103,25 @@ public final class BankdataApiClient {
 
     private RequestBuilder createRequestInSession(URL url, String storageKey) {
         final OAuth2Token authToken = getTokenFromSession(storageKey);
+        final String requestId = UUID.randomUUID().toString();
 
-        return createRequest(url).addBearerToken(authToken);
+        return createRequest(url)
+                .addBearerToken(authToken)
+                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                .header(HeaderKeys.X_REQUEST_ID, requestId)
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
     }
 
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest paymentRequest, PaymentType type) throws PaymentException {
-        final String requestId = UUID.randomUUID().toString();
+
         final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
         URL url = new URL(configuration.getBaseUrl() + productType);
 
         try {
             CreatePaymentResponse response =
-                    client.request(url)
-                            .addBearerToken(getTokenFromSession(StorageKeys.INITIAL_TOKEN))
-                            .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                            .header(HeaderKeys.X_REQUEST_ID, requestId)
-                            .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                    createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
                             .body(paymentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                             .post(CreatePaymentResponse.class);
 
@@ -140,17 +141,10 @@ public final class BankdataApiClient {
     }
 
     public GetPaymentDetails getPaymentDetails(URL url) {
-        final String requestId = UUID.randomUUID().toString();
-
-        return createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
-                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .get(GetPaymentDetails.class);
+        return createRequestInSession(url, StorageKeys.INITIAL_TOKEN).get(GetPaymentDetails.class);
     }
 
     public FetchPaymentResponse fetchPayment(String paymentId, PaymentType type) {
-        final String requestId = UUID.randomUUID().toString();
         final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
         URL url =
@@ -158,14 +152,10 @@ public final class BankdataApiClient {
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
         return createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
-                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .get(FetchPaymentResponse.class);
     }
 
     private AccountEntity fetchBalances(final AccountEntity accountEntity) {
-        final String requestId = UUID.randomUUID().toString();
         final URL url =
                 new URL(
                         getConfiguration().getBaseUrl()
@@ -176,9 +166,7 @@ public final class BankdataApiClient {
                 client.request(url)
                         .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
                         .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
-                        .header(HeaderKeys.X_REQUEST_ID, requestId)
                         .type(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .get(AccountEntity.class)
                         .getBalances();
         accountEntity.setBalances(balances);
@@ -187,16 +175,13 @@ public final class BankdataApiClient {
     }
 
     public AccountResponse fetchAccounts() {
-        final String requestId = UUID.randomUUID().toString();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.ACCOUNTS);
 
         final AccountResponse accountsWithoutBalances =
                 createRequestInSession(url, StorageKeys.OAUTH_TOKEN)
                         .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                         .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
-                        .header(HeaderKeys.X_REQUEST_ID, requestId)
                         .type(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .get(AccountResponse.class);
 
         final List<AccountEntity> accountsWithBalances =
@@ -209,7 +194,6 @@ public final class BankdataApiClient {
 
     public TransactionResponse fetchTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        final String requestId = UUID.randomUUID().toString();
         final URL fullUrl =
                 new URL(
                         configuration.getBaseUrl()
@@ -217,8 +201,6 @@ public final class BankdataApiClient {
                                 + account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL));
 
         return createRequestInSession(fullUrl, StorageKeys.OAUTH_TOKEN)
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                 .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
                 .queryParam(
                         QueryKeys.DATE_TO,
@@ -251,7 +233,6 @@ public final class BankdataApiClient {
     }
 
     public void authorizePayment(String paymentId, PaymentType type) {
-        final String requestId = UUID.randomUUID().toString();
         AuthorizePaymentRequest request = new AuthorizePaymentRequest();
 
         String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
@@ -261,9 +242,6 @@ public final class BankdataApiClient {
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
         createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
-                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .post(AuthorizePaymentResponse.class, request);
     }
 
@@ -346,27 +324,20 @@ public final class BankdataApiClient {
 
     public String getConsentId() {
         final ConsentRequest consentRequest = new ConsentRequest();
-        final String requestId = UUID.randomUUID().toString();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.CONSENT);
 
-        return client.request(url)
-                .addBearerToken(getTokenFromSession(StorageKeys.INITIAL_TOKEN))
-                .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
+        return createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
                 .body(consentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentResponse.class)
                 .getConsentId();
     }
 
     public void authorizeConsent(String consentId) {
-        final String requestId = UUID.randomUUID().toString();
         final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
 
-        client.request(url.parameter(IdTags.CONSENT_ID, consentId))
-                .addBearerToken(getTokenFromSession(StorageKeys.INITIAL_TOKEN))
-                .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
+        createRequestInSession(
+                        url.parameter(IdTags.CONSENT_ID, consentId), StorageKeys.INITIAL_TOKEN)
                 .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentAuthorizationResponse.class);
     }
