@@ -10,7 +10,4 @@ public class MifidInformationEntity {
 
     @JsonProperty("Mifid")
     private boolean mifid;
-
-    // @JsonProperty("MifidDate")
-    // `MifidDate` is null - cannot define it!
 }

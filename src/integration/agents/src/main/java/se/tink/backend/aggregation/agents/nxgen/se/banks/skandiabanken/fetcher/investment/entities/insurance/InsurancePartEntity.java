@@ -27,9 +27,6 @@ public class InsurancePartEntity {
     @JsonProperty("Status")
     private int status;
 
-    // @JsonProperty("InsuranceAgreementIdCombination")
-    // `InsuranceAgreementIdCombination` is null - cannot define it!
-
     @JsonProperty("DepotReference")
     private DepotReferenceEntity depotReference;
 

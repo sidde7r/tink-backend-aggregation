@@ -7,7 +7,4 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InsuranceReferenceEntity {
     @JsonProperty("Number")
     private String number;
-
-    // @JsonProperty("EncryptedNumber")
-    // `EncryptedNumber` is null - cannot define it!
 }

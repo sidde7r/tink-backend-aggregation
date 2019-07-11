@@ -47,9 +47,6 @@ public class SecuritiesAccountsEntity {
     @JsonProperty("IsNamed")
     private boolean isNamed;
 
-    // @JsonProperty("FullDepotNumber")
-    // `FullDepotNumber` is null - cannot define it!
-
     @JsonProperty("AccountTypeName")
     private String accountTypeName = "";
 
@@ -58,9 +55,6 @@ public class SecuritiesAccountsEntity {
 
     @JsonProperty("AccountResponsible")
     private String accountResponsible = "";
-
-    // @JsonProperty("InsuranceHolderName")
-    // `InsuranceHolderName` is null - cannot define it!
 
     @JsonProperty("RegDate")
     private String regDate = "";
