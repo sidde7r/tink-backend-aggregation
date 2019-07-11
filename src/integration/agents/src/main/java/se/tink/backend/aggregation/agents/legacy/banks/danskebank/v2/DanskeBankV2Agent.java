@@ -646,7 +646,7 @@ public class DanskeBankV2Agent extends AbstractAgent
         return validator.validate(message).getValidOcr().isPresent();
     }
 
-    private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(
+    private Map<Account, List<TransferDestinationPattern>> getBankTransferAccountDestinations(
             List<Account> updatedAccounts) {
         TransferDetailsResponse transferDetailsResponse = apiClient.getTransferAccounts();
 
@@ -1065,9 +1065,26 @@ public class DanskeBankV2Agent extends AbstractAgent
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+
         Map<Account, List<TransferDestinationPattern>> transferDestinations = new HashMap<>();
-        transferDestinations.putAll(getTransferAccountDestinations(accounts));
-        transferDestinations.putAll(getPaymentAccountDestinations(accounts));
+
+        transferDestinations.putAll(getBankTransferAccountDestinations(accounts));
+
+        Map<Account, List<TransferDestinationPattern>> paymentDestinations =
+                getPaymentAccountDestinations(accounts);
+
+        for (Map.Entry<Account, List<TransferDestinationPattern>> entry :
+                paymentDestinations.entrySet()) {
+            // if account exists in response, add payment destinations to already added transfer
+            // destinations
+            if (transferDestinations.containsKey(entry.getKey())) {
+                transferDestinations.get(entry.getKey()).addAll(entry.getValue());
+            } else {
+                // otherwise add a new entry
+                transferDestinations.put(entry.getKey(), entry.getValue());
+            }
+        }
+
         return new FetchTransferDestinationsResponse(transferDestinations);
     }
 
