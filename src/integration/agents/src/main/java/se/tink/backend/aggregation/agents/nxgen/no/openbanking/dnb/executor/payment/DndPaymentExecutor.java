@@ -51,7 +51,7 @@ public class DndPaymentExecutor implements PaymentExecutor {
         PaymentResponse paymentResponse =
                 apiClient
                         .createPayment(createPaymentRequest, dnbPaymentType)
-                        .toTinkPaymentResponse(paymentRequest.getPayment(), dnbPaymentType);
+                        .toTinkPaymentResponse(creditor, debtor, amount, dnbPaymentType);
 
         createdPaymentList.add(paymentResponse);
 

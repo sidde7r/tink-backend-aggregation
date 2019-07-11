@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Debtor;
 
 @JsonObject
 @JsonInclude(Include.NON_NULL)
@@ -31,21 +33,30 @@ public class AccountEntity {
     }
 
     public static AccountEntity creditorOf(PaymentRequest paymentRequest) {
-        Payment payment = paymentRequest.getPayment();
-        return new AccountEntity(
-                payment.getCreditor().getAccountIdentifierType(),
-                payment.getCreditor().getAccountNumber());
+        Creditor creditor = paymentRequest.getPayment().getCreditor();
+        return new AccountEntity(creditor.getAccountIdentifierType(), creditor.getAccountNumber());
     }
 
     public static AccountEntity debtorOf(PaymentRequest paymentRequest) {
-        Payment payment = paymentRequest.getPayment();
-        return new AccountEntity(
-                payment.getDebtor().getAccountIdentifierType(),
-                payment.getDebtor().getAccountNumber());
+        Debtor debtor = paymentRequest.getPayment().getDebtor();
+        return new AccountEntity(debtor.getAccountIdentifierType(), debtor.getAccountNumber());
+    }
+
+    public Creditor toTinkCreditor() {
+        return new Creditor(AccountIdentifier.create(getAccountType(), getAccountNumber()));
+    }
+
+    public Debtor toTinkDebtor() {
+        return new Debtor(AccountIdentifier.create(getAccountType(), getAccountNumber()));
     }
 
     @JsonIgnore
     public String getAccountNumber() {
         return Strings.isNullOrEmpty(bban) ? iban : bban;
+    }
+
+    @JsonIgnore
+    public Type getAccountType() {
+        return Strings.isNullOrEmpty(bban) ? Type.IBAN : Type.NO;
     }
 }

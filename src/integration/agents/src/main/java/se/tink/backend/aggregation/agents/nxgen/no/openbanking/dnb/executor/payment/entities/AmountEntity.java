@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.pay
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -23,8 +24,12 @@ public class AmountEntity {
                 paymentRequest.getPayment().getAmount().getCurrency());
     }
 
+    public Amount toTinkAmount() {
+        return Amount.valueOf(currency, Double.valueOf(getParsedAmount() * 100).longValue(), 2);
+    }
+
     @JsonIgnore
-    public double getParsedAmount() {
+    private double getParsedAmount() {
         return StringUtils.parseAmount(amount);
     }
 
