@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreateCrossBorderPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreateDomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreateSepaPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.TypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -92,7 +93,8 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor {
                         .withDebtor(debtorEntity)
                         .withAmount(amountEntity)
                         .withRequestedExecutionDate(
-                                paymentRequest.getPayment().getExecutionDate().toString())
+                                DateUtils.convertToDateViaInstant(
+                                        paymentRequest.getPayment().getExecutionDate()))
                         .withChargeBearer(PaymentRequests.CHARGE_BEARER)
                         .withCreditorAgent(PaymentRequests.AGENT)
                         .withCreditorAddress(creditorAddress)
@@ -125,7 +127,8 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor {
                         .withDebtor(debtorEntity)
                         .withAmount(amountEntity)
                         .withRequestedExecutionDate(
-                                paymentRequest.getPayment().getExecutionDate().toString())
+                                DateUtils.convertToDateViaInstant(
+                                        paymentRequest.getPayment().getExecutionDate()))
                         .build();
 
         return apiClient
@@ -160,7 +163,8 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor {
                         .withDebtor(debtorEntity)
                         .withAmount(amountEntity)
                         .withRequestedExecutionDate(
-                                paymentRequest.getPayment().getExecutionDate().toString())
+                                DateUtils.convertToDateViaInstant(
+                                        paymentRequest.getPayment().getExecutionDate()))
                         .withChargeBearer(PaymentRequests.CHARGE_BEARER)
                         .withCreditorAgent(PaymentRequests.AGENT)
                         .withCreditorAddress(creditorAddress)

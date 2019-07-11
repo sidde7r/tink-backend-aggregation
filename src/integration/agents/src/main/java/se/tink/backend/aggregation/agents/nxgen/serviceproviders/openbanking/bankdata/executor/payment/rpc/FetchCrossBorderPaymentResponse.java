@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.DebtorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.enums.BankdataPaymentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.DateUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -35,7 +36,8 @@ public class FetchCrossBorderPaymentResponse {
                         .withCreditor(creditorAccount.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
                         .withAmount(instructedAmount.toAmount())
-                        .withExecutionDate(null)
+                        .withExecutionDate(
+                                DateUtils.convertToLocalDateViaInstant(requestedExecutionDate))
                         .withCurrency(instructedAmount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(

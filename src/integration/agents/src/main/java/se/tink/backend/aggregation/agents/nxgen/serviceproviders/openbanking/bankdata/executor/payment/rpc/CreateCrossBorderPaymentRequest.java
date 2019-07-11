@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorAddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorEntity;
@@ -21,7 +22,7 @@ public class CreateCrossBorderPaymentRequest {
     private String remittanceInformationUnstructured;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private String requestedExecutionDate;
+    private Date requestedExecutionDate;
 
     private CreateCrossBorderPaymentRequest(Builder builder) {
         this.creditorAccount = builder.creditorAccount;
@@ -43,7 +44,7 @@ public class CreateCrossBorderPaymentRequest {
         private CreditorEntity creditorAccount;
         private DebtorEntity debtorAccount;
         private AmountEntity instructedAmount;
-        private String requestedExecutionDate;
+        private Date requestedExecutionDate;
         private String creditorName;
         private String creditorAgent;
         private CreditorAddressEntity creditorAddress;
@@ -65,7 +66,7 @@ public class CreateCrossBorderPaymentRequest {
             return this;
         }
 
-        public Builder withRequestedExecutionDate(String requestedExecutionDate) {
+        public Builder withRequestedExecutionDate(Date requestedExecutionDate) {
             this.requestedExecutionDate = requestedExecutionDate;
             return this;
         }

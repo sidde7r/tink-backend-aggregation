@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.DebtorEntity;
@@ -15,7 +16,7 @@ public class CreateDomesticPaymentRequest {
     private AmountEntity instructedAmount;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private String requestedExecutionDate;
+    private Date requestedExecutionDate;
 
     private CreateDomesticPaymentRequest(Builder builder) {
         this.creditorAccount = builder.creditorAccount;
@@ -32,7 +33,7 @@ public class CreateDomesticPaymentRequest {
         private CreditorEntity creditorAccount;
         private DebtorEntity debtorAccount;
         private AmountEntity instructedAmount;
-        private String requestedExecutionDate;
+        private Date requestedExecutionDate;
 
         public Builder withCreditor(CreditorEntity creditorAmount) {
             this.creditorAccount = creditorAmount;
@@ -49,7 +50,7 @@ public class CreateDomesticPaymentRequest {
             return this;
         }
 
-        public Builder withRequestedExecutionDate(String requestedExecutionDate) {
+        public Builder withRequestedExecutionDate(Date requestedExecutionDate) {
             this.requestedExecutionDate = requestedExecutionDate;
             return this;
         }
