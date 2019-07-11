@@ -107,7 +107,9 @@ public final class BankdataApiClient {
                             .post(CreatePaymentResponse.class);
 
             authorizePayment(response.getPaymentId(), type);
-            sessionStorage.put(response.getPaymentId(), signPaymentUrl(response.getPaymentId()));
+
+            URL signUrl = signPaymentUrl(response.getPaymentId());
+            sessionStorage.put(response.getPaymentId(), signUrl.toString());
 
             URL transactionDetailsURL =
                     new URL(
@@ -147,8 +149,7 @@ public final class BankdataApiClient {
                                 + accountEntity.getBalancesLink());
 
         final List<BalanceEntity> balances =
-                client.request(url)
-                        .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
+                createRequestInSession(url, StorageKeys.OAUTH_TOKEN)
                         .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
                         .type(MediaType.APPLICATION_JSON)
                         .get(AccountEntity.class)
@@ -216,7 +217,7 @@ public final class BankdataApiClient {
                 .getUrl();
     }
 
-    public void authorizePayment(String paymentId, PaymentType type) {
+    private void authorizePayment(String paymentId, PaymentType type) {
         AuthorizePaymentRequest request = new AuthorizePaymentRequest();
 
         String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
@@ -229,12 +230,11 @@ public final class BankdataApiClient {
                 .post(AuthorizePaymentResponse.class, request);
     }
 
-    public URL signPaymentUrl(String paymentId) {
+    private URL signPaymentUrl(String paymentId) {
         final String codeVerifier = BerlinGroupUtils.generateCodeVerifier();
         final String codeChallenge = BerlinGroupUtils.generateCodeChallenge(codeVerifier);
         final String clientId = getConfiguration().getClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
-        sessionStorage.put(StorageKeys.CONSENT_ID, paymentId);
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
 
         return new URL(configuration.getBaseAuthUrl() + Endpoints.AUTHORIZE)
@@ -242,8 +242,10 @@ public final class BankdataApiClient {
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.SCOPE, QueryValues.PIS_SCOPE + paymentId)
                 .queryParam(
-                        QueryKeys.STATE, sessionStorage.get(BankdataConstants.StorageKeys.STATE))
-                .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
+                        QueryKeys.STATE,
+                        sessionStorage.get(StorageKeys.STATE))
+                .queryParam(
+                        QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri);
     }
