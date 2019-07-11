@@ -15,13 +15,15 @@ public class TransactionEntity {
     private AmountEntity transactionAmount;
     private String transactionId;
     private String valueDate;
+    private String debtorName;
+    private AccountEntity debtorAccount;
 
     @JsonIgnore
     public Transaction toBookedTinkTransaction() {
         return Transaction.builder()
                 .setDate(bookingDate)
                 .setPending(false)
-                .setDescription(remittanceInformationUnstructured)
+                .setDescription(getDescription())
                 .setAmount(transactionAmount.toAmount())
                 .build();
     }
@@ -31,8 +33,19 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setDate(bookingDate)
                 .setPending(true)
-                .setDescription(remittanceInformationUnstructured)
+                .setDescription(getDescription())
                 .setAmount(transactionAmount.toAmount())
                 .build();
+    }
+
+    private String getDescription() {
+        if (remittanceInformationUnstructured != null) {
+            return remittanceInformationUnstructured;
+        } else {
+            if (debtorName != null) {
+                return debtorName;
+            }
+        }
+        return creditorName;
     }
 }

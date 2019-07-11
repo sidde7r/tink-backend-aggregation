@@ -8,4 +8,9 @@ public class TransactionsLinksEntity {
     private String account;
     private String first;
     private String last;
+    private String transactionDetails;
+
+    public String getTransactionDetails() {
+        return transactionDetails;
+    }
 }

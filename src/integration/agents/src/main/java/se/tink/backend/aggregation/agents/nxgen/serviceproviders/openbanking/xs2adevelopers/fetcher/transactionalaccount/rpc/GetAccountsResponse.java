@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @JsonObject
 public class GetAccountsResponse {
 
-    @JsonProperty("account-list")
+    @JsonProperty("accounts")
     private List<AccountEntity> accountList;
 
     public List<AccountEntity> getAccountList() {
@@ -28,6 +28,8 @@ public class GetAccountsResponse {
     public List<TransactionalAccount> toTinkAcounts() {
         return Optional.ofNullable(accountList).orElse(Collections.emptyList()).stream()
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }
