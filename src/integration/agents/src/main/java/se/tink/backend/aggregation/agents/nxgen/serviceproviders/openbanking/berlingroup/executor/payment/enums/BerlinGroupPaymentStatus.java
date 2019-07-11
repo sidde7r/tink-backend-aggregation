@@ -4,17 +4,17 @@ import java.util.Arrays;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum BerlinGroupPaymentStatus {
-    AcceptedCustomerProfile("ACCP", PaymentStatus.PENDING),
-    AcceptedSettlementCompleted("ACSC", PaymentStatus.PAID),
-    AcceptedSettlementInProcess("ACSP", PaymentStatus.PAID),
-    AcceptedTechnicalValidation("ACTC", PaymentStatus.PAID),
-    AcceptedWithChange("ACWC", PaymentStatus.CREATED),
-    AcceptedWithoutPosting("ACWP", PaymentStatus.PENDING),
-    Received("RCVD", PaymentStatus.PENDING),
-    Pending("PNDG", PaymentStatus.PENDING),
-    Rejected("RJCT", PaymentStatus.REJECTED),
-    Canceled("CANC", PaymentStatus.CANCELLED),
-    Undefined("Undefined", PaymentStatus.UNDEFINED);
+    ACCEPTED_CUSTOMER_PROFILE("ACCP", PaymentStatus.PENDING),
+    ACCEPTED_SETTLEMENT_COMPLETED("ACSC", PaymentStatus.PAID),
+    ACCEPTED_SETTLEMENT_IN_PROCESS("ACSP", PaymentStatus.PAID),
+    ACCEPTED_TECHNICAL_VALIDATION("ACTC", PaymentStatus.PAID),
+    ACCEPTED_WITH_CHANGE("ACWC", PaymentStatus.CREATED),
+    ACCEPTED_WITHOUT_POSTING("ACWP", PaymentStatus.PENDING),
+    RECEIVED("RCVD", PaymentStatus.PENDING),
+    PENDING("PNDG", PaymentStatus.PENDING),
+    REJECTED("RJCT", PaymentStatus.REJECTED),
+    CANCELED("CANC", PaymentStatus.CANCELLED),
+    UNDEFINED("Undefined", PaymentStatus.UNDEFINED);
 
     BerlinGroupPaymentStatus(String text, PaymentStatus paymentStatus) {
         this.text = text;
@@ -25,7 +25,7 @@ public enum BerlinGroupPaymentStatus {
         return Arrays.stream(BerlinGroupPaymentStatus.values())
                 .filter(s -> s.text.equalsIgnoreCase(text))
                 .findFirst()
-                .orElse(Undefined);
+                .orElse(UNDEFINED);
     }
 
     private String text;

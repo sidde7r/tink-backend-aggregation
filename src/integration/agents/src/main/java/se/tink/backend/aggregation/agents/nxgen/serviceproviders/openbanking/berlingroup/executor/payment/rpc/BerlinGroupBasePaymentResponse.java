@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.enums.BerlinGroupPaymentType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -20,29 +20,19 @@ public abstract class BerlinGroupBasePaymentResponse {
 
     Payment.Builder getBuildingPaymentResponse(
             Payment payment, BerlinGroupPaymentType paymentType) {
+        Amount amount = payment.getAmount();
+        Creditor creditor = payment.getCreditor();
+        Debtor debtor = payment.getDebtor();
+
         return new Payment.Builder()
                 .withType(paymentType.getTinkPaymentType())
                 .withStatus(
                         BerlinGroupPaymentStatus.fromString(transactionStatus)
                                 .getTinkPaymentStatus())
                 .withCurrency(payment.getCurrency())
-                .withAmount(
-                        Amount.valueOf(
-                                payment.getAmount().getCurrency(),
-                                Double.valueOf(payment.getAmount().doubleValue() * 100).longValue(),
-                                2))
-                .withCreditor(
-                        new Creditor(
-                                AccountIdentifier.create(
-                                        payment.getCreditor().getAccountIdentifierType(),
-                                        payment.getCreditor().getAccountNumber(),
-                                        payment.getCreditor().getName())))
-                .withDebtor(
-                        new Debtor(
-                                AccountIdentifier.create(
-                                        payment.getDebtor().getAccountIdentifierType(),
-                                        payment.getDebtor().getAccountNumber())))
-                .withExecutionDate(null);
+                .withAmount(new Amount(amount.getCurrency(), amount.getValue()))
+                .withCreditor(new Creditor(new IbanIdentifier(creditor.getAccountNumber())))
+                .withDebtor(new Debtor(new IbanIdentifier(debtor.getAccountNumber())));
     }
 
     public String getTransactionStatus() {

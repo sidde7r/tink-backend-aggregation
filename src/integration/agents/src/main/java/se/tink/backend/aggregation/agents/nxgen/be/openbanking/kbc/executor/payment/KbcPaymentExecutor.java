@@ -52,6 +52,6 @@ public class KbcPaymentExecutor extends BerlinGroupBasePaymentExecutor {
 
     @Override
     protected BerlinGroupPaymentType getPaymentType(PaymentRequest paymentRequest) {
-        return BerlinGroupPaymentType.SepaCreditTransfers;
+        return BerlinGroupPaymentType.SEPA_CREDIT_TRANSFERS;
     }
 }

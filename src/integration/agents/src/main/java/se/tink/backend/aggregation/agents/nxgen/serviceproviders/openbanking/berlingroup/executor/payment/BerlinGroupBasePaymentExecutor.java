@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment;
 
 import java.util.ArrayList;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.entites.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.entites.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.enums.BerlinGroupPaymentStatus;
@@ -24,7 +25,7 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public abstract class BerlinGroupBasePaymentExecutor implements PaymentExecutor {
 
-    private ArrayList<PaymentResponse> createdPaymentsList;
+    private List<PaymentResponse> createdPaymentsList;
 
     protected BerlinGroupBasePaymentExecutor() {
         createdPaymentsList = new ArrayList<>();

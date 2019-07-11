@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 import se.tink.libraries.payment.enums.PaymentType;
 
 public enum BerlinGroupPaymentType {
-    SepaCreditTransfers("sepa-credit-transfers", PaymentType.SEPA),
-    InstantSepaCreditTransfers("instant-sepa-credit-transfers", PaymentType.SEPA),
+    SEPA_CREDIT_TRANSFERS("sepa-credit-transfers", PaymentType.SEPA),
+    INSTANT_SEPA_CREDIT_TRANSFERS("instant-sepa-credit-transfers", PaymentType.SEPA),
     Target2Payments(
             "target-2-payments", PaymentType.UNDEFINED), // Can be either domestic or international
-    CrossBorderCreditTransfers("cross-border-credit-transfers", PaymentType.INTERNATIONAL),
-    Undefined("Undefind", PaymentType.UNDEFINED);
+    CROSS_BORDER_CREDIT_TRANSFERS("cross-border-credit-transfers", PaymentType.INTERNATIONAL),
+    UNDEFINED("Undefind", PaymentType.UNDEFINED);
 
     BerlinGroupPaymentType(String text, PaymentType paymentType) {
         this.text = text;
