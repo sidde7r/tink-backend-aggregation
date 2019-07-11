@@ -113,5 +113,4 @@ public final class Xs2aDevelopersConstants {
     public static class CredentialKeys {
         public static final String IBAN = "iban";
     }
-
 }

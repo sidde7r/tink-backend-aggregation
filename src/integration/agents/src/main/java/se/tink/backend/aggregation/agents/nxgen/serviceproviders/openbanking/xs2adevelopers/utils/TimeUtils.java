@@ -7,12 +7,11 @@ import java.util.Date;
 
 public class TimeUtils {
 
-  public static String getDate() {
-    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(new Date());
-    calendar.add(Calendar.DATE, 89);
-    return dateFormat.format(calendar.getTime());
-  }
-
+    public static String getDate() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DATE, 89);
+        return dateFormat.format(calendar.getTime());
+    }
 }
