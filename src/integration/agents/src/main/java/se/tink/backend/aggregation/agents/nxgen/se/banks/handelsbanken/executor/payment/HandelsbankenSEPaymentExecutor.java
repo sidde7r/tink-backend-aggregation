@@ -17,9 +17,15 @@ import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.entities.DetailedPermissions;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.payment.rpc.PaymentSignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.UpdatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmVerificationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferApprovalRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferApprovalResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.PaymentDetails;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.interfaces.UpdatablePayment;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.HandelsbankenSEPaymentContext;
@@ -28,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.UpdatePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
@@ -41,11 +48,15 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
 
     private final HandelsbankenSEApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;
+    private final ExecutorExceptionResolver exceptionResolver;
 
     public HandelsbankenSEPaymentExecutor(
-            HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
+            HandelsbankenSEApiClient client,
+            HandelsbankenSessionStorage sessionStorage,
+            ExecutorExceptionResolver exceptionResolver) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.exceptionResolver = exceptionResolver;
     }
 
     @Override
@@ -60,13 +71,7 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
         PaymentRecipient paymentRecipient = verifyRecipient(transfer.getDestination(), context);
         validateDestinationMessage(paymentRecipient, transfer.getDestinationMessage());
 
-        CreatePaymentRequest createPaymentRequest =
-                CreatePaymentRequest.create(transfer, paymentRecipient);
-        PaymentDetails paymentDetails =
-                client.createPayment(context, createPaymentRequest)
-                        .orElseThrow(() -> exception(PAYMENT_CREATE_FAILED));
-
-        client.signPayment(paymentDetails);
+        signTransfer(context.toCreate(), PaymentSignRequest.create(transfer, paymentRecipient));
     }
 
     @Override
@@ -75,8 +80,8 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                 fetchPaymentDetails(
                         transfer.getOriginalTransfer()
                                 .orElseThrow((() -> exception(PAYMENT_UPDATE_FAILED))));
-        paymentDetails = (PaymentDetails) updateIfChanged(transfer, paymentDetails);
-        signUpdate(paymentDetails);
+
+        updateIfChanged(transfer, paymentDetails);
     }
 
     private void verifySourceAccount(
@@ -156,8 +161,45 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                 .orElseThrow(() -> exception(PAYMENT_NO_MATCHES));
     }
 
+    private void signTransfer(Optional<URL> url, PaymentSignRequest paymentSignRequest) {
+
+        TransferSignResponse transferSignResponse =
+                url.map(requestUrl -> client.signTransfer(requestUrl, paymentSignRequest))
+                        .orElseThrow(() -> exception(PAYMENT_CREATE_FAILED));
+
+        if (!transferSignResponse.getErrors().isEmpty()) {
+            exception(PAYMENT_CREATE_FAILED);
+        }
+
+        confirmTransfer(transferSignResponse, null);
+    }
+
+    // Made public since it's used in HandelsbankenSEEInvoiceExecutor and
+    // HandelsbankenSEBankTransferExecutor
+    public void confirmTransfer(
+            TransferSignResponse transferSignResponse,
+            TransferApprovalRequest transferApprovalRequest) {
+        ConfirmInfoResponse confirmInfoResponse =
+                client.getConfirmInfo(
+                        transferSignResponse.getConfirmTransferLink(exceptionResolver));
+
+        ConfirmVerificationResponse confirmVerificationResponse =
+                client.postConfirmVerification(
+                        confirmInfoResponse.getConfirmationVerificationLink(exceptionResolver));
+
+        confirmVerificationResponse.validateResult(exceptionResolver);
+
+        TransferApprovalResponse transferApprovalResponse =
+                client.postApproveTransfer(
+                        transferSignResponse.getApprovalLink(exceptionResolver),
+                        transferApprovalRequest);
+
+        transferApprovalResponse.validateResult(exceptionResolver);
+    }
+
     // Made public since it's used to update e-invoices during approval
-    public UpdatablePayment updateIfChanged(Transfer transfer, UpdatablePayment updatablePayment) {
+    public boolean updateIfChanged(Transfer transfer, UpdatablePayment updatablePayment) {
+        boolean isUpdated = false;
 
         if (transfer.getSource() instanceof SwedishIdentifier) {
             transfer.setSource(
@@ -169,6 +211,8 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                 transfer.getOriginalTransfer().orElseThrow(() -> exception(PAYMENT_UPDATE_FAILED));
 
         if (!Objects.equals(originalTransfer.getHash(), transfer.getHash())) {
+            isUpdated = true;
+
             verifyUpdatePermitted(transfer, originalTransfer, updatablePayment);
 
             HandelsbankenSEPaymentContext context =
@@ -177,16 +221,14 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                             : client.paymentContext(updatablePayment));
             verifySourceAccount(transfer.getSource(), context);
 
-            updatablePayment =
+            TransferSignResponse response =
                     client.updatePayment(updatablePayment, UpdatePaymentRequest.create(transfer))
                             .orElseThrow(() -> exception(PAYMENT_UPDATE_FAILED));
+
+            confirmTransfer(response, null);
         }
 
-        return updatablePayment;
-    }
-
-    private void signUpdate(PaymentDetails paymentDetails) {
-        client.signPayment(paymentDetails);
+        return isUpdated;
     }
 
     private void verifyUpdatePermitted(

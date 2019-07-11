@@ -5,22 +5,22 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.ha
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.device.CheckAgreementResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.EInvoice;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.PendingTransaction;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.rpc.ApproveEInvoiceRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.rpc.ApproveEInvoiceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.rpc.EInvoiceDetails;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.rpc.SignEInvoicesResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.BaseSignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.UpdatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmVerificationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.HandelsbankenSETransferContext;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignatureResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSpecificationRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSpecificationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferApprovalRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferApprovalResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ValidateRecipientRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ValidateRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardSETransactionsResponse;
@@ -43,7 +43,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.Payme
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PendingTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.EntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.ValidateSignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.CommitProfileResponse;
@@ -72,9 +71,8 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
         super(client, configuration);
     }
 
-    public InitBankIdResponse initBankId(
-            EntryPointResponse entryPoint, InitBankIdRequest initBankIdRequest) {
-        return createPostRequest(entryPoint.toBankIdLogin())
+    public InitBankIdResponse initToBank(InitBankIdRequest initBankIdRequest) {
+        return createPostRequest(HandelsbankenSEConstants.Urls.INIT_REQUEST)
                 .post(InitBankIdResponse.class, initBankIdRequest);
     }
 
@@ -144,37 +142,16 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
                 .map(url -> createRequest(url).get(EInvoiceDetails.class));
     }
 
-    public Optional<ApproveEInvoiceResponse> approveEInvoice(
-            EInvoiceDetails eInvoiceDetails, ApproveEInvoiceRequest request) {
-        return eInvoiceDetails
-                .toApproval()
-                .map(url -> createPostRequest(url).post(ApproveEInvoiceResponse.class, request));
-    }
-
-    public Optional<SignEInvoicesResponse> signEInvoice(
-            ApproveEInvoiceResponse approveEInvoiceResponse) {
-        return approveEInvoiceResponse
-                .toSignature()
-                .map(url -> createPostRequest(url).post(SignEInvoicesResponse.class));
-    }
-
     public HandelsbankenSEPaymentContext paymentContext(UpdatablePayment updatablePayment) {
         return createRequest(updatablePayment.toPaymentContext())
                 .get(HandelsbankenSEPaymentContext.class);
     }
 
-    public Optional<PaymentDetails> createPayment(
-            HandelsbankenSEPaymentContext paymentContext, CreatePaymentRequest request) {
-        return paymentContext
-                .toCreate()
-                .map(url -> createPostRequest(url).post(PaymentDetails.class, request));
-    }
-
-    public Optional<UpdatablePayment> updatePayment(
+    public Optional<TransferSignResponse> updatePayment(
             UpdatablePayment updatablePayment, UpdatePaymentRequest request) {
         return updatablePayment
                 .toUpdate()
-                .map(url -> createPostRequest(url).put(updatablePayment.getClass(), request));
+                .map(url -> createPostRequest(url).put(TransferSignResponse.class, request));
     }
 
     public Optional<PaymentDetails> signPayment(PaymentDetails paymentDetails) {
@@ -264,19 +241,50 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
                 .get(HandelsbankenSETransferContext.class);
     }
 
-    public TransferSpecificationResponse createTransfer(
-            Creatable creatable, TransferSpecificationRequest transferSpecification) {
+    public TransferSignResponse signTransfer(URL requestUrl, BaseSignRequest request) {
+        TransferSignResponse transferSignResponse = null;
+
         try {
-            return createPostRequest(creatable.toCreate())
-                    .post(TransferSpecificationResponse.class, transferSpecification);
-        } catch (HttpResponseException e) {
-            // Still interested in the deserialized response.
-            return e.getResponse().getBody(TransferSpecificationResponse.class);
+            transferSignResponse =
+                    createPostRequest(requestUrl).post(TransferSignResponse.class, request);
+        } catch (HttpResponseException exception) {
+            if (exception.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                transferSignResponse = exception.getResponse().getBody(TransferSignResponse.class);
+            } else {
+                throw exception;
+            }
         }
+
+        return transferSignResponse;
     }
 
-    public TransferSignatureResponse signTransfer(Signable signable) {
-        return createPostRequest(signable.toSignature()).post(TransferSignatureResponse.class);
+    public ConfirmInfoResponse getConfirmInfo(URL url) {
+        ConfirmInfoResponse response;
+        try {
+            response = createRequest(url).get(ConfirmInfoResponse.class);
+        } catch (HttpResponseException exception) {
+            if (exception.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                // done for COB-758.
+                response = exception.getResponse().getBody(ConfirmInfoResponse.class);
+            } else {
+                throw exception;
+            }
+        }
+        return response;
+    }
+
+    public ConfirmVerificationResponse postConfirmVerification(URL url) {
+        return createPostRequest(url).post(ConfirmVerificationResponse.class);
+    }
+
+    public TransferApprovalResponse postApproveTransfer(
+            URL url, TransferApprovalRequest transferApprovalRequest) {
+        try {
+            return createPostRequest(url)
+                    .post(TransferApprovalResponse.class, transferApprovalRequest);
+        } catch (HttpResponseException e) {
+            return e.getResponse().getBody(TransferApprovalResponse.class);
+        }
     }
 
     public ValidateRecipientResponse validateRecipient(
@@ -299,13 +307,5 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
             ApplicationEntryPointResponse applicationEntryPoint) {
         return createRequest(applicationEntryPoint.toPaymentContext())
                 .get(HandelsbankenSEPaymentContext.class);
-    }
-
-    public interface Creatable {
-        URL toCreate();
-    }
-
-    public interface Signable {
-        URL toSignature();
     }
 }

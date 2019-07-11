@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor
 
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.HandelsbankenAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSpecificationRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -10,8 +10,7 @@ import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 
 @JsonObject
 public class HandelsbankenSEPaymentAccount
-        implements TransferSpecificationRequest.AmountableSource,
-                TransferSpecificationRequest.AmountableDestination {
+        implements TransferSignRequest.AmountableSource, TransferSignRequest.AmountableDestination {
     private String number;
     private String numberFormatted;
     private String name;
@@ -25,7 +24,7 @@ public class HandelsbankenSEPaymentAccount
         return TransferAmount.from(number, numberFormatted, name);
     }
 
-    public TransferSpecificationRequest.AmountableDestination asAmountableDestination() {
+    public TransferSignRequest.AmountableDestination asAmountableDestination() {
         return this;
     }
 

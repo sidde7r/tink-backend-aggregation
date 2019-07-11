@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -7,13 +8,19 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.HandelsbankenSEAccountContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.HandelsbankenSEPaymentAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-public class HandelsbankenSETransferContext extends TransferableResponse {
+public class HandelsbankenSETransferContext extends BaseResponse {
 
     private HandelsbankenSEAccountContext fromAccounts;
     private HandelsbankenSEAccountContext toAccounts;
+
+    @JsonIgnore
+    public Optional<URL> toCreatable() {
+        return searchLink(HandelsbankenConstants.URLS.Links.CREATE);
+    }
 
     public Optional<HandelsbankenSEPaymentAccount> findSourceAccount(Transfer transfer) {
         return Optional.ofNullable(fromAccounts)
