@@ -7,7 +7,7 @@ public class SdcDkConstants {
 
     public static class Authentication {
         public static final ImmutableList<String> BANKS_WITH_PIN_AUTHENTICATION =
-                ImmutableList.of("9740", "9922", "9388");
+                ImmutableList.of("9740", "9922", "9388", "9283", "0537", "8412");
     }
 
     public static class Market {
