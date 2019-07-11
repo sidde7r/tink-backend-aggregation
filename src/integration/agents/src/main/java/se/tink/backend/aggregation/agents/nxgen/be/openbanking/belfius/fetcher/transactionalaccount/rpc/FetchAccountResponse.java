@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.rpc;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
