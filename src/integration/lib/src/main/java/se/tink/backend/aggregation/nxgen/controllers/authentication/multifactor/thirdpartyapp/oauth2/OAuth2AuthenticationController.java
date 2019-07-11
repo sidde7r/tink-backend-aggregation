@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.assertj.core.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
@@ -18,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.ErrorType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -25,12 +28,15 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OAuth2AuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
     private static final Random random = new SecureRandom();
     private static final Base64.Encoder encoder = Base64.getUrlEncoder();
+    private static final Logger logger =
+            LoggerFactory.getLogger(OAuth2AuthenticationController.class);
 
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -134,6 +140,8 @@ public class OAuth2AuthenticationController
                                 LoginError.INCORRECT_CREDENTIALS
                                         ::exception); // todo: change this exception
 
+        handleErrors(callbackData);
+
         String code = callbackData.getOrDefault(OAuth2Constants.CallbackParams.CODE, null);
         if (Strings.isNullOrEmpty(code)) {
             throw new IllegalStateException("callbackData did not contain 'code'");
@@ -161,5 +169,39 @@ public class OAuth2AuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
+    }
+
+    private Optional<String> getCallbackElement(Map<String, String> callbackData, String key) {
+        String value = callbackData.getOrDefault(key, null);
+        if (com.google.common.base.Strings.isNullOrEmpty(value)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(value);
+    }
+
+    private void handleErrors(Map<String, String> callbackData) throws AuthenticationException {
+        Optional<String> error =
+                getCallbackElement(callbackData, OAuth2Constants.CallbackParams.ERROR);
+        Optional<String> errorDescription =
+                getCallbackElement(callbackData, OAuth2Constants.CallbackParams.ERROR_DESCRIPTION);
+
+        if (!error.isPresent()) {
+            logger.info("OAuth2 callback success.");
+            return;
+        }
+
+        ErrorType errorType = ErrorType.getErrorType(error.get());
+        if (OAuth2Constants.ErrorType.ACCESS_DENIED.equals(errorType)
+                || ErrorType.LOGIN_REQUIRED.equals(errorType)) {
+            logger.info(
+                    "OAuth2 {} callback: {}",
+                    errorType.getValue(),
+                    SerializationUtils.serializeToString(callbackData));
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        throw new IllegalStateException(
+                String.format("Unknown error: %s:%s.", errorType, errorDescription.orElse("")));
     }
 }
