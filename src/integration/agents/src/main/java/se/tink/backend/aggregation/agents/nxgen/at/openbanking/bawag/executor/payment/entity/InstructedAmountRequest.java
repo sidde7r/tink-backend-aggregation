@@ -3,10 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.p
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class InstructedAmountRequest {
-
-    private String currency;
-    private Double amount;
+public class InstructedAmountRequest extends InstructedAmount {
 
     private InstructedAmountRequest(String currency, Double amount) {
         this.currency = currency;
@@ -44,14 +41,6 @@ public class InstructedAmountRequest {
 
         public InstructedAmountRequest build() {
             return new InstructedAmountRequest(currency, amount);
-        }
-
-        public String toString() {
-            return "InstructedAmountRequest.InstructedAmountBuilder(currency="
-                    + this.currency
-                    + ", amount="
-                    + this.amount
-                    + ")";
         }
     }
 }

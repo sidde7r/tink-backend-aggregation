@@ -6,14 +6,7 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.rpc.Debtor;
 
 @JsonObject
-public class DebtorAccountResponse {
-
-    private String iban;
-    private String bban;
-    private String pan;
-    private String maskedPan;
-    private String msisdn;
-    private String currency;
+public class DebtorAccountResponse extends Account {
 
     public DebtorAccountResponse() {}
 

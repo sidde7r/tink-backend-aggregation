@@ -6,14 +6,7 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.rpc.Creditor;
 
 @JsonObject
-public class CreditorAccountRequest {
-
-    private String iban;
-    private String bban;
-    private String pan;
-    private String maskedPan;
-    private String msisdn;
-    private String currency;
+public class CreditorAccountRequest extends Account {
 
     private CreditorAccountRequest(
             String iban,
@@ -81,22 +74,6 @@ public class CreditorAccountRequest {
 
         public CreditorAccountRequest build() {
             return new CreditorAccountRequest(iban, bban, pan, maskedPan, msisdn, currency);
-        }
-
-        public String toString() {
-            return "CreditorAccountRequest.CreditorAccountBuilder(iban="
-                    + this.iban
-                    + ", bban="
-                    + this.bban
-                    + ", pan="
-                    + this.pan
-                    + ", maskedPan="
-                    + this.maskedPan
-                    + ", msisdn="
-                    + this.msisdn
-                    + ", currency="
-                    + this.currency
-                    + ")";
         }
     }
 }

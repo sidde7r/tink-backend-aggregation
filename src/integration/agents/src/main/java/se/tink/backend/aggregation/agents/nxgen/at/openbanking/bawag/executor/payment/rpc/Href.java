@@ -3,8 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.p
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Self {
-
+public class Href {
     private String href;
 
     public String getHref() {

@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.payment.rpc.Payment;
 
 public class BawagPaymentExecutor implements PaymentExecutor {
 
@@ -27,45 +28,44 @@ public class BawagPaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        final Payment payment = paymentRequest.getPayment();
 
         CreditorAccountRequest creditorAccount =
                 CreditorAccountRequest.builder()
-                        .iban(paymentRequest.getPayment().getCreditor().getAccountNumber())
+                        .iban(payment.getCreditor().getAccountNumber())
                         .build();
 
         DebtorAccountRequest debtorAccount =
-                DebtorAccountRequest.builder()
-                        .iban(paymentRequest.getPayment().getDebtor().getAccountNumber())
-                        .build();
+                DebtorAccountRequest.builder().iban(payment.getDebtor().getAccountNumber()).build();
 
         InstructedAmountRequest instructedAmount =
                 InstructedAmountRequest.builder()
-                        .amount(paymentRequest.getPayment().getAmount().doubleValue())
-                        .currency(paymentRequest.getPayment().getCurrency())
+                        .amount(payment.getAmount().doubleValue())
+                        .currency(payment.getCurrency())
                         .build();
 
-        CreatePaymentRequest payment =
+        CreatePaymentRequest createPaymentRequest =
                 CreatePaymentRequest.builder()
                         .creditorAccount(creditorAccount)
                         .debtorAccount(debtorAccount)
                         .instructedAmount(instructedAmount)
-                        .creditorName(paymentRequest.getPayment().getCreditor().getName())
+                        .creditorName(payment.getCreditor().getName())
                         .requestedExecutionDate(
                                 paymentRequest
                                         .getPayment()
                                         .getExecutionDate()
                                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                        .isSepa(paymentRequest.getPayment().isSepa())
+                        .isSepa(payment.isSepa())
                         .build();
 
         return apiClient
-                .createPayment(payment)
+                .createPayment(createPaymentRequest)
                 .toTinkPayment(
                         creditorAccount,
                         debtorAccount,
-                        paymentRequest.getPayment().getAmount(),
-                        paymentRequest.getPayment().getExecutionDate(),
-                        paymentRequest.getPayment().getType());
+                        payment.getAmount(),
+                        payment.getExecutionDate(),
+                        payment.getType());
     }
 
     @Override
