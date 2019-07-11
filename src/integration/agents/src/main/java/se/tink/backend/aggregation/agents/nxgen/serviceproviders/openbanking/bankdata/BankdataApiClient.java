@@ -241,11 +241,8 @@ public final class BankdataApiClient {
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.SCOPE, QueryValues.PIS_SCOPE + paymentId)
-                .queryParam(
-                        QueryKeys.STATE,
-                        sessionStorage.get(StorageKeys.STATE))
-                .queryParam(
-                        QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
+                .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE))
+                .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri);
     }
