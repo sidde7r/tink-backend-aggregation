@@ -37,6 +37,7 @@ public class TokenRequestForm extends AbstractForm {
             SoftwareStatement softwareStatement,
             WellKnownResponse wellknownConfiguration,
             ClientInfo clientInfo) {
+        this.put("client_id", clientInfo.getClientId());
         this.put("client_assertion_type", OpenIdConstants.CLIENT_ASSERTION_TYPE);
         this.put(
                 "client_assertion",
