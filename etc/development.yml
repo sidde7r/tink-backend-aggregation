@@ -468,11 +468,6 @@ agentsServiceConfiguration:
         - local-development
     aggregationWorker:
       collectorSubscriptionKey: ASK_JOHANNES
-    nordea:
-      tink:
-        clientId: "dummyId"
-        clientSecret: "dummySecret"
-        redirectUrl: "https://api.tink.com/api/v1/credentials/third-party/callback"
     bec:
     sparebank1:
       tink:
