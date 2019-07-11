@@ -98,11 +98,6 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.empty();
     }
