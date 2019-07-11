@@ -8,6 +8,7 @@ java_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib",
+        "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidas",
         "//src/libraries/cryptography",
         "//src/libraries/serialization",

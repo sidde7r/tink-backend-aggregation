@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bunq",
         "//src/integration/lib",
+        "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
         "//src/libraries/amount",

@@ -23,6 +23,7 @@ java_library(
         "//src/integration/agents",
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/libraries/account:rpc",

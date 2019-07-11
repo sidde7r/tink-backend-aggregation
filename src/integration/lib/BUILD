@@ -1,5 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
+alias(
+    name = "annotations",
+    actual = "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+    visibility = ["//visibility:public"],
+)
+
 java_library(
     name = "lib",
     srcs = glob(
@@ -14,6 +20,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "annotations",
         "//src/aggregation/api",
         "//src/integration/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
@@ -109,6 +116,7 @@ junit_test(
         "//src/aggregation/api",
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
