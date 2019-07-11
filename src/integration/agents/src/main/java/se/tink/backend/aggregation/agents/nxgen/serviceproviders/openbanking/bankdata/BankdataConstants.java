@@ -73,6 +73,7 @@ public final class BankdataConstants {
         public static final String CLIENT_ID = "CLIENT_ID";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
+        public static final String STATE = "STATE";
     }
 
     public static class QueryKeys {

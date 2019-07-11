@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.PaymentRequests;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.configuration.BankdataConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorAddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorEntity;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -34,9 +36,16 @@ import se.tink.libraries.payment.rpc.Payment;
 public class BankdataPaymentExecutorSelector implements PaymentExecutor {
 
     private BankdataApiClient apiClient;
+    private SessionStorage sessionStorage;
+    private BankdataConfiguration configuration;
 
-    public BankdataPaymentExecutorSelector(BankdataApiClient apiClient) {
+    public BankdataPaymentExecutorSelector(
+            BankdataApiClient apiClient,
+            SessionStorage sessionStorage,
+            BankdataConfiguration configuration) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
+        this.configuration = configuration;
     }
 
     @Override
@@ -107,9 +116,6 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor {
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
-
-        apiClient.authorizePayment(payment.getUniqueId(), payment.getType());
-        apiClient.signPayment(payment.getUniqueId());
 
         // On their sandbox data is static and can't be changed
         // so the status will always be recieved

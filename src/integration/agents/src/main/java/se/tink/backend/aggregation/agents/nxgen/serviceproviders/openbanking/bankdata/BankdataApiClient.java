@@ -1,12 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata;
 
-import com.google.api.client.util.Preconditions;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -44,14 +41,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -65,21 +54,13 @@ import tink.org.apache.http.HttpHeaders;
 
 public final class BankdataApiClient {
 
-    private static final long WAIT_FOR_SECONDS = 30;
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final SupplementalInformationHelper supplementalInformationHelper;
-    private final String state;
     private BankdataConfiguration configuration;
 
-    public BankdataApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            SupplementalInformationHelper supplementalInformationHelper) {
+    public BankdataApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.state = generateRandomState();
     }
 
     private static String generateRandomState() {
@@ -124,6 +105,9 @@ public final class BankdataApiClient {
                     createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
                             .body(paymentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                             .post(CreatePaymentResponse.class);
+
+            authorizePayment(response.getPaymentId(), type);
+            sessionStorage.put(response.getPaymentId(), signPaymentUrl(response.getPaymentId()));
 
             URL transactionDetailsURL =
                     new URL(
@@ -245,65 +229,23 @@ public final class BankdataApiClient {
                 .post(AuthorizePaymentResponse.class, request);
     }
 
-    public void signPayment(String paymentId) {
+    public URL signPaymentUrl(String paymentId) {
         final String codeVerifier = BerlinGroupUtils.generateCodeVerifier();
         final String codeChallenge = BerlinGroupUtils.generateCodeChallenge(codeVerifier);
         final String clientId = getConfiguration().getClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
         sessionStorage.put(StorageKeys.CONSENT_ID, paymentId);
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
-        URL url =
-                new URL(configuration.getBaseAuthUrl() + Endpoints.AUTHORIZE)
-                        .queryParam(QueryKeys.RESPONSE_TYPE, BankdataConstants.QueryValues.CODE)
-                        .queryParam(QueryKeys.CLIENT_ID, clientId)
-                        .queryParam(QueryKeys.SCOPE, QueryValues.PIS_SCOPE + paymentId)
-                        .queryParam(QueryKeys.STATE, this.state)
-                        .queryParam(
-                                QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
-                        .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
-                        .queryParam(QueryKeys.REDIRECT_URI, redirectUri);
 
-        openThirdPartyApp(url);
-    }
-
-    private void openThirdPartyApp(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
-        Preconditions.checkNotNull(payload);
-        this.supplementalInformationHelper.openThirdPartyApp(payload);
-        this.collect();
-    }
-
-    public ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-
-        Android androidPayload = new Android();
-        androidPayload.setIntent(authorizeUrl.get());
-
-        Ios iOsPayload = new Ios();
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-
-        payload.setAndroid(androidPayload);
-        payload.setIos(iOsPayload);
-        return payload;
-    }
-
-    public ThirdPartyAppResponse<String> collect() {
-
-        Optional<Map<String, String>> optionalCallbackData =
-                this.supplementalInformationHelper.waitForSupplementalInformation(
-                        OAuthUtils.formatSupplementalKey(this.state),
-                        WAIT_FOR_SECONDS,
-                        TimeUnit.SECONDS);
-
-        String code =
-                optionalCallbackData
-                        .map(stringStringMap -> stringStringMap.getOrDefault("code", null))
-                        .orElseThrow(() -> new IllegalStateException("No code in api response"));
-
-        getToken(code);
-
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+        return new URL(configuration.getBaseAuthUrl() + Endpoints.AUTHORIZE)
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
+                .queryParam(QueryKeys.CLIENT_ID, clientId)
+                .queryParam(QueryKeys.SCOPE, QueryValues.PIS_SCOPE + paymentId)
+                .queryParam(
+                        QueryKeys.STATE, sessionStorage.get(BankdataConstants.StorageKeys.STATE))
+                .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
+                .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUri);
     }
 
     public void getTokenWithClientCredentials() {

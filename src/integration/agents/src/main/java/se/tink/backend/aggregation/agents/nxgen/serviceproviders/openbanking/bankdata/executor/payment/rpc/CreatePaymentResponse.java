@@ -45,6 +45,10 @@ public class CreatePaymentResponse {
         return links.getDetailsLink();
     }
 
+    public String getPaymentId() {
+        return paymentId;
+    }
+
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
