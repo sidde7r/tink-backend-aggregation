@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.insurance.InsuranceReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -28,6 +29,12 @@ public class SecuritiesAccountsEntity {
     @JsonProperty("Status")
     private int status;
 
+    @JsonProperty("Holder")
+    private HolderEntity holder;
+
+    @JsonProperty("MifidInformation")
+    private MifidInformationEntity mifidInformation;
+
     @JsonProperty("OwnedBySelf")
     private boolean ownedBySelf;
 
@@ -40,11 +47,20 @@ public class SecuritiesAccountsEntity {
     @JsonProperty("IsNamed")
     private boolean isNamed;
 
+    // @JsonProperty("FullDepotNumber")
+    // `FullDepotNumber` is null - cannot define it!
+
     @JsonProperty("AccountTypeName")
     private String accountTypeName = "";
 
+    @JsonProperty("AccountRepresentative")
+    private AccountRepresentativeEntity accountRepresentative;
+
     @JsonProperty("AccountResponsible")
     private String accountResponsible = "";
+
+    // @JsonProperty("InsuranceHolderName")
+    // `InsuranceHolderName` is null - cannot define it!
 
     @JsonProperty("RegDate")
     private String regDate = "";
@@ -94,6 +110,9 @@ public class SecuritiesAccountsEntity {
     @JsonProperty("IsInPaymentMode")
     private boolean isInPaymentMode;
 
+    @JsonProperty("InsuranceReference")
+    private InsuranceReferenceEntity insuranceReference;
+
     @JsonProperty("DisplayTypeName")
     private String displayTypeName = "";
 
@@ -127,5 +146,10 @@ public class SecuritiesAccountsEntity {
     @JsonIgnore
     public BigDecimal getTotalValue() {
         return totalValue;
+    }
+
+    @JsonIgnore
+    public HolderEntity getHolder() {
+        return holder;
     }
 }
