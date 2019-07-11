@@ -126,4 +126,9 @@ public abstract class BerlinGroupConstants {
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String ENCODE_CERTIFICATE_ERROR = "Cannot encode certificate.";
     }
+
+    public static class IdTags {
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String PAYMENT_ID = "paymentId";
+    }
 }

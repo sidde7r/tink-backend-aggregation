@@ -16,6 +16,7 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
     private String clientKeyStorePath;
     private String clientKeyStorePassword;
     private String redirectUrl;
+    private String psuIpAddress;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -80,5 +81,13 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
                         ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate Path"));
 
         return clientSigningCertificatePath;
+    }
+
+    public String getPsuIpAddress() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(psuIpAddress),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
+
+        return psuIpAddress;
     }
 }
