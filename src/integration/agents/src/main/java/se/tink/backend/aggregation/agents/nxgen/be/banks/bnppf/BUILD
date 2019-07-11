@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib:annotations",
         "//src/libraries/amount",
         "//src/libraries/credentials:service",
         "//third_party:com_google_guava_guava",

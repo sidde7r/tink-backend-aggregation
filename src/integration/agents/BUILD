@@ -41,6 +41,7 @@ java_library(
     deps = [
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
@@ -140,6 +141,7 @@ junit_test(
         "//src/integration/agents",
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib:annotations",
         "//src/integration/lib:lib_test",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
