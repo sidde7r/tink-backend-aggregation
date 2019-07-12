@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -147,6 +148,13 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);
+        } catch (FileNotFoundException e) {
+            if (e.getMessage().equals("File etc/development.yml not found")) {
+                final String message =
+                        "etc/development.yml missing. Please make a copy of etc/development.template.yml.";
+                throw new IllegalStateException(message);
+            }
+            throw new IllegalStateException(e);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
