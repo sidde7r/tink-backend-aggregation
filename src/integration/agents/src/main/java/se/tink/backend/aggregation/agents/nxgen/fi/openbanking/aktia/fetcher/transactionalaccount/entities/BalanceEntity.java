@@ -7,7 +7,7 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class BalanceEntity {
 
-    private BalanceAmountEntity balanceAmount;
+    private AmountEntity balanceAmount;
     private String balanceType;
 
     public boolean isAvailableBalance() {

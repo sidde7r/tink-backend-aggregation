@@ -57,18 +57,20 @@ public class Xs2aDevelopersApiClient {
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
         final OAuth2Token authToken = getTokenFromStorage();
 
-        return createRequest(url).header(HeaderKeys.AUTHORIZATION, authToken.getAccessToken());
+        return createRequest(url).addBearerToken(authToken);
     }
 
     private RequestBuilder createFetchingRequest(URL url) {
-        return createRequestInSession(url).header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage());
+        return createRequestInSession(url)
+                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
     }
 
     private String getConsentIdFromStorage() {
@@ -98,15 +100,18 @@ public class Xs2aDevelopersApiClient {
                 .post(PostConsentResponse.class);
     }
 
-    public URL buildAuthorizeUrl(String state, String scope) {
-        return new URL(configuration.getBaseUrl() + ApiServices.AUTHORIZE)
+    public URL buildAuthorizeUrl(String state, String scope, String href) {
+        String code = getCodeVerifier();
+        persistentStorage.put(StorageKeys.CODE_VERIFIER, code);
+
+        return new URL(href)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.SCOPE, scope)
-                .queryParam(QueryKeys.CODE_CHALLENGE, getCodeChallenge(getCodeVerifier()))
+                .queryParam(QueryKeys.CODE_CHALLENGE, getCodeChallenge(code))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
-                .queryParam(QueryKeys.CODE_CHALLENGE_TYPE, QueryValues.CODE_CHALLENGE_TYPE);
+                .queryParam(QueryKeys.CODE_CHALLENGE_TYPE_M, QueryValues.CODE_CHALLENGE_TYPE);
     }
 
     public GetTokenResponse getToken(GetTokenForm getTokenForm) {
@@ -123,7 +128,7 @@ public class Xs2aDevelopersApiClient {
     public GetBalanceResponse getBalance(AccountEntity account) {
         return createFetchingRequest(
                         new URL(configuration.getBaseUrl() + ApiServices.GET_BALANCES)
-                                .parameter(IdTags.ACCOUNT_ID, account.getId()))
+                                .parameter(IdTags.ACCOUNT_ID, account.getResourceId()))
                 .get(GetBalanceResponse.class);
     }
 

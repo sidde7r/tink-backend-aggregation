@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.tra
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -51,7 +51,7 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount(String customerName) {
         final AccountTypes type =
-                SBABConstants.ACCOUNT_TYPE_MAPPER.translate(accountType).orElse(AccountTypes.OTHER);
+                SbabConstants.ACCOUNT_TYPE_MAPPER.translate(accountType).orElse(AccountTypes.OTHER);
         switch (type) {
             case SAVINGS:
                 return toSavingsAccount(customerName);
@@ -71,7 +71,7 @@ public class AccountEntity {
                 .addAccountIdentifier(
                         AccountIdentifier.create(AccountIdentifier.Type.IBAN, accountNumber))
                 .addHolderName(customerName)
-                .putInTemporaryStorage(SBABConstants.StorageKeys.ACCOUNT_NUMBER, accountNumber)
+                .putInTemporaryStorage(SbabConstants.StorageKeys.ACCOUNT_NUMBER, accountNumber)
                 .setApiIdentifier(accountNumber)
                 .build();
     }

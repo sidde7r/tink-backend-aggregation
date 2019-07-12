@@ -5,8 +5,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AccessInfoEntity {
 
+    private String bban;
     private String currency;
     private String iban;
+    private String maskedPan;
+    private String msisdn;
 
     public AccessInfoEntity(String currency, String iban) {
         this.currency = currency;

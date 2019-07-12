@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
@@ -29,7 +30,9 @@ public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
     @Override
     public URL buildAuthorizeUrl(String state) {
         return apiClient.buildAuthorizeUrl(
-                state, "PIS:" + persistentStorage.get(StorageKeys.PAYMENT_ID));
+                state,
+                "PIS:" + persistentStorage.get(StorageKeys.PAYMENT_ID),
+                configuration.getBaseUrl() + ApiServices.AUTHORIZE);
     }
 
     @Override

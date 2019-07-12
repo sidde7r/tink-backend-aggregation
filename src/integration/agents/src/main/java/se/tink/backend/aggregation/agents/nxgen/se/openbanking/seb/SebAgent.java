@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.SebAuthenticator;
@@ -17,19 +20,18 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class SebAgent extends NextGenerationAgent {
+public final class SebAgent extends NextGenerationAgent
+        implements RefreshCreditCardAccountsExecutor {
 
     private final String clientName;
     private final SebApiClient apiClient;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SebAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -37,6 +39,19 @@ public final class SebAgent extends NextGenerationAgent {
 
         apiClient = new SebApiClient(client, sessionStorage);
         clientName = request.getProvider().getPayload();
+
+        final SebCreditCardAccountFetcher accountFetcher =
+                new SebCreditCardAccountFetcher(apiClient);
+
+        creditCardRefreshController =
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        accountFetcher, Fetcher.START_PAGE)));
     }
 
     @Override
@@ -88,39 +103,17 @@ public final class SebAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        final SebCreditCardAccountFetcher accountFetcher =
-                new SebCreditCardAccountFetcher(apiClient);
-
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        accountFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        accountFetcher, Fetcher.START_PAGE))));
-    }
-
-    @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
     protected SessionHandler constructSessionHandler() {
         return new SebSessionHandler(apiClient, sessionStorage);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
     }
 }

@@ -7,4 +7,8 @@ public class LinksEntity {
 
     private LinkDetailsEntity account;
     private LinkDetailsEntity next;
+
+    public LinkDetailsEntity getNext() {
+        return next;
+    }
 }

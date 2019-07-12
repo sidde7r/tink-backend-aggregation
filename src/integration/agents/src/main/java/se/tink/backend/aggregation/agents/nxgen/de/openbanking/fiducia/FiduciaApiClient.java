@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
-import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.ErrorMessages;
@@ -18,14 +17,13 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class FiduciaApiClient {
 
@@ -132,27 +130,23 @@ public final class FiduciaApiClient {
                 .get(GetBalancesResponse.class);
     }
 
-    public PaginatorResponse getTransactions(
+    public TransactionKeyPaginatorResponse<String> getTransactions(
             TransactionalAccount account,
-            Date fromDate,
-            Date toDate,
+            String key,
             String digest,
             String certificate,
             String signature,
             String reqId,
             String date) {
-        return createRequestInSession(
-                        Urls.GET_TRANSACTIONS.parameter(
-                                IdTags.ACCOUNT_ID, account.getApiIdentifier()),
-                        reqId,
-                        digest,
-                        signature,
-                        certificate,
-                        date)
+        URL url =
+                Optional.ofNullable(key)
+                        .map(k -> new URL(Urls.BASE_URL + k))
+                        .orElse(
+                                Urls.GET_TRANSACTIONS.parameter(
+                                        IdTags.ACCOUNT_ID, account.getApiIdentifier()));
+
+        return createRequestInSession(url, reqId, digest, signature, certificate, date)
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
-                .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(GetTransactionsResponse.class);
     }
 }

@@ -7,15 +7,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccessEntity {
 
     private List<AccessInfoEntity> accounts;
+    private String allPsd2;
+    private String availableAccounts;
+    private String availableAccountsWithBalances;
     private List<AccessInfoEntity> balances;
     private List<AccessInfoEntity> transactions;
 
-    public AccessEntity(
-            List<AccessInfoEntity> accounts,
-            List<AccessInfoEntity> balances,
-            List<AccessInfoEntity> transactions) {
-        this.accounts = accounts;
-        this.balances = balances;
-        this.transactions = transactions;
+    public AccessEntity(String allPsd2) {
+        this.allPsd2 = allPsd2;
     }
 }

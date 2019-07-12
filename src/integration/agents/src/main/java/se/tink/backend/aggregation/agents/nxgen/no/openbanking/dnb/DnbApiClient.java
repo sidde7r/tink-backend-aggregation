@@ -151,7 +151,7 @@ public final class DnbApiClient {
 
     private Date getValidUntilForConsent() {
         final Calendar now = Calendar.getInstance();
-        now.add(Calendar.MONTH, 11);
+        now.add(Calendar.MONTH, 2);
         return now.getTime();
     }
 }

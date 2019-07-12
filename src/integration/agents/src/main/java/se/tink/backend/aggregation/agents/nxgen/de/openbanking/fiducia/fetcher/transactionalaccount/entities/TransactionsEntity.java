@@ -22,4 +22,8 @@ public class TransactionsEntity {
                 .map(TransactionEntity::toBookedTransaction)
                 .collect(Collectors.toList());
     }
+
+    public LinksEntity getLinks() {
+        return links;
+    }
 }
