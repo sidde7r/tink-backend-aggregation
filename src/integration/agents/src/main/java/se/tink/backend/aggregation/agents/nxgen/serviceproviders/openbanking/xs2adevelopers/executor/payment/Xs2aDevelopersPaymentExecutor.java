@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
@@ -36,7 +37,7 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor {
                         creditor,
                         payment.getCreditor().getName(),
                         payment.getExecutionDate()
-                                .format(DateTimeFormatter.ofPattern("dd MM yyyy")),
+                                .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)),
                         debtor,
                         new AmountEntity(payment.getAmount()));
 
