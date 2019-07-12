@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
@@ -65,6 +66,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
@@ -78,6 +80,7 @@ public class AgentWorkerOperationFactory {
     private final CuratorFramework coordinationClient;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final AgentDebugStorageHandler agentDebugStorageHandler;
+    private final EventProducerServiceClient eventProducerServiceClient;
     // States
     private AgentWorkerOperationState agentWorkerOperationState;
     private CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
@@ -105,7 +108,8 @@ public class AgentWorkerOperationFactory {
             ControllerWrapperProvider controllerWrapperProvider,
             AggregatorInfoProvider aggregatorInfoProvider,
             CuratorFramework coordinationClient,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            EventProducerServiceClient eventProducerServiceClient) {
         this.cacheClient = cacheClient;
 
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
@@ -126,6 +130,7 @@ public class AgentWorkerOperationFactory {
         this.supplementalInformationController = supplementalInformationController;
         this.coordinationClient = coordinationClient;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
+        this.eventProducerServiceClient = eventProducerServiceClient;
     }
 
     /**
@@ -256,6 +261,9 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
+        commands.add(
+                new CredentialsEventProducer(
+                        eventProducerServiceClient, request.getCredentials(), null));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
