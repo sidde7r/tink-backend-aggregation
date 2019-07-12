@@ -27,7 +27,6 @@ public class DomesticPaymentResponse {
                         .withCreditor(creditor.toTinkCreditor())
                         .withDebtor(debtor.toTinkDebtor())
                         .withAmount(amount)
-                        .withExecutionDate(null)
                         .withCurrency(amount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(status)
