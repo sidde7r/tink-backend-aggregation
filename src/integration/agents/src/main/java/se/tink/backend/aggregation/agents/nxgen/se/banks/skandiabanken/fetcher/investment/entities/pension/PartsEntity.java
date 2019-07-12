@@ -70,9 +70,6 @@ public class PartsEntity {
     @JsonProperty("HoldingsInsurance")
     private String holdingsInsurance;
 
-    @JsonProperty("InsuranceCombination")
-    private Object insuranceCombination;
-
     @JsonProperty("InsuranceInformation")
     private String insuranceInformation;
 
@@ -81,9 +78,6 @@ public class PartsEntity {
 
     @JsonProperty("InsuranceType")
     private String insuranceType;
-
-    @JsonProperty("InsuranceTypeName")
-    private Object insuranceTypeName;
 
     @JsonProperty("IsAieInsurance")
     private boolean isAieInsurance;
@@ -133,15 +127,6 @@ public class PartsEntity {
     @JsonProperty("ResponsibleAdvisor")
     private String responsibleAdvisor;
 
-    @JsonProperty("ResponsibleAdvisorCompany")
-    private Object responsibleAdvisorCompany;
-
-    @JsonProperty("ResponsibleAdvisorPhone")
-    private Object responsibleAdvisorPhone;
-
-    @JsonProperty("Roles")
-    private Object roles;
-
     @JsonProperty("Scope")
     private String scope;
 
@@ -157,9 +142,6 @@ public class PartsEntity {
     @JsonProperty("SortingCategory1")
     private String sortingCategory1;
 
-    @JsonProperty("Spec")
-    private Object spec;
-
     @JsonProperty("StatusInsurance")
     private String statusInsurance;
 
@@ -168,9 +150,6 @@ public class PartsEntity {
 
     @JsonProperty("StatusOfOngoingTrade")
     private String statusOfOngoingTrade;
-
-    @JsonProperty("StatusOfOngoingTradeText")
-    private Object statusOfOngoingTradeText;
 
     @JsonProperty("TJP_F")
     private String tjpF;
