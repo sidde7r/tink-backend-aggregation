@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
@@ -9,15 +9,51 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class TransactionEntity {
 
-    private Date bookingDate;
-    private AccountEntity creditorAccount;
+    private AccountsEntity debtorAccount;
     private String creditorName;
-    private String remittanceInformationUnstructured;
-    private AmountEntity transactionAmount;
-    private String transactionId;
+    private TransactionAmountEntity transactionAmount;
+    private AccountsEntity creditorAccount;
+    private Date bookingDate;
     private String valueDate;
+    private String remittanceInformationUnstructured;
+    private String endToEndId;
     private String debtorName;
-    private AccountEntity debtorAccount;
+
+    public AccountsEntity getDebtorAccount() {
+        return debtorAccount;
+    }
+
+    public String getCreditorName() {
+        return creditorName;
+    }
+
+    public TransactionAmountEntity getTransactionAmount() {
+        return transactionAmount;
+    }
+
+    public AccountsEntity getCreditorAccount() {
+        return creditorAccount;
+    }
+
+    public Date getBookingDate() {
+        return bookingDate;
+    }
+
+    public String getValueDate() {
+        return valueDate;
+    }
+
+    public String getRemittanceInformationUnstructured() {
+        return remittanceInformationUnstructured;
+    }
+
+    public String getEndToEndId() {
+        return endToEndId;
+    }
+
+    public String getDebtorName() {
+        return debtorName;
+    }
 
     @JsonIgnore
     public Transaction toBookedTinkTransaction() {

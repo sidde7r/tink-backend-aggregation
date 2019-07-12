@@ -22,10 +22,10 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
 
-    private final Xs2aDevelopersApiClient apiClient;
-    private final PersistentStorage persistentStorage;
+    protected final Xs2aDevelopersApiClient apiClient;
+    protected final PersistentStorage persistentStorage;
     private final Xs2aDevelopersConfiguration configuration;
-    private final String iban;
+    protected final String iban;
 
     public Xs2aDevelopersAuthenticator(
             Xs2aDevelopersApiClient apiClient,
@@ -38,7 +38,7 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
         this.iban = iban;
     }
 
-    private Xs2aDevelopersConfiguration getConfiguration() {
+    protected Xs2aDevelopersConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }

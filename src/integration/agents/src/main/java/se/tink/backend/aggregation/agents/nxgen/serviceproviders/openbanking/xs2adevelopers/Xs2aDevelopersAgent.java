@@ -32,14 +32,13 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final String clientName;
-    private final Xs2aDevelopersApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    protected Xs2aDevelopersApiClient apiClient;
 
     protected Xs2aDevelopersAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new Xs2aDevelopersApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -49,14 +48,14 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         Xs2aDevelopersConfiguration xs2aDevelopersConfiguration = getClientConfiguration();
-        apiClient.setConfiguration(getClientConfiguration());
+        apiClient.setConfiguration(xs2aDevelopersConfiguration);
         this.client.setEidasProxy(
                 configuration.getEidasProxy(), xs2aDevelopersConfiguration.getCertificateId());
     }
 
     protected abstract String getIntegrationName();
 
-    private Xs2aDevelopersConfiguration getClientConfiguration() {
+    protected Xs2aDevelopersConfiguration getClientConfiguration() {
         return getClientConfiguration(getIntegrationName());
     }
 
