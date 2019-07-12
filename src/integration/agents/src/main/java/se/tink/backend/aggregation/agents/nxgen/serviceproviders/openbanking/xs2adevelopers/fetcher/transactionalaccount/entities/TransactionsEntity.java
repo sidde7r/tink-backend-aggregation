@@ -29,4 +29,8 @@ public class TransactionsEntity {
                                 .map(TransactionEntity::toPendingTinkTransaction))
                 .collect(Collectors.toList());
     }
+
+    public TransactionsLinksEntity getLinks() {
+        return links;
+    }
 }

@@ -13,10 +13,14 @@ public class TransactionsEntity {
     private List<TransactionEntity> booked;
     private List<TransactionEntity> pending;
 
+    // TODO - Temporary fix: Filter added due to pending transaction date is null return by Sandbox
+    // API (API bug)
     public Stream<? extends Transaction> toTinkTransactions() {
         return Stream.concat(
                 getNonNullStream(booked).map(TransactionEntity::toBookedTinkTransaction),
-                getNonNullStream(pending).map(TransactionEntity::toPendingTinkTransaction));
+                getNonNullStream(pending)
+                        .map(TransactionEntity::toPendingTinkTransaction)
+                        .filter(transaction -> transaction.getDate() != null));
     }
 
     private Stream<? extends TransactionEntity> getNonNullStream(

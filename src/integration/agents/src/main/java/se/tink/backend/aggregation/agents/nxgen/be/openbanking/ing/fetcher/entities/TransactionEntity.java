@@ -38,8 +38,10 @@ public class TransactionEntity {
     }
 
     private Transaction toTinkTransaction(boolean isPending) {
+
         return Transaction.builder()
                 .setPending(isPending)
+                // .setExternalId(transactionId)
                 .setDescription(remittanceInformationUnstructured)
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)

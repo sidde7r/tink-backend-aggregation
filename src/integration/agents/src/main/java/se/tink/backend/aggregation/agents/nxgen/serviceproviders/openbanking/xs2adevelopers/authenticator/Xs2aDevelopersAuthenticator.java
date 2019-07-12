@@ -46,8 +46,7 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
     public URL buildAuthorizeUrl(String state) {
         List<AccessInfoEntity> accessInfoEntityList =
                 Collections.singletonList(new AccessInfoEntity(FormValues.EUR, iban));
-        AccessEntity accessEntity =
-                new AccessEntity(accessInfoEntityList, accessInfoEntityList, accessInfoEntityList);
+        AccessEntity accessEntity = new AccessEntity(FormValues.ALL_ACCOUNTS);
         PostConsentBody postConsentBody =
                 new PostConsentBody(
                         accessEntity,
@@ -58,7 +57,8 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
 
         PostConsentResponse postConsentResponse = apiClient.createConsent(postConsentBody);
         persistentStorage.put(StorageKeys.CONSENT_ID, postConsentResponse.getConsentId());
-        return apiClient.buildAuthorizeUrl(state);
+
+        return apiClient.buildAuthorizeUrl(state, postConsentResponse.getLinks().getScaOAuth());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
                 GetTokenForm.builder()
                         .setClientId(configuration.getClientId())
                         .setCode(code)
-                        .setCodeVerifier(FormValues.CODE_VERIFIER)
+                        .setCodeVerifier(persistentStorage.get(StorageKeys.CODE_VERIFIER))
                         .setGrantType(FormValues.AUTHORIZATION_CODE)
                         .setRedirectUri(configuration.getRedirectUrl())
                         .setValidRequest(true)

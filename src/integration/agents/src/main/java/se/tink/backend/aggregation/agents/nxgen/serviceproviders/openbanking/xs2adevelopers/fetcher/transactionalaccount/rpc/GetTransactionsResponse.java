@@ -25,4 +25,8 @@ public class GetTransactionsResponse {
                 .orElse(new TransactionsEntity())
                 .toTinkTransactions();
     }
+
+    public TransactionsEntity getTransactions() {
+        return transactions;
+    }
 }

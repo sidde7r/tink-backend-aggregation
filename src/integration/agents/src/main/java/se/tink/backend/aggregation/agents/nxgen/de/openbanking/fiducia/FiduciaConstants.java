@@ -44,8 +44,6 @@ public final class FiduciaConstants {
 
     public static class QueryKeys {
         public static final String BOOKING_STATUS = "bookingStatus";
-        public static final String DATE_FROM = "dateFrom";
-        public static final String DATE_TO = "dateTo";
     }
 
     public static class QueryValues {
