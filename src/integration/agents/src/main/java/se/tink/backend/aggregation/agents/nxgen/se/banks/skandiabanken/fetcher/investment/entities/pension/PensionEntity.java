@@ -94,10 +94,10 @@ public class PensionEntity {
             return parts.stream()
                     .filter(p -> p.getTypeName().equalsIgnoreCase("SecuritiesAccountPart"))
                     .map(PartsEntity::getSecuritiesAccount)
-                    .map(this::getTinkPortfolio)
+                    .map(this::toTinkPortfolio)
                     .collect(Collectors.toList());
         }
-        return parts.stream().map(this::getTinkPortfolio).collect(Collectors.toList());
+        return parts.stream().map(this::toTinkPortfolio).collect(Collectors.toList());
     }
 
     @JsonIgnore
@@ -133,7 +133,7 @@ public class PensionEntity {
     }
 
     @JsonIgnore
-    private Portfolio getTinkPortfolio(PartsEntity part) {
+    private Portfolio toTinkPortfolio(PartsEntity part) {
         final Portfolio portfolio = new Portfolio();
         portfolio.setUniqueIdentifier(part.getNumber());
         portfolio.setRawType(part.getTypeName());
@@ -144,7 +144,7 @@ public class PensionEntity {
     }
 
     @JsonIgnore
-    private Portfolio getTinkPortfolio(SecuritiesAccountsEntity part) {
+    private Portfolio toTinkPortfolio(SecuritiesAccountsEntity part) {
         final Portfolio portfolio = new Portfolio();
         portfolio.setUniqueIdentifier(part.getNumber());
         portfolio.setRawType(part.getTypeName());
