@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator;
 
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Authentication.INSTANCE_ID;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Authentication.REGISTRATION_TOKEN;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
@@ -15,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.BearerTokenResponse;
@@ -92,7 +90,8 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
 
     private void createSession() {
         final CreateSessionRequest sessionRequest =
-                new CreateSessionRequest(REGISTRATION_TOKEN, INSTANCE_ID);
+                new CreateSessionRequest(
+                        Authentication.REGISTRATION_TOKEN, Authentication.INSTANCE_ID);
         apiClient.createSession(sessionRequest);
     }
 

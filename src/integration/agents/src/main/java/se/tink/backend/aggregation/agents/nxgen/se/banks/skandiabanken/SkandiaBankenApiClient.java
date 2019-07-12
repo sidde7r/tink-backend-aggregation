@@ -1,21 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CLIENT_ID;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CLIENT_ID_VALUE;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CODE_CHALLENGE;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CODE_CHALLENGE_METHOD;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CODE_CHALLENGE_METHOD_S256;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.ENCRYPED_NATIONAL_IDENTIFICATION_NUMBER;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.PFIDP_ADAPTER_ID;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.PFIDP_ADAPTER_ID_MOBILE;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.REDIRECT_URI_VALUE;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.REDRIECT_URI;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.RESPONSE_TYPE;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.RESPONSE_TYPE_CODE;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.SCOPE;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.SCOPES_READ;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.STATE;
-
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.FormKeys;
@@ -23,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBa
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.AutoStartResponse;
@@ -90,14 +75,14 @@ public class SkandiaBankenApiClient {
 
         return httpClient
                 .request(Urls.OAUTH_AUTHORIZE)
-                .queryParam(CODE_CHALLENGE_METHOD, CODE_CHALLENGE_METHOD_S256)
-                .queryParam(RESPONSE_TYPE, RESPONSE_TYPE_CODE)
-                .queryParam(CLIENT_ID, CLIENT_ID_VALUE)
-                .queryParam(CODE_CHALLENGE, codeChallenge)
-                .queryParam(REDRIECT_URI, REDIRECT_URI_VALUE)
-                .queryParam(PFIDP_ADAPTER_ID, PFIDP_ADAPTER_ID_MOBILE)
-                .queryParam(SCOPE, SCOPES_READ)
-                .queryParam(STATE, randomState)
+                .queryParam(QueryParam.CODE_CHALLENGE_METHOD, QueryParam.CODE_CHALLENGE_METHOD_S256)
+                .queryParam(QueryParam.RESPONSE_TYPE, QueryParam.RESPONSE_TYPE_CODE)
+                .queryParam(QueryParam.CLIENT_ID, QueryParam.CLIENT_ID_VALUE)
+                .queryParam(QueryParam.CODE_CHALLENGE, codeChallenge)
+                .queryParam(QueryParam.REDRIECT_URI, QueryParam.REDIRECT_URI_VALUE)
+                .queryParam(QueryParam.PFIDP_ADAPTER_ID, QueryParam.PFIDP_ADAPTER_ID_MOBILE)
+                .queryParam(QueryParam.SCOPE, QueryParam.SCOPES_READ)
+                .queryParam(QueryParam.STATE, randomState)
                 .get(String.class);
     }
 
@@ -241,7 +226,7 @@ public class SkandiaBankenApiClient {
                         Urls.FETCH_PENSIONS_HOLDINGS
                                 .parameter(IdTags.PART_ID, partNumber)
                                 .queryParam(
-                                        ENCRYPED_NATIONAL_IDENTIFICATION_NUMBER,
+                                        QueryParam.ENCRYPED_NATIONAL_IDENTIFICATION_NUMBER,
                                         encrypedNationalIdentificationNumber))
                 .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
