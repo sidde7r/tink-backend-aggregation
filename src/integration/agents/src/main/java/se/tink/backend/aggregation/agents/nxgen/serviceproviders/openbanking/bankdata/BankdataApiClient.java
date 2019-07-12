@@ -52,7 +52,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentType;
 
-public final class BankdataApiClient{
+public final class BankdataApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
@@ -69,12 +69,13 @@ public final class BankdataApiClient{
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(BankdataConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
+    protected void setConfiguration(
+            BankdataConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.client.setEidasProxy(eidasProxyConfiguration, "Tink");
 
-        //configuration.getCertificateId();
+        // configuration.getCertificateId();
     }
 
     private RequestBuilder createRequest(URL url) {
