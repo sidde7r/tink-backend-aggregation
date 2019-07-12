@@ -47,3 +47,6 @@ Thumbs.db
 
 # Virtual env
 **/.venv
+
+# Configuration files
+etc/development.yml
