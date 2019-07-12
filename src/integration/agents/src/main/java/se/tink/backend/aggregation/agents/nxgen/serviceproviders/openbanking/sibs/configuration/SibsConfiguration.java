@@ -6,13 +6,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
-import se.tink.backend.aggregation.nxgen.http.URL;
 
 @JsonObject
 public class SibsConfiguration implements ClientConfiguration {
 
     private String baseUrl;
-    private String eidasProxyBaseUrl;
     private String certificateId;
     private String clientId;
     private String clientSecret;
@@ -27,14 +25,6 @@ public class SibsConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
 
         return baseUrl;
-    }
-
-    public URL getEidasProxyBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasProxyBaseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "EIDAS Proxy Base URL"));
-
-        return new URL(eidasProxyBaseUrl);
     }
 
     public String getCertificateId() {
