@@ -11,8 +11,9 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.AxaMa
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.AxaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.AxaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.AxaSessionHandler;
+import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
@@ -25,7 +26,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class AxaAgent extends NextGenerationAgent
+@ProgressiveAuth
+public final class AxaAgent extends SubsequentGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final AxaApiClient apiClient;
@@ -60,7 +62,7 @@ public final class AxaAgent extends NextGenerationAgent
 
         MultiFactorAuthenticator manualAuthenticator =
                 new AxaManualAuthenticator(
-                        catalog, apiClient, storage, supplementalInformationHelper);
+                        catalog, apiClient, storage, supplementalInformationFormer);
         AutoAuthenticator autoAuthenticator = new AxaAutoAuthenticator(apiClient, storage);
 
         return new AutoAuthenticationController(

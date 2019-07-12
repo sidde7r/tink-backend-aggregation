@@ -26,7 +26,9 @@ public final class AxaConstants {
 
     public enum Storage {
         ACCESS_TOKEN,
+        ACTIVATION_PASSWORD,
         BASIC_AUTH,
+        CHALLENGE,
         CLIENT_INITIAL_VECTOR_DECRYPT,
         CLIENT_INITIAL_VECTOR_INIT,
         DERIVATION_CODE,
@@ -44,6 +46,7 @@ public final class AxaConstants {
         SERIAL_NO,
         SERVER_INITIAL_VECTOR,
         STORE_REGISTRATION_CD_RESPONSE,
+        UCRID,
         XFAD,
         ;
     }
