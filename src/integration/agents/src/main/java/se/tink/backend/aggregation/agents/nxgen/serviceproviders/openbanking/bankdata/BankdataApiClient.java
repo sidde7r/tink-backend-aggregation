@@ -38,7 +38,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public final class BankdataApiClient {
+public final class BankdataApiClient{
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
