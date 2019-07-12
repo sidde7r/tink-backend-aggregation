@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.HolderEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.SecuritiesAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.PensionFundsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -69,9 +70,6 @@ public class PartsEntity {
     @JsonProperty("HoldingsInsurance")
     private String holdingsInsurance;
 
-    @JsonProperty("InsuranceCombination")
-    private Object insuranceCombination;
-
     @JsonProperty("InsuranceInformation")
     private String insuranceInformation;
 
@@ -80,9 +78,6 @@ public class PartsEntity {
 
     @JsonProperty("InsuranceType")
     private String insuranceType;
-
-    @JsonProperty("InsuranceTypeName")
-    private Object insuranceTypeName;
 
     @JsonProperty("IsAieInsurance")
     private boolean isAieInsurance;
@@ -132,29 +127,20 @@ public class PartsEntity {
     @JsonProperty("ResponsibleAdvisor")
     private String responsibleAdvisor;
 
-    @JsonProperty("ResponsibleAdvisorCompany")
-    private Object responsibleAdvisorCompany;
-
-    @JsonProperty("ResponsibleAdvisorPhone")
-    private Object responsibleAdvisorPhone;
-
-    @JsonProperty("Roles")
-    private Object roles;
-
     @JsonProperty("Scope")
     private String scope;
 
     @JsonProperty("Secrecy")
     private String secrecy;
 
+    @JsonProperty("SecuritiesAccount")
+    private SecuritiesAccountsEntity securitiesAccount;
+
     @JsonProperty("SkandiaLivValue")
     private double skandiaLivValue;
 
     @JsonProperty("SortingCategory1")
     private String sortingCategory1;
-
-    @JsonProperty("Spec")
-    private Object spec;
 
     @JsonProperty("StatusInsurance")
     private String statusInsurance;
@@ -164,9 +150,6 @@ public class PartsEntity {
 
     @JsonProperty("StatusOfOngoingTrade")
     private String statusOfOngoingTrade;
-
-    @JsonProperty("StatusOfOngoingTradeText")
-    private Object statusOfOngoingTradeText;
 
     @JsonProperty("TJP_F")
     private String tjpF;
@@ -219,38 +202,51 @@ public class PartsEntity {
     @JsonIgnore private PensionFundsResponse pensionFunds;
 
     @JsonIgnore
+    public SecuritiesAccountsEntity getSecuritiesAccount() {
+        return securitiesAccount;
+    }
+
+    @JsonIgnore
     public String getNumber() {
         return number;
     }
 
+    @JsonIgnore
     public String getTypeName() {
         return typeName;
     }
 
+    @JsonIgnore
     public double getValue() {
         return value;
     }
 
+    @JsonIgnore
     public HolderEntity getHolder() {
         return holder;
     }
 
+    @JsonIgnore
     public String getAgreement() {
         return agreement;
     }
 
+    @JsonIgnore
     public boolean isCanSeeHolding() {
         return canSeeHolding;
     }
 
+    @JsonIgnore
     public String getEncryptedNationalIdentificationNumberOfFirstInsuredPerson() {
         return encryptedNationalIdentificationNumberOfFirstInsuredPerson;
     }
 
+    @JsonIgnore
     public void setPensionFunds(PensionFundsResponse pensionFunds) {
         this.pensionFunds = pensionFunds;
     }
 
+    @JsonIgnore
     public PensionFundsResponse getPensionFunds() {
         return pensionFunds;
     }

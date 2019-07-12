@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Portfolio.Type;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.HolderEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.SecuritiesAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.PensionFundsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -19,7 +21,6 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class PensionEntity {
-
     @JsonProperty("Category1")
     private String category1;
 
@@ -65,26 +66,51 @@ public class PensionEntity {
     @JsonProperty("TypeName")
     private String typeName;
 
+    @JsonIgnore
     public List<PartsEntity> getParts() {
         return parts;
     }
 
+    @JsonIgnore
     public void setParts(List<PartsEntity> parts) {
         this.parts = parts;
     }
 
     @JsonIgnore
     public InvestmentAccount toTinkInvestmentAccount() {
-        return InvestmentAccount.builder(this.number.replaceAll("[^\\d]", ""))
-                .setAccountNumber(this.number)
-                .setName(this.displayName)
+        return InvestmentAccount.builder(getNumber().replaceAll("[^\\d]", ""))
+                .setAccountNumber(getNumber())
+                .setName(displayName)
                 .setHolderName(getHolderName())
-                .setPortfolios(
-                        this.parts.stream()
-                                .map(this::getTinkPortfolio)
-                                .collect(Collectors.toList()))
+                .setPortfolios(getPortfolio())
                 .setCashBalance(Amount.inSEK(0.0)) // Amount is set in framework from parts.
                 .build();
+    }
+
+    @JsonIgnore
+    private List<Portfolio> getPortfolio() {
+        if (hasSecuritiesAccountPart) {
+            return parts.stream()
+                    .filter(p -> p.getTypeName().equalsIgnoreCase("SecuritiesAccountPart"))
+                    .map(PartsEntity::getSecuritiesAccount)
+                    .map(this::toTinkPortfolio)
+                    .collect(Collectors.toList());
+        }
+        return parts.stream().map(this::toTinkPortfolio).collect(Collectors.toList());
+    }
+
+    @JsonIgnore
+    private String getNumber() {
+        return number != null ? number : getNumberFromParts();
+    }
+
+    @JsonIgnore
+    private String getNumberFromParts() {
+        return Optional.ofNullable(parts).orElse(Collections.emptyList()).stream()
+                .map(PartsEntity::getNumber)
+                .findFirst()
+                .orElseThrow(
+                        () -> new IllegalStateException(ErrorMessages.INVESTMENT_NUMBER_NOT_FOUND));
     }
 
     @JsonIgnore
@@ -95,21 +121,35 @@ public class PensionEntity {
                 .map(HolderEntity::getFullName)
                 .findFirst()
                 .map(HolderName::new)
-                .orElse(
-                        Optional.ofNullable(holder)
-                                .map(HolderEntity::getFullName)
-                                .map(HolderName::new)
-                                .orElse(new HolderName(null)));
+                .orElse(getHolderNameFromHolderEntity());
     }
 
     @JsonIgnore
-    private Portfolio getTinkPortfolio(PartsEntity part) {
+    private HolderName getHolderNameFromHolderEntity() {
+        return Optional.ofNullable(holder)
+                .map(HolderEntity::getFullName)
+                .map(HolderName::new)
+                .orElse(new HolderName(null));
+    }
+
+    @JsonIgnore
+    private Portfolio toTinkPortfolio(PartsEntity part) {
         final Portfolio portfolio = new Portfolio();
         portfolio.setUniqueIdentifier(part.getNumber());
         portfolio.setRawType(part.getTypeName());
         portfolio.setType(Type.PENSION);
         portfolio.setTotalValue(part.getValue());
         portfolio.setInstruments(getInstrumentsList(part));
+        return portfolio;
+    }
+
+    @JsonIgnore
+    private Portfolio toTinkPortfolio(SecuritiesAccountsEntity part) {
+        final Portfolio portfolio = new Portfolio();
+        portfolio.setUniqueIdentifier(part.getNumber());
+        portfolio.setRawType(part.getTypeName());
+        portfolio.setType(Type.PENSION);
+        portfolio.setTotalValue(part.getTotalValue().doubleValue());
         return portfolio;
     }
 
