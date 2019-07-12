@@ -167,7 +167,6 @@ data:
         activobank:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -178,7 +177,6 @@ data:
         atlanticoeuropa:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -189,7 +187,6 @@ data:
         bancobpi-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -200,7 +197,6 @@ data:
         bancoctt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -211,7 +207,6 @@ data:
         bancomontepio:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -222,7 +217,6 @@ data:
         bankinter:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -233,7 +227,6 @@ data:
         big:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -244,7 +237,6 @@ data:
         bpg:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -255,7 +247,6 @@ data:
         caixa-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -266,7 +257,6 @@ data:
         caixacrl-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -277,7 +267,6 @@ data:
         caixa-fr:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -288,7 +277,6 @@ data:
         cemah:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -299,7 +287,6 @@ data:
         creditoagricola:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -310,7 +297,6 @@ data:
         eurobic-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -321,7 +307,6 @@ data:
         millenniumbcp:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -332,7 +317,6 @@ data:
         novobanco:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -343,7 +327,6 @@ data:
         novobancoacores:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -354,7 +337,6 @@ data:
         santander-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             certificateId: Tink-qsealc
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
