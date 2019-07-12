@@ -505,6 +505,43 @@ public class Account implements Cloneable {
         return Objects.equals(bankId, account.bankId);
     }
 
+    public static boolean deepEquals(Account first, Account second) {
+        if (first == null || second == null) {
+            return false;
+        }
+
+        if (first == second) {
+            return true;
+        }
+
+        return Double.compare(first.availableCredit, second.availableCredit) == 0
+                && Double.compare(first.balance, second.balance) == 0
+                && first.excluded == second.excluded
+                && first.favored == second.favored
+                && Double.compare(first.ownership, second.ownership) == 0
+                && first.userModifiedExcluded == second.userModifiedExcluded
+                && first.userModifiedName == second.userModifiedName
+                && first.userModifiedType == second.userModifiedType
+                && first.closed == second.closed
+                && Objects.equals(first.accountNumber, second.accountNumber)
+                && first.accountExclusion == second.accountExclusion
+                && Objects.equals(first.exactAvailableCredit, second.exactAvailableCredit)
+                && Objects.equals(first.exactBalance, second.exactBalance)
+                && Objects.equals(first.currencyCode, second.currencyCode)
+                && Objects.equals(first.bankId, second.bankId)
+                && Objects.equals(first.certainDate, second.certainDate)
+                && Objects.equals(first.credentialsId, second.credentialsId)
+                && Objects.equals(first.name, second.name)
+                && Objects.equals(first.payload, second.payload)
+                && first.type == second.type
+                && Objects.equals(first.userId, second.userId)
+                && Objects.equals(first.identifiers, second.identifiers)
+                && Objects.equals(first.details, second.details)
+                && Objects.equals(first.holderName, second.holderName)
+                && Objects.equals(first.flags, second.flags)
+                && Objects.equals(first.financialInstitutionId, second.financialInstitutionId);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(bankId);

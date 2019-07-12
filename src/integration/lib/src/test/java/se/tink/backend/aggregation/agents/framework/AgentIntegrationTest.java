@@ -415,7 +415,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
         }
     }
 
-    public void testRefresh() throws Exception {
+    public NewAgentTestContext testRefresh() throws Exception {
         initiateCredentials();
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
@@ -431,8 +431,8 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         context.validateFetchedData(validator);
-
         context.printCollectedData();
+        return context;
     }
 
     private void testBankTransfer(Transfer transfer, boolean isUpdate) throws Exception {
@@ -482,6 +482,10 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         context.printCollectedData();
+    }
+
+    public Provider getProvider() {
+        return provider;
     }
 
     public static class Builder {

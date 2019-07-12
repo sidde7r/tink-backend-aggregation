@@ -97,6 +97,10 @@ public final class NewAgentTestContext extends AgentContext {
                 .collect(Collectors.toList());
     }
 
+    public Map<String, List<Transaction>> getTransactionsByAccountBankId() {
+        return transactionsByAccountBankId;
+    }
+
     public List<Transfer> getTransfers() {
         return transfers;
     }
