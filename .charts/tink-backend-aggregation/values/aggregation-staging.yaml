@@ -65,6 +65,7 @@ agents:
   callbackJwtSignatureKeyPairEnabled: true
 
 shouldProvisionClients: true
+agentDataAvailabilityTrackerAvailable: true
 
 clients:
   provision-job-testing:
