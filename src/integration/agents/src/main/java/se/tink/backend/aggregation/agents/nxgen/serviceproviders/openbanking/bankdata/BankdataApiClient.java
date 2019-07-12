@@ -59,6 +59,8 @@ public final class BankdataApiClient{
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.client.setEidasProxy(eidasProxyConfiguration, "Tink");
+
+        //configuration.getCertificateId();
     }
 
     private RequestBuilder createRequest(URL url) {
