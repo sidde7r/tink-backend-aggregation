@@ -12,6 +12,7 @@ public class Xs2aDevelopersConfiguration implements ClientConfiguration {
     private String clientId;
     private String redirectUrl;
     private String baseUrl;
+    private String certificateId;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -35,5 +36,13 @@ public class Xs2aDevelopersConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
 
         return baseUrl;
+    }
+
+    public String getCertificateId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(certificateId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "certificate ID"));
+
+        return certificateId;
     }
 }

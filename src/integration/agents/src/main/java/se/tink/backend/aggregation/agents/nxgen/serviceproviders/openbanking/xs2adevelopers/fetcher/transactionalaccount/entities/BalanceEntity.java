@@ -16,7 +16,7 @@ public class BalanceEntity {
 
     @JsonIgnore
     public boolean isAvailableBalance() {
-        return balanceType.equalsIgnoreCase(BalanceTypes.INTERIM_AVAILABLE);
+        return balanceType.equalsIgnoreCase(BalanceTypes.AUTHORISED);
     }
 
     @JsonIgnore

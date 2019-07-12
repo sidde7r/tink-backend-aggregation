@@ -16,4 +16,8 @@ public class PostConsentResponse {
     public String getConsentId() {
         return consentId;
     }
+
+    public ConsentLinksEntity getLinks() {
+        return links;
+    }
 }
