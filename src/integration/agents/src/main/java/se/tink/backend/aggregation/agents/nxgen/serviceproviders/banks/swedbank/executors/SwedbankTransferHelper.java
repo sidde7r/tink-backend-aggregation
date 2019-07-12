@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -38,6 +40,7 @@ public class SwedbankTransferHelper {
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SwedbankDefaultApiClient apiClient;
+    private static final Logger log = LoggerFactory.getLogger(SwedbankTransferHelper.class);
 
     public SwedbankTransferHelper(
             AgentContext context,
@@ -222,8 +225,13 @@ public class SwedbankTransferHelper {
         try {
             Map<String, String> answers =
                     supplementalInformationHelper.askSupplementalInformation(nameField);
-            return Optional.ofNullable(answers.get("name"));
+            Optional<String> name = Optional.ofNullable(answers.get("name"));
+            if (!name.isPresent()) {
+                log.warn("Did not get recipient name from {}", answers.keySet());
+            }
+            return name;
         } catch (SupplementalInfoException e) {
+            log.warn("Could not get recipient name", e);
             return Optional.empty();
         }
     }
