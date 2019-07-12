@@ -50,3 +50,11 @@ Thumbs.db
 
 # Configuration files
 etc/development.yml
+# certs
+/*.crt
+/*.crs
+/*.key
+/*.pub
+/*.pem
+/*.p12
+/*.pfx
