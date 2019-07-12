@@ -94,7 +94,7 @@ public class OpenIdConstants {
     }
 
     public static final String CLIENT_ASSERTION_TYPE =
-            "client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
+            "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
 
     public static class CallbackParams {
         public static final String CODE = "code";
