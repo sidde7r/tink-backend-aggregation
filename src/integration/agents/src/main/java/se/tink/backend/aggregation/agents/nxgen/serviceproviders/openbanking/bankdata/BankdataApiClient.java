@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.StorageKeys;
@@ -31,9 +30,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.utils.BankdataUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.utils.DateUtils;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -44,6 +43,7 @@ public final class BankdataApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private BankdataConfiguration configuration;
+    private EidasProxyConfiguration eidasProxyConfiguration;
 
     public BankdataApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
@@ -55,9 +55,10 @@ public final class BankdataApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(BankdataConfiguration configuration) {
+    protected void setConfiguration(BankdataConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
-        this.client.setEidasProxy(this.configuration.getEidasProxyBaseUrl(), "Tink");
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+        this.client.setEidasProxy(eidasProxyConfiguration, "Tink");
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -152,7 +153,7 @@ public final class BankdataApiClient {
         return createRequest(url)
                 .queryParam(QueryKeys.RESPONSE_TYPE, BankdataConstants.QueryValues.CODE)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
-                .queryParam(QueryKeys.SCOPE, "ais:" + consentId)
+                .queryParam(QueryKeys.SCOPE, consentId)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
@@ -198,14 +199,6 @@ public final class BankdataApiClient {
         final String requestId = UUID.randomUUID().toString();
         final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
-
-        HttpResponse response =
-                client.request(url.parameter(IdTags.CONSENT_ID, consentId))
-                        .addBearerToken(getTokenFromSession())
-                        .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
-                        .header(HeaderKeys.X_REQUEST_ID, requestId)
-                        .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
-                        .post(HttpResponse.class);
     }
 
     public OAuth2Token getToken(String code) {
