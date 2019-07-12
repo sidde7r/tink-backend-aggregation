@@ -118,11 +118,15 @@ public class PensionEntity {
                 .map(HolderEntity::getFullName)
                 .findFirst()
                 .map(HolderName::new)
-                .orElse(
-                        Optional.ofNullable(holder)
-                                .map(HolderEntity::getFullName)
-                                .map(HolderName::new)
-                                .orElse(new HolderName(null)));
+                .orElse(getHolderNameFromHolderEntity());
+    }
+
+    @JsonIgnore
+    private HolderName getHolderNameFromHolderEntity() {
+        return Optional.ofNullable(holder)
+                .map(HolderEntity::getFullName)
+                .map(HolderName::new)
+                .orElse(new HolderName(null));
     }
 
     @JsonIgnore
