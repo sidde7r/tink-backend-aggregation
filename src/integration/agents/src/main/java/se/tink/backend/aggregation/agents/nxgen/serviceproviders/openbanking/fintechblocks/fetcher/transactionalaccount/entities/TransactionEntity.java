@@ -41,7 +41,6 @@ public class TransactionEntity {
                 .setAmount(amount.toAmount())
                 .setDate(bookingDateTime)
                 .setPending(!status.equalsIgnoreCase(TransactionsStatuses.BOOKED))
-                .setExternalId(transactionId)
                 .build();
     }
 }

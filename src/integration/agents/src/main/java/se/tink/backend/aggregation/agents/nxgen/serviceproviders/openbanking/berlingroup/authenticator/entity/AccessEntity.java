@@ -2,27 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 
 import java.util.ArrayList;
 import java.util.List;
-import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonObject
-public class AccessEntity {
+public abstract class AccessEntity {
 
-    private final List<IbanEntity> accounts = new ArrayList<>();
-    private final List<IbanEntity> transactions = new ArrayList<>();
-    private final List<IbanEntity> balances = new ArrayList<>();
+    protected List<IbanEntity> accounts = new ArrayList<>();
+    protected List<IbanEntity> transactions = new ArrayList<>();
+    protected List<IbanEntity> balances = new ArrayList<>();
 
-    public void addIban(final String iban) {
-        accounts.add(new IbanEntity(iban));
-        transactions.add(new IbanEntity(iban));
-        balances.add(new IbanEntity(iban));
-    }
+    public abstract void addIban(final String iban);
 
-    public void addIbans(final List<String> ibans) {
-        ibans.forEach(
-                iban -> {
-                    accounts.add(new IbanEntity(iban));
-                    transactions.add(new IbanEntity(iban));
-                    balances.add(new IbanEntity(iban));
-                });
-    }
+    public abstract void addIbans(final List<String> ibans);
 }

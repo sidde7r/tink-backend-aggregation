@@ -5,13 +5,20 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntityBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestPost;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.enums.BerlinGroupPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.rpc.GetPaymentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -32,9 +39,9 @@ public final class KbcApiClient extends BerlinGroupApiClient {
     }
 
     @Override
-    public AccountsBaseResponse fetchAccounts() {
+    public AccountsBaseResponseBerlinGroup fetchAccounts() {
         return getAccountsRequestBuilder(getConfiguration().getBaseUrl() + Urls.ACCOUNTS)
-                .get(AccountsBaseResponse.class);
+                .get(AccountsBaseResponseBerlinGroup.class);
     }
 
     @Override
@@ -93,13 +100,34 @@ public final class KbcApiClient extends BerlinGroupApiClient {
                 .toTinkToken();
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public String getConsentId() {
+        final AccessEntity accessEntity = new AccessEntityBerlinGroup();
+        accessEntity.addIban(credentials.getField("IBAN"));
         final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
-        consentsRequest.getAccess().addIban(credentials.getField("IBAN"));
+        consentsRequest.setAccess(accessEntity);
+
         return client.request(getConfiguration().getBaseUrl() + Urls.CONSENT)
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentBaseResponse.class)
                 .getConsentId();
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, BerlinGroupPaymentType paymentType) {
+        return getPaymentRequestBuilder(
+                        new URL(getConfiguration().getBaseUrl() + Urls.PAYMENTS)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentType.toString()))
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public GetPaymentStatusResponse getPaymentStatus(
+            String paymentId, BerlinGroupPaymentType paymentType) {
+        return getPaymentRequestBuilder(
+                        new URL(getConfiguration().getBaseUrl() + Urls.PAYMENT_STATUS)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentType.toString())
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .get(GetPaymentStatusResponse.class);
     }
 }

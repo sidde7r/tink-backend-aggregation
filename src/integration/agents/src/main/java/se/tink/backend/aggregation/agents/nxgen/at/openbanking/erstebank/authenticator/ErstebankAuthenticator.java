@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.authent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountBaseEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountEntityBaseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -28,10 +28,10 @@ public class ErstebankAuthenticator extends BerlinGroupAuthenticator {
         final OAuth2Token token = apiClient.getToken(code);
         sessionStorage.put(StorageKeys.OAUTH_TOKEN, token);
 
-        final AccountsBaseResponse accounts = apiClient.fetchAccounts();
+        final AccountsBaseResponseBerlinGroup accounts = apiClient.fetchAccounts();
         List<String> ibans =
                 accounts.getAccounts().stream()
-                        .map(AccountBaseEntity::getIban)
+                        .map(AccountEntityBaseEntity::getIban)
                         .collect(Collectors.toList());
 
         final ConsentBaseResponse consent = apiClient.getConsent(ibans);

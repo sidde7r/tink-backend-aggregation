@@ -22,7 +22,11 @@ public class TokenResponse {
     @JsonProperty("refresh_token_expires_in")
     private long refreshTokenExpiresIn;
 
+    @JsonProperty("scope")
     private String scope;
+
+    @JsonProperty("client_id")
+    private String clientId;
 
     public OAuth2Token toTinkToken() {
         return OAuth2Token.create(
@@ -31,5 +35,9 @@ public class TokenResponse {
 
     public String getScope() {
         return scope;
+    }
+
+    public String getClientId() {
+        return clientId;
     }
 }

@@ -14,8 +14,8 @@ public class BookedEntity {
     private Date bookingDate;
     private String creditorName;
     private String debtorName;
-    private BalanceAmountEntity instructedAmount;
-    private BalanceAmountEntity transactionAmount;
+    private AmountEntity instructedAmount;
+    private AmountEntity transactionAmount;
     private String transactionId;
 
     public Transaction toTinkTransaction() {

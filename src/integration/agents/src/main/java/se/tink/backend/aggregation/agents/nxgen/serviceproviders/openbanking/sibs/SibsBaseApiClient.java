@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -78,8 +79,8 @@ public class SibsBaseApiClient {
                 .get(BalancesResponse.class);
     }
 
-    public TransactionsResponse getAccountTransactions(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+    public TransactionKeyPaginatorResponse<String> getAccountTransactions(
+            TransactionalAccount account) {
 
         SimpleDateFormat formatter = new SimpleDateFormat(Formats.PAGINATION_DATE_FORMAT);
 
@@ -95,8 +96,16 @@ public class SibsBaseApiClient {
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
-                .queryParam(QueryKeys.DATE_FROM, formatter.format(fromDate))
-                .queryParam(QueryKeys.DATE_TO, formatter.format(toDate))
+                .queryParam(QueryKeys.DATE_FROM, formatter.format(new Date(0)))
+                .get(TransactionsResponse.class);
+    }
+
+    public TransactionKeyPaginatorResponse<String> getTransactionsForKey(String key) {
+        return createRequest(new URL(Urls.BASE_URL + key.replace(" ", "%20")))
+                .signed()
+                .inSession(getConsentFromStorage())
+                .build()
+                .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .get(TransactionsResponse.class);
     }
 
@@ -121,6 +130,31 @@ public class SibsBaseApiClient {
         persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
 
         return new URL(consentResponse.getLinks().getRedirect());
+    }
+
+    public ConsentResponse createDecoupledAuthConsent(
+            String state, String psuIdType, String psuId) {
+        ConsentRequest consentRequest = getConsentRequest();
+        String digest = SibsUtils.getDigest(consentRequest);
+
+        ConsentResponse consentResponse =
+                createRequest(
+                                Urls.CREATE_CONSENT.parameter(
+                                        PathParameterKeys.ASPSP_CDE, configuration.getAspspCode()))
+                        .signed(digest)
+                        .build()
+                        .header(
+                                HeaderKeys.TPP_REDIRECT_URI,
+                                new URL(configuration.getRedirectUrl())
+                                        .queryParam(QueryKeys.STATE, state)
+                                        .queryParam(QueryKeys.CODE, SibsUtils.getRequestId()))
+                        .header(SibsConstants.HeaderKeys.PSU_ID_TYPE, psuIdType)
+                        .header(SibsConstants.HeaderKeys.PSU_ID, psuId)
+                        .post(ConsentResponse.class, consentRequest);
+
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+
+        return consentResponse;
     }
 
     public ConsentStatusResponse getConsentStatus() {

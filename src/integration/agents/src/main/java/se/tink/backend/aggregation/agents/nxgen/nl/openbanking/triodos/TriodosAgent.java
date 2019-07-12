@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configura
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -19,6 +21,16 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
         super(request, context, signatureKeyPair);
 
         apiClient = new TriodosApiClient(client, sessionStorage);
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+        return OAuth2AuthenticationFlow.create(
+                request,
+                systemUpdater,
+                persistentStorage,
+                supplementalInformationHelper,
+                new TriodosAuthenticator(apiClient));
     }
 
     @Override
@@ -42,10 +54,5 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
     @Override
     protected Class<TriodosConfiguration> getConfigurationClassDescription() {
         return TriodosConfiguration.class;
-    }
-
-    @Override
-    protected TriodosAuthenticator getAgentAuthenticator() {
-        return new TriodosAuthenticator(getApiClient());
     }
 }

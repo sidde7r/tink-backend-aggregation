@@ -7,11 +7,18 @@ public class AccountLinksEntity {
     private String balances;
     private String transactions;
 
-    public String getTransactions() {
+    public String getTransactionLink() {
         return transactions;
     }
 
-    public String getBalances() {
+    public AccountLinksEntity() {}
+
+    public AccountLinksEntity(String balances, String transactions) {
+        this.balances = balances;
+        this.transactions = transactions;
+    }
+
+    public String getBalanceLink() {
         return balances;
     }
 }

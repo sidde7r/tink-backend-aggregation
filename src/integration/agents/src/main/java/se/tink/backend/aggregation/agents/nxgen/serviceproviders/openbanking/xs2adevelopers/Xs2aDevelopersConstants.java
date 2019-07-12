@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.TimeUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class Xs2aDevelopersConstants {
 
-    public static final String INTEGRATION_NAME = "crelan";
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "SAC")
                     .put(AccountTypes.SAVINGS, "SAV")
+                    .put(AccountTypes.CHECKING, "start2bank zichtrekening")
                     .build();
 
     private Xs2aDevelopersConstants() {
@@ -27,11 +28,14 @@ public final class Xs2aDevelopersConstants {
     }
 
     public static class ApiServices {
+
         public static final String POST_CONSENT = "/berlingroup/v1/consents";
         public static final String AUTHORIZE = "/public/berlingroup/authorize";
         public static final String TOKEN = "/berlingroup/v1/token";
         public static final String GET_ACCOUNTS = "/berlingroup/v1/accounts";
         public static final String GET_BALANCES = "/berlingroup/v1/accounts/{accountId}/balances";
+        public static final String GET_AUTHORISATION =
+                "/berlingroup/v1/consents/{accountId}/authorisations";
         public static final String GET_TRANSACTIONS =
                 "/berlingroup/v1/accounts/{accountId}/transactions";
     }
@@ -39,6 +43,8 @@ public final class Xs2aDevelopersConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "consent_id";
+        public static final String CODE_VERIFIER = "code_verifier";
+        public static final String ACCOUNT_ID = "accountId";
     }
 
     public static class QueryKeys {
@@ -49,9 +55,11 @@ public final class Xs2aDevelopersConstants {
         public static final String CODE_CHALLENGE = "code_challenge";
         public static final String RESPONSE_TYPE = "response_type";
         public static final String CODE_CHALLENGE_TYPE = "code_challenge_type";
+        public static final String CODE_CHALLENGE_TYPE_M = "code_challenge_method";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
         public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String WITH_BALANCE = "withBalance";
     }
 
     public static class QueryValues {
@@ -59,6 +67,7 @@ public final class Xs2aDevelopersConstants {
         public static final String CODE = "code";
         public static final String CODE_CHALLENGE_TYPE = "S256";
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
+        public static final String SCOPE = "AIS:";
     }
 
     public static class HeaderKeys {
@@ -86,8 +95,11 @@ public final class Xs2aDevelopersConstants {
         public static final Boolean FALSE = false;
         public static final int FREQUENCY_PER_DAY = 4;
         public static final Boolean TRUE = true;
-        public static final String VALID_UNTIL = "2020-11-11";
+
+        public static final String VALID_UNTIL = TimeUtils.getDate();
+
         public static final String EUR = "EUR";
+        public static final String ALL_ACCOUNTS = "allAccounts";
     }
 
     public static class IdTags {
@@ -95,7 +107,7 @@ public final class Xs2aDevelopersConstants {
     }
 
     public static class BalanceTypes {
-        public static final String INTERIM_AVAILABLE = "interimAvailable";
+        public static final String AUTHORISED = "authorised";
     }
 
     public static class CredentialKeys {

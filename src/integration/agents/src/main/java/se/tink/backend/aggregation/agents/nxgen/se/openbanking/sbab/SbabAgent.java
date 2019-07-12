@@ -1,0 +1,83 @@
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
+
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.SbabPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+
+public final class SbabAgent extends NextGenerationAgent {
+
+    private final String clientName;
+    private final SbabApiClient apiClient;
+
+    public SbabAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
+
+        apiClient = new SbabApiClient(client, persistentStorage);
+        clientName = request.getProvider().getPayload();
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+
+        apiClient.setConfiguration(getClientConfiguration());
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(new PaymentController(new SbabPaymentExecutor(apiClient)));
+    }
+
+    protected SbabConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        SbabConstants.INTEGRATION_NAME, clientName, SbabConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+        return new SbabAuthenticator(apiClient, persistentStorage, getClientConfiguration());
+    }
+
+    @Override
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        final SbabTransactionalAccountFetcher accountFetcher =
+                new SbabTransactionalAccountFetcher(apiClient);
+
+        final SbabTransactionalAccountTransactionFetcher transactionFetcher =
+                new SbabTransactionalAccountTransactionFetcher(apiClient);
+
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(transactionFetcher))));
+    }
+
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
+}

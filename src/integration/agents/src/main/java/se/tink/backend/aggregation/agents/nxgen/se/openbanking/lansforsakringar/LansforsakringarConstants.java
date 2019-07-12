@@ -39,9 +39,6 @@ public abstract class LansforsakringarConstants {
         public static final String CLIENT_SECRET = "clientSecret";
         public static final String CONSENT_ID = "consentId";
         public static final String ACCESS_TOKEN = "access-token";
-        public static final String CITY = "city";
-        public static final String COUNTRY = "country";
-        public static final String STREET = "street";
     }
 
     public static class QueryKeys {
@@ -78,6 +75,10 @@ public abstract class LansforsakringarConstants {
 
     public static class FormValues {
         public static final String CLIENT_CREDENTIALS = "client_credentials";
+        public static final String CITY = "Berlin";
+        public static final String COUNTRY = "Tyskland";
+        public static final String STREET = "Strasse";
+        public static final String DATE_FORMAT = "dd MM yyyy";
     }
 
     public static class ErrorMessages {

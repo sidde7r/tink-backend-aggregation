@@ -28,12 +28,12 @@ public class Account {
 
     public TransactionalAccount toTinkModel(List<Balance> balances) {
         return CheckingAccount.builder()
-                .setUniqueIdentifier(resourceId)
-                .setAccountNumber(resourceId)
+                .setUniqueIdentifier(getIban())
+                .setAccountNumber(getIban())
                 .setBalance(getBalance(balances))
                 .setAlias(name)
                 .addAccountIdentifier(
-                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, resourceId))
+                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
                 .addHolderName(name)
                 .setApiIdentifier(resourceId)
                 .putInTemporaryStorage(BnpParibasFortisConstants.StorageKeys.ACCOUNT_LINKS, links)
@@ -46,6 +46,10 @@ public class Account {
                 .findFirst()
                 .map(Balance::toTinkAmount)
                 .orElse(new Amount(currency, 0));
+    }
+
+    private String getIban() {
+        return resourceId.substring(0, resourceId.length() - 3);
     }
 
     public Links getLinks() {

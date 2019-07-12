@@ -24,6 +24,6 @@ public class FetchTransactionsResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(false);
+        return Optional.empty();
     }
 }

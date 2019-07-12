@@ -79,7 +79,7 @@ public class AccountEntity {
 
     private TransactionalAccount parseSavingsAccount() {
         return SavingsAccount.builder()
-                .setUniqueIdentifier(getIban())
+                .setUniqueIdentifier(getUniqueId())
                 .setAccountNumber(getBban())
                 .setBalance(getAvailableBalance())
                 .setAlias(getBban())
@@ -94,7 +94,7 @@ public class AccountEntity {
 
     private TransactionalAccount parseCheckingAccount() {
         return CheckingAccount.builder()
-                .setUniqueIdentifier(getIban())
+                .setUniqueIdentifier(getUniqueId())
                 .setAccountNumber(getBban())
                 .setBalance(getAvailableBalance())
                 .setAlias(getBban())
@@ -131,5 +131,13 @@ public class AccountEntity {
                                             + LogTag.from("openbanking_base_nordea"));
                             return new IllegalArgumentException();
                         });
+    }
+
+    private String getUniqueId() {
+        String bban = getBban();
+
+        return !country.equalsIgnoreCase("SE")
+                ? getIban()
+                : "************" + bban.substring(bban.length() - 4);
     }
 }

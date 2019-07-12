@@ -1,11 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.executor.payment.KbcPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -18,6 +24,16 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
 
         Credentials credentials = request.getCredentials();
         apiClient = new KbcApiClient(client, sessionStorage, credentials);
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+        return OAuth2AuthenticationFlow.create(
+                request,
+                systemUpdater,
+                persistentStorage,
+                supplementalInformationHelper,
+                new KbcAuthenticator(apiClient));
     }
 
     @Override
@@ -43,7 +59,12 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
     }
 
     @Override
-    protected KbcAuthenticator getAgentAuthenticator() {
-        return new KbcAuthenticator(getApiClient());
+    public Optional<PaymentController> constructPaymentController() {
+        BerlinGroupPaymentAuthenticator paymentAuthenticator =
+                new BerlinGroupPaymentAuthenticator(supplementalInformationHelper);
+        return Optional.of(
+                new PaymentController(
+                        new KbcPaymentExecutor(
+                                apiClient, paymentAuthenticator, getConfiguration())));
     }
 }
