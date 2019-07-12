@@ -31,7 +31,6 @@ public class InitiatedCrossBorderPaymentEntity {
                         .withCreditor(creditor.toTinkCreditor())
                         .withDebtor(debtor.toTinkDebtor())
                         .withAmount(actualAmount.toAmount())
-                        .withExecutionDate(null)
                         .withCurrency(actualAmount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(status)
