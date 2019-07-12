@@ -62,16 +62,16 @@ git_repository(
 
 git_repository(
     name = "com_tink_api_grpc",
-    commit = "30828f51bcf8de2162fc8d533977d8c6093404e3",
+    commit = "c216e927af5f196dd3a514023bb3da0e7a65d78d",
     remote = "git@github.com:tink-ab/tink-grpc.git",
-    shallow_since = "1562659285 +0000",
+    shallow_since = "1562857859 +0000",
 )
 
 git_repository(
     name = "tink_backend",
     remote = "git@github.com:tink-ab/tink-backend",
-    commit = "9b2dc75b459e9a1995aac9c76e8c43e95781a6ac",
-    shallow_since = "1562770241 +0000",
+    commit = "820c42738a8ebb6f30ac40b5310187140ba7b5b5",
+    shallow_since = "1562930565 +0000",
 )
 
 # Docker dependencies
