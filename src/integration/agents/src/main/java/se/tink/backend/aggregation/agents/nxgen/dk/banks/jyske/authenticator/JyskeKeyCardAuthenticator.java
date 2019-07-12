@@ -67,7 +67,13 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator {
         enrollEntity.setKeycardNo(this.challengeEntity.getKeycardNo());
         enrollEntity.setMobileCode(this.password);
 
-        NemIdResponse enrollment = apiClient.nemIdEnroll(enrollEntity, this.token);
+        NemIdResponse enrollment;
+        try {
+            enrollment = apiClient.nemIdEnroll(enrollEntity, this.token);
+        } catch (HttpResponseException e) {
+            NemIdErrorEntity.throwError(e);
+            throw e; // will never get here because exception already thrown.
+        }
 
         NemIdInstallIdEntity installIdEntity =
                 new Decryptor(token).read(enrollment, NemIdInstallIdEntity.class);

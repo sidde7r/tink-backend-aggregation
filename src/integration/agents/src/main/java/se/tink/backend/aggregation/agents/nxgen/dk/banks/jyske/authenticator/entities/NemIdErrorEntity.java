@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities;
 
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants.ErrorCode;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -24,10 +24,12 @@ public class NemIdErrorEntity {
     public static void throwError(HttpResponseException e) throws LoginException {
         NemIdErrorEntity error = e.getResponse().getBody(NemIdErrorEntity.class);
         switch (Integer.valueOf(error.getErrorCode())) {
-            case JyskeConstants.ErrorCode.INVALID_CREDENTIAL:
+            case ErrorCode.INVALID_CREDENTIAL:
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             case ErrorCode.NOT_SIGNED_UP_FOR_MOBILE_BANK:
                 throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
+            case ErrorCode.INROLL_BAD_REQUEST:
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             default:
                 throw new IllegalStateException(
                         String.format(
