@@ -7,7 +7,9 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.BnpParibasFortisAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.BnpParibasFortisPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.configuration.BnpParibasFortisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.BnpParibasFortisPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.BnpParibasFortisTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.session.BnpParibasFortisSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -113,5 +116,15 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new BnpParibasFortisSessionHandler(apiClient);
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        BnpParibasFortisPaymentAuthenticator paymentAuthenticator =
+                new BnpParibasFortisPaymentAuthenticator(supplementalInformationHelper);
+        return Optional.of(
+                new PaymentController(
+                        new BnpParibasFortisPaymentExecutor(
+                                apiClient, paymentAuthenticator, getClientConfiguration())));
     }
 }

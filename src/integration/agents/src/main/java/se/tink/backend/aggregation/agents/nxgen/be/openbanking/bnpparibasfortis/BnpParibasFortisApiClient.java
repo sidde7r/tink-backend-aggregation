@@ -14,6 +14,9 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.configuration.BnpParibasFortisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account.Account;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account.Links;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.balance.GetBalancesResponse;
@@ -177,5 +180,17 @@ public final class BnpParibasFortisApiClient {
                         .orElseThrow(IllegalStateException::new);
 
         return createAuthenticatedRequest(transactionsUrl).get(GetTransactionsResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest paymentRequest) {
+        return createAuthenticatedRequest(getConfiguration().getApiBaseUrl() + Urls.PAYMENTS)
+                .post(CreatePaymentResponse.class, paymentRequest);
+    }
+
+    public GetPaymentResponse getPayment(String paymentId) {
+        return createAuthenticatedRequest(
+                        String.format(
+                                getConfiguration().getApiBaseUrl() + Urls.GET_PAYMENT, paymentId))
+                .get(GetPaymentResponse.class);
     }
 }
