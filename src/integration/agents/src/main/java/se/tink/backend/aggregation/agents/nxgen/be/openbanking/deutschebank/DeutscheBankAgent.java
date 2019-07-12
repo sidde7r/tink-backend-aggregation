@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils.readFile;
-
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -13,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.auth
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.DeutscheBankAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -49,7 +48,7 @@ public final class DeutscheBankAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         client.setSslClientCertificate(
-                readFile(getClientConfiguration().getClientKeyStorePath()),
+                BerlinGroupUtils.readFile(getClientConfiguration().getClientKeyStorePath()),
                 getClientConfiguration().getClientKeyStorePassword());
         apiClient.setConfiguration(getClientConfiguration());
     }
