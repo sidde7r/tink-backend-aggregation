@@ -183,6 +183,7 @@ public class KbcConstants {
 
     public static class Storage {
         public static final String DEVICE_KEY = "device";
+        public static final String SIGNING_ID = "SIGNING_ID";
     }
 
     public static class LogTags {

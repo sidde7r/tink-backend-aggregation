@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcCreditC
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.filters.KbcHttpFilter;
+import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@ProgressiveAuth
 public final class KbcAgent extends NextGenerationAgent {
 
     private final KbcApiClient apiClient;
@@ -51,7 +53,7 @@ public final class KbcAgent extends NextGenerationAgent {
                         sessionStorage,
                         persistentStorage,
                         apiClient,
-                        supplementalInformationHelper);
+                        supplementalInformationFormer);
         return new AutoAuthenticationController(
                 request, systemUpdater, authenticator, authenticator);
     }

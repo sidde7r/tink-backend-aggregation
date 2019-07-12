@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 
 import com.google.common.base.Strings;
+import java.util.Arrays;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -18,29 +18,41 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.E
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
+public class KbcAuthenticator
+        implements MultiFactorAuthenticator, AutoAuthenticator, ProgressiveAuthenticator {
 
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final KbcApiClient apiClient;
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalInformationFormer supplementalInformationFormer;
     private static final AggregationLogger logger = new AggregationLogger(KbcAuthenticator.class);
 
     public KbcAuthenticator(
             final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
             final KbcApiClient apiClient,
-            final SupplementalInformationHelper supplementalInformationHelper) {
+            final SupplementalInformationFormer supplementalInformationFormer) {
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
-        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.supplementalInformationFormer = supplementalInformationFormer;
+    }
+
+    @Override
+    public Iterable<? extends AuthenticationStep> authenticationSteps(
+            final Credentials credentials) {
+        return Arrays.asList(
+                new LoginStep(this, sessionStorage, apiClient, supplementalInformationFormer),
+                new SignStep(this, sessionStorage, apiClient, supplementalInformationFormer),
+                new FinalStep(this, sessionStorage, apiClient));
     }
 
     @Override
@@ -48,77 +60,24 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         return CredentialsTypes.PASSWORD;
     }
 
-    private static byte[] generateCipherKey() {
+    static byte[] generateCipherKey() {
         return RandomUtils.secureRandom(KbcConstants.Encryption.AES_KEY_LENGTH);
     }
 
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        String panNr = verifyCredentialsNotNullOrEmpty(credentials.getField(Field.Key.USERNAME));
-
-        final byte[] cipherKey = generateCipherKey();
-        sessionStorage.put(
-                KbcConstants.Encryption.AES_SESSION_KEY_KEY,
-                EncodingUtils.encodeAsBase64String(cipherKey));
-        apiClient.prepareSession(cipherKey);
-
-        registerLogon(panNr, cipherKey);
-
-        String signingId = apiClient.enrollDevice(cipherKey);
-        String signTypeId = apiClient.signTypeManual(signingId, cipherKey);
-        String signChallengeCode = apiClient.signChallenge(signTypeId, signingId, cipherKey);
-        String signResponseCode =
-                verifyCredentialsNotNullOrEmpty(
-                        supplementalInformationHelper.waitForSignCodeChallengeResponse(
-                                signChallengeCode));
-        String finalSigningId =
-                apiClient.signValidation(signResponseCode, panNr, signingId, cipherKey);
-        EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse =
-                enrollDeviceRoundTwo(finalSigningId, cipherKey);
-
-        KbcDevice device = createAndActivateKbcDevice(enrollDeviceRoundTwoResponse, cipherKey);
-
-        apiClient.logout(cipherKey);
-
-        login(device);
+        throw new AssertionError();
     }
 
-    private String verifyCredentialsNotNullOrEmpty(String value) throws LoginException {
+    String verifyCredentialsNotNullOrEmpty(String value) throws LoginException {
         if (Strings.isNullOrEmpty(value) || value.trim().isEmpty()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
         return value;
     }
 
-    private void registerLogon(String panNr, final byte[] cipherKey)
-            throws AuthenticationException, AuthorizationException {
-        String challengeCode = apiClient.challenge(cipherKey);
-        String responseCode =
-                verifyCredentialsNotNullOrEmpty(
-                        supplementalInformationHelper.waitForLoginChallengeResponse(challengeCode));
-        try {
-            apiClient.registerLogon(panNr, responseCode, cipherKey);
-        } catch (IllegalStateException e) {
-            if (isIncorrectCardNumber(e) || isIncorrectCard(e)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(
-                        KbcConstants.UserMessage.INCORRECT_CARD_NUMBER.getKey());
-            }
-
-            if (isIncorrectLoginCodeLastAttempt(e)) {
-                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
-            }
-
-            if (isIncorrectLoginCode(e)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-
-            throw e;
-        }
-    }
-
-    private EnrollDeviceRoundTwoResponse enrollDeviceRoundTwo(
-            String finalSigningId, final byte[] cipherKey)
+    EnrollDeviceRoundTwoResponse enrollDeviceRoundTwo(String finalSigningId, final byte[] cipherKey)
             throws AuthenticationException, AuthorizationException {
         try {
             return apiClient.enrollDeviceWithSigningId(finalSigningId, cipherKey);
@@ -136,7 +95,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         }
     }
 
-    private KbcDevice createAndActivateKbcDevice(
+    KbcDevice createAndActivateKbcDevice(
             EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse, final byte[] cipherKey)
             throws AuthorizationException {
         KbcDevice device = new KbcDevice();
@@ -193,7 +152,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         return device;
     }
 
-    private boolean isIncorrectCardNumber(IllegalStateException e) {
+    boolean isIncorrectCardNumber(IllegalStateException e) {
         if (matchesErrorMessage(e, KbcConstants.HeaderErrorMessage.INCORRECT_CARD_NUMBER)) {
             return true;
         }
@@ -201,7 +160,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                 e, KbcConstants.ErrorMessage.INCORRECT_CARD_NUMBER);
     }
 
-    private boolean isIncorrectCard(IllegalStateException e) {
+    boolean isIncorrectCard(IllegalStateException e) {
         return matchesErrorMessage(
                 e, KbcConstants.HeaderErrorMessage.CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC);
     }
@@ -219,12 +178,12 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                 e, KbcConstants.ErrorMessage.NOT_A_CUSTOMER);
     }
 
-    private boolean isIncorrectLoginCodeLastAttempt(IllegalStateException e) {
+    boolean isIncorrectLoginCodeLastAttempt(IllegalStateException e) {
         return matchesErrorMessage(
                 e, KbcConstants.HeaderErrorMessage.INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT);
     }
 
-    private boolean isIncorrectLoginCode(IllegalStateException e) {
+    boolean isIncorrectLoginCode(IllegalStateException e) {
         if (matchesErrorMessage(
                 e, KbcConstants.HeaderErrorMessage.INCORRECT_LOGIN_CODE_TWO_ATTEMPT_LEFT)) {
             return true;
