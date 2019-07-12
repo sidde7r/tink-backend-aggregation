@@ -61,8 +61,7 @@ public final class AxaAgent extends SubsequentGenerationAgent
     protected Authenticator constructAuthenticator() {
 
         MultiFactorAuthenticator manualAuthenticator =
-                new AxaManualAuthenticator(
-                        catalog, apiClient, storage, supplementalInformationFormer);
+                new AxaManualAuthenticator(apiClient, storage, supplementalInformationFormer);
         AutoAuthenticator autoAuthenticator = new AxaAutoAuthenticator(apiClient, storage);
 
         return new AutoAuthenticationController(

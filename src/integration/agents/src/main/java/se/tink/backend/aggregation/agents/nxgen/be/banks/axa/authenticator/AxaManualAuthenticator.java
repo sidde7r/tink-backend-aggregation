@@ -9,23 +9,19 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
-import se.tink.libraries.i18n.Catalog;
 
 public final class AxaManualAuthenticator
         implements MultiFactorAuthenticator, ProgressiveAuthenticator {
 
     private final AxaApiClient apiClient;
-    private final Catalog catalog;
     private final AxaStorage storage;
     private final SupplementalInformationFormer supplementalInformationFormer;
 
     public AxaManualAuthenticator(
-            final Catalog catalog,
             final AxaApiClient apiClient,
             final AxaStorage storage,
             final SupplementalInformationFormer supplementalInformationFormer) {
         this.apiClient = apiClient;
-        this.catalog = catalog;
         this.storage = storage;
         this.supplementalInformationFormer = supplementalInformationFormer;
     }
