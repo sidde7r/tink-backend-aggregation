@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator;
 
-import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskePersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdChallengeEntity;
@@ -73,13 +71,8 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator {
         try {
             enrollment = apiClient.nemIdEnroll(enrollEntity, this.token);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                NemIdErrorEntity error = e.getResponse().getBody(NemIdErrorEntity.class);
-                if ("1".equals(error.getErrorCode())) {
-                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
-                }
-            }
-            throw e;
+            NemIdErrorEntity.throwError(e);
+            throw e; // will never get here because exception already thrown.
         }
 
         NemIdInstallIdEntity installIdEntity =
