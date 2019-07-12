@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Transactions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.AmountEntity;
@@ -47,30 +49,45 @@ public class TransactionEntity {
         return creditDebitIndicator;
     }
 
-    public Transaction toTinkTransaction(TransactionTypeEntity transactionType) {
-        return transactionType == TransactionTypeEntity.DEBIT
-                ? constructTransactionalAccountTransaction()
-                : constructCreditCardTransaction();
-    }
+    public Transaction constructCreditCardTransaction() {
 
-    private Transaction constructCreditCardTransaction() {
+        Amount transactionAmount = new Amount(amount.getCurrency(), amount.getAmount());
+
+        transactionAmount =
+                getCreditDebitIndicator().equals(TransactionTypeEntity.CREDIT)
+                        ? transactionAmount.negate()
+                        : transactionAmount;
+
         return CreditCardTransaction.builder()
                 .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
                 .setDate(getBookedDate())
-                .setAmount(new Amount(amount.getCurrency(), amount.getAmount()))
+                .setDescription(creditorAccount.getName())
+                .setAmount(transactionAmount)
                 .build();
     }
 
-    private Transaction constructTransactionalAccountTransaction() {
+    public Transaction constructTransactionalAccountTransaction() {
+
+        Amount transactionAmount = new Amount(amount.getCurrency(), amount.getAmount());
+
+        transactionAmount =
+                getCreditDebitIndicator().equalsIgnoreCase(CrosskeyBaseConstants.Transactions.DEBIT)
+                        ? transactionAmount.negate()
+                        : transactionAmount;
+
+        String transactionName =
+                Optional.ofNullable(creditorAccount.getName()).orElse(debtorAccount.getName());
+
         return Transaction.builder()
                 .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
                 .setDate(getBookedDate())
-                .setAmount(new Amount(amount.getCurrency(), amount.getAmount()))
+                .setDescription(transactionName)
+                .setAmount(transactionAmount)
                 .build();
     }
 
     @JsonIgnore
-    public Date getBookedDate() {
+    private Date getBookedDate() {
         try {
             return new SimpleDateFormat(Format.TRANSACTION_TIMESTAMP).parse(bookingDateTime);
         } catch (ParseException e) {

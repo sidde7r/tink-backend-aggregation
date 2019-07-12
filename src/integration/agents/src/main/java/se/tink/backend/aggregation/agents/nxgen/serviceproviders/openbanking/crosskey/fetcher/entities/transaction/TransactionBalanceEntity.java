@@ -12,4 +12,16 @@ public class TransactionBalanceEntity {
     private AmountEntity amount;
     private String creditDebitIndicator;
     private String type;
+
+    public AmountEntity getAmount() {
+        return amount;
+    }
+
+    public String getCreditDebitIndicator() {
+        return creditDebitIndicator;
+    }
+
+    public String getType() {
+        return type;
+    }
 }
