@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
-
 public final class DeutscheBankConstants {
 
     public static final String INTEGRATION_NAME = "deutschebank";
@@ -10,14 +7,6 @@ public final class DeutscheBankConstants {
     private DeutscheBankConstants() {
         throw new AssertionError();
     }
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")
-                    .put(AccountTypes.SAVINGS, "some_string2_the_integratee_uses")
-                    .put(AccountTypes.CREDIT_CARD, "some_string3_the_integratee_uses")
-                    .ignoreKeys("some_string4_the_integratee_uses")
-                    .build();
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
