@@ -4,12 +4,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.primitives.Bytes;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -192,12 +190,6 @@ public class KbcOtpUtils {
         for (byte b : data) {
             dataList.add(b);
         }
-        logger.info(String.format("data == %s", dataList));
-        logger.info(
-                "KbcOtpUtils: tools/ directory contents: {}",
-                Arrays.asList(
-                        Objects.requireNonNull(
-                                new File(new File(LIBRARY_FILE_PATH).getParent()).listFiles())));
         KbcWhiteBoxAes kbcWhiteBoxAes =
                 (KbcWhiteBoxAes) Native.loadLibrary(LIBRARY_FILE_PATH, KbcWhiteBoxAes.class);
         logger.info("KbcOtpUtils: Reading library done");
@@ -208,7 +200,6 @@ public class KbcOtpUtils {
             throw new IllegalStateException(e);
         }
         kbcWhiteBoxAes.kbc_wb_aes128_encrypt(data, out);
-        logger.info("KbcOtpUtils: wbAesEncrypt done");
         return out;
     }
 
