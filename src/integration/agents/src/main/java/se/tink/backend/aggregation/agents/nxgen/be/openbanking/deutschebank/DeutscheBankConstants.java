@@ -48,8 +48,6 @@ public final class DeutscheBankConstants {
         public static final String DELTA_LIST = "true";
     }
 
-    public static class HeaderKeys {}
-
     public static class FormKeys {}
 
     public static class FormValues {}
