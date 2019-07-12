@@ -17,7 +17,7 @@ public class DeutscheBankAuthenticator {
     public DeutscheBankAuthenticator(
             DeutscheBankApiClient apiClient,
             SessionStorage sessionStorage,
-        BerlinGroupConfiguration configuration,
+            BerlinGroupConfiguration configuration,
             String iban) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;

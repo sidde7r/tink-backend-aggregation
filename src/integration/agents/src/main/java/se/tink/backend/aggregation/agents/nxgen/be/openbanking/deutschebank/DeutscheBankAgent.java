@@ -59,7 +59,7 @@ public final class DeutscheBankAgent extends NextGenerationAgent
                 .getClientConfiguration(
                         DeutscheBankConstants.INTEGRATION_NAME,
                         clientName,
-                    BerlinGroupConfiguration.class)
+                        BerlinGroupConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
