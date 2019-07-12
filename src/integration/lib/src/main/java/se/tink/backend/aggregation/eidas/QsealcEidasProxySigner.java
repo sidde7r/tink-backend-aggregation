@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.eidas;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,13 +49,5 @@ public final class QsealcEidasProxySigner implements Signer {
                 .type("application/octet-stream")
                 .body(signingString)
                 .post(String.class);
-    }
-
-    private static byte[] readFile(String path) {
-        try {
-            return Files.readAllBytes(Paths.get(path));
-        } catch (IOException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
     }
 }
