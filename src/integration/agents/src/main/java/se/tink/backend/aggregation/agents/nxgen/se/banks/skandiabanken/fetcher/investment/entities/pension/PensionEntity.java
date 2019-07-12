@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.pension;
 
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.ErrorMessages.INVESTMENT_NUMBER_NOT_FOUND;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
@@ -12,6 +10,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Portfolio.Type;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.HolderEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.SecuritiesAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.PensionFundsResponse;
@@ -110,7 +109,8 @@ public class PensionEntity {
         return Optional.ofNullable(parts).orElse(Collections.emptyList()).stream()
                 .map(PartsEntity::getNumber)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException(INVESTMENT_NUMBER_NOT_FOUND));
+                .orElseThrow(
+                        () -> new IllegalStateException(ErrorMessages.INVESTMENT_NUMBER_NOT_FOUND));
     }
 
     @JsonIgnore
