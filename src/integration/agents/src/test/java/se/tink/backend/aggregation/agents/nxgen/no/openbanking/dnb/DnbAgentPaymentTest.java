@@ -11,7 +11,6 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -21,7 +20,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
 public class DnbAgentPaymentTest {
 
     private final ArgumentManager<DnbAgentPaymentTest.Arg> manager =
