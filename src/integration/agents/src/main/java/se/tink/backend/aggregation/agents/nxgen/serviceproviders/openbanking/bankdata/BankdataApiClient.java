@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.configuration.BankdataConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.AuthorizePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.AuthorizePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.BankdataErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreatePaymentRequest;
@@ -213,8 +212,6 @@ public final class BankdataApiClient {
     }
 
     private void authorizePayment(String paymentId, PaymentType type) {
-        AuthorizePaymentRequest request = new AuthorizePaymentRequest();
-
         String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
         URL url =
@@ -222,7 +219,7 @@ public final class BankdataApiClient {
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
         createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
-                .post(AuthorizePaymentResponse.class, request);
+                .post(AuthorizePaymentResponse.class, "{}");
     }
 
     private URL signPaymentUrl(String paymentId) {
