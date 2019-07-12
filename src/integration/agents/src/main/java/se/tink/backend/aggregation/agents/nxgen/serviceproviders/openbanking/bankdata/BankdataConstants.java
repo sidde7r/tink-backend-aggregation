@@ -1,8 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata;
 
+import java.util.HashMap;
+import java.util.Map;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.TypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.payment.enums.PaymentType;
 
 public final class BankdataConstants {
 
@@ -11,6 +17,12 @@ public final class BankdataConstants {
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "checkings")
                     .put(AccountTypes.CHECKING, "savings")
+                    .build();
+
+    public static final GenericTypeMapper<PaymentType, TypePair> PAYMENT_TYPE_MAPPER =
+            GenericTypeMapper.<PaymentType, TypePair>genericBuilder()
+                    .put(PaymentType.DOMESTIC, new TypePair(Type.DK, Type.DK))
+                    .put(PaymentType.SEPA, new TypePair(Type.IBAN, Type.IBAN))
                     .build();
 
     private BankdataConstants() {
@@ -22,6 +34,15 @@ public final class BankdataConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String UNSUPPORTED_PAYMENT_TYPE = "Unsupported payment type.";
+    }
+
+    public static final Map<PaymentType, String> TYPE_TO_DOMAIN_MAPPER = new HashMap<>();
+
+    static {
+        TYPE_TO_DOMAIN_MAPPER.put(PaymentType.DOMESTIC, Endpoints.DOMESTIC_PAYMENT);
+        TYPE_TO_DOMAIN_MAPPER.put(PaymentType.SEPA, Endpoints.SEPA_PAYMENT);
+        TYPE_TO_DOMAIN_MAPPER.put(PaymentType.INTERNATIONAL, Endpoints.CROSS_BORDER_PAYMENT);
     }
 
     public static class Endpoints {
@@ -32,17 +53,27 @@ public final class BankdataConstants {
                 "/openbanking-consent/v1/consents/{consentId}/authorisations";
         public static final String ACCOUNTS = "/openbanking-account/v1/accounts";
         public static final String AIS_PRODUCT = "/openbanking-account";
-        public static final String TRANSACTIONS = "";
+        public static final String PIS_PRODUCT = "/openbanking-payment";
+        public static final String DOMESTIC_PAYMENT =
+                PIS_PRODUCT + "/v1/payments/domestic-credit-transfers";
+        public static final String SEPA_PAYMENT =
+                PIS_PRODUCT + "/v1/payments/sepa-credit-transfers";
+        public static final String CROSS_BORDER_PAYMENT =
+                PIS_PRODUCT + "/v1/payments/cross-border-credit-transfers";
+        public static final String AUTHORIZE_PAYMENT = "/{paymentId}" + "/authorisations";
+        public static final String PAYMENT_ID = "/{paymentId}";
     }
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
+        public static final String INITIAL_TOKEN = "INITIAL_TOKEN";
         public static final String CODE_VERIFIER = "CODE_VERIFIER";
         public static final String CONSENT_ID = "consentId";
         public static final String IBAN = "IBAN";
         public static final String CLIENT_ID = "CLIENT_ID";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
+        public static final String STATE = "STATE";
     }
 
     public static class QueryKeys {
@@ -65,6 +96,7 @@ public final class BankdataConstants {
 
     public static class QueryValues {
         public static final String SCOPE = "ais:";
+        public static final String PIS_SCOPE = "pis:";
         public static final String CODE = "code";
         public static final String CODE_CHALLENGE_METHOD = "S256";
         public static final String TRUE = "true";
@@ -77,17 +109,20 @@ public final class BankdataConstants {
         public static final String X_API_KEY = "x-api-key";
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String CONSENT_ID = "Consent-ID";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN_GRANT_TYPE = "refresh_token";
         public static final String CLIENT_CREDENTIALS = "client_credentials";
-        public static final String SCOPE = "aisprepare";
+        public static final String SCOPE = "aisprepare pisprepare";
     }
 
     public static class IdTags {
         public static final String CONSENT_ID = "consentId";
+        public static final String PAYMENT_ID = "paymentId";
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
     }
 
     public static class ConsentRequest {
@@ -105,5 +140,23 @@ public final class BankdataConstants {
 
     public static class CredentialKeys {
         public static final String IBAN = "iban";
+    }
+
+    public static class HeaderValues {
+        public static final String PSU_IP_ADDRESS = "127.0.0.1";
+    }
+
+    public static class PaymentRequests {
+        public static final String CHARGE_BEARER = "SHAR";
+        public static final String AGENT = "ARABBHBMMAN";
+        public static final String CREDITOR_NAME = "Bahrain International circuit";
+        public static final String STREET = "Streetname";
+        public static final String BUILDING = "123";
+        public static final String CITY = "Netropolis";
+        public static final String POSTAL_CODE = "889900";
+        public static final String COUNTRY = "BH";
+        public static final String REMITTANCE = "Text message to creditor";
+        public static final String EUR = "EUR";
+        public static final String IDENTIFICATION = "endToEndIdentification";
     }
 }
