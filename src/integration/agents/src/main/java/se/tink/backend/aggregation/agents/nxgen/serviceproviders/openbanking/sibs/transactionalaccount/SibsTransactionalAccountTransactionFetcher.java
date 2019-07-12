@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount;
 
 import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -19,7 +18,6 @@ public class SibsTransactionalAccountTransactionFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        key = StringUtils.deleteWhitespace(key);
         return Optional.ofNullable(key)
                 .map(apiClient::getTransactionsForKey)
                 .orElseGet(() -> apiClient.getAccountTransactions(account));
