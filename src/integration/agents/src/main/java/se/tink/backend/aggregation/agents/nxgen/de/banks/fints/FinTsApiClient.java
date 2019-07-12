@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -11,20 +12,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.HKSPA;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SEPAAccount;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SepaAccountGuesser;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKIDN;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKSYN;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth.HKVVB;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.depot.HKWPD;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.depot.MT535Statement;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.dialog.HKEND;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.saldo.HKSAL;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement.HKKAZ;
@@ -32,8 +36,11 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statemen
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class FinTsApiClient {
     private final TinkHttpClient apiClient;
@@ -47,8 +54,7 @@ public class FinTsApiClient {
     private int hkkazVersion = 6;
     // We need to get full information of account in two calls, so need to cache here.
     private List<SEPAAccount> sepaAccounts;
-    private static final Logger LOGGER = LoggerFactory.getLogger(FinTsApiClient.class);
-    private static final AggregationLogger LONGLOGGER = new AggregationLogger(FinTsApiClient.class);
+    private static final AggregationLogger longlogger = new AggregationLogger(FinTsApiClient.class);
 
     private boolean endDateSupported = true;
 
@@ -74,7 +80,6 @@ public class FinTsApiClient {
                 new String(
                         Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")),
                         StandardCharsets.ISO_8859_1);
-
         FinTsResponse response = new FinTsResponse(plainResponse);
 
         this.messageNumber++;
@@ -171,6 +176,17 @@ public class FinTsApiClient {
                         this.getAccountString(sepaAccount, this.hksalVersion)));
     }
 
+    private FinTsRequest getMessageGetInvestment(SEPAAccount sepaAccount, String touchdown) {
+
+        return new FinTsRequest(
+                configuration,
+                this.dialogId,
+                this.messageNumber,
+                this.systemId,
+                this.tanCapability,
+                new HKWPD(3, sepaAccount, touchdown));
+    }
+
     public Collection<String> sync() {
         FinTsResponse syncResponse = sendMessage(getMessageSync());
         if (!syncResponse.isSuccess() || syncResponse.isAccountBlocked()) {
@@ -197,7 +213,7 @@ public class FinTsApiClient {
 
     public void init() {
         FinTsResponse initResponse = sendMessage(getMessageInit());
-        List<String> accounts = initResponse.findSegments(FinTsConstants.Segments.HIUPD);
+        List<String> accounts = initResponse.findSegments(FinTsConstants.Segments.HIUPD.name());
 
         for (String account : accounts) {
             List<String> elements = FinTsParser.getSegmentDataGroups(account);
@@ -264,7 +280,7 @@ public class FinTsApiClient {
         if (!getAccountResponse.isSuccess()) {
             throw new IllegalStateException(getAccountResponse.toString());
         }
-        String accounts = getAccountResponse.findSegment(FinTsConstants.Segments.HISPA);
+        String accounts = getAccountResponse.findSegment(FinTsConstants.Segments.HISPA.name());
         List<String> splits = FinTsParser.getSegmentDataGroups(accounts);
         List<String> accountList = splits.subList(1, splits.size());
 
@@ -318,7 +334,7 @@ public class FinTsApiClient {
 
     public void getBalance(SEPAAccount account) {
         // Defensive check
-        if (!account.getExtensions().contains(FinTsConstants.Segments.HKSAL)) {
+        if (!account.getExtensions().contains(FinTsConstants.Segments.HKSAL.name())) {
             throw new IllegalStateException("Target account does not support HKSAL");
         }
         FinTsResponse getBalanceResponse = sendMessage(this.getMessageGetBalance(account));
@@ -326,7 +342,7 @@ public class FinTsApiClient {
         // We cannot fetch the balance for all account types
         if (!getBalanceResponse.isSuccess()) {
             String accountNumber = account.getAccountNo();
-            LONGLOGGER.warnExtraLong(
+            longlogger.warnExtraLong(
                     String.format(
                             "Cannot fetch balance AccountNumber: %s , AccounType: %s",
                             account.getAccountNo(), account.getAccountType()),
@@ -335,7 +351,8 @@ public class FinTsApiClient {
             return;
         }
 
-        List<String> segments = getBalanceResponse.findSegments(FinTsConstants.Segments.HISAL);
+        List<String> segments =
+                getBalanceResponse.findSegments(FinTsConstants.Segments.HISAL.name());
 
         for (String balanceSeg : segments) {
             List<String> deg = FinTsParser.getSegmentDataGroups(balanceSeg);
@@ -352,6 +369,84 @@ public class FinTsApiClient {
                     FinTsParser.getDataGroupElements(deg.get(4)).get(1),
                     isBalancePositive(deg.get(4)));
         }
+    }
+
+    public Optional<InvestmentAccount> getInvestment(SEPAAccount account) {
+        // Defensive check
+        if (!account.getExtensions().contains(FinTsConstants.Segments.HKWPD.name())) {
+            throw new IllegalStateException("Target account does not support HKWPD");
+        }
+
+        FinTsRequest request = this.getMessageGetInvestment(account, null);
+        FinTsResponse response = sendMessage(request);
+        String segment = response.findSegment(FinTsConstants.Segments.HIWPD.name());
+
+        Map<String, String> status = response.getLocalStatus();
+
+        // TODO: Need to start checking key AND value
+        if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED)
+                || status.containsValue(FinTsConstants.StatusCode.NO_DATA_AVAILABLE)
+                || status.containsValue(FinTsConstants.StatusCode.TECHNICAL_ERROR)
+                || Strings.isNullOrEmpty(segment)) {
+            return Optional.empty();
+        }
+
+        // Any missing error code shall be caught here
+        if (!response.isSuccess()) {
+            throw new IllegalStateException(response.toString());
+        }
+
+        List<String> mt535s = FinTsParser.getMT535Content(segment);
+        Map<String, String> touchdowns = response.getTouchDowns(request);
+        List<Portfolio> portfolios = new ArrayList<>();
+        Portfolio portfolio = (new MT535Statement(account, mt535s)).toTinkPortfolio();
+        portfolios.add(portfolio);
+
+        // Process with touchdowns
+        String seg = null;
+        List<String> mt535Contents;
+        while (touchdowns.containsKey(FinTsConstants.Segments.HKWPD.name())) {
+            try {
+                FinTsRequest getFurtherTransactionRequest =
+                        this.getMessageGetInvestment(
+                                account, touchdowns.get(FinTsConstants.Segments.HKWPD.name()));
+                FinTsResponse furtherTransactionsResponse =
+                        sendMessage(getFurtherTransactionRequest);
+                seg = furtherTransactionsResponse.findSegment(FinTsConstants.Segments.HIWPD.name());
+                mt535Contents = FinTsParser.getMT535Content(segment);
+                portfolios.add((new MT535Statement(account, mt535Contents)).toTinkPortfolio());
+                touchdowns =
+                        furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
+            } catch (Exception e) {
+                longlogger.warnExtraLong(
+                        String.format(
+                                "Cannot fetch transactions AccountNumber: %s , AccountType: %s Seg: %s",
+                                account.getAccountNo(), account.getAccountType(), seg),
+                        FinTsConstants.LogTags.ERROR_CANNOT_FETCH_ACCOUNT_TRANSACTIONS,
+                        e);
+                touchdowns = Collections.emptyMap();
+            }
+        }
+
+        List<Instrument> instruments = portfolio.getInstruments();
+        String currency = instruments.isEmpty() ? "EUR" : instruments.get(0).getCurrency();
+        ExactCurrencyAmount balance =
+                new ExactCurrencyAmount(
+                        new BigDecimal(
+                                portfolios.stream()
+                                        .map(Portfolio::getTotalValue)
+                                        .reduce(0.0, Double::sum)),
+                        currency);
+
+        InvestmentAccount investmentAccount =
+                InvestmentAccount.builder(account.getAccountNo() + account.getAccountType())
+                        .setAccountNumber(account.getAccountNo())
+                        .setHolderName(new HolderName(account.getAccountOwner1()))
+                        .setName(account.getAccountNo())
+                        .setPortfolios(portfolios)
+                        .setCashBalance(balance)
+                        .build();
+        return Optional.of(investmentAccount);
     }
 
     private boolean isBalancePositive(String balanceSegment) {
@@ -387,7 +482,7 @@ public class FinTsApiClient {
                 this.createStatementRequest(targetAccount, start, end, null);
 
         FinTsResponse response = sendMessage(getTransactionRequest);
-        String segment = response.findSegment(FinTsConstants.Segments.HIKAZ);
+        String segment = response.findSegment(FinTsConstants.Segments.HIKAZ.name());
 
         Map<String, String> status = response.getLocalStatus();
 
@@ -421,23 +516,23 @@ public class FinTsApiClient {
         // Process with touchdowns
         String seg = null;
         String mt940Content;
-        while (touchdowns.containsKey(FinTsConstants.Segments.HKKAZ)) {
+        while (touchdowns.containsKey(FinTsConstants.Segments.HKKAZ.name())) {
             try {
                 FinTsRequest getFurtherTransactionRequest =
                         this.createStatementRequest(
                                 targetAccount,
                                 start,
                                 end,
-                                touchdowns.get(FinTsConstants.Segments.HKKAZ));
+                                touchdowns.get(FinTsConstants.Segments.HKKAZ.name()));
                 FinTsResponse furtherTransactionsResponse =
                         sendMessage(getFurtherTransactionRequest);
-                seg = furtherTransactionsResponse.findSegment(FinTsConstants.Segments.HIKAZ);
+                seg = furtherTransactionsResponse.findSegment(FinTsConstants.Segments.HIKAZ.name());
                 mt940Content = FinTsParser.getMT940Content(seg);
                 transactions.addAll(this.parseMt940Transactions(mt940Content));
                 touchdowns =
                         furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
             } catch (Exception e) {
-                LONGLOGGER.warnExtraLong(
+                longlogger.warnExtraLong(
                         String.format(
                                 "Cannot fetch transactions AccountNumber: %s , AccountType: %s Seg: %s",
                                 targetAccount.getAccountNo(), targetAccount.getAccountType(), seg),

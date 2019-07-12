@@ -20,7 +20,7 @@ public class HNVSD extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HNVSD;
+        return FinTsConstants.Segments.HNVSD.name();
     }
 
     public void appendEncryptedSegment(FinTsSegment segment) {

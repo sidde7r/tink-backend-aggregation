@@ -25,6 +25,6 @@ public class HKSAL extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HKSAL;
+        return FinTsConstants.Segments.HKSAL.name();
     }
 }

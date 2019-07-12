@@ -62,7 +62,7 @@ public class FinTsResponse {
     }
 
     public String getDialogId() {
-        String segment = this.findSegment(FinTsConstants.Segments.HNHBK);
+        String segment = this.findSegment(FinTsConstants.Segments.HNHBK.name());
 
         if (Strings.isNullOrEmpty(segment)) {
             throw new IllegalArgumentException("Invalid response, no HNHBK segment");
@@ -72,7 +72,7 @@ public class FinTsResponse {
     }
 
     public String getSystemId() {
-        String segment = this.findSegment(FinTsConstants.Segments.HISYN);
+        String segment = this.findSegment(FinTsConstants.Segments.HISYN.name());
         return FinTsParser.getSystemId(segment);
     }
 
@@ -121,7 +121,7 @@ public class FinTsResponse {
     public Map<String, String> getLocalStatus() {
 
         Map<String, String> result = new HashMap<>();
-        String seg = this.findSegment(FinTsConstants.Segments.HIRMS);
+        String seg = this.findSegment(FinTsConstants.Segments.HIRMS.name());
         List<String> splits = FinTsParser.getSegmentDataGroups(seg);
         if (!splits.isEmpty()) {
             List<String> parts = splits.subList(1, splits.size());
@@ -136,15 +136,15 @@ public class FinTsResponse {
     }
 
     public int getHKKAZMaxVersion() {
-        return this.getSegmentMaxVersion(FinTsConstants.Segments.HIKAZS);
+        return this.getSegmentMaxVersion(FinTsConstants.Segments.HIKAZS.name());
     }
 
     public int getHKSALMaxVersion() {
-        return this.getSegmentMaxVersion(FinTsConstants.Segments.HISALS);
+        return this.getSegmentMaxVersion(FinTsConstants.Segments.HISALS.name());
     }
 
     public List<String> getSupportedTanMechanisms() {
-        List<String> segments = this.findSegments(FinTsConstants.Segments.HIRMS);
+        List<String> segments = this.findSegments(FinTsConstants.Segments.HIRMS.name());
 
         for (String segment : segments) {
             List<String> degs = FinTsParser.getSegmentDataGroups(segment);
@@ -162,7 +162,8 @@ public class FinTsResponse {
     public Map<String, String> getTouchDowns(FinTsRequest message) {
         Map<String, String> touchdown = new HashMap<>();
         for (FinTsSegment msgseg : message.getEncryptedSegments()) {
-            String segment = this.findSegmentForReference(FinTsConstants.Segments.HIRMS, msgseg);
+            String segment =
+                    this.findSegmentForReference(FinTsConstants.Segments.HIRMS.name(), msgseg);
             if (!Strings.isNullOrEmpty(segment)) {
                 List<String> parts = FinTsParser.getSegmentDataGroups(segment);
                 parts.remove(0);

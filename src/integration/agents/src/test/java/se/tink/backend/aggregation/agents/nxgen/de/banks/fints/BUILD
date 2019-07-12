@@ -16,5 +16,6 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fints",
         "//src/integration/api",
         "//src/integration/lib:lib_test",
+        "//src/integration/models",
     ],
 )

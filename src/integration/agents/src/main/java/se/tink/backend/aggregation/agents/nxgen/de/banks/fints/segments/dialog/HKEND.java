@@ -17,6 +17,6 @@ public class HKEND extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HKEND;
+        return FinTsConstants.Segments.HKEND.name();
     }
 }

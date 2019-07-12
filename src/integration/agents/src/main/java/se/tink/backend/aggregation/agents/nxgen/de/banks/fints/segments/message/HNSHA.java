@@ -23,6 +23,6 @@ public class HNSHA extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HNSHA;
+        return FinTsConstants.Segments.HNSHA.name();
     }
 }
