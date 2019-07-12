@@ -8,7 +8,10 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortConstants;
@@ -23,8 +26,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitResponse> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SebKortAuthenticator.class);
@@ -76,19 +81,9 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
                 final BankIdCompleteResponse completeResponse =
                         apiClient.completeBankId(collectResponse.getCompleteUrl());
 
-                final LoginRequest loginRequest =
-                        new LoginRequest(completeResponse.getResponseSAML(), config);
-                final LoginResponse loginResponse = apiClient.login(loginRequest);
+                final LoginResponse loginResponse = loginUser(completeResponse);
 
-                final AuthRequest authRequest =
-                        new AuthRequest(loginResponse.getUid(), loginResponse.getSecret(), config);
-                final AuthResponse authResponse = apiClient.auth(authRequest);
-
-                if (authResponse.isSuccess()) {
-                    sessionStorage.put(
-                            SebKortConstants.StorageKey.AUTHORIZATION,
-                            "Bearer " + SebKortConstants.AUTHORIZATION_UUID);
-                }
+                authorizeUser(loginResponse);
             }
             return bankIdStatus;
         } catch (HttpResponseException e) {
@@ -96,6 +91,42 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
                 throw BankIdError.INTERRUPTED.exception();
             }
             throw e;
+        }
+    }
+
+    private LoginResponse loginUser(BankIdCompleteResponse completeResponse) throws LoginException {
+        try {
+            final LoginRequest loginRequest =
+                    new LoginRequest(completeResponse.getResponseSAML(), config);
+            return apiClient.login(loginRequest);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+
+            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
+
+            throw e;
+        }
+    }
+
+    private void authorizeUser(LoginResponse loginResponse) {
+        final AuthRequest authRequest =
+                new AuthRequest(loginResponse.getUid(), loginResponse.getSecret(), config);
+        final AuthResponse authResponse = apiClient.auth(authRequest);
+
+        if (authResponse.isSuccess()) {
+            sessionStorage.put(
+                    SebKortConstants.StorageKey.AUTHORIZATION,
+                    "Bearer " + SebKortConstants.AUTHORIZATION_UUID);
+        } else {
+
+            if (authResponse.isBankSideFailure()) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+
+            LOGGER.info(
+                    "BankID Login Failed " + SerializationUtils.serializeToString(authResponse));
         }
     }
 

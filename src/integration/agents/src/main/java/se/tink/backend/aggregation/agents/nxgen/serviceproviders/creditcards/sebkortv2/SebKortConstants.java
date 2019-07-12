@@ -76,5 +76,10 @@ public class SebKortConstants {
 
     public static class ErrorCode {
         public static final String ALREADY_IN_PROGRESS = "ALREADY_IN_PROGRESS";
+        public static final String GENERIC_TECHNICAL_ERROR = "GENERIC_TECHNICAL_ERROR";
+    }
+
+    public static class ErrorMessage {
+        public static final String BANK_SIDE_FAILURE = "tillfälligt tekniskt fel";
     }
 }
