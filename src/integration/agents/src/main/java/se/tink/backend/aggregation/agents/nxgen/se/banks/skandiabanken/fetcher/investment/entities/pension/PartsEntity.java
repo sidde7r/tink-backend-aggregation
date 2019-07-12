@@ -232,34 +232,42 @@ public class PartsEntity {
         return number;
     }
 
+    @JsonIgnore
     public String getTypeName() {
         return typeName;
     }
 
+    @JsonIgnore
     public double getValue() {
         return value;
     }
 
+    @JsonIgnore
     public HolderEntity getHolder() {
         return holder;
     }
 
+    @JsonIgnore
     public String getAgreement() {
         return agreement;
     }
 
+    @JsonIgnore
     public boolean isCanSeeHolding() {
         return canSeeHolding;
     }
 
+    @JsonIgnore
     public String getEncryptedNationalIdentificationNumberOfFirstInsuredPerson() {
         return encryptedNationalIdentificationNumberOfFirstInsuredPerson;
     }
 
+    @JsonIgnore
     public void setPensionFunds(PensionFundsResponse pensionFunds) {
         this.pensionFunds = pensionFunds;
     }
 
+    @JsonIgnore
     public PensionFundsResponse getPensionFunds() {
         return pensionFunds;
     }

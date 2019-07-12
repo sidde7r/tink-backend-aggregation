@@ -67,10 +67,12 @@ public class PensionEntity {
     @JsonProperty("TypeName")
     private String typeName;
 
+    @JsonIgnore
     public List<PartsEntity> getParts() {
         return parts;
     }
 
+    @JsonIgnore
     public void setParts(List<PartsEntity> parts) {
         this.parts = parts;
     }
@@ -86,6 +88,7 @@ public class PensionEntity {
                 .build();
     }
 
+    @JsonIgnore
     private List<Portfolio> getPortfolio() {
         if (hasSecuritiesAccountPart) {
             return parts.stream()
