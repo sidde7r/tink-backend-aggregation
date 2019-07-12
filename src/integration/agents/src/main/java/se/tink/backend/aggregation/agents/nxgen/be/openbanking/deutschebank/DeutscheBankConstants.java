@@ -48,8 +48,6 @@ public final class DeutscheBankConstants {
         public static final String DELTA_LIST = "true";
     }
 
-    public static class LogTags {}
-
     public static class CredentialKeys {
         public static final String IBAN = "iban";
     }
