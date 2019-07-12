@@ -35,7 +35,7 @@ public class FetchTransactionsResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.empty();
+        return Optional.of(links != null); // TODO - Temporary change for Sandbox
     }
 
     public FetchTransactionsResponse setFetchNextFunction(

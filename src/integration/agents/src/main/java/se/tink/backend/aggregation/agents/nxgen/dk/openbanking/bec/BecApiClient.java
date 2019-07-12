@@ -7,10 +7,14 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.BecConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.BecConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.BecConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.BecConstants.PaymentTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.BecConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.BecConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.BecConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.configuration.BecConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -73,5 +77,18 @@ public final class BecApiClient {
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(GetTransactionsResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+        return createRequest(
+                        Urls.CREATE_PAYMENT.parameter(
+                                IdTags.PAYMENT_TYPE,
+                                PaymentTypes.INSTANT_DANISH_DOMESTIC_CREDIT_TRANSFER))
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public GetPaymentResponse getPayment(String paymentId) {
+        return createRequest(Urls.GET_PAYMENT.parameter(IdTags.PAYMENT_ID, paymentId))
+                .get(GetPaymentResponse.class);
     }
 }
