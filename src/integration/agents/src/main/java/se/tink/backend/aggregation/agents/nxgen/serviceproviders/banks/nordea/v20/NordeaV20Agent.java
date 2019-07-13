@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.creditcard.NordeaV20CreditCardFetcher;
@@ -25,12 +27,15 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class NordeaV20Agent extends NextGenerationAgent
-        implements RefreshInvestmentAccountsExecutor, RefreshLoanAccountsExecutor {
+        implements RefreshInvestmentAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     protected final NordeaV20ApiClient nordeaClient;
     protected final NordeaV20Parser parser;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     protected NordeaV20Agent(
             CredentialsRequest request,
@@ -52,6 +57,8 @@ public abstract class NordeaV20Agent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new NordeaV20LoanFetcher(nordeaClient, parser));
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected abstract NordeaV20ApiClient constructNordeaClient();
@@ -74,17 +81,25 @@ public abstract class NordeaV20Agent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         NordeaV20CreditCardFetcher creditCardFetcher =
                 new NordeaV20CreditCardFetcher(nordeaClient, parser);
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(creditCardFetcher))));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(creditCardFetcher)));
     }
 
     @Override
