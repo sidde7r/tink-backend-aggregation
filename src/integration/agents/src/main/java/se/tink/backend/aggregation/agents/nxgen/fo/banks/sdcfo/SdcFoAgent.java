@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fo.banks.sdcfo;
 
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fo.banks.sdcfo.parser.SdcFoTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
@@ -21,9 +24,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SdcFoAgent extends SdcAgent {
+public class SdcFoAgent extends SdcAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
     private static Logger LOG = LoggerFactory.getLogger(SdcFoAgent.class);
     private static final int MAX_CONSECUTIVE_EMPTY_PAGES = 8;
+
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public SdcFoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -33,6 +39,8 @@ public class SdcFoAgent extends SdcAgent {
                 signatureKeyPair,
                 new SdcFoConfiguration(request.getProvider()),
                 new SdcFoTransactionParser());
+
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -41,22 +49,37 @@ public class SdcFoAgent extends SdcAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new SdcAccountFetcher(
-                                this.bankClient, this.sdcSessionStorage, this.agentConfiguration),
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new SdcTransactionFetcher(
-                                                this.bankClient,
-                                                this.sdcSessionStorage,
-                                                this.parser),
-                                        MAX_CONSECUTIVE_EMPTY_PAGES))));
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                new SdcAccountFetcher(
+                        this.bankClient, this.sdcSessionStorage, this.agentConfiguration),
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new SdcTransactionFetcher(
+                                        this.bankClient, this.sdcSessionStorage, this.parser),
+                                MAX_CONSECUTIVE_EMPTY_PAGES)));
     }
 
     private Authenticator constructSmsAuthenticator() {
