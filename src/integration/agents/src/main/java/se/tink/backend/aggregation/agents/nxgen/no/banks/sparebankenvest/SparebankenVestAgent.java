@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.SparebankenVestAutoAuthenticator;
@@ -37,11 +39,14 @@ import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguratio
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SparebankenVestAgent extends NextGenerationAgent
-        implements RefreshInvestmentAccountsExecutor, RefreshLoanAccountsExecutor {
+        implements RefreshInvestmentAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
     private final SparebankenVestApiClient apiClient;
     private final EncapClient encapClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SparebankenVestAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -68,6 +73,8 @@ public class SparebankenVestAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         SparebankenVestLoanFetcher.create(apiClient));
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -108,7 +115,16 @@ public class SparebankenVestAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
 
         TransactionFetcher<CreditCardAccount> transactionFetcher =
                 new TransactionFetcherController<CreditCardAccount>(
@@ -116,12 +132,11 @@ public class SparebankenVestAgent extends NextGenerationAgent
                         new TransactionDatePaginationController<CreditCardAccount>(
                                 SparebankenVestCreditCardTransactionFetcher.create(apiClient)));
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        SparebankenVestCreditCardAccountFetcher.create(apiClient),
-                        transactionFetcher));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                SparebankenVestCreditCardAccountFetcher.create(apiClient),
+                transactionFetcher);
     }
 
     @Override
