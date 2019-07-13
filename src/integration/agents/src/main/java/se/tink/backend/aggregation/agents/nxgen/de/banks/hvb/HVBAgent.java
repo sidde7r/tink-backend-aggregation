@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.HVBPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.HVBTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.HVBTransactionalAccountFetcher;
@@ -18,7 +21,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class HVBAgent extends NextGenerationAgent {
+public final class HVBAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private static final WLConfig wlConfig =
             new WLConfig(
@@ -31,6 +35,8 @@ public final class HVBAgent extends NextGenerationAgent {
     private final WLApiClient apiClient;
     private final HVBStorage storage;
 
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+
     public HVBAgent(
             final CredentialsRequest request,
             final AgentContext context,
@@ -38,6 +44,8 @@ public final class HVBAgent extends NextGenerationAgent {
         super(request, context, keyPair);
         apiClient = new WLApiClient(client);
         storage = new HVBStorage(sessionStorage, persistentStorage);
+
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -47,17 +55,34 @@ public final class HVBAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new HVBTransactionalAccountFetcher(apiClient, storage, wlConfig),
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
-                                        new HVBTransactionFetcher(apiClient, storage, wlConfig)))));
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new HVBTransactionalAccountFetcher(apiClient, storage, wlConfig),
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                new HVBTransactionFetcher(apiClient, storage, wlConfig))));
     }
 
     @Override
