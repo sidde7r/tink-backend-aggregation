@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse.fetcher.SdcSeCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse.fetcher.SdcSeIdentityDataFetcher;
@@ -22,7 +24,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 /*
  * Configure market specific client, this is SE
  */
-public class SdcSeAgent extends SdcAgent implements RefreshIdentityDataExecutor {
+public class SdcSeAgent extends SdcAgent
+        implements RefreshIdentityDataExecutor, RefreshCreditCardAccountsExecutor {
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SdcSeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -32,6 +36,8 @@ public class SdcSeAgent extends SdcAgent implements RefreshIdentityDataExecutor 
                 signatureKeyPair,
                 new SdcSeConfiguration(request.getProvider()),
                 new SdcSeTransactionParser());
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -49,7 +55,16 @@ public class SdcSeAgent extends SdcAgent implements RefreshIdentityDataExecutor 
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         SdcSeCreditCardFetcher creditCardFetcher =
                 new SdcSeCreditCardFetcher(
                         this.bankClient,
@@ -57,14 +72,13 @@ public class SdcSeAgent extends SdcAgent implements RefreshIdentityDataExecutor 
                         this.parser,
                         this.agentConfiguration);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(creditCardFetcher))));
+        return new CreditCardRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(creditCardFetcher)));
     }
 
     @Override
