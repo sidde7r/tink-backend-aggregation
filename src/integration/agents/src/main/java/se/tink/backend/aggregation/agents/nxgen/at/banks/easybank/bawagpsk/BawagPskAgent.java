@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.authenticator.BawagPskPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.BawagPskTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.creditcard.BawagPskCreditCardFetcher;
@@ -34,12 +35,13 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class BawagPskAgent extends NextGenerationAgent
         implements RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor, RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final BawagPskApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BawagPskAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -66,6 +68,8 @@ public class BawagPskAgent extends NextGenerationAgent
                                         new BawagPskTransactionFetcher<>(apiClient))));
 
         creditCardRefreshController = constructCreditCardRefreshController();
+
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -78,12 +82,29 @@ public class BawagPskAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final BawagPskTransactionFetcher<TransactionalAccount> transactionFetcher =
                 new BawagPskTransactionFetcher<TransactionalAccount>(apiClient);
-        return Optional.of(
-                new TransactionalAccountRefreshController(
+        return new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
                         new BawagPskTransactionalAccountFetcher(apiClient),
@@ -93,7 +114,7 @@ public class BawagPskAgent extends NextGenerationAgent
                                 // which keeps fetching
                                 // transactions until AccountStatementItem/Position equals 1
                                 // (signifying the earliest entry)
-                                new TransactionDatePaginationController<>(transactionFetcher))));
+                                new TransactionDatePaginationController<>(transactionFetcher)));
     }
 
     @Override
