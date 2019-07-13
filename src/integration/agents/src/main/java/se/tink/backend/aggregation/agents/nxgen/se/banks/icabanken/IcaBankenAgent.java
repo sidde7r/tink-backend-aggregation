@@ -12,11 +12,13 @@ import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.IcaBankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankTransferExecutor;
@@ -56,7 +58,9 @@ public class IcaBankenAgent extends NextGenerationAgent
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshTransferDestinationExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
 
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
@@ -66,6 +70,7 @@ public class IcaBankenAgent extends NextGenerationAgent
     private final LoanRefreshController loanRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public IcaBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -92,6 +97,9 @@ public class IcaBankenAgent extends NextGenerationAgent
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
+
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -108,21 +116,37 @@ public class IcaBankenAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         IcaBankenTransactionalAccountsFetcher transactionalAccountFetcher =
                 new IcaBankenTransactionalAccountsFetcher(apiClient);
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        transactionalAccountFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
-                                        transactionalAccountFetcher),
-                                transactionalAccountFetcher)));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                transactionalAccountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(transactionalAccountFetcher),
+                        transactionalAccountFetcher));
     }
 
     @Override
