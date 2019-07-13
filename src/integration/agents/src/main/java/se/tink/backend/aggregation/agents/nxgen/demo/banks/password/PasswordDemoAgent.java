@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
@@ -38,7 +39,8 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
-public class PasswordDemoAgent extends NextGenerationDemoAgent {
+public class PasswordDemoAgent extends NextGenerationDemoAgent
+        implements RefreshTransferDestinationExecutor {
     private static String username;
     private static String provider;
 
