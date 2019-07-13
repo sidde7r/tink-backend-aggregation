@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.santander;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.authenticator.SantanderPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.credit.SantanderCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.SantanderAccountFetcher;
@@ -18,14 +21,19 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SantanderAgent extends NextGenerationAgent {
+public class SantanderAgent extends NextGenerationAgent
+        implements RefreshCreditCardAccountsExecutor {
 
     private final SantanderApiClient santanderApiClient;
+
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SantanderAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         santanderApiClient = new SantanderApiClient(this.client, sessionStorage);
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -49,17 +57,25 @@ public class SantanderAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new SantanderCreditCardFetcher(santanderApiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
-                                        new SantanderCreditCardFetcher(santanderApiClient)))));
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new SantanderCreditCardFetcher(santanderApiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                new SantanderCreditCardFetcher(santanderApiClient))));
     }
 
     @Override
