@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.BecAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.BecAccountTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardFetcher;
@@ -34,12 +35,15 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class BecAgent extends NextGenerationAgent
         implements RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
     private final BecApiClient apiClient;
     private final BecAccountTransactionsFetcher transactionFetcher;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BecAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -60,6 +64,8 @@ public class BecAgent extends NextGenerationAgent
                         this.updateController,
                         new BecLoanFetcher(this.apiClient, this.credentials));
         this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -68,17 +74,34 @@ public class BecAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new BecAccountFetcher(this.apiClient),
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(this.transactionFetcher),
-                                this.transactionFetcher)));
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                new BecAccountFetcher(this.apiClient),
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(this.transactionFetcher),
+                        this.transactionFetcher));
     }
 
     @Override
