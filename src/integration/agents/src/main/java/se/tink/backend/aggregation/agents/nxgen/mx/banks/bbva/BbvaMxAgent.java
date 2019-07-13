@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.BbvaMxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit.BbvaMxCreditCardFetcher;
@@ -20,10 +22,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BbvaMxAgent extends NextGenerationAgent implements RefreshLoanAccountsExecutor {
+public class BbvaMxAgent extends NextGenerationAgent
+        implements RefreshLoanAccountsExecutor, RefreshCreditCardAccountsExecutor {
 
     private final BbvaMxApiClient bbvaApiClient;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public BbvaMxAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -35,6 +39,8 @@ public class BbvaMxAgent extends NextGenerationAgent implements RefreshLoanAccou
                         metricRefreshController,
                         updateController,
                         new BbvaMxLoanFetcher(bbvaApiClient));
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -61,18 +67,26 @@ public class BbvaMxAgent extends NextGenerationAgent implements RefreshLoanAccou
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         BbvaMxCreditCardFetcher creditCardFetcher =
                 new BbvaMxCreditCardFetcher(bbvaApiClient, persistentStorage);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(creditCardFetcher))));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(creditCardFetcher)));
     }
 
     @Override
