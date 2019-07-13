@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.authenticator.CoopPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.fetcher.creditcards.CoopCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.fetcher.transactionalaccounts.CoopTransactionalAccountFetcher;
@@ -20,9 +21,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class CoopAgent extends NextGenerationAgent implements RefreshCreditCardAccountsExecutor {
+public class CoopAgent extends NextGenerationAgent
+        implements RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
     private final CoopApiClient apiClient;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public CoopAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -31,6 +36,7 @@ public class CoopAgent extends NextGenerationAgent implements RefreshCreditCardA
         sessionStorage.put(CoopConstants.Storage.CREDENTIALS_ID, credentials.getId());
 
         creditCardRefreshController = constructCreditCardRefreshController();
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -40,8 +46,26 @@ public class CoopAgent extends NextGenerationAgent implements RefreshCreditCardA
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         CoopTransactionalAccountFetcher accountFetcher =
                 new CoopTransactionalAccountFetcher(apiClient, sessionStorage);
 
@@ -53,7 +77,7 @@ public class CoopAgent extends NextGenerationAgent implements RefreshCreditCardA
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionPagePaginationController<>(accountFetcher, 0)));
-        return Optional.of(accountRefreshController);
+        return accountRefreshController;
     }
 
     @Override
