@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.RabobankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.SandboxTransactionFetcher;
@@ -22,11 +25,13 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class RabobankAgent extends NextGenerationAgent {
+public class RabobankAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final RabobankApiClient apiClient;
     private final String clientName;
     private RabobankConfiguration rabobankConfiguration;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public RabobankAgent(
             final CredentialsRequest request,
@@ -36,6 +41,8 @@ public class RabobankAgent extends NextGenerationAgent {
 
         apiClient = new RabobankApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
+
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
 
         // Necessary to circumvent HTTP 413: Payload too large
         client.disableSignatureRequestHeader();
@@ -79,8 +86,26 @@ public class RabobankAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final TransactionDatePaginator<TransactionalAccount> transactionFetcher;
 
         if (isSandbox()) {
@@ -89,14 +114,13 @@ public class RabobankAgent extends NextGenerationAgent {
             transactionFetcher = new TransactionFetcher(apiClient);
         }
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new TransactionalAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(transactionFetcher))));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new TransactionalAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(transactionFetcher)));
     }
 
     @Override
