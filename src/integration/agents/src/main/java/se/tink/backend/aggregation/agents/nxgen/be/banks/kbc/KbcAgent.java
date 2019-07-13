@@ -6,7 +6,10 @@ import java.util.Locale;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.KbcAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.KbcBankTransferExecutor;
@@ -31,12 +34,13 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @ProgressiveAuth
 public final class KbcAgent extends NextGenerationAgent
-        implements RefreshTransferDestinationExecutor {
+        implements RefreshTransferDestinationExecutor, RefreshCreditCardAccountsExecutor {
 
     private final KbcApiClient apiClient;
     private final String kbcLanguage;
     private KbcHttpFilter httpFilter;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public KbcAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -46,6 +50,7 @@ public final class KbcAgent extends NextGenerationAgent
         this.apiClient = new KbcApiClient(client);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -83,15 +88,20 @@ public final class KbcAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         KbcCreditCardFetcher creditCardFetcher =
                 new KbcCreditCardFetcher(apiClient, sessionStorage);
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        creditCardFetcher));
+        return new CreditCardRefreshController(
+                metricRefreshController, updateController, creditCardFetcher, creditCardFetcher);
     }
 
     @Override
