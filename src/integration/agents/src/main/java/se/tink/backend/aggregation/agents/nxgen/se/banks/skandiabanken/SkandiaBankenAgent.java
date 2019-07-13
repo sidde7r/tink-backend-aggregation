@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Fetcher;
@@ -30,9 +32,12 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SkandiaBankenAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
     private final SkandiaBankenApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SkandiaBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -44,6 +49,8 @@ public class SkandiaBankenAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new SkandiaBankenInvestmentFetcher(apiClient));
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -71,15 +78,23 @@ public class SkandiaBankenAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new SkandiaBankenCreditCardFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(null, 0))));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new SkandiaBankenCreditCardFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(null, 0)));
     }
 
     @Override
