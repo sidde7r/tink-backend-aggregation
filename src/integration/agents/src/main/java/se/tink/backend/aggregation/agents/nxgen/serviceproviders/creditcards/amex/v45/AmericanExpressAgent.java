@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45;
 
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.authenticator.AmericanExpressPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.AmericanExpressCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.AmericanExpressTransactionFetcher;
@@ -18,11 +20,13 @@ import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.strings.StringUtils;
 
-public class AmericanExpressAgent extends NextGenerationAgent {
+public class AmericanExpressAgent extends NextGenerationAgent
+        implements RefreshCreditCardAccountsExecutor {
 
     private final AmericanExpressApiClient apiClient;
     private final AmericanExpressConfiguration config;
     private final MultiIpGateway gateway;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     protected AmericanExpressAgent(
             CredentialsRequest request,
@@ -34,6 +38,8 @@ public class AmericanExpressAgent extends NextGenerationAgent {
         this.apiClient = new AmericanExpressApiClient(client, sessionStorage, config);
         this.config = config;
         this.gateway = new MultiIpGateway(client, credentials);
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     private void generateDeviceId() {
@@ -58,13 +64,21 @@ public class AmericanExpressAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new AmericanExpressCreditCardAccountFetcher(sessionStorage, config),
-                        new AmericanExpressTransactionFetcher(apiClient, config)));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new AmericanExpressCreditCardAccountFetcher(sessionStorage, config),
+                new AmericanExpressTransactionFetcher(apiClient, config));
     }
 
     @Override
