@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
@@ -56,7 +58,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                 RefreshEInvoiceExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshTransferDestinationExecutor {
+                RefreshTransferDestinationExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     protected final SwedbankConfiguration configuration;
     protected final SwedbankDefaultApiClient apiClient;
@@ -64,6 +67,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SwedbankAbstractAgent(
             CredentialsRequest request,
@@ -105,6 +109,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                         new SwedbankDefaultLoanFetcher(apiClient));
 
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -144,7 +150,16 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         SwedbankDefaultCreditCardFetcher creditCardFetcher =
                 new SwedbankDefaultCreditCardFetcher(
                         apiClient, request.getProvider().getCurrency());
@@ -154,12 +169,11 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(creditCardFetcher));
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        transactionFetcherController));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                transactionFetcherController);
     }
 
     @Override
