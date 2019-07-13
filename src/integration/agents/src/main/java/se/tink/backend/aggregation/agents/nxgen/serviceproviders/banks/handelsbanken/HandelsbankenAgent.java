@@ -15,8 +15,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
@@ -24,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -106,19 +103,12 @@ public abstract class HandelsbankenAgent<
     protected abstract Optional<TransferController> constructTransferController(
             API client, HandelsbankenSessionStorage sessionStorage, AgentContext context);
 
-    protected abstract AccountFetcher<CreditCardAccount> constructCreditCardAccountFetcher(
-            API client, HandelsbankenSessionStorage sessionStorage);
-
     protected abstract TransactionPaginator<TransactionalAccount>
             constructAccountTransactionPaginator(
                     API client, HandelsbankenSessionStorage sessionStorage);
 
     protected abstract UpcomingTransactionFetcher<TransactionalAccount>
             constructUpcomingTransactionFetcher(
-                    API client, HandelsbankenSessionStorage sessionStorage);
-
-    protected abstract TransactionPaginator<CreditCardAccount>
-            constructCreditCardTransactionPaginator(
                     API client, HandelsbankenSessionStorage sessionStorage);
 
     @Override
@@ -144,21 +134,6 @@ public abstract class HandelsbankenAgent<
                                 constructAccountTransactionPaginator(
                                         this.bankClient, this.handelsbankenSessionStorage),
                                 constructUpcomingTransactionFetcher(
-                                        this.bankClient, this.handelsbankenSessionStorage))));
-    }
-
-    @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-
-        return Optional.of(
-                new CreditCardRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        constructCreditCardAccountFetcher(
-                                this.bankClient, this.handelsbankenSessionStorage),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                constructCreditCardTransactionPaginator(
                                         this.bankClient, this.handelsbankenSessionStorage))));
     }
 
