@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.HandelsbankenLoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -16,13 +15,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class HandelsbankenAgent<
@@ -103,14 +97,6 @@ public abstract class HandelsbankenAgent<
     protected abstract Optional<TransferController> constructTransferController(
             API client, HandelsbankenSessionStorage sessionStorage, AgentContext context);
 
-    protected abstract TransactionPaginator<TransactionalAccount>
-            constructAccountTransactionPaginator(
-                    API client, HandelsbankenSessionStorage sessionStorage);
-
-    protected abstract UpcomingTransactionFetcher<TransactionalAccount>
-            constructUpcomingTransactionFetcher(
-                    API client, HandelsbankenSessionStorage sessionStorage);
-
     @Override
     protected SessionHandler constructSessionHandler() {
         return new HandelsbankenSessionHandler(
@@ -118,23 +104,6 @@ public abstract class HandelsbankenAgent<
                 this.handelsbankenPersistentStorage,
                 this.credentials,
                 this.handelsbankenSessionStorage);
-    }
-
-    @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new HandelsbankenTransactionalAccountFetcher(
-                                this.bankClient, this.handelsbankenSessionStorage),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                constructAccountTransactionPaginator(
-                                        this.bankClient, this.handelsbankenSessionStorage),
-                                constructUpcomingTransactionFetcher(
-                                        this.bankClient, this.handelsbankenSessionStorage))));
     }
 
     @Override
