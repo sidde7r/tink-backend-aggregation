@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.SparebankenVestAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.SparebankenVestOneTimeActivationCodeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.SparebankenVestCreditCardAccountFetcher;
@@ -41,12 +42,15 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class SparebankenVestAgent extends NextGenerationAgent
         implements RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
     private final SparebankenVestApiClient apiClient;
     private final EncapClient encapClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public SparebankenVestAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -75,6 +79,8 @@ public class SparebankenVestAgent extends NextGenerationAgent
                         SparebankenVestLoanFetcher.create(apiClient));
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -93,8 +99,26 @@ public class SparebankenVestAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         SparebankenVestTransactionFetcher transactionFetcher =
                 SparebankenVestTransactionFetcher.create(apiClient, credentials);
 
@@ -106,12 +130,11 @@ public class SparebankenVestAgent extends NextGenerationAgent
                                 SparebankenVestConstants.PagePagination.START_INDEX),
                         transactionFetcher);
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        SparebankenVestTransactionalAccountFetcher.create(apiClient, credentials),
-                        transactionFetcherController));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                SparebankenVestTransactionalAccountFetcher.create(apiClient, credentials),
+                transactionFetcherController);
     }
 
     @Override
