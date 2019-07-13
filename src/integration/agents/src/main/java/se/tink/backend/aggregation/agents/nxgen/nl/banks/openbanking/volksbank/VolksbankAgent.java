@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
 import java.util.Base64;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.VolksbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionFetcher;
@@ -21,13 +24,16 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class VolksbankAgent extends NextGenerationAgent {
+public class VolksbankAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final VolksbankApiClient volksbankApiClient;
     private final VolksbankHttpClient httpClient;
     private final VolksbankUtils utils;
     private final String BANK_PATH;
     private final String redirectUrl;
+
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public VolksbankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -40,6 +46,8 @@ public class VolksbankAgent extends NextGenerationAgent {
         this.utils = new VolksbankUtils(BANK_PATH);
 
         volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage, utils);
+
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -86,18 +94,35 @@ public class VolksbankAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new VolksbankTransactionalAccountFetcher(volksbankApiClient),
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
-                                        new VolksbankTransactionFetcher(volksbankApiClient)))));
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new VolksbankTransactionalAccountFetcher(volksbankApiClient),
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                new VolksbankTransactionFetcher(volksbankApiClient))));
     }
 
     @Override
