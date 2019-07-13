@@ -9,7 +9,9 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
@@ -41,12 +43,16 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @ProgressiveAuth
 public class IngAgent extends SubsequentGenerationAgent
-        implements RefreshTransferDestinationExecutor, RefreshCreditCardAccountsExecutor {
+        implements RefreshTransferDestinationExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
     private final IngTransferHelper ingTransferHelper;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -58,6 +64,8 @@ public class IngAgent extends SubsequentGenerationAgent
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -78,8 +86,26 @@ public class IngAgent extends SubsequentGenerationAgent
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         IngTransactionFetcher transactionFetcher =
                 new IngTransactionFetcher(credentials, apiClient, ingHelper);
 
@@ -94,12 +120,11 @@ public class IngAgent extends SubsequentGenerationAgent
                         transactionPagePaginationController,
                         transactionFetcher);
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new IngTransactionalAccountFetcher(apiClient, ingHelper),
-                        transactionFetcherController));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new IngTransactionalAccountFetcher(apiClient, ingHelper),
+                transactionFetcherController);
     }
 
     @Override
