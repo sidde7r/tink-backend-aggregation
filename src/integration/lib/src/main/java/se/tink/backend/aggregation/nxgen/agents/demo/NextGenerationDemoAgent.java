@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -39,12 +41,14 @@ import se.tink.libraries.identitydata.IdentityData;
 public abstract class NextGenerationDemoAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshLoanAccountsExecutor {
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
     private final NextGenerationDemoAuthenticator authenticator;
     // TODO Requires changes when multi-currency is implemented. Will do for now
     protected final String currency;
     private InvestmentRefreshController investmentRefreshController;
     private LoanRefreshController loanRefreshController;
+    private CreditCardRefreshController creditCardRefreshController;
 
     public NextGenerationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -82,18 +86,31 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return lazyLoadCreditCardRefreshController().fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return lazyLoadCreditCardRefreshController().fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController lazyLoadCreditCardRefreshController() {
+        if (creditCardRefreshController != null) {
+            return creditCardRefreshController;
+        }
         NextGenerationDemoCreditCardFetcher transactionAndAccountFetcher =
                 new NextGenerationDemoCreditCardFetcher(
                         request.getAccounts(), currency, catalog, getCreditCardAccounts());
 
-        return Optional.of(
+        creditCardRefreshController =
                 new CreditCardRefreshController(
                         metricRefreshController,
                         updateController,
                         transactionAndAccountFetcher,
                         new TransactionFetcherController<>(
-                                transactionPaginationHelper, transactionAndAccountFetcher)));
+                                transactionPaginationHelper, transactionAndAccountFetcher));
+        return creditCardRefreshController;
     }
 
     private InvestmentRefreshController lazyLoadInvestmentRefreshController() {
