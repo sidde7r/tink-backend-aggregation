@@ -1,16 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank;
 
+import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.SwedbankDefaultBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
@@ -51,13 +55,15 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshEInvoiceExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshLoanAccountsExecutor {
+                RefreshLoanAccountsExecutor,
+                RefreshTransferDestinationExecutor {
 
     protected final SwedbankConfiguration configuration;
     protected final SwedbankDefaultApiClient apiClient;
     private EInvoiceRefreshController eInvoiceRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     public SwedbankAbstractAgent(
             CredentialsRequest request,
@@ -97,6 +103,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new SwedbankDefaultLoanFetcher(apiClient));
+
+        transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -175,12 +183,13 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return Optional.of(
-                new TransferDestinationRefreshController(
-                        metricRefreshController,
-                        new SwedbankDefaultTransferDestinationFetcher(apiClient)));
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new SwedbankDefaultTransferDestinationFetcher(apiClient));
     }
 
     @Override
