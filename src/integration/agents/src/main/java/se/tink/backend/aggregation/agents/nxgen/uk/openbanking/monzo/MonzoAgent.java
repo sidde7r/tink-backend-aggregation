@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.MonzoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.configuration.MonzoConfiguration;
@@ -18,9 +21,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class MonzoAgent extends NextGenerationAgent {
+public class MonzoAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
     private final String clientName;
     private final MonzoApiClient apiClient;
+
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public MonzoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -28,6 +34,8 @@ public class MonzoAgent extends NextGenerationAgent {
 
         apiClient = new MonzoApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
+
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -63,17 +71,34 @@ public class MonzoAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final MonzoTransactionalAccountFetcher fetcher =
                 new MonzoTransactionalAccountFetcher(apiClient);
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        fetcher,
-                        new TransactionFetcherController<>(transactionPaginationHelper, fetcher)));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                fetcher,
+                new TransactionFetcherController<>(transactionPaginationHelper, fetcher));
     }
 
     @Override
