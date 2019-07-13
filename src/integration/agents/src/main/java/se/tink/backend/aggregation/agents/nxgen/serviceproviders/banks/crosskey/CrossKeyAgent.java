@@ -8,10 +8,12 @@ import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyInvestmentsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionalAccountFetcher;
@@ -34,7 +36,9 @@ public abstract class CrossKeyAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
 
     protected final CrossKeyApiClient apiClient;
     protected final CrossKeyConfiguration agentConfiguration;
@@ -43,6 +47,7 @@ public abstract class CrossKeyAgent extends NextGenerationAgent
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public CrossKeyAgent(
             CredentialsRequest request,
@@ -67,21 +72,41 @@ public abstract class CrossKeyAgent extends NextGenerationAgent
                         new CrossKeyLoanFetcher(this.apiClient, agentConfiguration));
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
+
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new CrossKeyTransactionalAccountFetcher(this.apiClient, agentConfiguration),
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new CrossKeyTransactionFetcher(
-                                                this.apiClient, agentConfiguration)))));
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                new CrossKeyTransactionalAccountFetcher(this.apiClient, agentConfiguration),
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new CrossKeyTransactionFetcher(
+                                        this.apiClient, agentConfiguration))));
     }
 
     @Override
