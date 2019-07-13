@@ -2,7 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.ImaginBankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.ImaginBankCreditCardFetcher;
@@ -26,16 +29,21 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
  * The main differences are authentication.
  * ImaginBank also has separate account fetching
  */
-public class ImaginBankAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class ImaginBankAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshCreditCardAccountsExecutor {
 
     private final ImaginBankApiClient apiClient;
     private final ImaginBankSessionStorage imaginBankSessionStorage;
+
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public ImaginBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new ImaginBankApiClient(client);
         imaginBankSessionStorage = new ImaginBankSessionStorage(sessionStorage);
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -63,17 +71,25 @@ public class ImaginBankAgent extends NextGenerationAgent implements RefreshIdent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         ImaginBankCreditCardFetcher creditCardFetcher = new ImaginBankCreditCardFetcher(apiClient);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(creditCardFetcher, 0))));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(creditCardFetcher, 0)));
     }
 
     @Override
