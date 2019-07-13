@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.authenticator.SebKortAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.SebKortAccountFetcher;
@@ -20,9 +22,11 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 
-public class SebKortAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class SebKortAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshCreditCardAccountsExecutor {
     private final SebKortApiClient apiClient;
     private final SebKortConfiguration config;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     protected SebKortAgent(
             CredentialsRequest request,
@@ -33,6 +37,8 @@ public class SebKortAgent extends NextGenerationAgent implements RefreshIdentity
 
         this.apiClient = new SebKortApiClient(client, sessionStorage, config);
         this.config = config;
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -44,16 +50,24 @@ public class SebKortAgent extends NextGenerationAgent implements RefreshIdentity
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new SebKortAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new SebKortTransactionFetcher(apiClient)))));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new SebKortAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new SebKortTransactionFetcher(apiClient))));
     }
 
     @Override
