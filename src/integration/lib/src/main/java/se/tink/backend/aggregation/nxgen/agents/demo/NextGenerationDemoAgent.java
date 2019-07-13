@@ -2,17 +2,18 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
@@ -42,13 +43,16 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
     private final NextGenerationDemoAuthenticator authenticator;
     // TODO Requires changes when multi-currency is implemented. Will do for now
     protected final String currency;
     private InvestmentRefreshController investmentRefreshController;
     private LoanRefreshController loanRefreshController;
     private CreditCardRefreshController creditCardRefreshController;
+    private TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public NextGenerationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -66,8 +70,30 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return lazyLoadTransactionalAccountRefreshController().fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return lazyLoadTransactionalAccountRefreshController().fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return lazyLoadTransactionalAccountRefreshController().fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return lazyLoadTransactionalAccountRefreshController().fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController lazyLoadTransactionalAccountRefreshController() {
+        if (transactionalAccountRefreshController != null) {
+            return transactionalAccountRefreshController;
+        }
+
         NextGenerationDemoTransactionFetcher transactionFetcher =
                 new NextGenerationDemoTransactionFetcher(
                         request.getAccounts(),
@@ -76,13 +102,15 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
                         getTransactionAccounts(),
                         getDemoSavingsAccounts());
 
-        return Optional.of(
+        transactionalAccountRefreshController =
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
                         transactionFetcher,
                         new TransactionFetcherController<>(
-                                transactionPaginationHelper, transactionFetcher)));
+                                transactionPaginationHelper, transactionFetcher));
+
+        return transactionalAccountRefreshController;
     }
 
     @Override
