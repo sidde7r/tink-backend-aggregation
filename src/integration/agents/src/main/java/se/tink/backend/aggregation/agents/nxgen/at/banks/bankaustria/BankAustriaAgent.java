@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.authenticator.BankAustriaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.fetcher.BankAustriaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml.OtmlBodyReader;
@@ -18,11 +21,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BankAustriaAgent extends NextGenerationAgent {
+public class BankAustriaAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor,
+        RefreshSavingsAccountsExecutor {
 
     private final OtmlResponseConverter otmlResponseConverter;
     private final BankAustriaSessionStorage bankAustriaSessionStorage;
     private BankAustriaApiClient apiClient;
+
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BankAustriaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -34,6 +40,8 @@ public class BankAustriaAgent extends NextGenerationAgent {
                         BankAustriaConstants.Device.IPHONE7_OTML_LAYOUT_INITIAL);
         this.apiClient = new BankAustriaApiClient(this.client, bankAustriaSessionStorage);
         this.otmlResponseConverter = new OtmlResponseConverter();
+
+        this.transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -54,19 +62,36 @@ public class BankAustriaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         BankAustriaTransactionalAccountFetcher transactionalAccountFetcher =
                 new BankAustriaTransactionalAccountFetcher(apiClient, otmlResponseConverter);
-        return Optional.of(
-                new TransactionalAccountRefreshController(
+        return new TransactionalAccountRefreshController(
                         this.metricRefreshController,
                         this.updateController,
                         transactionalAccountFetcher,
                         new TransactionFetcherController<>(
                                 this.transactionPaginationHelper,
                                 new TransactionDatePaginationController<>(
-                                        transactionalAccountFetcher))));
+                                        transactionalAccountFetcher)));
     }
 
     @Override
