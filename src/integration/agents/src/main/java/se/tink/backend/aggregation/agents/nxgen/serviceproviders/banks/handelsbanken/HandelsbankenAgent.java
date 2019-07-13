@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -107,10 +106,6 @@ public abstract class HandelsbankenAgent<
     protected abstract Optional<TransferController> constructTransferController(
             API client, HandelsbankenSessionStorage sessionStorage, AgentContext context);
 
-    protected abstract Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController(
-                    API client, HandelsbankenSessionStorage sessionStorage);
-
     protected abstract AccountFetcher<CreditCardAccount> constructCreditCardAccountFetcher(
             API client, HandelsbankenSessionStorage sessionStorage);
 
@@ -175,13 +170,6 @@ public abstract class HandelsbankenAgent<
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return loanRefreshController.fetchLoanTransactions();
-    }
-
-    @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return constructTransferDestinationRefreshController(
-                this.bankClient, this.handelsbankenSessionStorage);
     }
 
     @Override
