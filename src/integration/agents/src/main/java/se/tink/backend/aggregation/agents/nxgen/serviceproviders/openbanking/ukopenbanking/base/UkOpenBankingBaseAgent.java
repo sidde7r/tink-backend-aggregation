@@ -7,7 +7,10 @@ import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
@@ -39,7 +42,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
-        implements RefreshTransferDestinationExecutor {
+        implements RefreshTransferDestinationExecutor, RefreshCreditCardAccountsExecutor {
 
     private final Provider tinkProvider;
     private final URL wellKnownURL;
@@ -53,6 +56,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     private boolean disableSslVerification;
 
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
@@ -88,6 +92,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.wellKnownURL = wellKnownURL;
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -226,17 +232,25 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         UkOpenBankingAis ais = getAisSupport();
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        ais.makeCreditCardAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                ais.makeCreditCardTransactionPaginatorController(apiClient))));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                ais.makeCreditCardAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        ais.makeCreditCardTransactionPaginatorController(apiClient)));
     }
 
     @Override
