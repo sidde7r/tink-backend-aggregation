@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
 import com.google.common.base.Strings;
+import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
@@ -22,10 +26,12 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BelfiusAgent extends NextGenerationAgent {
+public class BelfiusAgent extends NextGenerationAgent
+        implements RefreshTransferDestinationExecutor {
 
     private final BelfiusApiClient apiClient;
     private final BelfiusSessionStorage belfiusSessionStorage;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     public BelfiusAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -36,6 +42,8 @@ public class BelfiusAgent extends NextGenerationAgent {
                         this.client,
                         belfiusSessionStorage,
                         getBelfiusLocale(request.getUser().getLocale()));
+
+        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     @Override
@@ -93,11 +101,13 @@ public class BelfiusAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return Optional.of(
-                new TransferDestinationRefreshController(
-                        metricRefreshController, new BelfiusTransferDestinationFetcher(apiClient)));
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new BelfiusTransferDestinationFetcher(apiClient));
     }
 
     @Override
