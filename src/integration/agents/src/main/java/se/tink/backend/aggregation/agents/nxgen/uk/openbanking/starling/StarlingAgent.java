@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
 import java.security.PrivateKey;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.StarlingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
@@ -28,10 +32,12 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /** Starling documentation is available at https://api-sandbox.starlingbank.com/api/swagger.yaml */
-public class StarlingAgent extends NextGenerationAgent {
+public class StarlingAgent extends NextGenerationAgent
+        implements RefreshTransferDestinationExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(StarlingAgent.class);
     private final String clientName;
     private final StarlingApiClient apiClient;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     private ClientConfigurationEntity aisConfiguration;
     private ClientConfigurationEntity pisConfiguration;
@@ -43,6 +49,8 @@ public class StarlingAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
         clientName = request.getProvider().getPayload();
         apiClient = new StarlingApiClient(client, persistentStorage);
+
+        transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     @Override
@@ -101,13 +109,13 @@ public class StarlingAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        LOGGER.info("Creating TransferDestinationRefreshController");
-        return Optional.of(
-                new TransferDestinationRefreshController(
-                        metricRefreshController,
-                        new StarlingTransferDestinationFetcher(apiClient)));
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new StarlingTransferDestinationFetcher(apiClient));
     }
 
     @Override
