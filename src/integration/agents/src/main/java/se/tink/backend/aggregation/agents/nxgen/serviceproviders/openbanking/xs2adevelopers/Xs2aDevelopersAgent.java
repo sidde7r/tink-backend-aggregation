@@ -2,6 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
@@ -24,10 +28,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class Xs2aDevelopersAgent extends NextGenerationAgent {
+public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final String clientName;
     private final Xs2aDevelopersApiClient apiClient;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     protected Xs2aDevelopersAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -35,6 +41,7 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent {
 
         apiClient = new Xs2aDevelopersApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
@@ -82,19 +89,36 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
                 new Xs2aDevelopersTransactionalAccountFetcher(apiClient);
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        accountFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(accountFetcher))));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(accountFetcher)));
     }
 
     @Override
