@@ -56,19 +56,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
             URL wellKnownURL) {
-        super(request, context, signatureKeyPair);
-        configureHttpClient(client);
-        this.disableSslVerification = false;
-
-        this.paymentsHttpClient =
-                new TinkHttpClient(
-                        context.getAggregatorInfo(),
-                        metricContext.getMetricRegistry(),
-                        context.getLogOutputStream(),
-                        signatureKeyPair,
-                        request.getProvider());
-        tinkProvider = request.getProvider();
-        this.wellKnownURL = wellKnownURL;
+        this(request, context, signatureKeyPair, wellKnownURL, false);
     }
 
     public UkOpenBankingBaseAgent(
