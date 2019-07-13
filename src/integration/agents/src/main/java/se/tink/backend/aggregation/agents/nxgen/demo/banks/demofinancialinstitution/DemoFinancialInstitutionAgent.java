@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitu
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.ErrorMessages;
@@ -33,13 +35,16 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 /* This is the agent for the Demo Financial Institution which is a Tink developed test & demo bank */
 
 public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor, RefreshLoanAccountsExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final String clientName;
     private final DemoFinancialInstitutionApiClient apiClient;
     private final SessionStorage sessionStorage;
 
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public DemoFinancialInstitutionAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -54,6 +59,8 @@ public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
 
         loanRefreshController =
                 new LoanRefreshController(metricRefreshController, updateController, loanFetcher);
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -97,18 +104,26 @@ public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         final DemoFinancialInstitutionCreditCardFetcher creditCardFetcher =
                 new DemoFinancialInstitutionCreditCardFetcher(apiClient, sessionStorage);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(creditCardFetcher))));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(creditCardFetcher)));
     }
 
     @Override
