@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor;
 
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.SparebankenSorAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.SparebankenSorMultiFactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginRequest;
@@ -42,10 +43,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
  * config - Add rules to appstore monitor
  */
 public class SparebankenSorAgent extends NextGenerationAgent
-        implements RefreshLoanAccountsExecutor, RefreshCreditCardAccountsExecutor {
+        implements RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
     private final SparebankenSorApiClient apiClient;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public SparebankenSorAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -58,6 +63,7 @@ public class SparebankenSorAgent extends NextGenerationAgent
                 new LoanRefreshController(metricRefreshController, updateController, loanFetcher);
 
         creditCardRefreshController = constructCreditCardRefreshController();
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -99,14 +105,31 @@ public class SparebankenSorAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new SparebankenSorTransactionalAccountFetcher(apiClient),
-                        new SparebankenSorTransactionFetcher(apiClient)));
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new SparebankenSorTransactionalAccountFetcher(apiClient),
+                new SparebankenSorTransactionFetcher(apiClient));
     }
 
     @Override

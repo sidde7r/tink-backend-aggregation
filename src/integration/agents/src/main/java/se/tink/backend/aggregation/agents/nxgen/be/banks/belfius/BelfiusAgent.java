@@ -8,7 +8,9 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
@@ -30,12 +32,16 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BelfiusAgent extends NextGenerationAgent
-        implements RefreshTransferDestinationExecutor, RefreshCreditCardAccountsExecutor {
+        implements RefreshTransferDestinationExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
 
     private final BelfiusApiClient apiClient;
     private final BelfiusSessionStorage belfiusSessionStorage;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BelfiusAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -49,6 +55,8 @@ public class BelfiusAgent extends NextGenerationAgent
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -69,19 +77,36 @@ public class BelfiusAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         BelfiusTransactionalAccountFetcher transactionalAccountFetcher =
                 new BelfiusTransactionalAccountFetcher(this.apiClient, this.belfiusSessionStorage);
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                transactionalAccountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
                         transactionalAccountFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                transactionalAccountFetcher,
-                                transactionalAccountFetcher)));
+                        transactionalAccountFetcher));
     }
 
     private String getBelfiusLocale(String userLocale) {

@@ -2,8 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen;
 
 import com.google.common.base.Strings;
 import java.time.ZoneId;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.RaiffeisenOAuth2Authenticator;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.fetcher.RaiffeisenAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.fetcher.RaiffeisenTransactionFetcher;
@@ -19,9 +22,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class RaiffeisenAgent extends NextGenerationAgent {
+public class RaiffeisenAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final RaiffeisenApiClient raiffeisenApiClient;
+
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public RaiffeisenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -33,6 +39,9 @@ public class RaiffeisenAgent extends NextGenerationAgent {
         }
 
         this.raiffeisenApiClient = new RaiffeisenApiClient(client, persistentStorage, redirectUrl);
+
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -51,18 +60,35 @@ public class RaiffeisenAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new RaiffeisenAccountFetcher(raiffeisenApiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionMonthPaginationController<>(
-                                        new RaiffeisenTransactionFetcher(raiffeisenApiClient),
-                                        ZoneId.of("Europe/Madrid")))));
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new RaiffeisenAccountFetcher(raiffeisenApiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionMonthPaginationController<>(
+                                new RaiffeisenTransactionFetcher(raiffeisenApiClient),
+                                ZoneId.of("Europe/Madrid"))));
     }
 
     @Override

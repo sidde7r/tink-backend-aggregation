@@ -2,8 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 
 import static org.apache.http.client.config.CookieSpecs.IGNORE_COOKIES;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.ArgentaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionalTransactionFetcher;
@@ -19,9 +22,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class ArgentaAgent extends NextGenerationAgent {
+public class ArgentaAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final ArgentaApiClient apiClient;
+
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public ArgentaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -29,6 +35,9 @@ public class ArgentaAgent extends NextGenerationAgent {
         configureHttpClient(client);
         this.apiClient =
                 new ArgentaApiClient(this.client, new ArgentaSessionStorage(this.sessionStorage));
+
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -53,8 +62,26 @@ public class ArgentaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         String deviceId = new ArgentaPersistentStorage(this.persistentStorage).getDeviceId();
         ArgentaTransactionalAccountFetcher transactionalAccountFetcher =
                 new ArgentaTransactionalAccountFetcher(apiClient, deviceId);
@@ -70,12 +97,11 @@ public class ArgentaAgent extends NextGenerationAgent {
                 new TransactionFetcherController<>(
                         transactionPaginationHelper, transactionPagePaginationController);
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        transactionalAccountFetcher,
-                        transactionFetcherController));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                transactionalAccountFetcher,
+                transactionFetcherController);
     }
 
     @Override

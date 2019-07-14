@@ -1,31 +1,19 @@
 package se.tink.backend.aggregation.nxgen.agents;
 
 import java.security.Security;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.SuperAbstractAgent;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
@@ -42,12 +30,8 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountRefresher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.TransactionRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -65,9 +49,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
  * Same as the old NextGenerationAgent, but with SupplementalInformationController + Helper removed.
  */
 public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                TransferExecutorNxgen,
+        implements TransferExecutorNxgen,
                 PersistentLogin,
                 // TODO auth: remove this implements
                 ProgressiveAuthAgent {
@@ -87,15 +69,10 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     // TODO auth: remove helper and controller when refactor is done
     protected final SupplementalInformationFormer supplementalInformationFormer;
 
-    private List<Refresher> refreshers;
     private TransferController transferController;
     private Authenticator authenticator;
     private SessionController sessionController;
     private PaymentController paymentController;
-
-    // Until we can refresh CHECKING and SAVING accounts & transactions separately.
-    private boolean hasRefreshedCheckingAccounts = false;
-    private boolean hasRefreshedCheckingTransactions = false;
 
     protected SubsequentGenerationAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -235,26 +212,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         return authenticator;
     }
 
-    private List<Refresher> getRefreshControllers() {
-        if (refreshers == null) {
-            refreshers = new ArrayList<>();
-            constructTransactionalAccountRefreshController().ifPresent(refreshers::add);
-        }
-        return refreshers;
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends Refresher> List<T> getRefreshControllersOfType(Class<T> cls) {
-        return getRefreshControllers().stream()
-                .filter(cls::isInstance)
-                .map(refresher -> (T) refresher)
-                .collect(Collectors.toList());
-    }
-
-    private <T extends Refresher> Optional<T> getRefreshController(Class<T> cls) {
-        return getRefreshControllersOfType(cls).stream().findFirst();
-    }
-
     private Optional<TransferController> getTransferController() {
         if (transferController == null) {
             transferController = constructTransferController().orElse(null);
@@ -286,75 +243,11 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
 
     protected abstract Authenticator constructAuthenticator();
 
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.empty();
-    }
-
     protected abstract SessionHandler constructSessionHandler();
 
     // transfer and payment executors
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return this.fetchTransactionalAccounts();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return this.fetchTransactionalAccounts();
-    }
-
-    private FetchAccountsResponse fetchTransactionalAccounts() {
-        if (hasRefreshedCheckingAccounts) {
-            return new FetchAccountsResponse(Collections.emptyList());
-        }
-        hasRefreshedCheckingAccounts = true;
-
-        return fetchTransactionalAccountsPerType(TransactionalAccountRefreshController.class);
-    }
-
-    private <T extends AccountRefresher> FetchAccountsResponse fetchTransactionalAccountsPerType(
-            Class<T> cls) {
-        List<Account> accounts = new ArrayList<>();
-        for (AccountRefresher refresher : getRefreshControllersOfType(cls)) {
-            accounts.addAll(refresher.fetchAccounts().keySet());
-        }
-
-        return new FetchAccountsResponse(accounts);
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return this.fetchTransactionalAccountTransactions();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return this.fetchTransactionalAccountTransactions();
-    }
-
-    private FetchTransactionsResponse fetchTransactionalAccountTransactions() {
-        if (hasRefreshedCheckingTransactions) {
-            return new FetchTransactionsResponse(Collections.emptyMap());
-        }
-        hasRefreshedCheckingTransactions = true;
-
-        return fetchTransactionsPerType(TransactionalAccountRefreshController.class);
-    }
-
-    private <T extends TransactionRefresher> FetchTransactionsResponse fetchTransactionsPerType(
-            Class<T> cls) {
-
-        Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
-
-        for (TransactionRefresher refresher : getRefreshControllersOfType(cls)) {
-            transactionsMap.putAll(refresher.fetchTransactions());
-        }
-        return new FetchTransactionsResponse(transactionsMap);
     }
 
     public Optional<PaymentController> constructPaymentController() {

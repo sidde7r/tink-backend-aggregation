@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankAccountLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankMultiTransactionsFetcher;
@@ -34,7 +35,9 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         extends NextGenerationAgent
         implements RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
     protected final MarketSpecificApiClient apiClient;
     protected final DanskeBankConfiguration configuration;
     protected final String deviceId;
@@ -42,6 +45,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public DanskeBankAgent(
             CredentialsRequest request,
@@ -70,6 +74,9 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
 
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
+
         // Must add the filter here because `configureHttpClient` is called before the agent
         // constructor
         // (from NextGenerationAgent constructor).
@@ -80,15 +87,32 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
             TinkHttpClient client, DanskeBankConfiguration configuration);
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new DanskeBankTransactionalAccountFetcher(
-                                this.credentials, this.apiClient, this.configuration),
-                        createTransactionFetcherController()));
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                new DanskeBankTransactionalAccountFetcher(
+                        this.credentials, this.apiClient, this.configuration),
+                createTransactionFetcherController());
     }
 
     @Override

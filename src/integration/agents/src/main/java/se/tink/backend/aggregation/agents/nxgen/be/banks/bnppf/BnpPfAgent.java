@@ -2,10 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.authenticator.BnpPfAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.fetcher.BnpPfTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.filter.BnpPfHttpFilter;
@@ -17,17 +20,20 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BnpPfAgent extends NextGenerationAgent {
+public class BnpPfAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private static final String BNPPF_CERT_PATH = "/etc/tink/bnppf-cert.p12";
 
     private final BnpPfApiClient apiClient;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BnpPfAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
         apiClient = new BnpPfApiClient(client);
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -47,16 +53,33 @@ public class BnpPfAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         BnpPfTransactionalAccountFetcher transactionalAccountFetcher =
                 new BnpPfTransactionalAccountFetcher(apiClient);
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        transactionalAccountFetcher,
-                        transactionalAccountFetcher));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                transactionalAccountFetcher,
+                transactionalAccountFetcher);
     }
 
     @Override

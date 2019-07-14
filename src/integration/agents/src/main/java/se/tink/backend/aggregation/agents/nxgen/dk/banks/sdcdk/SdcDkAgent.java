@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.sdcdk;
 
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.sdcdk.parser.SdcDkTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
@@ -31,11 +32,15 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 /*
  * Configure market specific client, this is DK
  */
-public class SdcDkAgent extends SdcAgent implements RefreshCreditCardAccountsExecutor {
+public class SdcDkAgent extends SdcAgent
+        implements RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
     private static Logger LOG = LoggerFactory.getLogger(SdcDkAgent.class);
     private static final int DK_MAX_CONSECUTIVE_EMPTY_PAGES = 8;
 
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public SdcDkAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -47,6 +52,7 @@ public class SdcDkAgent extends SdcAgent implements RefreshCreditCardAccountsExe
                 new SdcDkTransactionParser());
 
         creditCardRefreshController = constructCreditCardRefreshController();
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -61,22 +67,37 @@ public class SdcDkAgent extends SdcAgent implements RefreshCreditCardAccountsExe
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new SdcAccountFetcher(
-                                this.bankClient, this.sdcSessionStorage, this.agentConfiguration),
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new SdcTransactionFetcher(
-                                                this.bankClient,
-                                                this.sdcSessionStorage,
-                                                this.parser),
-                                        DK_MAX_CONSECUTIVE_EMPTY_PAGES))));
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                new SdcAccountFetcher(
+                        this.bankClient, this.sdcSessionStorage, this.agentConfiguration),
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new SdcTransactionFetcher(
+                                        this.bankClient, this.sdcSessionStorage, this.parser),
+                                DK_MAX_CONSECUTIVE_EMPTY_PAGES)));
     }
 
     @Override

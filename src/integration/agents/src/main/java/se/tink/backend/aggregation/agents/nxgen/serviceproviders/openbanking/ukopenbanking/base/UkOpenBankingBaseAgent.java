@@ -10,7 +10,9 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
@@ -42,7 +44,10 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
-        implements RefreshTransferDestinationExecutor, RefreshCreditCardAccountsExecutor {
+        implements RefreshTransferDestinationExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
 
     private final Provider tinkProvider;
     private final URL wellKnownURL;
@@ -57,6 +62,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
@@ -94,6 +100,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
+
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -216,19 +225,36 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         UkOpenBankingAis ais = getAisSupport();
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        getTransactionalAccountFetcher(),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                ais.makeAccountTransactionPaginatorController(apiClient),
-                                ais.makeUpcomingTransactionFetcher(apiClient).orElse(null))));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                getTransactionalAccountFetcher(),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        ais.makeAccountTransactionPaginatorController(apiClient),
+                        ais.makeUpcomingTransactionFetcher(apiClient).orElse(null)));
     }
 
     @Override
