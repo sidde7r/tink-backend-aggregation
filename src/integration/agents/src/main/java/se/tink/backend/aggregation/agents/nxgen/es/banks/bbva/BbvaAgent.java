@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -35,10 +37,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class BbvaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshLoanAccountsExecutor {
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
     private BbvaApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public BbvaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -53,6 +57,8 @@ public class BbvaAgent extends NextGenerationAgent
         this.loanRefreshController =
                 new LoanRefreshController(
                         metricRefreshController, updateController, new BbvaLoanFetcher(apiClient));
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -81,16 +87,24 @@ public class BbvaAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new BbvaCreditCardFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
-                                        new BbvaCreditCardTransactionFetcher(apiClient)))));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new BbvaCreditCardFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                new BbvaCreditCardTransactionFetcher(apiClient))));
     }
 
     @Override

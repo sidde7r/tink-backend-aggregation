@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPinAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataCreditCardAccountFetcher;
@@ -28,9 +30,10 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BankdataAgent extends NextGenerationAgent
-        implements RefreshInvestmentAccountsExecutor {
+        implements RefreshInvestmentAccountsExecutor, RefreshCreditCardAccountsExecutor {
     private BankdataApiClient bankClient;
     private final InvestmentRefreshController investmentRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public BankdataAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -43,6 +46,8 @@ public class BankdataAgent extends NextGenerationAgent
         investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController, updateController, investmentFetcher);
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -81,7 +86,16 @@ public class BankdataAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         BankdataCreditCardAccountFetcher ccAccountFetcher =
                 new BankdataCreditCardAccountFetcher(bankClient);
         BankdataCreditCardTransactionFetcher ccTransactionFetcher =
@@ -96,12 +110,11 @@ public class BankdataAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper, ccTransactionPagePaginationController);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        ccAccountFetcher,
-                        ccTransactionFetcherController));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                ccAccountFetcher,
+                ccTransactionFetcherController);
     }
 
     @Override

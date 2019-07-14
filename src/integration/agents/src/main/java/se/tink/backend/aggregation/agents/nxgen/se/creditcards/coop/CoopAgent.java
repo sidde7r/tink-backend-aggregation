@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.authenticator.CoopPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.fetcher.creditcards.CoopCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.fetcher.transactionalaccounts.CoopTransactionalAccountFetcher;
@@ -17,14 +20,17 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class CoopAgent extends NextGenerationAgent {
+public class CoopAgent extends NextGenerationAgent implements RefreshCreditCardAccountsExecutor {
     private final CoopApiClient apiClient;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public CoopAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new CoopApiClient(client, sessionStorage);
         sessionStorage.put(CoopConstants.Storage.CREDENTIALS_ID, credentials.getId());
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -51,7 +57,16 @@ public class CoopAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         CoopCreditCardFetcher creditCardFetcher =
                 new CoopCreditCardFetcher(apiClient, sessionStorage);
 
@@ -63,7 +78,7 @@ public class CoopAgent extends NextGenerationAgent {
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionPagePaginationController<>(creditCardFetcher, 0)));
-        return Optional.of(creditCardRefreshController);
+        return creditCardRefreshController;
     }
 
     @Override

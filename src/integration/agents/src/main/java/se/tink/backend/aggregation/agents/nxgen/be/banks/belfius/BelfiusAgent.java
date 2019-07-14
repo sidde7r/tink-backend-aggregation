@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
@@ -27,11 +30,12 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BelfiusAgent extends NextGenerationAgent
-        implements RefreshTransferDestinationExecutor {
+        implements RefreshTransferDestinationExecutor, RefreshCreditCardAccountsExecutor {
 
     private final BelfiusApiClient apiClient;
     private final BelfiusSessionStorage belfiusSessionStorage;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public BelfiusAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -44,6 +48,7 @@ public class BelfiusAgent extends NextGenerationAgent
                         getBelfiusLocale(request.getUser().getLocale()));
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -90,14 +95,22 @@ public class BelfiusAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         BelfiusCreditCardFetcher accountFetcher = new BelfiusCreditCardFetcher(this.apiClient);
-        return Optional.of(
-                new CreditCardRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        accountFetcher,
-                        accountFetcher));
+        return new CreditCardRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                accountFetcher,
+                accountFetcher);
     }
 
     @Override

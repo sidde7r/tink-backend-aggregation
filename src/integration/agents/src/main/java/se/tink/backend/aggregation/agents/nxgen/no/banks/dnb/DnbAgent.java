@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingaccount.DnbAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingaccount.DnbTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.DnbCreditCardFetcher;
@@ -20,13 +23,15 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class DnbAgent extends NextGenerationAgent {
+public class DnbAgent extends NextGenerationAgent implements RefreshCreditCardAccountsExecutor {
     private final DnbApiClient apiClient;
     private final DnbAuthenticator authenticator;
     private final DnbAccountFetcher accountFetcher;
     private final DnbTransactionFetcher transactionFetcher;
     private final DnbCreditCardFetcher creditCardFetcher;
     private final DnbCreditTransactionFetcher creditTransactionFetcher;
+
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public DnbAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -38,6 +43,8 @@ public class DnbAgent extends NextGenerationAgent {
         this.transactionFetcher = new DnbTransactionFetcher(apiClient);
         this.creditCardFetcher = new DnbCreditCardFetcher(apiClient);
         this.creditTransactionFetcher = new DnbCreditTransactionFetcher(apiClient);
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -62,13 +69,21 @@ public class DnbAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        creditTransactionFetcher));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                creditTransactionFetcher);
     }
 
     @Override

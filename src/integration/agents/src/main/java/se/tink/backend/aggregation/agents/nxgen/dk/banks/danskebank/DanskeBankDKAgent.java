@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
@@ -25,10 +27,12 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class DanskeBankDKAgent extends DanskeBankAgent implements RefreshLoanAccountsExecutor {
+public class DanskeBankDKAgent extends DanskeBankAgent
+        implements RefreshLoanAccountsExecutor, RefreshCreditCardAccountsExecutor {
 
     private static final int DK_MAX_CONSECUTIVE_EMPTY_PAGES = 8;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public DanskeBankDKAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -41,6 +45,8 @@ public class DanskeBankDKAgent extends DanskeBankAgent implements RefreshLoanAcc
                         this.updateController,
                         new DanskeBankLoanFetcher(
                                 this.credentials, this.apiClient, this.configuration));
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
 
         configureHttpClient(client);
     }
@@ -97,14 +103,22 @@ public class DanskeBankDKAgent extends DanskeBankAgent implements RefreshLoanAcc
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new DanskeBankCreditCardFetcher(
-                                this.apiClient, this.configuration.getLanguageCode()),
-                        createTransactionFetcherController()));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                new DanskeBankCreditCardFetcher(
+                        this.apiClient, this.configuration.getLanguageCode()),
+                createTransactionFetcherController());
     }
 
     private TransactionFetcherController createTransactionFetcherController() {

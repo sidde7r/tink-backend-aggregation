@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -82,11 +81,6 @@ public abstract class SibsBaseAgent extends NextGenerationAgent {
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionKeyPaginationController<>(transactionFetcher))));
-    }
-
-    @Override
-    public Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
     }
 
     @Override

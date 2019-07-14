@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -36,11 +38,13 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class SantanderEsAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshLoanAccountsExecutor {
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
     private final SantanderEsApiClient apiClient;
     private final SantanderEsSessionStorage santanderEsSessionStorage;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SantanderEsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -59,6 +63,8 @@ public class SantanderEsAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new SantanderEsLoanFetcher(apiClient, santanderEsSessionStorage));
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
 
         configureHttpClient(client);
     }
@@ -88,18 +94,26 @@ public class SantanderEsAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         CreditCardFetcher creditcardFetcher =
                 new CreditCardFetcher(apiClient, santanderEsSessionStorage);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditcardFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(creditcardFetcher))));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditcardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(creditcardFetcher)));
     }
 
     @Override

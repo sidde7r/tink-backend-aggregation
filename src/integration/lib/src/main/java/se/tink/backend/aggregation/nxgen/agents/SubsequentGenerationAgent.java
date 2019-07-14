@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.SuperAbstractAgent;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -47,7 +46,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.TransactionRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
@@ -69,7 +67,6 @@ import se.tink.libraries.transfer.rpc.Transfer;
 public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshCreditCardAccountsExecutor,
                 TransferExecutorNxgen,
                 PersistentLogin,
                 // TODO auth: remove this implements
@@ -242,7 +239,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         if (refreshers == null) {
             refreshers = new ArrayList<>();
             constructTransactionalAccountRefreshController().ifPresent(refreshers::add);
-            constructCreditCardRefreshController().ifPresent(refreshers::add);
         }
         return refreshers;
     }
@@ -295,10 +291,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         return Optional.empty();
     }
 
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
-    }
-
     protected abstract SessionHandler constructSessionHandler();
 
     // transfer and payment executors
@@ -314,11 +306,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
         return this.fetchTransactionalAccounts();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCreditCardAccounts() {
-        return fetchTransactionalAccountsPerType(CreditCardRefreshController.class);
     }
 
     private FetchAccountsResponse fetchTransactionalAccounts() {
@@ -348,11 +335,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return this.fetchTransactionalAccountTransactions();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCreditCardTransactions() {
-        return fetchTransactionsPerType(CreditCardRefreshController.class);
     }
 
     private FetchTransactionsResponse fetchTransactionalAccountTransactions() {

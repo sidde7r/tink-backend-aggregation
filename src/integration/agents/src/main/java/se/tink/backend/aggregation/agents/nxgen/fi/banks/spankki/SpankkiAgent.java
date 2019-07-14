@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -36,12 +38,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class SpankkiAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshLoanAccountsExecutor {
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
     private final SpankkiSessionStorage spankkiSessionStorage;
     private final SpankkiPersistentStorage spankkiPersistentStorage;
     private final SpankkiApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SpankkiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -61,6 +65,8 @@ public class SpankkiAgent extends NextGenerationAgent
         this.loanRefreshController =
                 new LoanRefreshController(
                         this.metricRefreshController, this.updateController, loanFetcher);
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -101,14 +107,22 @@ public class SpankkiAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         SpankkiCreditCardFetcher creditcardFetcher = new SpankkiCreditCardFetcher(this.apiClient);
-        return Optional.of(
-                new CreditCardRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        creditcardFetcher,
-                        creditcardFetcher));
+        return new CreditCardRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                creditcardFetcher,
+                creditcardFetcher);
     }
 
     @Override

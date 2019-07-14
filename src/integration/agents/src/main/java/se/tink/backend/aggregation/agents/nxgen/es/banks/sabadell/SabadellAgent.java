@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -39,10 +41,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class SabadellAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshLoanAccountsExecutor {
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
     private final SabadellApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SabadellAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -61,6 +65,8 @@ public class SabadellAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new SabadellLoanFetcher(apiClient));
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -89,16 +95,24 @@ public class SabadellAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new SabadellCreditCardFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(
-                                        new SabadellCreditCardTransactionFetcher(apiClient), 1))));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new SabadellCreditCardFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(
+                                new SabadellCreditCardTransactionFetcher(apiClient), 1)));
     }
 
     @Override

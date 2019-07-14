@@ -4,6 +4,9 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.sdcdk.parser.SdcDkTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
@@ -28,9 +31,11 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 /*
  * Configure market specific client, this is DK
  */
-public class SdcDkAgent extends SdcAgent {
+public class SdcDkAgent extends SdcAgent implements RefreshCreditCardAccountsExecutor {
     private static Logger LOG = LoggerFactory.getLogger(SdcDkAgent.class);
     private static final int DK_MAX_CONSECUTIVE_EMPTY_PAGES = 8;
+
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SdcDkAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -40,6 +45,8 @@ public class SdcDkAgent extends SdcAgent {
                 signatureKeyPair,
                 new SdcDkConfiguration(request.getProvider()),
                 new SdcDkTransactionParser());
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -73,7 +80,16 @@ public class SdcDkAgent extends SdcAgent {
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         SdcCreditCardFetcher creditCardFetcher =
                 new SdcCreditCardFetcher(
                         this.bankClient,
@@ -81,15 +97,14 @@ public class SdcDkAgent extends SdcAgent {
                         this.parser,
                         this.agentConfiguration);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        creditCardFetcher, DK_MAX_CONSECUTIVE_EMPTY_PAGES))));
+        return new CreditCardRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                creditCardFetcher, DK_MAX_CONSECUTIVE_EMPTY_PAGES)));
     }
 
     private Authenticator constructSmsAuthenticator() {

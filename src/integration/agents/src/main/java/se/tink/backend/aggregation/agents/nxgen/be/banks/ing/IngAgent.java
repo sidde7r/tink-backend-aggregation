@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
@@ -38,11 +41,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @ProgressiveAuth
 public class IngAgent extends SubsequentGenerationAgent
-        implements RefreshTransferDestinationExecutor {
+        implements RefreshTransferDestinationExecutor, RefreshCreditCardAccountsExecutor {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
     private final IngTransferHelper ingTransferHelper;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -53,6 +57,7 @@ public class IngAgent extends SubsequentGenerationAgent
         this.ingTransferHelper = new IngTransferHelper(catalog);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -98,15 +103,20 @@ public class IngAgent extends SubsequentGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         IngCreditCardFetcher creditCardFetcher = new IngCreditCardFetcher(ingHelper);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        creditCardFetcher));
+        return new CreditCardRefreshController(
+                metricRefreshController, updateController, creditCardFetcher, creditCardFetcher);
     }
 
     @Override

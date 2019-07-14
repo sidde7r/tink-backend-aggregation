@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.credit.ErsteBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.ErsteBankAccountFetcher;
@@ -19,14 +22,19 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class ErsteBankPasswordAgent extends NextGenerationAgent {
+public class ErsteBankPasswordAgent extends NextGenerationAgent
+        implements RefreshCreditCardAccountsExecutor {
 
     private final ErsteBankApiClient ersteBankApiClient;
+
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public ErsteBankPasswordAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.ersteBankApiClient = new ErsteBankApiClient(this.client, persistentStorage);
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -50,18 +58,26 @@ public class ErsteBankPasswordAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         ErsteBankCreditCardFetcher creditFetcher =
                 new ErsteBankCreditCardFetcher(ersteBankApiClient);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(creditFetcher, 0))));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(creditFetcher, 0)));
     }
 
     @Override

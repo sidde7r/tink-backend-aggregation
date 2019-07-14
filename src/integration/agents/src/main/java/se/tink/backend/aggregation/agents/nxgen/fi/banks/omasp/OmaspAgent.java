@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspConstants.Storage;
@@ -31,9 +33,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 
 public class OmaspAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor, RefreshLoanAccountsExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
     private final OmaspApiClient apiClient;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public OmaspAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -45,6 +50,8 @@ public class OmaspAgent extends NextGenerationAgent
         loanRefreshController =
                 new LoanRefreshController(
                         metricRefreshController, updateController, new OmaspLoanFetcher(apiClient));
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -83,14 +90,22 @@ public class OmaspAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         OmaspCreditCardFetcher omaspCreditCardFetcher = new OmaspCreditCardFetcher(apiClient);
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        omaspCreditCardFetcher,
-                        omaspCreditCardFetcher));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                omaspCreditCardFetcher,
+                omaspCreditCardFetcher);
     }
 
     @Override

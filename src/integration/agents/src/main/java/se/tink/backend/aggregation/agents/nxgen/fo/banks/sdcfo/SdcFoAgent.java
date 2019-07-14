@@ -11,13 +11,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcCo
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcSmsOtpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcTransactionFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -59,26 +57,6 @@ public class SdcFoAgent extends SdcAgent {
                                                 this.sdcSessionStorage,
                                                 this.parser),
                                         MAX_CONSECUTIVE_EMPTY_PAGES))));
-    }
-
-    @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        SdcCreditCardFetcher creditCardFetcher =
-                new SdcCreditCardFetcher(
-                        this.bankClient,
-                        this.sdcSessionStorage,
-                        this.parser,
-                        this.agentConfiguration);
-
-        return Optional.of(
-                new CreditCardRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        creditCardFetcher, MAX_CONSECUTIVE_EMPTY_PAGES))));
     }
 
     private Authenticator constructSmsAuthenticator() {

@@ -4,7 +4,10 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.VolvoFinansBankIdAutenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.VolvoFinansCreditCardFetcher;
@@ -22,14 +25,18 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 
-public class VolvoFinansAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class VolvoFinansAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshCreditCardAccountsExecutor {
 
     private final VolvoFinansApiClient apiClient;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public VolvoFinansAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new VolvoFinansApiClient(client, sessionStorage);
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -55,16 +62,24 @@ public class VolvoFinansAgent extends NextGenerationAgent implements RefreshIden
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new VolvoFinansCreditCardFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new VolvoFinansCreditCardFetcher(apiClient)))));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new VolvoFinansCreditCardFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new VolvoFinansCreditCardFetcher(apiClient))));
     }
 
     @Override

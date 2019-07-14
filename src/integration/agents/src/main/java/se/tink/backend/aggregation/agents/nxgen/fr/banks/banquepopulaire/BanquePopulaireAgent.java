@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.BanquePopulaireAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.creditcard.BanquePopulaireCreditCardFetcher;
@@ -24,9 +26,10 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BanquePopulaireAgent extends NextGenerationAgent
-        implements RefreshLoanAccountsExecutor {
+        implements RefreshLoanAccountsExecutor, RefreshCreditCardAccountsExecutor {
     private BanquePopulaireApiClient apiClient;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public BanquePopulaireAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -42,6 +45,8 @@ public class BanquePopulaireAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new BanquePopulaireLoanFetcher(apiClient));
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -74,7 +79,16 @@ public class BanquePopulaireAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         BanquePopulaireCreditCardFetcher creditCardFetcher =
                 new BanquePopulaireCreditCardFetcher(apiClient);
 
@@ -87,7 +101,7 @@ public class BanquePopulaireAgent extends NextGenerationAgent
                                 transactionPaginationHelper,
                                 new TransactionKeyPaginationController<>(creditCardFetcher)));
 
-        return Optional.of(creditCardController);
+        return creditCardController;
     }
 
     @Override

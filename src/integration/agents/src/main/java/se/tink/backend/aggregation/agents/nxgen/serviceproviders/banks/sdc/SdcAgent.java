@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcAccountFetcher;
@@ -27,7 +29,9 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SdcAgent extends NextGenerationAgent
-        implements RefreshInvestmentAccountsExecutor, RefreshLoanAccountsExecutor {
+        implements RefreshInvestmentAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     protected final SdcTransactionParser parser;
     protected SdcConfiguration agentConfiguration;
@@ -36,6 +40,7 @@ public abstract class SdcAgent extends NextGenerationAgent
     protected SdcPersistentStorage sdcPersistentStorage;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SdcAgent(
             CredentialsRequest request,
@@ -64,6 +69,8 @@ public abstract class SdcAgent extends NextGenerationAgent
                         this.updateController,
                         new SdcLoanFetcher(
                                 this.bankClient, this.sdcSessionStorage, request.getProvider()));
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -106,7 +113,16 @@ public abstract class SdcAgent extends NextGenerationAgent
     protected abstract SdcApiClient createApiClient(SdcConfiguration agentConfiguration);
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         SdcCreditCardFetcher creditCardFetcher =
                 new SdcCreditCardFetcher(
                         this.bankClient,
@@ -114,14 +130,13 @@ public abstract class SdcAgent extends NextGenerationAgent
                         this.parser,
                         this.agentConfiguration);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(creditCardFetcher))));
+        return new CreditCardRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(creditCardFetcher)));
     }
 
     @Override

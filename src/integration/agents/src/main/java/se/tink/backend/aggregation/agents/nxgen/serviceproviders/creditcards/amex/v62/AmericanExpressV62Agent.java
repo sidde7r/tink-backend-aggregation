@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.AmericanExpressV62PasswordAuthenticator;
@@ -27,12 +29,13 @@ import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AmericanExpressV62Agent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor {
+        implements RefreshIdentityDataExecutor, RefreshCreditCardAccountsExecutor {
 
     private final AmericanExpressV62ApiClient apiClient;
     private final AmericanExpressV62Configuration config;
     private final MultiIpGateway gateway;
     private final Storage instanceStorage;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     protected AmericanExpressV62Agent(
             CredentialsRequest request,
@@ -47,6 +50,8 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
         this.config = config;
         this.gateway = new MultiIpGateway(client, credentials);
         this.instanceStorage = new Storage();
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -66,7 +71,16 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         AmericanExpressV62CreditCardFetcher americanExpressV62CreditCardFetcher =
                 AmericanExpressV62CreditCardFetcher.create(config, apiClient, instanceStorage);
 
@@ -83,12 +97,11 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper, amexV66TransactionPagePaginationController);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        americanExpressV62CreditCardFetcher,
-                        amexV62TransactionFetcherController));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                americanExpressV62CreditCardFetcher,
+                amexV62TransactionFetcherController);
     }
 
     @Override

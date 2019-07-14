@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.LoopProofTransactionFetcherController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebAbstractAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
@@ -16,12 +19,17 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class SebAccountsAndCardsAgent extends SebAbstractAgent<SebAccountsAndCardsApiClient> {
+public final class SebAccountsAndCardsAgent extends SebAbstractAgent<SebAccountsAndCardsApiClient>
+        implements RefreshCreditCardAccountsExecutor {
+
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SebAccountsAndCardsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new SebAccountsAndCardsApiClient(client, sessionStorage);
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -41,19 +49,27 @@ public final class SebAccountsAndCardsAgent extends SebAbstractAgent<SebAccounts
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new SebCardAccountFetcher(apiClient),
-                        // TODO: restore TransactionFetcherController and remove
-                        // LoopProofTransactionFetcherController
-                        new LoopProofTransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionMonthPaginationController<>(
-                                        new SebCardTransactionsFetcher(apiClient),
-                                        SebCommonConstants.ZONE_ID))));
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new SebCardAccountFetcher(apiClient),
+                // TODO: restore TransactionFetcherController and remove
+                // LoopProofTransactionFetcherController
+                new LoopProofTransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionMonthPaginationController<>(
+                                new SebCardTransactionsFetcher(apiClient),
+                                SebCommonConstants.ZONE_ID)));
     }
 }

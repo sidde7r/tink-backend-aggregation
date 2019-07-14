@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.IberCajaPasswordAuthenticator;
@@ -28,11 +30,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IberCajaAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final IberCajaApiClient apiClient;
     private final IberCajaSessionStorage iberCajaSessionStorage;
     private final InvestmentRefreshController investmentRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public IberCajaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -45,6 +50,8 @@ public class IberCajaAgent extends NextGenerationAgent
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController, updateController, investmentAccountFetcher);
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -71,19 +78,27 @@ public class IberCajaAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         IberCajaCreditCardFetcher creditCardFetcher = new IberCajaCreditCardFetcher(apiClient);
         IberCajaCreditCardTransactionalFetcher transactionalFetcher =
                 new IberCajaCreditCardTransactionalFetcher(apiClient);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(transactionalFetcher))));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(transactionalFetcher)));
     }
 
     @Override

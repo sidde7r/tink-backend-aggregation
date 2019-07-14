@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.IngAtPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit.IngAtCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit.IngAtCreditCardTransactionFetcher;
@@ -20,9 +23,11 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IngAtAgent extends NextGenerationAgent {
+public class IngAtAgent extends NextGenerationAgent implements RefreshCreditCardAccountsExecutor {
     private final IngAtSessionStorage ingAtSessionStorage;
     private final IngAtApiClient apiClient;
+
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public IngAtAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -31,6 +36,8 @@ public class IngAtAgent extends NextGenerationAgent {
         this.ingAtSessionStorage = new IngAtSessionStorage(sessionStorage);
         this.apiClient =
                 new IngAtApiClient(this.client, request.getProvider(), this.ingAtSessionStorage);
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -59,17 +66,25 @@ public class IngAtAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new IngAtCreditCardAccountFetcher(apiClient, ingAtSessionStorage),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new IngAtCreditCardTransactionFetcher(
-                                                apiClient, ingAtSessionStorage)))));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new IngAtCreditCardAccountFetcher(apiClient, ingAtSessionStorage),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new IngAtCreditCardTransactionFetcher(
+                                        apiClient, ingAtSessionStorage))));
     }
 
     @Override

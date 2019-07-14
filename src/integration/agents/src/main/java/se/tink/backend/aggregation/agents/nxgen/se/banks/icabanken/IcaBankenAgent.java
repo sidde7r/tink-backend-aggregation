@@ -5,12 +5,14 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
@@ -53,7 +55,8 @@ public class IcaBankenAgent extends NextGenerationAgent
                 RefreshEInvoiceExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshTransferDestinationExecutor {
+                RefreshTransferDestinationExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
@@ -62,6 +65,7 @@ public class IcaBankenAgent extends NextGenerationAgent
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public IcaBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -86,6 +90,8 @@ public class IcaBankenAgent extends NextGenerationAgent
                         new IcaBankenLoanFetcher(apiClient));
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -120,17 +126,25 @@ public class IcaBankenAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         IcaBankenCreditCardFetcher creditCardFetcher = new IcaBankenCreditCardFetcher(apiClient);
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(creditCardFetcher))));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(creditCardFetcher)));
     }
 
     @Override

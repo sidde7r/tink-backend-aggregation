@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
@@ -22,11 +24,13 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class ICSAgent extends NextGenerationAgent {
+public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAccountsExecutor {
 
     private final ICSApiClient apiClient;
     private final String clientName;
     private final String redirectUri;
+
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public ICSAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -35,6 +39,8 @@ public class ICSAgent extends NextGenerationAgent {
         clientName = request.getProvider().getPayload().split(" ")[0];
         redirectUri = request.getProvider().getPayload().split(" ")[1];
         apiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -81,17 +87,25 @@ public class ICSAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new ICSAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(
-                                        new ICSCreditCardFetcher(apiClient), 0),
-                                null)));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new ICSAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(
+                                new ICSCreditCardFetcher(apiClient), 0),
+                        null));
     }
 
     @Override

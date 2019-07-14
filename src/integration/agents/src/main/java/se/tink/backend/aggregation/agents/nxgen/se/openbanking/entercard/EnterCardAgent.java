@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.authenticator.EnterCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.configuration.EnterCardConfiguration;
@@ -21,10 +24,13 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class EnterCardAgent extends NextGenerationAgent {
+public final class EnterCardAgent extends NextGenerationAgent
+        implements RefreshCreditCardAccountsExecutor {
 
     private final String clientName;
     private final EnterCardApiClient apiClient;
+
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public EnterCardAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -32,6 +38,8 @@ public final class EnterCardAgent extends NextGenerationAgent {
 
         apiClient = new EnterCardApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -63,16 +71,24 @@ public final class EnterCardAgent extends NextGenerationAgent {
     }
 
     @Override
-    public Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new CreditCardAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new CreditCardTransactionFetcher(apiClient)))));
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new CreditCardAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new CreditCardTransactionFetcher(apiClient))));
     }
 
     @Override

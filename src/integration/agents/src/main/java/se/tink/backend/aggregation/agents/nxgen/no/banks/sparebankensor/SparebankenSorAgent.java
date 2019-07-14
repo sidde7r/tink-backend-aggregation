@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.SparebankenSorAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.SparebankenSorMultiFactorAuthenticator;
@@ -40,9 +42,10 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
  * config - Add rules to appstore monitor
  */
 public class SparebankenSorAgent extends NextGenerationAgent
-        implements RefreshLoanAccountsExecutor {
+        implements RefreshLoanAccountsExecutor, RefreshCreditCardAccountsExecutor {
     private final SparebankenSorApiClient apiClient;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SparebankenSorAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -53,6 +56,8 @@ public class SparebankenSorAgent extends NextGenerationAgent
         SparebankenSorLoanFetcher loanFetcher = new SparebankenSorLoanFetcher(apiClient);
         loanRefreshController =
                 new LoanRefreshController(metricRefreshController, updateController, loanFetcher);
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -105,18 +110,23 @@ public class SparebankenSorAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         SparebankenSorCreditCardAccountFetcher ccAccountFetcher =
                 new SparebankenSorCreditCardAccountFetcher(apiClient);
         SparebankenSorCreditCardTransactionFetcher ccTransactionFetcher =
                 new SparebankenSorCreditCardTransactionFetcher();
 
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        ccAccountFetcher,
-                        ccTransactionFetcher));
+        return new CreditCardRefreshController(
+                metricRefreshController, updateController, ccAccountFetcher, ccTransactionFetcher);
     }
 
     @Override

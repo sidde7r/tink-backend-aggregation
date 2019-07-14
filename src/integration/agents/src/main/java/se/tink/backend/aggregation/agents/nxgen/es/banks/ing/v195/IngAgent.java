@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -37,11 +39,13 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class IngAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshLoanAccountsExecutor {
+                RefreshLoanAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final IngApiClient ingApiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -56,6 +60,7 @@ public class IngAgent extends NextGenerationAgent
                         metricRefreshController, updateController, accountFetcher);
 
         this.loanRefreshController = constructLoanRefreshController();
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -90,8 +95,16 @@ public class IngAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
 
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         IngCreditCardAccountFetcher accountFetcher = new IngCreditCardAccountFetcher(ingApiClient);
         IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
 
@@ -110,7 +123,7 @@ public class IngAgent extends NextGenerationAgent
                         accountFetcher,
                         fetcherController);
 
-        return Optional.of(refreshController);
+        return refreshController;
     }
 
     @Override

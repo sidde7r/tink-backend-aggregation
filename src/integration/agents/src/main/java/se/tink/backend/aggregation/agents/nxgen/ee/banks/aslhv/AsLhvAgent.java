@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.authenticator.AsLhvPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.fetcher.creditcard.AsLhvCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.fetcher.creditcard.AsLhvCreditCardTransactionFetcher;
@@ -19,16 +22,19 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class AsLhvAgent extends NextGenerationAgent {
+public class AsLhvAgent extends NextGenerationAgent implements RefreshCreditCardAccountsExecutor {
 
     private final AsLhvApiClient apiClient;
     private final AsLhvSessionStorage asLhvSessionStorage;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public AsLhvAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         asLhvSessionStorage = new AsLhvSessionStorage(sessionStorage);
         this.apiClient = new AsLhvApiClient(this.client);
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -53,17 +59,25 @@ public class AsLhvAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
         final AsLhvCreditCardTransactionFetcher transactionFetcher =
                 new AsLhvCreditCardTransactionFetcher(apiClient, asLhvSessionStorage);
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new AsLhvCreditCardAccountFetcher(apiClient, asLhvSessionStorage),
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(transactionFetcher))));
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new AsLhvCreditCardAccountFetcher(apiClient, asLhvSessionStorage),
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(transactionFetcher)));
     }
 
     @Override
