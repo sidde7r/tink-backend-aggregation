@@ -21,8 +21,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BankAustriaAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor,
-        RefreshSavingsAccountsExecutor {
+public class BankAustriaAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final OtmlResponseConverter otmlResponseConverter;
     private final BankAustriaSessionStorage bankAustriaSessionStorage;
@@ -41,7 +41,8 @@ public class BankAustriaAgent extends NextGenerationAgent implements RefreshChec
         this.apiClient = new BankAustriaApiClient(this.client, bankAustriaSessionStorage);
         this.otmlResponseConverter = new OtmlResponseConverter();
 
-        this.transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -85,13 +86,12 @@ public class BankAustriaAgent extends NextGenerationAgent implements RefreshChec
         BankAustriaTransactionalAccountFetcher transactionalAccountFetcher =
                 new BankAustriaTransactionalAccountFetcher(apiClient, otmlResponseConverter);
         return new TransactionalAccountRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        transactionalAccountFetcher,
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        transactionalAccountFetcher)));
+                this.metricRefreshController,
+                this.updateController,
+                transactionalAccountFetcher,
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(transactionalAccountFetcher)));
     }
 
     @Override

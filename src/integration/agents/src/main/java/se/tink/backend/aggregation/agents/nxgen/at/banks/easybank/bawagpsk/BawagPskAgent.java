@@ -35,7 +35,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class BawagPskAgent extends NextGenerationAgent
         implements RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshCreditCardAccountsExecutor, RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
 
     private final BawagPskApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
@@ -105,16 +107,16 @@ public class BawagPskAgent extends NextGenerationAgent
         final BawagPskTransactionFetcher<TransactionalAccount> transactionFetcher =
                 new BawagPskTransactionFetcher<TransactionalAccount>(apiClient);
         return new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new BawagPskTransactionalAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                // TODO Alternatively, implement a custom pagination controller
-                                // which keeps fetching
-                                // transactions until AccountStatementItem/Position equals 1
-                                // (signifying the earliest entry)
-                                new TransactionDatePaginationController<>(transactionFetcher)));
+                metricRefreshController,
+                updateController,
+                new BawagPskTransactionalAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        // TODO Alternatively, implement a custom pagination controller
+                        // which keeps fetching
+                        // transactions until AccountStatementItem/Position equals 1
+                        // (signifying the earliest entry)
+                        new TransactionDatePaginationController<>(transactionFetcher)));
     }
 
     @Override
