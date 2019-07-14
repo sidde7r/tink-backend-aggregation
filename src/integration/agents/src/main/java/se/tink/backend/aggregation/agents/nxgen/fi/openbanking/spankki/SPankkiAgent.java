@@ -21,4 +21,19 @@ public final class SPankkiAgent extends CrosskeyBaseAgent {
     public String getClientName() {
         return SPankkiConstants.Market.CLIENT_NAME;
     }
+
+    @Override
+    protected String getBaseAPIUrl() {
+        return SPankkiConstants.BASE_API_URL;
+    }
+
+    @Override
+    protected String getBaseAuthUrl() {
+        return SPankkiConstants.BASE_AUTH_URL;
+    }
+
+    @Override
+    protected String getxFapiFinancialId() {
+        return SPankkiConstants.X_FAPI_FINANCIAL_ID;
+    }
 }

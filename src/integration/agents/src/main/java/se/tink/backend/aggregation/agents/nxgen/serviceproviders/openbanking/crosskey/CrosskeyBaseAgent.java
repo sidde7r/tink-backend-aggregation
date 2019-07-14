@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.CrosskeyBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
@@ -13,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.TransactionalAccountAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.TransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.session.CrosskeySessionHandler;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JWTUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -27,10 +27,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class CrosskeyBaseAgent extends NextGenerationAgent
-        implements RefreshCreditCardAccountsExecutor {
+        implements RefreshCreditCardAccountsExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
 
     protected final CrosskeyBaseApiClient apiClient;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final String clientName;
 
     public CrosskeyBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -44,11 +48,21 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         updateController,
                         new CreditCardAccountFetcher(apiClient),
                         new CreditCardTransactionFetcher(apiClient));
+
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
+        this.clientName = request.getProvider().getPayload();
     }
 
     protected abstract String getIntegrationName();
 
     protected abstract String getClientName();
+
+    protected abstract String getBaseAPIUrl();
+
+    protected abstract String getBaseAuthUrl();
+
+    protected abstract String getxFapiFinancialId();
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -56,18 +70,22 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
 
         final CrosskeyBaseConfiguration crosskeyBaseConfiguration = getClientConfiguration();
 
-        apiClient.setConfiguration(crosskeyBaseConfiguration);
-
-        client.setSslClientCertificate(
-                JWTUtils.readFile(crosskeyBaseConfiguration.getClientKeyStorePath()),
-                crosskeyBaseConfiguration.getClientKeyStorePassword());
+        apiClient.setConfiguration(crosskeyBaseConfiguration, configuration.getEidasProxy());
     }
 
     private CrosskeyBaseConfiguration getClientConfiguration() {
+        CrosskeyBaseConfiguration crosskeyBaseConfiguration = getClientConfiguration("crosskey");
+        crosskeyBaseConfiguration.setBaseAPIUrl(getBaseAPIUrl());
+        crosskeyBaseConfiguration.setBaseAuthUrl(getBaseAuthUrl());
+        crosskeyBaseConfiguration.setxFapiFinancialId(getxFapiFinancialId());
+        return crosskeyBaseConfiguration;
+    }
+
+    protected CrosskeyBaseConfiguration getClientConfiguration(String integrationName) {
         return configuration
                 .getIntegrations()
                 .getClientConfiguration(
-                        getIntegrationName(), getClientName(), CrosskeyBaseConfiguration.class)
+                        integrationName, clientName, CrosskeyBaseConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
@@ -88,14 +106,31 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new TransactionalAccountAccountFetcher(apiClient),
-                        new TransactionalAccountTransactionFetcher(apiClient)));
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new TransactionalAccountAccountFetcher(apiClient),
+                new TransactionalAccountTransactionFetcher(apiClient));
     }
 
     @Override

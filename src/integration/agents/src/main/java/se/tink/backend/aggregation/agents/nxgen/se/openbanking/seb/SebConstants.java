@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb;
 
 public abstract class SebConstants {
-
     public static final String INTEGRATION_NAME = "seb";
 
     public static class Urls {
@@ -14,6 +13,13 @@ public abstract class SebConstants {
         public static final String ACCOUNTS = BASE_URL + BASE_AIS + "/identified2/accounts";
         public static final String TRANSACTIONS =
                 BASE_URL + BASE_AIS + "/identified2/accounts/{accountId}/transactions";
+        private static final String BASE_PIS = BASE_URL + "/pis/v5/identified2/payments";
+        public static final String CREATE_PAYMENT = BASE_PIS + "/{paymentProduct}";
+        public static final String GET_PAYMENT = BASE_PIS + "/{paymentProduct}/{paymentId}";
+        public static final String GET_PAYMENT_STATUS =
+                BASE_PIS + "/{paymentProduct}/{paymentId}/status";
+        public static final String SIGN_PAYMENT =
+                BASE_PIS + "/{paymentProduct}/{paymentId}/authorisations";
     }
 
     public static class QueryKeys {
@@ -46,6 +52,7 @@ public abstract class SebConstants {
     public static class HeaderKeys {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String PSU_CORPORATE_ID = "PSU-Corporate-ID";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class StorageKeys {
@@ -64,6 +71,8 @@ public abstract class SebConstants {
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class Fetcher {
@@ -74,6 +83,12 @@ public abstract class SebConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String UNKNOWN_PAYMENT_PRODUCT =
+                "The payment product could not be determined";
+        public static final String CROSS_BORDER_PAYMENT_NOT_SUPPORTED =
+                "Cross border payment is still not supported";
+        public static final String AUTHENTICATION_METHOD_ID_MISSING =
+                "Could not find authentication method id";
     }
 
     public static class Format {
@@ -86,5 +101,9 @@ public abstract class SebConstants {
         // Include the PSU-Corporate-ID parameter in the API call to trigger corporate data in the
         // dynamic sandbox. Leaving this field black will trigger private sandbox data.
         public static final Object PSU_CORPORATE_ID = "40073144970009";
+    }
+
+    public class SebSignSteps {
+        public static final String SAMPLE_STEP = "SAMPLE_STEP";
     }
 }

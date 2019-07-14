@@ -69,6 +69,7 @@ public final class FiduciaConstants {
         public static final String TRUE = "true";
         public static final String VALID_UNTIL = "2019-11-11";
         public static final String FALSE = "false";
+        public static final String DATE_FORMAT = "dd MM yyyy";
     }
 
     public static class SignatureKeys {

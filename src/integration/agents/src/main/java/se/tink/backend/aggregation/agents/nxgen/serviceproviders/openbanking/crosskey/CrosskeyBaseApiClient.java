@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import java.util.Arrays;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Encryption;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.OIDCValues;
@@ -17,8 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.accessconsents.RequestDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.accessconsents.RiskEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.oidcrequestobject.IdTokenClaim;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.oidcrequestobject.JWTAuthPayload;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.oidcrequestobject.JWTHeader;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.oidcrequestobject.JwtAuthPayload;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.oidcrequestobject.JwtHeader;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.rpc.InitialTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
@@ -26,7 +25,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JWTUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -34,13 +34,13 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import tink.org.apache.http.HttpHeaders;
 
 public class CrosskeyBaseApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private CrosskeyBaseConfiguration configuration;
+    private EidasProxyConfiguration eidasProxyConfiguration;
 
     public CrosskeyBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
@@ -52,14 +52,18 @@ public class CrosskeyBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    public void setConfiguration(CrosskeyBaseConfiguration configuration) {
+    public void setConfiguration(
+            CrosskeyBaseConfiguration configuration,
+            EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+        this.client.setEidasProxy(eidasProxyConfiguration, "Tink");
     }
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+                .header(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -96,8 +100,8 @@ public class CrosskeyBaseApiClient {
         final String clientId = getConfiguration().getClientId();
 
         return client.request(url)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .header(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .queryParam(QueryKeys.CLIENT_ID, clientId);
     }
 
@@ -110,7 +114,6 @@ public class CrosskeyBaseApiClient {
         final String clientSecret = getConfiguration().getClientSecret();
 
         final String redirectUri = getConfiguration().getRedirectUrl();
-        final String keyPath = getConfiguration().getClientSigningKeyPath();
         final String baseAuthUrl = getConfiguration().getBaseAuthUrl();
 
         final InitialTokenResponse clientCredentials = getInitialTokenResponse();
@@ -118,9 +121,9 @@ public class CrosskeyBaseApiClient {
 
         sessionStorage.put(StorageKeys.CONSENT, accessConsentResponse);
 
-        final JWTHeader jwtHeader = new JWTHeader(OIDCValues.ALG, OIDCValues.TYP);
-        final JWTAuthPayload jwtAuthPayload =
-                new JWTAuthPayload(
+        final JwtHeader jwtHeader = new JwtHeader(OIDCValues.ALG, OIDCValues.TYP);
+        final JwtAuthPayload jwtAuthPayload =
+                new JwtAuthPayload(
                         OIDCValues.SCOPE,
                         new IdTokenClaim(
                                 OIDCValues.TOKEN_ID_PREFIX
@@ -131,9 +134,9 @@ public class CrosskeyBaseApiClient {
                         state,
                         state,
                         clientId);
+
         final String oidcRequest =
-                JWTUtils.constructOIDCRequestObject(
-                        jwtHeader, jwtAuthPayload, keyPath, Encryption.KEY_ALGORITHM);
+                JwtUtils.toOidcBase64(eidasProxyConfiguration, jwtHeader, jwtAuthPayload);
 
         return client.request(baseAuthUrl + Urls.OAUTH)
                 .header(HeaderKeys.X_API_KEY, clientSecret)
@@ -153,6 +156,7 @@ public class CrosskeyBaseApiClient {
         final String baseApiUrl = getConfiguration().getBaseAPIUrl();
 
         return createTokenRequest(baseApiUrl + Urls.TOKEN)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .header(HeaderKeys.X_API_KEY, clientSecret)
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.CLIENT_CREDENTIALS)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
@@ -226,16 +230,6 @@ public class CrosskeyBaseApiClient {
                 .setTransactionType(TransactionTypeEntity.DEBIT);
     }
 
-    private AccessConsentResponse getConsent(
-            InitialTokenResponse clientCredentials, String consentId) {
-        final String baseApiUrl = getConfiguration().getBaseAPIUrl();
-        final URL url =
-                new URL(baseApiUrl + Urls.ACCOUNT_ACCESS_CONSENT)
-                        .parameter(UrlParameters.CONSENT_ID, consentId);
-
-        return createAuthorizationRequest(clientCredentials, url).get(AccessConsentResponse.class);
-    }
-
     public OAuth2Token getRefreshToken(String refreshToken) {
         final String redirectUri = getConfiguration().getRedirectUrl();
         final String baseApiUrl = getConfiguration().getBaseAPIUrl();
@@ -256,11 +250,5 @@ public class CrosskeyBaseApiClient {
 
     public void setTokenToSession(OAuth2Token accessToken) {
         sessionStorage.put(StorageKeys.TOKEN, accessToken);
-    }
-
-    private AccessConsentResponse getAccessConsentFromSession() {
-        return sessionStorage
-                .get(StorageKeys.CONSENT, AccessConsentResponse.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONSENT));
     }
 }

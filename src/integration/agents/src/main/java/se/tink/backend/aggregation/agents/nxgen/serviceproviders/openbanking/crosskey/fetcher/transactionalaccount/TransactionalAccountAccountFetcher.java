@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.CheckingBuildStep;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.TinkIdentifier;
 import se.tink.libraries.amount.Amount;
 
@@ -31,7 +32,7 @@ public class TransactionalAccountAccountFetcher implements AccountFetcher<Transa
                 .collect(Collectors.toList());
     }
 
-    protected CheckingAccount toCheckingAccount(AccountEntity accountEntity) {
+    private CheckingAccount toCheckingAccount(AccountEntity accountEntity) {
         final CrosskeyAccountBalancesResponse crosskeyAccountBalancesResponse =
                 apiClient.fetchAccountBalances(accountEntity.getAccountId());
 
@@ -42,27 +43,26 @@ public class TransactionalAccountAccountFetcher implements AccountFetcher<Transa
         return getCheckingAccount(accountEntity, accountDetails, amount);
     }
 
-    protected CheckingAccount getCheckingAccount(
+    private CheckingAccount getCheckingAccount(
             AccountEntity accountEntity,
             Optional<AccountDetailsEntity> accountDetails,
             AmountEntity amount) {
-        final String uniqueIdentifier =
+
+        final String uniqueIdentifier = accountEntity.getAccountId();
+
+        final String accountNumber =
                 accountDetails
                         .map(AccountDetailsEntity::getIdentification)
-                        .orElse(accountEntity.getAccountId());
-
-        final String accountAlias =
-                accountDetails
-                        .map(AccountDetailsEntity::getName)
                         .orElse(accountEntity.getAccountId());
 
         final CheckingBuildStep checkingBuildStep =
                 CheckingAccount.builder()
                         .setUniqueIdentifier(uniqueIdentifier)
-                        .setAccountNumber(uniqueIdentifier)
+                        .setAccountNumber(accountNumber)
                         .setBalance(new Amount(amount.getCurrency(), amount.getAmount()))
-                        .setAlias(accountAlias)
+                        .setAlias(accountEntity.getDescription())
                         .addAccountIdentifier(new TinkIdentifier(uniqueIdentifier))
+                        .addAccountIdentifier(new IbanIdentifier(accountNumber))
                         .setApiIdentifier(accountEntity.getAccountId())
                         .setProductName(accountEntity.getDescription());
 
