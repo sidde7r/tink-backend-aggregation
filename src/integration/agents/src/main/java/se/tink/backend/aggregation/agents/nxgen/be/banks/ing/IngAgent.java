@@ -2,8 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers.USER_AGENT;
 
+import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller.IngCardReaderAuthenticationController;
@@ -33,10 +37,12 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @ProgressiveAuth
-public class IngAgent extends SubsequentGenerationAgent {
+public class IngAgent extends SubsequentGenerationAgent
+        implements RefreshTransferDestinationExecutor {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
     private final IngTransferHelper ingTransferHelper;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -45,6 +51,8 @@ public class IngAgent extends SubsequentGenerationAgent {
         this.apiClient = new IngApiClient(client);
         this.ingHelper = new IngHelper(sessionStorage);
         this.ingTransferHelper = new IngTransferHelper(catalog);
+
+        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -102,12 +110,13 @@ public class IngAgent extends SubsequentGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return Optional.of(
-                new TransferDestinationRefreshController(
-                        metricRefreshController,
-                        new IngTransferDestinationFetcher(apiClient, ingHelper)));
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new IngTransferDestinationFetcher(apiClient, ingHelper));
     }
 
     @Override

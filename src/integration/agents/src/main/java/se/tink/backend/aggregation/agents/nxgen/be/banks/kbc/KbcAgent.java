@@ -1,9 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.KbcAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.KbcBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcCreditCardFetcher;
@@ -26,11 +30,13 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @ProgressiveAuth
-public final class KbcAgent extends NextGenerationAgent {
+public final class KbcAgent extends NextGenerationAgent
+        implements RefreshTransferDestinationExecutor {
 
     private final KbcApiClient apiClient;
     private final String kbcLanguage;
     private KbcHttpFilter httpFilter;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     public KbcAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -38,6 +44,8 @@ public final class KbcAgent extends NextGenerationAgent {
         configureHttpClient(client);
         kbcLanguage = getKbcLanguage(request.getUser().getLocale());
         this.apiClient = new KbcApiClient(client);
+
+        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -87,12 +95,14 @@ public final class KbcAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return Optional.of(
-                new TransferDestinationRefreshController(
-                        metricRefreshController,
-                        new KbcTransferDestinationFetcher(apiClient, kbcLanguage, sessionStorage)));
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController,
+                new KbcTransferDestinationFetcher(apiClient, kbcLanguage, sessionStorage));
     }
 
     @Override

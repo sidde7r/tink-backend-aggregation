@@ -15,13 +15,11 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.SuperAbstractAgent;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
@@ -29,7 +27,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
@@ -53,7 +50,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -74,7 +70,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
-                RefreshTransferDestinationExecutor,
                 TransferExecutorNxgen,
                 PersistentLogin,
                 // TODO auth: remove this implements
@@ -248,7 +243,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
             refreshers = new ArrayList<>();
             constructTransactionalAccountRefreshController().ifPresent(refreshers::add);
             constructCreditCardRefreshController().ifPresent(refreshers::add);
-            constructTransferDestinationRefreshController().ifPresent(refreshers::add);
         }
         return refreshers;
     }
@@ -302,11 +296,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     }
 
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
-    }
-
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
@@ -384,18 +373,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
             transactionsMap.putAll(refresher.fetchTransactions());
         }
         return new FetchTransactionsResponse(transactionsMap);
-    }
-
-    @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        TransferDestinationRefreshController destinationRefresher =
-                getRefreshController(TransferDestinationRefreshController.class).orElse(null);
-        if (destinationRefresher == null) {
-            return new FetchTransferDestinationsResponse(Collections.emptyMap());
-        }
-        Map<Account, List<TransferDestinationPattern>> refreshTransferDestination =
-                destinationRefresher.refreshTransferDestinationsFor(accounts);
-        return new FetchTransferDestinationsResponse(refreshTransferDestination);
     }
 
     public Optional<PaymentController> constructPaymentController() {

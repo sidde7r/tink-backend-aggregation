@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingAccountFetcher;
@@ -34,7 +38,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
+public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
+        implements RefreshTransferDestinationExecutor {
 
     private final Provider tinkProvider;
     private final URL wellKnownURL;
@@ -47,6 +52,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private boolean disableSslVerification;
 
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
+
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
     private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> transactionalAccountFetcher;
@@ -56,19 +63,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
             URL wellKnownURL) {
-        super(request, context, signatureKeyPair);
-        configureHttpClient(client);
-        this.disableSslVerification = false;
-
-        this.paymentsHttpClient =
-                new TinkHttpClient(
-                        context.getAggregatorInfo(),
-                        metricContext.getMetricRegistry(),
-                        context.getLogOutputStream(),
-                        signatureKeyPair,
-                        request.getProvider());
-        tinkProvider = request.getProvider();
-        this.wellKnownURL = wellKnownURL;
+        this(request, context, signatureKeyPair, wellKnownURL, false);
     }
 
     public UkOpenBankingBaseAgent(
@@ -91,6 +86,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                         request.getProvider());
         tinkProvider = request.getProvider();
         this.wellKnownURL = wellKnownURL;
+
+        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -243,11 +240,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return Optional.of(
-                new TransferDestinationRefreshController(
-                        metricRefreshController, new UkOpenBankingTransferDestinationFetcher()));
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new UkOpenBankingTransferDestinationFetcher());
     }
 
     @Override
