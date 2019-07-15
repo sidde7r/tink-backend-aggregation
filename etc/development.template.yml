@@ -207,7 +207,6 @@ agentsServiceConfiguration:
     activobank:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -218,7 +217,6 @@ agentsServiceConfiguration:
     atlanticoeuropa:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -229,7 +227,6 @@ agentsServiceConfiguration:
     bancobpi-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -240,7 +237,6 @@ agentsServiceConfiguration:
     bancoctt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -251,7 +247,6 @@ agentsServiceConfiguration:
     bancomontepio:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -262,7 +257,6 @@ agentsServiceConfiguration:
     bankinter:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -273,7 +267,6 @@ agentsServiceConfiguration:
     big:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -294,7 +287,6 @@ agentsServiceConfiguration:
     bpg:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -325,7 +317,6 @@ agentsServiceConfiguration:
     caixa-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -336,7 +327,6 @@ agentsServiceConfiguration:
     caixacrl-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -347,7 +337,6 @@ agentsServiceConfiguration:
     caixa-fr:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -358,7 +347,6 @@ agentsServiceConfiguration:
     cemah:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -380,7 +368,6 @@ agentsServiceConfiguration:
     creditoagricola:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -392,7 +379,6 @@ agentsServiceConfiguration:
     eurobic-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -404,7 +390,6 @@ agentsServiceConfiguration:
     millenniumbcp:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -416,7 +401,6 @@ agentsServiceConfiguration:
     novobanco:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -437,7 +421,6 @@ agentsServiceConfiguration:
     novobancoacores:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
@@ -449,7 +432,6 @@ agentsServiceConfiguration:
     santander-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
