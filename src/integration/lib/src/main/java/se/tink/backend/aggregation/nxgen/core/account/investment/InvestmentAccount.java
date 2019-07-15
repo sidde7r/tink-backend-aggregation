@@ -18,12 +18,12 @@ public class InvestmentAccount extends Account {
                     .add(AccountTypes.PENSION)
                     .build();
 
-    private List<Portfolio> portfolios;
+    private List<Portfolio> systemPortfolios;
 
     private InvestmentAccount(
             Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder) {
         super(builder);
-        this.portfolios = builder.getPortfolios();
+        this.systemPortfolios = builder.getPortfolios();
     }
 
     public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
@@ -39,8 +39,8 @@ public class InvestmentAccount extends Account {
         return builder(uniqueIdentifier).setBalance(balance);
     }
 
-    public List<Portfolio> getPortfolios() {
-        return Optional.ofNullable(this.portfolios)
+    public List<Portfolio> getSystemPortfolios() {
+        return Optional.ofNullable(this.systemPortfolios)
                 .<List<Portfolio>>map(p -> ImmutableList.copyOf(p))
                 .orElseGet(Collections::emptyList);
     }

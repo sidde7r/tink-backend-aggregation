@@ -48,7 +48,8 @@ public class UpdateController {
 
     public Pair<se.tink.backend.agents.rpc.Account, AccountFeatures> updateAccount(
             InvestmentAccount account) {
-        return updateAccount(account, AccountFeatures.createForPortfolios(account.getPortfolios()));
+        return updateAccount(
+                account, AccountFeatures.createForPortfolios(account.getSystemPortfolios()));
     }
 
     private Pair<se.tink.backend.agents.rpc.Account, AccountFeatures> updateAccount(
