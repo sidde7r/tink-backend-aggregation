@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalLimitType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
@@ -58,13 +59,7 @@ public class AccountBalanceEntity {
     }
 
     public Optional<Amount> getAvailableCredit() {
-
-        return Optional.ofNullable(creditLine).orElseGet(Collections::emptyList).stream()
-                .filter(
-                        credit ->
-                                credit.getType()
-                                        == UkOpenBankingApiDefinitions.ExternalLimitType.AVAILABLE)
-                .findAny()
+        return ExternalLimitType.getPreferredCreditLineEntity(creditLine)
                 .map(CreditLineEntity::getAmount);
     }
 

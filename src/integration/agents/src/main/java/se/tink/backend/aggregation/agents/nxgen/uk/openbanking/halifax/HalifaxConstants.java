@@ -23,5 +23,16 @@ final class HalifaxConstants {
             public static final String WELL_KNOWN_URL =
                     "https://authorise-api.halifax-online.co.uk/prod01/channel/hfx/.well-known/openid-configuration";
         }
+
+        class V31 {
+            public static final String AIS_AUTH_URL =
+                    "https://secure-api.halifax.co.uk/prod01/lbg/hfx/open-banking/v3.1/aisp";
+            public static final String AIS_API_URL =
+                    "https://secure-api.halifax.co.uk/prod01/lbg/hfx/open-banking/v3.1/aisp";
+            public static final String PIS_AUTH_URL = "";
+            public static final String PIS_API_URL = "";
+            public static final String WELL_KNOWN_URL =
+                    "https://authorise-api.halifax-online.co.uk/prod01/channel/hfx/.well-known/openid-configuration";
+        }
     }
 }
