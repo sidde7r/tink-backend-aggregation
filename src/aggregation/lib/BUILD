@@ -99,9 +99,9 @@ java_library(
         "//third_party:org_springframework_spring_core",
         "//third_party:org_springframework_spring_expression",
         "//third_party:org_xerial_snappy_snappy_java",
+        "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@tink_backend//src/libraries/event_producer_service_client",
         "@tink_backend//src/libraries/protobuf_type_utils",
-        "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
     ],
 )
 
@@ -153,8 +153,8 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:pl_pragmatists_junitparams",
+        "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@tink_backend//src/libraries/event_producer_service_client",
         "@tink_backend//src/libraries/uuid",
-        "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
     ],
 )
