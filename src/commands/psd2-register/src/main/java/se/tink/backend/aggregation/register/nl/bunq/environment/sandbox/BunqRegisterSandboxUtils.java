@@ -55,7 +55,7 @@ public final class BunqRegisterSandboxUtils {
             throw new IllegalStateException(e);
         }
 
-        X509Certificate rootCert = getCertificateFromPEMBytes(rootCertString.getBytes());
+        X509Certificate rootCert = getCertificateFromPemBytes(rootCertString.getBytes());
         return x509CertificateToPem(rootCert);
     }
 
@@ -137,7 +137,7 @@ public final class BunqRegisterSandboxUtils {
         return writer.toString();
     }
 
-    private static X509Certificate getCertificateFromPEMBytes(byte[] byteCertificate) {
+    private static X509Certificate getCertificateFromPemBytes(byte[] byteCertificate) {
         try {
             ByteArrayInputStream isCert = new ByteArrayInputStream(byteCertificate);
 
