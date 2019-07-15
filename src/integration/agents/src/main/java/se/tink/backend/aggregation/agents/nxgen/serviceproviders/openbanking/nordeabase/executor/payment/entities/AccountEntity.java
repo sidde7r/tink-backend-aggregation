@@ -44,36 +44,28 @@ public class AccountEntity {
     }
 
     public AccountIdentifier toTinkAccountIdentifier() {
-        AccountIdentifier accountIdentifier;
         switch (toTinkAccountType()) {
             case IBAN:
-                accountIdentifier = new IbanIdentifier(value);
-                break;
+                return new IbanIdentifier(value);
 
             case SE:
-                accountIdentifier = new SwedishIdentifier(value);
-                break;
+                return new SwedishIdentifier(value);
 
             case SE_BG:
-                accountIdentifier = new BankGiroIdentifier(value);
-                break;
+                return new BankGiroIdentifier(value);
 
             case SE_PG:
-                accountIdentifier = new PlusGiroIdentifier(value);
-                break;
+                return new PlusGiroIdentifier(value);
 
             case NO:
-                accountIdentifier = new NorwegianIdentifier(value);
-                break;
+                return new NorwegianIdentifier(value);
 
             case DK:
-                accountIdentifier = new DanishIdentifier(value);
-                break;
+                return new DanishIdentifier(value);
 
             default:
                 throw new IllegalArgumentException(
                         "Unrecognized Tink account type " + toTinkAccountType());
         }
-        return accountIdentifier;
     }
 }
