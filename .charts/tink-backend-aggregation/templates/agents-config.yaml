@@ -26,7 +26,7 @@ data:
       {{- if .Values.agentDataAvailabilityTrackerAvailable }}
       agentDataAvailabilityTrackerConfiguration:
         host: agent-data-availability-tracker.agent-data-availability-tracker.svc.cluster.local
-        port: 3306
+        port: 443
       {{- end }}
 
       {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
