@@ -110,7 +110,7 @@ public final class RedsysConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final boolean TRUE = true;
         public static final boolean FALSE = false;
-        public static final int FREQUENCY_PER_DAY = 100;
+        public static final int FREQUENCY_PER_DAY = 4;
         public static final String VALID_UNTIL = "9999-12-31";
         public static final String ALL_ACCOUNTS = "allAccounts";
     }
