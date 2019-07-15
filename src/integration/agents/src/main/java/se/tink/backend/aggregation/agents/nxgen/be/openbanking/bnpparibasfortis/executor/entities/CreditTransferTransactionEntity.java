@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Arrays;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.PaymentRequestValues;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -13,10 +12,11 @@ public class CreditTransferTransactionEntity {
     private List<String> remittanceInformation;
 
     @JsonIgnore
-    public CreditTransferTransactionEntity(AmountEntity instructedAmount) {
+    public CreditTransferTransactionEntity(
+            AmountEntity instructedAmount, String remittanceInformation) {
         paymentId = new PaymentIdEntity();
         this.instructedAmount = instructedAmount;
-        remittanceInformation = Arrays.asList(PaymentRequestValues.REMITTANCE_INFORMATION);
+        this.remittanceInformation = Arrays.asList(remittanceInformation);
     }
 
     public CreditTransferTransactionEntity() {}

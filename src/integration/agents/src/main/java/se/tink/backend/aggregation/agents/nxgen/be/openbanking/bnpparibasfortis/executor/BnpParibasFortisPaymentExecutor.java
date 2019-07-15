@@ -62,6 +62,8 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor {
                         .withExecutionDate(paymentRequest.getPayment().getExecutionDate())
                         .withCreationDateTime(LocalDateTime.now())
                         .withRedirectUrl(configuration.getRedirectUri())
+                        .withRemittanceInformation(
+                                paymentRequest.getPayment().getReference().getValue())
                         .build();
 
         PaymentResponse paymentResponse =

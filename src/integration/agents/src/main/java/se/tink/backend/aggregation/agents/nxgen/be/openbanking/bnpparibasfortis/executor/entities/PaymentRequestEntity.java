@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.entities;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -23,10 +24,7 @@ public class PaymentRequestEntity {
         return creditTransferTransaction.stream()
                 .findFirst()
                 .map(CreditTransferTransactionEntity::getAmount)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Amount cannot be extracted from the response"));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.AMOUNT_EXTRACT_ERROR));
     }
 
     public AccountEntity getDebtorAccount() {

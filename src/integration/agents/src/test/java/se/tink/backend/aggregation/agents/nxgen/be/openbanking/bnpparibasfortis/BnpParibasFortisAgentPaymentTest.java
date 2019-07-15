@@ -15,6 +15,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Reference;
 
 @Ignore
 public class BnpParibasFortisAgentPaymentTest {
@@ -55,6 +56,7 @@ public class BnpParibasFortisAgentPaymentTest {
                             .withAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
+                            .withReference(new Reference("Message", "Text message to creditor"))
                             .build());
         }
 

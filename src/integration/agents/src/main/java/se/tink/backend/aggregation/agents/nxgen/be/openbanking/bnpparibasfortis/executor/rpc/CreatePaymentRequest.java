@@ -40,7 +40,9 @@ public class CreatePaymentRequest {
         debtorAccount = builder.debtorAccount;
         beneficiary = new BeneficiaryEntity(builder.creditorName, builder.creditorAccount);
         creditTransferTransaction =
-                Arrays.asList(new CreditTransferTransactionEntity(builder.amount));
+                Arrays.asList(
+                        new CreditTransferTransactionEntity(
+                                builder.amount, builder.remittanceInformation));
         supplementaryData = new SupplementaryDataEntity(builder.redirectUrl);
     }
 
@@ -57,6 +59,7 @@ public class CreatePaymentRequest {
         private AmountEntity amount;
         private BnpParibasFortisPaymentType paymentType;
         private String redirectUrl;
+        private String remittanceInformation;
 
         public Builder withPaymentType(BnpParibasFortisPaymentType paymentType) {
             this.paymentType = paymentType;
@@ -95,6 +98,11 @@ public class CreatePaymentRequest {
 
         public Builder withRedirectUrl(String redirectUrl) {
             this.redirectUrl = redirectUrl;
+            return this;
+        }
+
+        public Builder withRemittanceInformation(String remittanceInformation) {
+            this.remittanceInformation = remittanceInformation;
             return this;
         }
 

@@ -66,6 +66,8 @@ public abstract class BnpParibasFortisConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String AMOUNT_EXTRACT_ERROR =
+                "Amount cannot be extracted from the response";
     }
 
     public static class IdTags {
@@ -75,7 +77,6 @@ public abstract class BnpParibasFortisConstants {
     public static class PaymentRequestValues {
         public static final String INITIATING_PARTY = "TINK";
         public static final int NUMBER_OF_TRANSACTIONS = 1;
-        public static final String REMITTANCE_INFORMATION = "Text message to creditor";
         public static final String AUTHENTICATION_METHODS = "REDIRECT";
     }
 }
