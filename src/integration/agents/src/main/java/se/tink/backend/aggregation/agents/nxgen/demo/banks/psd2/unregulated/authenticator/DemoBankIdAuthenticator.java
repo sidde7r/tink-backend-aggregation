@@ -71,7 +71,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String> {
     }
 
     @Override
-    public Optional<OAuth2Token> getAcessToken() {
+    public Optional<OAuth2Token> getAccessToken() {
         return Optional.empty();
     }
 

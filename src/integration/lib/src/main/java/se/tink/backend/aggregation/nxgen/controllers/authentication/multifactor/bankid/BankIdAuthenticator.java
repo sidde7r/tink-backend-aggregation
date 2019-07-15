@@ -25,7 +25,7 @@ public interface BankIdAuthenticator<T> {
      */
     Optional<String> getAutostartToken();
 
-    Optional<OAuth2Token> getAcessToken();
+    Optional<OAuth2Token> getAccessToken();
 
     /**
      * Attempts to use the refresh token supplied to return a new OAuth2Token to extend validity.
