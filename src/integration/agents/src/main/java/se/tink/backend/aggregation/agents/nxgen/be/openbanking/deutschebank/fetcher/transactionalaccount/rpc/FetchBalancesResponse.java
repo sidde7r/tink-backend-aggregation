@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FetchBalancesResponse {
-
     private List<AccountEntity> account;
     private String psuMessage;
 

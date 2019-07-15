@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 @JsonObject
 public class FetchAccountsResponse implements BerlinGroupAccountResponse {
-    protected List<AccountEntity> accounts;
+    private List<AccountEntity> accounts;
 
     public void setAccounts(List<AccountEntity> accounts) {
         this.accounts = accounts;

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -102,7 +104,12 @@ public final class DeutscheBankApiClient {
                                                         Urls.BALANCES, account.getResourceId())))
                         .get(FetchBalancesResponse.class);
 
-        account.setBalances(res.getAccount().get(0).getBalances());
+        List<BalanceBaseEntity> balances =
+                Optional.ofNullable(res.getAccount().get(0))
+                        .map(AccountEntity::getBalances)
+                        .orElseThrow(
+                                () -> new IllegalStateException(ErrorMessages.MISSING_BALANCE));
+        account.setBalances(balances);
     }
 
     public TransactionKeyPaginatorResponse<String> fetchTransactionsForAccount(

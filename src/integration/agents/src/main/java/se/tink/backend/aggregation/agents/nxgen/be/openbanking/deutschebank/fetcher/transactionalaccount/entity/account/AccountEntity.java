@@ -21,16 +21,15 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity implements BerlinGroupAccountEntity {
-    protected String resourceId;
-    protected String iban;
-    protected String currency;
-    protected String name;
-    protected String cashAccountType;
-
-    protected List<BalanceBaseEntity> balances;
+    private String resourceId;
+    private String iban;
+    private String currency;
+    private String name;
+    private String cashAccountType;
+    private List<BalanceBaseEntity> balances;
 
     @JsonProperty("_links")
-    protected AccountLinksWithHrefEntity links;
+    private AccountLinksWithHrefEntity links;
 
     @Override
     public boolean isCheckingOrSavingsType() {
@@ -53,27 +52,17 @@ public class AccountEntity implements BerlinGroupAccountEntity {
 
     @Override
     public TransactionalAccount toCheckingAccount() {
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(getUniqueIdentifier())
-                                .withAccountNumber(getAccountNumber())
-                                .withAccountName(name)
-                                .addIdentifier(getIdentifier())
-                                .build())
-                .withBalance(BalanceModule.of(getBalance()))
-                .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(getUniqueIdentifier())
-                .addHolderName(name)
-                .build();
+        return toTinkAccountWithType(TransactionalAccountType.CHECKING);
     }
 
     @Override
     public TransactionalAccount toSavingsAccount() {
+        return toTinkAccountWithType(TransactionalAccountType.SAVINGS);
+    }
+
+    private TransactionalAccount toTinkAccountWithType(TransactionalAccountType type) {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.SAVINGS)
+                .withType(type)
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier())
