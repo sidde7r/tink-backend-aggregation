@@ -760,6 +760,9 @@ public class SEBApiAgent extends AbstractAgent
             if (response.x.systemcode == 2) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception(
                         UserMessage.MUST_AUTHORIZE_BANKID.getKey());
+            } else if (response.x.systemcode == 9200) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                        UserMessage.MUST_ANSWER_KYC.getKey());
             } else {
                 throw new IllegalStateException(
                         String.format(
@@ -2407,7 +2410,10 @@ public class SEBApiAgent extends AbstractAgent
                         "Wrong BankID signature. Did you log in with the wrong personnummer?")),
         DO_NOT_SUPPORT_YOUTH(
                 new LocalizableKey(
-                        "It looks like you have SEB Ung. Unfortunately we currently only support SEB's standard login."));
+                        "It looks like you have SEB Ung. Unfortunately we currently only support SEB's standard login.")),
+        MUST_ANSWER_KYC(
+                new LocalizableKey(
+                        "To continue using this app you must answer some questions from your bank. Please log in with your bank's app or website."));
 
         private LocalizableKey userMessage;
 

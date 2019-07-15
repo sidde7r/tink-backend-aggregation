@@ -1035,3 +1035,8 @@ msgid ""
 "Message from bank: You have used the service too many times today, please "
 "try again tomorrow."
 msgstr ""
+
+msgid ""
+"To continue using this app you must answer some questions from your bank. "
+"Please log in with your bank's app or website."
+msgstr ""
