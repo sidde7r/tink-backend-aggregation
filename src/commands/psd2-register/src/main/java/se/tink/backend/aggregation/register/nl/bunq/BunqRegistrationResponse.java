@@ -34,16 +34,13 @@ public class BunqRegistrationResponse {
 
     @Override
     public String toString() {
-        return String.format("clientId : \"%s\"", clientId)
-                + System.lineSeparator()
-                + String.format("clientSecret : \"%s\"", clientSecret)
-                + System.lineSeparator()
-                + String.format("psd2ApiKey : \"%s\"", psd2ApiKey)
-                + System.lineSeparator()
-                + String.format("psd2ClientAuthToken : '%s'", psd2ClientAuthToken)
-                + System.lineSeparator()
-                + String.format("psd2InstallationKeyPair : '%s'", psd2InstallationKeyPair)
-                + System.lineSeparator()
-                + String.format("redirectUrl : \"%s\"", redirectUrl);
+        return String.join(
+                System.lineSeparator(),
+                String.format("clientId : \"%s\"", clientId),
+                String.format("clientSecret : \"%s\"", clientSecret),
+                String.format("psd2ApiKey : \"%s\"", psd2ApiKey),
+                String.format("psd2ClientAuthToken : '%s'", psd2ClientAuthToken),
+                String.format("psd2InstallationKeyPair : '%s'", psd2InstallationKeyPair),
+                String.format("redirectUrl : \"%s\"", redirectUrl));
     }
 }
