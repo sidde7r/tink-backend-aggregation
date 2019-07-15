@@ -55,6 +55,8 @@ public abstract class CrosskeyBaseConstants {
     public static class HeaderKeys {
         public static final String X_API_KEY = "X-API-Key";
         public static final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
+        public static final String ACCEPT = "Accept";
+        public static final String CONTENT_TYPE = "Content-Type";
     }
 
     public static class ErrorMessages {
@@ -97,15 +99,13 @@ public abstract class CrosskeyBaseConstants {
 
     public static class Transactions {
         public static final String STATUS_BOOKED = "Booked";
+        public static final String DEBIT = "Debit";
+        public static final String CREDIT = "Credit";
     }
 
     public static class Format {
         public static final String TIMEZONE = "UTC";
         public static final String TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-        public static final String TRANSACTION_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    }
-
-    public class Encryption {
-        public static final String KEY_ALGORITHM = "RSA";
+        public static final String TRANSACTION_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ssX";
     }
 }

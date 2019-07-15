@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.StorageKeys;
@@ -13,6 +14,9 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConsta
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.rpc.AuthorizeConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configuration.AktiaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
@@ -99,7 +103,18 @@ public final class AktiaApiClient {
     }
 
     public AuthorizeConsentResponse authorizeConsent(String startAuthorisation) {
-        return createRequest(new URL(Urls.BASE_URL + startAuthorisation))
+        return createRequest(new URL(Urls.BASE_URL_AIS + startAuthorisation))
                 .post(AuthorizeConsentResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+        return createRequest(Urls.CREATE_PAYMENT)
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public GetPaymentResponse getPayment(String paymentId) {
+        return createRequest(Urls.GET_PAYMENT.parameter(IdTags.PAYMENT_ID, paymentId))
+                .get(GetPaymentResponse.class);
     }
 }

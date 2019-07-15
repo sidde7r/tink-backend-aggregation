@@ -19,6 +19,19 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     private String clientSigningKeyPath;
     private String clientSigningCertificatePath;
     private String xFapiFinancialId;
+    private String eidasProxyBaseUrl;
+
+    public void setBaseAPIUrl(String baseAPIUrl) {
+        this.baseAPIUrl = baseAPIUrl;
+    }
+
+    public void setBaseAuthUrl(String baseAuthUrl) {
+        this.baseAuthUrl = baseAuthUrl;
+    }
+
+    public void setxFapiFinancialId(String xFapiFinancialId) {
+        this.xFapiFinancialId = xFapiFinancialId;
+    }
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -60,44 +73,19 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         return baseAPIUrl;
     }
 
-    public String getClientKeyStorePath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientKeyStorePath),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Key Store Path"));
-
-        return clientKeyStorePath;
-    }
-
-    public String getClientSigningKeyPath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSigningKeyPath),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Signing Key Path"));
-
-        return clientSigningKeyPath;
-    }
-
-    public String getClientSigningCertificatePath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSigningCertificatePath),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate Path"));
-
-        return clientSigningCertificatePath;
-    }
-
-    public String getClientKeyStorePassword() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientKeyStorePassword),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Key Store Password"));
-
-        return clientKeyStorePassword;
-    }
-
     public String getXFapiFinancialId() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(xFapiFinancialId),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "x-fapi-financial-id"));
 
         return xFapiFinancialId;
+    }
+
+    public String getEidasProxyBaseUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(eidasProxyBaseUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas proxy base URL"));
+
+        return eidasProxyBaseUrl;
     }
 }

@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
 import org.assertj.core.util.Strings;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JWTUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 
@@ -50,7 +50,7 @@ public final class BerlinGroupUtils {
         return Base64.getEncoder()
                 .encodeToString(
                         RSA.signSha256(
-                                JWTUtils.readSigningKey(signingKeyPath, algorithm),
+                                JwtUtils.readSigningKey(signingKeyPath, algorithm),
                                 input.getBytes()));
     }
 

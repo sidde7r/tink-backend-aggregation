@@ -21,4 +21,19 @@ public class AlandsbankenFIAgent extends CrosskeyBaseAgent {
     public String getClientName() {
         return AlandsbankenFIConstants.Market.CLIENT_NAME;
     }
+
+    @Override
+    protected String getBaseAPIUrl() {
+        return AlandsbankenFIConstants.BASE_API_URL;
+    }
+
+    @Override
+    protected String getBaseAuthUrl() {
+        return AlandsbankenFIConstants.BASE_AUTH_URL;
+    }
+
+    @Override
+    protected String getxFapiFinancialId() {
+        return AlandsbankenFIConstants.X_FAPI_FINANCIAL_ID;
+    }
 }

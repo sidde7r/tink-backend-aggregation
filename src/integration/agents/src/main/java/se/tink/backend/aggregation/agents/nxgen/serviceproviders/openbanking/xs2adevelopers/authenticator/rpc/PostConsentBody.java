@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class PostConsentBody {
+
     private AccessEntity access;
     private Boolean combinedServiceIndicator;
     private int frequencyPerDay;

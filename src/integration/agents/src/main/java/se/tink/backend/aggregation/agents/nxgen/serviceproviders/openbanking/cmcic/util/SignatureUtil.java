@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Signature;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JWTUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 
@@ -72,7 +72,7 @@ public final class SignatureUtil {
         return Base64.getEncoder()
                 .encodeToString(
                         RSA.signSha256(
-                                JWTUtils.readSigningKey(
+                                JwtUtils.readSigningKey(
                                         clientSigningKeyPath, Signature.SIGNING_ALGORITHM),
                                 signatureEntity.getBytes()));
     }

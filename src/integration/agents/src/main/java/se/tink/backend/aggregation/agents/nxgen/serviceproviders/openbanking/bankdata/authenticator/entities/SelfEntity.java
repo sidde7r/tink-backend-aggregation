@@ -5,4 +5,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class SelfEntity {
     private String href;
+
+    public String getHref() {
+        return href;
+    }
 }

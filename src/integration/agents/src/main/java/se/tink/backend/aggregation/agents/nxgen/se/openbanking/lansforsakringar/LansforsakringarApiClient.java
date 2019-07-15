@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.PaymentTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
@@ -20,6 +21,14 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.AuthorizePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.CrossBorderPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.CrossBorderPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.DomesticPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.DomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetCrossBorderPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetDomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -54,12 +63,9 @@ public final class LansforsakringarApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
-        final String consentId = getConfiguration().getConsentId();
-
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.CONSENT_ID, consentId)
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
@@ -92,6 +98,7 @@ public final class LansforsakringarApiClient {
 
     public Collection<TransactionalAccount> getAccounts() {
         return createRequestInSession(Urls.GET_ACCOUNTS)
+                .header(HeaderKeys.CONSENT_ID, configuration.getConsentId())
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .get(GetAccountsResponse.class)
                 .toTinkAccounts();
@@ -99,6 +106,7 @@ public final class LansforsakringarApiClient {
 
     public TransactionKeyPaginatorResponse<String> getTransactionsForKey(String key) {
         return createRequestInSession(Urls.BASE_URL + key)
+                .header(HeaderKeys.CONSENT_ID, configuration.getConsentId())
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
     }
@@ -110,6 +118,7 @@ public final class LansforsakringarApiClient {
                         .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());
 
         return createRequestInSession(url)
+                .header(HeaderKeys.CONSENT_ID, configuration.getConsentId())
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
@@ -126,5 +135,50 @@ public final class LansforsakringarApiClient {
                             return new IllegalStateException(
                                     SessionError.SESSION_EXPIRED.exception());
                         });
+    }
+
+    public DomesticPaymentResponse createDomesticPayment(
+            DomesticPaymentRequest domesticPaymentRequest) {
+        return createRequestInSession(
+                        new URL(Urls.CREATE_PAYMENT)
+                                .parameter(
+                                        IdTags.PAYMENT_TYPE,
+                                        PaymentTypes.DOMESTIC_CREDIT_TRANSFERS))
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUri())
+                .post(DomesticPaymentResponse.class, domesticPaymentRequest);
+    }
+
+    public CrossBorderPaymentResponse createCrossBorderPayment(
+            CrossBorderPaymentRequest crossBorderPaymentRequest) {
+        return createRequestInSession(
+                        new URL(Urls.CREATE_PAYMENT)
+                                .parameter(
+                                        IdTags.PAYMENT_TYPE,
+                                        PaymentTypes.CROSS_BORDER_CREDIT_TRANSFERS))
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUri())
+                .post(CrossBorderPaymentResponse.class, crossBorderPaymentRequest);
+    }
+
+    public GetPaymentStatusResponse getPaymentStatus(String paymentId) {
+        return createRequestInSession(
+                        new URL(Urls.GET_PAYMENT_STATUS).parameter(IdTags.PAYMENT_ID, paymentId))
+                .get(GetPaymentStatusResponse.class);
+    }
+
+    public GetCrossBorderPaymentResponse getCrossBorderPayment(String paymentId) {
+        return createRequestInSession(
+                        new URL(Urls.GET_PAYMENT).parameter(IdTags.PAYMENT_ID, paymentId))
+                .get(GetCrossBorderPaymentResponse.class);
+    }
+
+    public GetDomesticPaymentResponse getDomesticPayment(String paymentId) {
+        return createRequestInSession(
+                        new URL(Urls.GET_PAYMENT).parameter(IdTags.PAYMENT_ID, paymentId))
+                .get(GetDomesticPaymentResponse.class);
+    }
+
+    public void signPayment(String paymentId) {
+        createRequestInSession(new URL(Urls.SIGN_PAYMENT).parameter(IdTags.PAYMENT_ID, paymentId))
+                .post(AuthorizePaymentResponse.class);
     }
 }

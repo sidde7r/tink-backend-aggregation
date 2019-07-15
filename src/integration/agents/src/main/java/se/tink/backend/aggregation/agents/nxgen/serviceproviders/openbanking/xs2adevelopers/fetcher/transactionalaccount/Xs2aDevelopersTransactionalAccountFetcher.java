@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class Xs2aDevelopersTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -33,7 +34,12 @@ public class Xs2aDevelopersTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        return PaginatorResponseImpl.create(
-                apiClient.getTransactions(account, fromDate, toDate).toTinkTransactions());
+
+        try {
+            return PaginatorResponseImpl.create(
+                    apiClient.getTransactions(account, fromDate, toDate).toTinkTransactions());
+        } catch (HttpResponseException e) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
     }
 }
