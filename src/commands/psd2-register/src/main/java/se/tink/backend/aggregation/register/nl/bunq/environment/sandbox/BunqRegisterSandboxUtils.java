@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.register.nl.bunq.environment.sandbox;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
@@ -17,6 +18,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.io.FileUtils;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -44,30 +46,15 @@ public final class BunqRegisterSandboxUtils {
     }
 
     public static String getPaymentServiceProviderCertificateChainAsString() {
-        String rootCertString =
-                "-----BEGIN CERTIFICATE-----\n"
-                        + "MIID1zCCAr+gAwIBAgIBATANBgkqhkiG9w0BAQsFADB1MQswCQYDVQQGEwJOTDEW\n"
-                        + "MBQGA1UECBMNTm9vcmQtSG9sbGFuZDESMBAGA1UEBxMJQW1zdGVyZGFtMRIwEAYD\n"
-                        + "VQQKEwlidW5xIGIudi4xDzANBgNVBAsTBkRldk9wczEVMBMGA1UEAxMMUFNEMiBU\n"
-                        + "ZXN0IENBMB4XDTE5MDIxODEzNDkwMFoXDTI5MDIxODEzNDkwMFowdTELMAkGA1UE\n"
-                        + "BhMCTkwxFjAUBgNVBAgTDU5vb3JkLUhvbGxhbmQxEjAQBgNVBAcTCUFtc3RlcmRh\n"
-                        + "bTESMBAGA1UEChMJYnVucSBiLnYuMQ8wDQYDVQQLEwZEZXZPcHMxFTATBgNVBAMT\n"
-                        + "DFBTRDIgVGVzdCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALOv\n"
-                        + "zPl+uegBpnFhXsjuKs0ws00e+232wR9tvDqYBjGdOlYorw8CyrT+mr0HKO9lx7vg\n"
-                        + "xhJ3f+oonkZvBb+IehDmEsBbZ+vRtdjEWw3RTWVBT69jPcRQGE2e5qUuTJYVCONY\n"
-                        + "JsOQP8CoCHXa6+oUSmUyMZX/zNJhTvbLV9e/qpIWwWVrKzK0EEB5c71gITNgzOXG\n"
-                        + "+lIKJmOnvvJyWPCx02hIgQI3nVphDj8ydMEKuwTgBrFV5Lqkar3L6ngF7LgzjXPC\n"
-                        + "Nbf3JL/2Ccp0hYPb2MLVEpYba8/38eN6izjorJiwu+uGehOpj/RNcfv27iGyvXRY\n"
-                        + "FC2PfRP8ZP5CpoijJR8CAwEAAaNyMHAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4E\n"
-                        + "FgQU38gzLVi6UQYiNLXKIhwoklPnSYMwCwYDVR0PBAQDAgEGMBEGCWCGSAGG+EIB\n"
-                        + "AQQEAwIABzAeBglghkgBhvhCAQ0EERYPeGNhIGNlcnRpZmljYXRlMA0GCSqGSIb3\n"
-                        + "DQEBCwUAA4IBAQBt6HBrnSvEbUX514ab3Zepdct0QWVLzzEKFC8y9ARLWttyaRJ5\n"
-                        + "AhzCa4t8LJnyoYuEPHOKDIsqLzmJlwqBnsXPuMdWEd3vnFRgj1oL3vVqoJwrfqDp\n"
-                        + "S3jHshWopqMKtmzAO9Q3BWpk/lrqJTP1y/6057LtMGhwA6m0fDmvA+VuTrh9mgzw\n"
-                        + "FgWwmahVa08h1Cm5+vc1Phi8wVXi3R1NzmVUQFYOixSwifs8P0MstBfCFlBFQ47C\n"
-                        + "EvGEYvOBLlEiiaoMUT6aoYj+L8zHWXakSQFAzIzQFJn668q2ds6zx67P7wKFZ887\n"
-                        + "VJSv7sTqspxON1s1oFlkRXu5JihaVJcHmFAY\n"
-                        + "-----END CERTIFICATE-----\n";
+        final String rootCertString;
+        try {
+            final String path =
+                    "src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register/nl/bunq/resources/rootcert.pem";
+            rootCertString = FileUtils.readFileToString(new File(path), "UTF-8");
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+
         X509Certificate rootCert = getCertificateFromPEMBytes(rootCertString.getBytes());
         return x509CertificateToPem(rootCert);
     }
