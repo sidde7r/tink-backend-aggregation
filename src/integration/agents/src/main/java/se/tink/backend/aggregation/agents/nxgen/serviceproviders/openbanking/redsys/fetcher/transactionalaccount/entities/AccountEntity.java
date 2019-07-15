@@ -73,6 +73,9 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<LinkEntity> getLink(String linkName) {
+        if (links == null) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(links.get(linkName));
     }
 

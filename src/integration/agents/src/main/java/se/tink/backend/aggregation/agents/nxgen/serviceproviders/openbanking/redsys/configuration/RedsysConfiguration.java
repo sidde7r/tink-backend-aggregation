@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.nio.file.Paths;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
@@ -17,6 +18,7 @@ public class RedsysConfiguration implements ClientConfiguration {
     private String consentRedirectUrl;
     private String aspsp;
     private String clientSigningKeyPath;
+    private String clientSigningKeyPassword;
     private String clientSigningCertificatePath;
 
     public String getBaseAuthUrl() {
@@ -71,8 +73,15 @@ public class RedsysConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSigningKeyPath),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Signing Key Path"));
+        Preconditions.checkArgument(
+                Paths.get(clientSigningKeyPath).toFile().canRead(),
+                "Cannot read Client Signing Key File");
 
         return clientSigningKeyPath;
+    }
+
+    public String getClientSigningKeyPassword() {
+        return clientSigningKeyPassword;
     }
 
     public String getClientSigningCertificatePath() {
@@ -80,7 +89,9 @@ public class RedsysConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(clientSigningCertificatePath),
                 String.format(
                         ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate Path"));
-
+        Preconditions.checkArgument(
+                Paths.get(clientSigningCertificatePath).toFile().canRead(),
+                "Cannot read Client Signing Certificate File");
         return clientSigningCertificatePath;
     }
 
