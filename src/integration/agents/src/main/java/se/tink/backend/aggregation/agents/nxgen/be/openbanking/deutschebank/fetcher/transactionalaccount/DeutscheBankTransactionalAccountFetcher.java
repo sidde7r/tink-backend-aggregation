@@ -1,15 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class DeutscheBankTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-                TransactionPagePaginator<TransactionalAccount> {
+                TransactionDatePaginator<TransactionalAccount> {
 
     private final DeutscheBankApiClient apiClient;
 
@@ -19,13 +22,15 @@ public class DeutscheBankTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient
-                .fetchAccounts()
-                .toTinkAccounts(apiClient.fetchPartners().getNaturalFullName());
+        return apiClient.fetchAccounts().getAccounts().stream()
+                .map(AccountEntity::toTinkAccount)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        return apiClient.fetchTransactions(account, page - 1);
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+
+        return apiClient.fetchTransactionsForAccount(account, fromDate, toDate);
     }
 }
