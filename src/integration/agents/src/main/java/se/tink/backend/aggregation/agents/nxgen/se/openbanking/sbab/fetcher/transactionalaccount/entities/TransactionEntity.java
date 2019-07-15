@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
@@ -25,6 +26,9 @@ public class TransactionEntity {
 
     private String statement;
 
+    @JsonProperty("counter_part_statement")
+    private String counterPartStatement;
+
     private String type;
 
     private String status;
@@ -38,11 +42,19 @@ public class TransactionEntity {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setDate(accountingDate)
-                .setDescription(statement)
+                .setDate(getTransactionDate())
+                .setDescription(getStatement())
                 .setPending(isPending())
                 .setAmount(new Amount(currency, amount))
                 .build();
+    }
+
+    private Date getTransactionDate() {
+        return Optional.ofNullable(accountingDate).orElse(valueDate);
+    }
+
+    private String getStatement() {
+        return Optional.ofNullable(statement).orElse(counterPartStatement);
     }
 
     public Boolean isPending() {

@@ -1,42 +1,86 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator;
 
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.BankIdStatusCodes;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.BankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.DecoupledResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class SbabAuthenticator implements Authenticator {
+public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
 
     private final SbabApiClient apiClient;
-    private final PersistentStorage persistentStorage;
-    private final SbabConfiguration configuration;
+    private String autostarttoken;
+    private OAuth2Token token;
+    private PersistentStorage persistentStorage;
 
-    public SbabAuthenticator(
-            SbabApiClient apiClient,
-            PersistentStorage persistentStorage,
-            SbabConfiguration configuration) {
+    public SbabAuthenticator(SbabApiClient apiClient, PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
-    }
-
-    private SbabConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        String code = apiClient.getPendingAuthorizationCode();
-        OAuth2Token token = apiClient.getToken(code);
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
+    public BankIdResponse init(String ssn) throws BankIdException, BankServiceException {
+        persistentStorage.remove(StorageKeys.PAGINATION_INDICATOR_REFRESHED_TOKEN);
+        try {
+            BankIdResponse response = apiClient.initBankId(ssn);
+            autostarttoken = response.getAutostartToken();
+            return response;
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            }
+            throw e;
+        }
+    }
+
+    @Override
+    public BankIdStatus collect(BankIdResponse reference) {
+        try {
+            DecoupledResponse decoupledResponse =
+                    apiClient.getDecoupled(reference.getAuthorizationCode());
+            token = decoupledResponse.getAccessToken();
+        } catch (HttpResponseException e) {
+            if (e.getMessage().contains(BankIdStatusCodes.AUTHORIZATION_NOT_COMPLETED)) {
+                return BankIdStatus.WAITING;
+            }
+            if (e.getMessage().contains(BankIdStatusCodes.USER_NOT_FOUND)) {
+                return BankIdStatus.NO_CLIENT;
+            }
+            if (e.getMessage().contains(BankIdStatusCodes.AUTHORIZATION_FAILED)) {
+                return BankIdStatus.FAILED_UNKNOWN;
+            }
+            return BankIdStatus.FAILED_UNKNOWN;
+        }
+        return BankIdStatus.DONE;
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.ofNullable(autostarttoken);
+    }
+
+    @Override
+    public Optional<OAuth2Token> getAccessToken() {
+        return Optional.ofNullable(token);
+    }
+
+    @Override
+    public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
+        Optional<OAuth2Token> refreshedToken =
+                Optional.ofNullable(apiClient.refreshAccessToken(refreshToken).getAccessToken());
+        if (refreshedToken.isPresent()) {
+            persistentStorage.put(StorageKeys.PAGINATION_INDICATOR_REFRESHED_TOKEN, false);
+        }
+        return refreshedToken;
     }
 }

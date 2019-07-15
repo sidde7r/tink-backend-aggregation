@@ -9,40 +9,20 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class SbabConfiguration implements ClientConfiguration {
 
-    private String baseUrl;
-    private String clientId;
     private String redirectUrl;
-    private String clientCertificatePath;
+    private String eidasCertId;
 
-    public String getClientCertificatePath() {
+    public String getEidasCertId() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(clientCertificatePath),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client certificate path"));
-
-        return clientCertificatePath;
-    }
-
-    public String getBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(baseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
-
-        return baseUrl;
-    }
-
-    public String getClientId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
-
-        return clientId;
+                Strings.emptyToNull(eidasCertId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Cert Id"));
+        return eidasCertId;
     }
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
         return redirectUrl;
     }
 }

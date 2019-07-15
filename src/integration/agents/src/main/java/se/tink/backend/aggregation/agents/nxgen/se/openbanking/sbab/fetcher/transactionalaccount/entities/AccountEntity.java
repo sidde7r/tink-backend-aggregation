@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -69,7 +70,7 @@ public class AccountEntity {
                 .setBalance(new Amount(currency, balance))
                 .setAlias(accountName)
                 .addAccountIdentifier(
-                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, accountNumber))
+                        AccountIdentifier.create(Type.SE, accountNumber, customerName))
                 .addHolderName(customerName)
                 .putInTemporaryStorage(SbabConstants.StorageKeys.ACCOUNT_NUMBER, accountNumber)
                 .setApiIdentifier(accountNumber)

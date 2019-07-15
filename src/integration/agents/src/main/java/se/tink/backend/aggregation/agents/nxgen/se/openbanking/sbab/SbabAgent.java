@@ -16,6 +16,8 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -44,7 +46,11 @@ public final class SbabAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        apiClient.setConfiguration(getClientConfiguration());
+        SbabConfiguration sbabConfiguration = getClientConfiguration();
+        apiClient.setConfiguration(sbabConfiguration);
+
+        this.client.setEidasProxy(
+                configuration.getEidasProxy(), sbabConfiguration.getEidasCertId());
     }
 
     @Override
@@ -62,7 +68,16 @@ public final class SbabAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SbabAuthenticator(apiClient, persistentStorage, getClientConfiguration());
+        SbabAuthenticator sbabAuthenticator = new SbabAuthenticator(apiClient, persistentStorage);
+        BankIdAuthenticationController bankIdAuthenticationController =
+                new BankIdAuthenticationController<>(
+                        supplementalRequester, sbabAuthenticator, persistentStorage);
+
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                bankIdAuthenticationController,
+                bankIdAuthenticationController);
     }
 
     @Override
