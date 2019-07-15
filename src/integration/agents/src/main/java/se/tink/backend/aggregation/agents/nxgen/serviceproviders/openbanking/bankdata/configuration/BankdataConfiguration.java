@@ -14,7 +14,6 @@ public class BankdataConfiguration implements ClientConfiguration {
     private String apiKey;
     private String baseUrl;
     private String baseAuthUrl;
-    private String eidasProxyBaseUrl;
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(
@@ -62,13 +61,5 @@ public class BankdataConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
-    }
-
-    public String getEidasProxyBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasProxyBaseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas proxy base URL"));
-
-        return eidasProxyBaseUrl;
     }
 }
