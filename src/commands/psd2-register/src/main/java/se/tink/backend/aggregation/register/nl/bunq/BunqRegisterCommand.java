@@ -39,8 +39,8 @@ public class BunqRegisterCommand {
     private static final String SANDBOX_OPTION_NAME = "s";
     private static final String REDIRECT_URL_OPTION_NAME = "r";
 
-    private static BunqRegistrationResponse bunqRegistrationResponse =
-            new BunqRegistrationResponse();
+    private static BunqRegistrationResponse.Builder bunqRegistrationResponse =
+            BunqRegistrationResponse.builder();
     private static TemporaryStorage temporaryStorage = new TemporaryStorage();
 
     public static void main(String[] args) throws Exception {
@@ -79,11 +79,10 @@ public class BunqRegisterCommand {
         registerOAuthCallback(apiClient, psd2UserId, redirectUrl);
         cleanupSession(apiClient, psd2Session);
 
-        System.out.println(
-                "\n### RESPONSE ###\n\n"
-                        + bunqRegistrationResponse.toString()
-                        + "\n\n################\n");
-        String outFile = saveResponse(bunqRegistrationResponse.toString());
+        final String yamlOutput = bunqRegistrationResponse.build().toYaml();
+
+        System.out.println("\n### RESPONSE ###\n\n" + yamlOutput + "\n\n################\n");
+        String outFile = saveResponse(yamlOutput);
         System.out.println(String.format("Done! \nRegistration response saved to: %s", outFile));
     }
 
