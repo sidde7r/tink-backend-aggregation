@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordea.executor.
 
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.NordeaBasePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
@@ -34,7 +35,7 @@ public class NordeaDkPaymentExecutorSelector extends NordeaBasePaymentExecutor {
                 .orElseThrow(
                         () ->
                                 new NotImplementedException(
-                                        "No PaymentType found for your AccountIdentifiers pair "
+                                        ErrorMessages.PAYMENT_TYPE_NOT_FOUND
                                                 + accountIdentifiersKey));
     }
 
