@@ -34,20 +34,19 @@ public class BunqRegistrationResponse {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
 
-        sb.append(String.format("clientId : \"%s\"", clientId));
-        sb.append(System.lineSeparator());
-        sb.append(String.format("clientSecret : \"%s\"", clientSecret));
-        sb.append(System.lineSeparator());
-        sb.append(String.format("psd2ApiKey : \"%s\"", psd2ApiKey));
-        sb.append(System.lineSeparator());
-        sb.append(String.format("psd2ClientAuthToken : '%s'", psd2ClientAuthToken));
-        sb.append(System.lineSeparator());
-        sb.append(String.format("psd2InstallationKeyPair : '%s'", psd2InstallationKeyPair));
-        sb.append(System.lineSeparator());
-        sb.append(String.format("redirectUrl : \"%s\"", redirectUrl));
-
-        return sb.toString();
+        final String sb =
+                String.format("clientId : \"%s\"", clientId)
+                        + System.lineSeparator()
+                        + String.format("clientSecret : \"%s\"", clientSecret)
+                        + System.lineSeparator()
+                        + String.format("psd2ApiKey : \"%s\"", psd2ApiKey)
+                        + System.lineSeparator()
+                        + String.format("psd2ClientAuthToken : '%s'", psd2ClientAuthToken)
+                        + System.lineSeparator()
+                        + String.format("psd2InstallationKeyPair : '%s'", psd2InstallationKeyPair)
+                        + System.lineSeparator()
+                        + String.format("redirectUrl : \"%s\"", redirectUrl);
+        return sb;
     }
 }
