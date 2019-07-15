@@ -97,7 +97,7 @@ public class BankIdAuthenticationController<T>
             switch (status) {
                 case DONE:
                     authenticator
-                            .getAcessToken()
+                            .getAccessToken()
                             .ifPresent(
                                     token ->
                                             persistentStorage.put(
