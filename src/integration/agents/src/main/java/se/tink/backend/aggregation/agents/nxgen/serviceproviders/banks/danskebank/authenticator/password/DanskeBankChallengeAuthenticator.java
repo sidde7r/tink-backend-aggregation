@@ -191,6 +191,10 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         switch (pollStatus.toLowerCase()) {
             case DanskeBankConstants.CodeApp.STATUS_OK:
                 break;
+            case DanskeBankConstants.CodeApp.STATUS_OVERWRITTEN:
+                // Caused when a new NemID request for the bank is received after the one created
+                // by this instance; new request might succeed, this one will be 'overwritten'.
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
             case DanskeBankConstants.CodeApp.STATUS_TIMEOUT:
                 throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                         UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
