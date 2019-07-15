@@ -5,7 +5,6 @@ java_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register:psd2-register",
-        "//src/integration/agents",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bunq",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
