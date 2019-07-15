@@ -32,6 +32,9 @@ public class BecAuthenticator implements PasswordAuthenticator {
                 String errorMessage = response.getMessage().toLowerCase();
                 if (errorMessage.contains(ErrorMessage.FUNCTION_NOT_AVAILABLE_DANISH)) {
                     throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                } else if (errorMessage.contains(ErrorMessage.NETBANK_REQUIRED)
+                        || errorMessage.contains(ErrorMessage.NETBANK_REQUIRED_DANISH)) {
+                    throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
                 }
             }
             throw e;
