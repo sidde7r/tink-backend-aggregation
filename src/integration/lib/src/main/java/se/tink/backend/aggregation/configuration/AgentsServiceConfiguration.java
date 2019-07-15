@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.configuration;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AgentsServiceConfiguration {
@@ -30,6 +31,10 @@ public class AgentsServiceConfiguration {
     private CreditSafeConfiguration creditSafe = new CreditSafeConfiguration();
 
     @JsonProperty private EidasProxyConfiguration eidasProxy = new EidasProxyConfiguration();
+
+    @JsonProperty
+    private AgentDataAvailabilityTrackerConfiguration agentDataAvailabilityTrackerConfiguration =
+            new AgentDataAvailabilityTrackerConfiguration();
 
     public AbnAmroConfiguration getAbnAmroStaging() {
         return abnAmroStaging;
@@ -69,5 +74,10 @@ public class AgentsServiceConfiguration {
 
     public EidasProxyConfiguration getEidasProxy() {
         return eidasProxy;
+    }
+
+    public AgentDataAvailabilityTrackerConfiguration
+            getAgentDataAvailabilityTrackerConfiguration() {
+        return agentDataAvailabilityTrackerConfiguration;
     }
 }

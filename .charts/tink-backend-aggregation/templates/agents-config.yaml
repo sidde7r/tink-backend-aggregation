@@ -23,6 +23,12 @@ data:
         tlsCrtPath: /etc/client-certificate/tls.crt
         tlsKeyPath: /etc/client-certificate/tls.key
 
+      {{- if .Values.agentDataAvailabilityTrackerAvailable }}
+      agentDataAvailabilityTrackerConfiguration:
+        host: agent-data-availability-tracker.agent-data-availability-tracker.svc.cluster.local
+        port: 3306
+      {{- end }}
+
       {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
       callbackJwtSignatureKeyPair:
         privateKeyPath: "/etc/tink-callback-jwt-signature-pair/private_ec_key.pem"
