@@ -43,7 +43,7 @@ public class BunqRegisterCommand {
             new BunqRegistrationResponse();
     private static TemporaryStorage temporaryStorage = new TemporaryStorage();
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
         Options options = createOptions();
