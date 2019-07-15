@@ -91,8 +91,6 @@ public class NordeaTransferDestinationFetcher implements TransferDestinationFetc
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
-                .addMultiMatchPattern(
-                        AccountIdentifier.Type.SE_NDA_SSN, TransferDestinationPattern.ALL)
                 .build();
     }
 }
