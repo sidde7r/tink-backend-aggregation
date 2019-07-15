@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import org.assertj.core.util.Lists;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.entities.CreditTransferTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.entities.CreditorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.entities.CreditorEntity;
@@ -53,23 +56,22 @@ public class CreatePaymentRequest {
     public CreatePaymentRequest() {}
 
     public PaymentResponse toTinkPaymentResponse() {
-        LocalDate executionDate = null;
-        Amount amount = null;
-        if (creditTransferTransaction != null && creditTransferTransaction.get(0) != null) {
-            executionDate =
-                    LocalDate.parse(
-                            creditTransferTransaction
-                                    .get(0)
-                                    .getRequestedExecutionDate()
-                                    .substring(0, 10));
-            InstructedAmountEntity instructedAmount =
-                    creditTransferTransaction.get(0).getInstructedAmount();
-            amount =
-                    Amount.valueOf(
-                            instructedAmount.getCurrency(),
-                            Double.valueOf(instructedAmount.getAmount() * 100).longValue(),
-                            2);
-        }
+        CreditTransferTransactionEntity creditTransferTransactionEntity = getTransactionFromList();
+
+        LocalDate executionDate =
+                LocalDate.parse(
+                        creditTransferTransactionEntity
+                                .getRequestedExecutionDate()
+                                .substring(0, 10));
+
+        InstructedAmountEntity instructedAmount =
+                creditTransferTransactionEntity.getInstructedAmount();
+
+        Amount amount =
+                Amount.valueOf(
+                        instructedAmount.getCurrency(),
+                        Double.valueOf(instructedAmount.getAmount() * 100).longValue(),
+                        2);
 
         return new PaymentResponse(
                 new Payment.Builder()
@@ -79,6 +81,12 @@ public class CreatePaymentRequest {
                         .withCurrency(amount.getCurrency())
                         .withStatus(PaymentStatus.PENDING)
                         .build());
+    }
+
+    private CreditTransferTransactionEntity getTransactionFromList() {
+        return Optional.ofNullable(creditTransferTransaction).orElse(Lists.emptyList()).stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.PAYMENT_NOT_FOUND));
     }
 
     public static class Builder {

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.entities;
 
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 
@@ -11,9 +12,9 @@ public class PaymentTypeInformationEntity {
 
     public static PaymentTypeInformationEntity of(PaymentRequest paymentRequest) {
         return new PaymentTypeInformationEntity.Builder()
-                .withCategoryPurpose("DVPM")
-                .withLocalInstrument("INST")
-                .withServiceLevel("SEPA")
+                .withCategoryPurpose(PaymentTypeInformation.CATEGORY_PURPOSE)
+                .withLocalInstrument(PaymentTypeInformation.LOCAL_INSTRUMENT)
+                .withServiceLevel(PaymentTypeInformation.SERVICE_LEVEL)
                 .build();
     }
 

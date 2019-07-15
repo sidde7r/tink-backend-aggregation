@@ -35,4 +35,14 @@ public final class LaBanquePostaleConstants {
     public static class Payload {
         public static final String EMPTY = "";
     }
+
+    public static class PaymentTypeInformation {
+        public static final String CATEGORY_PURPOSE = "DVPM";
+        public static final String LOCAL_INSTRUMENT = "INST";
+        public static final String SERVICE_LEVEL = "SEPA";
+    }
+
+    public static class ErrorMessages {
+        public static final String PAYMENT_NOT_FOUND = "Payment can not be found";
+    }
 }
