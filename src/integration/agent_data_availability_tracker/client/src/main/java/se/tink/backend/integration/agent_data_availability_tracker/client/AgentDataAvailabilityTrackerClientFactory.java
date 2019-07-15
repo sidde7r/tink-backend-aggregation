@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 
 public class AgentDataAvailabilityTrackerClientFactory {
 
-    private static final String TEST_PROVIDER = "tracking-test-provider";
+    private static final String TEST_PROVIDER = "avanza-bankid";
 
     public static AgentDataAvailabilityTrackerClient getClient(
             final AgentDataAvailabilityTrackerConfiguration configuration,
