@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentAuthorizationRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.InitialTokenRequest;
@@ -82,6 +81,12 @@ public final class BankdataApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createRequestInSession(URL url) {
+        final OAuth2Token authToken = getTokenFromSession();
+
+        return createRequest(url).addBearerToken(authToken);
     }
 
     private RequestBuilder createRequestInSession(URL url, String storageKey) {
@@ -198,6 +203,31 @@ public final class BankdataApiClient {
                 .get(TransactionResponse.class);
     }
 
+    // AIS
+    public URL getAuthorizeUrl(String state) {
+        String consentId = getConsentId();
+        authorizeConsent(consentId);
+        final String clientId = getConfiguration().getClientId();
+        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String codeVerifier = BankdataUtils.generateCodeVerifier();
+        final String codeChallenge = BankdataUtils.generateCodeChallenge(codeVerifier);
+        sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
+        sessionStorage.put(StorageKeys.CONSENT_ID, consentId);
+        URL url = new URL(configuration.getBaseAuthUrl() + Endpoints.AUTHORIZE);
+
+        return createRequest(url)
+                .queryParam(QueryKeys.RESPONSE_TYPE, BankdataConstants.QueryValues.CODE)
+                .queryParam(QueryKeys.CLIENT_ID, clientId)
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE + consentId)
+                .queryParam(QueryKeys.STATE, state)
+                .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
+                .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam("acr", "psd2")
+                .getUrl();
+    }
+
+    // PIS
     public URL getAuthorizeUrl(String state, String consentId) {
         authorizeConsent(consentId);
         final String clientId = getConfiguration().getClientId();
@@ -264,6 +294,26 @@ public final class BankdataApiClient {
         sessionStorage.put(StorageKeys.OAUTH_TOKEN, response.toTinkToken());
     }
 
+    // AIS
+    public String getConsentId() {
+        getTokenWithClientCredentials();
+        final ConsentRequest consentRequest = new ConsentRequest();
+        final String requestId = UUID.randomUUID().toString();
+        URL url = new URL(configuration.getBaseUrl() + Endpoints.CONSENT);
+
+        ConsentResponse response =
+                client.request(url)
+                        .addBearerToken(getTokenFromSession())
+                        .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
+                        .header(HeaderKeys.X_REQUEST_ID, requestId)
+                        .body(consentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
+                        .post(ConsentResponse.class);
+
+        return response.getConsentId();
+    }
+
+    // PIS
+    /*
     public String getConsentId() {
         final ConsentRequest consentRequest = new ConsentRequest();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.CONSENT);
@@ -272,8 +322,17 @@ public final class BankdataApiClient {
                 .body(consentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentResponse.class)
                 .getConsentId();
+    }*/
+
+    // AIS
+    private void authorizeConsent(String consentId) {
+        final String requestId = UUID.randomUUID().toString();
+        final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
+        URL url = new URL(configuration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
     }
 
+    // PIS
+    /*
     public void authorizeConsent(String consentId) {
         final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
@@ -282,7 +341,7 @@ public final class BankdataApiClient {
                         url.parameter(IdTags.CONSENT_ID, consentId), StorageKeys.INITIAL_TOKEN)
                 .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentAuthorizationResponse.class);
-    }
+    }*/
 
     public OAuth2Token getToken(String code) {
         final AccessTokenRequest request =
@@ -296,6 +355,15 @@ public final class BankdataApiClient {
         return getTokenResponse(request);
     }
 
+    // AIS
+    private OAuth2Token getTokenFromSession() {
+        return sessionStorage
+                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+    }
+
+    // PIS
     private OAuth2Token getTokenFromSession(String storageKey) {
         return sessionStorage
                 .get(storageKey, OAuth2Token.class)

@@ -25,6 +25,14 @@ public class BankdataAuthenticator implements OAuth2Authenticator {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    // AIS
+    @Override
+    public URL buildAuthorizeUrl(String state) {
+        return apiClient.getAuthorizeUrl(state);
+    }
+
+    // PIS
+    /*
     @Override
     public URL buildAuthorizeUrl(String state) {
         apiClient.getTokenWithClientCredentials();
@@ -32,7 +40,7 @@ public class BankdataAuthenticator implements OAuth2Authenticator {
         apiClient.authorizeConsent(consentId);
 
         return apiClient.getAuthorizeUrl(state, consentId);
-    }
+    }*/
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) {

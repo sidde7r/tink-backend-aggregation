@@ -34,6 +34,8 @@ public abstract class BankdataAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
+        client.setDebugOutput(true);
+
         apiClient = new BankdataApiClient(client, sessionStorage);
         clientName = request.getProvider().getPayload();
     }
