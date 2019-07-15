@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executo
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.AccountIdentifier;
@@ -21,16 +22,15 @@ public class AccountEntity {
                 this.iban = accountNumber;
                 break;
             case SE:
-                this.bban = accountNumber;
             case SE_BG:
-                this.bban = accountNumber;
-                break;
             case SE_PG:
                 this.bban = accountNumber;
                 break;
             default:
                 throw new IllegalStateException(
-                        "Invalid account type: " + accountIdentifierType.toString());
+                        String.format(
+                                ErrorMessages.INVALID_ACCOUNT_TYPE,
+                                accountIdentifierType.toString()));
         }
     }
 

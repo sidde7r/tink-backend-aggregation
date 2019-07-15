@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.Swedbank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.UrlParameters;
@@ -192,46 +193,41 @@ public final class SwedbankApiClient {
                 .toTinkToken();
     }
 
-    public CreatePaymentResponse createPayment(
-            CreatePaymentRequest createPaymentRequest, SwedbankPaymentType swedbankPaymentType) {
-        return createRequest(
-                        Urls.INITIATE_PAYMENT.parameter(
-                                UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString()))
+    private RequestBuilder getPaymentRequestBuilder(URL url) {
+        return createRequest(url)
                 .addBearerToken(getTokenFromSession())
                 .queryParam(QueryKeys.BIC, BICSandbox.SWEDEN)
                 .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
-                .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
                 .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
                 .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, configuration.getRedirectUrl())
+                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT);
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, SwedbankPaymentType swedbankPaymentType) {
+        return getPaymentRequestBuilder(
+                        Urls.INITIATE_PAYMENT.parameter(
+                                UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString()))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public GetPaymentResponse getPayment(String paymentId) {
-        return createRequest(Urls.GET_PAYMENT.parameter(UrlParameters.PAYMENT_ID, paymentId))
-                .addBearerToken(getTokenFromSession())
-                .queryParam(QueryKeys.BIC, BICSandbox.SWEDEN)
-                .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+        return getPaymentRequestBuilder(
+                        Urls.GET_PAYMENT.parameter(UrlParameters.PAYMENT_ID, paymentId))
                 .get(GetPaymentResponse.class);
     }
 
     public GetPaymentStatusResponse getPaymentStatus(String paymentId) {
-        return createRequest(Urls.GET_PAYMENT_STATUS.parameter(UrlParameters.PAYMENT_ID, paymentId))
-                .addBearerToken(getTokenFromSession())
-                .queryParam(QueryKeys.BIC, BICSandbox.SWEDEN)
-                .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+        return getPaymentRequestBuilder(
+                        Urls.GET_PAYMENT_STATUS.parameter(UrlParameters.PAYMENT_ID, paymentId))
                 .get(GetPaymentStatusResponse.class);
     }
 
     public PaymentAuthorisationResponse startPaymentAuthorisation(String paymentId) {
-        return createRequest(
+        return getPaymentRequestBuilder(
                         Urls.INITIATE_PAYMENT_AUTH.parameter(UrlParameters.PAYMENT_ID, paymentId))
-                .addBearerToken(getTokenFromSession())
-                .queryParam(QueryKeys.BIC, BICSandbox.SWEDEN)
-                .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
                 .post(PaymentAuthorisationResponse.class);
     }
 

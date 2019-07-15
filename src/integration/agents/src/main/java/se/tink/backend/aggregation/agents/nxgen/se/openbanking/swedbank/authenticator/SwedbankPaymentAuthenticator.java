@@ -35,7 +35,7 @@ public class SwedbankPaymentAuthenticator {
         return encoder.encodeToString(randomData);
     }
 
-    public ThirdPartyAppResponse<String> collect() {
+    private ThirdPartyAppResponse<String> collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 OAuthUtils.formatSupplementalKey(this.state), WAIT_FOR_SECONDS, TimeUnit.SECONDS);
 

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.enums;
 
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.util.AccountTypePair;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -34,8 +35,9 @@ public enum SwedbankPaymentType {
                 .orElseThrow(
                         () ->
                                 new NotImplementedException(
-                                        "No SwedbankPaymentType found for AccountIdentifiers pair "
-                                                + accountTypePair));
+                                        String.format(
+                                                ErrorMessages.INVALID_PAYMENT_TYPE
+                                                        + accountTypePair)));
     }
 
     private static final GenericTypeMapper<SwedbankPaymentType, AccountTypePair>

@@ -90,6 +90,11 @@ public final class SwedbankConstants {
         public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
         public static final String TPP_NOK_REDIRECT_URI = "tpp-nok-redirect-uri";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+        public static final String PSU_USER_AGENT = "PSU-User-Agent";
+    }
+
+    public static class HeaderValues {
+        public static final String PSU_USER_AGENT = "Browser";
     }
 
     public static class BICSandbox {
@@ -113,5 +118,8 @@ public final class SwedbankConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String INVALID_ACCOUNT_TYPE = "Invalid account type: %s";
+        public static final String INVALID_PAYMENT_TYPE =
+                "No SwedbankPaymentType found for AccountIdentifiers pair %s";
     }
 }
