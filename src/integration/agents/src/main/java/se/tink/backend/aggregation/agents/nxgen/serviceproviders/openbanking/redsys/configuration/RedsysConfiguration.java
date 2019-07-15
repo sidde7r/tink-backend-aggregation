@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.nio.file.Paths;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
@@ -13,13 +13,13 @@ public class RedsysConfiguration implements ClientConfiguration {
     private String baseAuthUrl;
     private String baseAPIUrl;
     private String clientId;
-    private String authClientId;
     private String redirectUrl;
-    private String consentRedirectUrl;
     private String aspsp;
     private String clientSigningKeyPath;
     private String clientSigningKeyPassword;
-    private String clientSigningCertificatePath;
+    private String clientSigningCertificate;
+    private String clientSigningCertificateId;
+    private String certificateId;
 
     public String getBaseAuthUrl() {
         Preconditions.checkNotNull(
@@ -35,14 +35,6 @@ public class RedsysConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base API URL"));
 
         return baseAPIUrl;
-    }
-
-    public String getAuthClientId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(authClientId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID for authentication"));
-
-        return authClientId;
     }
 
     public String getClientId() {
@@ -69,37 +61,32 @@ public class RedsysConfiguration implements ClientConfiguration {
         return aspsp;
     }
 
-    public String getClientSigningKeyPath() {
+    public String getClientSigningCertificateId() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSigningKeyPath),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Signing Key Path"));
-        Preconditions.checkArgument(
-                Paths.get(clientSigningKeyPath).toFile().canRead(),
-                "Cannot read Client Signing Key File");
-
-        return clientSigningKeyPath;
-    }
-
-    public String getClientSigningKeyPassword() {
-        return clientSigningKeyPassword;
-    }
-
-    public String getClientSigningCertificatePath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSigningCertificatePath),
+                Strings.emptyToNull(clientSigningCertificateId),
                 String.format(
-                        ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate Path"));
-        Preconditions.checkArgument(
-                Paths.get(clientSigningCertificatePath).toFile().canRead(),
-                "Cannot read Client Signing Certificate File");
-        return clientSigningCertificatePath;
+                        ErrorMessages.INVALID_CONFIGURATION,
+                        "Client Signing Certificate (QsealC) ID"));
+
+        return clientSigningCertificateId;
     }
 
-    public String getConsentRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(consentRedirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL for consent"));
+    public String getCertificateId() {
+        return certificateId;
+    }
 
-        return consentRedirectUrl;
+    public Optional<String> getClientSigningKeyPath() {
+        return Optional.ofNullable(clientSigningKeyPath);
+    }
+
+    public Optional<String> getClientSigningKeyPassword() {
+        return Optional.ofNullable(clientSigningKeyPassword);
+    }
+
+    public String getClientSigningCertificate() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientSigningCertificate),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate"));
+        return clientSigningCertificate;
     }
 }

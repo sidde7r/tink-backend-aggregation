@@ -2,14 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.PrivateKey;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.Locale;
@@ -18,15 +10,6 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
-import org.bouncycastle.openssl.PEMKeyPair;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.bouncycastle.openssl.jcajce.JceOpenSSLPKCS8DecryptorProviderBuilder;
-import org.bouncycastle.operator.InputDecryptorProvider;
-import org.bouncycastle.operator.OperatorCreationException;
-import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
-import org.bouncycastle.pkcs.PKCSException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
@@ -54,7 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
@@ -70,7 +53,9 @@ public final class RedsysApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private RedsysConfiguration configuration;
+    private EidasProxyConfiguration eidasProxyConfiguration;
     private RedsysConsentController consentController;
+    private X509Certificate clientSigningCertificate;
 
     public RedsysApiClient(
             TinkHttpClient client,
@@ -87,20 +72,16 @@ public final class RedsysApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(RedsysConfiguration configuration) {
+    protected void setConfiguration(
+            RedsysConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
-    }
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+        this.clientSigningCertificate =
+                RedsysUtils.parseCertificate(configuration.getClientSigningCertificate());
 
-    private RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
-    }
-
-    private RequestBuilder createRequestInSession(URL url) {
-        final OAuth2Token authToken = getTokenFromStorage();
-
-        return createRequest(url).addBearerToken(authToken);
+        if (eidasProxyConfiguration != null && configuration.getCertificateId() != null) {
+            client.setEidasProxy(eidasProxyConfiguration, configuration.getCertificateId());
+        }
     }
 
     private OAuth2Token getTokenFromStorage() {
@@ -135,7 +116,7 @@ public final class RedsysApiClient {
     }
 
     public URL getAuthorizeUrl(String state, String codeChallenge) {
-        final String clientId = getConfiguration().getAuthClientId();
+        final String clientId = getAuthClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
 
         return client.request(makeAuthUrl(RedsysConstants.Urls.OAUTH))
@@ -150,7 +131,7 @@ public final class RedsysApiClient {
     }
 
     public OAuth2Token getToken(String code, String codeVerifier) {
-        final String clientId = getConfiguration().getAuthClientId();
+        final String clientId = getAuthClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
 
         final String payload =
@@ -182,8 +163,7 @@ public final class RedsysApiClient {
                         FormValues.FALSE);
 
         final GetConsentResponse getConsentResponse =
-                createSignedRequest(url, getConsentRequest)
-                        .headers(getTppRedirectHeaders(scaState))
+                createSignedRequest(url, getConsentRequest, getTppRedirectHeaders(scaState))
                         .post(GetConsentResponse.class);
         final String consentId = getConsentResponse.getConsentId();
         final String consentRedirectUrl =
@@ -208,7 +188,7 @@ public final class RedsysApiClient {
     public OAuth2Token refreshToken(final String refreshToken) {
         final String url = getConfiguration().getBaseAuthUrl() + "/" + Urls.REFRESH;
         final String aspsp = getConfiguration().getAspsp();
-        final String clientId = getConfiguration().getAuthClientId();
+        final String clientId = getAuthClientId();
 
         final String payload =
                 Form.builder()
@@ -225,96 +205,8 @@ public final class RedsysApiClient {
                 .toTinkToken();
     }
 
-    private X509Certificate getCertificate() {
-        try {
-            InputStream in =
-                    new FileInputStream(getConfiguration().getClientSigningCertificatePath());
-            CertificateFactory factory = CertificateFactory.getInstance("X.509");
-            X509Certificate cert = (X509Certificate) factory.generateCertificate(in);
-            return cert;
-        } catch (IOException | CertificateException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
-    private String getKeyID(X509Certificate cert) {
-        return String.format(
-                Locale.ENGLISH,
-                Signature.KEY_ID_FORMAT,
-                cert.getSerialNumber(),
-                cert.getIssuerX500Principal().getName());
-    }
-
-    private PrivateKeyInfo decryptPrivateKey(PKCS8EncryptedPrivateKeyInfo encryptedKeyInfo)
-            throws OperatorCreationException, PKCSException {
-        final InputDecryptorProvider decryptorProvider =
-                new JceOpenSSLPKCS8DecryptorProviderBuilder()
-                        .build(getConfiguration().getClientSigningKeyPassword().toCharArray());
-        return encryptedKeyInfo.decryptPrivateKeyInfo(decryptorProvider);
-    }
-
-    private PrivateKey readPrivateKey() throws IOException {
-        final String keyPath = getConfiguration().getClientSigningKeyPath();
-        final PEMParser parser = new PEMParser(new InputStreamReader(new FileInputStream(keyPath)));
-        final Object readKeyInfo = parser.readObject();
-        final PrivateKeyInfo keyInfo;
-        if (readKeyInfo instanceof PKCS8EncryptedPrivateKeyInfo) {
-            try {
-                keyInfo = decryptPrivateKey((PKCS8EncryptedPrivateKeyInfo) readKeyInfo);
-            } catch (OperatorCreationException | PKCSException e) {
-                throw new IllegalStateException("Unable to decrypt private key", e);
-            }
-        } else if (readKeyInfo instanceof PEMKeyPair) {
-            keyInfo = ((PEMKeyPair) readKeyInfo).getPrivateKeyInfo();
-        } else {
-            throw new IllegalStateException(
-                    "Unexpected key class: " + readKeyInfo.getClass().getCanonicalName());
-        }
-
-        final JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-        return converter.getPrivateKey(keyInfo);
-    }
-
-    private String generateRequestSignature(
-            String digest, String requestID, String tppRedirectUri) {
-        String payloadToSign =
-                String.format(
-                        "%s: %s\n%s: %s",
-                        HeaderKeys.DIGEST.toLowerCase(Locale.ENGLISH),
-                        digest,
-                        HeaderKeys.REQUEST_ID.toLowerCase(Locale.ENGLISH),
-                        requestID);
-        String headers = HeaderKeys.DIGEST + " " + HeaderKeys.REQUEST_ID;
-        if (!Strings.isNullOrEmpty(tppRedirectUri)) {
-            headers += " " + HeaderKeys.TPP_REDIRECT_URI;
-            payloadToSign +=
-                    String.format(
-                            "\n%s: %s",
-                            HeaderKeys.TPP_REDIRECT_URI.toLowerCase(Locale.ENGLISH),
-                            tppRedirectUri);
-        }
-
-        final PrivateKey privateKey;
-        try {
-            privateKey = readPrivateKey();
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-        final String signature =
-                Base64.getEncoder()
-                        .encodeToString(RSA.signSha256(privateKey, payloadToSign.getBytes()));
-        final String keyID = getKeyID(getCertificate());
-
-        return String.format(
-                Signature.FORMAT, keyID, headers.toLowerCase(Locale.ENGLISH), signature);
-    }
-
-    private RequestBuilder createSignedRequest(String url, @Nullable Object payload) {
-        return createSignedRequest(url, payload, getTokenFromStorage());
-    }
-
-    private RequestBuilder createSignedRequest(String url) {
-        return createSignedRequest(url, null, getTokenFromStorage());
+    private String getAuthClientId() {
+        return RedsysUtils.getAuthClientId(clientSigningCertificate);
     }
 
     private Map<String, Object> getTppRedirectHeaders(String state) {
@@ -332,30 +224,46 @@ public final class RedsysApiClient {
     }
 
     private RequestBuilder createSignedRequest(
-            String url, @Nullable Object payload, OAuth2Token token) {
+            String url, @Nullable Object payload, Map<String, Object> headers) {
+        return createSignedRequest(url, payload, getTokenFromStorage(), headers);
+    }
+
+    private RequestBuilder createSignedRequest(String url, @Nullable Object payload) {
+        return createSignedRequest(url, payload, getTokenFromStorage(), Maps.newHashMap());
+    }
+
+    private RequestBuilder createSignedRequest(String url) {
+        return createSignedRequest(url, null, getTokenFromStorage(), Maps.newHashMap());
+    }
+
+    private RequestBuilder createSignedRequest(
+            String url, @Nullable Object payload, OAuth2Token token, Map<String, Object> headers) {
         String serializedPayload = "";
         if (payload != null) {
             serializedPayload = SerializationUtils.serializeToString(payload);
         }
+
+        // construct headers
+        final Map<String, Object> allHeaders = Maps.newHashMap(headers);
+        allHeaders.put(HeaderKeys.IBM_CLIENT_ID, getConfiguration().getClientId());
         final String digest =
                 Signature.DIGEST_PREFIX
                         + Base64.getEncoder().encodeToString(Hash.sha256(serializedPayload));
+        allHeaders.put(HeaderKeys.DIGEST, digest);
         final String requestID = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
-        final String signature = generateRequestSignature(digest, requestID, null);
-        final String encodedCertificate;
-        try {
-            encodedCertificate = Base64.getEncoder().encodeToString(getCertificate().getEncoded());
-        } catch (CertificateEncodingException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-        RequestBuilder request =
-                client.request(url)
-                        .addBearerToken(token)
-                        .header(HeaderKeys.IBM_CLIENT_ID, getConfiguration().getClientId())
-                        .header(HeaderKeys.DIGEST, digest)
-                        .header(HeaderKeys.REQUEST_ID, requestID)
-                        .header(HeaderKeys.SIGNATURE, signature)
-                        .header(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, encodedCertificate);
+        allHeaders.put(HeaderKeys.REQUEST_ID, requestID);
+        final String signature =
+                RedsysUtils.generateRequestSignature(
+                        configuration,
+                        eidasProxyConfiguration,
+                        clientSigningCertificate,
+                        allHeaders);
+        allHeaders.put(HeaderKeys.SIGNATURE, signature);
+        allHeaders.put(
+                HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
+                RedsysUtils.getEncodedSigningCertificate(clientSigningCertificate));
+
+        RequestBuilder request = client.request(url).addBearerToken(token).headers(allHeaders);
 
         if (payload != null) {
             request = request.body(serializedPayload, MediaType.APPLICATION_JSON);
@@ -390,9 +298,8 @@ public final class RedsysApiClient {
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest request, PaymentProduct paymentProduct, String scaToken) {
         final String url = makeApiUrl(Urls.CREATE_PAYMENT, paymentProduct.getProductName());
-        return createSignedRequest(url, request)
+        return createSignedRequest(url, request, getTppRedirectHeaders(scaToken))
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .headers(getTppRedirectHeaders(scaToken))
                 .post(CreatePaymentResponse.class);
     }
 

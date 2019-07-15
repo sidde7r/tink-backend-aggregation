@@ -48,14 +48,17 @@ public final class RedsysAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        apiClient.setConfiguration(getClientConfiguration());
+        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+    }
+
+    protected String getIntegrationName() {
+        return RedsysConstants.INTEGRATION_NAME;
     }
 
     protected RedsysConfiguration getClientConfiguration() {
         return configuration
                 .getIntegrations()
-                .getClientConfiguration(
-                        RedsysConstants.INTEGRATION_NAME, clientName, RedsysConfiguration.class)
+                .getClientConfiguration(getIntegrationName(), clientName, RedsysConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
