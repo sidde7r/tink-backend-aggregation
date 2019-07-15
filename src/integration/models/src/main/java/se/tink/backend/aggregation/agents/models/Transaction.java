@@ -8,6 +8,7 @@ import com.google.common.base.MoreObjects;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -193,6 +194,28 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
 
     public void setUpcoming(boolean upcoming) {
         this.upcoming = upcoming;
+    }
+
+    public static boolean deepEquals(Transaction first, Transaction second) {
+        if (first == null || second == null) {
+            return false;
+        }
+
+        if (first == second) {
+            return true;
+        }
+
+        return Double.compare(first.amount, second.amount) == 0
+                && Double.compare(first.originalAmount, second.originalAmount) == 0
+                && first.pending == second.pending
+                && first.timestamp == second.timestamp
+                && first.upcoming == second.upcoming
+                && Objects.equals(first.credentialsId, second.credentialsId)
+                && Objects.equals(first.date, second.date)
+                && Objects.equals(first.description, second.description)
+                && Objects.equals(first.payloadSerialized, second.payloadSerialized)
+                && first.type == second.type
+                && Objects.equals(first.userId, second.userId);
     }
 
     @Override
