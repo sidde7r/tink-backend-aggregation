@@ -71,7 +71,7 @@ git_repository(
     name = "tink_backend",
     remote = "git@github.com:tink-ab/tink-backend",
     commit = "820c42738a8ebb6f30ac40b5310187140ba7b5b5",
-    shallow_since = "1562930565 +0000",
+    shallow_since = "1543992595 +0100",
 )
 
 # Docker dependencies
