@@ -274,16 +274,6 @@ agentsServiceConfiguration:
         clientSigningCertificateSerialNumber: ""
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         aspspCode: "BIG"
-    bper:
-      tink:
-        clientId: "97427d2b-b4c0-45b8-80b3-16b2db6c2a30"
-        clientSecret: "ffc65646-de7f-4d79-8054-59a35a415831"
-        keystorePath: "data/test/cryptography/cbiglobe/cbiglobe.p12"
-        keystorePassword: "123456"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "05387"
-        aspspProductCode: "SMART"
-        psuId: ""
     bpg:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
@@ -294,26 +284,6 @@ agentsServiceConfiguration:
         clientSigningCertificateSerialNumber: ""
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         aspspCode: "BPG"
-    bpm:
-      tink:
-        clientId: "97427d2b-b4c0-45b8-80b3-16b2db6c2a30"
-        clientSecret: "ffc65646-de7f-4d79-8054-59a35a415831"
-        keystorePath: "data/test/cryptography/cbiglobe/cbiglobe.p12"
-        keystorePassword: "123456"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "05034"
-        aspspProductCode: "IBP01"
-        psuId: "li7AuHJ"
-    bpsondrio:
-      tink:
-        clientId: "97427d2b-b4c0-45b8-80b3-16b2db6c2a30"
-        clientSecret: "ffc65646-de7f-4d79-8054-59a35a415831"
-        keystorePath: "data/test/cryptography/cbiglobe/cbiglobe.p12"
-        keystorePassword: "123456"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "05696"
-        aspspProductCode: "BIR"
-        psuId: "333394"
     caixa-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
@@ -354,17 +324,6 @@ agentsServiceConfiguration:
         clientSigningCertificateSerialNumber: ""
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         aspspCode: "CEMAH"
-    credem:
-      tink:
-        clientId: "97427d2b-b4c0-45b8-80b3-16b2db6c2a30"
-        clientSecret: "ffc65646-de7f-4d79-8054-59a35a415831"
-        keystorePath: "data/test/cryptography/cbiglobe/cbiglobe.p12"
-        keystorePassword: "123456"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "03032"
-        aspspProductCode: "PR"
-        psuId: "PR-00000000-001-00013384-IH"
-        psuIdType: "PR"
     creditoagricola:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
@@ -462,36 +421,6 @@ agentsServiceConfiguration:
         clientKeyStorePath: "data/test/cryptography/ing/client.p12"
         clientKeyStorePassword: "123456"
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-    isp:
-      tink:
-        clientId: "97427d2b-b4c0-45b8-80b3-16b2db6c2a30"
-        clientSecret: "ffc65646-de7f-4d79-8054-59a35a415831"
-        keystorePath: "data/test/cryptography/cbiglobe/cbiglobe.p12"
-        keystorePassword: "123456"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "03069"
-        aspspProductCode: "ALLPRODUCTS"
-        psuId: ""
-    mps:
-      tink:
-        clientId: "97427d2b-b4c0-45b8-80b3-16b2db6c2a30"
-        clientSecret: "ffc65646-de7f-4d79-8054-59a35a415831"
-        keystorePath: "data/test/cryptography/cbiglobe/cbiglobe.p12"
-        keystorePassword: "123456"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "01030"
-        aspspProductCode: "retail"
-        psuId: "813DC433D43F5F6E6B97C52FEA7CE14803C6DC88486980E92B1CE9186F09D480"
-    ubi:
-      tink:
-        clientId: "97427d2b-b4c0-45b8-80b3-16b2db6c2a30"
-        clientSecret: "ffc65646-de7f-4d79-8054-59a35a415831"
-        keystorePath: "data/test/cryptography/cbiglobe/cbiglobe.p12"
-        keystorePassword: "123456"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "03111"
-        aspspProductCode: "ContoCorrenteGenerico"
-        psuId: ""
     deutschebank:
       tink:
         baseUrl: "https://simulator-api.db.com"
