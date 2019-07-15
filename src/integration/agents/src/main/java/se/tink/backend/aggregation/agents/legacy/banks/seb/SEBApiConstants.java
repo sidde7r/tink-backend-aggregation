@@ -9,4 +9,9 @@ public class SEBApiConstants {
         public static final String SAFE_PENSION_INSURANCE = "trygg privatpension";
         public static final String PENSION_INSURANCE = "pensionsförsäkring";
     }
+
+    public static class SystemCode {
+        public static final int BANKID_NOT_AUTHORIZED = 2;
+        public static final int KYC_ERROR = 9200;
+    }
 }
