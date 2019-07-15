@@ -68,8 +68,7 @@ public final class RedsysAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new RedsysAuthenticator(
-                                apiClient, sessionStorage, getClientConfiguration()),
+                        new RedsysAuthenticator(apiClient, sessionStorage),
                         credentials,
                         strongAuthenticationState);
 

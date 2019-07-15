@@ -65,7 +65,7 @@ public final class RedsysConstants {
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
         public static final String SCOPE = "AIS PIS";
-        public static final String CODE_CHALLENGE_METHOD = "plain";
+        public static final String CODE_CHALLENGE_METHOD = "S256";
         public static final String TRUE = "true";
         public static final String FALSE = "false";
 
