@@ -106,10 +106,11 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                             "Aborting tracking attempt. Capability Tracking service code: %s",
                             e.getStatus()),
                     e);
-
+            requestStream.onError(e);
         } catch (Exception e) {
 
             log.warn(String.format("Tracking failed with exception: %s", e.getMessage()), e);
+            requestStream.onError(e);
         }
     }
 
