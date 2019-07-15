@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,6 +29,9 @@ public class GetConsentResponse {
 
     @JsonIgnore
     public Optional<LinkEntity> getLink(String linkName) {
+        if (links == null) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(links.get(linkName));
     }
 }
