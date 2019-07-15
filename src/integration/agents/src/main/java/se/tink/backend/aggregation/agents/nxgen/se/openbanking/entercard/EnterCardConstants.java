@@ -33,6 +33,8 @@ public final class EnterCardConstants {
                 new URL(Endpoints.BASE_URL_ACCOUNTS + Endpoints.ACCOUNTS);
         public static final URL TRANSACTIONS =
                 new URL(Endpoints.BASE_URL_TRANSACTIONS + Endpoints.MOVEMENTS);
+        static final URL PAYMENT_ENDPOINT =
+                new URL(Endpoints.BASE_URL_PAYMENTS + Endpoints.PAYMENT);
     }
 
     public static class Endpoints {
@@ -46,6 +48,9 @@ public final class EnterCardConstants {
         public static final String BASE_URL_TRANSACTIONS =
                 "https://private-anon-1b525c52f4-movements.apiary-mock.com";
         public static final String MOVEMENTS = "/v1/movements";
+        public static final String BASE_URL_PAYMENTS =
+                "https://private-anon-8a2aa31897-paymentservices4.apiary-mock.com/payment-services";
+        public static final String PAYMENT = "/v1/payments";
     }
 
     public static class StorageKeys {
@@ -54,6 +59,8 @@ public final class EnterCardConstants {
         public static final String AUTH_CODE = "AUTHORIZATION_CODE";
         public static final String TOKEN = "TOKEN";
         public static final String ACCOUNT_NUMBER = "ACCOUNT_NUMBER";
+        public static final String E_SIGN_URL = "eSignUrl";
+        public static final String STATE = "state";
     }
 
     public static class QueryKeys {
