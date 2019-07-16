@@ -18,11 +18,6 @@ public class SupplementalInformationFormer {
                         .collect(Collectors.toMap(Field::getName, field -> field));
     }
 
-    public List<Field> formChallengeResponseFields(final String challenge) {
-        return formChallengeResponseFields(
-                Field.Key.SIGN_CODE_DESCRIPTION, Field.Key.SIGN_CODE_INPUT, challenge);
-    }
-
     public List<Field> formChallengeResponseFields(
             final Field.Key descriptionKey, final Field.Key inputKey, final String challenge) {
         List<Field> result = new ArrayList<>();
