@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.embedded;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -26,14 +27,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent {
     private static final int DAYS_UNTIL_SESSION_SHOULD_EXPIRE = 90;
-    private static String username;
-    private static String provider;
+    private final String username;
+    private final String provider;
 
     public EmbeddedAuthenticationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        this.username = request.getCredentials().getField("username");
+        this.username = request.getCredentials().getField(Field.Key.USERNAME);
         this.provider = request.getProvider().getName();
     }
 

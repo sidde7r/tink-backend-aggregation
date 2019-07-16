@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -26,7 +27,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
 public class ThirdPartyAuthenticationDemoAgent extends NextGenerationDemoAgent {
-    private static String username;
+    private final String username;
     private final ThirdPartyAppAuthenticator.FailCause failCause;
     private final boolean successfulAuthentication;
 
@@ -34,7 +35,7 @@ public class ThirdPartyAuthenticationDemoAgent extends NextGenerationDemoAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        this.username = request.getCredentials().getField("username");
+        this.username = request.getCredentials().getField(Field.Key.USERNAME);
         Provider provider = request.getProvider();
 
         String name = provider.getName();
