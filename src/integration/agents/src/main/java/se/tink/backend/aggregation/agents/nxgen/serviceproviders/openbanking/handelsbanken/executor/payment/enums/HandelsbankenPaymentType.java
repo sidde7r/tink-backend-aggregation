@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import se.tink.libraries.payment.enums.PaymentType;
 
 public enum HandelsbankenPaymentType {
-    SwedishDomesticGiroPayment("swedish-domestic-giro-payment", PaymentType.DOMESTIC),
-    SwedishDomesticCreditTransfer("swedish-domestic-credit-transfer", PaymentType.DOMESTIC),
-    SepaCreditTransfer("sepa-credit-transfer", PaymentType.SEPA),
-    CrossCurrencyCreditTransfer("cross-currency-credit-transfer", PaymentType.INTERNATIONAL),
-    BritishDomesticCreditTransfer("british-domestic-credit-transfer", PaymentType.DOMESTIC),
-    Undefined("Undefined", PaymentType.UNDEFINED);
+    SWEDISH_DOMESTICGIRO_PAYMENT("swedish-domestic-giro-payment", PaymentType.DOMESTIC),
+    SWEDISH_DOMESTIC_CREDIT_TRANSFER("swedish-domestic-credit-transfer", PaymentType.DOMESTIC),
+    SEPA_CREDIT_TRANSFER("sepa-credit-transfer", PaymentType.SEPA),
+    CROSS_CURRENCY_CREDIT_TRANSFER("cross-currency-credit-transfer", PaymentType.INTERNATIONAL),
+    BRITISH_DOMESTIC_CREDIT_TRANSFER("british-domestic-credit-transfer", PaymentType.DOMESTIC),
+    UNDEFINED("Undefined", PaymentType.UNDEFINED);
 
     private final String text;
     private final PaymentType paymentType;

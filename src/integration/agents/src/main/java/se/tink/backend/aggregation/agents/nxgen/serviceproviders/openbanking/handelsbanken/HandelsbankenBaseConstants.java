@@ -99,6 +99,11 @@ public final class HandelsbankenBaseConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
+    public static class IdTags {
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String PAYMENT_ID = "paymentId";
+    }
+
     public static class AccountBalance {
         public static final String AVAILABLE_BALANCE = "AVAILABLE_AMOUNT";
     }

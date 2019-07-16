@@ -19,10 +19,10 @@ public class HandelsbankenPaymentExecutorSelector extends HandelsbankenBasePayme
             accountIdentifiersToPaymentProductMapper =
                     GenericTypeMapper.<HandelsbankenPaymentType, AccountTypePair>genericBuilder()
                             .put(
-                                    HandelsbankenPaymentType.SwedishDomesticCreditTransfer,
+                                    HandelsbankenPaymentType.SWEDISH_DOMESTIC_CREDIT_TRANSFER,
                                     new AccountTypePair(Type.SE, Type.SE))
                             .put(
-                                    HandelsbankenPaymentType.SwedishDomesticGiroPayment,
+                                    HandelsbankenPaymentType.SWEDISH_DOMESTICGIRO_PAYMENT,
                                     new AccountTypePair(Type.SE, Type.SE_BG),
                                     new AccountTypePair(Type.SE, Type.SE_PG))
                             .build();

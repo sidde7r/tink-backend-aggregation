@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Urls;
@@ -180,9 +181,8 @@ public class HandelsbankenBaseApiClient {
             throws PaymentException {
         try {
             return createRequest(
-                            new URL(Urls.PIS_BASE_URL + Urls.INITIATE_PAYMENT)
-                                    .parameter(
-                                            QueryKeys.PAYMENT_PRODUCT, paymentProduct.toString()))
+                            new URL(Urls.INITIATE_PAYMENT)
+                                    .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct.toString()))
                     .post(CreatePaymentResponse.class, createPaymentRequest);
         } catch (HttpResponseException e) {
             handleHttpResponseException(e);
@@ -194,9 +194,9 @@ public class HandelsbankenBaseApiClient {
             String paymentId, HandelsbankenPaymentType paymentProduct) throws PaymentException {
         try {
             return createRequest(
-                            new URL(Urls.PIS_BASE_URL + Urls.CONFIRM_PAYMENT)
-                                    .parameter(QueryKeys.PAYMENT_PRODUCT, paymentProduct.toString())
-                                    .parameter(QueryKeys.PAYMENT_ID, paymentId))
+                            new URL(Urls.CONFIRM_PAYMENT)
+                                    .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct.toString())
+                                    .parameter(IdTags.PAYMENT_ID, paymentId))
                     .put(ConfirmPaymentResponse.class);
         } catch (HttpResponseException e) {
             handleHttpResponseException(e);
@@ -208,9 +208,9 @@ public class HandelsbankenBaseApiClient {
             throws PaymentException {
         try {
             return createRequest(
-                            new URL(Urls.PIS_BASE_URL + Urls.GET_PAYMENT)
-                                    .parameter(QueryKeys.PAYMENT_PRODUCT, paymentProduct)
-                                    .parameter(QueryKeys.PAYMENT_ID, paymentId))
+                            new URL(Urls.GET_PAYMENT)
+                                    .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                    .parameter(IdTags.PAYMENT_ID, paymentId))
                     .get(GetPaymentResponse.class);
         } catch (HttpResponseException e) {
             handleHttpResponseException(e);
