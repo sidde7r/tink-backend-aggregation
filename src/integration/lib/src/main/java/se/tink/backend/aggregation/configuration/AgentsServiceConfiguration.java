@@ -36,6 +36,8 @@ public class AgentsServiceConfiguration {
     private AgentDataAvailabilityTrackerConfiguration agentDataAvailabilityTrackerConfiguration =
             new AgentDataAvailabilityTrackerConfiguration();
 
+    @JsonProperty private TestConfiguration testConfiguration = new TestConfiguration();
+
     public AbnAmroConfiguration getAbnAmroStaging() {
         return abnAmroStaging;
     }
@@ -79,5 +81,9 @@ public class AgentsServiceConfiguration {
     public AgentDataAvailabilityTrackerConfiguration
             getAgentDataAvailabilityTrackerConfiguration() {
         return agentDataAvailabilityTrackerConfiguration;
+    }
+
+    public TestConfiguration getTestConfiguration() {
+        return testConfiguration;
     }
 }
