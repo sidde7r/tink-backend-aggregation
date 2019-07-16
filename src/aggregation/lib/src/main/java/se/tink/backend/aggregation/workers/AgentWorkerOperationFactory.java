@@ -257,8 +257,7 @@ public class AgentWorkerOperationFactory {
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         // Please be aware that the order of adding commands is meaningful
-        List<se.tink.backend.aggregation.workers.AgentWorkerCommand> commands =
-                Lists.newArrayList();
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 

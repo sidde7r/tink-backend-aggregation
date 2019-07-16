@@ -27,11 +27,9 @@ public class CredentialsRefreshStartEventCommandTest {
 
     @Test
     public void testCredentialsRefreshStartEventCommand() throws Exception {
-        se.tink.backend.aggregation.workers.commands.CredentialsRefreshStartEventCommand
-                credentialsRefreshStartEventCommand =
-                        new se.tink.backend.aggregation.workers.commands
-                                .CredentialsRefreshStartEventCommand(
-                                credentialsEventProducer, validCredentials, appId);
+        CredentialsRefreshStartEventCommand credentialsRefreshStartEventCommand =
+                new CredentialsRefreshStartEventCommand(
+                        credentialsEventProducer, validCredentials, appId);
         Assertions.assertThat(credentialsRefreshStartEventCommand.execute())
                 .isEqualTo(AgentWorkerCommandResult.CONTINUE);
     }
