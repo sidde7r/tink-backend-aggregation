@@ -7,6 +7,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.authe
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.fetcher.transactionalaccount.CommerzbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -21,12 +24,16 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class CommerzBankAgent extends Xs2aDevelopersAgent {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private AgentsServiceConfiguration configuration;
+    private String clientName;
 
     public CommerzBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+
         this.apiClient = new CommerzbankApiClient(client, persistentStorage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        clientName = request.getProvider().getPayload();
     }
 
     @Override
@@ -49,7 +56,7 @@ public final class CommerzBankAgent extends Xs2aDevelopersAgent {
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new ThirdPartyAppAuthenticationController<>(
+                new ThirdPartyAppAuthenticationController<String>(
                         controller, supplementalInformationHelper),
                 controller);
     }
@@ -86,5 +93,23 @@ public final class CommerzBankAgent extends Xs2aDevelopersAgent {
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        this.configuration = configuration;
+    }
+
+    private Xs2aDevelopersConfiguration getClientConfiguration() {
+        return getClientConfiguration(getIntegrationName());
+    }
+
+    private Xs2aDevelopersConfiguration getClientConfiguration(String integrationName) {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        integrationName, clientName, Xs2aDevelopersConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 }

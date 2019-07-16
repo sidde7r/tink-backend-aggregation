@@ -76,7 +76,6 @@ public class TransactionAccountEntity {
                 return Optional.ofNullable(toCheckingAccount(balanceEntity));
             case SAVINGS:
                 return Optional.ofNullable(toSavingsAccount(balanceEntity));
-            case OTHER:
             default:
                 return Optional.empty();
         }

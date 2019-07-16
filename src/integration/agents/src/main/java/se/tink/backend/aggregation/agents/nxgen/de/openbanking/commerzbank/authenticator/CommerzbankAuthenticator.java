@@ -16,6 +16,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class CommerzbankAuthenticator extends Xs2aDevelopersAuthenticator {
 
     private CommerzbankApiClient commerzbankApiClient;
+    private PersistentStorage persistentStorage;
+    private Xs2aDevelopersApiClient apiClient;
 
     public CommerzbankAuthenticator(
             Xs2aDevelopersApiClient apiClient,
@@ -23,6 +25,8 @@ public class CommerzbankAuthenticator extends Xs2aDevelopersAuthenticator {
             Xs2aDevelopersConfiguration configuration,
             String iban) {
         super(apiClient, persistentStorage, configuration, iban);
+        this.persistentStorage = persistentStorage;
+        this.apiClient = apiClient;
         this.commerzbankApiClient = (CommerzbankApiClient) apiClient;
     }
 
@@ -43,7 +47,7 @@ public class CommerzbankAuthenticator extends Xs2aDevelopersAuthenticator {
 
         return apiClient.buildAuthorizeUrl(
                 state,
-                QueryValues.SCOPE + super.persistentStorage.get(StorageKeys.CONSENT_ID),
+                QueryValues.SCOPE + persistentStorage.get(StorageKeys.CONSENT_ID),
                 consentResponse.getLinksEntity().getScaOAuthEntity().getHref());
     }
 }
