@@ -13,8 +13,7 @@ public abstract class AgentWorkerCommand {
      *     execute methods or not.
      * @throws Exception on error
      */
-    public abstract AgentWorkerCommandResult execute()
-            throws Exception;
+    public abstract AgentWorkerCommandResult execute() throws Exception;
 
     /**
      * Called for every command in a command chain's reverse order.
