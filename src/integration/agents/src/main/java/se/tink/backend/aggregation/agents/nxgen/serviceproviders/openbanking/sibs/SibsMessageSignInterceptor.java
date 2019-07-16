@@ -47,7 +47,7 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     protected void appendAdditionalHeaders(ClientRequest request) {
         if (request.getHeaders().get(HeaderKeys.DATE) == null) {
             String requestTimestamp =
-                    new SimpleDateFormat(Formats.CONSENT_REQUEST_DATE_FORMAT, Locale.ENGLISH)
+                    new SimpleDateFormat(Formats.CONSENT_BODY_DATE_FORMAT, Locale.ENGLISH)
                             .format(new Date());
             request.getHeaders().add(HeaderKeys.DATE, requestTimestamp);
         }

@@ -15,14 +15,15 @@ public final class SibsConstants {
     }
 
     public static class Urls {
-        public static final String ACCOUNTS = "/{aspsp-cde}/v1/accounts";
-        public static final String ACCOUNT_DETAILS = "/{aspsp-cde}/v1/accounts/{account-id}";
-        public static final String CREATE_CONSENT = "/{aspsp-cde}/v1/consents";
-        public static final String CONSENT_STATUS = "/{aspsp-cde}/v1/consents/{consent-id}/status";
+        public static final String ACCOUNTS = "/{aspsp-cde}/v1-0-2/accounts";
+        public static final String ACCOUNT_DETAILS = "/{aspsp-cde}/v1-0-2/accounts/{account-id}";
+        public static final String CREATE_CONSENT = "/{aspsp-cde}/v1-0-2/consents";
+        public static final String CONSENT_STATUS =
+                "/{aspsp-cde}/v1-0-2/consents/{consent-id}/status";
         public static final String ACCOUNT_BALANCES =
-                "/{aspsp-cde}/v1/accounts/{account-id}/balances";
+                "/{aspsp-cde}/v1-0-2/accounts/{account-id}/balances";
         public static final String ACCOUNT_TRANSACTIONS =
-                "/{aspsp-cde}/v1/accounts/{account-id}/transactions";
+                "/{aspsp-cde}/v1-0-2/accounts/{account-id}/transactions";
     }
 
     public static class StorageKeys {
