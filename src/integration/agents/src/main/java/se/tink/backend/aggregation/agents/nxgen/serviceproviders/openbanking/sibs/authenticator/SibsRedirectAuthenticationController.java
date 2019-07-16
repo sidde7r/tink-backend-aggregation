@@ -28,8 +28,8 @@ public class SibsRedirectAuthenticationController
     private final SibsAuthenticator authenticator;
     private final String state;
     private static final long WAIT_FOR_MINUTES = 9L;
-    private static final long SLEEP_TIME = 5L;
-    private static final int RETRY_ATTEMPTS = 3;
+    private static final long SLEEP_TIME = 10L;
+    private static final int RETRY_ATTEMPTS = 10;
 
     public SibsRedirectAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
