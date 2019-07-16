@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount;
 
 import java.util.Date;
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
