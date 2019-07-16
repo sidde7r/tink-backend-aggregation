@@ -4,7 +4,6 @@ import com.google.common.collect.EnumHashBiMap;
 import java.util.Arrays;
 import java.util.Optional;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
 
 public enum NordeaAccountType {
     IBAN,
@@ -20,8 +19,8 @@ public enum NordeaAccountType {
     DK_73,
     DK_75;
 
-    private static final EnumHashBiMap<Type, NordeaAccountType> tinkToNordeaAccountTypeBiMapper =
-            EnumHashBiMap.create(AccountIdentifier.Type.class);
+    private static final EnumHashBiMap<AccountIdentifier.Type, NordeaAccountType>
+            tinkToNordeaAccountTypeBiMapper = EnumHashBiMap.create(AccountIdentifier.Type.class);
 
     static {
         tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.IBAN, IBAN);

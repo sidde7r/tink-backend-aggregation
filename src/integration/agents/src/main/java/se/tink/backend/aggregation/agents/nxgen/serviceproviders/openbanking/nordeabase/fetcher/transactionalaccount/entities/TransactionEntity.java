@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
@@ -52,15 +53,24 @@ public class TransactionEntity {
     private Date valueDate;
 
     public Transaction toTinkTransaction() {
+
         return Transaction.builder()
                 .setAmount(getAmount())
-                .setDate(transactionDate)
-                .setDescription(typeDescription)
-                .setPending(false)
+                .setDate(bookingDate)
+                .setDescription(getDescription())
+                .setPending(isPending())
                 .build();
+    }
+
+    private String getDescription() {
+        return (narrative != null) ? narrative : typeDescription;
     }
 
     private Amount getAmount() {
         return new Amount(currency, amount);
+    }
+
+    private boolean isPending() {
+        return status.equalsIgnoreCase(NordeaBaseConstants.StatusResponse.RESERVED);
     }
 }

@@ -3,20 +3,22 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -38,7 +40,7 @@ public class AccountEntity {
     private String accountType;
 
     @JsonProperty("available_balance")
-    private double availableBalance;
+    private BigDecimal availableBalance;
 
     private BankEntity bank;
 
@@ -68,60 +70,63 @@ public class AccountEntity {
 
         switch (type) {
             case CHECKING:
-                return parseCheckingAccount();
+                return parseAccount(TransactionalAccountType.CHECKING);
             case SAVINGS:
-                return parseSavingsAccount();
+                return parseAccount(TransactionalAccountType.SAVINGS);
             case OTHER:
             default:
                 throw new IllegalStateException("Unknown account type.");
         }
     }
 
-    private TransactionalAccount parseSavingsAccount() {
-        return SavingsAccount.builder()
-                .setUniqueIdentifier(getUniqueId())
-                .setAccountNumber(getBban())
-                .setBalance(getAvailableBalance())
-                .setAlias(getBban())
-                .addAccountIdentifier(
-                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
-                .addHolderName(accountName)
-                .setProductName(product)
-                .setApiIdentifier(id)
+    private TransactionalAccount parseAccount(TransactionalAccountType accountType) {
+        return TransactionalAccount.nxBuilder()
+                .withType(accountType)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getLast4Bban())
+                                .withAccountNumber(getBban())
+                                .withAccountName(product)
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.IBAN, getIban()))
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.SE, getBban()))
+                                .build())
+                .withBalance(BalanceModule.of(getAvailableBalance()))
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
+                .setApiIdentifier(id)
                 .build();
     }
 
-    private TransactionalAccount parseCheckingAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(getUniqueId())
-                .setAccountNumber(getBban())
-                .setBalance(getAvailableBalance())
-                .setAlias(getBban())
-                .addAccountIdentifier(
-                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
-                .addHolderName(accountName)
-                .setProductName(product)
-                .setApiIdentifier(id)
-                .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
-                .build();
-    }
-
-    private Amount getAvailableBalance() {
-        return new Amount(currency, availableBalance);
+    private ExactCurrencyAmount getAvailableBalance() {
+        return new ExactCurrencyAmount(availableBalance, currency);
     }
 
     private String getBban() {
         return Optional.ofNullable(accountNumbers).orElse(Collections.emptyList()).stream()
-                .filter(acc -> StringUtils.equalsIgnoreCase(acc.getType(), "bban"))
+                .filter(
+                        acc ->
+                                StringUtils.equalsIgnoreCase(
+                                        acc.getType(),
+                                        NordeaBaseConstants.AccountTypesResponse.BBAN_SE))
                 .findFirst()
                 .map(AccountNumberEntity::getValue)
                 .orElse(getIban());
     }
 
+    private String getLast4Bban() {
+        return getBban().substring(getBban().length() - 4);
+    }
+
     private String getIban() {
         return Optional.ofNullable(accountNumbers).orElse(Collections.emptyList()).stream()
-                .filter(acc -> StringUtils.equalsIgnoreCase(acc.getType(), "iban"))
+                .filter(
+                        acc ->
+                                StringUtils.equalsIgnoreCase(
+                                        acc.getType(),
+                                        NordeaBaseConstants.AccountTypesResponse.IBAN))
                 .findFirst()
                 .map(AccountNumberEntity::getValue)
                 .orElseThrow(
@@ -131,13 +136,5 @@ public class AccountEntity {
                                             + LogTag.from("openbanking_base_nordea"));
                             return new IllegalArgumentException();
                         });
-    }
-
-    private String getUniqueId() {
-        String bban = getBban();
-
-        return !country.equalsIgnoreCase("SE")
-                ? getIban()
-                : "************" + bban.substring(bban.length() - 4);
     }
 }
