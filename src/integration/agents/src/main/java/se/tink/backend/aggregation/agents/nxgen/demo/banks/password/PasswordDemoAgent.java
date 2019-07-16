@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -41,14 +42,14 @@ import se.tink.libraries.identitydata.NameElement;
 
 public class PasswordDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {
-    private static String username;
-    private static String provider;
+    private final String username;
+    private final String provider;
 
     public PasswordDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        this.username = request.getCredentials().getField("username");
+        this.username = request.getCredentials().getField(Field.Key.USERNAME);
         this.provider = request.getProvider().getName();
     }
 

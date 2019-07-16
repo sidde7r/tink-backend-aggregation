@@ -53,6 +53,13 @@ git_repository(
     commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
 )
 
+git_repository(
+    name = "tink_backend_integration_openbanking",
+    remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
+    commit = "HEAD",
+    shallow_since = "1562076445 +0000",
+)
+
 # Docker dependencies
 http_archive(
     name = "io_bazel_rules_docker",

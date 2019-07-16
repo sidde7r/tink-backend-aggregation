@@ -66,6 +66,7 @@ import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.crypto.Pem;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
+import se.tink.backend.aggregation.agents.utils.jersey.MessageSignInterceptor;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -129,6 +130,11 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private SSLContext sslContext;
+    private MessageSignInterceptor messageSignInterceptor;
+
+    public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {
+        this.messageSignInterceptor = messageSignInterceptor;
+    }
 
     private class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
@@ -334,6 +340,9 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         }
         if (this.debugOutput) {
             this.internalClient.addFilter(debugOutputLoggingFilter);
+        }
+        if (messageSignInterceptor != null) {
+            this.internalClient.addFilter(messageSignInterceptor);
         }
     }
 
