@@ -6,29 +6,27 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 
 public class CredentialsRefreshStartEventCommand extends AgentWorkerCommand {
-  private final Credentials credentials;
-  private final String appId;
-  private final CredentialsEventProducer credentialsEventProducer;
+    private final Credentials credentials;
+    private final String appId;
+    private final CredentialsEventProducer credentialsEventProducer;
 
-  public CredentialsRefreshStartEventCommand(
-      CredentialsEventProducer credentialsEventProducer,
-      Credentials credentials,
-      String appId
-  ) {
-    this.credentialsEventProducer = credentialsEventProducer;
-    this.credentials = credentials;
-    this.appId = appId;
+    public CredentialsRefreshStartEventCommand(
+            CredentialsEventProducer credentialsEventProducer,
+            Credentials credentials,
+            String appId) {
+        this.credentialsEventProducer = credentialsEventProducer;
+        this.credentials = credentials;
+        this.appId = appId;
+    }
 
-  }
+    @Override
+    public AgentWorkerCommandResult execute() throws Exception {
+        credentialsEventProducer.sendCredentialsRefreshCommandChainStarted(credentials, appId);
+        return AgentWorkerCommandResult.CONTINUE;
+    }
 
-  @Override
-  public AgentWorkerCommandResult execute() throws Exception {
-    credentialsEventProducer.sendCredentialsRefreshCommandChainStarted(credentials, appId);
-    return AgentWorkerCommandResult.CONTINUE;
-  }
-
-  @Override
-  public void postProcess() throws Exception {
-    // NOP
-  }
+    @Override
+    public void postProcess() throws Exception {
+        // NOP
+    }
 }
