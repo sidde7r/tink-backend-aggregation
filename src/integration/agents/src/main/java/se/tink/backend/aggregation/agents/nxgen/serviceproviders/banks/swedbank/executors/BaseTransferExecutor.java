@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisteredTransfersResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.TransferTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.updatepayment.rpc.PaymentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.TransferDestinationAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
@@ -163,8 +164,20 @@ public class BaseTransferExecutor {
         }
     }
 
+    private LinkEntity getDeleteLink(TransactionEntity transaction) {
+        final LinkEntity deleteLink = transaction.getLinks().getDelete();
+        if (deleteLink != null) {
+            return deleteLink;
+        }
+
+        // fetch delete link from payment details
+        final PaymentDetailsResponse paymentDetailsResponse =
+                apiClient.paymentDetails(transaction.getLinks().getSelf());
+        return paymentDetailsResponse.getTransaction().getLinks().getDelete();
+    }
+
     private void deleteTransfer(TransactionEntity transaction) {
-        HttpResponse deleteResponse = apiClient.deleteTransfer(transaction.getLinks().getDelete());
+        HttpResponse deleteResponse = apiClient.deleteTransfer(getDeleteLink(transaction));
 
         if (deleteResponse.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
             ErrorResponse errorResponse = deleteResponse.getBody(ErrorResponse.class);
