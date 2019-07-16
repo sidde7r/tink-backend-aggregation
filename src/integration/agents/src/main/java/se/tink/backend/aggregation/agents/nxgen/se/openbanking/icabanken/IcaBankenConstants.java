@@ -5,30 +5,60 @@ public final class IcaBankenConstants {
     public static final String INTEGRATION_NAME = "icabanken";
 
     public static class Urls {
-        private static String BASE_URL = "accounts/1.0.0";
-        public static final String ACCOUNTS_PATH = BASE_URL + "/Accounts";
-        public static final String TRANSACTIONS_PATH =
-                BASE_URL + "/Accounts/{accountId}/transactions";
+        private static String BASE =
+                "https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0";
+
+        public static final String AUTH_PATH = "https://ims.icagruppen.se/oauth/v2/authorize";
+        public static final String TOKEN_PATH =
+                "https://mtls-ims.icagruppen.se/oauth/v2/mtls-token";
+        public static final String ACCOUNTS_PATH = BASE + "/Accounts";
+        public static final String TRANSACTIONS_PATH = BASE + "/Accounts/{accountId}/transactions";
     }
 
     public static class StorageKeys {
-        public static final String BASE_URL = "BASE_URL";
         public static final String TOKEN = "OAUTH_TOKEN";
     }
 
     public static class QueryKeys {
+        public static final String BEARER = "Bearer";
         public static final String WITH_BALANCE = "withBalance";
         public static final String DATE_FROM = "from";
         public static final String DATE_TO = "to";
         public static final String STATUS = "status";
+        public static final String CLIENT_ID = "client_id";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String SCOPE = "scope";
+        public static final String STATE = "state";
+        public static final String SSN = "ssn";
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String CODE = "code";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class QueryValues {
         public static final String STATUS = "both";
+        public static final String CODE = "code";
+        public static final String SCOPE = "account";
+        public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String WITH_BALANCE = "true";
+        public static final String ACCOUNT = "account";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class HeaderKeys {
         public static final String REQUEST_ID = "X-Request-ID";
+        public static final String CONTENT_TYPE = "Content-Type";
+        public static final String AUTHORIZATION = "authorization";
+        public static final String SCOPE = "scope";
+
+        public static final String TINK_DEBUG = "X-Tink-Debug";
+        public static final String TRUST_ALL = "trust_all";
+    }
+
+    public static class HeaderValues {
+        public static final String BEARER = "Bearer ";
+        public static final String ACCOUNT = "account";
     }
 
     public class Account {
@@ -37,7 +67,6 @@ public final class IcaBankenConstants {
     }
 
     public class ErrorMessages {
-
         public static final String MISSING_CONFIGURATION = "ICA Banken configuration missing.";
     }
 }

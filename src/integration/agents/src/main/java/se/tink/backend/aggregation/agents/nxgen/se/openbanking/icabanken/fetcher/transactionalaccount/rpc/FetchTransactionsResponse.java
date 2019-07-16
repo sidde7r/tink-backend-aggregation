@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,7 +38,8 @@ public class FetchTransactionsResponse implements PaginatorResponse {
     }
 
     private List<Transaction> getPendingTransactions() {
-        return transactions.getPending().stream()
+        return Optional.ofNullable(transactions.getPending()).orElse(Collections.emptyList())
+                .stream()
                 .map(this::toTinkTransaction)
                 .collect(Collectors.toList());
     }
