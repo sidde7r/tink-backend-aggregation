@@ -27,7 +27,19 @@ public final class SparebankConstants {
     public static class Urls {
         public static final String CONSENTS = "/v1/consents";
         public static final String FETCH_ACCOUNTS = "/v1/accounts";
-        public static final String FETCH_TRANSACTIONS = "/v1/accounts/%s/transactions";
+        public static final String FETCH_TRANSACTIONS = "/v1/accounts/{accountId}/transactions";
+        public static final String CREATE_PAYMENT = "/v1/payments/{paymentProduct}";
+        public static final String GET_PAYMENT = "/v1/payments/{paymentProduct}/{paymentId}";
+        public static final String SIGN_PAYMENT =
+                "/v1/payments/{paymentProduct}/{paymentId}/authorisations";
+        public static final String GET_PAYMENT_STATUS =
+                "/v1/payments/{paymentProduct}/{paymentId}/status";
+    }
+
+    public static class IdTags {
+        public static final String ACCOUNT_ID = "accountId";
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class StorageKeys {
@@ -35,6 +47,7 @@ public final class SparebankConstants {
         public static final String TPP_SESSION_ID = "TppSessionId";
         public static final String PSU_ID = "PsuId";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
+        public static final String STATE = "state";
     }
 
     public static class QueryKeys {
@@ -67,10 +80,15 @@ public final class SparebankConstants {
         public static final String TPP_ID = "TPP-ID";
         public static final String TPP_SESSION_ID = "TPP-SESSION-ID";
         public static final String PSU_ID = "PSU-ID";
+        public static final String DIGEST = "Digest";
     }
 
     public static class HeaderValues {
         public static final String BOOKING_STATUS = "both";
+    }
+
+    public static class SparebankSignSteps {
+        public static final String SAMPLE_STEP = "SAMPLE_STEP";
     }
 
     public static class Signature {
