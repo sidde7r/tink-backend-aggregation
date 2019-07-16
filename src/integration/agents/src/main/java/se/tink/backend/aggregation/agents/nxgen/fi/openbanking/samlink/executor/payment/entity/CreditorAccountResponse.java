@@ -15,8 +15,6 @@ public class CreditorAccountResponse {
     private String msisdn;
     private String currency;
 
-    public CreditorAccountResponse() {}
-
     public String getIban() {
         return iban;
     }

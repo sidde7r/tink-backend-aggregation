@@ -8,8 +8,6 @@ public class InstructedAmountResponse {
     private String currency;
     private Double amount;
 
-    public InstructedAmountResponse() {}
-
     public String getCurrency() {
         return currency;
     }

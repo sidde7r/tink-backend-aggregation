@@ -15,8 +15,6 @@ public class DebtorAccountResponse {
     private String msisdn;
     private String currency;
 
-    public DebtorAccountResponse() {}
-
     public Debtor toTinkDebtor() {
         return new Debtor(AccountIdentifier.create(Type.IBAN, iban));
     }

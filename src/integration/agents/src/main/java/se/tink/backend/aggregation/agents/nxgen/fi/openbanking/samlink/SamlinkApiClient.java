@@ -120,23 +120,22 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
 
     public FetchPaymentResponse fetchSepaPayment(PaymentRequest paymentRequest) {
         String url = getConfiguration().getBaseUrl() + Urls.GET_SEPA_PAYMENT;
-
-        return createRequest(
-                        new URL(url)
-                                .parameter(
-                                        IdTags.PAYMENT_ID,
-                                        paymentRequest.getPayment().getUniqueId()))
-                .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
-                .get(FetchPaymentResponse.class);
+        URL urlWithPaymentId =
+                new URL(url)
+                        .parameter(IdTags.PAYMENT_ID, paymentRequest.getPayment().getUniqueId());
+        return fetchPayment(urlWithPaymentId);
     }
 
     public FetchPaymentResponse fetchForeignPayment(PaymentRequest paymentRequest) {
         String url = getConfiguration().getBaseUrl() + Urls.GET_FOREIGN_PAYMENT;
-        return createRequest(
-                        new URL(url)
-                                .parameter(
-                                        IdTags.PAYMENT_ID,
-                                        paymentRequest.getPayment().getUniqueId()))
+        URL urlWithPaymentId =
+                new URL(url)
+                        .parameter(IdTags.PAYMENT_ID, paymentRequest.getPayment().getUniqueId());
+        return fetchPayment(urlWithPaymentId);
+    }
+
+    private FetchPaymentResponse fetchPayment(URL url) {
+        return createRequest(url)
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
                 .get(FetchPaymentResponse.class);
     }
