@@ -1,0 +1,750 @@
+{
+    "dependency_tree": {
+        "conflict_resolution": {
+            "net.java.dev.jna:jna:4.5.1": "net.java.dev.jna:jna:5.2.0"
+        },
+        "dependencies": [
+            {
+                "coord": "ch.qos.logback:logback-classic:1.2.3",
+                "dependencies": [
+                    "ch.qos.logback:logback-core:1.2.3",
+                    "org.slf4j:slf4j-api:1.7.25"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar",
+                "sha256": "fb53f8539e7fcb8f093a56e138112056ec1dc809ebb020b59d8a36a5ebac37e0",
+                "url": "https://repo1.maven.org/maven2/ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar"
+            },
+            {
+                "coord": "ch.qos.logback:logback-core:1.2.3",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/ch/qos/logback/logback-core/1.2.3/logback-core-1.2.3.jar",
+                "sha256": "5946d837fe6f960c02a53eda7a6926ecc3c758bbdd69aa453ee429f858217f22",
+                "url": "https://repo1.maven.org/maven2/ch/qos/logback/logback-core/1.2.3/logback-core-1.2.3.jar"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-annotation:3.0.2",
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.25"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2.jar",
+                "sha256": "26dad71e3dee3ad44a007fea76ee7a9d5e86485b27c619f2db9a6ee329cb6bf6",
+                "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2.jar"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-core:3.0.2",
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.25"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar",
+                "sha256": "9e819c6f4d5f446e00cb05b08d0127226683b725a94d161288aea870c1bd2f63",
+                "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-healthchecks:3.0.2",
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.25"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2.jar",
+                "sha256": "87b983760bc3e1aad32340c6106d9c344d14c48e3582a2091492a483874d8e04",
+                "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2.jar"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jersey:3.0.2",
+                "dependencies": [
+                    "com.codahale.metrics:metrics-annotation:3.0.2",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.slf4j:slf4j-api:1.7.25",
+                    "com.sun.jersey:jersey-core:1.18.1",
+                    "com.sun.jersey:jersey-server:1.18.1"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2.jar",
+                "sha256": "5e45cf6873c55debebab2458517684a9526800de3c58baa26b59334e31b03645",
+                "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2.jar"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-json:3.0.2",
+                "dependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-annotations:2.2.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.2.2",
+                    "org.slf4j:slf4j-api:1.7.25",
+                    "com.fasterxml.jackson.core:jackson-core:2.2.2"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2.jar",
+                "sha256": "d4ae62ec07ab5b4fc7e4e4321cf7b96b96f9002a755e26f14661abf4917e7aad",
+                "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2.jar"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jvm:3.0.2",
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.25",
+                    "com.codahale.metrics:metrics-core:3.0.2"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2.jar",
+                "sha256": "3037359ca538d98c5a7bcf070f98a9b9023379853276826b4902d64bc358911a",
+                "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2.jar"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-servlets:3.0.2",
+                "dependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-annotations:2.2.2",
+                    "com.codahale.metrics:metrics-jvm:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.2.2",
+                    "org.slf4j:slf4j-api:1.7.25",
+                    "com.fasterxml.jackson.core:jackson-core:2.2.2",
+                    "com.codahale.metrics:metrics-healthchecks:3.0.2",
+                    "com.codahale.metrics:metrics-json:3.0.2"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2.jar",
+                "sha256": "dd5470632d0ffa7d1d315ad86fc827afc57f917a8d68b8c06ed60214ddd4bfbc",
+                "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2.jar"
+            },
+            {
+                "coord": "com.datastax.cassandra:cassandra-driver-core:3.4.0",
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.30.Final",
+                    "org.ow2.asm:asm-tree:5.0.3",
+                    "com.github.jnr:jffi:1.2.10",
+                    "io.netty:netty-codec:4.1.30.Final",
+                    "com.github.jnr:jffi:jar:native:1.2.10",
+                    "io.netty:netty-transport:4.1.30.Final",
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-commons:5.0.3",
+                    "org.slf4j:slf4j-api:1.7.25",
+                    "org.ow2.asm:asm-analysis:5.0.3",
+                    "com.google.guava:guava:21.0",
+                    "io.netty:netty-handler:4.0.47.Final",
+                    "io.netty:netty-buffer:4.1.30.Final",
+                    "com.github.jnr:jnr-constants:0.9.0",
+                    "com.github.jnr:jnr-ffi:2.0.7",
+                    "org.ow2.asm:asm-util:5.0.3",
+                    "com.github.jnr:jnr-x86asm:1.0.2",
+                    "io.netty:netty-common:4.1.30.Final",
+                    "com.github.jnr:jnr-posix:3.0.27"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/datastax/cassandra/cassandra-driver-core/3.4.0/cassandra-driver-core-3.4.0.jar",
+                "sha256": "e227712b4cfa898998b382b75db92946ba9ca4fade2b581e39b46bbb60dd3283",
+                "url": "https://repo1.maven.org/maven2/com/datastax/cassandra/cassandra-driver-core/3.4.0/cassandra-driver-core-3.4.0.jar"
+            },
+            {
+                "coord": "com.fasterxml.jackson.core:jackson-annotations:2.2.2",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.2.2/jackson-annotations-2.2.2.jar",
+                "sha256": "ccc4a5a10e7a30ce61f11496a460b28fbfb48695e0f11d4ffcb76cc715bd7116",
+                "url": "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.2.2/jackson-annotations-2.2.2.jar"
+            },
+            {
+                "coord": "com.fasterxml.jackson.core:jackson-core:2.2.2",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.2.2/jackson-core-2.2.2.jar",
+                "sha256": "1ec254be61bd73b44b9adf26923d04e18965aa48cb3d3e1537096056e139e3c7",
+                "url": "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.2.2/jackson-core-2.2.2.jar"
+            },
+            {
+                "coord": "com.fasterxml.jackson.core:jackson-databind:2.2.2",
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:2.2.2",
+                    "com.fasterxml.jackson.core:jackson-annotations:2.2.2"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.2.2/jackson-databind-2.2.2.jar",
+                "sha256": "f9d2033d9d3809f307440227adf8900dbb89234282c77eacabd75d0f538a7cd9",
+                "url": "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.2.2/jackson-databind-2.2.2.jar"
+            },
+            {
+                "coord": "com.github.jai-imageio:jai-imageio-core:1.4.0",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0.jar",
+                "sha256": "8ad3c68e9efffb10ac87ff8bc589adf64b04a729c5194c079efd0643607fd72a",
+                "url": "https://repo1.maven.org/maven2/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0.jar"
+            },
+            {
+                "coord": "com.github.jnr:jffi:1.2.10",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/github/jnr/jffi/1.2.10/jffi-1.2.10.jar",
+                "sha256": "acf67c23f3320b69c8caae389f64e4d98ead14b591bac84b3f2592cbcf36a33e",
+                "url": "https://repo1.maven.org/maven2/com/github/jnr/jffi/1.2.10/jffi-1.2.10.jar"
+            },
+            {
+                "coord": "com.github.jnr:jffi:jar:native:1.2.10",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/github/jnr/jffi/1.2.10/jffi-1.2.10-native.jar",
+                "sha256": "c8bc5bce45a2bcb5520902b6195b8395e9caba1518c6b72ce69de6b9844e72ae",
+                "url": "https://repo1.maven.org/maven2/com/github/jnr/jffi/1.2.10/jffi-1.2.10-native.jar"
+            },
+            {
+                "coord": "com.github.jnr:jnr-constants:0.9.0",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/github/jnr/jnr-constants/0.9.0/jnr-constants-0.9.0.jar",
+                "sha256": "fef43ba363a6c5cc5dab671b2ea06d06511cf73ed32ac1ee82e893a840ed2733",
+                "url": "https://repo1.maven.org/maven2/com/github/jnr/jnr-constants/0.9.0/jnr-constants-0.9.0.jar"
+            },
+            {
+                "coord": "com.github.jnr:jnr-ffi:2.0.7",
+                "dependencies": [
+                    "org.ow2.asm:asm-tree:5.0.3",
+                    "com.github.jnr:jffi:1.2.10",
+                    "com.github.jnr:jffi:jar:native:1.2.10",
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-commons:5.0.3",
+                    "org.ow2.asm:asm-analysis:5.0.3",
+                    "org.ow2.asm:asm-util:5.0.3",
+                    "com.github.jnr:jnr-x86asm:1.0.2"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/github/jnr/jnr-ffi/2.0.7/jnr-ffi-2.0.7.jar",
+                "sha256": "9406dfaad59bc3fc0de97abf8a455e70d460c294d6f445407d5080db93239643",
+                "url": "https://repo1.maven.org/maven2/com/github/jnr/jnr-ffi/2.0.7/jnr-ffi-2.0.7.jar"
+            },
+            {
+                "coord": "com.github.jnr:jnr-posix:3.0.27",
+                "dependencies": [
+                    "org.ow2.asm:asm-tree:5.0.3",
+                    "com.github.jnr:jffi:1.2.10",
+                    "com.github.jnr:jffi:jar:native:1.2.10",
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-commons:5.0.3",
+                    "org.ow2.asm:asm-analysis:5.0.3",
+                    "com.github.jnr:jnr-constants:0.9.0",
+                    "com.github.jnr:jnr-ffi:2.0.7",
+                    "org.ow2.asm:asm-util:5.0.3",
+                    "com.github.jnr:jnr-x86asm:1.0.2"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/github/jnr/jnr-posix/3.0.27/jnr-posix-3.0.27.jar",
+                "sha256": "84dab031a38688cb2ec808a011ba0233cb0d1146d39020e1447992ad505f3d78",
+                "url": "https://repo1.maven.org/maven2/com/github/jnr/jnr-posix/3.0.27/jnr-posix-3.0.27.jar"
+            },
+            {
+                "coord": "com.github.jnr:jnr-x86asm:1.0.2",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2.jar",
+                "sha256": "39f3675b910e6e9b93825f8284bec9f4ad3044cd20a6f7c8ff9e2f8695ebf21e",
+                "url": "https://repo1.maven.org/maven2/com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2.jar"
+            },
+            {
+                "coord": "com.google.code.findbugs:jsr305:3.0.0",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0.jar",
+                "sha256": "bec0b24dcb23f9670172724826584802b80ae6cbdaba03bdebdef9327b962f6a",
+                "url": "https://repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0.jar"
+            },
+            {
+                "coord": "com.google.errorprone:error_prone_annotations:2.0.11",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.0.11/error_prone_annotations-2.0.11.jar",
+                "sha256": "5ef721197178ed9078b7afc7914e15cd64256f7c768b6a8a46123d8d34bf3131",
+                "url": "https://repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.0.11/error_prone_annotations-2.0.11.jar"
+            },
+            {
+                "coord": "com.google.guava:guava:21.0",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/google/guava/guava/21.0/guava-21.0.jar",
+                "sha256": "972139718abc8a4893fa78cba8cf7b2c903f35c97aaf44fa3031b0669948b480",
+                "url": "https://repo1.maven.org/maven2/com/google/guava/guava/21.0/guava-21.0.jar"
+            },
+            {
+                "coord": "com.google.instrumentation:instrumentation-api:0.4.3",
+                "dependencies": [
+                    "com.google.errorprone:error_prone_annotations:2.0.11",
+                    "com.google.code.findbugs:jsr305:3.0.0",
+                    "com.google.guava:guava:21.0",
+                    "io.grpc:grpc-context:1.2.0"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/google/instrumentation/instrumentation-api/0.4.3/instrumentation-api-0.4.3.jar",
+                "sha256": "9502d5622fea56e5b3fbe4a5263ad3bfd93487869813304c36831e1cb1d88bd5",
+                "url": "https://repo1.maven.org/maven2/com/google/instrumentation/instrumentation-api/0.4.3/instrumentation-api-0.4.3.jar"
+            },
+            {
+                "coord": "com.lowagie:itext:2.1.7",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/lowagie/itext/2.1.7/itext-2.1.7.jar",
+                "sha256": "7d82c6b097a31cdf5a6d49a327bf582fdec7304da69308f9f6abf54aa9fd9055",
+                "url": "https://repo1.maven.org/maven2/com/lowagie/itext/2.1.7/itext-2.1.7.jar"
+            },
+            {
+                "coord": "com.sun.jersey:jersey-core:1.18.1",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/com/sun/jersey/jersey-core/1.18.1/jersey-core-1.18.1.jar",
+                "sha256": "8fdba4e61638f8c94e81033e27fbf2cb5e9e4be25015912fc58e7718ed684406",
+                "url": "https://repo1.maven.org/maven2/com/sun/jersey/jersey-core/1.18.1/jersey-core-1.18.1.jar"
+            },
+            {
+                "coord": "com.sun.jersey:jersey-server:1.18.1",
+                "dependencies": [
+                    "com.sun.jersey:jersey-core:1.18.1"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/sun/jersey/jersey-server/1.18.1/jersey-server-1.18.1.jar",
+                "sha256": "f4007a4be13fafffaabfc0ce2a34edd1d6d7a02a5822d9dde4d07eabede5ad7c",
+                "url": "https://repo1.maven.org/maven2/com/sun/jersey/jersey-server/1.18.1/jersey-server-1.18.1.jar"
+            },
+            {
+                "coord": "com.sun.jersey:jersey-servlet:1.18.1",
+                "dependencies": [
+                    "com.sun.jersey:jersey-core:1.18.1",
+                    "com.sun.jersey:jersey-server:1.18.1"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/com/sun/jersey/jersey-servlet/1.18.1/jersey-servlet-1.18.1.jar",
+                "sha256": "5f650730576fd5a6dc6e5a5afa6942c3a17706e4c77341a5a037031405736283",
+                "url": "https://repo1.maven.org/maven2/com/sun/jersey/jersey-servlet/1.18.1/jersey-servlet-1.18.1.jar"
+            },
+            {
+                "coord": "commons-beanutils:commons-beanutils:1.9.2",
+                "dependencies": [
+                    "commons-collections:commons-collections:3.2.1",
+                    "commons-logging:commons-logging:1.2"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/commons-beanutils/commons-beanutils/1.9.2/commons-beanutils-1.9.2.jar",
+                "sha256": "23729e3a2677ed5fb164ec999ba3fcdde3f8460e5ed086b6a43d8b5d46998d42",
+                "url": "https://repo1.maven.org/maven2/commons-beanutils/commons-beanutils/1.9.2/commons-beanutils-1.9.2.jar"
+            },
+            {
+                "coord": "commons-collections:commons-collections:3.2.1",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar",
+                "sha256": "87363a4c94eaabeefd8b930cb059f66b64c9f7d632862f23de3012da7660047b",
+                "url": "https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"
+            },
+            {
+                "coord": "commons-io:commons-io:2.6",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/commons-io/commons-io/2.6/commons-io-2.6.jar",
+                "sha256": "f877d304660ac2a142f3865badfc971dec7ed73c747c7f8d5d2f5139ca736513",
+                "url": "https://repo1.maven.org/maven2/commons-io/commons-io/2.6/commons-io-2.6.jar"
+            },
+            {
+                "coord": "commons-logging:commons-logging:1.2",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar",
+                "sha256": "daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636",
+                "url": "https://repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar"
+            },
+            {
+                "coord": "io.grpc:grpc-context:1.2.0",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-context/1.2.0/grpc-context-1.2.0.jar",
+                "sha256": "4f1fed2735f011ba6f8ab1faa003ef67bade9e773f5a5ec4b69eb2a124500ca6",
+                "url": "https://repo1.maven.org/maven2/io/grpc/grpc-context/1.2.0/grpc-context-1.2.0.jar"
+            },
+            {
+                "coord": "io.netty:netty-buffer:4.1.30.Final",
+                "dependencies": [
+                    "io.netty:netty-common:4.1.30.Final"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/netty/netty-buffer/4.1.30.Final/netty-buffer-4.1.30.Final.jar",
+                "sha256": "dac32e67876f416e0526c457bbb4d4a7b245d2d6977a39e3ed54484370d86d6e",
+                "url": "https://repo1.maven.org/maven2/io/netty/netty-buffer/4.1.30.Final/netty-buffer-4.1.30.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-codec-dns:4.1.30.Final",
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.30.Final",
+                    "io.netty:netty-codec:4.1.30.Final",
+                    "io.netty:netty-transport:4.1.30.Final",
+                    "io.netty:netty-buffer:4.1.30.Final",
+                    "io.netty:netty-common:4.1.30.Final"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/netty/netty-codec-dns/4.1.30.Final/netty-codec-dns-4.1.30.Final.jar",
+                "sha256": "27cd13191ef86525c132ca98bfacf06cadb5511bdf6d6fec0bd3e2659579e140",
+                "url": "https://repo1.maven.org/maven2/io/netty/netty-codec-dns/4.1.30.Final/netty-codec-dns-4.1.30.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-codec:4.1.30.Final",
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.30.Final",
+                    "io.netty:netty-transport:4.1.30.Final",
+                    "io.netty:netty-buffer:4.1.30.Final",
+                    "io.netty:netty-common:4.1.30.Final"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/netty/netty-codec/4.1.30.Final/netty-codec-4.1.30.Final.jar",
+                "sha256": "ca9873b1a4419dd3d5455afa8351279e5c9c834b86118c5e345ff7751492bd30",
+                "url": "https://repo1.maven.org/maven2/io/netty/netty-codec/4.1.30.Final/netty-codec-4.1.30.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-common:4.1.30.Final",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/io/netty/netty-common/4.1.30.Final/netty-common-4.1.30.Final.jar",
+                "sha256": "b5f23d82aab356751db417829536267886ad835d314b4ae4425736cf8a0a9a2a",
+                "url": "https://repo1.maven.org/maven2/io/netty/netty-common/4.1.30.Final/netty-common-4.1.30.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-handler:4.0.47.Final",
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.30.Final",
+                    "io.netty:netty-codec:4.1.30.Final",
+                    "io.netty:netty-transport:4.1.30.Final",
+                    "io.netty:netty-buffer:4.1.30.Final",
+                    "io.netty:netty-common:4.1.30.Final"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/netty/netty-handler/4.0.47.Final/netty-handler-4.0.47.Final.jar",
+                "sha256": "e7da2a6666bd30a8d4ebe36fa7ae7bd37d7db37f5098c2558ff6771b2ba2c830",
+                "url": "https://repo1.maven.org/maven2/io/netty/netty-handler/4.0.47.Final/netty-handler-4.0.47.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-resolver-dns:4.1.30.Final",
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.30.Final",
+                    "io.netty:netty-codec:4.1.30.Final",
+                    "io.netty:netty-transport:4.1.30.Final",
+                    "io.netty:netty-buffer:4.1.30.Final",
+                    "io.netty:netty-common:4.1.30.Final",
+                    "io.netty:netty-codec-dns:4.1.30.Final"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/netty/netty-resolver-dns/4.1.30.Final/netty-resolver-dns-4.1.30.Final.jar",
+                "sha256": "e6953e152ee747fa91962dc102e2b7a0706fb21c83db5db3bba6fdf7b00d08b7",
+                "url": "https://repo1.maven.org/maven2/io/netty/netty-resolver-dns/4.1.30.Final/netty-resolver-dns-4.1.30.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-resolver:4.1.30.Final",
+                "dependencies": [
+                    "io.netty:netty-common:4.1.30.Final"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/netty/netty-resolver/4.1.30.Final/netty-resolver-4.1.30.Final.jar",
+                "sha256": "c975aed0421009c6f762afa4d7182eee51a9fc00f3d238f24950e2225c3e882f",
+                "url": "https://repo1.maven.org/maven2/io/netty/netty-resolver/4.1.30.Final/netty-resolver-4.1.30.Final.jar"
+            },
+            {
+                "coord": "io.netty:netty-transport:4.1.30.Final",
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.30.Final",
+                    "io.netty:netty-buffer:4.1.30.Final",
+                    "io.netty:netty-common:4.1.30.Final"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/netty/netty-transport/4.1.30.Final/netty-transport-4.1.30.Final.jar",
+                "sha256": "8b2ac95f7ad8ba53847a7724e45b5d68ebc84bb058093f493424df9fc2ecf2fa",
+                "url": "https://repo1.maven.org/maven2/io/netty/netty-transport/4.1.30.Final/netty-transport-4.1.30.Final.jar"
+            },
+            {
+                "coord": "io.prometheus:simpleclient:0.5.0",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/io/prometheus/simpleclient/0.5.0/simpleclient-0.5.0.jar",
+                "sha256": "68e20a01ec974f382553b763f58594416c3c652b7067d8aeccf1a5ea6c8b1d0d",
+                "url": "https://repo1.maven.org/maven2/io/prometheus/simpleclient/0.5.0/simpleclient-0.5.0.jar"
+            },
+            {
+                "coord": "io.prometheus:simpleclient_common:0.5.0",
+                "dependencies": [
+                    "io.prometheus:simpleclient:0.5.0"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/prometheus/simpleclient_common/0.5.0/simpleclient_common-0.5.0.jar",
+                "sha256": "41d881034a44639d5717d71c61d207b8580bc755e0c0a6f4a1ec7137a7274366",
+                "url": "https://repo1.maven.org/maven2/io/prometheus/simpleclient_common/0.5.0/simpleclient_common-0.5.0.jar"
+            },
+            {
+                "coord": "io.prometheus:simpleclient_hotspot:0.5.0",
+                "dependencies": [
+                    "io.prometheus:simpleclient:0.5.0"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/prometheus/simpleclient_hotspot/0.5.0/simpleclient_hotspot-0.5.0.jar",
+                "sha256": "93f4f9e43948599ce42e38b3899194a130989d967eba47233abe16177fef1d06",
+                "url": "https://repo1.maven.org/maven2/io/prometheus/simpleclient_hotspot/0.5.0/simpleclient_hotspot-0.5.0.jar"
+            },
+            {
+                "coord": "io.prometheus:simpleclient_httpserver:0.5.0",
+                "dependencies": [
+                    "io.prometheus:simpleclient_common:0.5.0",
+                    "io.prometheus:simpleclient:0.5.0"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/prometheus/simpleclient_httpserver/0.5.0/simpleclient_httpserver-0.5.0.jar",
+                "sha256": "e3a42188c9b1dee3a0317496a8ffb461c958737188fe4a8bcd3a9f651e934a58",
+                "url": "https://repo1.maven.org/maven2/io/prometheus/simpleclient_httpserver/0.5.0/simpleclient_httpserver-0.5.0.jar"
+            },
+            {
+                "coord": "io.prometheus:simpleclient_pushgateway:0.5.0",
+                "dependencies": [
+                    "io.prometheus:simpleclient_common:0.5.0",
+                    "io.prometheus:simpleclient:0.5.0"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/prometheus/simpleclient_pushgateway/0.5.0/simpleclient_pushgateway-0.5.0.jar",
+                "sha256": "149bdaf8fcb2e8b802e0db7ec0ae8c338503f80606ddb27318d84be2477e4746",
+                "url": "https://repo1.maven.org/maven2/io/prometheus/simpleclient_pushgateway/0.5.0/simpleclient_pushgateway-0.5.0.jar"
+            },
+            {
+                "coord": "io.prometheus:simpleclient_servlet:0.5.0",
+                "dependencies": [
+                    "io.prometheus:simpleclient_common:0.5.0",
+                    "io.prometheus:simpleclient:0.5.0"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/io/prometheus/simpleclient_servlet/0.5.0/simpleclient_servlet-0.5.0.jar",
+                "sha256": "f8c1d2879588475a4a2600f286347203ef71fdde68ebac0006498c821e6d0de3",
+                "url": "https://repo1.maven.org/maven2/io/prometheus/simpleclient_servlet/0.5.0/simpleclient_servlet-0.5.0.jar"
+            },
+            {
+                "coord": "log4j:log4j:1.2.17",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17.jar",
+                "sha256": "1d31696445697720527091754369082a6651bd49781b6005deb94e56753406f9",
+                "url": "https://repo1.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17.jar"
+            },
+            {
+                "coord": "net.java.dev.jna:jna:5.2.0",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/net/java/dev/jna/jna/5.2.0/jna-5.2.0.jar",
+                "sha256": "0271ae7fc162a5e69c337f36d86fdb94a8a232c5c42a80d8a7424071addd1fdc",
+                "url": "https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.2.0/jna-5.2.0.jar"
+            },
+            {
+                "coord": "net.sourceforge.lept4j:lept4j:1.12.0",
+                "dependencies": [
+                    "commons-io:commons-io:2.6",
+                    "net.java.dev.jna:jna:5.2.0",
+                    "com.github.jai-imageio:jai-imageio-core:1.4.0"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/net/sourceforge/lept4j/lept4j/1.12.0/lept4j-1.12.0.jar",
+                "sha256": "db28aa5e4a26b26558185a11e00c42be0b65e389a905a2197612eb0b6d58943d",
+                "url": "https://repo1.maven.org/maven2/net/sourceforge/lept4j/lept4j/1.12.0/lept4j-1.12.0.jar"
+            },
+            {
+                "coord": "net.sourceforge.tess4j:tess4j:4.3.1",
+                "dependencies": [
+                    "org.slf4j:log4j-over-slf4j:1.7.25",
+                    "net.java.dev.jna:jna:5.2.0",
+                    "net.sourceforge.lept4j:lept4j:1.12.0",
+                    "commons-logging:commons-logging:1.2",
+                    "commons-io:commons-io:2.6",
+                    "ch.qos.logback:logback-classic:1.2.3",
+                    "org.apache.pdfbox:fontbox:2.0.12",
+                    "org.jboss:jboss-vfs:3.2.14.Final",
+                    "org.apache.pdfbox:pdfbox-debugger:2.0.12",
+                    "org.apache.xmlgraphics:xmlgraphics-commons:1.4",
+                    "log4j:log4j:1.2.17",
+                    "org.slf4j:jcl-over-slf4j:1.7.25",
+                    "org.slf4j:slf4j-api:1.7.25",
+                    "org.apache.pdfbox:pdfbox:2.0.12",
+                    "com.lowagie:itext:2.1.7",
+                    "commons-beanutils:commons-beanutils:1.9.2",
+                    "org.jboss.logging:jboss-logging:3.1.4.GA",
+                    "org.apache.pdfbox:jbig2-imageio:3.0.2",
+                    "org.ghost4j:ghost4j:1.0.1",
+                    "org.apache.pdfbox:pdfbox-tools:2.0.12",
+                    "ch.qos.logback:logback-core:1.2.3",
+                    "org.slf4j:jul-to-slf4j:1.7.25",
+                    "com.github.jai-imageio:jai-imageio-core:1.4.0",
+                    "commons-collections:commons-collections:3.2.1"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/net/sourceforge/tess4j/tess4j/4.3.1/tess4j-4.3.1.jar",
+                "sha256": "1285b9c55b6813f850d35d5d6ab9b014c7a083454fa1f16e13905d88acf8963d",
+                "url": "https://repo1.maven.org/maven2/net/sourceforge/tess4j/tess4j/4.3.1/tess4j-4.3.1.jar"
+            },
+            {
+                "coord": "org.apache.logging.log4j:log4j-api:2.11.1",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1.jar",
+                "sha256": "493b37b5a6c49c4f5fb609b966375e4dc1783df436587584ca1dc7e861d0742b",
+                "url": "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1.jar"
+            },
+            {
+                "coord": "org.apache.logging.log4j:log4j-core:2.11.1",
+                "dependencies": [
+                    "org.apache.logging.log4j:log4j-api:2.11.1"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1.jar",
+                "sha256": "a20c34cdac4978b76efcc9d0db66e95600bd807c6a0bd3f5793bcb45d07162ec",
+                "url": "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1.jar"
+            },
+            {
+                "coord": "org.apache.pdfbox:fontbox:2.0.12",
+                "dependencies": [
+                    "commons-logging:commons-logging:1.2"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/pdfbox/fontbox/2.0.12/fontbox-2.0.12.jar",
+                "sha256": "3753f3fc7d10a81efe7139abbf1d456a3dbb89d68782ede95f7da78a57d9c924",
+                "url": "https://repo1.maven.org/maven2/org/apache/pdfbox/fontbox/2.0.12/fontbox-2.0.12.jar"
+            },
+            {
+                "coord": "org.apache.pdfbox:jbig2-imageio:3.0.2",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/pdfbox/jbig2-imageio/3.0.2/jbig2-imageio-3.0.2.jar",
+                "sha256": "3dc510cd41511f2e2382eb7ac3550b2f94e21847f0b7221be8ddd0f2252a8fe4",
+                "url": "https://repo1.maven.org/maven2/org/apache/pdfbox/jbig2-imageio/3.0.2/jbig2-imageio-3.0.2.jar"
+            },
+            {
+                "coord": "org.apache.pdfbox:pdfbox-debugger:2.0.12",
+                "dependencies": [
+                    "commons-logging:commons-logging:1.2",
+                    "org.apache.pdfbox:pdfbox:2.0.12",
+                    "org.apache.pdfbox:fontbox:2.0.12"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/pdfbox/pdfbox-debugger/2.0.12/pdfbox-debugger-2.0.12.jar",
+                "sha256": "d6ae565de9915932168a2386155df7fc36e0f17832e7fcb007b6501ef0e65b48",
+                "url": "https://repo1.maven.org/maven2/org/apache/pdfbox/pdfbox-debugger/2.0.12/pdfbox-debugger-2.0.12.jar"
+            },
+            {
+                "coord": "org.apache.pdfbox:pdfbox-tools:2.0.12",
+                "dependencies": [
+                    "org.apache.pdfbox:pdfbox-debugger:2.0.12",
+                    "commons-logging:commons-logging:1.2",
+                    "org.apache.pdfbox:pdfbox:2.0.12",
+                    "org.apache.pdfbox:fontbox:2.0.12"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/pdfbox/pdfbox-tools/2.0.12/pdfbox-tools-2.0.12.jar",
+                "sha256": "4539d30b4a39a2f192a47dff544f658cc4c78960aa1162d73df1196bcc80beef",
+                "url": "https://repo1.maven.org/maven2/org/apache/pdfbox/pdfbox-tools/2.0.12/pdfbox-tools-2.0.12.jar"
+            },
+            {
+                "coord": "org.apache.pdfbox:pdfbox:2.0.12",
+                "dependencies": [
+                    "commons-logging:commons-logging:1.2",
+                    "org.apache.pdfbox:fontbox:2.0.12"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/pdfbox/pdfbox/2.0.12/pdfbox-2.0.12.jar",
+                "sha256": "bbc07ce7f7622aedadecd5f8f90f2eabdee306b2686ad13fbf35f480803f747a",
+                "url": "https://repo1.maven.org/maven2/org/apache/pdfbox/pdfbox/2.0.12/pdfbox-2.0.12.jar"
+            },
+            {
+                "coord": "org.apache.xmlgraphics:xmlgraphics-commons:1.4",
+                "dependencies": [
+                    "commons-io:commons-io:2.6",
+                    "commons-logging:commons-logging:1.2"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/xmlgraphics/xmlgraphics-commons/1.4/xmlgraphics-commons-1.4.jar",
+                "sha256": "e3ca24908a353679d13fd35edb2cc18bfb6136a16837082907ce2d20eb0ea10e",
+                "url": "https://repo1.maven.org/maven2/org/apache/xmlgraphics/xmlgraphics-commons/1.4/xmlgraphics-commons-1.4.jar"
+            },
+            {
+                "coord": "org.bouncycastle:bcmail-jdk14:jar:1.38",
+                "dependencies": [
+                    "org.bouncycastle:bcprov-jdk14:jar:1.38"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/bouncycastle/bcmail-jdk14/1.38/bcmail-jdk14-1.38.jar",
+                "sha256": "389f405cfa66b26004484733937a22624782a5d86456e0c35e007b60ebc8e359",
+                "url": "https://repo1.maven.org/maven2/org/bouncycastle/bcmail-jdk14/1.38/bcmail-jdk14-1.38.jar"
+            },
+            {
+                "coord": "org.bouncycastle:bcprov-jdk14:jar:1.38",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk14/1.38/bcprov-jdk14-1.38.jar",
+                "sha256": "d60b88c5d1932de8d98edd5a3ae2d5d5647793de3eb6157015807ee523cd2bee",
+                "url": "https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk14/1.38/bcprov-jdk14-1.38.jar"
+            },
+            {
+                "coord": "org.bouncycastle:bctsp-jdk14:1.38",
+                "dependencies": [
+                    "org.bouncycastle:bcmail-jdk14:jar:1.38",
+                    "org.bouncycastle:bcprov-jdk14:jar:1.38"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/bouncycastle/bctsp-jdk14/1.38/bctsp-jdk14-1.38.jar",
+                "sha256": "ecbbe4d19c256e4dbfec3454b82b4d24b149f90f3f9c90e6aaef229463cd4da8",
+                "url": "https://repo1.maven.org/maven2/org/bouncycastle/bctsp-jdk14/1.38/bctsp-jdk14-1.38.jar"
+            },
+            {
+                "coord": "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016.jar",
+                "sha256": "a2cc192a076d9effd10becee8aacbe157f0fe2010fd4322e58aaeff198e56dbe",
+                "url": "https://repo1.maven.org/maven2/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016.jar"
+            },
+            {
+                "coord": "org.ghost4j:ghost4j:1.0.1",
+                "dependencies": [
+                    "net.java.dev.jna:jna:5.2.0",
+                    "commons-logging:commons-logging:1.2",
+                    "commons-io:commons-io:2.6",
+                    "org.apache.xmlgraphics:xmlgraphics-commons:1.4",
+                    "log4j:log4j:1.2.17",
+                    "com.lowagie:itext:2.1.7",
+                    "commons-beanutils:commons-beanutils:1.9.2",
+                    "commons-collections:commons-collections:3.2.1"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/ghost4j/ghost4j/1.0.1/ghost4j-1.0.1.jar",
+                "sha256": "6f51c46a3cfa402a24db4adf2014b87c4c4a00701c66b5b92d0bf0eb3d4eda78",
+                "url": "https://repo1.maven.org/maven2/org/ghost4j/ghost4j/1.0.1/ghost4j-1.0.1.jar"
+            },
+            {
+                "coord": "org.jboss.logging:jboss-logging:3.1.4.GA",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/org/jboss/logging/jboss-logging/3.1.4.GA/jboss-logging-3.1.4.GA.jar",
+                "sha256": "486a3600efe286d7e380e570f8e97caca0b14ad8367c4a38a3261a08dc30dd48",
+                "url": "https://repo1.maven.org/maven2/org/jboss/logging/jboss-logging/3.1.4.GA/jboss-logging-3.1.4.GA.jar"
+            },
+            {
+                "coord": "org.jboss:jboss-vfs:3.2.14.Final",
+                "dependencies": [
+                    "org.jboss.logging:jboss-logging:3.1.4.GA"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/jboss/jboss-vfs/3.2.14.Final/jboss-vfs-3.2.14.Final.jar",
+                "sha256": "63576c856a5a0c7adc5f6db562ce6962921cbef49e30bbbad80b61c477b8ec12",
+                "url": "https://repo1.maven.org/maven2/org/jboss/jboss-vfs/3.2.14.Final/jboss-vfs-3.2.14.Final.jar"
+            },
+            {
+                "coord": "org.ow2.asm:asm-analysis:5.0.3",
+                "dependencies": [
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-tree:5.0.3"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/ow2/asm/asm-analysis/5.0.3/asm-analysis-5.0.3.jar",
+                "sha256": "e8fa2a63462c96557dcd36c25525e1264b77366ff851cf0b94eb7592b290849d",
+                "url": "https://repo1.maven.org/maven2/org/ow2/asm/asm-analysis/5.0.3/asm-analysis-5.0.3.jar"
+            },
+            {
+                "coord": "org.ow2.asm:asm-commons:5.0.3",
+                "dependencies": [
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-tree:5.0.3"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/ow2/asm/asm-commons/5.0.3/asm-commons-5.0.3.jar",
+                "sha256": "18c1e092230233c9d29e46f21943d769bdb48130cc279e4b0e663f423948c2da",
+                "url": "https://repo1.maven.org/maven2/org/ow2/asm/asm-commons/5.0.3/asm-commons-5.0.3.jar"
+            },
+            {
+                "coord": "org.ow2.asm:asm-tree:5.0.3",
+                "dependencies": [
+                    "org.ow2.asm:asm:5.0.3"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/ow2/asm/asm-tree/5.0.3/asm-tree-5.0.3.jar",
+                "sha256": "347a7a9400f9964e87c91d3980e48eebdc8d024bc3b36f7f22189c662853a51c",
+                "url": "https://repo1.maven.org/maven2/org/ow2/asm/asm-tree/5.0.3/asm-tree-5.0.3.jar"
+            },
+            {
+                "coord": "org.ow2.asm:asm-util:5.0.3",
+                "dependencies": [
+                    "org.ow2.asm:asm:5.0.3",
+                    "org.ow2.asm:asm-tree:5.0.3"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/ow2/asm/asm-util/5.0.3/asm-util-5.0.3.jar",
+                "sha256": "2768edbfa2681b5077f08151de586a6d66b916703cda3ab297e58b41ae8f2362",
+                "url": "https://repo1.maven.org/maven2/org/ow2/asm/asm-util/5.0.3/asm-util-5.0.3.jar"
+            },
+            {
+                "coord": "org.ow2.asm:asm:5.0.3",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar",
+                "sha256": "71c4f78e437b8fdcd9cc0dfd2abea8c089eb677005a6a5cff320206cc52b46cc",
+                "url": "https://repo1.maven.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar"
+            },
+            {
+                "coord": "org.slf4j:jcl-over-slf4j:1.7.25",
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.25"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/slf4j/jcl-over-slf4j/1.7.25/jcl-over-slf4j-1.7.25.jar",
+                "sha256": "5e938457e79efcbfb3ab64bc29c43ec6c3b95fffcda3c155f4a86cc320c11e14",
+                "url": "https://repo1.maven.org/maven2/org/slf4j/jcl-over-slf4j/1.7.25/jcl-over-slf4j-1.7.25.jar"
+            },
+            {
+                "coord": "org.slf4j:jul-to-slf4j:1.7.25",
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.25"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/slf4j/jul-to-slf4j/1.7.25/jul-to-slf4j-1.7.25.jar",
+                "sha256": "416c5a0c145ad19526e108d44b6bf77b75412d47982cce6ce8d43abdbdbb0fac",
+                "url": "https://repo1.maven.org/maven2/org/slf4j/jul-to-slf4j/1.7.25/jul-to-slf4j-1.7.25.jar"
+            },
+            {
+                "coord": "org.slf4j:log4j-over-slf4j:1.7.25",
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.25"
+                ],
+                "file": "v1/https/repo1.maven.org/maven2/org/slf4j/log4j-over-slf4j/1.7.25/log4j-over-slf4j-1.7.25.jar",
+                "sha256": "c84c5ce4bbb661369ccd4c7b99682027598a0fb2e3d63a84259dbe5c0bf1f949",
+                "url": "https://repo1.maven.org/maven2/org/slf4j/log4j-over-slf4j/1.7.25/log4j-over-slf4j-1.7.25.jar"
+            },
+            {
+                "coord": "org.slf4j:slf4j-api:1.7.25",
+                "dependencies": [],
+                "file": "v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar",
+                "sha256": "18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79",
+                "url": "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar"
+            }
+        ],
+        "version": "0.1.0"
+    }
+}

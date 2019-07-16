@@ -53,6 +53,7 @@ load("//secrets:secrets.bzl", "RT_USERNAME", "RT_PASSWORD")
 
 maven_install(
     name = "maven",
+    maven_install_json = "//third_party:maven_install.json",
     artifacts = [
         "asm:asm:3.1",
         "c3p0:c3p0:0.9.1.1",
@@ -205,8 +206,12 @@ maven_install(
     ],
 )
 
+load("@maven//:defs.bzl", "pinned_maven_install")
+pinned_maven_install()
+
 maven_install(
     name = "dropwizard",
+    maven_install_json = "//third_party:dropwizard_install.json",
     artifacts = [
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
@@ -239,11 +244,14 @@ maven_install(
     generate_compat_repositories = True
 )
 
+load("@dropwizard//:defs.bzl", "pinned_maven_install")
+pinned_maven_install()
 load("@dropwizard//:compat.bzl", "compat_repositories")
 compat_repositories()
 
 maven_install(
     name = "tink_aws_sdk",
+    maven_install_json = "//third_party:tink_aws_sdk_install.json",
     artifacts = [
         "com.fasterxml.jackson.core:jackson-annotations:2.8.8",
         "com.fasterxml.jackson.core:jackson-core:2.8.8",
@@ -264,11 +272,14 @@ maven_install(
     generate_compat_repositories = True
 )
 
+load("@tink_aws_sdk//:defs.bzl", "pinned_maven_install")
+pinned_maven_install()
 load("@tink_aws_sdk//:compat.bzl", "compat_repositories")
 compat_repositories()
 
 maven_install(
     name = "other",
+    maven_install_json = "//third_party:other_install.json",
     artifacts = [
         "com.google.instrumentation:instrumentation-api:0.4.3",
         "com.codahale.metrics:metrics-jersey:3.0.2",
@@ -321,6 +332,8 @@ maven_install(
     generate_compat_repositories = True
 )
 
+load("@other//:defs.bzl", "pinned_maven_install")
+pinned_maven_install()
 load("@other//:compat.bzl", "compat_repositories")
 compat_repositories()
 
@@ -331,6 +344,7 @@ GRPC_JAVA_NANO_VERSION = "1.21.0"
 
 maven_install(
     name = "grpc",
+    maven_install_json = "//third_party:grpc_install.json",
     artifacts = [
         "com.google.protobuf:protobuf-java:%s" % PROTOBUF_VERSION,
         "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
@@ -349,6 +363,8 @@ maven_install(
     generate_compat_repositories = True
 )
 
+load("@grpc//:defs.bzl", "pinned_maven_install")
+pinned_maven_install()
 load("@grpc//:compat.bzl", "compat_repositories")
 compat_repositories()
 
