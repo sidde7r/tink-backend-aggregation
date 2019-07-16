@@ -36,10 +36,8 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
     public SibsBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
         apiClient = new SibsBaseApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
@@ -48,8 +46,10 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
         apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+        client.setMessageSignInterceptor(
+                new SibsMessageSignInterceptor(
+                        getClientConfiguration(), configuration.getEidasProxy()));
     }
 
     protected SibsConfiguration getClientConfiguration() {
