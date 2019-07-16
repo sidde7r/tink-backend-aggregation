@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -123,7 +124,8 @@ public final class PayPalAgent extends NextGenerationAgent
                 isWiPPaymentInitiated()
                         ? new PayPalOrderPaymentExecutor(apiClient, supplementalInformationHelper)
                         : new PayPalPaymentExecutor(apiClient, supplementalInformationHelper);
-        return Optional.of(new PaymentController(paymentExecutor));
+        FetchablePaymentExecutor fetchable = (FetchablePaymentExecutor) paymentExecutor;
+        return Optional.of(new PaymentController(paymentExecutor, fetchable));
     }
 
     private boolean isWiPPaymentInitiated() {

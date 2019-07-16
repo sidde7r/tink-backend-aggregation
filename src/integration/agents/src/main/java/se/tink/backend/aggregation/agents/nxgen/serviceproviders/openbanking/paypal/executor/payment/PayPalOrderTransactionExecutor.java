@@ -1,18 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.executor.payment;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.ExceptionMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.WipPaymentRequestBody;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.LinkTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalUtil;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.entities.shared.LinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.PaymentRequestBody;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
@@ -22,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -34,7 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class PayPalOrderPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+public class PayPalOrderTransactionExecutor implements PaymentExecutor {
 
     private static final long WAIT_FOR_SECONDS = 30L;
 
@@ -44,7 +49,7 @@ public class PayPalOrderPaymentExecutor implements PaymentExecutor, FetchablePay
     private static final Encoder encoder = Base64.getUrlEncoder();
     private final SupplementalInformationHelper supplementalInformationHelper;
 
-    public PayPalOrderPaymentExecutor(
+    public PayPalOrderTransactionExecutor(
             PayPalApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
@@ -54,7 +59,7 @@ public class PayPalOrderPaymentExecutor implements PaymentExecutor, FetchablePay
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        WipPaymentRequestBody requestBody = WipPaymentRequestBody.of(paymentRequest);
+        PaymentRequestBody requestBody = PaymentRequestBody.of(paymentRequest);
         return apiClient.createPayment(requestBody).toTinkPayment();
     }
 
@@ -69,24 +74,34 @@ public class PayPalOrderPaymentExecutor implements PaymentExecutor, FetchablePay
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
         String nextStep;
-        String link = paymentMultiStepRequest.getPayment().getReference().getValue();
+        String stringLinks = paymentMultiStepRequest.getPayment().getReference().getValue();
+
+        List<LinkEntity> links =
+                PayPalUtil.fromJSON(new TypeReference<List<LinkEntity>>() {}, stringLinks);
+        LinkEntity link =
+                PayPalUtil.findByRelation(links, LinkTypes.APPROVE)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                String.format(
+                                                        "No link with type: %s",
+                                                        LinkTypes.APPROVE)));
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
-                URL toOpen = new URL(link);
+                URL toOpen = new URL(link.getReference());
                 openThirdPartyApp(toOpen);
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
                 break;
             default:
                 throw new IllegalStateException(
-                        String.format(
-                                ExceptionMessages.UNKNOWN_STEP, paymentMultiStepRequest.getStep()));
+                        String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
         }
 
         PaymentResponse details =
                 apiClient
                         .fetchOrderTransactionDetails(
                                 paymentMultiStepRequest.getPayment().getUniqueId())
-                        .toTinkPaymentApprove();
+                        .toTinkPayment();
         return new PaymentMultiStepResponse(details.getPayment(), nextStep, new ArrayList<>());
     }
 
@@ -106,12 +121,14 @@ public class PayPalOrderPaymentExecutor implements PaymentExecutor, FetchablePay
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
             throws PaymentException {
-        // Convert between payment request list -> payment list responses.
         List<PaymentResponse> responses =
-                paymentListRequest.getPaymentRequestList().stream()
-                        .map(PaymentRequest::getPayment)
-                        .map(PaymentResponse::new)
+                Optional.ofNullable(paymentListRequest)
+                        .map(PaymentListRequest::getPaymentRequestList)
+                        .map(Collection::stream)
+                        .orElseGet(Stream::empty)
+                        .map(this::fetch)
                         .collect(Collectors.toList());
+
         return new PaymentListResponse(responses);
     }
 
@@ -119,10 +136,12 @@ public class PayPalOrderPaymentExecutor implements PaymentExecutor, FetchablePay
         ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
         Preconditions.checkNotNull(payload);
         this.supplementalInformationHelper.openThirdPartyApp(payload);
-        this.collect();
+        ThirdPartyAppResponse<String> response =
+                ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
+        this.collect(response.getReference());
     }
 
-    private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
+    public ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
         Android androidPayload = new Android();
         androidPayload.setIntent(authorizeUrl.get());
@@ -134,9 +153,10 @@ public class PayPalOrderPaymentExecutor implements PaymentExecutor, FetchablePay
         return payload;
     }
 
-    private ThirdPartyAppResponse<String> collect() {
+    public ThirdPartyAppResponse<String> collect(String reference) {
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_SECONDS, TimeUnit.SECONDS);
+
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
