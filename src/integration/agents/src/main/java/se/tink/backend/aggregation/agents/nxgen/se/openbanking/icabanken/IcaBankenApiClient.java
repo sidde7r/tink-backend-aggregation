@@ -1,10 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken;
 
-import com.datastax.driver.core.utils.UUIDs;
 import java.util.Date;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.*;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.Account;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenResponse;
@@ -49,7 +54,7 @@ public final class IcaBankenApiClient {
                         HeaderKeys.AUTHORIZATION,
                         HeaderValues.BEARER + sessionStorage.get(StorageKeys.TOKEN))
                 .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
-                .header(HeaderKeys.REQUEST_ID, UUIDs.random().toString())
+                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TINK_DEBUG, HeaderKeys.TRUST_ALL)
                 .get(FetchAccountsResponse.class);
     }
