@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber.Bank;
 import se.tink.libraries.i18n.Catalog;
@@ -169,8 +168,20 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
     }
 
     private String getToAccountType(Transfer transfer) {
-        return transfer.getDestination() instanceof NDAPersonalNumberIdentifier
-                ? NordeaSEConstants.PaymentAccountTypes.NDASE
-                : NordeaSEConstants.PaymentAccountTypes.LBAN;
+        switch (transfer.getDestination().getType()) {
+            case SE_NDA_SSN:
+                return NordeaSEConstants.PaymentAccountTypes.NDASE;
+            case SE:
+                if (transfer.getDestination()
+                        .to(SwedishIdentifier.class)
+                        .getBank()
+                        .equals(Bank.NORDEA_PERSONKONTO)) {
+                    return NordeaSEConstants.PaymentAccountTypes.NDASE;
+                } else {
+                    return NordeaSEConstants.PaymentAccountTypes.LBAN;
+                }
+            default:
+                return NordeaSEConstants.PaymentAccountTypes.LBAN;
+        }
     }
 }

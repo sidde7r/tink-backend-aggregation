@@ -5,6 +5,7 @@ import com.google.inject.Module;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.libraries.discovery.CoordinationModule;
+import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientModule;
 
 public class AggregationModuleFactory {
 
@@ -27,7 +28,12 @@ public class AggregationModuleFactory {
                 .add(new AggregationModule(configuration, environment.jersey()))
                 .add(
                         new QueueModule(
-                                configuration.getSqsQueueConfiguration(), environment.lifecycle()));
+                                configuration.getSqsQueueConfiguration(), environment.lifecycle()))
+                .add(
+                        new EventProducerServiceClientModule(
+                                configuration
+                                        .getEndpoints()
+                                        .getEventProducerServiceConfiguration()));
     }
 
     private static ImmutableList.Builder<Module> buildForDevelopment(
