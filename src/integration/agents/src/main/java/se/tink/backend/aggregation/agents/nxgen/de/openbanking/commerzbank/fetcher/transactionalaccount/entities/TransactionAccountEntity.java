@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
-public class AccountsEntity {
+public class TransactionAccountEntity {
 
     private String cashAccountType;
     private String resourceId;

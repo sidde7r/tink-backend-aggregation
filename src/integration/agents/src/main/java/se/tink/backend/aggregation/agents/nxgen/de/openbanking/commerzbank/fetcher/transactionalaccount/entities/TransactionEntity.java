@@ -9,17 +9,17 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class TransactionEntity {
 
-    private AccountsEntity debtorAccount;
+    private TransactionAccountEntity debtorAccount;
     private String creditorName;
     private TransactionAmountEntity transactionAmount;
-    private AccountsEntity creditorAccount;
+    private TransactionAccountEntity creditorAccount;
     private Date bookingDate;
     private String valueDate;
     private String remittanceInformationUnstructured;
     private String endToEndId;
     private String debtorName;
 
-    public AccountsEntity getDebtorAccount() {
+    public TransactionAccountEntity getDebtorAccount() {
         return debtorAccount;
     }
 
@@ -31,7 +31,7 @@ public class TransactionEntity {
         return transactionAmount;
     }
 
-    public AccountsEntity getCreditorAccount() {
+    public TransactionAccountEntity getCreditorAccount() {
         return creditorAccount;
     }
 

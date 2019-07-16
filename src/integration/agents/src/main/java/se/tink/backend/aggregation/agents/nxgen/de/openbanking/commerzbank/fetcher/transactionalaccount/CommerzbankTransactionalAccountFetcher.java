@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.CommerzbankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.fetcher.transactionalaccount.entities.AccountsEntity;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.fetcher.transactionalaccount.entities.TransactionAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
@@ -32,13 +32,15 @@ public class CommerzbankTransactionalAccountFetcher
         AccountsResponse getAccountsResponse = commerzbankApiClient.createAccount();
 
         List<TransactionalAccount> accounts = new ArrayList<>();
-        for (AccountsEntity accountsEntity : getAccountsResponse.getAccounts()) {
+        for (TransactionAccountEntity transactionAccountEntity :
+                getAccountsResponse.getAccounts()) {
             BalanceEntity balanceEntity =
                     commerzbankApiClient
-                            .createBalance(accountsEntity.getLinks().getBalances().getHref())
+                            .createBalance(
+                                    transactionAccountEntity.getLinks().getBalances().getHref())
                             .getBalances()
                             .get(0);
-            accounts.add(accountsEntity.toTinkAccount(balanceEntity).get());
+            accounts.add(transactionAccountEntity.toTinkAccount(balanceEntity).get());
         }
         return accounts;
     }

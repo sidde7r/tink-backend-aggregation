@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.fetcher.transactionalaccount.entities.AccountsEntity;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.fetcher.transactionalaccount.entities.TransactionAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -13,9 +13,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @JsonObject
 public class AccountsResponse {
 
-    private List<AccountsEntity> accounts;
+    private List<TransactionAccountEntity> accounts;
 
-    public List<AccountsEntity> getAccounts() {
+    public List<TransactionAccountEntity> getAccounts() {
         return accounts;
     }
 
