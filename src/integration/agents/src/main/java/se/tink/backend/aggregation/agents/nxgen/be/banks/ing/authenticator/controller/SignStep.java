@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -49,6 +50,8 @@ public final class SignStep implements AuthenticationStep {
                 .setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
         return new AuthenticationResponse(
                 supplementalInformationFormer.formChallengeResponseFields(
+                        Key.SIGN_CODE_DESCRIPTION,
+                        Key.SIGN_CODE_INPUT,
                         challengeExchangeValues.getChallenge()));
     }
 }

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
@@ -47,6 +48,7 @@ final class LoginStep implements AuthenticationStep {
         String challengeCode = apiClient.challenge(cipherKey);
 
         return new AuthenticationResponse(
-                supplementalInformationFormer.formChallengeResponseFields(challengeCode));
+                supplementalInformationFormer.formChallengeResponseFields(
+                        Key.LOGIN_DESCRIPTION, Key.LOGIN_INPUT, challengeCode));
     }
 }
