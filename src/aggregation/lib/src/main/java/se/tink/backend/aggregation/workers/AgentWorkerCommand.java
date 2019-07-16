@@ -13,7 +13,7 @@ public abstract class AgentWorkerCommand {
      *     execute methods or not.
      * @throws Exception on error
      */
-    public abstract se.tink.backend.aggregation.workers.AgentWorkerCommandResult execute()
+    public abstract AgentWorkerCommandResult execute()
             throws Exception;
 
     /**
