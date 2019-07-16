@@ -108,8 +108,14 @@ public class PaymentEntity {
 
     @JsonIgnore
     private AccountIdentifier getDestination() {
-        return AccountIdentifier.create(
-                getRecipientTinkType(), recipientAccountNumber, getDestinationName());
+
+        AccountIdentifier destination =
+                AccountIdentifier.create(
+                        getRecipientTinkType(), recipientAccountNumber, getDestinationName());
+        if (destination.is(Type.SE_NDA_SSN)) {
+            return destination.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
+        }
+        return destination;
     }
 
     @JsonIgnore
