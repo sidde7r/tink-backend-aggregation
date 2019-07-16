@@ -64,7 +64,8 @@ public final class CommerzBankAgent extends Xs2aDevelopersAgent {
                 accountFetcher,
                 new TransactionFetcherController<TransactionalAccount>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<TransactionalAccount>(accountFetcher)));
+                        new TransactionDatePaginationController<TransactionalAccount>(
+                                accountFetcher)));
     }
 
     @Override
