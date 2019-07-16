@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.ErrorMessages;
@@ -25,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import tink.org.apache.http.HttpHeaders;
 
 public final class PayPalApiClient {
 

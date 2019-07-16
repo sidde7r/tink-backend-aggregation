@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -49,7 +50,6 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentType;
-import tink.org.apache.http.HttpHeaders;
 
 public final class BankdataApiClient {
 
