@@ -21,4 +21,9 @@ public final class DjurslandsAgent extends BankdataAgent {
     protected String getBaseAuthUrl() {
         return DjurslandsConstants.BASE_AUTH_URL;
     }
+
+    @Override
+    protected String getIntegrationName() {
+        return DjurslandsConstants.INTEGRATION_NAME;
+    }
 }

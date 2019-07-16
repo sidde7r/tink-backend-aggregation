@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentAuthorizationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.InitialTokenRequest;
@@ -43,7 +44,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -69,13 +69,19 @@ public final class BankdataApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(
+    //AIS
+    /*protected void setConfiguration(
             BankdataConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.client.setEidasProxy(eidasProxyConfiguration, "Tink");
 
         // configuration.getCertificateId();
+    }*/
+
+    //PIS
+    protected void setConfiguration(BankdataConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -151,6 +157,7 @@ public final class BankdataApiClient {
     }
 
     // AIS
+    /*
     private AccountEntity fetchBalances(final AccountEntity accountEntity) {
         final String requestId = UUID.randomUUID().toString();
         final URL url =
@@ -171,10 +178,10 @@ public final class BankdataApiClient {
         accountEntity.setBalances(balances);
 
         return accountEntity;
-}
+    }*/
 
     // PIS
-        /*
+
     private AccountEntity fetchBalances(final AccountEntity accountEntity) {
         final URL url =
                 new URL(
@@ -191,9 +198,10 @@ public final class BankdataApiClient {
         accountEntity.setBalances(balances);
 
         return accountEntity;
-    }*/
+    }
 
     // AIS
+    /*
     public AccountResponse fetchAccounts() {
         final String requestId = UUID.randomUUID().toString();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.ACCOUNTS);
@@ -213,10 +221,10 @@ public final class BankdataApiClient {
                         .collect(Collectors.toList());
 
         return new AccountResponse(accountsWithBalances);
-    }
+    }*/
 
     // PIS
-    /*
+
     public AccountResponse fetchAccounts() {
         URL url = new URL(configuration.getBaseUrl() + Endpoints.ACCOUNTS);
 
@@ -233,10 +241,10 @@ public final class BankdataApiClient {
                         .collect(Collectors.toList());
 
         return new AccountResponse(accountsWithBalances);
-    }*/
+    }
 
     // AIS
-    public TransactionResponse fetchTransactions(
+    /*public TransactionResponse fetchTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
         final String requestId = UUID.randomUUID().toString();
         final URL fullUrl =
@@ -257,11 +265,11 @@ public final class BankdataApiClient {
                         DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .get(TransactionResponse.class);
-    }
+    }*/
 
 
     // PIS
-    /*
+
     public TransactionResponse fetchTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
         final URL fullUrl =
@@ -280,9 +288,10 @@ public final class BankdataApiClient {
                         DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .get(TransactionResponse.class);
-    }*/
+    }
 
     // AIS
+    /*
     public URL getAuthorizeUrl(String state) {
         String consentId = getConsentId();
         authorizeConsent(consentId);
@@ -304,7 +313,7 @@ public final class BankdataApiClient {
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam("acr", "psd2")
                 .getUrl();
-    }
+    }*/
 
     // PIS
     public URL getAuthorizeUrl(String state, String consentId) {
@@ -374,6 +383,7 @@ public final class BankdataApiClient {
     }
 
     // AIS
+    /*
     public String getConsentId() {
         getTokenWithClientCredentials();
         final ConsentRequest consentRequest = new ConsentRequest();
@@ -389,10 +399,10 @@ public final class BankdataApiClient {
                         .post(ConsentResponse.class);
 
         return response.getConsentId();
-    }
+    }*/
 
     // PIS
-    /*
+
     public String getConsentId() {
         final ConsentRequest consentRequest = new ConsentRequest();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.CONSENT);
@@ -401,10 +411,11 @@ public final class BankdataApiClient {
                 .body(consentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentResponse.class)
                 .getConsentId();
-    }*/
+    }
 
     // AIS
-    private void authorizeConsent(String consentId) {
+    /*
+    public void authorizeConsent(String consentId) {
         final String requestId = UUID.randomUUID().toString();
         final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
@@ -416,10 +427,10 @@ public final class BankdataApiClient {
                         .header(HeaderKeys.X_REQUEST_ID, requestId)
                         .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
                         .post(HttpResponse.class);
-    }
+    }*/
 
     // PIS
-    /*
+
     public void authorizeConsent(String consentId) {
         final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
@@ -428,7 +439,7 @@ public final class BankdataApiClient {
                         url.parameter(IdTags.CONSENT_ID, consentId), StorageKeys.INITIAL_TOKEN)
                 .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentAuthorizationResponse.class);
-    }*/
+    }
 
     public OAuth2Token getToken(String code) {
         final AccessTokenRequest request =

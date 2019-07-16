@@ -26,21 +26,23 @@ public class BankdataAuthenticator implements OAuth2Authenticator {
     }
 
     // AIS
+    /*
     @Override
     public URL buildAuthorizeUrl(String state) {
         return apiClient.getAuthorizeUrl(state);
-    }
+    }*/
+
 
     // PIS
 
-    /*@Override
+    @Override
     public URL buildAuthorizeUrl(String state) {
         apiClient.getTokenWithClientCredentials();
         String consentId = apiClient.getConsentId();
         apiClient.authorizeConsent(consentId);
 
         return apiClient.getAuthorizeUrl(state, consentId);
-    }*/
+    }
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) {

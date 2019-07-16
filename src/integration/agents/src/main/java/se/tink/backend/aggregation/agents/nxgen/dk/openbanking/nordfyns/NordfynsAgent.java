@@ -21,4 +21,9 @@ public final class NordfynsAgent extends BankdataAgent {
     protected String getBaseAuthUrl() {
         return NordfynsConstants.BASE_AUTH_URL;
     }
+
+    @Override
+    protected String getIntegrationName() {
+        return NordfynsConstants.INTEGRATION_NAME;
+    }
 }
