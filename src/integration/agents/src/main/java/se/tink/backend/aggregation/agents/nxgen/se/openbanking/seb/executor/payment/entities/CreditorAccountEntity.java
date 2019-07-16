@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.executor.payment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import net.minidev.json.annotate.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
