@@ -93,7 +93,11 @@ public class PaymentEntity {
         switch (type.toLowerCase()) {
             case NordeaSEConstants.PaymentTypes.BANKGIRO:
             case NordeaSEConstants.PaymentTypes.PLUSGIRO:
-                return TransferType.PAYMENT;
+                if (hasEIvoiceDetails()) {
+                    return TransferType.EINVOICE;
+                } else {
+                    return TransferType.PAYMENT;
+                }
             case NordeaSEConstants.PaymentTypes.EINVOICE:
                 return TransferType.EINVOICE;
             case NordeaSEConstants.PaymentTypes.IBAN:
