@@ -515,6 +515,8 @@ agentsServiceConfiguration:
   eidasProxy:
     host: "https://eidas-proxy.staging.aggregation.tink.network"
     localEidasDev: true
+  testConfiguration:
+    debugOutput: false
 
 transfers:
   enabled: true
