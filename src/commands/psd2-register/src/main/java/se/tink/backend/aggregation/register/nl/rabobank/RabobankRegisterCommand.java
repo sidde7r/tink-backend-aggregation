@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.register.nl.rabobank;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
@@ -20,15 +17,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
-import org.bouncycastle.openssl.PEMException;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.bouncycastle.openssl.jcajce.JceOpenSSLPKCS8DecryptorProviderBuilder;
-import org.bouncycastle.operator.InputDecryptorProvider;
-import org.bouncycastle.operator.OperatorCreationException;
-import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
-import org.bouncycastle.pkcs.PKCSException;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.eidas.Signer;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -38,42 +26,6 @@ import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstant
 import se.tink.backend.aggregation.register.nl.rabobank.rpc.JwsRequest;
 
 public final class RabobankRegisterCommand {
-
-    private static PrivateKey readPemPrivateKey(final String path) {
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-        final FileReader reader;
-        try {
-            reader = new FileReader(path);
-        } catch (FileNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-        final PEMParser pemParser = new PEMParser(reader);
-        final PKCS8EncryptedPrivateKeyInfo encryptedKeyPair;
-        try {
-            encryptedKeyPair = (PKCS8EncryptedPrivateKeyInfo) pemParser.readObject();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-        final InputDecryptorProvider decryptorProvider;
-        try {
-            decryptorProvider =
-                    new JceOpenSSLPKCS8DecryptorProviderBuilder().build("tink".toCharArray());
-        } catch (OperatorCreationException e) {
-            throw new IllegalStateException(e);
-        }
-        final PrivateKeyInfo privateKeyInfo;
-        try {
-            privateKeyInfo = encryptedKeyPair.decryptPrivateKeyInfo(decryptorProvider);
-        } catch (PKCSException e) {
-            throw new IllegalStateException(e);
-        }
-        final JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-        try {
-            return converter.getPrivateKey(privateKeyInfo);
-        } catch (PEMException e) {
-            throw new IllegalStateException(e);
-        }
-    }
 
     private static String readPemCertificateAsB64(final String path) {
         final CertificateFactory certificateFactory;
