@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class CommerzBankAgent extends Xs2aDevelopersAgent {
@@ -43,8 +44,7 @@ public final class CommerzBankAgent extends Xs2aDevelopersAgent {
                                 apiClient,
                                 persistentStorage,
                                 getClientConfiguration(),
-                                credentials.getField(CredentialKeys.IBAN),
-                                (CommerzbankApiClient) this.apiClient));
+                                credentials.getField(CredentialKeys.IBAN)));
 
         return new AutoAuthenticationController(
                 request,
@@ -56,16 +56,15 @@ public final class CommerzBankAgent extends Xs2aDevelopersAgent {
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CommerzbankTransactionalAccountFetcher accountFetcher =
-                new CommerzbankTransactionalAccountFetcher(
-                        apiClient, (CommerzbankApiClient) this.apiClient);
+                new CommerzbankTransactionalAccountFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
                 accountFetcher,
-                new TransactionFetcherController<>(
+                new TransactionFetcherController<TransactionalAccount>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController<TransactionalAccount>(accountFetcher)));
     }
 
     @Override

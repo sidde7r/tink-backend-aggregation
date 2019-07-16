@@ -21,10 +21,9 @@ public class CommerzbankAuthenticator extends Xs2aDevelopersAuthenticator {
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
             Xs2aDevelopersConfiguration configuration,
-            String iban,
-            CommerzbankApiClient commerzbankApiClient) {
+            String iban) {
         super(apiClient, persistentStorage, configuration, iban);
-        this.commerzbankApiClient = commerzbankApiClient;
+        this.commerzbankApiClient = (CommerzbankApiClient) apiClient;
     }
 
     @Override

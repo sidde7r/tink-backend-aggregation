@@ -21,9 +21,9 @@ public class CommerzbankTransactionalAccountFetcher
     private final CommerzbankApiClient commerzbankApiClient;
 
     public CommerzbankTransactionalAccountFetcher(
-            Xs2aDevelopersApiClient apiClient, CommerzbankApiClient commerzbankApiClient) {
+            Xs2aDevelopersApiClient apiClient) {
         super(apiClient);
-        this.commerzbankApiClient = commerzbankApiClient;
+        this.commerzbankApiClient = (CommerzbankApiClient) apiClient;
     }
 
     @Override
