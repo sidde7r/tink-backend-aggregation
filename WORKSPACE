@@ -35,8 +35,8 @@ http_archive(
 """
 Import rules_jvm_external for better Maven support
 """
-RULES_JVM_EXTERNAL_TAG = "2.2"
-RULES_JVM_EXTERNAL_SHA = "f1203ce04e232ab6fdd81897cf0ff76f2c04c0741424d192f28e65ae752ce2d6"
+RULES_JVM_EXTERNAL_TAG = "2.5"
+RULES_JVM_EXTERNAL_SHA = "249e8129914be6d987ca57754516be35a14ea866c616041ff0cd32ea94d2f3a1"
 http_archive(
     name = "rules_jvm_external",
     strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
