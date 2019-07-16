@@ -76,13 +76,6 @@ public class VolksbankAgent extends NextGenerationAgent
 
         client.setEidasProxy(configuration.getEidasProxy(), clientId);
 
-        // httpClient.setSslClientCertificate(
-        //        Base64.getDecoder()
-        //                .decode(
-        //                        volksbankConfiguration
-        //                                .getAisConfiguration()
-        //                                .getClientCertificateContent()),
-        //        volksbankConfiguration.getAisConfiguration().getClientCertificatePass());
     }
 
     @Override
