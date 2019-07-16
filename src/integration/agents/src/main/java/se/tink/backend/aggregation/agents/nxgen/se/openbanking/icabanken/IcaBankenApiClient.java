@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken;
 
-import com.datastax.driver.core.utils.UUIDs;
 import java.util.Date;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -55,7 +54,7 @@ public final class IcaBankenApiClient {
                         HeaderKeys.AUTHORIZATION,
                         HeaderValues.BEARER + sessionStorage.get(StorageKeys.TOKEN))
                 .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
-                .header(HeaderKeys.REQUEST_ID, UUIDs.random().toString())
+                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TINK_DEBUG, HeaderKeys.TRUST_ALL)
                 .get(FetchAccountsResponse.class);
     }
