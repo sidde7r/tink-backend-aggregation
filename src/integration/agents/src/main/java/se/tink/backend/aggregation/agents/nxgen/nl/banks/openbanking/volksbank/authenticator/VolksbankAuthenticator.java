@@ -58,7 +58,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                                 QueryParams.CLIENT_SECRET,
                                 client.getConfiguration().getAisConfiguration().getClientSecret())
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
-                        .queryParam(QueryParams.REDIRECT_URI, redirectUri);
+                        .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString());
 
         OAuth2Token token = client.getBearerToken(url);
 
