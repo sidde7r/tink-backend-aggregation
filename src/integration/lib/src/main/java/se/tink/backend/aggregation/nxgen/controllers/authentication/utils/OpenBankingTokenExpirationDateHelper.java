@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.utils;
 
 import com.google.common.base.Preconditions;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Date;
@@ -30,7 +30,7 @@ public class OpenBankingTokenExpirationDateHelper {
      * Use this method if the ASPSP doe snot return any information through their API and the API
      * docs does not provide any information about how long the lifetime of the token is.
      *
-     * @return expiration date which is 90 days from now.
+     * @return expiration date in UTC format, which is 90 days from now.
      */
     public static Date getDefaultExpirationDate() {
         return getExpirationDateFrom(DEFAULT_LIFETIME, DEFAULT_LIFETIME_UNIT);
@@ -43,7 +43,8 @@ public class OpenBankingTokenExpirationDateHelper {
      * @param tokenLifetime - the lifetime of the token
      * @param tokenLifetimeUnit - the unit of the lifetime of the token
      * @exception NullPointerException if tokenLifeTime or tokenLifeTimeUnit not set.
-     * @return the expiration date, will default to 90 days if any of the parameters are null.
+     * @return the expiration date in UTC format, will default to 90 days if any of the parameters
+     *     are null.
      */
     public static Date getExpirationDateFrom(
             Integer tokenLifetime, TemporalUnit tokenLifetimeUnit) {
@@ -58,7 +59,7 @@ public class OpenBankingTokenExpirationDateHelper {
                 LocalDate.now()
                         .plus(tokenLifetime, tokenLifetimeUnit)
                         .atStartOfDay()
-                        .atZone(ZoneId.systemDefault())
+                        .atOffset(ZoneOffset.UTC)
                         .toInstant());
     }
 
@@ -67,7 +68,8 @@ public class OpenBankingTokenExpirationDateHelper {
      * token is not available.
      *
      * @param token - OAuth2Token with information about lifetime of token.
-     * @return the expiration date, will default to 90 days if any of the parameters are null.
+     * @return the expiration date in UTC format, will default to 90 days if any of the parameters
+     *     are null.
      */
     public static Date getExpirationDateFromTokenOrDefault(OAuth2Token token) {
         return getExpirationDateFrom(token, DEFAULT_LIFETIME, DEFAULT_LIFETIME_UNIT);
@@ -81,7 +83,8 @@ public class OpenBankingTokenExpirationDateHelper {
      * @param tokenLifetime - the lifetime of the token
      * @param tokenLifetimeUnit - the unit of the lifetime of the token
      * @exception NullPointerException if tokenLifeTime or tokenLifeTimeUnit not set.
-     * @return the expiration date, will default to 90 days if any of the parameters are null.
+     * @return the expiration date in UTC format, will default to 90 days if any of the parameters
+     *     are null.
      */
     public static Date getExpirationDateFrom(
             @Nullable OAuth2Token token, Integer tokenLifetime, TemporalUnit tokenLifetimeUnit) {
