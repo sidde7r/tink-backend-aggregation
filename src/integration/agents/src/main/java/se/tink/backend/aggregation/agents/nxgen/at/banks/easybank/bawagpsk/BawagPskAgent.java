@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetch
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.loan.BawagPskLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.transactional.BawagPskTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.session.BawagPskSessionHandler;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -73,12 +72,6 @@ public class BawagPskAgent extends NextGenerationAgent
         creditCardRefreshController = constructCreditCardRefreshController();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        client.setDebugOutput(configuration.getTestConfiguration().isDebugOutputEnabled());
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
