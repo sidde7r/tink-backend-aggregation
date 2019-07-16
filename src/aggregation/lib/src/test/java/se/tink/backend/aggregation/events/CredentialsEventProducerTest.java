@@ -1,44 +1,39 @@
 package se.tink.backend.aggregation.events;
 
 import com.google.protobuf.Any;
-import org.assertj.core.api.Assertions;
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.eventproducerservice.events.grpc.CredentialsRefreshCommandChainStartedProto.CredentialsRefreshCommandChainStarted;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
 import se.tink.libraries.uuid.UUIDUtils;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CredentialsEventProducerTest {
 
-    private Credentials validCredentials;
     private EventProducerServiceClient eventProducerServiceClient;
+    private CredentialsEventProducer credentialsEventProducer;
+    private Credentials validCredentials;
     private String appId;
 
     @Before
     public void setup() {
         this.eventProducerServiceClient = Mockito.mock(EventProducerServiceClient.class);
+        this.credentialsEventProducer = new CredentialsEventProducer(eventProducerServiceClient);
         this.validCredentials = buildValidCredentials();
         this.appId = UUIDUtils.generateUUID();
     }
 
     @Test
-    public void
-            testCredentialsRefreshCommandChainStarted_WhenClientIsAvailable_EventShouldBePosted()
-                    throws Exception {
-
+    public void testCredentialsRefreshCommandChainStarted() throws InvalidProtocolBufferException {
         ArgumentCaptor<Any> capture = ArgumentCaptor.forClass(Any.class);
-
-        CredentialsEventProducer credentialsEventProducer =
-                new CredentialsEventProducer(eventProducerServiceClient, validCredentials, appId);
-
-        Assertions.assertThat(credentialsEventProducer.execute())
-                .isEqualTo(AgentWorkerCommandResult.CONTINUE);
-
+        credentialsEventProducer.sendCredentialsRefreshCommandChainStarted(validCredentials, appId);
         Mockito.verify(eventProducerServiceClient, Mockito.times(1))
                 .postEventAsync(capture.capture());
 

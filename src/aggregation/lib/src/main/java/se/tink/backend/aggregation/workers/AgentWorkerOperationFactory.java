@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
+import se.tink.backend.aggregation.workers.commands.CredentialsRefreshStartEventCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
@@ -66,7 +67,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
@@ -80,7 +80,7 @@ public class AgentWorkerOperationFactory {
     private final CuratorFramework coordinationClient;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final AgentDebugStorageHandler agentDebugStorageHandler;
-    private final EventProducerServiceClient eventProducerServiceClient;
+    private final CredentialsEventProducer credentialsEventProducer;
     // States
     private AgentWorkerOperationState agentWorkerOperationState;
     private CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
@@ -109,7 +109,7 @@ public class AgentWorkerOperationFactory {
             AggregatorInfoProvider aggregatorInfoProvider,
             CuratorFramework coordinationClient,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            EventProducerServiceClient eventProducerServiceClient) {
+            CredentialsEventProducer credentialsEventProducer) {
         this.cacheClient = cacheClient;
 
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
@@ -130,7 +130,7 @@ public class AgentWorkerOperationFactory {
         this.supplementalInformationController = supplementalInformationController;
         this.coordinationClient = coordinationClient;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
-        this.eventProducerServiceClient = eventProducerServiceClient;
+        this.credentialsEventProducer = credentialsEventProducer;
     }
 
     /**
@@ -257,13 +257,13 @@ public class AgentWorkerOperationFactory {
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
         // Please be aware that the order of adding commands is meaningful
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
+        List<se.tink.backend.aggregation.workers.AgentWorkerCommand> commands = Lists.newArrayList();
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
         commands.add(
-                new CredentialsEventProducer(
-                        eventProducerServiceClient, request.getCredentials(), null));
+                new CredentialsRefreshStartEventCommand(
+                        credentialsEventProducer, request.getCredentials(), null));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
