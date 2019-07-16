@@ -131,6 +131,8 @@ public class SibsBaseApiClient {
         URL createConsent = createUrl(SibsConstants.Urls.CREATE_CONSENT);
         ConsentResponse consentResponse =
                 client.request(createConsent)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(configuration.getRedirectUrl())
