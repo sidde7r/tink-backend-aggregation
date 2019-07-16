@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
 import java.util.Optional;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.QueryKeys;
@@ -20,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import tink.org.apache.http.HttpHeaders;
 
 public final class BbvaApiClient {
 
