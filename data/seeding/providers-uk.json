@@ -219,7 +219,7 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.uk.openbanking.hsbc.HsbcAgent",
+            "className": "nxgen.uk.openbanking.hsbc.HsbcV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "HSBC",
             "fields": [
@@ -270,7 +270,7 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.uk.openbanking.markandspencer.MarkAndSpencerAgent",
+            "className": "nxgen.uk.openbanking.markandspencer.MarkAndSpencerV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "M&S Bank",
             "fields": [
