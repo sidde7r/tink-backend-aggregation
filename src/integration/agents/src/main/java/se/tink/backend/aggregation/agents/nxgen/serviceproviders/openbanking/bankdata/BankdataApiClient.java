@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -83,12 +84,14 @@ public final class BankdataApiClient {
                 .type(MediaType.APPLICATION_JSON);
     }
 
+    // AIS
     private RequestBuilder createRequestInSession(URL url) {
         final OAuth2Token authToken = getTokenFromSession();
 
         return createRequest(url).addBearerToken(authToken);
     }
 
+    // PIS
     private RequestBuilder createRequestInSession(URL url, String storageKey) {
         final OAuth2Token authToken = getTokenFromSession(storageKey);
         final String requestId = UUID.randomUUID().toString();
@@ -147,6 +150,31 @@ public final class BankdataApiClient {
                 .get(FetchPaymentResponse.class);
     }
 
+    // AIS
+    private AccountEntity fetchBalances(final AccountEntity accountEntity) {
+        final String requestId = UUID.randomUUID().toString();
+        final URL url =
+                new URL(
+                        getConfiguration().getBaseUrl()
+                                + Endpoints.AIS_PRODUCT
+                                + accountEntity.getBalancesLink());
+
+        final List<BalanceEntity> balances =
+                client.request(url)
+                        .addBearerToken(getTokenFromSession())
+                        .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                        .header(HeaderKeys.X_REQUEST_ID, requestId)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                        .get(AccountEntity.class)
+                        .getBalances();
+        accountEntity.setBalances(balances);
+
+        return accountEntity;
+}
+
+    // PIS
+        /*
     private AccountEntity fetchBalances(final AccountEntity accountEntity) {
         final URL url =
                 new URL(
@@ -163,8 +191,32 @@ public final class BankdataApiClient {
         accountEntity.setBalances(balances);
 
         return accountEntity;
+    }*/
+
+    // AIS
+    public AccountResponse fetchAccounts() {
+        final String requestId = UUID.randomUUID().toString();
+        URL url = new URL(configuration.getBaseUrl() + Endpoints.ACCOUNTS);
+
+        final AccountResponse accountsWithoutBalances =
+                createRequestInSession(url)
+                        .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
+                        .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                        .header(HeaderKeys.X_REQUEST_ID, requestId)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                        .get(AccountResponse.class);
+
+        final List<AccountEntity> accountsWithBalances =
+                accountsWithoutBalances.getAccounts().stream()
+                        .map(this::fetchBalances)
+                        .collect(Collectors.toList());
+
+        return new AccountResponse(accountsWithBalances);
     }
 
+    // PIS
+    /*
     public AccountResponse fetchAccounts() {
         URL url = new URL(configuration.getBaseUrl() + Endpoints.ACCOUNTS);
 
@@ -181,8 +233,35 @@ public final class BankdataApiClient {
                         .collect(Collectors.toList());
 
         return new AccountResponse(accountsWithBalances);
+    }*/
+
+    // AIS
+    public TransactionResponse fetchTransactions(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        final String requestId = UUID.randomUUID().toString();
+        final URL fullUrl =
+                new URL(
+                        configuration.getBaseUrl()
+                                + Endpoints.AIS_PRODUCT
+                                + account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL));
+
+        return createRequestInSession(fullUrl)
+                .header(HeaderKeys.X_REQUEST_ID, requestId)
+                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .queryParam(
+                        QueryKeys.DATE_TO,
+                        DateUtils.formatDateTime(toDate, Format.TIMESTAMP, Format.TIMEZONE))
+                .queryParam(
+                        QueryKeys.DATE_FROM,
+                        DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
+                .get(TransactionResponse.class);
     }
 
+
+    // PIS
+    /*
     public TransactionResponse fetchTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
         final URL fullUrl =
@@ -201,7 +280,7 @@ public final class BankdataApiClient {
                         DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .get(TransactionResponse.class);
-    }
+    }*/
 
     // AIS
     public URL getAuthorizeUrl(String state) {
@@ -329,6 +408,14 @@ public final class BankdataApiClient {
         final String requestId = UUID.randomUUID().toString();
         final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
+
+        HttpResponse response =
+                client.request(url.parameter(IdTags.CONSENT_ID, consentId))
+                        .addBearerToken(getTokenFromSession())
+                        .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
+                        .header(HeaderKeys.X_REQUEST_ID, requestId)
+                        .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
+                        .post(HttpResponse.class);
     }
 
     // PIS

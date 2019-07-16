@@ -32,8 +32,8 @@ public class BankdataAuthenticator implements OAuth2Authenticator {
     }
 
     // PIS
-    /*
-    @Override
+
+    /*@Override
     public URL buildAuthorizeUrl(String state) {
         apiClient.getTokenWithClientCredentials();
         String consentId = apiClient.getConsentId();
