@@ -38,6 +38,7 @@ public final class JwsRequest {
         final ProtectedEntity protectedEntity = ProtectedEntity.create(qsealB64);
         final String protectedString = SerializationUtils.serializeToString(protectedEntity);
         final byte[] protectedBytes = protectedString.getBytes();
+
         return Base64.getUrlEncoder().encodeToString(protectedBytes);
     }
 
@@ -46,6 +47,7 @@ public final class JwsRequest {
         final PayloadEntity payloadEntity = PayloadEntity.create(exp, email, organization);
         final String payloadString = SerializationUtils.serializeToString(payloadEntity);
         final byte[] payloadBytes = payloadString.getBytes();
+
         return Base64.getUrlEncoder().encodeToString(payloadBytes);
     }
 
