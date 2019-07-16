@@ -267,6 +267,14 @@ java_library(
 )
 
 java_library(
+    name = "com_google_protobuf_protobuf_java",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_google_protobuf_protobuf_java//jar",
+    ],
+)
+
+java_library(
     name = "com_netflix_governator",
     visibility = ["//visibility:public"],
     exports = [

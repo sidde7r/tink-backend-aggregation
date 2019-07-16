@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
+import se.tink.libraries.endpoints.EndpointsConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.repository.config.DatabaseConfiguration;
 
@@ -36,6 +37,8 @@ public class AggregationServiceConfiguration extends Configuration {
     @JsonProperty private boolean isMultiClientDevelopment = false;
 
     @JsonProperty private ProvisionClientsConfig provisionClientsConfig;
+
+    @JsonProperty private EndpointsConfiguration endpoints = new EndpointsConfiguration();
 
     public AgentsServiceConfiguration getAgentsServiceConfiguration() {
         return agentsServiceConfiguration;
@@ -87,5 +90,9 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public ProvisionClientsConfig getProvisionClientsConfig() {
         return provisionClientsConfig;
+    }
+
+    public EndpointsConfiguration getEndpoints() {
+        return endpoints;
     }
 }
