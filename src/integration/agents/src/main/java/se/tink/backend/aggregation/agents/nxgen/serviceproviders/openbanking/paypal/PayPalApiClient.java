@@ -23,8 +23,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pay
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.PersonalPaymentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.PersonalPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.PaymentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.PaymentRequestBody;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.WipPaymentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.WipPaymentRequestBody;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -35,7 +35,6 @@ import se.tink.libraries.payment.rpc.Payment;
 import tink.org.apache.http.HttpHeaders;
 
 public final class PayPalApiClient {
-
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private PayPalConfiguration configuration;
@@ -43,7 +42,6 @@ public final class PayPalApiClient {
     public PayPalApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.client.setDebugOutput(true);
     }
 
     private PayPalConfiguration getConfiguration() {
@@ -174,14 +172,14 @@ public final class PayPalApiClient {
         return createRequestInSession(PAYMENT_DETAILS).get(PersonalPaymentResponse.class);
     }
 
-    public PaymentDetailsResponse createPayment(PaymentRequestBody body) {
+    public WipPaymentDetailsResponse createPayment(WipPaymentRequestBody body) {
         return createRequestInSession(PayPalConstants.Urls.ORDER_PAYMENT)
                 .body(body)
-                .post(PaymentDetailsResponse.class);
+                .post(WipPaymentDetailsResponse.class);
     }
 
-    public PaymentDetailsResponse fetchOrderTransactionDetails(String paymentId) {
+    public WipPaymentDetailsResponse fetchOrderTransactionDetails(String paymentId) {
         URL PAYMENT_DETAILS = Urls.ORDER_PAYMENT_DETAILS.parameter(PathTags.PAYMENT_ID, paymentId);
-        return createRequestInSession(PAYMENT_DETAILS).get(PaymentDetailsResponse.class);
+        return createRequestInSession(PAYMENT_DETAILS).get(WipPaymentDetailsResponse.class);
     }
 }

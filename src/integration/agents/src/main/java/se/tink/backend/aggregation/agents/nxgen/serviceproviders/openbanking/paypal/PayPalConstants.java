@@ -107,6 +107,7 @@ public final class PayPalConstants {
     public static class RequestConstants {
         public static final String CAPTURE = "CAPTURE";
         public static final String REFERENCE_TYPE = "LINKS";
+        public static final String PERSONAL = "PERSONAL";
     }
 
     public static class LinkTypes {
@@ -119,5 +120,19 @@ public final class PayPalConstants {
 
     public static class RunConfigurationValues {
         public static final String WIP = "WiP";
+    }
+
+    public static class ExceptionMessages {
+        public static final String UNRECOGNIZED_PAYPAL_ACCOUNT =
+                "Unrecognized PayPal account type: %s";
+        public static final String UNRECOGNIZED_TINK_ACCOUNT = "Unrecognized Tink account type: %s";
+        public static final String NO_LINK_WITH_TYPE = "No link with type: %s";
+        public static final String UNKNOWN_STEP = "Unknown step: %s";
+        public static final String CANNOT_MAP_TINK_TO_PAYPAL =
+                "Cannot map Tink account type : %s to PayPal account type.";
+        public static final String CANNOT_MAP_PAYPAL_TO_TINK =
+                "Cannot map PayPal account type : %s to a Tink account type.";
+        public static final String CANNOT_MAP_PAYPAL_STATUS_TO_TINK_STATUS =
+                "Cannot map PayPal payment status: %s to Tink payment status.";
     }
 }

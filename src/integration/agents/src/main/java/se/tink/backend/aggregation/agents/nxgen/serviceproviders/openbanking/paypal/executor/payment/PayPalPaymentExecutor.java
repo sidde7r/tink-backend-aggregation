@@ -5,15 +5,13 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Encoder;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.ExceptionMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.PersonalPaymentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.PersonalPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -83,15 +81,17 @@ public class PayPalPaymentExecutor implements PaymentExecutor {
                 break;
             default:
                 throw new IllegalStateException(
-                        String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
+                        String.format(
+                                ExceptionMessages.UNKNOWN_STEP, paymentMultiStepRequest.getStep()));
         }
 
-        PaymentResponse payment =
+        PaymentResponse paymentResponse =
                 apiClient
                         .fetchPersonalPaymentDetails(paymentMultiStepRequest.getPayment())
                         .toTinkResponse();
 
-        return new PaymentMultiStepResponse(payment.getPayment(), nextStep, new ArrayList<>());
+        return new PaymentMultiStepResponse(
+                paymentResponse.getPayment(), nextStep, new ArrayList<>());
     }
 
     @Override
@@ -110,14 +110,12 @@ public class PayPalPaymentExecutor implements PaymentExecutor {
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
             throws PaymentException {
+        // Convert between payment request list -> payment list responses.
         List<PaymentResponse> responses =
-                Optional.ofNullable(paymentListRequest)
-                        .map(PaymentListRequest::getPaymentRequestList)
-                        .map(Collection::stream)
-                        .orElseGet(Stream::empty)
-                        .map(this::fetch)
+                paymentListRequest.getPaymentRequestList().stream()
+                        .map(PaymentRequest::getPayment)
+                        .map(PaymentResponse::new)
                         .collect(Collectors.toList());
-
         return new PaymentListResponse(responses);
     }
 
@@ -125,12 +123,10 @@ public class PayPalPaymentExecutor implements PaymentExecutor {
         ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
         Preconditions.checkNotNull(payload);
         this.supplementalInformationHelper.openThirdPartyApp(payload);
-        ThirdPartyAppResponse<String> response =
-                ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
-        this.collect(response.getReference());
+        this.collect();
     }
 
-    public ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
+    private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
         Android androidPayload = new Android();
         androidPayload.setIntent(authorizeUrl.get());
@@ -142,7 +138,7 @@ public class PayPalPaymentExecutor implements PaymentExecutor {
         return payload;
     }
 
-    public ThirdPartyAppResponse<String> collect(String reference) {
+    public ThirdPartyAppResponse<String> collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_SECONDS, TimeUnit.SECONDS);
 

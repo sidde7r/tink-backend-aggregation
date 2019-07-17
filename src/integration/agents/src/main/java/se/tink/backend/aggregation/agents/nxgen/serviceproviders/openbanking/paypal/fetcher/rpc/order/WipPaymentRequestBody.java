@@ -10,16 +10,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 
 @JsonObject
-public class PaymentRequestBody {
-
+public class WipPaymentRequestBody {
     private String intent;
 
     @JsonProperty("purchase_units")
     private List<PurchaseUnitsEntity> purchases;
 
-    public PaymentRequestBody() {}
+    public WipPaymentRequestBody() {}
 
-    private PaymentRequestBody(Builder builder) {
+    private WipPaymentRequestBody(Builder builder) {
         this.intent = builder.intent;
         this.purchases = builder.purchases;
     }
@@ -32,7 +31,7 @@ public class PaymentRequestBody {
         return purchases;
     }
 
-    public static PaymentRequestBody of(PaymentRequest paymentRequest) {
+    public static WipPaymentRequestBody of(PaymentRequest paymentRequest) {
         List<PurchaseUnitsEntity> purchases =
                 Stream.of(paymentRequest).map(PurchaseUnitsEntity::of).collect(Collectors.toList());
         return new Builder().withIntent(RequestConstants.CAPTURE).withPurchase(purchases).build();
@@ -40,7 +39,6 @@ public class PaymentRequestBody {
 
     public static class Builder {
         private String intent;
-
         private List<PurchaseUnitsEntity> purchases;
 
         public Builder withIntent(String intent) {
@@ -53,8 +51,8 @@ public class PaymentRequestBody {
             return this;
         }
 
-        public PaymentRequestBody build() {
-            return new PaymentRequestBody(this);
+        public WipPaymentRequestBody build() {
+            return new WipPaymentRequestBody(this);
         }
     }
 }

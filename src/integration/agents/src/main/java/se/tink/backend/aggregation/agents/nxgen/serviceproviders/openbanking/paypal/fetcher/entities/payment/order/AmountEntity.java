@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 
 @JsonObject
 public class AmountEntity {
-
     private String value;
 
     @JsonProperty("currency_code")
@@ -38,7 +37,6 @@ public class AmountEntity {
 
     public static class Builder {
         private String value;
-
         private String currencyCode;
 
         public Builder withValue(String value) {

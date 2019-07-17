@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.entities.payment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.executor.payment.enums.PayPalAccountType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -11,7 +12,6 @@ import se.tink.libraries.payment.rpc.Debtor;
 @JsonObject
 public class PayeeEntity {
     private String id;
-
     private String type;
 
     public PayeeEntity() {}
@@ -49,14 +49,15 @@ public class PayeeEntity {
                 accountIdentifier = new TinkIdentifier(id);
                 break;
             default:
-                throw new IllegalArgumentException("Unrecognized Tink account type " + type);
+                throw new IllegalArgumentException(
+                        String.format(
+                                PayPalConstants.ExceptionMessages.UNRECOGNIZED_TINK_ACCOUNT, type));
         }
         return new Debtor(accountIdentifier);
     }
 
     public static class Builder {
         private String id;
-
         private String type;
 
         public Builder withId(String id) {

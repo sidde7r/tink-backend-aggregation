@@ -6,9 +6,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 
 @JsonObject
 public class PurchaseUnitsEntity {
-
     private AmountEntity amount;
-
     private PayeeEntity payee;
 
     public PurchaseUnitsEntity() {}
@@ -36,7 +34,6 @@ public class PurchaseUnitsEntity {
 
     public static class Builder {
         private AmountEntity amount;
-
         private PayeeEntity payee;
 
         public Builder withAmount(AmountEntity amount) {

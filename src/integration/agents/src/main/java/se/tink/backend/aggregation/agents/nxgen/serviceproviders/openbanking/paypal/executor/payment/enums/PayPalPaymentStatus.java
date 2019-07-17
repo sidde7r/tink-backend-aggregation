@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pa
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum PayPalPaymentStatus {
     CREATED("CREATED"),
+    APPROVED("APPROVED"),
     PROCESSED("PROCESSED"),
     UNKNOWN("UNKNOWN");
 
@@ -27,6 +29,7 @@ public enum PayPalPaymentStatus {
     static {
         payPalPaymentStatusToTinkMapper.put(CREATED, PaymentStatus.PENDING);
         payPalPaymentStatusToTinkMapper.put(PROCESSED, PaymentStatus.PAID);
+        payPalPaymentStatusToTinkMapper.put(APPROVED, PaymentStatus.PAID);
     }
 
     public static PayPalPaymentStatus fromString(String status) {
@@ -42,7 +45,8 @@ public enum PayPalPaymentStatus {
                         () ->
                                 new IllegalArgumentException(
                                         String.format(
-                                                "Cannot map PayPal payment status: %s to Tink payment status.",
+                                                PayPalConstants.ExceptionMessages
+                                                        .CANNOT_MAP_PAYPAL_STATUS_TO_TINK_STATUS,
                                                 payPalPaymentStatus.toString())));
     }
 }

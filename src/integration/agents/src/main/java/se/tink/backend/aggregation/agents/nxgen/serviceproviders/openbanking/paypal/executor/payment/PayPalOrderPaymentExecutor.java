@@ -1,24 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.executor.payment;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Encoder;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.LinkTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalUtil;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.entities.shared.LinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.PaymentRequestBody;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.ExceptionMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.WipPaymentRequestBody;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
@@ -39,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class PayPalOrderTransactionExecutor implements PaymentExecutor {
+public class PayPalOrderPaymentExecutor implements PaymentExecutor {
 
     private static final long WAIT_FOR_SECONDS = 30L;
 
@@ -49,7 +43,7 @@ public class PayPalOrderTransactionExecutor implements PaymentExecutor {
     private static final Encoder encoder = Base64.getUrlEncoder();
     private final SupplementalInformationHelper supplementalInformationHelper;
 
-    public PayPalOrderTransactionExecutor(
+    public PayPalOrderPaymentExecutor(
             PayPalApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
@@ -59,7 +53,7 @@ public class PayPalOrderTransactionExecutor implements PaymentExecutor {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        PaymentRequestBody requestBody = PaymentRequestBody.of(paymentRequest);
+        WipPaymentRequestBody requestBody = WipPaymentRequestBody.of(paymentRequest);
         return apiClient.createPayment(requestBody).toTinkPayment();
     }
 
@@ -74,34 +68,24 @@ public class PayPalOrderTransactionExecutor implements PaymentExecutor {
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
         String nextStep;
-        String stringLinks = paymentMultiStepRequest.getPayment().getReference().getValue();
-
-        List<LinkEntity> links =
-                PayPalUtil.fromJSON(new TypeReference<List<LinkEntity>>() {}, stringLinks);
-        LinkEntity link =
-                PayPalUtil.findByRelation(links, LinkTypes.APPROVE)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                String.format(
-                                                        "No link with type: %s",
-                                                        LinkTypes.APPROVE)));
+        String link = paymentMultiStepRequest.getPayment().getReference().getValue();
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
-                URL toOpen = new URL(link.getReference());
+                URL toOpen = new URL(link);
                 openThirdPartyApp(toOpen);
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
                 break;
             default:
                 throw new IllegalStateException(
-                        String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
+                        String.format(
+                                ExceptionMessages.UNKNOWN_STEP, paymentMultiStepRequest.getStep()));
         }
 
         PaymentResponse details =
                 apiClient
                         .fetchOrderTransactionDetails(
                                 paymentMultiStepRequest.getPayment().getUniqueId())
-                        .toTinkPayment();
+                        .toTinkPaymentApprove();
         return new PaymentMultiStepResponse(details.getPayment(), nextStep, new ArrayList<>());
     }
 
@@ -121,14 +105,12 @@ public class PayPalOrderTransactionExecutor implements PaymentExecutor {
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
             throws PaymentException {
+        // Convert between payment request list -> payment list responses.
         List<PaymentResponse> responses =
-                Optional.ofNullable(paymentListRequest)
-                        .map(PaymentListRequest::getPaymentRequestList)
-                        .map(Collection::stream)
-                        .orElseGet(Stream::empty)
-                        .map(this::fetch)
+                paymentListRequest.getPaymentRequestList().stream()
+                        .map(PaymentRequest::getPayment)
+                        .map(PaymentResponse::new)
                         .collect(Collectors.toList());
-
         return new PaymentListResponse(responses);
     }
 
@@ -136,12 +118,10 @@ public class PayPalOrderTransactionExecutor implements PaymentExecutor {
         ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
         Preconditions.checkNotNull(payload);
         this.supplementalInformationHelper.openThirdPartyApp(payload);
-        ThirdPartyAppResponse<String> response =
-                ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
-        this.collect(response.getReference());
+        this.collect();
     }
 
-    public ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
+    private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
         Android androidPayload = new Android();
         androidPayload.setIntent(authorizeUrl.get());
@@ -153,10 +133,9 @@ public class PayPalOrderTransactionExecutor implements PaymentExecutor {
         return payload;
     }
 
-    public ThirdPartyAppResponse<String> collect(String reference) {
+    private ThirdPartyAppResponse<String> collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_SECONDS, TimeUnit.SECONDS);
-
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 

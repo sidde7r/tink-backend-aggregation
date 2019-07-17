@@ -7,9 +7,7 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AmountEntity {
-
     private String value;
-
     private String currency;
 
     public AmountEntity() {}

@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pay
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.authenticator.PayPalAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.authenticator.PayPalOrderTransactionAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.configuration.PayPalConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.executor.payment.PayPalOrderTransactionExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.executor.payment.PayPalOrderPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.executor.payment.PayPalPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.PayPalTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.PayPalTransactionalAccountFetcher;
@@ -29,31 +29,25 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class PayPalAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
-
     private final String clientName;
     private final PayPalApiClient apiClient;
-
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public PayPalAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
         apiClient = new PayPalApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
         apiClient.setConfiguration(getClientConfiguration());
     }
 
@@ -91,11 +85,9 @@ public final class PayPalAgent extends NextGenerationAgent
         // P2P uses regular OAuth authentications while
         // WiP uses client credential authentication.
         // Switch between two authenticators, P2P and WiP.
-        if (isWiPPaymentInitiated()) {
-            // If we are running wip payment use different authenticator.
-            return new PayPalOrderTransactionAuthenticator(
-                    apiClient, persistentStorage, getClientConfiguration());
-        }
+        Authenticator wipAuthenticator =
+                new PayPalOrderTransactionAuthenticator(
+                        apiClient, persistentStorage, getClientConfiguration());
 
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
@@ -106,12 +98,15 @@ public final class PayPalAgent extends NextGenerationAgent
                         credentials,
                         strongAuthenticationState);
 
-        return new AutoAuthenticationController(
-                request,
-                systemUpdater,
-                new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                controller);
+        Authenticator aisAuthenticator =
+                new AutoAuthenticationController(
+                        request,
+                        systemUpdater,
+                        new ThirdPartyAppAuthenticationController<>(
+                                controller, supplementalInformationHelper),
+                        controller);
+
+        return isWiPPaymentInitiated() ? wipAuthenticator : aisAuthenticator;
     }
 
     @Override
@@ -120,29 +115,20 @@ public final class PayPalAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
-    }
-
-    @Override
     public Optional<PaymentController> constructPaymentController() {
         // PayPal has two types of payments, P2P and WiP.
         // P2P uses one controller while WiP uses another.
         // Switch between two payment controllers, P2P and WiP.
-
-        PaymentExecutor paymentExecutor;
-        if (isWiPPaymentInitiated()) {
-            paymentExecutor =
-                    new PayPalOrderTransactionExecutor(apiClient, supplementalInformationHelper);
-        } else {
-            paymentExecutor = new PayPalPaymentExecutor(apiClient, supplementalInformationHelper);
-        }
+        PaymentExecutor paymentExecutor =
+                isWiPPaymentInitiated()
+                        ? new PayPalOrderPaymentExecutor(apiClient, supplementalInformationHelper)
+                        : new PayPalPaymentExecutor(apiClient, supplementalInformationHelper);
         return Optional.of(new PaymentController(paymentExecutor));
     }
 
     private boolean isWiPPaymentInitiated() {
         String wip = credentials.getField(RunConfigurationKeys.RUN_CONFIGURATION);
-        return wip != null && wip.equals(RunConfigurationValues.WIP);
+        return RunConfigurationValues.WIP.equalsIgnoreCase(wip);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pa
 import com.google.common.collect.EnumHashBiMap;
 import java.util.Arrays;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.ExceptionMessages;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 
@@ -39,7 +40,9 @@ public enum PayPalAccountType {
                 .orElseThrow(
                         () ->
                                 new IllegalArgumentException(
-                                        "Unrecognized payPal account type : " + text));
+                                        String.format(
+                                                ExceptionMessages.UNRECOGNIZED_PAYPAL_ACCOUNT,
+                                                text)));
     }
 
     public static PayPalAccountType mapToPayPalAccountType(AccountIdentifier.Type tinkAccountType) {
@@ -48,7 +51,7 @@ public enum PayPalAccountType {
                         () ->
                                 new IllegalArgumentException(
                                         String.format(
-                                                "Cannot map Tink account type : %s to PayPal account type.",
+                                                ExceptionMessages.CANNOT_MAP_TINK_TO_PAYPAL,
                                                 tinkAccountType.toString())));
     }
 
@@ -58,7 +61,7 @@ public enum PayPalAccountType {
                         () ->
                                 new IllegalArgumentException(
                                         String.format(
-                                                "Cannot map PayPal account type : %s to a Tink account type.",
+                                                ExceptionMessages.CANNOT_MAP_PAYPAL_TO_TINK,
                                                 name)));
     }
 }

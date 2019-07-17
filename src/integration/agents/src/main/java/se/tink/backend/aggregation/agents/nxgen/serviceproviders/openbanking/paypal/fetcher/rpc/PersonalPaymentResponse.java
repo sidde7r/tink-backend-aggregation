@@ -15,18 +15,14 @@ import se.tink.libraries.payment.rpc.Reference;
 
 @JsonObject
 public class PersonalPaymentResponse {
-
     private String id;
-
     private AmountEntity amount;
-
     private PayeeEntity payee;
 
     @JsonProperty("payment_type")
     private String paymentType;
 
     private List<LinkEntity> links;
-
     private String status;
 
     public String getId() {
