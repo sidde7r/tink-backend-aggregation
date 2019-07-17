@@ -3,6 +3,7 @@ Import the new Skylark version of http_archive & git_repository
 
 This uses the system's native git client which supports fancy key formats and key passphrases.
 """
+
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
@@ -11,19 +12,24 @@ Assert Bazel version
 
 Usually this should be set to the version of Bazel used for CI
 """
+
 git_repository(
     name = "bazel_skylib",
-    remote = "https://github.com/bazelbuild/bazel-skylib",
     commit = "6126842e3db2ec4986752f6dfc0860ca922997f1",
-    shallow_since = "1557756873 +0200"
+    remote = "https://github.com/bazelbuild/bazel-skylib",
+    shallow_since = "1557756873 +0200",
 )
+
 load("@bazel_skylib//lib:versions.bzl", "versions")
+
 versions.check("0.25.0")
 
 """
 Import bazel-common, which has a Maven pom_file generation rule
 """
+
 BAZEL_COMMON_VERSION = "f3dc1a775d21f74fc6f4bbcf076b8af2f6261a69"
+
 http_archive(
     name = "bazel_common",
     sha256 = "ccdd09559b49c7efd9e4b0b617b18e2a4bbdb2142fc30dfd3501eb5fa1294dcc",
@@ -34,24 +40,27 @@ http_archive(
 """
 Import rules_jvm_external for better Maven support
 """
+
 RULES_JVM_EXTERNAL_VERSION = "2.5"
+
 http_archive(
     name = "rules_jvm_external",
     sha256 = "249e8129914be6d987ca57754516be35a14ea866c616041ff0cd32ea94d2f3a1",
     strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_VERSION,
     url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_VERSION,
 )
-load("@rules_jvm_external//:defs.bzl", "maven_install", "artifact")
+
+load("@rules_jvm_external//:defs.bzl", "artifact", "maven_install")
 load("@rules_jvm_external//:specs.bzl", "maven")
 
 """
 Install Maven dependencies
 """
-load("//secrets:secrets.bzl", "RT_USERNAME", "RT_PASSWORD")
+
+load("//secrets:secrets.bzl", "RT_PASSWORD", "RT_USERNAME")
 
 maven_install(
     name = "maven",
-    maven_install_json = "//third_party:maven_install.json",
     artifacts = [
         "asm:asm:3.1",
         "c3p0:c3p0:0.9.1.1",
@@ -199,17 +208,18 @@ maven_install(
         #"tink.org.apache.httpcomponents:httpcore:4.4.9-SNAPSHOT",
         "xerces:xercesImpl:2.10.0",
     ],
+    maven_install_json = "//third_party:maven_install.json",
     repositories = [
         "https://repo1.maven.org/maven2/",
     ],
 )
 
 load("@maven//:defs.bzl", "pinned_maven_install")
+
 pinned_maven_install()
 
 maven_install(
     name = "dropwizard",
-    maven_install_json = "//third_party:dropwizard_install.json",
     artifacts = [
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
@@ -236,20 +246,23 @@ maven_install(
         "org.yaml:snakeyaml:1.24",
         "com.netflix.governator:governator:1.17.8",
     ],
+    generate_compat_repositories = True,
+    maven_install_json = "//third_party:dropwizard_install.json",
     repositories = [
         "https://repo1.maven.org/maven2/",
     ],
-    generate_compat_repositories = True
 )
 
 load("@dropwizard//:defs.bzl", "pinned_maven_install")
+
 pinned_maven_install()
+
 load("@dropwizard//:compat.bzl", "compat_repositories")
+
 compat_repositories()
 
 maven_install(
     name = "tink_aws_sdk",
-    maven_install_json = "//third_party:tink_aws_sdk_install.json",
     artifacts = [
         "com.fasterxml.jackson.core:jackson-annotations:2.8.8",
         "com.fasterxml.jackson.core:jackson-core:2.8.8",
@@ -264,20 +277,23 @@ maven_install(
         "com.amazonaws:aws-java-sdk-sqs:1.11.381",
         "com.amazonaws:jmespath-java:1.11.381",
     ],
+    generate_compat_repositories = True,
+    maven_install_json = "//third_party:tink_aws_sdk_install.json",
     repositories = [
         "https://repo1.maven.org/maven2/",
     ],
-    generate_compat_repositories = True
 )
 
 load("@tink_aws_sdk//:defs.bzl", "pinned_maven_install")
+
 pinned_maven_install()
+
 load("@tink_aws_sdk//:compat.bzl", "compat_repositories")
+
 compat_repositories()
 
 maven_install(
     name = "other",
-    maven_install_json = "//third_party:other_install.json",
     artifacts = [
         "com.google.instrumentation:instrumentation-api:0.4.3",
         "com.codahale.metrics:metrics-jersey:3.0.2",
@@ -289,7 +305,7 @@ maven_install(
             version = "3.4.0",
             exclusions = [
                 "io.dropwizard.metrics:metrics-core",
-            ]
+            ],
         ),
         "com.sun.jersey:jersey-core:1.18.1",
         "com.sun.jersey:jersey-server:1.18.1",
@@ -318,31 +334,37 @@ maven_install(
                 # Can be removed once https://github.com/zippy1978/ghost4j/pull/66 is merged
                 # and new releases of ghost4j + tess4j are published
                 "bouncycastle:bctsp-jdk14",
-            ]
+            ],
         ),
         "org.bouncycastle:bctsp-jdk14:1.38",
         "com.google.guava:guava:21.0",
         "commons-logging:commons-logging:1.2",
     ],
+    generate_compat_repositories = True,
+    maven_install_json = "//third_party:other_install.json",
     repositories = [
         "https://repo1.maven.org/maven2/",
     ],
-    generate_compat_repositories = True
 )
 
 load("@other//:defs.bzl", "pinned_maven_install")
+
 pinned_maven_install()
+
 load("@other//:compat.bzl", "compat_repositories")
+
 compat_repositories()
 
 PROTOBUF_VERSION = "3.9.0"
+
 OPENCENSUS_VERSION = "0.21.0"
+
 GRPC_JAVA_VERSION = "1.22.1"
+
 GRPC_JAVA_NANO_VERSION = "1.21.0"
 
 maven_install(
     name = "grpc",
-    maven_install_json = "//third_party:grpc_install.json",
     artifacts = [
         "com.google.protobuf:protobuf-java:%s" % PROTOBUF_VERSION,
         "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
@@ -355,34 +377,44 @@ maven_install(
         "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
     ],
+    generate_compat_repositories = True,
+    maven_install_json = "//third_party:grpc_install.json",
     repositories = [
         "https://repo1.maven.org/maven2/",
     ],
-    generate_compat_repositories = True
 )
 
 load("@grpc//:defs.bzl", "pinned_maven_install")
+
 pinned_maven_install()
+
 load("@grpc//:compat.bzl", "compat_repositories")
+
 compat_repositories()
 
 """
 Import Docker rule
 """
+
 IO_BAZEL_RULES_DOCKER_VERSION = "3332026921c918c9bfaa94052578d0ca578aab66"
+
 http_archive(
     name = "io_bazel_rules_docker",
     sha256 = "8729112ed4288143955d50fee6c5a306305b9fca48838f73efc1f21f3c32573f",
     strip_prefix = "rules_docker-%s" % IO_BAZEL_RULES_DOCKER_VERSION,
     url = "https://github.com/bazelbuild/rules_docker/archive/%s.zip" % IO_BAZEL_RULES_DOCKER_VERSION,
 )
+
 load("@io_bazel_rules_docker//repositories:repositories.bzl", container_repositories = "repositories")
+
 container_repositories()
-load("@io_bazel_rules_docker//container:container.bzl","container_pull")
+
+load("@io_bazel_rules_docker//container:container.bzl", "container_pull")
 
 """
 Pull Docker images
 """
+
 container_pull(
     name = "openjdk_jdk8",
     registry = "gcr.io",
@@ -396,6 +428,7 @@ Tink-vendored dependencies
 These are repositories under Tink control. They are trusted, and imported
 as a part of tink-backend's repository (not checksumed).
 """
+
 git_repository(
     name = "dropwizard_jersey",
     commit = "0c2f90f4358e262d0fe0af3f6d31eb0fa3cabc40",
@@ -405,22 +438,22 @@ git_repository(
 
 git_repository(
     name = "tink_httpcore_4_4_9",
-    remote = "git@github.com:tink-ab/httpcomponents-core.git",
     commit = "0f72fa2c392fee8388d327cb3462cd10d675c2e2",
+    remote = "git@github.com:tink-ab/httpcomponents-core.git",
     shallow_since = "1537528950 +0200",
 )
 
 git_repository(
     name = "tink_httpclient_4_5_5",
-    remote = "git@github.com:tink-ab/httpcomponents-client.git",
     commit = "1ed65fa09a4b7bc9f469fbb3625ac5b087f9cc3e",
+    remote = "git@github.com:tink-ab/httpcomponents-client.git",
     shallow_since = "1537529121 +0200",
 )
 
 git_repository(
     name = "tink_aws_sdk_1_11",
-    remote = "git@github.com:tink-ab/aws-sdk-java.git",
     commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a",
+    remote = "git@github.com:tink-ab/aws-sdk-java.git",
     shallow_since = "1537529416 +0200",
 )
 
@@ -449,49 +482,49 @@ git_repository(
     name = "tink_backend",
     commit = "41147567649a64187c3f2b5a8c78ed8e43045888",
     remote = "git@github.com:tink-ab/tink-backend",
-    shallow_since = "1563543596 +0000"
+    shallow_since = "1563543596 +0000",
 )
 
 """
 Import Maven packages which rules_jvm_external can't currently resolve
 """
+
 # libm4ri library, needed by https://github.com/tink-ab/tink-backend-aggregation/tree/master/tools/libkbc_wbaes_src
 http_file(
-    name =  "libm4ri_dev",
+    name = "libm4ri_dev",
     downloaded_file_path = "libm4ri-dev_20140914-2+b1_amd64.deb",
-    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-dev_20140914-2+b1_amd64.deb"],
     sha256 = "040b81df10945380424d8874d38c062f45a5fee6886ae8e6963c87393ba84cd9",
+    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-dev_20140914-2+b1_amd64.deb"],
 )
 
 http_file(
-    name =  "libm4ri_0.0.20140914",
+    name = "libm4ri_0.0.20140914",
     downloaded_file_path = "libm4ri-0.0.20140914_20140914-2+b1_amd64.deb",
-    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb"],
     sha256 = "c2f38d51730b6e9a73e2f4d2e0edfadf647a9889da9d06a15abca07d3eccc6f1",
+    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb"],
 )
 
 """
 Import GRPC/Protobuf rules
 """
+
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
-    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-linux-x86_64.exe"],
     sha256 = "6f5fc69224f2fa9ed7e1376aedf6c5c6239dcfe566beb89d3a1c77c50fb8886b",
+    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-linux-x86_64.exe"],
 )
 
 http_file(
     name = "protoc_gen_grpc_java_macosx",
-    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-osx-x86_64.exe"],
     sha256 = "f7ad13d42e2a2415d021263ae258ca08157e584c54e9fce093f1a5a871a8763a",
+    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-osx-x86_64.exe"],
 )
 
-GOOGLE_PROTOBUF_TAG = "3.6.1.3"
-GOOGLE_PROTOBUF_SHA = "9510dd2afc29e7245e9e884336f848c8a6600a14ae726adb6befdb4f786f0be2"
 http_archive(
     name = "com_google_protobuf",
-    sha256 = GOOGLE_PROTOBUF_SHA,
-    strip_prefix = "protobuf-%s" % GOOGLE_PROTOBUF_TAG,
-    url = "https://github.com/google/protobuf/archive/v%s.zip" % GOOGLE_PROTOBUF_TAG,
+    sha256 = "9510dd2afc29e7245e9e884336f848c8a6600a14ae726adb6befdb4f786f0be2",
+    strip_prefix = "protobuf-%s" % PROTOBUF_VERSION,
+    url = "https://github.com/google/protobuf/archive/v%s.zip" % PROTOBUF_VERSION,
 )
 
 bind(
@@ -500,6 +533,7 @@ bind(
 )
 
 STACKB_RULES_PROTO_VERSION = "8afa882b3dff5fec93b22519d34d0099083a7ce2"
+
 http_archive(
     name = "build_stack_rules_proto",
     sha256 = "0d88313ba32c0042c2633c3cbdd187afb0c3c9468b978f6eb4919ac6e535f029",
@@ -507,21 +541,23 @@ http_archive(
     url = "https://github.com/stackb/rules_proto/archive/%s.tar.gz" % STACKB_RULES_PROTO_VERSION,
 )
 
-GRPC_JAVA_TAG = "1.20.0"
-GRPC_JAVA_SHA = "9d23d9fec84e24bd3962f5ef9d1fd61ce939d3f649a22bcab0f19e8167fae8ef"
 http_archive(
     name = "io_grpc_grpc_java",
-    strip_prefix = "grpc-java-%s" % GRPC_JAVA_TAG,
-    sha256 = GRPC_JAVA_SHA,
-    url = "https://github.com/grpc/grpc-java/archive/v%s.zip" % GRPC_JAVA_TAG,
+    sha256 = "9d23d9fec84e24bd3962f5ef9d1fd61ce939d3f649a22bcab0f19e8167fae8ef",
+    strip_prefix = "grpc-java-%s" % GRPC_JAVA_VERSION,
+    url = "https://github.com/grpc/grpc-java/archive/v%s.zip" % GRPC_JAVA_VERSION,
 )
+
 load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
+
 grpc_java_repositories(omit_com_google_protobuf = True)
 
 """
 Import Google API types
 """
+
 GOOGLE_API_TYPES_VERSION = "10049e8ea946100bb7da66f63b0ecd1a345e8760"
+
 http_archive(
     name = "com_google_googleapis",
     sha256 = "ddd2cd7b6b310028b8ba08057d2990ced6f78c35fdf5083ff142704f1c2c5e49",
