@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.AccessInfoEntity;
@@ -60,7 +60,7 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
         persistentStorage.put(StorageKeys.CONSENT_ID, postConsentResponse.getConsentId());
         return apiClient.buildAuthorizeUrl(
                 state,
-                "AIS:" + persistentStorage.get(LansforsakringarConstants.StorageKeys.CONSENT_ID),
+                QueryValues.SCOPE + persistentStorage.get(StorageKeys.CONSENT_ID),
                 postConsentResponse.getLinks().getScaOAuth());
     }
 

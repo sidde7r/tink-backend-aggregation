@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.assertj.core.util.Strings;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.axa.AxaConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -45,9 +45,9 @@ public class AccountEntity {
 
         switch (type) {
             case CHECKING:
-                return Optional.ofNullable(toCheckingAccount());
+                return Optional.ofNullable(toTypeAccount(TransactionalAccountType.CHECKING));
             case SAVINGS:
-                return Optional.ofNullable(toSavingsAccount());
+                return Optional.ofNullable(toTypeAccount(TransactionalAccountType.SAVINGS));
             case OTHER:
             default:
                 return Optional.empty();
@@ -55,39 +55,27 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private TransactionalAccount toCheckingAccount() {
+    private TransactionalAccount toTypeAccount(TransactionalAccountType transactionalAccountType) {
+
+        String accountName;
+        if (!Strings.isNullOrEmpty(name)) {
+            accountName = name;
+        } else {
+            accountName = iban;
+        }
 
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
+                .withType(transactionalAccountType)
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getAccountNumber())
                                 .withAccountNumber(getAccountNumber())
-                                .withAccountName(AxaConstants.INTEGRATION_NAME)
+                                .withAccountName(accountName)
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                                 .build())
                 .withBalance(BalanceModule.of(getAvailableBalance()))
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(getAccountNumber())
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
-                .build();
-    }
-
-    @JsonIgnore
-    private TransactionalAccount toSavingsAccount() {
-
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.SAVINGS)
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(getAccountNumber())
-                                .withAccountNumber(getAccountNumber())
-                                .withAccountName(AxaConstants.INTEGRATION_NAME)
-                                .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                                .build())
-                .withBalance(BalanceModule.of(getAvailableBalance()))
+                .addHolderName(accountName)
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(getAccountNumber())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)

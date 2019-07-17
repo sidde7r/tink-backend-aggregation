@@ -39,6 +39,7 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
+        this.apiClient = new Xs2aDevelopersApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

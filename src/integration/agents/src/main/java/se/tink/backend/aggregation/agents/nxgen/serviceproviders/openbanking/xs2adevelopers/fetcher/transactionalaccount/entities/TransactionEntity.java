@@ -40,12 +40,14 @@ public class TransactionEntity {
     }
 
     private String getDescription() {
+
         if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
             return remittanceInformationUnstructured;
-        }
-        if (!Strings.isNullOrEmpty(debtorName)) {
+        } else if (!Strings.isNullOrEmpty(debtorName)) {
             return debtorName;
+        } else if (!Strings.isNullOrEmpty(creditorName)) {
+            return creditorName;
         }
-        return creditorName;
+        return transactionId;
     }
 }
