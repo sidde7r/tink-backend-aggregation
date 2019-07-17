@@ -37,6 +37,17 @@ public class SibsBaseApiClient {
     protected SibsConfiguration configuration;
     protected EidasProxyConfiguration eidasConf;
 
+    /*
+    * TODO: remove this section after full AIS and PIS test:
+    // String requestTimestamp = new SimpleDateFormat(Formats.CONSENT_BODY_DATE_FORMAT, Locale.ENGLISH).format(new Date());
+    // .header(HeaderKeys.DATE, requestTimestamp)
+    * It was kept because sibs date header problems.
+    * Sibs might use different header patterns for different endpoints (even in same service)
+    * If Invalid Header shows verify if it's single or global call problem for:
+     * - global - change pattern in sign interceptor
+     * - single - use code above to create date with correct pattern and add header (it won't be override)
+    */
+
     public SibsBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
