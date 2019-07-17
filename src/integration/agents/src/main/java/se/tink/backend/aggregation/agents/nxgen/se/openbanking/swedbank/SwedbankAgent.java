@@ -63,7 +63,10 @@ public final class SwedbankAgent extends NextGenerationAgent
                 new SwedbankAuthenticator(apiClient, persistentStorage);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        authenticator,
+                        credentials);
         return new AutoAuthenticationController(
                 request,
                 context,

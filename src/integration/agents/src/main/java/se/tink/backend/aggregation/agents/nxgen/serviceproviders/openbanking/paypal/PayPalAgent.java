@@ -61,7 +61,8 @@ public final class PayPalAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new PayPalAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                                apiClient, persistentStorage, getClientConfiguration()),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

@@ -72,7 +72,8 @@ public abstract class BankdataAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new BankdataAuthenticator(apiClient, getClientConfiguration()));
+                        new BankdataAuthenticator(apiClient, getClientConfiguration()),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

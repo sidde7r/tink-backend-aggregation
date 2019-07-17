@@ -77,7 +77,8 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
                                 apiClient,
                                 persistentStorage,
                                 getClientConfiguration(),
-                                credentials.getField(CredentialKeys.IBAN)));
+                                credentials.getField(CredentialKeys.IBAN)),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,
@@ -127,7 +128,8 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new Xs2aDevelopersPaymentAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                                apiClient, persistentStorage, getClientConfiguration()),
+                        credentials);
 
         return Optional.of(
                 new Xs2aDevelopersPaymentController(

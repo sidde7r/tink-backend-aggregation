@@ -40,7 +40,10 @@ public final class NordeaDkAgent extends NordeaBaseAgent
                 new NordeaDkAuthenticator((NordeaDkApiClient) apiClient, sessionStorage);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        authenticator,
+                        credentials);
         return new AutoAuthenticationController(
                 request,
                 context,

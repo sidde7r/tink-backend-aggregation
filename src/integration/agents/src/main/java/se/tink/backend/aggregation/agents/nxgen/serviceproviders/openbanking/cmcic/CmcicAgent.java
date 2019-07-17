@@ -63,7 +63,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new CmcicAuthenticator(apiClient, persistentStorage));
+                        new CmcicAuthenticator(apiClient, persistentStorage),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

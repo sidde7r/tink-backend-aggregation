@@ -66,7 +66,8 @@ public final class RedsysAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new RedsysAuthenticator(
-                                apiClient, sessionStorage, getClientConfiguration()));
+                                apiClient, sessionStorage, getClientConfiguration()),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

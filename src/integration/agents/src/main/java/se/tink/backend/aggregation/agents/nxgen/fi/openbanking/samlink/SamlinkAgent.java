@@ -26,7 +26,8 @@ public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, Samli
                 systemUpdater,
                 persistentStorage,
                 supplementalInformationHelper,
-                new SamlinkAuthenticator(apiClient));
+                new SamlinkAuthenticator(apiClient),
+                credentials);
     }
 
     @Override

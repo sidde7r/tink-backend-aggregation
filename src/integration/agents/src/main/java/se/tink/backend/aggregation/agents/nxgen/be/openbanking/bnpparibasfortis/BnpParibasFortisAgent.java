@@ -63,7 +63,10 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
                 new BnpParibasFortisAuthenticator(apiClient, sessionStorage);
         final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        authenticator,
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,
