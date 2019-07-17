@@ -29,7 +29,4 @@ foreach ($locales as $locale) {
     exec('msguniq --use-first --no-location ../../po/' .$locale.'.po' . ' -o ../../po/' .$locale.'.po');
 }
 
-print('Converting translations...');
-exec('cd ../../src/common-lib && mvn gettext:dist && cd ../../tools/translation');
-
 ?>
