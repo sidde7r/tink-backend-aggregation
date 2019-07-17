@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstants.ErrorStrings;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstants.LogTags;
 
 public abstract class NemidAuthenticationController {
 
@@ -171,19 +170,8 @@ public abstract class NemidAuthenticationController {
             }
         }
 
-        LOGGER.infoExtraLong(driver.getPageSource(), LogTags.LOG_TAG_MAINPAGE_ERROR_CASE);
-        try {
-            switchToIframe();
-            LOGGER.infoExtraLong(driver.getPageSource(), LogTags.LOG_TAG_IFRAME_ERROR_CASE);
-        } catch (IllegalStateException ex) {
-            // If we cannot find iframe, switchToIframe method throws IllegalStateException
-            LOGGER.infoExtraLong("", LogTags.LOG_TAG_MAINPAGE_NO_IFRAME_ERROR_CASE);
-            throw ex;
-        }
-
         // We will only reach this state if we could not find the nemId token -> something went
         // wrong in the authentication.
-        driver.switchTo().defaultContent();
         throw new IllegalStateException("[nemid] Could not find nemId token.");
     }
 
