@@ -6,10 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LinksEntity {
     private ScaRedirectEntity scaRedirect;
 
-    public boolean hasScaRedirectEntity() {
-        return scaRedirect != null && scaRedirect.hasScaRedirectLink();
-    }
-
     public String getScaRedirectEntity() {
         return scaRedirect.getScaRedirectLink();
     }

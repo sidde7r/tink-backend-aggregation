@@ -15,6 +15,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 
@@ -64,16 +65,20 @@ public class SparebankUtils {
         }
     }
 
-    public static String getSignature(Map<String, String> headers, String keyId, String keyPath) {
+    public static String getSignature(
+            Map<String, Optional<String>> headers, String keyId, String keyPath) {
         final String algorithm = "rsa-sha256";
 
         StringBuilder signingString = new StringBuilder();
         StringBuilder header = new StringBuilder();
 
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            header = header.append(" " + entry.getKey());
-            signingString.append(String.format("%s: %s\n", entry.getKey(), entry.getValue()));
-        }
+        headers.forEach(
+                (key, value) ->
+                        value.ifPresent(
+                                item -> {
+                                    header.append(" " + key);
+                                    signingString.append(String.format("%s: %s\n", key, item));
+                                }));
 
         String signature =
                 generateSignature(

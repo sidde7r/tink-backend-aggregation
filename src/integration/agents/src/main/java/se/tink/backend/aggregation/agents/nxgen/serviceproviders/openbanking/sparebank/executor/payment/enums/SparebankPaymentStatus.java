@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sp
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.ErrorMessages;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum SparebankPaymentStatus {
@@ -52,7 +53,9 @@ public enum SparebankPaymentStatus {
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
-                                        "Can not map " + text + " to Sparebank payment status"));
+                                        String.format(
+                                                ErrorMessages.CANT_MAP_TO_PAYMENT_PRODUCT_ERROR,
+                                                text)));
     }
 
     public static PaymentStatus mapToTinkPaymentStatus(
@@ -61,8 +64,8 @@ public enum SparebankPaymentStatus {
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
-                                        "Cannot map Sparebank payment status : "
-                                                + sparebankPaymentStatus.toString()
-                                                + " to Tink payment status"));
+                                        String.format(
+                                                ErrorMessages.MAPING_TO_TINK_PAYMENT_STATUS_ERROR,
+                                                sparebankPaymentStatus.getText())));
     }
 }

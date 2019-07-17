@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sp
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.AdressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.CreditorAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.DebtorAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentProduct;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -14,8 +14,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class CreatePaymentRequest {
     private AmountEntity instructedAmount;
     private String creditorName;
-    private CreditorAccountEntity creditorAccount;
-    private DebtorAccountEntity debtorAccount;
+    private AccountEntity creditorAccount;
+    private AccountEntity debtorAccount;
     private AdressEntity creditorAddress;
     private String ultimateDebtor;
     private String remittanceInformationUnstructured;
@@ -41,8 +41,8 @@ public class CreatePaymentRequest {
     public static class Builder {
         private AmountEntity instructedAmount;
         private String creditorName;
-        private CreditorAccountEntity creditorAccount;
-        private DebtorAccountEntity debtorAccount;
+        private AccountEntity creditorAccount;
+        private AccountEntity debtorAccount;
         private AdressEntity creditorAddress;
         private String ultimateDebtor;
         private String remittanceInformationUnstructured;
@@ -58,18 +58,21 @@ public class CreatePaymentRequest {
             return this;
         }
 
-        public Builder withCreditorAccount(CreditorAccountEntity creditorAccount) {
+        public Builder withCreditorAccount(AccountEntity creditorAccount) {
             this.creditorAccount = creditorAccount;
             return this;
         }
 
-        public Builder withDebtorAccount(DebtorAccountEntity debtorAccount) {
+        public Builder withDebtorAccount(AccountEntity debtorAccount) {
             this.debtorAccount = debtorAccount;
             return this;
         }
 
-        public Builder withCreditorAddress(AdressEntity creditorAddress) {
-            this.creditorAddress = creditorAddress;
+        public Builder withCreditorAddress(
+                AdressEntity creditorAddress, SparebankPaymentProduct paymentProduct) {
+            if (paymentProduct == SparebankPaymentProduct.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER) {
+                this.creditorAddress = creditorAddress;
+            }
             return this;
         }
 

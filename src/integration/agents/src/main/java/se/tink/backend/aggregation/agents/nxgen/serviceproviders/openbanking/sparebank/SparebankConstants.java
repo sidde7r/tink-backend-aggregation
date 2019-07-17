@@ -55,6 +55,11 @@ public final class SparebankConstants {
         public static final String LIMIT = "limit";
         public static final String OFFSET = "offset";
         public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String STATE = "state";
+    }
+
+    public static class CountryCodes {
+        public static final String NORWAY = "NO";
     }
 
     public static class Accounts {
@@ -99,11 +104,22 @@ public final class SparebankConstants {
         public static final String SIGNING_ALGORITHM = "RSA";
     }
 
+    public static class DatePatterns {
+        public static final String YYYY_MM_DD_PATTERN = "yyyy-MM-dd";
+    }
+
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String ENCODE_CERTIFICATE_ERROR = "Cannot encode certificate.";
+        public static final String PAYMENT_CANT_BE_SIGNED_ERROR = "Payment cannot be signed";
+        public static final String CANT_MAP_TO_PAYMENT_PRODUCT_ERROR =
+                "Can not map %s to Sparebank payment status";
+        public static final String MAPING_TO_TINK_PAYMENT_STATUS_ERROR =
+                "Cannot map Sparebank payment status %s to Tink payment status";
+        public static final String NO_ACCOUNT_TYPE_FOUND =
+                "No PaymentType found for your AccountIdentifiers pair: %s";
     }
 }

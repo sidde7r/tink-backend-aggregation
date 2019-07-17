@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
@@ -11,7 +12,8 @@ public class CreatePaymentResponse {
     private String paymentId;
     private String transactionStatus;
 
-    public PaymentResponse toTinkPaymentResponse(PaymentRequest paymentRequest) {
+    public PaymentResponse toTinkPaymentResponse(
+            PaymentRequest paymentRequest, PaymentType paymentType) {
         Payment payment = paymentRequest.getPayment();
 
         Payment paymentResponse =
@@ -25,7 +27,7 @@ public class CreatePaymentResponse {
                         .withStatus(
                                 SparebankPaymentStatus.mapToTinkPaymentStatus(
                                         SparebankPaymentStatus.fromString(transactionStatus)))
-                        .withType(payment.getType())
+                        .withType(paymentType)
                         .build();
 
         return new PaymentResponse(paymentResponse);

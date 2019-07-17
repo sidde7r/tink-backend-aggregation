@@ -56,7 +56,7 @@ public class SparebankPaymentController extends PaymentController {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
-    public ThirdPartyAppResponse<String> collect(String reference) {
+    private ThirdPartyAppResponse<String> collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
@@ -69,7 +69,6 @@ public class SparebankPaymentController extends PaymentController {
         this.supplementalInformationHelper.openThirdPartyApp(payload);
     }
 
-    @SuppressWarnings("Duplicates")
     private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
         Android androidPayload = new Android();
@@ -97,11 +96,11 @@ public class SparebankPaymentController extends PaymentController {
         if (paymentMultiStepRequest
                 .getStep()
                 .equalsIgnoreCase(AuthenticationStepConstants.STEP_INIT)) {
-            ThirdPartyAppResponse<String> ref = init();
+            init();
             URL authorizeUrl =
                     new URL(sessionStorage.get(paymentMultiStepRequest.getPayment().getUniqueId()));
             openThirdPartyApp(authorizeUrl);
-            collect(ref.getReference());
+            collect();
             return new PaymentMultiStepResponse(
                     paymentMultiStepRequest.getPayment(),
                     SparebankSignSteps.SAMPLE_STEP,

@@ -3,14 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sp
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.CountryCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.DatePatterns;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.SparebankSignSteps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.AdressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.CreditorAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.DebtorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest.Builder;
@@ -25,15 +28,22 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SparebankPaymentExecutor implements PaymentExecutor {
     private SparebankApiClient apiClient;
     private SessionStorage sessionStorage;
     private SparebankConfiguration sparebankConfiguration;
+    private List<PaymentResponse> paymentList =
+            new ArrayList<>(); // used for mocking fetch multiple
 
     public SparebankPaymentExecutor(
             SparebankApiClient apiClient,
@@ -46,33 +56,29 @@ public class SparebankPaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        PaymentType paymentType = getPaymentType(paymentRequest);
         SparebankPaymentProduct paymentProduct =
-                SparebankPaymentProduct.mapTinkPaymentTypeToSparebankPaymentProduct(
-                        paymentRequest.getPayment().getType());
-
-        CreditorAccountEntity creditorAccountEntity =
-                CreditorAccountEntity.of(paymentRequest, paymentProduct);
-        DebtorAccountEntity debtorAccountEntity =
-                DebtorAccountEntity.of(paymentRequest, paymentProduct);
+                SparebankPaymentProduct.mapTinkPaymentTypeToSparebankPaymentProduct(paymentType);
+        AdressEntity creditorAddress =
+                new AdressEntity.Builder().withCountry(CountryCodes.NORWAY).build();
+        AccountEntity creditorAccountEntity =
+                AccountEntity.ofCreditor(paymentRequest, paymentProduct);
+        AccountEntity debtorAccountEntity = AccountEntity.ofDebtor(paymentRequest, paymentProduct);
         AmountEntity amount = AmountEntity.of(paymentRequest);
 
-        CreatePaymentRequest.Builder builingPaymentRequest =
+        CreatePaymentRequest createPaymentRequest =
                 new Builder()
                         .withCreditorAccount(creditorAccountEntity)
                         .withDebtorAccount(debtorAccountEntity)
                         .withRequestedExecutionDate(getCurrentDate())
                         .withInstructedAmount(amount)
-                        .withCreditorName(paymentRequest.getPayment().getCreditor().getName());
-
-        if (paymentProduct == SparebankPaymentProduct.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER) {
-            AdressEntity creditorAddress = new AdressEntity.Builder().withCountry("NO").build();
-
-            builingPaymentRequest.withCreditorAddress(creditorAddress);
-        }
+                        .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
+                        .withCreditorAddress(creditorAddress, paymentProduct)
+                        .build();
 
         return apiClient
-                .createPayment(paymentProduct.getText(), builingPaymentRequest.build())
-                .toTinkPaymentResponse(paymentRequest);
+                .createPayment(paymentProduct.getText(), createPaymentRequest)
+                .toTinkPaymentResponse(paymentRequest, paymentType);
     }
 
     @Override
@@ -81,10 +87,12 @@ public class SparebankPaymentExecutor implements PaymentExecutor {
         SparebankPaymentProduct paymentProduct =
                 SparebankPaymentProduct.mapTinkPaymentTypeToSparebankPaymentProduct(
                         payment.getType());
-
-        return apiClient
-                .getPayment(paymentProduct.getText(), payment.getUniqueId())
-                .toTinkPaymentResponse(paymentRequest);
+        PaymentResponse paymentResponse =
+                apiClient
+                        .getPayment(paymentProduct.getText(), payment.getUniqueId())
+                        .toTinkPaymentResponse(paymentRequest);
+        paymentList.add(paymentResponse); // used for mocking fetch multiple
+        return paymentResponse;
     }
 
     @Override
@@ -94,18 +102,15 @@ public class SparebankPaymentExecutor implements PaymentExecutor {
                 SparebankPaymentProduct.mapTinkPaymentTypeToSparebankPaymentProduct(
                         payment.getType());
         String paymentId = payment.getUniqueId();
-        PaymentStatus paymentStatus;
+        PaymentStatus paymentStatus = payment.getStatus();
         String nextStep;
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
                 StartAuthorizationProcessResponse startAuthorizationResponse =
                         apiClient.startAuthorizationProcess(paymentProduct.getText(), paymentId);
-                if (!startAuthorizationResponse.hasScaRedirectLink()) {
-                    throw new IllegalStateException("Payment cannot be signed");
-                }
+
                 sessionStorage.put(
                         payment.getUniqueId(), startAuthorizationResponse.getScaRedirectLink());
-                paymentStatus = PaymentStatus.PENDING;
                 nextStep = SparebankSignSteps.SAMPLE_STEP;
                 break;
             case SparebankSignSteps.SAMPLE_STEP:
@@ -145,14 +150,36 @@ public class SparebankPaymentExecutor implements PaymentExecutor {
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         // mocking of the fetch multiple so we can test sign
-        return new PaymentListResponse(
-                new PaymentResponse(
-                        paymentListRequest.getPaymentRequestList().get(0).getPayment()));
+        return new PaymentListResponse(paymentList);
     }
 
     private String getCurrentDate() {
-        LocalDate date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return date.format(formatter);
+        return LocalDate.now().format(DateTimeFormatter.ofPattern(DatePatterns.YYYY_MM_DD_PATTERN));
+    }
+
+    private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
+            accountIdentifiersToPaymentTypeMapper =
+                    GenericTypeMapper
+                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                                    genericBuilder()
+                            .put(
+                                    PaymentType.DOMESTIC,
+                                    new Pair<>(
+                                            AccountIdentifier.Type.NO, AccountIdentifier.Type.NO))
+                            .put(PaymentType.SEPA, new Pair<>(Type.IBAN, Type.IBAN))
+                            .setDefaultTranslationValue(PaymentType.INTERNATIONAL)
+                            .build();
+
+    private PaymentType getPaymentType(PaymentRequest paymentRequest) {
+        Pair<Type, Type> accountIdentifiers =
+                paymentRequest.getPayment().getCreditorAndDebtorAccountType();
+        return accountIdentifiersToPaymentTypeMapper
+                .translate(accountIdentifiers)
+                .orElseThrow(
+                        () ->
+                                new NotImplementedException(
+                                        String.format(
+                                                ErrorMessages.NO_ACCOUNT_TYPE_FOUND,
+                                                accountIdentifiers)));
     }
 }

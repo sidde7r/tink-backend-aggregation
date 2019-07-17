@@ -43,20 +43,18 @@ public class SparebankApiClient {
 
     public URL getAuthorizeUrl(String state) {
         final URL redirectUrl =
-                new URL(getConfiguration().getRedirectUrl()).queryParam("state", state);
+                new URL(getConfiguration().getRedirectUrl()).queryParam(QueryKeys.STATE, state);
         final String baseUrl = getConfiguration().getBaseUrl();
-
-        Map<String, String> headers =
-                new HashMap<String, String>() {
-                    {
-                        put(HeaderKeys.TPP_REDIRECT_URI.toLowerCase(), redirectUrl.toString());
-                    }
-                };
 
         RedirectEntity redirectEntity = null;
         try {
             String response =
-                    createRequest(new URL(baseUrl + Urls.CONSENTS), headers).post(String.class);
+                    createRequest(
+                                    new URL(baseUrl + Urls.CONSENTS),
+                                    Optional.empty(),
+                                    Optional.of(redirectUrl.toString()),
+                                    Optional.empty())
+                            .post(String.class);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401) {
                 redirectEntity = e.getResponse().getBody(RedirectEntity.class);
@@ -75,38 +73,27 @@ public class SparebankApiClient {
 
     public AccountResponse fetchAccounts() {
         final String baseUrl = getConfiguration().getBaseUrl();
-        Map<String, String> headers =
-                new HashMap<String, String>() {
-                    {
-                        put(HeaderKeys.PSU_ID.toLowerCase(), getPsuId());
-                        put(
-                                HeaderKeys.TPP_REDIRECT_URI.toLowerCase(),
-                                getConfiguration().getRedirectUrl());
-                    }
-                };
+        final String redirectUrl = getConfiguration().getRedirectUrl();
+
         return createRequestInSession(
-                        new URL(baseUrl + SparebankConstants.Urls.FETCH_ACCOUNTS), headers)
+                        new URL(baseUrl + SparebankConstants.Urls.FETCH_ACCOUNTS),
+                        Optional.of(getPsuId()),
+                        Optional.of(redirectUrl),
+                        Optional.empty())
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .get(AccountResponse.class);
     }
 
     public TransactionResponse fetchTransactions(String resourceId, String offset, Integer limit) {
         final String baseUrl = getConfiguration().getBaseUrl();
-
-        Map<String, String> headers =
-                new HashMap<String, String>() {
-                    {
-                        put(HeaderKeys.PSU_ID.toLowerCase(), getPsuId());
-                        put(
-                                HeaderKeys.TPP_REDIRECT_URI.toLowerCase(),
-                                getConfiguration().getRedirectUrl());
-                    }
-                };
+        final String redirectUrl = getConfiguration().getRedirectUrl();
 
         return createRequestInSession(
                         new URL(baseUrl + Urls.FETCH_TRANSACTIONS)
                                 .parameter(IdTags.ACCOUNT_ID, resourceId),
-                        headers)
+                        Optional.of(getPsuId()),
+                        Optional.of(redirectUrl),
+                        Optional.empty())
                 .queryParam(SparebankConstants.QueryKeys.LIMIT, Integer.toString(limit))
                 .queryParam(SparebankConstants.QueryKeys.OFFSET, offset)
                 .queryParam(
@@ -121,43 +108,27 @@ public class SparebankApiClient {
         final String redirectUrl = getConfiguration().getRedirectUrl();
         final String digest = "SHA-256=" + SparebankUtils.calculateDigest(paymentRequest.toData());
 
-        Map<String, String> headers =
-                new HashMap<String, String>() {
-                    {
-                        put(HeaderKeys.PSU_ID.toLowerCase(), getPsuId());
-                        put(
-                                HeaderKeys.TPP_REDIRECT_URI.toLowerCase(),
-                                getConfiguration().getRedirectUrl());
-                        put(HeaderKeys.DIGEST.toLowerCase(), digest);
-                    }
-                };
-
         return createRequestInSession(
                         new URL(baseUrl + Urls.CREATE_PAYMENT)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct),
-                        headers)
+                        Optional.of(getPsuId()),
+                        Optional.of(redirectUrl),
+                        Optional.of(digest))
                 .header(HeaderKeys.DIGEST, digest)
                 .post(CreatePaymentResponse.class, paymentRequest);
     }
 
     public GetPaymentResponse getPayment(String paymentProduct, String paymentId) {
         final String baseUrl = getConfiguration().getBaseUrl();
-
-        Map<String, String> headers =
-                new HashMap<String, String>() {
-                    {
-                        put(HeaderKeys.PSU_ID.toLowerCase(), getPsuId());
-                        put(
-                                HeaderKeys.TPP_REDIRECT_URI.toLowerCase(),
-                                getConfiguration().getRedirectUrl());
-                    }
-                };
+        final String redirectUrl = getConfiguration().getRedirectUrl();
 
         return createRequestInSession(
                         new URL(baseUrl + Urls.GET_PAYMENT)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                                 .parameter(IdTags.PAYMENT_ID, paymentId),
-                        headers)
+                        Optional.of(getPsuId()),
+                        Optional.of(redirectUrl),
+                        Optional.empty())
                 .get(GetPaymentResponse.class);
     }
 
@@ -167,45 +138,36 @@ public class SparebankApiClient {
 
         URL redirectUrl =
                 new URL(getConfiguration().getRedirectUrl())
-                        .queryParam(StorageKeys.STATE, sessionStorage.get(StorageKeys.STATE));
-
-        Map<String, String> headers =
-                new HashMap<String, String>() {
-                    {
-                        put(HeaderKeys.PSU_ID.toLowerCase(), getPsuId());
-                        put(HeaderKeys.TPP_REDIRECT_URI.toLowerCase(), redirectUrl.toString());
-                    }
-                };
+                        .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE));
 
         return createRequestInSession(
                         new URL(baseUrl + Urls.SIGN_PAYMENT)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                                 .parameter(IdTags.PAYMENT_ID, paymetnId),
-                        headers)
+                        Optional.of(getPsuId()),
+                        Optional.of(redirectUrl.toString()),
+                        Optional.empty())
                 .post(StartAuthorizationProcessResponse.class);
     }
 
     public GetPaymentStatusResponse getPaymentStatus(String paymentProduct, String paymentId) {
         final String baseUrl = getConfiguration().getBaseUrl();
-        Map<String, String> headers =
-                new HashMap<String, String>() {
-                    {
-                        put(HeaderKeys.PSU_ID.toLowerCase(), getPsuId());
-                        put(
-                                HeaderKeys.TPP_REDIRECT_URI.toLowerCase(),
-                                getConfiguration().getRedirectUrl());
-                    }
-                };
-
+        final String redirectUrl = getConfiguration().getRedirectUrl();
         return createRequestInSession(
                         new URL(baseUrl + Urls.GET_PAYMENT_STATUS)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                                 .parameter(IdTags.PAYMENT_ID, paymentId),
-                        headers)
+                        Optional.of(getPsuId()),
+                        Optional.of(redirectUrl),
+                        Optional.empty())
                 .get(GetPaymentStatusResponse.class);
     }
 
-    protected RequestBuilder createRequest(URL url, Map<String, String> headers) {
+    protected RequestBuilder createRequest(
+            URL url,
+            Optional<String> psuId,
+            Optional<String> redirectUrl,
+            Optional<String> digest) {
         final String xRequestId = getXRequestId().toString();
         final String certificatePath = getConfiguration().getClientSigningCertificatePath();
         final String date = ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME);
@@ -214,10 +176,20 @@ public class SparebankApiClient {
         final String tppId = getConfiguration().getTppId();
         final String psuIpAddress = getConfiguration().getPsuIpAdress();
 
-        headers.put(
-                HeaderKeys.DATE.toLowerCase(),
-                ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
-        headers.put(HeaderKeys.X_REQUEST_ID.toLowerCase(), xRequestId);
+        Map<String, Optional<String>> headers =
+                new HashMap<String, Optional<String>>() {
+                    {
+                        put(
+                                HeaderKeys.DATE.toLowerCase(),
+                                Optional.of(
+                                        ZonedDateTime.now()
+                                                .format(DateTimeFormatter.RFC_1123_DATE_TIME)));
+                        put(HeaderKeys.X_REQUEST_ID.toLowerCase(), Optional.of(xRequestId));
+                        put(HeaderKeys.TPP_REDIRECT_URI.toLowerCase(), redirectUrl);
+                        put(HeaderKeys.PSU_ID.toLowerCase(), psuId);
+                        put(HeaderKeys.DIGEST.toLowerCase(), digest);
+                    }
+                };
 
         return client.request(url)
                 .type(MediaType.APPLICATION_JSON)
@@ -225,9 +197,7 @@ public class SparebankApiClient {
                 .header(HeaderKeys.DATE, date)
                 .header(HeaderKeys.TPP_ID, tppId)
                 .header(HeaderKeys.X_REQUEST_ID, xRequestId)
-                .header(
-                        HeaderKeys.TPP_REDIRECT_URI,
-                        headers.get(HeaderKeys.TPP_REDIRECT_URI.toLowerCase()))
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl.get())
                 .header(
                         HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
                         SparebankUtils.getCertificateEncoded(certificatePath))
@@ -235,8 +205,12 @@ public class SparebankApiClient {
                 .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
     }
 
-    public RequestBuilder createRequestInSession(URL url, Map<String, String> headers) {
-        return createRequest(url, headers)
+    public RequestBuilder createRequestInSession(
+            URL url,
+            Optional<String> psuId,
+            Optional<String> redirectUrl,
+            Optional<String> digest) {
+        return createRequest(url, psuId, redirectUrl, digest)
                 .header(HeaderKeys.TPP_SESSION_ID, getTppSessionId())
                 .header(HeaderKeys.PSU_ID, getPsuId());
     }

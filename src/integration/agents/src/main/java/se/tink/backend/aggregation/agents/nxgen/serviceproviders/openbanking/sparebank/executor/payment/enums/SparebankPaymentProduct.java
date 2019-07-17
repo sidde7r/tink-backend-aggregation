@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.ErrorMessages;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public enum SparebankPaymentProduct {
@@ -15,6 +16,14 @@ public enum SparebankPaymentProduct {
 
     private static Map<PaymentType, SparebankPaymentProduct>
             tinkPaymentTypeToSparebankPaymentProductMapper = new HashMap<>();
+
+    static {
+        tinkPaymentTypeToSparebankPaymentProductMapper.put(
+                PaymentType.DOMESTIC, NORWEGIAN_DOMESTIC_CREDIT_TRANSFER);
+        tinkPaymentTypeToSparebankPaymentProductMapper.put(
+                PaymentType.INTERNATIONAL, CROSS_BORDER_CREDIT_TRANSFER);
+        tinkPaymentTypeToSparebankPaymentProductMapper.put(PaymentType.SEPA, SEPA_CREDIT_TRANSFER);
+    }
 
     static {
         tinkPaymentTypeToSparebankPaymentProductMapper.put(
@@ -39,7 +48,9 @@ public enum SparebankPaymentProduct {
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
-                                        "Can not map " + text + " to Sparebank payment product"));
+                                        String.format(
+                                                ErrorMessages.CANT_MAP_TO_PAYMENT_PRODUCT_ERROR,
+                                                text)));
     }
 
     public static SparebankPaymentProduct mapTinkPaymentTypeToSparebankPaymentProduct(
@@ -48,8 +59,8 @@ public enum SparebankPaymentProduct {
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
-                                        "Cannot map Tink payment type: "
-                                                + paymentType.toString()
-                                                + " to Sparebank payment product"));
+                                        String.format(
+                                                ErrorMessages.MAPING_TO_TINK_PAYMENT_STATUS_ERROR,
+                                                paymentType.toString())));
     }
 }
