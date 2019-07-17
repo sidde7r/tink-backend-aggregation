@@ -73,40 +73,22 @@ public class TransactionAccountEntity {
 
         switch (type) {
             case CHECKING:
-                return Optional.ofNullable(toCheckingAccount(balanceEntity));
+                return Optional.ofNullable(
+                        toTypeAccount(balanceEntity, TransactionalAccountType.CHECKING));
             case SAVINGS:
-                return Optional.ofNullable(toSavingsAccount(balanceEntity));
+                return Optional.ofNullable(
+                        toTypeAccount(balanceEntity, TransactionalAccountType.SAVINGS));
             default:
                 return Optional.empty();
         }
     }
 
     @JsonIgnore
-    private TransactionalAccount toCheckingAccount(BalanceEntity balanceEntity) {
+    private TransactionalAccount toTypeAccount(
+            BalanceEntity balanceEntity, TransactionalAccountType type) {
 
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(getAccountNumber())
-                                .withAccountNumber(getAccountNumber())
-                                .withAccountName(name)
-                                .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                                .build())
-                .withBalance(BalanceModule.of(balanceEntity.toAmount()))
-                .addHolderName(name)
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(getAccountNumber())
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
-                .build();
-    }
-
-    @JsonIgnore
-    private TransactionalAccount toSavingsAccount(BalanceEntity balanceEntity) {
-
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.SAVINGS)
+                .withType(type)
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getAccountNumber())
