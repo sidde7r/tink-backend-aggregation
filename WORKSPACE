@@ -23,25 +23,23 @@ versions.check("0.25.0")
 """
 Import bazel-common, which has a Maven pom_file generation rule
 """
-BAZEL_COMMON_TAG = "f3dc1a775d21f74fc6f4bbcf076b8af2f6261a69"
-BAZEL_COMMON_SHA = "ccdd09559b49c7efd9e4b0b617b18e2a4bbdb2142fc30dfd3501eb5fa1294dcc"
+BAZEL_COMMON_VERSION = "f3dc1a775d21f74fc6f4bbcf076b8af2f6261a69"
 http_archive(
     name = "bazel_common",
-    strip_prefix = "bazel-common-%s" % BAZEL_COMMON_TAG,
-    sha256 = BAZEL_COMMON_SHA,
-    url = "https://github.com/google/bazel-common/archive/%s.zip" % BAZEL_COMMON_TAG,
+    sha256 = "ccdd09559b49c7efd9e4b0b617b18e2a4bbdb2142fc30dfd3501eb5fa1294dcc",
+    strip_prefix = "bazel-common-%s" % BAZEL_COMMON_VERSION,
+    url = "https://github.com/google/bazel-common/archive/%s.zip" % BAZEL_COMMON_VERSION,
 )
 
 """
 Import rules_jvm_external for better Maven support
 """
-RULES_JVM_EXTERNAL_TAG = "2.5"
-RULES_JVM_EXTERNAL_SHA = "249e8129914be6d987ca57754516be35a14ea866c616041ff0cd32ea94d2f3a1"
+RULES_JVM_EXTERNAL_VERSION = "2.5"
 http_archive(
     name = "rules_jvm_external",
-    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
-    sha256 = RULES_JVM_EXTERNAL_SHA,
-    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
+    sha256 = "249e8129914be6d987ca57754516be35a14ea866c616041ff0cd32ea94d2f3a1",
+    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_VERSION,
+    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_VERSION,
 )
 load("@rules_jvm_external//:defs.bzl", "maven_install", "artifact")
 load("@rules_jvm_external//:specs.bzl", "maven")
@@ -371,13 +369,12 @@ compat_repositories()
 """
 Import Docker rule
 """
-IO_BAZEL_RULES_DOCKER_TAG = "3332026921c918c9bfaa94052578d0ca578aab66"
-IO_BAZEL_RULES_DOCKER_SHA = "8729112ed4288143955d50fee6c5a306305b9fca48838f73efc1f21f3c32573f"
+IO_BAZEL_RULES_DOCKER_VERSION = "3332026921c918c9bfaa94052578d0ca578aab66"
 http_archive(
     name = "io_bazel_rules_docker",
-    strip_prefix = "rules_docker-%s" % IO_BAZEL_RULES_DOCKER_TAG,
-    sha256 = IO_BAZEL_RULES_DOCKER_SHA,
-    url = "https://github.com/bazelbuild/rules_docker/archive/%s.zip" % IO_BAZEL_RULES_DOCKER_TAG,
+    sha256 = "8729112ed4288143955d50fee6c5a306305b9fca48838f73efc1f21f3c32573f",
+    strip_prefix = "rules_docker-%s" % IO_BAZEL_RULES_DOCKER_VERSION,
+    url = "https://github.com/bazelbuild/rules_docker/archive/%s.zip" % IO_BAZEL_RULES_DOCKER_VERSION,
 )
 load("@io_bazel_rules_docker//repositories:repositories.bzl", container_repositories = "repositories")
 container_repositories()
@@ -456,39 +453,6 @@ git_repository(
 )
 
 """
-External repositories that are not under Tink control.
-
-These should *always* be locked to something stable
-(a commit or a release tag, but not a branch for example) and have
-a checksum to prevent tampering by the remote end.
-"""
-http_file(
-    name = "protoc_gen_grpc_java_linux_x86_64",
-    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-linux-x86_64.exe"],
-    sha256 = "6f5fc69224f2fa9ed7e1376aedf6c5c6239dcfe566beb89d3a1c77c50fb8886b",
-)
-
-http_file(
-    name = "protoc_gen_grpc_java_macosx",
-    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-osx-x86_64.exe"],
-    sha256 = "f7ad13d42e2a2415d021263ae258ca08157e584c54e9fce093f1a5a871a8763a",
-)
-
-# proto_library rules implicitly depend on @com_google_protobuf//:protoc,
-# which is the proto-compiler.
-http_archive(
-    name = "com_google_protobuf",
-    sha256 = "9510dd2afc29e7245e9e884336f848c8a6600a14ae726adb6befdb4f786f0be2",
-    strip_prefix = "protobuf-3.6.1.3",
-    urls = ["https://github.com/google/protobuf/archive/v3.6.1.3.zip"],
-)
-
-bind(
-    name = "protocol_compiler",
-    actual = "@com_google_protobuf//:protoc",
-)
-
-"""
 Import Maven packages which rules_jvm_external can't currently resolve
 """
 # libm4ri library, needed by https://github.com/tink-ab/tink-backend-aggregation/tree/master/tools/libkbc_wbaes_src
@@ -509,19 +473,66 @@ http_file(
 """
 Import GRPC/Protobuf rules
 """
+http_file(
+    name = "protoc_gen_grpc_java_linux_x86_64",
+    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-linux-x86_64.exe"],
+    sha256 = "6f5fc69224f2fa9ed7e1376aedf6c5c6239dcfe566beb89d3a1c77c50fb8886b",
+)
+
+http_file(
+    name = "protoc_gen_grpc_java_macosx",
+    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-osx-x86_64.exe"],
+    sha256 = "f7ad13d42e2a2415d021263ae258ca08157e584c54e9fce093f1a5a871a8763a",
+)
+
+GOOGLE_PROTOBUF_TAG = "3.6.1.3"
+GOOGLE_PROTOBUF_SHA = "9510dd2afc29e7245e9e884336f848c8a6600a14ae726adb6befdb4f786f0be2"
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = GOOGLE_PROTOBUF_SHA,
+    strip_prefix = "protobuf-%s" % GOOGLE_PROTOBUF_TAG,
+    url = "https://github.com/google/protobuf/archive/v%s.zip" % GOOGLE_PROTOBUF_TAG,
+)
+
+bind(
+    name = "protocol_compiler",
+    actual = "@com_google_protobuf//:protoc",
+)
+
+STACKB_RULES_PROTO_VERSION = "8afa882b3dff5fec93b22519d34d0099083a7ce2"
 http_archive(
     name = "build_stack_rules_proto",
     sha256 = "0d88313ba32c0042c2633c3cbdd187afb0c3c9468b978f6eb4919ac6e535f029",
-    strip_prefix = "rules_proto-8afa882b3dff5fec93b22519d34d0099083a7ce2",
-    urls = ["https://github.com/stackb/rules_proto/archive/8afa882b3dff5fec93b22519d34d0099083a7ce2.tar.gz"],
+    strip_prefix = "rules_proto-%s" % STACKB_RULES_PROTO_VERSION,
+    url = "https://github.com/stackb/rules_proto/archive/%s.tar.gz" % STACKB_RULES_PROTO_VERSION,
 )
+
+GRPC_JAVA_TAG = "1.20.0"
+GRPC_JAVA_SHA = "9d23d9fec84e24bd3962f5ef9d1fd61ce939d3f649a22bcab0f19e8167fae8ef"
 http_archive(
     name = "io_grpc_grpc_java",
-    sha256 = "9d23d9fec84e24bd3962f5ef9d1fd61ce939d3f649a22bcab0f19e8167fae8ef",
-    strip_prefix = "grpc-java-1.20.0",
-    urls = [
-        "https://github.com/grpc/grpc-java/archive/v1.20.0.zip",
-    ],
+    strip_prefix = "grpc-java-%s" % GRPC_JAVA_TAG,
+    sha256 = GRPC_JAVA_SHA,
+    url = "https://github.com/grpc/grpc-java/archive/v%s.zip" % GRPC_JAVA_TAG,
 )
 load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
 grpc_java_repositories(omit_com_google_protobuf = True)
+
+"""
+Import Google API types
+"""
+GOOGLE_API_TYPES_VERSION = "10049e8ea946100bb7da66f63b0ecd1a345e8760"
+http_archive(
+    name = "com_google_googleapis",
+    sha256 = "ddd2cd7b6b310028b8ba08057d2990ced6f78c35fdf5083ff142704f1c2c5e49",
+    strip_prefix = "googleapis-%s" % GOOGLE_API_TYPES_VERSION,
+    url = "https://github.com/googleapis/googleapis/archive/%s.zip" % GOOGLE_API_TYPES_VERSION,
+)
+
+load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_language")
+
+switched_rules_by_language(
+    name = "com_google_googleapis_imports",
+    grpc = True,
+    java = True,
+)
