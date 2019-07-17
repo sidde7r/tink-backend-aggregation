@@ -31,7 +31,8 @@ public final class ErstebankAgent
                 systemUpdater,
                 persistentStorage,
                 supplementalInformationHelper,
-                new ErstebankAuthenticator(apiClient, sessionStorage));
+                new ErstebankAuthenticator(apiClient, sessionStorage),
+                credentials);
     }
 
     @Override

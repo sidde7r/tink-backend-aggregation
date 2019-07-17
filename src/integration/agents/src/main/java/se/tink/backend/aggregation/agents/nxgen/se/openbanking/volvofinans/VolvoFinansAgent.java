@@ -64,7 +64,8 @@ public final class VolvoFinansAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new VolvoFinansAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                                apiClient, persistentStorage, getClientConfiguration()),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

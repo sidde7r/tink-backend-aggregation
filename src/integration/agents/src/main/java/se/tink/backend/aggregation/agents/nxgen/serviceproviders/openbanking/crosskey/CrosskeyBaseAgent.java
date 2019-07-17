@@ -95,7 +95,8 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new CrosskeyBaseAuthenticator(apiClient));
+                        new CrosskeyBaseAuthenticator(apiClient),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

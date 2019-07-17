@@ -33,7 +33,8 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
                 systemUpdater,
                 persistentStorage,
                 supplementalInformationHelper,
-                new KbcAuthenticator(apiClient));
+                new KbcAuthenticator(apiClient),
+                credentials);
     }
 
     @Override

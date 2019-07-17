@@ -30,7 +30,8 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
                 systemUpdater,
                 persistentStorage,
                 supplementalInformationHelper,
-                new TriodosAuthenticator(apiClient));
+                new TriodosAuthenticator(apiClient),
+                credentials);
     }
 
     @Override
