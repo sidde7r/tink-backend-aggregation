@@ -83,7 +83,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
 
-    private AgentIntegrationTest(Builder builder) {
+    protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
         this.user = builder.getUser();
         this.credential = builder.getCredential();
