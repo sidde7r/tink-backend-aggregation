@@ -165,10 +165,6 @@ public class Field {
         return checkbox;
     }
 
-    public void setCheckbox(boolean checkbox) {
-        this.checkbox = checkbox;
-    }
-
     public static class Builder {
         private String description;
         private String helpText;
@@ -281,7 +277,7 @@ public class Field {
             field.setPatternError(patternError);
             field.setValue(value);
             field.setAdditionalInfo(additionalInfo);
-            field.setCheckbox(checkbox);
+            field.checkbox = checkbox;
 
             return field;
         }
