@@ -269,13 +269,14 @@ git_repository(
     name = "tink_aws_sdk_1_11",
     remote = "git@github.com:tink-ab/aws-sdk-java.git",
     commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a",
-    shallow_since = "1543992595 +0100",
+    shallow_since = "1537529416 +0200",
 )
 
 git_repository(
     name = "tink_backend_shared_libraries",
+    commit = "c69da74aaf68d93f764c2ab2b7d62665b0925f39",
     remote = "git@github.com:tink-ab/tink-backend-shared-libraries",
-    commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
+    shallow_since = "1563523445 +0000",
 )
 
 git_repository(
@@ -294,9 +295,9 @@ git_repository(
 
 git_repository(
     name = "tink_backend",
+    commit = "41147567649a64187c3f2b5a8c78ed8e43045888",
     remote = "git@github.com:tink-ab/tink-backend",
-    commit = "820c42738a8ebb6f30ac40b5310187140ba7b5b5",
-    shallow_since = "1543992595 +0100",
+    shallow_since = "1563543596 +0000"
 )
 
 """
