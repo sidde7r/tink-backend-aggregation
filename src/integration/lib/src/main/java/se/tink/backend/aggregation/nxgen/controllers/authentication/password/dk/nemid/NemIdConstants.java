@@ -1,20 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid;
 
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class NemIdConstants {
 
     public static final URL BASE_URL = new URL("https://applet.danid.dk");
-
-    public static class LogTags {
-        public static final LogTag LOG_TAG_IFRAME_ERROR_CASE =
-                LogTag.from("#auth-error-iframe-source");
-        public static final LogTag LOG_TAG_MAINPAGE_ERROR_CASE =
-                LogTag.from("#auth-error-mainpage-source");
-        public static final LogTag LOG_TAG_MAINPAGE_NO_IFRAME_ERROR_CASE =
-                LogTag.from("#auth-error-mainpage-no_iframe_source");
-    }
 
     public static class ErrorStrings {
         public static final String INVALID_CREDENTIALS = "Incorrect user ID or password";
