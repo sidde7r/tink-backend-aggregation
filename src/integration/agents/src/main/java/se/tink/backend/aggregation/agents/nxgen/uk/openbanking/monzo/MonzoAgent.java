@@ -60,7 +60,8 @@ public class MonzoAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new MonzoAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                                apiClient, persistentStorage, getClientConfiguration()),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

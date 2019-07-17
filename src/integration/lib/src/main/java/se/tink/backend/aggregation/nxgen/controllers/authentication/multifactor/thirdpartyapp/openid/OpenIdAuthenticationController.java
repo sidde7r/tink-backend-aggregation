@@ -4,12 +4,15 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
@@ -25,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -43,12 +47,17 @@ public class OpenIdAuthenticationController
     // cumbersome
     // authentication flows.
     private static final long WAIT_FOR_MINUTES = 9;
+    private static final int DEFAULT_TOKEN_LIFETIME = 90;
+    private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
 
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
     private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
+    private final Credentials credentials;
+    private final int tokenLifetime;
+    private final TemporalUnit tokenLifetimeUnit;
 
     private final String state;
     private final String nonce;
@@ -64,12 +73,38 @@ public class OpenIdAuthenticationController
             OpenIdApiClient apiClient,
             OpenIdAuthenticator authenticator,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            String callbackUriId) {
+            String callbackUriId,
+            Credentials credentials) {
+        this(
+                persistentStorage,
+                supplementalInformationHelper,
+                apiClient,
+                authenticator,
+                callbackJWTSignatureKeyPair,
+                callbackUriId,
+                credentials,
+                DEFAULT_TOKEN_LIFETIME,
+                DEFAULT_TOKEN_LIFETIME_UNIT);
+    }
+
+    public OpenIdAuthenticationController(
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            OpenIdApiClient apiClient,
+            OpenIdAuthenticator authenticator,
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            String callbackUriId,
+            Credentials credentials,
+            int tokenLifetime,
+            TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
         this.authenticator = authenticator;
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
+        this.credentials = credentials;
+        this.tokenLifetime = tokenLifetime;
+        this.tokenLifetimeUnit = tokenLifetimeUnit;
 
         this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
 
@@ -226,6 +261,10 @@ public class OpenIdAuthenticationController
             throw new IllegalStateException(
                     String.format("Unknown token type '%s'.", accessToken.getTokenType()));
         }
+
+        credentials.setSessionExpiryDate(
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                        accessToken, tokenLifetime, tokenLifetimeUnit));
 
         persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
         apiClient.attachAuthFilter(accessToken);

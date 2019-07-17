@@ -75,7 +75,8 @@ public class RabobankAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new RabobankAuthenticator(
-                                apiClient, persistentStorage, rabobankConfiguration));
+                                apiClient, persistentStorage, rabobankConfiguration),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

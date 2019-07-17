@@ -124,7 +124,8 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                         new OAuth2AuthenticationController(
                                 dummyStorage,
                                 supplementalInformationHelper,
-                                new StarlingAuthenticator(apiClient, pisConfiguration)),
+                                new StarlingAuthenticator(apiClient, pisConfiguration),
+                                credentials),
                         supplementalInformationHelper);
 
         try {

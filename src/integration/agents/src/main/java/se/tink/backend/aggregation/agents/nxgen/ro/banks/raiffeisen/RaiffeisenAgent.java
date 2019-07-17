@@ -50,7 +50,10 @@ public class RaiffeisenAgent extends NextGenerationAgent
                 new RaiffeisenOAuth2Authenticator(raiffeisenApiClient);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        authenticator,
+                        credentials);
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,

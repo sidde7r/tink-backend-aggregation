@@ -66,7 +66,8 @@ public final class OpBankAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new OpBankAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                                apiClient, persistentStorage, getClientConfiguration()),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

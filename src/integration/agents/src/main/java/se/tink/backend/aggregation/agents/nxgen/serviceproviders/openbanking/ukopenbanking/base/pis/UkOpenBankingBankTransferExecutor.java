@@ -150,7 +150,8 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
                         apiClient,
                         paymentAuthenticator,
                         callbackJWTSignatureKeyPair,
-                        callbackUriId);
+                        callbackUriId,
+                        credentials);
 
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(
