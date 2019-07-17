@@ -9,12 +9,14 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.RevolutAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.RevolutMultifactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities.UserEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.RevolutTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.RevolutTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.filter.RevolutFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.filter.RevolutErrorsFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.filter.RevolutHeadersFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.rpc.BaseUserResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.session.RevolutSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -27,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class RevolutAgent extends NextGenerationAgent
@@ -48,7 +51,12 @@ public class RevolutAgent extends NextGenerationAgent
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(new RevolutFilter());
+        client.addFilter(new RevolutHeadersFilter());
+        client.addFilter(new RevolutErrorsFilter());
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override

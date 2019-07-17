@@ -42,6 +42,9 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassw
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
+            } else if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                // Unknown cause; not common and users can recover from it
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
             }
             throw e;
         }

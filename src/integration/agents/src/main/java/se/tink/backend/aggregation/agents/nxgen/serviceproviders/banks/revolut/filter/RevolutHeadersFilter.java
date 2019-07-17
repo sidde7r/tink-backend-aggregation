@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 
-public class RevolutFilter extends Filter {
+public class RevolutHeadersFilter extends Filter {
 
     private void addHeaderIfNotPresent(
             HttpRequest httpRequest, RevolutConstants.AppAuthenticationValues constant) {
