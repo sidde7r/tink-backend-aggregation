@@ -153,10 +153,6 @@ public class Field {
         this.sensitive = sensitive;
     }
 
-    public void setAdditionalInfo(String additionalInfo) {
-        this.additionalInfo = additionalInfo;
-    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -276,7 +272,7 @@ public class Field {
             field.setPattern(pattern);
             field.setPatternError(patternError);
             field.setValue(value);
-            field.setAdditionalInfo(additionalInfo);
+            field.additionalInfo = additionalInfo;
             field.checkbox = checkbox;
 
             return field;
