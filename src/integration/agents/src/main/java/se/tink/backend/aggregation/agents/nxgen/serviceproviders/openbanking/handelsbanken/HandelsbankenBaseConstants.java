@@ -115,6 +115,9 @@ public final class HandelsbankenBaseConstants {
 
     public static class ExceptionMessages {
         public static final String BALANCE_NOT_FOUND = "Balance not found.";
+        public static final String ACCOUNT_TYPE_NOT_SUPPORTED = "Not supported account type: ";
+        public static final String PAYMENT_EXCEPTION =
+                "Error code: %s; error message: %s; more info: %s";
         public static final String CONFIG_MISSING = "Handelsbanken configuration missing.";
         public static final String VALUE_DATE_MISSING =
                 "Valuedate not found, defaulting to transactiondate.";
