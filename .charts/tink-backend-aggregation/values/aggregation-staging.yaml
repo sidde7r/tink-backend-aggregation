@@ -23,6 +23,9 @@ agents:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/mobilebanking
     openbanking:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/openbanking
+  nordeaSE:
+    tink:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   abnamro:
     tink:
       redirectUrl: https://localhost/auth

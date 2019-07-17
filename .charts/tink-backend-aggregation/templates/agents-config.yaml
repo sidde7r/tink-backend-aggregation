@@ -63,6 +63,14 @@ data:
         {{- end }}
         {{- end }}
 
+        {{- if $agentsConfig.nordeaSE }}
+        nordeaSE:
+          tink:
+            clientId: "NORDEA_SE_CLIENT_ID"
+            clientSecret: "NORDEA_SE_CLIENT_SECRET"
+            redirectUrl: "{{ $agentsConfig.nordeaSE.redirectUrl }}"
+        {{- end }}
+
         {{- if $agentsConfig.monzo }}
         monzo:
           tink:
