@@ -12,6 +12,7 @@ java_library(
         "//src/libraries/amount",
         "//src/libraries/credentials:service",
         "//src/libraries/identity_data",
+        "//src/libraries/serialization",
         "//src/libraries/transfer:enums",
         "//src/libraries/transfer:rpc",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

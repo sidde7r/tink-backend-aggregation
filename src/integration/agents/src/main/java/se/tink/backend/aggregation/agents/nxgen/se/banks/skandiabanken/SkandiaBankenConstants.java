@@ -163,6 +163,7 @@ public class SkandiaBankenConstants {
 
     public static final class LogTags {
         public static final LogTag CREDIT_CARDS = LogTag.from("se_skandia_credit_cards");
+        public static final LogTag UPCOMING_TRANSFER = LogTag.from("se_skandia_upcoming_transfer");
     }
 
     public static final class ErrorMessages {
