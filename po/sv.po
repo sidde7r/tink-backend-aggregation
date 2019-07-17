@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2019-07-17 11:22+0000\n"
-"PO-Revision-Date: 2019-07-17 11:22+0000\n"
+"POT-Creation-Date: 2019-07-17 11:30+0000\n"
+"PO-Revision-Date: 2019-07-17 11:30+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -209,6 +209,9 @@ msgstr "Du har ingen giltig profil."
 
 msgid "You don't have any commitments in the selected bank."
 msgstr "Du har inga åtaganden i den valda banken."
+
+msgid "Incorrect login credentials. Please try again."
+msgstr "Felaktiga inloggningsuppgifter. Var god försök igen."
 
 msgid ""
 "Another BankId authentication was initiated while authenticating. Please try "
