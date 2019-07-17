@@ -5,14 +5,15 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file"
 
 git_repository(
     name = "bazel_skylib",
-    remote = "https://github.com/bazelbuild/bazel-skylib",
     commit = "6126842e3db2ec4986752f6dfc0860ca922997f1",
-    shallow_since = "1557756873 +0200"
+    remote = "https://github.com/bazelbuild/bazel-skylib",
+    shallow_since = "1557756873 +0200",
 )
 
 # This checks that the version of Bazel in use is at least the set version
 # Usually this should be set to the version of Bazel used for CI
 load("@bazel_skylib//lib:versions.bzl", "versions")
+
 versions.check("0.25.0")
 
 ## Tink virtual monorepsotiroy
@@ -28,35 +29,35 @@ git_repository(
 
 git_repository(
     name = "tink_httpcore_4_4_9",
-    remote = "git@github.com:tink-ab/httpcomponents-core.git",
     commit = "0f72fa2c392fee8388d327cb3462cd10d675c2e2",
+    remote = "git@github.com:tink-ab/httpcomponents-core.git",
     shallow_since = "1537528950 +0200",
 )
 
 git_repository(
     name = "tink_httpclient_4_5_5",
-    remote = "git@github.com:tink-ab/httpcomponents-client.git",
     commit = "1ed65fa09a4b7bc9f469fbb3625ac5b087f9cc3e",
+    remote = "git@github.com:tink-ab/httpcomponents-client.git",
     shallow_since = "1537529121 +0200",
 )
 
 git_repository(
     name = "tink_aws_sdk_1_11",
-    remote = "git@github.com:tink-ab/aws-sdk-java.git",
     commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a",
+    remote = "git@github.com:tink-ab/aws-sdk-java.git",
     shallow_since = "1543992595 +0100",
 )
 
 git_repository(
     name = "tink_backend_shared_libraries",
-    remote = "git@github.com:tink-ab/tink-backend-shared-libraries",
     commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
+    remote = "git@github.com:tink-ab/tink-backend-shared-libraries",
 )
 
 git_repository(
     name = "tink_backend_integration_openbanking",
-    remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
     commit = "HEAD",
+    remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
     shallow_since = "1562076445 +0000",
 )
 
@@ -69,8 +70,8 @@ git_repository(
 
 git_repository(
     name = "tink_backend",
-    remote = "git@github.com:tink-ab/tink-backend",
     commit = "820c42738a8ebb6f30ac40b5310187140ba7b5b5",
+    remote = "git@github.com:tink-ab/tink-backend",
     shallow_since = "1543992595 +0100",
 )
 
@@ -104,6 +105,7 @@ load(
     "@io_bazel_rules_docker//repositories:repositories.bzl",
     container_repositories = "repositories",
 )
+
 container_repositories()
 
 load(
@@ -125,30 +127,30 @@ container_pull(
 
 # libm4ri library, needed by https://github.com/tink-ab/tink-backend-aggregation/tree/master/tools/libkbc_wbaes_src
 http_file(
-    name =  "libm4ri_dev",
+    name = "libm4ri_dev",
     downloaded_file_path = "libm4ri-dev_20140914-2+b1_amd64.deb",
-    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-dev_20140914-2+b1_amd64.deb"],
     sha256 = "040b81df10945380424d8874d38c062f45a5fee6886ae8e6963c87393ba84cd9",
+    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-dev_20140914-2+b1_amd64.deb"],
 )
 
 http_file(
-    name =  "libm4ri_0.0.20140914",
+    name = "libm4ri_0.0.20140914",
     downloaded_file_path = "libm4ri-0.0.20140914_20140914-2+b1_amd64.deb",
-    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb"],
     sha256 = "c2f38d51730b6e9a73e2f4d2e0edfadf647a9889da9d06a15abca07d3eccc6f1",
+    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb"],
 )
 
 # TODO: Build these
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
-    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-linux-x86_64.exe"],
     sha256 = "6f5fc69224f2fa9ed7e1376aedf6c5c6239dcfe566beb89d3a1c77c50fb8886b",
+    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-linux-x86_64.exe"],
 )
 
 http_file(
     name = "protoc_gen_grpc_java_macosx",
-    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-osx-x86_64.exe"],
     sha256 = "f7ad13d42e2a2415d021263ae258ca08157e584c54e9fce093f1a5a871a8763a",
+    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-osx-x86_64.exe"],
 )
 
 # proto_library rules implicitly depend on @com_google_protobuf//:protoc,
@@ -256,6 +258,7 @@ maven_jar(
     artifact = "io.netty:netty-resolver-dns:4.1.30.Final",
     sha1 = "3f4bcf2e9fff1361ac9ad0bd27a10a1b31399294",
 )
+
 maven_jar(
     name = "io_netty_netty_codec_dns",
     artifact = "io.netty:netty-codec-dns:4.1.30.Final",
@@ -289,13 +292,13 @@ maven_jar(
 maven_jar(
     name = "com_google_googlejavaformat",
     artifact = "com.google.googlejavaformat:google-java-format:1.7",
-    sha1 = "97cb6afc835d65682edc248e19170a8e4ecfe4c4"
+    sha1 = "97cb6afc835d65682edc248e19170a8e4ecfe4c4",
 )
 
 maven_jar(
     name = "com_google_errorprone",
-    artifact  = "com.google.errorprone:javac-shaded:9+181-r4173-1",
-    sha1 = "a399ee380b6d6b6ea53af1cfbcb086b108d1efb7"
+    artifact = "com.google.errorprone:javac-shaded:9+181-r4173-1",
+    sha1 = "a399ee380b6d6b6ea53af1cfbcb086b108d1efb7",
 )
 
 maven_jar(
@@ -1087,7 +1090,7 @@ maven_jar(
 maven_jar(
     name = "org_springframework_security_core",
     artifact = "org.springframework.security:spring-security-core:4.2.3.RELEASE",
-    sha1 = "5c0e47a47036c94d6fdd02696bf52be6d1adbd4d"
+    sha1 = "5c0e47a47036c94d6fdd02696bf52be6d1adbd4d",
 )
 
 maven_jar(
@@ -1228,42 +1231,41 @@ maven_jar(
     sha1 = "2fd58d1de64553db427ae4fbc1a6691adea460e2",
 )
 
-
 maven_jar(
     name = "com_amazonaws_jmespath_java",
     artifact = "com.amazonaws:jmespath-java:1.11.381",
-    sha1 = "c428e44fa35032bbc89c6aaab15f1f3857c2afbe"
-    )
+    sha1 = "c428e44fa35032bbc89c6aaab15f1f3857c2afbe",
+)
 
 maven_jar(
     name = "com_amazonaws_aws_java_sdk_core",
     artifact = "com.amazonaws:aws-java-sdk-core:1.11.381",
-    sha1 = "7540dfa848acd7770e21ef982d67fbb612b33d7f"
-    )
+    sha1 = "7540dfa848acd7770e21ef982d67fbb612b33d7f",
+)
 
 maven_jar(
     name = "com_amazonaws_aws_java_sdk_code_generator",
     artifact = "com.amazonaws:aws-java-sdk-code-generator:1.11.381",
-    sha1 = "d8ed76e95c0313e3b9898c7cc5cc40b935d0c32b"
-    )
+    sha1 = "d8ed76e95c0313e3b9898c7cc5cc40b935d0c32b",
+)
 
 maven_jar(
     name = "com_amazonaws_aws_java_sdk_sqs",
     artifact = "com.amazonaws:aws-java-sdk-sqs:1.11.381",
-    sha1 = "4ea1ad090c04fde806eb4fa24b10fa5748900ef1"
-    )
+    sha1 = "4ea1ad090c04fde806eb4fa24b10fa5748900ef1",
+)
 
 maven_jar(
     name = "com_amazonaws_aws_java_sdk_s3",
     artifact = "com.amazonaws:aws-java-sdk-s3:1.11.381",
-    sha1 = "a2600515a420a5fd08d5c1d19fdf4a8714c515e2"
-    )
+    sha1 = "a2600515a420a5fd08d5c1d19fdf4a8714c515e2",
+)
 
 maven_jar(
     name = "com_amazonaws_aws_java_sdk_kms",
     artifact = "com.amazonaws:aws-java-sdk-kms:1.11.381",
-    sha1 = "17a06d9854f804dfcf2ec799f906f555984084c9"
-    )
+    sha1 = "17a06d9854f804dfcf2ec799f906f555984084c9",
+)
 
 maven_jar(
     name = "org_springframework_data_spring_data_jpa",
@@ -2085,43 +2087,43 @@ maven_jar(
 maven_jar(
     name = "org_apache_pdfbox_pdfbox",
     artifact = "org.apache.pdfbox:pdfbox:2.0.6",
-    sha1 = "68616a583c5f9b9ba72140364d15a07cd937ce0e"
+    sha1 = "68616a583c5f9b9ba72140364d15a07cd937ce0e",
 )
 
 maven_jar(
     name = "org_apache_pdfbox_fontbox",
     artifact = "org.apache.pdfbox:fontbox:2.0.0",
-    sha1 = "6f762d4e1c8ea99589d30597ef3731dfdcee43e2"
+    sha1 = "6f762d4e1c8ea99589d30597ef3731dfdcee43e2",
 )
 
 maven_jar(
     name = "com_nimbusds_srp6a",
     artifact = "com.nimbusds:srp6a:2.0.2",
-    sha1 = "fc461127a39208502518ccbe51100c315e7625e8"
+    sha1 = "fc461127a39208502518ccbe51100c315e7625e8",
 )
 
 maven_jar(
     name = "com_auth0_java_jwt",
     artifact = "com.auth0:java-jwt:3.3.0",
-    sha1 = "0e180a4b31f14c2a1cf203f457fb2149d2f6c1d2"
+    sha1 = "0e180a4b31f14c2a1cf203f457fb2149d2f6c1d2",
 )
 
 maven_jar(
     name = "net_sourceforge_lept4j",
     artifact = "net.sourceforge.lept4j:lept4j:1.10.0",
-    sha1 = "72153b28e8e1f0391afcc2380c41ac8e73bd599e"
+    sha1 = "72153b28e8e1f0391afcc2380c41ac8e73bd599e",
 )
 
 maven_jar(
     name = "net_sourceforge_tess4j",
     artifact = "net.sourceforge.tess4j:tess4j:4.0.2",
-    sha1 = "95516b133368840a0974ef5316fedd9c5e3aa635"
+    sha1 = "95516b133368840a0974ef5316fedd9c5e3aa635",
 )
 
 maven_jar(
     name = "com_sun_media_jai_imageio",
     artifact = "com.github.jai-imageio:jai-imageio-core:1.4.0",
-    sha1 = "fb6d79b929556362a241b2f65a04e538062f0077"
+    sha1 = "fb6d79b929556362a241b2f65a04e538062f0077",
 )
 
 maven_jar(
@@ -2228,103 +2230,102 @@ maven_jar(
 
 ### === START === Java Spark dependencies
 maven_jar(
+    name = "com_sparkjava_spark_core",
     artifact = "com.sparkjava:spark-core:2.8.0",
     sha1 = "784ff9ba2ff8b45ef44b4cbe7a8b3e34a839a69b",
-    name = "com_sparkjava_spark_core",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_websocket_websocket_api_spark_dep",
     artifact = "org.eclipse.jetty.websocket:websocket-api:9.4.12.v20180830",
     sha1 = "97d6376f70ae6c01112325c5254e566af118bc75",
-    name = "org_eclipse_jetty_websocket_websocket_api_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_websocket_websocket_client_spark_dep",
     artifact = "org.eclipse.jetty.websocket:websocket-client:9.4.12.v20180830",
     sha1 = "75880b6a90a6eda83fdbfc20a42f23eade4b975d",
-    name = "org_eclipse_jetty_websocket_websocket_client_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_websocket_websocket_common_spark_dep",
     artifact = "org.eclipse.jetty.websocket:websocket-common:9.4.12.v20180830",
     sha1 = "33997cdafbabb3ffd6947a5c33057f967e10535b",
-    name = "org_eclipse_jetty_websocket_websocket_common_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_websocket_websocket_server_spark_dep",
     artifact = "org.eclipse.jetty.websocket:websocket-server:9.4.12.v20180830",
     sha1 = "fadf609aec6026cb25f25b6bc0b979821f849fd7",
-    name = "org_eclipse_jetty_websocket_websocket_server_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_websocket_websocket_servlet_spark_dep",
     artifact = "org.eclipse.jetty.websocket:websocket-servlet:9.4.12.v20180830",
     sha1 = "8d212616b6ea21b96152ff202c2f53fdca8b8b53",
-    name = "org_eclipse_jetty_websocket_websocket_servlet_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_jetty_client_spark_dep",
     artifact = "org.eclipse.jetty:jetty-client:9.4.12.v20180830",
     sha1 = "1d329d68f31dce13135243c06013aaf6f708f7e7",
-    name = "org_eclipse_jetty_jetty_client_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_jetty_http_spark_dep",
     artifact = "org.eclipse.jetty:jetty-http:9.4.12.v20180830",
     sha1 = "1341796dde4e16df69bca83f3e87688ba2e7d703",
-    name = "org_eclipse_jetty_jetty_http_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_jetty_io_spark_dep",
     artifact = "org.eclipse.jetty:jetty-io:9.4.12.v20180830",
     sha1 = "e93f5adaa35a9a6a85ba130f589c5305c6ecc9e3",
-    name = "org_eclipse_jetty_jetty_io_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_jetty_security_spark_dep",
     artifact = "org.eclipse.jetty:jetty-security:9.4.12.v20180830",
     sha1 = "299e0602a9c0b753ba232cc1c1dda72ddd9addcf",
-    name = "org_eclipse_jetty_jetty_security_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_jetty_server_spark_dep",
     artifact = "org.eclipse.jetty:jetty-server:9.4.12.v20180830",
     sha1 = "b0f25df0d32a445fd07d5f16fff1411c16b888fa",
-    name = "org_eclipse_jetty_jetty_server_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_jetty_servlet_spark_dep",
     artifact = "org.eclipse.jetty:jetty-servlet:9.4.12.v20180830",
     sha1 = "4c1149328eda9fa39a274262042420f66d9ffd5f",
-    name = "org_eclipse_jetty_jetty_servlet_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_jetty_util_spark_dep",
     artifact = "org.eclipse.jetty:jetty-util:9.4.12.v20180830",
     sha1 = "cb4ccec9bd1fe4b10a04a0fb25d7053c1050188a",
-    name = "org_eclipse_jetty_jetty_util_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_jetty_webapp_spark_dep",
     artifact = "org.eclipse.jetty:jetty-webapp:9.4.12.v20180830",
     sha1 = "a3e119df2da04fcf5aa290c8c35c5b310ce2dcd1",
-    name = "org_eclipse_jetty_jetty_webapp_spark_dep",
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_jetty_xml_spark_dep",
     artifact = "org.eclipse.jetty:jetty-xml:9.4.12.v20180830",
     sha1 = "e9f1874e9b5edd498f2fe7cd0904405da07cc300",
-    name = "org_eclipse_jetty_jetty_xml_spark_dep",
 )
 
 maven_jar(
+    name = "javax_servlet_javax_servlet_api_spark_dep",
     artifact = "javax.servlet:javax.servlet-api:3.1.0",
     sha1 = "3cd63d075497751784b2fa84be59432f4905bf7c",
-    name = "javax_servlet_javax_servlet_api_spark_dep",
 )
 
 ### === END === Java Spark dependencies
-
 
 # GRPC/Protobuf rules
 http_archive(
@@ -2345,4 +2346,5 @@ http_archive(
 )
 
 load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
+
 grpc_java_repositories(omit_com_google_protobuf = True)
