@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar.model.account.create.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.agents.rpc.Field;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QuestionEntity {
@@ -104,20 +103,5 @@ public class QuestionEntity {
 
     public void setIconType(String iconType) {
         this.iconType = iconType;
-    }
-
-    public Field toField() {
-
-        if (type == null) {
-            return null;
-        }
-
-        Field field = new Field();
-        field.setName(id);
-        field.setDescription(title);
-        field.setOptional(!mandatory);
-        field.setNumeric(type.isNumeric());
-
-        return field;
     }
 }
