@@ -6,7 +6,7 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.aib.AibAgent",
+            "className": "nxgen.uk.openbanking.aib.AibV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "AIB",
             "fields": [
@@ -90,7 +90,7 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.bankofscotland.BankOfScotlandAgent",
+            "className": "nxgen.uk.openbanking.bankofscotland.BankOfScotlandV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Bank of Scotland",
             "fields": [
@@ -195,7 +195,7 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.halifax.HalifaxAgent",
+            "className": "nxgen.uk.openbanking.halifax.HalifaxV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Halifax",
             "fields": [
@@ -219,7 +219,7 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.uk.openbanking.hsbc.HsbcAgent",
+            "className": "nxgen.uk.openbanking.hsbc.HsbcV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "HSBC",
             "fields": [
@@ -270,7 +270,7 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.uk.openbanking.markandspencer.MarkAndSpencerAgent",
+            "className": "nxgen.uk.openbanking.markandspencer.MarkAndSpencerV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "M&S Bank",
             "fields": [

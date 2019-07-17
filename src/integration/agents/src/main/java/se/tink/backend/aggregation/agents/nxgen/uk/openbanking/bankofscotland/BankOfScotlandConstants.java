@@ -22,5 +22,16 @@ final class BankOfScotlandConstants {
             public static final String WELL_KNOWN_URL =
                     "https://authorise-api.bankofscotland.co.uk/prod01/channel/bos/.well-known/openid-configuration";
         }
+
+        class V31 {
+            public static final String AIS_AUTH_URL =
+                    "https://secure-api.bankofscotland.co.uk/prod01/lbg/bos/open-banking/v3.1/aisp";
+            public static final String AIS_API_URL =
+                    "https://secure-api.bankofscotland.co.uk/prod01/lbg/bos/open-banking/v3.1/aisp";
+            public static final String PIS_AUTH_URL = "";
+            public static final String PIS_API_URL = "";
+            public static final String WELL_KNOWN_URL =
+                    "https://authorise-api.bankofscotland.co.uk/prod01/channel/bos/.well-known/openid-configuration";
+        }
     }
 }

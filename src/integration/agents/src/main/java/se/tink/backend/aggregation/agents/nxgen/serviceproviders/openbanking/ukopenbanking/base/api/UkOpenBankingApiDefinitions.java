@@ -5,9 +5,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.CreditLineEntity;
 import se.tink.libraries.strings.StringUtils;
 
 public class UkOpenBankingApiDefinitions {
@@ -77,9 +80,9 @@ public class UkOpenBankingApiDefinitions {
 
         private static final ImmutableList<AccountBalanceType> PREFERRED_TYPE_LIST =
                 ImmutableList.<AccountBalanceType>builder()
-                        .add(INTERIM_BOOKED)
                         .add(INTERIM_AVAILABLE)
                         .add(EXPECTED)
+                        .add(INTERIM_BOOKED)
                         .add(OPENING_AVAILABLE)
                         .add(CLOSING_AVAILABLE)
                         .add(OPENING_BOOKED)
@@ -110,6 +113,30 @@ public class UkOpenBankingApiDefinitions {
         EMERGENCY,
         PRE_AGREED,
         TEMPORARY;
+
+        private static final ImmutableList<ExternalLimitType> PREFERRED_LIMIT_TYPE_LIST =
+                ImmutableList.<ExternalLimitType>builder()
+                        .add(AVAILABLE)
+                        .add(CREDIT)
+                        .add(PRE_AGREED)
+                        .add(EMERGENCY)
+                        .add(TEMPORARY)
+                        .build();
+
+        public static <T> Optional<CreditLineEntity> getPreferredCreditLineEntity(
+                List<CreditLineEntity> creditLineEntityList) {
+
+            Map<UkOpenBankingApiDefinitions.ExternalLimitType, CreditLineEntity>
+                    creditLineEntityMap = new HashMap<>();
+
+            creditLineEntityList.forEach(x -> creditLineEntityMap.put(x.getType(), x));
+
+            return Optional.ofNullable(PREFERRED_LIMIT_TYPE_LIST).orElseGet(ImmutableList::of)
+                    .stream()
+                    .filter(creditLineEntityMap::containsKey)
+                    .map(creditLineEntityMap::get)
+                    .findFirst();
+        }
 
         @JsonCreator
         private static ExternalLimitType fromString(String key) {
