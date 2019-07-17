@@ -9,10 +9,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
 public class EncodingUtils {
-    private static final Base64 base64Codec = new Base64();
 
     public static byte[] decodeBase64String(String base64String) {
-        return base64Codec.decode(base64String);
+        return Base64.decodeBase64(base64String);
     }
 
     public static byte[] decodeHexString(String hexString) {
@@ -24,7 +23,7 @@ public class EncodingUtils {
     }
 
     private static byte[] encodeAsBase64(byte[] binaryData) {
-        return base64Codec.encode(binaryData);
+        return Base64.encodeBase64(binaryData);
     }
 
     public static String encodeAsBase64String(byte[] binaryData) {
