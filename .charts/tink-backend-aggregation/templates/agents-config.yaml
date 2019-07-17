@@ -173,181 +173,343 @@ data:
         activobank:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "ABPT"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "ABPT"
         atlanticoeuropa:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "ATLEU"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "ATLEU"
         bancobpi-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "BBPI"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "BBPI"
         bancoctt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "BCTT"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "BCTT"
         bancomontepio:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "CEMG"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "CEMG"
         bankinter:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "BNKI"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "BNKI"
         big:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "BIG"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "BIG"
         bpg:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "BPG"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "BPG"
         caixa-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "CGDPT"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "CGDPT"
         caixacrl-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "CCAML"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "CCAML"
         caixa-fr:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "CGDFR"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "CGDFR"
         cemah:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "CEMAH"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "CEMAH"
         creditoagricola:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "GCA"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "GCA"
         eurobic-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "BIC"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "BIC"
         millenniumbcp:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl:"https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "BCPPT"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "BCPPT"
         novobanco:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "NVB"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "NVB"
         novobancoacores:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "NVBA"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "NVBA"
         santander-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            certificateId: Tink-qsealc
+            certificateId: Tink
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            aspspCode: "BST"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: cgd
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "BST"
         {{- end }}

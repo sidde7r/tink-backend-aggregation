@@ -448,6 +448,30 @@ spec:
               name: aggregation-secrets
               key: sibs-certificate-serial-number-tink
               optional: true
+        - name: SIBS_CLIENT_ID_CGD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-client-id-cgd
+              optional: true
+        - name: SIBS_CLIENT_SECRET_CGD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-client-secret-cgd
+              optional: true
+        - name: SIBS_CERTIFICATE_P12_CGD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-certificate-p12-cgd
+              optional: true
+        - name: SIBS_CERTIFICATE_SERIAL_NUMBER_CGD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-certificate-serial-number-cgd
+              optional: true
         {{- end }}
         {{- if $agentsConfig.abnamro }}
         - name: ABN_AMRO_CLIENT_ID_TINK
