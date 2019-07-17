@@ -46,7 +46,7 @@ public class Xs2aDevelopersApiClient {
         this.persistentStorage = persistentStorage;
     }
 
-    private Xs2aDevelopersConfiguration getConfiguration() {
+    protected Xs2aDevelopersConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
@@ -55,7 +55,7 @@ public class Xs2aDevelopersApiClient {
         this.configuration = configuration;
     }
 
-    private RequestBuilder createRequest(URL url) {
+    protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON);
@@ -63,11 +63,10 @@ public class Xs2aDevelopersApiClient {
 
     private RequestBuilder createRequestInSession(URL url) {
         final OAuth2Token authToken = getTokenFromStorage();
-
         return createRequest(url).addBearerToken(authToken);
     }
 
-    private RequestBuilder createFetchingRequest(URL url) {
+    protected RequestBuilder createFetchingRequest(URL url) {
         return createRequestInSession(url)
                 .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());

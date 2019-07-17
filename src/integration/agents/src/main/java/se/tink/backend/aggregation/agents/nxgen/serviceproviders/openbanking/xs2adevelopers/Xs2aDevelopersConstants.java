@@ -13,6 +13,7 @@ public final class Xs2aDevelopersConstants {
                     .put(AccountTypes.CHECKING, "SAC")
                     .put(AccountTypes.SAVINGS, "SAV")
                     .put(AccountTypes.CHECKING, "start2bank zichtrekening")
+                    .put(AccountTypes.CHECKING, "0-Euro-Konto Vorteil")
                     .build();
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
