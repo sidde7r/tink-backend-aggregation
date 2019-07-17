@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.TypePair;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -160,5 +161,10 @@ public final class BankdataConstants {
         public static final String REMITTANCE = "Text message to creditor";
         public static final String EUR = "EUR";
         public static final String IDENTIFICATION = "endToEndIdentification";
+    }
+
+    public static class LogTags {
+        public static final LogTag ERROR_FETCHING_BALANCE =
+                LogTag.from("BANKDATA_ERROR_FETCHING_BALANCE");
     }
 }
