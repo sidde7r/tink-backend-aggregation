@@ -149,10 +149,6 @@ public class Field {
         return sensitive;
     }
 
-    public void setSensitive(boolean sensitive) {
-        this.sensitive = sensitive;
-    }
-
     public static Builder builder() {
         return new Builder();
     }
