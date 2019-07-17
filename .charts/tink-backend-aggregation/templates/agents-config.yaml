@@ -444,7 +444,7 @@ data:
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
-            redirectUrl:"https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
+            redirectUrl: "https://main.staging.oxford.tink.com/api/vi/credentials/third-party/callback"
             aspspCode: "BCPPT"
           cgd:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
