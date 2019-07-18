@@ -36,8 +36,8 @@ public enum SwedbankPaymentType {
                         () ->
                                 new NotImplementedException(
                                         String.format(
-                                                ErrorMessages.INVALID_PAYMENT_TYPE
-                                                        + accountTypePair)));
+                                                ErrorMessages.INVALID_PAYMENT_TYPE,
+                                                accountTypePair)));
     }
 
     private static final GenericTypeMapper<SwedbankPaymentType, AccountTypePair>
