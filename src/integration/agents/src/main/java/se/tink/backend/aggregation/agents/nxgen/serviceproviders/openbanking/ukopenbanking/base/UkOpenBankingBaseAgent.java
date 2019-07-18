@@ -60,9 +60,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private boolean disableSslVerification;
 
-    private final TransferDestinationRefreshController transferDestinationRefreshController;
-    private final CreditCardRefreshController creditCardRefreshController;
-    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private TransferDestinationRefreshController transferDestinationRefreshController;
+    private CreditCardRefreshController creditCardRefreshController;
+    private TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
@@ -96,13 +96,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         request.getProvider());
         tinkProvider = request.getProvider();
         this.wellKnownURL = wellKnownURL;
-
-        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
-
-        this.creditCardRefreshController = constructCreditCardRefreshController();
-
-        this.transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -190,6 +183,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         configureAisHttpClient(client);
         configurePisHttpClient(paymentsHttpClient);
+
+        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+
+        this.creditCardRefreshController = constructCreditCardRefreshController();
+
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
     }
 
     protected UkOpenBankingApiClient createApiClient(
