@@ -38,7 +38,7 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
                 .map(PositionEntity::getContract)
                 .flatMap(ContractEntity::getLoan)
                 .map(this::enrichLoanAccountWithDetails)
-                .toJavaList();
+                .asJava();
     }
 
     private LoanAccount enrichLoanAccountWithDetails(LoanEntity loan) {

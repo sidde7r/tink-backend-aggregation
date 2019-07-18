@@ -60,7 +60,7 @@ public class AccountTransactionsResponse implements TransactionKeyPaginatorRespo
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions.map(TransactionEntity::toTinkTransaction).toJavaList();
+        return transactions.map(TransactionEntity::toTinkTransaction).asJava();
     }
 
     @Override

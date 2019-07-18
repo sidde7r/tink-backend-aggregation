@@ -28,7 +28,7 @@ public class OpenbankCreditCardFetcher
                 .fetchCards()
                 .filter(CardEntity::isCreditCardAccount)
                 .map(CardEntity::toTinkAccount)
-                .toJavaList();
+                .asJava();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class OpenbankCreditCardFetcher
                         .fetchCardTransactions(request)
                         .getCardTransactions()
                         .map(CardTransactionEntity::toTinkTransaction)
-                        .toJavaList();
+                        .asJava();
 
         return PaginatorResponseImpl.create(transactions);
     }
