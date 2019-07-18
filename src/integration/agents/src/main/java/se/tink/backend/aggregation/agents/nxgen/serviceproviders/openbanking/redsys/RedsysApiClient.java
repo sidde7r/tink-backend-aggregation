@@ -191,7 +191,7 @@ public final class RedsysApiClient {
     }
 
     public OAuth2Token refreshToken(final String refreshToken) {
-        final String url = getConfiguration().getBaseAuthUrl() + "/" + Urls.REFRESH;
+        final String url = makeAuthUrl(Urls.REFRESH);
         final String aspsp = getConfiguration().getAspsp();
         final String clientId = getAuthClientId();
 
