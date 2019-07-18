@@ -38,7 +38,7 @@ public class SkandiaBankenTransactionFetcher
         }
 
         return PaginatorResponseImpl.create(
-                tinkTransactions, transactionsResponse.size() > Fetcher.TRANSACTIONS_PER_BATCH);
+                tinkTransactions, transactionsResponse.size() == Fetcher.TRANSACTIONS_PER_BATCH);
     }
 
     private List<Transaction> fetchPendingTransactions(
