@@ -9,8 +9,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.BalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -24,6 +28,8 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity {
+    private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
+
     @JsonProperty private String resourceId;
     @JsonProperty private String iban;
     @JsonProperty private String bban;
@@ -61,14 +67,32 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private Amount getLatestBalance() {
+    private Amount getBalanceOfType(String balanceType) {
         if (balances == null) {
             return new Amount(currency, 0.0);
         }
-        return balances.stream()
-                .max(Comparator.comparing(BalanceEntity::getReferenceDate))
-                .map(BalanceEntity::getAmount)
-                .orElse(new Amount(currency, 0.0));
+        final List<BalanceEntity> balancesOfType =
+                balances.stream()
+                        .filter(
+                                balanceEntity ->
+                                        balanceEntity
+                                                .getBalanceType()
+                                                .equalsIgnoreCase(balanceType))
+                        .collect(Collectors.toList());
+
+        switch (balancesOfType.size()) {
+            case 0:
+                log.warn("Account has no balances of type {}", balanceType);
+                return new Amount(currency, 0.0);
+            case 1:
+                return balancesOfType.get(0).getAmount();
+            default:
+                // If there are several balances of the same type, get the latest
+                return balancesOfType.stream()
+                        .max(Comparator.comparing(BalanceEntity::getReferenceDate))
+                        .map(BalanceEntity::getAmount)
+                        .orElse(new Amount(currency, 0.0));
+        }
     }
 
     @JsonIgnore
@@ -88,7 +112,7 @@ public class AccountEntity {
                 CheckingAccount.builder()
                         .setUniqueIdentifier(iban)
                         .setAccountNumber(iban)
-                        .setBalance(getLatestBalance())
+                        .setBalance(getBalanceOfType(BalanceType.CLOSING_BOOKED))
                         .setAlias(name)
                         .addAccountIdentifier(accountIdentifier)
                         .setApiIdentifier(resourceId);
@@ -113,7 +137,7 @@ public class AccountEntity {
                 SavingsAccount.builder()
                         .setUniqueIdentifier(iban)
                         .setAccountNumber(iban)
-                        .setBalance(getLatestBalance())
+                        .setBalance(getBalanceOfType(BalanceType.CLOSING_BOOKED))
                         .setAlias(name)
                         .addAccountIdentifier(accountIdentifier)
                         .setApiIdentifier(resourceId);

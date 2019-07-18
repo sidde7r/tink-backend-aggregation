@@ -155,4 +155,10 @@ public final class RedsysConstants {
         public static final String PERSONAL = "PRIV";
         public static final String BUSINESS = "ORGA";
     }
+
+    public static class BalanceType {
+        public static final String EXPECTED = "expected";
+        public static final String INTERIM_BOOKED = "interimBooked";
+        public static final String CLOSING_BOOKED = "closingBooked";
+    }
 }

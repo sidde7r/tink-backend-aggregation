@@ -10,7 +10,7 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class BalanceEntity {
-    // @JsonProperty private String balanceType; // shown in examples, not seen in sandbox
+    @JsonProperty private String balanceType;
     @JsonProperty private AmountEntity balanceAmount;
     @JsonProperty private boolean creditLimitIncluded;
 
@@ -32,5 +32,9 @@ public class BalanceEntity {
 
     public Date getReferenceDate() {
         return referenceDate;
+    }
+
+    public String getBalanceType() {
+        return balanceType;
     }
 }
