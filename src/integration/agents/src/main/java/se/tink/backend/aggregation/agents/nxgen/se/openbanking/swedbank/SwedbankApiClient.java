@@ -46,8 +46,6 @@ public final class SwedbankApiClient {
     public SwedbankApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-
-        client.setDebugOutput(true);
     }
 
     public void setConfiguration(SwedbankConfiguration configuration) {
