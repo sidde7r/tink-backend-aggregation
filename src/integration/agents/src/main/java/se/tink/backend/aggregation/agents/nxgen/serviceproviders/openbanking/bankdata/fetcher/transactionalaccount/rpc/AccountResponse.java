@@ -14,6 +14,9 @@ public class AccountResponse {
 
     protected List<AccountEntity> accounts;
 
+    // Empty constructor for serialization
+    public AccountResponse() {}
+
     public AccountResponse(final List<AccountEntity> accounts) {
         this.accounts = accounts;
     }
