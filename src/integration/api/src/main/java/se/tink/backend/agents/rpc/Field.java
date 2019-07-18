@@ -129,10 +129,6 @@ public class Field {
         this.numeric = numeric;
     }
 
-    public void setOptional(boolean optional) {
-        this.optional = optional;
-    }
-
     public void setPattern(String pattern) {
         this.pattern = pattern;
     }
