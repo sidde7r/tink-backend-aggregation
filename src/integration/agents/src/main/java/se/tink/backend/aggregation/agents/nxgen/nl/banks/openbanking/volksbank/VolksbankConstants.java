@@ -26,6 +26,7 @@ public class VolksbankConstants {
         public static final String CLIENT_SECRET = "client_secret";
         public static final String GRANT_TYPE = "grant_type";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String CONSENT_ID = "consentId";
     }
 
     public static class Paths {
@@ -63,11 +64,11 @@ public class VolksbankConstants {
         public static final String CONTENT_TYPE = "Content-Type";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String AUTHORIZATION = "Authorization";
+        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
     }
 
     public static class Market {
         public static final String INTEGRATION_NAME = "volksbank";
-        public static final String CLIENT_NAME = "tink";
     }
 
     public static class ConsentParams {

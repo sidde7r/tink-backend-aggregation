@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
 import java.util.NoSuchElementException;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
@@ -34,6 +35,18 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
+        if (!sessionStorage.containsKey(Storage.CONSENT)) {
+            try {
+                final ConsentResponse consent = client.consentRequest();
+                sessionStorage.put(Storage.CONSENT, consent.getConsentId());
+            } catch (NullPointerException e) {
+                // Sandbox behaves a bit differently
+                final String consentResponseString = client.consentRequestString();
+                final String consentId =
+                        "SNS" + StringUtils.substringBetween(consentResponseString, "\"SNS", "\"");
+                sessionStorage.put(Storage.CONSENT, consentId);
+            }
+        }
 
         return urlFactory
                 .buildURL(Paths.AUTHORIZE)
@@ -41,6 +54,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParams.RESPONSE_TYPE_VALUE)
                 .queryParam(QueryParams.STATE, state)
                 .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString())
+                .queryParam(QueryParams.CONSENT_ID, sessionStorage.get(Storage.CONSENT))
                 .queryParam(
                         QueryParams.CLIENT_ID,
                         client.getConfiguration().getAisConfiguration().getClientId());

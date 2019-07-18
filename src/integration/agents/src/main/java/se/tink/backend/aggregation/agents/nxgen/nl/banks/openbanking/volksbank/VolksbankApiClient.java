@@ -140,26 +140,27 @@ public class VolksbankApiClient {
     }
 
     public ConsentResponse consentRequest() {
+        return getResponse(consentRequestString(), ConsentResponse.class);
+    }
 
-        URL url = urlFactory.buildURL(VolksbankConstants.Paths.CONSENT);
+    public String consentRequestString() {
+        final URL url = urlFactory.buildURL(VolksbankConstants.Paths.CONSENT);
+        final URL redirectUrl = configuration.getAisConfiguration().getRedirectUrl();
+        final String clientId = configuration.getAisConfiguration().getClientId();
+        final ConsentRequestBody body =
+                new ConsentRequestBody(
+                        VolksbankUtils.getFutureDateAsString(ConsentParams.VALID_YEAR),
+                        ConsentParams.FREQUENCY_PER_DAY);
 
-        String response =
-                client.getTinkClient()
-                        .request(url)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .header(
-                                HeaderKeys.AUTHORIZATION,
-                                configuration.getAisConfiguration().getClientId())
-                        .body(
-                                new ConsentRequestBody(
-                                        VolksbankUtils.getFutureDateAsString(
-                                                ConsentParams.VALID_YEAR),
-                                        ConsentParams.FREQUENCY_PER_DAY))
-                        .post(String.class);
-
-        return getResponse(response, ConsentResponse.class);
+        return client.getTinkClient()
+                .request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.REQUEST_ID, getRequestId())
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                .header(HeaderKeys.AUTHORIZATION, clientId)
+                .body(body)
+                .post(String.class);
     }
 
     public OAuth2Token getBearerToken(URL url) {

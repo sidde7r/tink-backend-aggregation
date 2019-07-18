@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.f
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.session.VolksbankSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -30,8 +31,8 @@ public class VolksbankAgent extends NextGenerationAgent
     private final VolksbankApiClient volksbankApiClient;
     private final VolksbankHttpClient httpClient;
     private final VolksbankUrlFactory urlFactory;
+    private VolksbankConfiguration volksbankConfiguration;
     private final String clientName;
-    private final URL redirectUrl;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -43,7 +44,6 @@ public class VolksbankAgent extends NextGenerationAgent
 
         clientName = payload[0];
         final String bankPath = payload[1];
-        redirectUrl = new URL(payload[2]);
 
         final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
@@ -59,7 +59,7 @@ public class VolksbankAgent extends NextGenerationAgent
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final VolksbankConfiguration volksbankConfiguration =
+        volksbankConfiguration =
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
@@ -73,13 +73,17 @@ public class VolksbankAgent extends NextGenerationAgent
 
         volksbankApiClient.setConfiguration(volksbankConfiguration);
 
-        final String clientId = volksbankConfiguration.getAisConfiguration().getClientId();
+        final String certificateId =
+                volksbankConfiguration.getAisConfiguration().getCertificateId();
 
-        client.setEidasProxy(configuration.getEidasProxy(), clientId);
+        final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
+
+        client.setEidasProxy(eidasProxyConfiguration, certificateId);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
+        final URL redirectUrl = volksbankConfiguration.getAisConfiguration().getRedirectUrl();
         VolksbankAuthenticator authenticator =
                 new VolksbankAuthenticator(
                         volksbankApiClient, sessionStorage, redirectUrl, urlFactory);

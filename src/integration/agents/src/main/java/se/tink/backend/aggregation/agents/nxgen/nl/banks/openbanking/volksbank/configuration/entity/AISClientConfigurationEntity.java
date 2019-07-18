@@ -2,14 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 @JsonObject
 public class AISClientConfigurationEntity {
 
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
-    @JsonProperty private String clientCertificateContent;
-    @JsonProperty private String clientCertificatePass;
+    @JsonProperty private String redirectUrl;
+    @JsonProperty private String certificateId;
 
     public String getClientId() {
         return clientId;
@@ -19,11 +20,11 @@ public class AISClientConfigurationEntity {
         return clientSecret;
     }
 
-    public String getClientCertificateContent() {
-        return clientCertificateContent;
+    public URL getRedirectUrl() {
+        return new URL(redirectUrl);
     }
 
-    public String getClientCertificatePass() {
-        return clientCertificatePass;
+    public String getCertificateId() {
+        return certificateId;
     }
 }
