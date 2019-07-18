@@ -10,6 +10,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.ParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.QueryValues;
@@ -22,6 +24,9 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authen
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.configuration.RaiffeisenConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -29,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public final class RaiffeisenApiClient {
@@ -64,8 +70,8 @@ public final class RaiffeisenApiClient {
 
         return createRequest(url)
                 .header(
-                        RaiffeisenConstants.HeaderKeys.AUTHORIZATION,
-                        RaiffeisenConstants.HeaderValues.TOKEN_PREFIX + getTokenFromStorage());
+                        HeaderKeys.AUTHORIZATION,
+                        HeaderValues.TOKEN_PREFIX + getTokenFromStorage());
     }
 
     private String getTokenFromStorage() {
@@ -118,7 +124,7 @@ public final class RaiffeisenApiClient {
 
         return createRequestInSession(Urls.ACCOUNTS)
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
-                .header(HeaderKeys.X_REQUEST_ID, RaiffeisenConstants.HeaderValues.X_REQUEST_ID)
+                .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(AccountsResponse.class);
     }
@@ -134,8 +140,26 @@ public final class RaiffeisenApiClient {
                         Urls.TRANSACTIONS.parameter(
                                 ParameterKeys.ACCOUNT_ID, account.getApiIdentifier()))
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
-                .header(HeaderKeys.X_REQUEST_ID, RaiffeisenConstants.HeaderValues.X_REQUEST_ID)
+                .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID)
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(TransactionsResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+
+        return createRequestInSession(Urls.INITIATE_PAYMENT)
+                .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID)
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public GetPaymentResponse getPayment(String paymentId) throws HttpResponseException {
+
+        GetPaymentResponse getPaymentResponse =
+                createRequestInSession(Urls.GET_PAYMENT.parameter(IdTags.PAYMENT_ID, paymentId))
+                        .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID)
+                        .get(GetPaymentResponse.class);
+        getPaymentResponse.setUniqueID(paymentId);
+        return getPaymentResponse;
     }
 }
