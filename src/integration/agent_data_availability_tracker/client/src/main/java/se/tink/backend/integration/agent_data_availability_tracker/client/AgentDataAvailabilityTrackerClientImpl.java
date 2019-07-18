@@ -5,12 +5,10 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.integration.agent_data_availability_tracker.api.AccountField;
 import se.tink.backend.integration.agent_data_availability_tracker.api.AgentDataAvailabilityTrackerServiceGrpc;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
@@ -83,21 +81,19 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                         .forEach(e -> serializer.addChild("portfolios", e));
             }
 
-            TrackAccountRequest request =
-                    TrackAccountRequest.newBuilder()
-                            .setAgent(agent)
-                            .addAllField(
-                                    serializer.buildList().stream()
-                                            .map(
-                                                    field ->
-                                                            AccountField.newBuilder()
-                                                                    .setFieldName(field.getName())
-                                                                    .setFieldValue(field.getValue())
-                                                                    .build())
-                                            .collect(Collectors.toList()))
-                            .build();
+            TrackAccountRequest.Builder requestBuilder =
+                    TrackAccountRequest.newBuilder().setAgent(agent);
 
-            requestStream.onNext(request);
+            // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
+            serializer
+                    .buildList()
+                    .forEach(
+                            entry ->
+                                    requestBuilder
+                                            .addFieldName(entry.getName())
+                                            .addFieldValue(entry.getValue()));
+
+            requestStream.onNext(requestBuilder.build());
 
         } catch (StatusRuntimeException e) {
 
@@ -119,7 +115,7 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
 
         log.warn("Waiting for tracking client to catch up...");
         try {
-            latch.await(60, TimeUnit.SECONDS);
+            latch.await(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
