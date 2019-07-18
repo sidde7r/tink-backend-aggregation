@@ -75,7 +75,6 @@ public class VolksbankAgent extends NextGenerationAgent
         final String clientId = volksbankConfiguration.getAisConfiguration().getClientId();
 
         client.setEidasProxy(configuration.getEidasProxy(), clientId);
-
     }
 
     @Override
