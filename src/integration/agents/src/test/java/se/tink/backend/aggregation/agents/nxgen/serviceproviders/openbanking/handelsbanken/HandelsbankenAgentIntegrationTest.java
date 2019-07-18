@@ -1,9 +1,7 @@
-//
 // With the current implementation of the framework, this is the only way to override the method
 // "doGenericPaymentBankTransfer" in
 // which the expected status of the fetched payment needs to be different than in base
 // implementation
-//
 
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
