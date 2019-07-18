@@ -2,20 +2,24 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Links;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.AccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.TppMessageEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.AccountReportEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class TransactionsResponse {
+public class TransactionsResponse implements TransactionKeyPaginatorResponse<String> {
     @JsonProperty private AccountReferenceEntity account;
     @JsonProperty private AccountReportEntity transactions;
     @JsonProperty private List<BalanceEntity> balances;
@@ -42,7 +46,23 @@ public class TransactionsResponse {
         return Optional.ofNullable(links.get(linkName));
     }
 
-    public AccountReportEntity getTransactions() {
-        return transactions;
+    @Override
+    public Collection<? extends Transaction> getTinkTransactions() {
+        return transactions.getTinkTransactions();
+    }
+
+    @Override
+    public Optional<Boolean> canFetchMore() {
+        final Optional<LinkEntity> nextLink = transactions.getLink(Links.NEXT);
+        return Optional.of(nextLink.isPresent());
+    }
+
+    @Override
+    public String nextKey() {
+        final Optional<LinkEntity> nextLink = transactions.getLink(Links.NEXT);
+        if (nextLink.isPresent()) {
+            return nextLink.get().getHref();
+        }
+        return null;
     }
 }

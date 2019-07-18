@@ -21,9 +21,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class RedsysAgent extends NextGenerationAgent
@@ -41,7 +43,7 @@ public final class RedsysAgent extends NextGenerationAgent
         apiClient = new RedsysApiClient(client, sessionStorage, supplementalInformationHelper);
         clientName = request.getProvider().getPayload();
 
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -100,17 +102,18 @@ public final class RedsysAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    protected TransactionalAccountRefreshController
+            constructTransactionalAccountRefreshController() {
         final RedsysTransactionalAccountFetcher accountFetcher =
                 new RedsysTransactionalAccountFetcher(apiClient);
+        final TransactionPaginator<TransactionalAccount> paginator =
+                new TransactionKeyPaginationController<>(accountFetcher);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
                 accountFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(accountFetcher)));
+                new TransactionFetcherController<>(transactionPaginationHelper, paginator));
     }
 
     @Override

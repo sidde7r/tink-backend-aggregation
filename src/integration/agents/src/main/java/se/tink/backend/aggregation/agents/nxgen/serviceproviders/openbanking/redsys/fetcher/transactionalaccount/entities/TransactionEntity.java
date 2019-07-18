@@ -85,4 +85,9 @@ public class TransactionEntity {
                 .setPending(pending)
                 .build();
     }
+
+    @JsonIgnore
+    public String getEntryReference() {
+        return entryReference;
+    }
 }

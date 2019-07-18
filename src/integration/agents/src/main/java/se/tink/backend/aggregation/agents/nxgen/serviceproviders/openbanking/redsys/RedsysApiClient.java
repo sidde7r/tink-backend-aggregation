@@ -3,13 +3,18 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import java.security.cert.X509Certificate;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
+import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
@@ -281,17 +286,34 @@ public final class RedsysApiClient {
                 .get(ListAccountsResponse.class);
     }
 
-    public TransactionsResponse fetchTransactions(String accountId, @Nullable String link) {
-        consentController.askForConsentIfNeeded();
-        final String consentId = getConsentId();
-        final String path =
-                Optional.ofNullable(link).orElse(String.format(Urls.TRANSACTIONS, accountId));
-        RequestBuilder request =
-                createSignedRequest(makeApiUrl(path))
-                        .header(HeaderKeys.CONSENT_ID, consentId)
-                        .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
-                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOTH);
+    public TransactionsResponse fetchTransactions(String accountId, Date fromDate, Date toDate) {
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
+        // consentController.askForConsentIfNeeded();
+        final String consentId = getConsentId();
+        RequestBuilder request =
+                createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId))
+                        .header(HeaderKeys.CONSENT_ID, consentId)
+                        .queryParam(QueryKeys.DATE_FROM, df.format(fromDate))
+                        .queryParam(QueryKeys.DATE_TO, df.format(toDate))
+                        .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
+                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
+
+        return request.get(TransactionsResponse.class);
+    }
+
+    public TransactionsResponse fetchTransactions(String accountId, @Nullable String path) {
+        if (path == null) {
+            // fetch from 90 days ago until now
+            final Date toDate = new Date();
+            final Date fromDate = new DateTime(toDate).minusDays(90).toDate();
+            return fetchTransactions(accountId, fromDate, toDate);
+        }
+
+        // consentController.askForConsentIfNeeded();
+        RequestBuilder request =
+                createSignedRequest(makeApiUrl(path)).header(HeaderKeys.CONSENT_ID, getConsentId());
         return request.get(TransactionsResponse.class);
     }
 
