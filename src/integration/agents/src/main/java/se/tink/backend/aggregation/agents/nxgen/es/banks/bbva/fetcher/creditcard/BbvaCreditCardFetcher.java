@@ -20,6 +20,6 @@ public class BbvaCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
                 .getCards()
                 .filter(CreditCardEntity::isCreditCard)
                 .map(CreditCardEntity::toTinkCreditCard)
-                .toJavaList();
+                .asJava();
     }
 }

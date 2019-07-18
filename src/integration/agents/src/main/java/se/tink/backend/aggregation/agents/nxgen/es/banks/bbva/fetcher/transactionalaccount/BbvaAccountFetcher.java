@@ -29,6 +29,6 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
                 .filter(AccountEntity::isTransactionalAccount)
                 .filter(AccountEntity::hasBalance)
                 .map(account -> account.toTinkAccount(holderName))
-                .toJavaList();
+                .asJava();
     }
 }

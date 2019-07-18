@@ -48,7 +48,7 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
                 .filter(not(List::isEmpty))
                 .getOrElse(List.empty())
                 .map(stockAccount -> stockAccount.toTinkAccount(apiClient, holderName))
-                .toJavaList();
+                .asJava();
     }
 
     private void log(Object data, LogTag logTag) {
