@@ -364,7 +364,7 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.natwest.NatWestAgent",
+            "className": "nxgen.uk.openbanking.natwest.NatWestV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "NatWest",
             "fields": [
