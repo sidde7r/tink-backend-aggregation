@@ -189,6 +189,9 @@ public class ErsteBankApiClient {
 
     public PollResponse pollStatus() {
         return getRequest(ErsteBankConstants.URLS.LOGIN_BASE, ErsteBankConstants.URLS.POLL, "*/*")
+                .queryParam(
+                        ErsteBankConstants.QUERYPARAMS.CLIENT_ID,
+                        ErsteBankConstants.QUERYPARAMS.CLIENT_ID_TRANSACTIONAPP)
                 .post(PollResponse.class);
     }
 
