@@ -166,19 +166,19 @@ public class SibsBaseApiClient {
     }
 
     private ConsentRequest getConsentRequest() {
-        String validOneDay = getOneDayValidConsentStringDate();
+        String valid90Days = get90DaysValidConsentStringDate();
         return new ConsentRequest(
                 new ConsentAccessEntity(SibsConstants.FormValues.ALL_ACCOUNTS),
                 true,
-                validOneDay,
+                valid90Days,
                 SibsConstants.FormValues.FREQUENCY_PER_DAY,
                 false);
     }
 
-    private String getOneDayValidConsentStringDate() {
+    private String get90DaysValidConsentStringDate() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime oneDayLater = now.plusDays(1);
-        return CONSENT_BODY_DATE_FORMATTER.format(oneDayLater);
+        LocalDateTime days90Later = now.plusDays(90);
+        return CONSENT_BODY_DATE_FORMATTER.format(days90Later);
     }
 
     private URL createUrl(String path) {
