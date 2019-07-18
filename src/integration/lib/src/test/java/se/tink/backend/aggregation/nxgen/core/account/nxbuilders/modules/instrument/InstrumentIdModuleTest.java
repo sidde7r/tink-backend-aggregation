@@ -1,0 +1,56 @@
+package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
+
+public class InstrumentIdModuleTest {
+    @Test(expected = NullPointerException.class)
+    public void missingIdentifier() {
+        InstrumentIdModule.of("SE0378331005", "SE", "name", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void emptyIdentifier() {
+        InstrumentIdModule.of("SE0378331005", "SE", "name", "");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void missingIsin() {
+        InstrumentIdModule.of(null, "SE", "name", "12345");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidIsin() {
+        InstrumentIdModule.of("34566", "SE", "name", "12345");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void missingName() {
+        InstrumentIdModule.of("SE0378331005", "SE", null, "12345");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void missingMarketPlace() {
+        InstrumentIdModule.of("SE0378331005", null, "name", "12345");
+    }
+
+    @Test
+    public void successfulBuild() {
+        InstrumentIdModule idModule = InstrumentIdModule.of("SE0378331005", "SE", "name", "12345");
+        assertEquals("SE0378331005", idModule.getIsin());
+        assertEquals("SE", idModule.getMarketPlace());
+        assertEquals("name", idModule.getName());
+        assertEquals("12345", idModule.getUniqueIdentifier());
+    }
+
+    @Test
+    public void buildWithoutUniqueId() {
+        InstrumentIdModule idModule = InstrumentIdModule.of("SE0378331005", "SE", "name");
+        assertEquals("SE0378331005", idModule.getIsin());
+        assertEquals("SE", idModule.getMarketPlace());
+        assertEquals("name", idModule.getName());
+        assertEquals("SE0378331005" + "SE", idModule.getUniqueIdentifier());
+    }
+}
