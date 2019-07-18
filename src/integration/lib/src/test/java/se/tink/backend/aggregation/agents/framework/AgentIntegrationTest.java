@@ -273,7 +273,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Done with refresh.");
     }
 
-    private void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
+    protected void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
             throws Exception {
 
         if (agent instanceof SubsequentGenerationAgent) {
