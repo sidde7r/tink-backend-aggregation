@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class VolksbankAgent extends NextGenerationAgent
@@ -30,7 +31,7 @@ public class VolksbankAgent extends NextGenerationAgent
     private final VolksbankHttpClient httpClient;
     private final VolksbankUrlFactory urlFactory;
     private final String clientName;
-    private final String redirectUrl;
+    private final URL redirectUrl;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -42,7 +43,7 @@ public class VolksbankAgent extends NextGenerationAgent
 
         clientName = payload[0];
         final String bankPath = payload[1];
-        redirectUrl = payload[2];
+        redirectUrl = new URL(payload[2]);
 
         final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
