@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.BecAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.BecController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.configuration.BecConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.BecPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.BecTransactionalAccountFetcher;
@@ -17,7 +18,6 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -56,25 +56,23 @@ public abstract class BecAgent extends NextGenerationAgent
     private BecConfiguration getClientConfiguration() {
         return configuration
                 .getIntegrations()
-                .getClientConfiguration(
-                        getIntegrationName(), clientName, BecConfiguration.class)
+                .getClientConfiguration(getIntegrationName(), clientName, BecConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final OAuth2AuthenticationController oAuth2AuthenticationController =
-            new OAuth2AuthenticationController(
-                persistentStorage,
-                supplementalInformationHelper,
-                new BecAuthenticator(apiClient, sessionStorage));
+        final BecController becController =
+                new BecController(
+                        supplementalInformationHelper,
+                        new BecAuthenticator(apiClient, sessionStorage));
 
         return new AutoAuthenticationController(
-            request,
-            context,
-            new ThirdPartyAppAuthenticationController<>(
-                oAuth2AuthenticationController, supplementalInformationHelper),
-            oAuth2AuthenticationController);
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        becController, supplementalInformationHelper),
+                becController);
     }
 
     @Override
@@ -109,6 +107,7 @@ public abstract class BecAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(accountFetcher)));
     }
+
     protected abstract String getIntegrationName();
 
     @Override

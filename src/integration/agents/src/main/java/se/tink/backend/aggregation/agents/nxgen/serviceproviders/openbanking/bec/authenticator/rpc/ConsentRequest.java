@@ -1,52 +1,57 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.annotation.Generated;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.entities.AccessEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@Generated("com.robohorse.robopojogenerator")
-public class ConsentRequest{
+@JsonObject
+public class ConsentRequest {
 
-	@JsonProperty("access")
-	private Access access;
+    @JsonProperty("access")
+    private AccessEntity access;
 
-	@JsonProperty("combinedServiceIndicator")
-	private String combinedServiceIndicator;
+    @JsonProperty("combinedServiceIndicator")
+    private String combinedServiceIndicator;
 
-	@JsonProperty("validUntil")
-	private String validUntil;
+    @JsonProperty("validUntil")
+    private String validUntil;
 
-	@JsonProperty("recurringIndicator")
-	private String recurringIndicator;
+    @JsonProperty("recurringIndicator")
+    private String recurringIndicator;
 
-	@JsonProperty("frequencyPerDay")
-	private int frequencyPerDay;
+    @JsonProperty("frequencyPerDay")
+    private int frequencyPerDay;
 
-	public Access getAccess(){
-		return access;
-	}
+    public AccessEntity getAccess() {
+        return access;
+    }
 
-	public String getCombinedServiceIndicator(){
-		return combinedServiceIndicator;
-	}
+    public String getCombinedServiceIndicator() {
+        return combinedServiceIndicator;
+    }
 
-	public String getValidUntil(){
-		return validUntil;
-	}
+    public String getValidUntil() {
+        return validUntil;
+    }
 
-	public String getRecurringIndicator(){
-		return recurringIndicator;
-	}
+    public String getRecurringIndicator() {
+        return recurringIndicator;
+    }
 
-	public int getFrequencyPerDay(){
-		return frequencyPerDay;
-	}
+    public int getFrequencyPerDay() {
+        return frequencyPerDay;
+    }
 
-	public ConsentRequest (Access access, String combinedServiceIndicator, String validUntil, String recurringIndicator, int frequencyPerDay) {
-		this.access = access;
-		this.combinedServiceIndicator = combinedServiceIndicator;
-		this.frequencyPerDay = frequencyPerDay;
-		this.recurringIndicator = recurringIndicator;
-		this.validUntil = validUntil;
-	}
-
+    public ConsentRequest(
+            AccessEntity access,
+            String combinedServiceIndicator,
+            String validUntil,
+            String recurringIndicator,
+            int frequencyPerDay) {
+        this.access = access;
+        this.combinedServiceIndicator = combinedServiceIndicator;
+        this.frequencyPerDay = frequencyPerDay;
+        this.recurringIndicator = recurringIndicator;
+        this.validUntil = validUntil;
+    }
 }

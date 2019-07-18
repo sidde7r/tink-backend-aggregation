@@ -14,15 +14,15 @@ public class BecConfiguration implements ClientConfiguration {
 
     public String getEnrollmentId() {
         Preconditions.checkNotNull(
-            Strings.emptyToNull(enrollmentID),
-            String.format(ErrorMessages.INVALID_CONFIGURATION, "Enrollment ID"));
+                Strings.emptyToNull(enrollmentID),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Enrollment ID"));
         return enrollmentID;
     }
 
     public String getEidasQwac() {
         Preconditions.checkNotNull(
-            Strings.emptyToNull(eidasQwac),
-            String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
+                Strings.emptyToNull(eidasQwac),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
         return eidasQwac;
     }
 }
