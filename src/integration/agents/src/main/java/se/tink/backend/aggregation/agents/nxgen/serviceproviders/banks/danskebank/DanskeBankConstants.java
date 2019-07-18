@@ -79,6 +79,7 @@ public final class DanskeBankConstants {
     public static class CodeApp {
         public static final String STATUS_OK = "ok";
         public static final String STATUS_TIMEOUT = "timeout";
+        public static final String STATUS_OVERWRITTEN = "overwritten";
     }
 
     public static class Account {
