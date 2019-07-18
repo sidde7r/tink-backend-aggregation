@@ -19,23 +19,24 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final VolksbankApiClient client;
     private final SessionStorage sessionStorage;
     private final String redirectUri;
-    private final VolksbankUrlFactory utils;
+    private final VolksbankUrlFactory urlFactory;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
             SessionStorage sessionStorage,
             String redirectUri,
-            VolksbankUrlFactory utils) {
+            VolksbankUrlFactory urlFactory) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.redirectUri = redirectUri;
-        this.utils = utils;
+        this.urlFactory = urlFactory;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
 
-        return utils.buildURL(Paths.AUTHORIZE)
+        return urlFactory
+                .buildURL(Paths.AUTHORIZE)
                 .queryParam(QueryParams.SCOPE, QueryParams.SCOPE_VALUE)
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParams.RESPONSE_TYPE_VALUE)
                 .queryParam(QueryParams.STATE, state)
@@ -49,7 +50,8 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
 
         URL url =
-                utils.buildURL(Paths.TOKEN)
+                urlFactory
+                        .buildURL(Paths.TOKEN)
                         .queryParam(QueryParams.CODE, code)
                         .queryParam(
                                 QueryParams.CLIENT_ID,
@@ -89,7 +91,8 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                                                 "Cannot refresh access token, could not fetch refresh token from old token object"));
 
         URL url =
-                utils.buildURL(Paths.TOKEN)
+                urlFactory
+                        .buildURL(Paths.TOKEN)
                         .queryParam(
                                 QueryParams.CLIENT_ID,
                                 client.getConfiguration().getAisConfiguration().getClientId())
