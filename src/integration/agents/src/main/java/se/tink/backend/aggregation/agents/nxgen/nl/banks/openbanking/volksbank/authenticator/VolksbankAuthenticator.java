@@ -102,8 +102,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.REFRESH_TOKEN)
                         .queryParam(QueryParams.REFRESH_TOKEN, refreshToken);
 
-        OAuth2Token token = client.getBearerToken(url);
-        return token;
+        return client.getBearerToken(url);
     }
 
     @Override
