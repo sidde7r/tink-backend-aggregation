@@ -16,7 +16,7 @@ public class AccountEntity {
     private String iban;
     private String bban;
 
-    public AccountEntity(String accountNumber, Type accountIdentifierType) {
+    private AccountEntity(String accountNumber, Type accountIdentifierType) {
         switch (accountIdentifierType) {
             case IBAN:
                 this.iban = accountNumber;
