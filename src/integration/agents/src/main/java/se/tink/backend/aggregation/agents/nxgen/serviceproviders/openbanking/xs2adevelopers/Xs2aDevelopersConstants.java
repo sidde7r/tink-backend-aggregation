@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.TimeUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
@@ -10,10 +11,14 @@ public final class Xs2aDevelopersConstants {
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "SAC")
+                    .put(
+                            AccountTypes.CHECKING,
+                            "SAC",
+                            "start2bank zichtrekening",
+                            "0-Euro-Konto Vorteil",
+                            "b.compact account",
+                            "Current Account")
                     .put(AccountTypes.SAVINGS, "SAV")
-                    .put(AccountTypes.CHECKING, "start2bank zichtrekening")
-                    .put(AccountTypes.CHECKING, "0-Euro-Konto Vorteil")
                     .build();
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
@@ -119,7 +124,8 @@ public final class Xs2aDevelopersConstants {
     }
 
     public static class BalanceTypes {
-        public static final String AUTHORISED = "authorised";
+        public static final ImmutableList<String> BALANCES =
+                ImmutableList.of("authorised", "expected");
     }
 
     public static class CredentialKeys {
