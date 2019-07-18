@@ -221,9 +221,28 @@ def main():
         default="127.0.0.1",
         help="ip to bind on"
     )
+    parser.add_argument(
+        "-c",
+        "--cert",
+        help="SSL certificate to use"
+    )
+    parser.add_argument(
+        "-k",
+        "--key",
+        help="Private key for SSL certificate"
+    )
     args = parser.parse_args()
 
-    app.run(threaded=True, ssl_context="adhoc", host=args.bind, port=args.port, load_dotenv=False)
+    if (args.cert and not args.key) or (args.key and not args.cert):
+        print("Both certificate and key must be passed.")
+        sys.exit(1)
+    
+    if (args.cert and args.key):
+        sslContext = (args.cert, args.key)
+    else:
+        sslContext = "adhoc"
+    
+    app.run(threaded=True, ssl_context=sslContext, host=args.bind, port=args.port, load_dotenv=False)
     return 0
 
 
