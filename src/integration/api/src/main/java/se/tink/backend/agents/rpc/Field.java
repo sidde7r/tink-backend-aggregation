@@ -255,19 +255,19 @@ public class Field {
 
             Field field = new Field();
 
-            field.setDescription(description);
-            field.setHelpText(helpText);
-            field.setHint(hint);
-            field.setImmutable(immutable);
-            field.setMasked(masked);
+            field.description = description;
+            field.helpText = helpText;
+            field.hint = hint;
+            field.immutable = immutable;
+            field.masked = masked;
             field.setMaxLength(maxLength);
-            field.setMinLength(minLength);
-            field.setName(name);
-            field.setNumeric(numeric);
-            field.setOptional(optional);
-            field.setPattern(pattern);
-            field.setPatternError(patternError);
-            field.setValue(value);
+            field.minLength = minLength;
+            field.name = name;
+            field.numeric = numeric;
+            field.optional = optional;
+            field.pattern = pattern;
+            field.patternError = patternError;
+            field.value = value;
             field.additionalInfo = additionalInfo;
             field.checkbox = checkbox;
 
