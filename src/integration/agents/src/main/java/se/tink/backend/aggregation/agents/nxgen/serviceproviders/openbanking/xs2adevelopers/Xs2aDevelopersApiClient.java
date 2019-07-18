@@ -20,6 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
@@ -43,7 +46,7 @@ public class Xs2aDevelopersApiClient {
         this.persistentStorage = persistentStorage;
     }
 
-    private Xs2aDevelopersConfiguration getConfiguration() {
+    protected Xs2aDevelopersConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
@@ -52,7 +55,7 @@ public class Xs2aDevelopersApiClient {
         this.configuration = configuration;
     }
 
-    private RequestBuilder createRequest(URL url) {
+    protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON);
@@ -60,11 +63,10 @@ public class Xs2aDevelopersApiClient {
 
     private RequestBuilder createRequestInSession(URL url) {
         final OAuth2Token authToken = getTokenFromStorage();
-
         return createRequest(url).addBearerToken(authToken);
     }
 
-    private RequestBuilder createFetchingRequest(URL url) {
+    protected RequestBuilder createFetchingRequest(URL url) {
         return createRequestInSession(url)
                 .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
@@ -81,6 +83,13 @@ public class Xs2aDevelopersApiClient {
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
+    private OAuth2Token getPisTokenFromStorage() {
+        return persistentStorage
+                .get(StorageKeys.PIS_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+    }
+
     public PostConsentResponse createConsent(PostConsentBody postConsentBody) {
         return createRequest(new URL(configuration.getBaseUrl() + ApiServices.POST_CONSENT))
                 .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
@@ -90,8 +99,7 @@ public class Xs2aDevelopersApiClient {
                 .post(PostConsentResponse.class);
     }
 
-    public URL buildAuthorizeUrl(String state, String href) {
-
+    public URL buildAuthorizeUrl(String state, String scope, String href) {
         String code = getCodeVerifier();
         persistentStorage.put(StorageKeys.CODE_VERIFIER, code);
 
@@ -99,7 +107,7 @@ public class Xs2aDevelopersApiClient {
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
-                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE + getConsentIdFromStorage())
+                .queryParam(QueryKeys.SCOPE, scope)
                 .queryParam(QueryKeys.CODE_CHALLENGE, getCodeChallenge(code))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.CODE_CHALLENGE_TYPE_M, QueryValues.CODE_CHALLENGE_TYPE);
@@ -133,5 +141,23 @@ public class Xs2aDevelopersApiClient {
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+        return createRequest(new URL(configuration.getBaseUrl() + ApiServices.CREATE_PAYMENT))
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
+                .header(HeaderKeys.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .body(createPaymentRequest)
+                .post(CreatePaymentResponse.class);
+    }
+
+    public GetPaymentResponse getPayment(String paymentId) {
+        return createRequest(
+                        new URL(configuration.getBaseUrl() + ApiServices.GET_PAYMENT)
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .header(HeaderKeys.AUTHORIZATION, getPisTokenFromStorage().getAccessToken())
+                .get(GetPaymentResponse.class);
     }
 }

@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.RaiffeisenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.configuration.RaiffeisenConfiguration;
@@ -17,10 +20,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class RaiffeisenAgent extends NextGenerationAgent {
+public final class RaiffeisenAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final String clientName;
     private final RaiffeisenApiClient apiClient;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public RaiffeisenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -28,6 +33,8 @@ public final class RaiffeisenAgent extends NextGenerationAgent {
 
         apiClient = new RaiffeisenApiClient(client, persistentStorage, credentials);
         clientName = request.getProvider().getPayload();
+
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
@@ -54,22 +61,39 @@ public final class RaiffeisenAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final RaiffeisenTransactionalAccountAccountFetcher accountFetcher =
                 new RaiffeisenTransactionalAccountAccountFetcher(apiClient);
 
         final RaiffeisenTransactionalAccountTransactionFetcher transactionFetcher =
                 new RaiffeisenTransactionalAccountTransactionFetcher(apiClient);
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        accountFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(transactionFetcher))));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(transactionFetcher)));
     }
 
     @Override

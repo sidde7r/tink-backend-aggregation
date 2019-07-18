@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.CredentialsKeys;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.StorageKeys;
@@ -20,6 +21,10 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.entity.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.entity.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.configuration.DnbConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.enums.DnbPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.TransactionResponse;
@@ -153,5 +158,23 @@ public final class DnbApiClient {
         final Calendar now = Calendar.getInstance();
         now.add(Calendar.MONTH, 2);
         return now.getTime();
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, DnbPaymentType dnbPaymentType) {
+        return createRequestWithoutRedirectHeader(
+                        new URL(getConfiguration().getBaseUrl() + Urls.PAYMENTS)
+                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString()))
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public GetPaymentResponse getPayment(DnbPaymentType dnbPaymentType, String paymentId) {
+        return createRequestWithoutRedirectHeader(
+                        new URL(getConfiguration().getBaseUrl() + Urls.GET_PAYMENT)
+                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString())
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                .get(GetPaymentResponse.class);
     }
 }

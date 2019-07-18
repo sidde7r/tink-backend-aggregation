@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class PendingTransactionBaseEntity extends TransactionDetailsBaseEntity {
@@ -9,7 +10,7 @@ public class PendingTransactionBaseEntity extends TransactionDetailsBaseEntity {
         return Transaction.builder()
                 .setPending(true)
                 .setAmount(transactionAmount.toAmount())
-                .setDate(bookingDate)
+                .setDate(Optional.ofNullable(bookingDate).orElse(valueDate))
                 .setDescription(remittanceInformationUnstructured)
                 .build();
     }

@@ -47,12 +47,12 @@ public abstract class NordeaBaseAuthenticator implements OAuth2Authenticator {
                         .build();
 
         OAuth2Token token = apiClient.refreshToken(form);
-        apiClient.setTokenToSession(token);
+        apiClient.storeToken(token);
         return token;
     }
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        apiClient.setTokenToSession(accessToken);
+        apiClient.storeToken(accessToken);
     }
 }

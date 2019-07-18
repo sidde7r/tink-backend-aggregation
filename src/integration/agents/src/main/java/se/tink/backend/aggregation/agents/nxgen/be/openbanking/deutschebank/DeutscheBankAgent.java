@@ -1,29 +1,35 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.DeutscheBankAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class DeutscheBankAgent extends NextGenerationAgent {
+public final class DeutscheBankAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final String clientName;
     private final DeutscheBankApiClient apiClient;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public DeutscheBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -31,54 +37,79 @@ public final class DeutscheBankAgent extends NextGenerationAgent {
 
         apiClient = new DeutscheBankApiClient(client, sessionStorage);
         clientName = request.getProvider().getPayload();
+
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
+        client.setSslClientCertificate(
+                BerlinGroupUtils.readFile(getClientConfiguration().getClientKeyStorePath()),
+                getClientConfiguration().getClientKeyStorePassword());
         apiClient.setConfiguration(getClientConfiguration());
     }
 
-    private DeutscheBankConfiguration getClientConfiguration() {
+    protected BerlinGroupConfiguration getClientConfiguration() {
         return configuration
                 .getIntegrations()
                 .getClientConfiguration(
-                        Market.INTEGRATION_NAME, clientName, DeutscheBankConfiguration.class)
+                        DeutscheBankConstants.INTEGRATION_NAME,
+                        clientName,
+                        BerlinGroupConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final OAuth2AuthenticationController oAuth2AuthenticationController =
-                new OAuth2AuthenticationController(
-                        persistentStorage,
+        String iban = credentials.getField(CredentialKeys.IBAN);
+
+        final DeutscheBankAuthenticatorController deutscheBankAuthenticatorController =
+                new DeutscheBankAuthenticatorController(
                         supplementalInformationHelper,
-                        new DeutscheBankAuthenticator(apiClient));
+                        new DeutscheBankAuthenticator(
+                                apiClient, sessionStorage, getClientConfiguration(), iban));
+
         return new AutoAuthenticationController(
                 request,
                 context,
                 new ThirdPartyAppAuthenticationController<>(
-                        oAuth2AuthenticationController, supplementalInformationHelper),
-                oAuth2AuthenticationController);
+                        deutscheBankAuthenticatorController, supplementalInformationHelper),
+                deutscheBankAuthenticatorController);
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final DeutscheBankTransactionalAccountFetcher accountFetcher =
                 new DeutscheBankTransactionalAccountFetcher(apiClient);
 
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        accountFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(
-                                        accountFetcher,
-                                        DeutscheBankConstants.Fetcher.START_PAGE))));
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(accountFetcher)));
     }
 
     @Override

@@ -18,6 +18,6 @@ public class CreditCardTransactionFetcher implements TransactionFetcher<CreditCa
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
         return new ArrayList<>(
-                apiClient.fetchCreditCardTransactions(account).getTinkTransactions());
+                apiClient.fetchCreditCardTransactions(account).getTinkCreditCardTransactions());
     }
 }

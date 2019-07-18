@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.Urls.ACCOUNTS;
 import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.Urls.TOKEN;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -26,10 +27,10 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import tink.org.apache.http.client.utils.DateUtils;
 
 public class IngApiClient {
 
+    private final SimpleDateFormat dateFormat;
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     private final String market;
@@ -39,6 +40,7 @@ public class IngApiClient {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.market = market;
+        dateFormat = new SimpleDateFormat(IngConstants.QueryValues.DATE_FORMAT);
     }
 
     public IngConfiguration getConfiguration() {
@@ -85,13 +87,8 @@ public class IngApiClient {
 
         final String completeReqPath =
                 new URL(reqPath)
-                        .queryParam(
-                                IngConstants.QueryKeys.DATE_FROM,
-                                DateUtils.formatDate(
-                                        fromDate, IngConstants.QueryValues.DATE_FORMAT))
-                        .queryParam(
-                                IngConstants.QueryKeys.DATE_TO,
-                                DateUtils.formatDate(toDate, IngConstants.QueryValues.DATE_FORMAT))
+                        .queryParam(IngConstants.QueryKeys.DATE_FROM, dateFormat.format(fromDate))
+                        .queryParam(IngConstants.QueryKeys.DATE_TO, dateFormat.format(fromDate))
                         .queryParam(
                                 IngConstants.QueryKeys.LIMIT,
                                 "10") // TODO - Temporary added for Sandbox specification

@@ -40,10 +40,10 @@ public class TransactionEntity {
     }
 
     private String getDescription() {
-        if (Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+        if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
             return remittanceInformationUnstructured;
         }
-        if (Strings.isNullOrEmpty(debtorName)) {
+        if (!Strings.isNullOrEmpty(debtorName)) {
             return debtorName;
         }
         return creditorName;

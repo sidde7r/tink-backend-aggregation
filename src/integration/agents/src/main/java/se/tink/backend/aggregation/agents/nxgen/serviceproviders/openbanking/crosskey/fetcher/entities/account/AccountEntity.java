@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountEntity {
 
-    private List<AccountDetailsEntity> accounts;
+    private List<AccountDetailsEntity> account;
     private String accountId;
     private String accountSubType;
     private String accountType;
@@ -25,7 +25,7 @@ public class AccountEntity {
     }
 
     public List<AccountDetailsEntity> getAccounts() {
-        return accounts;
+        return account;
     }
 
     public String getAccountId() {
@@ -33,7 +33,7 @@ public class AccountEntity {
     }
 
     public Optional<AccountDetailsEntity> resolveAccountDetails() {
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(account).orElse(Collections.emptyList()).stream()
                 .filter(AccountDetailsEntity::isIBAN)
                 .findFirst();
     }

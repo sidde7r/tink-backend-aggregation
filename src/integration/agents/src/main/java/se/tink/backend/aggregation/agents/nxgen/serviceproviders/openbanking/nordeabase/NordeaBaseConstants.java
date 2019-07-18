@@ -20,7 +20,7 @@ public final class NordeaBaseConstants {
     }
 
     public static class Urls {
-        public static final String BASE_URL = "https://api.nordeaopenbanking.com";
+        public static final String BASE_URL = "https://api.nordea.com/nordea-open-banking/obi";
         public static final URL AUTHORIZE = new URL(BASE_URL + ApiService.AUTHORIZE);
         public static final URL GET_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
@@ -32,15 +32,17 @@ public final class NordeaBaseConstants {
     }
 
     public static class ApiService {
-        public static final String AUTHORIZE = "/v3/authorize";
-        public static final String GET_TOKEN = "/v3/authorize/token";
-        public static final String GET_ACCOUNTS = "/v3/accounts";
-        public static final String GET_TRANSACTIONS = "/v3/accounts/{accountId}/transactions";
-        public static final String INITIATE_PAYMENT = "/v3/payments/{paymentType}";
+        public static final String VERSION = "/v3";
+        public static final String AUTHORIZE = VERSION + "/authorize";
+        public static final String GET_TOKEN = VERSION + "/authorize/token";
+        public static final String GET_ACCOUNTS = VERSION + "/accounts";
+        public static final String GET_TRANSACTIONS =
+                VERSION + "/accounts/{accountId}/transactions";
+        public static final String INITIATE_PAYMENT = VERSION + "/payments/{paymentType}";
         public static final String CONFIRM_PAYMENT =
-                "/v3/payments/{paymentType}/{paymentId}/confirm";
-        public static final String GET_PAYMENT = "/v3/payments/{paymentType}/{paymentId}";
-        public static final String GET_PAYMENTS = "/v3/payments/{paymentType}";
+                VERSION + "/payments/{paymentType}/{paymentId}/confirm";
+        public static final String GET_PAYMENT = VERSION + "/payments/{paymentType}/{paymentId}";
+        public static final String GET_PAYMENTS = VERSION + "/payments/{paymentType}";
     }
 
     public static class StorageKeys {
@@ -79,6 +81,7 @@ public final class NordeaBaseConstants {
 
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class IdTags {
@@ -89,5 +92,14 @@ public final class NordeaBaseConstants {
 
     public static final class ErrorMessages {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+    }
+
+    public static final class StatusResponse {
+        public static final String RESERVED = "reserved";
+    }
+
+    public static final class AccountTypesResponse {
+        public static final String BBAN_SE = "BBAN_SE";
+        public static final String IBAN = "iban";
     }
 }

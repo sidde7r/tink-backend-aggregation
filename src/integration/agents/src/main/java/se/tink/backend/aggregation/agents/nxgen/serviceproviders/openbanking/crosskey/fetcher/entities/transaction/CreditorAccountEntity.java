@@ -12,4 +12,20 @@ public class CreditorAccountEntity {
     private String name;
     private String schemeName;
     private String secondaryIdentification;
+
+    public String getIdentification() {
+        return identification;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSchemeName() {
+        return schemeName;
+    }
+
+    public String getSecondaryIdentification() {
+        return secondaryIdentification;
+    }
 }
