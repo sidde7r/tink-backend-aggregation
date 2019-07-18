@@ -31,6 +31,9 @@ agents:
     openbanking:
       baseUrl: http://demo-financial-institute.internal.production.aggregation.tink.network/openbanking
   collectorSubscriptionKey: true
+  nordeaSE:
+    tink:
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   monzo:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   volksbank:
