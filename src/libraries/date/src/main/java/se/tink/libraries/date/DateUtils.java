@@ -108,6 +108,10 @@ public final class DateUtils {
         HOLIDAYS_JAVA_LOCAL_DATE = javaLocalDateBuilder.build();
     }
 
+    private DateUtils() {
+        throw new AssertionError();
+    }
+
     /**
      * Helper function to create a MONTHLY period from year and month (as integers).
      *
