@@ -14,9 +14,10 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
-import org.assertj.core.util.Strings;
+import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 
 public class SparebankUtils {
 
@@ -65,40 +66,31 @@ public class SparebankUtils {
     }
 
     public static String getSignature(
-            String xRequestId,
-            String date,
-            String psuId,
-            String redirectUri,
-            String keyId,
-            String keyPath) {
+            Map<String, Optional<String>> headers, String keyId, String keyPath) {
         final String algorithm = "rsa-sha256";
 
-        String header = "date x-request-id tpp-redirect-uri";
+        StringBuilder signingString = new StringBuilder();
+        StringBuilder header = new StringBuilder();
 
-        String sigingString =
-                String.format(
-                        SparebankConstants.Signature.DATE
-                                + ": %s"
-                                + System.lineSeparator()
-                                + HeaderKeys.X_REQUEST_ID.toLowerCase()
-                                + ": %s"
-                                + System.lineSeparator()
-                                + SparebankConstants.Signature.TPP_REDIRECT_URI
-                                + ": %s",
-                        date,
-                        xRequestId,
-                        redirectUri);
-
-        if (!Strings.isNullOrEmpty(psuId)) {
-            header += " psu-id";
-            sigingString += String.format("\npsu-id: %s", psuId);
-        }
+        headers.forEach(
+                (key, value) ->
+                        value.ifPresent(
+                                item -> {
+                                    header.append(" " + key);
+                                    signingString.append(String.format("%s: %s\n", key, item));
+                                }));
 
         String signature =
-                SparebankUtils.generateSignature(
-                        sigingString, keyPath, SparebankConstants.Signature.SIGNING_ALGORITHM);
+                generateSignature(
+                        signingString.toString().trim(),
+                        keyPath,
+                        SparebankConstants.Signature.SIGNING_ALGORITHM);
         return String.format(
                 "keyId=\"%s\",algorithm=\"%s\",headers=\"%s\",signature=\"%s\"",
-                keyId, algorithm, header, signature);
+                keyId, algorithm, header.toString().trim(), signature);
+    }
+
+    public static String calculateDigest(final String data) {
+        return Base64.getEncoder().encodeToString(Hash.sha256(data));
     }
 }
