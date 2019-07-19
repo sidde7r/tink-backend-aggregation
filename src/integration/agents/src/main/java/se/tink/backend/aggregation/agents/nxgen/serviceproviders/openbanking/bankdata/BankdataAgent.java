@@ -57,7 +57,8 @@ public abstract class BankdataAgent extends NextGenerationAgent
     protected abstract String getIntegrationName();
 
     private BankdataConfiguration getClientConfiguration() {
-        BankdataConfiguration bankdataConfiguration = getClientConfiguration("bankdata");
+        BankdataConfiguration bankdataConfiguration =
+                getClientConfiguration(BankdataConstants.INTEGRATION_NAME);
         bankdataConfiguration.setBaseUrl(getBaseUrl());
         bankdataConfiguration.setBaseAuthUrl(getBaseAuthUrl());
         return bankdataConfiguration;
