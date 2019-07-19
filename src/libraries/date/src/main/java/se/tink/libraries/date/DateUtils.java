@@ -117,7 +117,7 @@ public final class DateUtils {
      * @param month
      * @return
      */
-    public static String createPeriod(int year, int month) {
+    private static String createPeriod(int year, int month) {
         return Integer.toString(year) + "-" + Strings.padStart(Integer.toString(month), 2, '0');
     }
 
@@ -144,7 +144,7 @@ public final class DateUtils {
      * @throws ParseException
      * @throws NumberFormatException
      */
-    public static List<String> createPeriodList(
+    private static List<String> createPeriodList(
             Date startDate, Date endDate, ResolutionTypes resolution, int periodBreakDate) {
 
         if (startDate == null || endDate == null) {
@@ -273,7 +273,7 @@ public final class DateUtils {
      *
      * @return
      */
-    public static String getCurrentMonthPeriod(ResolutionTypes resolution, int periodBreakDate) {
+    private static String getCurrentMonthPeriod(ResolutionTypes resolution, int periodBreakDate) {
         return getMonthPeriod(getToday(), resolution, periodBreakDate);
     }
 
@@ -322,7 +322,7 @@ public final class DateUtils {
         return getCurrentOrPreviousBusinessDay(getCalendar(date)).getTime();
     }
 
-    public static Calendar getCurrentOrPreviousBusinessDay(Calendar calendar) {
+    private static Calendar getCurrentOrPreviousBusinessDay(Calendar calendar) {
         Calendar businessDay = getCalendar(calendar.getTime());
 
         while (!isBusinessDay(businessDay)) {
@@ -437,7 +437,7 @@ public final class DateUtils {
      * @param periods
      * @return
      */
-    public static String getFirstPeriod(List<String> periods) {
+    private static String getFirstPeriod(List<String> periods) {
         return periods.stream().min(Comparator.naturalOrder()).get();
     }
 
@@ -510,7 +510,7 @@ public final class DateUtils {
      * @param periods
      * @return
      */
-    public static String getLastPeriod(List<String> periods) {
+    private static String getLastPeriod(List<String> periods) {
         return periods.stream().max(Comparator.naturalOrder()).get();
     }
 
@@ -535,7 +535,7 @@ public final class DateUtils {
         return localDate.format(JAVA_LOCAL_DATE_MONTHLY_FORMATTER);
     }
 
-    public static java.time.LocalDate getPeriodDate(Date date, int periodBreakDate) {
+    private static java.time.LocalDate getPeriodDate(Date date, int periodBreakDate) {
         // Find last not business day after this date or take this date.
         // This is reversed action for finding first day of a period.
         java.time.LocalDate localDate = date.toInstant().atZone(DEFAULT_ZONE_ID).toLocalDate();
@@ -582,7 +582,7 @@ public final class DateUtils {
      * @param periodBreakDate
      * @return
      */
-    public static double getMonthPeriodProgress(
+    private static double getMonthPeriodProgress(
             String period, Date date, ResolutionTypes resolution, int periodBreakDate) {
         Date startDate = getFirstDateFromPeriod(period, resolution, periodBreakDate);
         Date endDate = getLastDateFromPeriod(period, resolution, periodBreakDate);
@@ -765,7 +765,7 @@ public final class DateUtils {
      * @return
      * @throws ParseException
      */
-    public static String turnPastSixDigitsDateIntoEightDigits(
+    private static String turnPastSixDigitsDateIntoEightDigits(
             DateFormat inFormat, DateFormat outFormat, String s) throws ParseException {
         Date date = inFormat.parse(s);
 
