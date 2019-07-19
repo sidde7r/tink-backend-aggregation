@@ -121,10 +121,6 @@ public class Field {
         this.name = name;
     }
 
-    public void setNumeric(boolean numeric) {
-        this.numeric = numeric;
-    }
-
     public void setValue(String value) {
         this.value = value;
     }
