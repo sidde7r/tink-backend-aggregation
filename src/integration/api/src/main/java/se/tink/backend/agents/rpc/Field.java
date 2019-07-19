@@ -129,10 +129,6 @@ public class Field {
         this.pattern = pattern;
     }
 
-    public void setPatternError(String patternError) {
-        this.patternError = patternError;
-    }
-
     public void setValue(String value) {
         this.value = value;
     }
