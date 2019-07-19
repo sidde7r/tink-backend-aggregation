@@ -23,4 +23,8 @@ public enum ConsentStatus {
     public boolean isAcceptedStatus() {
         return this == ACTC;
     }
+
+    public boolean isNotAcceptedStatus() {
+        return this != ACTC;
+    }
 }

@@ -66,7 +66,7 @@ public final class SibsUtils {
     public static Retryer<ConsentStatus> getConsentStatusRetryer(
             long sleepTime, int retryAttempts) {
         return RetryerBuilder.<ConsentStatus>newBuilder()
-                .retryIfResult(status -> status != null && status.isWaitingStatus())
+                .retryIfResult(status -> status != null && status.isNotAcceptedStatus())
                 .withWaitStrategy(WaitStrategies.fixedWait(sleepTime, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
                 .build();
