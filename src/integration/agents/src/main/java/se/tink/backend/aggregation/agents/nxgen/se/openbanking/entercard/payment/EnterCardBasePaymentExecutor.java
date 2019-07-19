@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.payment
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class EnterCardBasePaymentExecutor implements PaymentExecutor {
+public class EnterCardBasePaymentExecutor implements FetchablePaymentExecutor {
 
     private EnterCardApiClient apiClient;
     private ScaRedirectCallbackHandler redirectCallbackHandler;

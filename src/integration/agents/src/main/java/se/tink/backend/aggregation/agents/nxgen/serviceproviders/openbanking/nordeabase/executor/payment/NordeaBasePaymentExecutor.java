@@ -8,31 +8,34 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.entities.DebtorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.enums.NordeaPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
-public abstract class NordeaBasePaymentExecutor implements PaymentExecutor {
+public abstract class NordeaBasePaymentExecutor implements FetchablePaymentExecutor {
     private NordeaBaseApiClient apiClient;
 
     public NordeaBasePaymentExecutor(NordeaBaseApiClient apiClient) {
@@ -72,7 +75,7 @@ public abstract class NordeaBasePaymentExecutor implements PaymentExecutor {
         PaymentStatus paymentStatus;
         String nextStep;
         switch (paymentMultiStepRequest.getStep()) {
-            case AuthenticationStepConstants.STEP_INIT:
+            case SigningStepConstants.STEP_INIT:
                 ConfirmPaymentResponse confirmPaymentsResponse =
                         apiClient.confirmPayment(
                                 paymentMultiStepRequest.getPayment().getUniqueId(),
@@ -83,14 +86,41 @@ public abstract class NordeaBasePaymentExecutor implements PaymentExecutor {
                                         confirmPaymentsResponse
                                                 .getPaymentResponse()
                                                 .getPaymentStatus()));
-                nextStep = NordeaSeConstants.NordeaSignSteps.SAMPLE_STEP;
+                nextStep = SigningStepConstants.STEP_SIGN;
                 break;
-            case NordeaSeConstants.NordeaSignSteps.SAMPLE_STEP:
-                paymentStatus =
-                        sampleStepNordeaAutoSignsAfterAFewSeconds(
-                                paymentMultiStepRequest.getPayment().getUniqueId(),
-                                getPaymentType(paymentMultiStepRequest));
-                nextStep = AuthenticationStepConstants.STEP_FINALIZE;
+
+            case SigningStepConstants.STEP_SIGN:
+                try {
+                    getSigner().sign(paymentMultiStepRequest);
+                } catch (AuthenticationException e) {
+                    if (e instanceof BankIdException) {
+                        BankIdError bankIdError = ((BankIdException) e).getError();
+                        switch (bankIdError) {
+                            case CANCELLED:
+                                throw new PaymentAuthorizationException(
+                                        "BankId signing cancelled by the user.", e);
+
+                            case NO_CLIENT:
+                                throw new PaymentAuthorizationException(
+                                        "No BankId client when trying to sign the payment.", e);
+
+                            case TIMEOUT:
+                                throw new PaymentAuthorizationException(
+                                        "BankId signing timed out.", e);
+
+                            case INTERRUPTED:
+                                throw new PaymentAuthorizationException(
+                                        "BankId signing interrupded.", e);
+
+                            case UNKNOWN:
+                            default:
+                                throw new PaymentAuthorizationException(
+                                        "Unknown problem when signing payment with BankId.", e);
+                        }
+                    }
+                }
+                paymentStatus = fetch(paymentMultiStepRequest).getPayment().getStatus();
+                nextStep = SigningStepConstants.STEP_FINALIZE;
                 break;
 
             default:
@@ -162,16 +192,5 @@ public abstract class NordeaBasePaymentExecutor implements PaymentExecutor {
 
     protected abstract Collection<PaymentType> getSupportedPaymentTypes();
 
-    private PaymentStatus sampleStepNordeaAutoSignsAfterAFewSeconds(
-            String providerId, PaymentType paymentType) throws PaymentException {
-        // Should be enough to get the payment auto signed.
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        GetPaymentResponse paymentResponse = apiClient.getPayment(providerId, paymentType);
-        return NordeaPaymentStatus.mapToTinkPaymentStatus(
-                NordeaPaymentStatus.fromString(paymentResponse.getResponse().getPaymentStatus()));
-    }
+    protected abstract Signer getSigner();
 }
