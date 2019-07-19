@@ -113,10 +113,6 @@ public class Field {
         }
     }
 
-    public void setMinLength(Integer minLength) {
-        this.minLength = minLength;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
