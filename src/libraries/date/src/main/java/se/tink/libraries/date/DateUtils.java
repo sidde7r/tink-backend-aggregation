@@ -153,10 +153,10 @@ public final class DateUtils {
                     ThreadSafeDateFormat.FORMATTER_MONTHLY.parse(
                             getMonthPeriod(endDate, resolution, periodBreakDate));
 
-            Integer startYear =
-                    Integer.valueOf(ThreadSafeDateFormat.FORMATTER_YEARLY.format(startPeriodDate));
-            Integer endYear =
-                    Integer.valueOf(ThreadSafeDateFormat.FORMATTER_YEARLY.format(endPeriodDate));
+            int startYear =
+                    Integer.parseInt(ThreadSafeDateFormat.FORMATTER_YEARLY.format(startPeriodDate));
+            int endYear =
+                    Integer.parseInt(ThreadSafeDateFormat.FORMATTER_YEARLY.format(endPeriodDate));
 
             Integer startMonth =
                     Integer.valueOf(
