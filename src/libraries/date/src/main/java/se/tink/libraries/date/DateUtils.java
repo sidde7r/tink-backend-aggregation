@@ -135,15 +135,7 @@ public final class DateUtils {
         return Lists.newArrayList();
     }
 
-    /**
-     * Returns a list of periods based on a start date and end date (inclusive).
-     *
-     * @param startDate
-     * @param endDate
-     * @return
-     * @throws ParseException
-     * @throws NumberFormatException
-     */
+    /** @return a list of periods based on a start date and end date (inclusive). */
     private static List<String> createPeriodList(
             Date startDate, Date endDate, ResolutionTypes resolution, int periodBreakDate) {
 
