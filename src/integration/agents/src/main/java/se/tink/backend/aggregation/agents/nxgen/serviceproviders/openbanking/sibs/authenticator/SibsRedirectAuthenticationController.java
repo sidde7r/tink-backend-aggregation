@@ -29,8 +29,8 @@ import se.tink.libraries.i18n.LocalizableKey;
 public class SibsRedirectAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(SibsRedirectAuthenticationController.class.getName());
+    private static final Logger logger =
+            LoggerFactory.getLogger(SibsRedirectAuthenticationController.class);
     private static final long WAIT_FOR_MINUTES = 9L;
     private static final long SLEEP_TIME = 10L;
     private static final int RETRY_ATTEMPTS = 10;
@@ -64,7 +64,7 @@ public class SibsRedirectAuthenticationController
         try {
             consentStatusRetryer.call(authenticator::getConsentStatus);
         } catch (ExecutionException | RetryException | IllegalStateException e) {
-            LOGGER.warn("Authorization failed, consents status is not accepted.", e);
+            logger.warn("Authorization failed, consents status is not accepted.", e);
             throw new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT);
         }
 

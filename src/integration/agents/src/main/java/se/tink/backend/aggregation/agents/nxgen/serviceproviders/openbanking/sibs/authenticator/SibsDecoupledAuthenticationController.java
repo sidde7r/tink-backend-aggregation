@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 
 public class SibsDecoupledAuthenticationController implements Authenticator {
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(SibsDecoupledAuthenticationController.class.getName());
+    private static final Logger logger =
+            LoggerFactory.getLogger(SibsDecoupledAuthenticationController.class);
     private static final long SLEEP_TIME = 10L;
     private static final int RETRY_ATTEMPTS = 60;
     private final SibsAuthenticator authenticator;
@@ -38,7 +38,7 @@ public class SibsDecoupledAuthenticationController implements Authenticator {
         try {
             consentStatusRetryer.call(authenticator::getConsentStatus);
         } catch (ExecutionException | RetryException | IllegalStateException e) {
-            LOGGER.warn("Authorization failed, consents status is not accepted.", e);
+            logger.warn("Authorization failed, consents status is not accepted.", e);
             throw new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT);
         }
     }
@@ -50,7 +50,7 @@ public class SibsDecoupledAuthenticationController implements Authenticator {
                     SibsConstants.HeaderValues.CLIENTE_PARTICULAR,
                     credentials.getField(CredentialKeys.PSU_ID));
         } catch (HttpClientException e) {
-            LOGGER.warn("Authorization failed, cannot create consents.", e);
+            logger.warn("Authorization failed, cannot create consents.", e);
             throw new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT);
         }
     }
