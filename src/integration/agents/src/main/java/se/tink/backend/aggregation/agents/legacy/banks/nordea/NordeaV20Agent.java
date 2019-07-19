@@ -1991,15 +1991,16 @@ public class NordeaV20Agent extends AbstractAgent
 
     private String requestVerificationCode(String challengeCharacter) throws IOException {
 
-        Field responseField = new Field();
-
-        responseField.setDescription("Kod:" + challengeCharacter);
-        responseField.setName("response");
-        responseField.setNumeric(true);
-        responseField.setHint("NNNN");
-        responseField.setMaxLength(4);
-        responseField.setMinLength(4);
-        responseField.setPattern("([0-9]{4})");
+        Field responseField =
+                Field.builder()
+                        .description("Kod:" + challengeCharacter)
+                        .name("response")
+                        .numeric(true)
+                        .hint("NNNN")
+                        .maxLength(4)
+                        .minLength(4)
+                        .pattern("([0-9]{4})")
+                        .build();
 
         List<Field> fields = Lists.newArrayList(responseField);
 
