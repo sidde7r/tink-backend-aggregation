@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -57,6 +58,7 @@ public final class RedsysApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private RedsysConfiguration configuration;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private RedsysConsentController consentController;
@@ -65,11 +67,14 @@ public final class RedsysApiClient {
     public RedsysApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.client = client;
+        client.setDebugOutput(true);
         this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.consentController =
-                new RedsysConsentController(this, sessionStorage, supplementalInformationHelper);
+                new RedsysConsentController(this, persistentStorage, supplementalInformationHelper);
     }
 
     private RedsysConfiguration getConfiguration() {
@@ -180,7 +185,7 @@ public final class RedsysApiClient {
     }
 
     private String getConsentId() {
-        return sessionStorage.get(StorageKeys.CONSENT_ID);
+        return persistentStorage.get(StorageKeys.CONSENT_ID);
     }
 
     public String fetchConsentStatus(String consentId) {

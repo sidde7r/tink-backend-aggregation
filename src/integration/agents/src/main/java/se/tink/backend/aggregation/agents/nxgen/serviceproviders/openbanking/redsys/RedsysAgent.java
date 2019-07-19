@@ -40,7 +40,9 @@ public final class RedsysAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new RedsysApiClient(client, sessionStorage, supplementalInformationHelper);
+        apiClient =
+                new RedsysApiClient(
+                        client, sessionStorage, persistentStorage, supplementalInformationHelper);
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
