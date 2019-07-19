@@ -121,13 +121,13 @@ spec:
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: nordea-se-client-id
+              key: nordea-client-id
               optional: true
         - name: NORDEA_SE_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: nordea-se-client-secret
+              key: nordea-client-secret
               optional: true
         - name: MONZO_CLIENT_ID
           valueFrom:
