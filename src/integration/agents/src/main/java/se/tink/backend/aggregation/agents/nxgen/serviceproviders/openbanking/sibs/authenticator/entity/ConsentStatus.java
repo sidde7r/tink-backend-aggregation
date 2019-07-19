@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity;
 
 public enum ConsentStatus {
-    RCVD, // Recieved
+    RCVD, // Received
     PDNG, // Pending
     PATC,
     ACTC, // Accepted
@@ -12,15 +12,7 @@ public enum ConsentStatus {
     RJCT, // Rejected
     CANC; // Canceled
 
-    public boolean isFailingStatus() {
-        return this == RJCT || this == CANC;
-    }
-
-    public boolean isWaitingStatus() {
-        return this == RCVD || this == PDNG;
-    }
-
-    public boolean isAcceptedStatus() {
-        return this == ACTC;
+    public boolean isFinalStatus() {
+        return this == ACTC || this == CANC || this == RJCT;
     }
 }
