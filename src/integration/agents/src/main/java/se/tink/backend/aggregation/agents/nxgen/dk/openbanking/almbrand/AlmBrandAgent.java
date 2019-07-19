@@ -13,6 +13,16 @@ public final class AlmBrandAgent extends BankdataAgent {
     }
 
     @Override
+    protected String getBaseUrl() {
+        return AlmBrandConstants.BASE_URL;
+    }
+
+    @Override
+    protected String getBaseAuthUrl() {
+        return AlmBrandConstants.BASE_AUTH_URL;
+    }
+
+    @Override
     protected String getIntegrationName() {
         return AlmBrandConstants.INTEGRATION_NAME;
     }

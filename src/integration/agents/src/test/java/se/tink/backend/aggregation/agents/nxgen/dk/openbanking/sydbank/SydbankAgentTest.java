@@ -9,8 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 
 public class SydbankAgentTest {
 
-    // IBAN for configuration DK5099991234567890
-    // --jvmopt=-Dtink.IBAN=DK5099991234567890
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 

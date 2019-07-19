@@ -13,6 +13,16 @@ public final class SydbankAgent extends BankdataAgent {
     }
 
     @Override
+    protected String getBaseUrl() {
+        return SydbankConstants.BASE_URL;
+    }
+
+    @Override
+    protected String getBaseAuthUrl() {
+        return SydbankConstants.BASE_AUTH_URL;
+    }
+
+    @Override
     protected String getIntegrationName() {
         return SydbankConstants.INTEGRATION_NAME;
     }

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.Accounts;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
@@ -17,8 +17,8 @@ public class BalanceEntity {
         this.balanceType = balanceType;
     }
 
-    public boolean isClosingBooked() {
-        return balanceType.equalsIgnoreCase(BankdataConstants.Accounts.BALANCE_CLOSING_BOOKED);
+    public boolean isForwardAvailable() {
+        return balanceType.equalsIgnoreCase(Accounts.BALANCE_FORWARD_AVAILABLE);
     }
 
     public boolean isInCurrency(final String currency) {

@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.BankdataPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.BankdataPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.BankdataTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -25,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class BankdataAgent extends NextGenerationAgent
@@ -44,18 +44,27 @@ public abstract class BankdataAgent extends NextGenerationAgent
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
+    protected abstract String getBaseUrl();
+
+    protected abstract String getBaseAuthUrl();
+
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        client.setSslClientCertificate(
-                BerlinGroupUtils.readFile(getClientConfiguration().getClientKeyStorePath()),
-                getClientConfiguration().getClientKeyStorePassword());
-        apiClient.setConfiguration(getClientConfiguration());
+        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
     }
 
     protected abstract String getIntegrationName();
 
     private BankdataConfiguration getClientConfiguration() {
+        BankdataConfiguration bankdataConfiguration =
+                getClientConfiguration(BankdataConstants.INTEGRATION_NAME);
+        bankdataConfiguration.setBaseUrl(getBaseUrl());
+        bankdataConfiguration.setBaseAuthUrl(getBaseAuthUrl());
+        return bankdataConfiguration;
+    }
+
+    private BankdataConfiguration pisGetClientConfiguration() {
         return getClientConfiguration(getIntegrationName());
     }
 
@@ -129,5 +138,10 @@ public abstract class BankdataAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    protected Optional<TransferController> constructTransferController() {
+        return Optional.empty();
     }
 }

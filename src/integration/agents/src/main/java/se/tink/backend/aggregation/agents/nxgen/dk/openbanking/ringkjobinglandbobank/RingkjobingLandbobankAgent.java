@@ -16,4 +16,14 @@ public final class RingkjobingLandbobankAgent extends BankdataAgent {
     protected String getIntegrationName() {
         return RingkjobingLandbobankConstants.INTEGRATION_NAME;
     }
+
+    @Override
+    protected String getBaseUrl() {
+        return RingkjobingLandbobankConstants.BASE_URL;
+    }
+
+    @Override
+    protected String getBaseAuthUrl() {
+        return RingkjobingLandbobankConstants.BASE_AUTH_URL;
+    }
 }

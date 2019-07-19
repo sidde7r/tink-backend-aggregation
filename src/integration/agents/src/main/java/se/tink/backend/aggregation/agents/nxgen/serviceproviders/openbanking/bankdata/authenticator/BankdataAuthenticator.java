@@ -27,11 +27,7 @@ public class BankdataAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        apiClient.getTokenWithClientCredentials();
-        String consentId = apiClient.getConsentId();
-        apiClient.authorizeConsent(consentId);
-
-        return apiClient.getAuthorizeUrl(state, consentId);
+        return apiClient.getAuthorizeUrl(state);
     }
 
     @Override

@@ -49,6 +49,14 @@ public class BankdataConfiguration implements ClientConfiguration {
         return baseAuthUrl;
     }
 
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    public void setBaseAuthUrl(String baseAuthUrl) {
+        this.baseAuthUrl = baseAuthUrl;
+    }
+
     public String getApiKey() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(apiKey),

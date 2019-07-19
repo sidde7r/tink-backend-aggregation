@@ -5,8 +5,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AccountLinksEntity {
 
-    BalancesLinkEntity balances;
-    TransactionsLinkEntity transactions;
+    private BalancesLinkEntity balances;
+    private TransactionsLinkEntity transactions;
 
     public BalancesLinkEntity getBalances() {
         return balances;

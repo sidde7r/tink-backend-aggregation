@@ -14,6 +14,7 @@ public class AccountResponse {
 
     protected List<AccountEntity> accounts;
 
+    // Empty constructor for serialization
     public AccountResponse() {}
 
     public AccountResponse(final List<AccountEntity> accounts) {
@@ -26,6 +27,7 @@ public class AccountResponse {
 
     public Collection<TransactionalAccount> toTinkAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+                .filter(x -> x.hasBalance())
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
