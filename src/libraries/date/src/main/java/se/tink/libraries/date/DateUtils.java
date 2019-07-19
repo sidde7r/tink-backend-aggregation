@@ -106,7 +106,7 @@ public final class DateUtils {
     }
 
     /** @return a Central European Time time zone instance (mutable) */
-    public static TimeZone createCetTimeZone() {
+    static TimeZone createCetTimeZone() {
         return TimeZone.getTimeZone("CET");
     }
 
@@ -121,7 +121,7 @@ public final class DateUtils {
         return Integer.toString(year) + "-" + Strings.padStart(Integer.toString(month), 2, '0');
     }
 
-    public static List<String> createPeriodListForYear(
+    static List<String> createPeriodListForYear(
             int year, ResolutionTypes resolution, int periodBreakDate) {
 
         try {
@@ -200,11 +200,11 @@ public final class DateUtils {
         }
     }
 
-    public static List<Date> createDailyDateList(Date first, Date last) {
+    static List<Date> createDailyDateList(Date first, Date last) {
         return createDailyDateList(first, last, false);
     }
 
-    public static List<Date> createDailyDateList(Date first, Date last, boolean reverse) {
+    static List<Date> createDailyDateList(Date first, Date last, boolean reverse) {
         List<Date> dates = Lists.newArrayList();
 
         int numDays = daysBetween(first, last);
@@ -219,7 +219,7 @@ public final class DateUtils {
         return reverse ? Lists.reverse(dates) : dates;
     }
 
-    public static List<String> createMonthlyPeriodList(String lastPeriod, int months) {
+    static List<String> createMonthlyPeriodList(String lastPeriod, int months) {
         LocalDateTime date = LocalDateTime.parse(lastPeriod, DATE_TIME_FORMATTER_MONTHLY);
 
         return IntStream.range(0, months)
@@ -258,11 +258,11 @@ public final class DateUtils {
         return Calendar.getInstance(createCetTimeZone(), DEFAULT_LOCALE);
     }
 
-    public static Calendar getCalendar(Locale locale) {
+    static Calendar getCalendar(Locale locale) {
         return Calendar.getInstance(createCetTimeZone(), locale);
     }
 
-    public static Calendar getCalendar(Date date) {
+    static Calendar getCalendar(Date date) {
         Calendar calendar = getCalendar();
         calendar.setTime(date);
         return calendar;
@@ -277,7 +277,7 @@ public final class DateUtils {
         return getMonthPeriod(getToday(), resolution, periodBreakDate);
     }
 
-    public static Period getPreviousPeriod(List<Period> periods, Period current) {
+    static Period getPreviousPeriod(List<Period> periods, Period current) {
         if (current == null) {
             return null;
         }
@@ -303,8 +303,7 @@ public final class DateUtils {
      * @param periodBreakDate
      * @return
      */
-    public static double getCurrentMonthPeriodProgress(
-            ResolutionTypes resolution, int periodBreakDate) {
+    static double getCurrentMonthPeriodProgress(ResolutionTypes resolution, int periodBreakDate) {
         String currentMonthPeriod = getCurrentMonthPeriod(resolution, periodBreakDate);
         Date date = new Date();
 
@@ -387,7 +386,7 @@ public final class DateUtils {
      * @param periodBreakDate
      * @return
      */
-    public static Date getFirstDateFromPeriod(
+    static Date getFirstDateFromPeriod(
             String period, ResolutionTypes resolution, int periodBreakDate) {
         Calendar calendar = getCalendar();
 
@@ -420,7 +419,7 @@ public final class DateUtils {
      * @param breakDate
      * @return
      */
-    public static Date getFirstDateFromPeriods(
+    static Date getFirstDateFromPeriods(
             List<String> periods, ResolutionTypes resolution, int breakDate) {
 
         if (periods.size() != 0) {
@@ -459,8 +458,7 @@ public final class DateUtils {
      * @param breakDate
      * @return
      */
-    public static Date getLastDateFromPeriod(
-            String period, ResolutionTypes resolution, int breakDate) {
+    static Date getLastDateFromPeriod(String period, ResolutionTypes resolution, int breakDate) {
         Calendar calendar = getCalendar();
 
         int year = Integer.parseInt(period.substring(0, 4));
@@ -493,7 +491,7 @@ public final class DateUtils {
      * @param breakDate
      * @return
      */
-    public static Date getLastDateFromPeriods(
+    static Date getLastDateFromPeriods(
             List<String> periods, ResolutionTypes resolution, int breakDate) {
 
         if (periods.size() != 0) {
@@ -525,8 +523,7 @@ public final class DateUtils {
     }
 
     /** Returns the MONTHLY/MONTHLY_ADJUSTED period for a date. */
-    public static String getMonthPeriod(
-            Date date, ResolutionTypes resolution, int periodBreakDate) {
+    static String getMonthPeriod(Date date, ResolutionTypes resolution, int periodBreakDate) {
         if (resolution == ResolutionTypes.MONTHLY) {
             return ThreadSafeDateFormat.FORMATTER_MONTHLY.format(date);
         }
@@ -555,7 +552,7 @@ public final class DateUtils {
         return localDate;
     }
 
-    public static String getNextMonthPeriod(String period) {
+    static String getNextMonthPeriod(String period) {
         try {
             LocalDateTime date = LocalDateTime.parse(period, DATE_TIME_FORMATTER_MONTHLY);
             return ThreadSafeDateFormat.FORMATTER_MONTHLY.format(date.plusMonths(1));
@@ -565,7 +562,7 @@ public final class DateUtils {
         }
     }
 
-    public static String getPreviousMonthPeriod(String period) {
+    static String getPreviousMonthPeriod(String period) {
         try {
             LocalDateTime date = LocalDateTime.parse(period, DATE_TIME_FORMATTER_MONTHLY);
             return ThreadSafeDateFormat.FORMATTER_MONTHLY.format(date.minusMonths(1));
@@ -696,14 +693,14 @@ public final class DateUtils {
         return new org.pojava.datetime.DateTime(text.trim()).toDate();
     }
 
-    public static void setInclusiveEndTime(Calendar calendar) {
+    static void setInclusiveEndTime(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
     }
 
-    public static Date inclusiveEndTime(Date date) {
+    static Date inclusiveEndTime(Date date) {
         Calendar calendar = getCalendar(date);
         setInclusiveEndTime(calendar);
         return calendar.getTime();
@@ -722,7 +719,7 @@ public final class DateUtils {
         return calendar.getTime();
     }
 
-    public static Date setInclusiveEndTime(Date date) {
+    static Date setInclusiveEndTime(Date date) {
         Calendar calendar = getCalendar();
         calendar.setTime(date);
 
@@ -797,7 +794,7 @@ public final class DateUtils {
         return (int) (days2 - days1);
     }
 
-    public static Calendar getFirstDateOfWeek(Calendar calendar) {
+    static Calendar getFirstDateOfWeek(Calendar calendar) {
         Calendar weekStartCalendar = (Calendar) calendar.clone();
         weekStartCalendar.add(
                 Calendar.DAY_OF_WEEK,
@@ -809,7 +806,7 @@ public final class DateUtils {
         return weekStartCalendar;
     }
 
-    public static boolean isBusinessDayWithinDaysFromNow(Date date, int days) {
+    static boolean isBusinessDayWithinDaysFromNow(Date date, int days) {
         Date businessDay = DateUtils.getCurrentOrPreviousBusinessDay(DateUtils.daysFromNow(days));
 
         return inclusiveEndTime(date).before(businessDay);
@@ -862,7 +859,7 @@ public final class DateUtils {
         return calendar.getTime();
     }
 
-    public static Date daysFromNow(int days) {
+    static Date daysFromNow(int days) {
         Date today = inclusiveEndTime(new Date());
         return addDays(today, days);
     }
@@ -879,7 +876,7 @@ public final class DateUtils {
         return calendar.getTime();
     }
 
-    public static String prettyFormatMillis(int millis) {
+    static String prettyFormatMillis(int millis) {
 
         String sign = millis < 0 ? "-" : "";
 
@@ -889,7 +886,7 @@ public final class DateUtils {
                         .print(new Interval(now, now.plusMillis(Math.abs(millis))).toPeriod());
     }
 
-    public static Period buildDailyPeriod(String stringPeriod) {
+    static Period buildDailyPeriod(String stringPeriod) {
         Date date = parseDate(stringPeriod);
 
         Period period = new Period();
@@ -901,7 +898,7 @@ public final class DateUtils {
         return period;
     }
 
-    public static Period buildWeeklyPeriod(String stringPeriod, Locale locale) {
+    static Period buildWeeklyPeriod(String stringPeriod, Locale locale) {
         Date date;
         try {
             date = new SimpleDateFormat(WEEK_OF_YEAR_DATE_FORMAT, locale).parse(stringPeriod);
@@ -919,7 +916,7 @@ public final class DateUtils {
         return period;
     }
 
-    public static Period buildMonthlyPeriod(
+    static Period buildMonthlyPeriod(
             String period, ResolutionTypes resolutionType, int periodBreakDay) {
         period = period.substring(0, 7); // yyyy-mm
         Period newPeriod = new Period();
@@ -931,8 +928,7 @@ public final class DateUtils {
         return newPeriod;
     }
 
-    public static Period buildYearlyPeriod(
-            int year, ResolutionTypes periodMode, int periodBreakDay) {
+    static Period buildYearlyPeriod(int year, ResolutionTypes periodMode, int periodBreakDay) {
         Period period = new Period();
         period.setStartDate(getFirstDateFromPeriod(year + "-01", periodMode, periodBreakDay));
         period.setEndDate(getLastDateFromPeriod(year + "-12", periodMode, periodBreakDay));
@@ -942,8 +938,7 @@ public final class DateUtils {
         return period;
     }
 
-    public static String getYearlyPeriod(
-            String period, ResolutionTypes periodMode, int periodBreakDay) {
+    static String getYearlyPeriod(String period, ResolutionTypes periodMode, int periodBreakDay) {
         if (ThreadSafeDateFormat.FORMATTER_YEARLY.fitsFormat(period)) {
             return period;
         }
