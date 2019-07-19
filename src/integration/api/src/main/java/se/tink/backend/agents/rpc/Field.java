@@ -236,7 +236,11 @@ public class Field {
             field.hint = hint;
             field.immutable = immutable;
             field.masked = masked;
-            field.setMaxLength(maxLength);
+            if (maxLength != null && maxLength == 0) {
+                field.maxLength = null;
+            } else {
+                field.maxLength = maxLength;
+            }
             field.minLength = minLength;
             field.name = name;
             field.numeric = numeric;
