@@ -93,10 +93,6 @@ public class Field {
         this.description = description;
     }
 
-    public void setHelpText(String helpText) {
-        this.helpText = helpText;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
