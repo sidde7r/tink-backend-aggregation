@@ -64,8 +64,8 @@ public class DkbPaymentExecutor implements PaymentExecutor {
                                 paymentRequest
                                         .getPayment()
                                         .getUniqueId()); // UrlEcnoder.encode() can't be used
-                                                         // becuase it encodes spaces to +, and we
-                                                         // need %20. So we use this method instead.
+        // becuase it encodes spaces to +, and we
+        // need %20. So we use this method instead.
         return apiClient.getPayment(paymentId, paymentProduct).toTinkPaymentResponse();
     }
 
