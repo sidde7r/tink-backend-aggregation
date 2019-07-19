@@ -63,12 +63,12 @@ data:
         {{- end }}
         {{- end }}
 
-        {{- if $agentsConfig.nordeaSE }}
+        {{- if $agentsConfig.nordea }}
         nordea:
           tink:
-            clientId: "NORDEA_SE_CLIENT_ID"
-            clientSecret: "NORDEA_SE_CLIENT_SECRET"
-            redirectUrl: "{{ $agentsConfig.nordeaSE.redirectUrl }}"
+            clientId: "NORDEA_CLIENT_ID"
+            clientSecret: "NORDEA_CLIENT_SECRET"
+            redirectUrl: "{{ $agentsConfig.nordea.tink.redirectUrl }}"
         {{- end }}
 
         {{- if $agentsConfig.monzo }}
