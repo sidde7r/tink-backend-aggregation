@@ -201,9 +201,8 @@ public final class DateUtils {
 
         int numDays = daysBetween(first, last);
         if (numDays > 0) {
-            Date current = first;
             for (int i = 0; i <= numDays; i++) {
-                Date tmp = org.apache.commons.lang3.time.DateUtils.addDays(current, i);
+                Date tmp = org.apache.commons.lang3.time.DateUtils.addDays(first, i);
                 dates.add(tmp);
             }
         }
