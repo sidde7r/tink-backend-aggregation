@@ -118,7 +118,7 @@ public final class DateUtils {
      * @return
      */
     private static String createPeriod(int year, int month) {
-        return Integer.toString(year) + "-" + Strings.padStart(Integer.toString(month), 2, '0');
+        return year + "-" + Strings.padStart(Integer.toString(month), 2, '0');
     }
 
     static List<String> createPeriodListForYear(
