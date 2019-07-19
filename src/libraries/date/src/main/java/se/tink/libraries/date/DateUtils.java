@@ -757,7 +757,7 @@ public final class DateUtils {
             DateFormat inFormat, DateFormat outFormat, String s) throws ParseException {
         Date date = inFormat.parse(s);
 
-        // Validation. Appearently 31st nov silently becomes 1st dec instead of ParseException.
+        // Validation. Apparently 31st nov silently becomes 1st dec instead of ParseException.
         String s2 = inFormat.format(date);
         if (!s.equals(s2)) {
             throw new ParseException("Date isn't valid", 0);
