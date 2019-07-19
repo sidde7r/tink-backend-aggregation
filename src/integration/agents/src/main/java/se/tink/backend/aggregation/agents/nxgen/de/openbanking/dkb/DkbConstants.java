@@ -15,6 +15,8 @@ public final class DkbConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String MAPING_DKB_PAYMENT_TO_TINK_PAYMENT_ERROR =
+                "Cannot map Dkb payment status: %s to Tink payment status.";
     }
 
     public static class Urls {

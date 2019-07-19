@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.enu
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ErrorMessages;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum DkbPaymentStatus {
@@ -64,9 +65,10 @@ public enum DkbPaymentStatus {
                 .orElseThrow(
                         () ->
                                 new IllegalArgumentException(
-                                        "Cannot map Dkb payment status : "
-                                                + dkbPaymentStatus.toString()
-                                                + " to Tink payment status."));
+                                        String.format(
+                                                ErrorMessages
+                                                        .MAPING_DKB_PAYMENT_TO_TINK_PAYMENT_ERROR,
+                                                dkbPaymentStatus.toString())));
     }
 
     @Override

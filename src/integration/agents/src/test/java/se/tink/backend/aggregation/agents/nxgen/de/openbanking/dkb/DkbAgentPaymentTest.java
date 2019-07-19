@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +8,7 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.CredentialKeys;
@@ -45,15 +43,19 @@ public class DkbAgentPaymentTest {
         List<Payment> listOfMockedPayments = new ArrayList<>();
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.DE).toString()).when(creditor).getAccountNumber();
-            doReturn("Creditor Name").when(creditor).getName();
-            Debtor debtor = mock(Debtor.class);
-            doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.DE).toString()).when(debtor).getAccountNumber();
+            Creditor creditor = Mockito.mock(Creditor.class);
+            Mockito.doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
+            Mockito.doReturn(Iban.random(CountryCode.DE).toString())
+                    .when(creditor)
+                    .getAccountNumber();
+            Mockito.doReturn("Creditor Name").when(creditor).getName();
+            Debtor debtor = Mockito.mock(Debtor.class);
+            Mockito.doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
+            Mockito.doReturn(Iban.random(CountryCode.DE).toString())
+                    .when(debtor)
+                    .getAccountNumber();
 
-            Amount amount = Amount.inSEK(new Random().nextInt(50000));
+            Amount amount = Amount.inEUR(new Random().nextInt(50000));
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 

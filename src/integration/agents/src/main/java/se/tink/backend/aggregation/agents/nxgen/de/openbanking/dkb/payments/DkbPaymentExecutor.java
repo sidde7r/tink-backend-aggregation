@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments;
 
+import com.google.common.net.UrlEscapers;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.PaymentProducts;
@@ -56,12 +57,15 @@ public class DkbPaymentExecutor implements PaymentExecutor {
                 paymentRequest.getPayment().isSepa()
                         ? PaymentProducts.INSTANT_SEPA_CREDIT_TRANSFER
                         : PaymentProducts.CROSS_BORDER_CREDIT_TRANSFERS;
+
         String paymentId =
-                paymentRequest
-                        .getPayment()
-                        .getUniqueId()
-                        .replaceAll(
-                                " ", "%20"); // replace all the spaces in payment product with %20
+                UrlEscapers.urlFragmentEscaper()
+                        .escape(
+                                paymentRequest
+                                        .getPayment()
+                                        .getUniqueId()); // UrlEcnoder.encode() can't be used
+                                                         // becuase it encodes spaces to +, and we
+                                                         // need %20. So we use this method instead.
         return apiClient.getPayment(paymentId, paymentProduct).toTinkPaymentResponse();
     }
 
@@ -80,7 +84,8 @@ public class DkbPaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        return null;
+        throw new NotImplementedException(
+                "cancel not yet implemented for " + this.getClass().getName());
     }
 
     @Override

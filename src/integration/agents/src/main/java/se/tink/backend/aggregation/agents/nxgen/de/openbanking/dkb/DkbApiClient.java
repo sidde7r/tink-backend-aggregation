@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.IdTags;
@@ -113,38 +112,32 @@ public final class DkbApiClient {
 
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, String paymentProduct)
-            throws PaymentException {
-        try {
-            return createRequestInSession(
-                            Urls.CREATE_PAYMENT.parameter(IdTags.PAYMENT_PRODUCT, paymentProduct))
-                    .header(HeaderKeys.X_REQUEST_ID, getRequestId())
-                    .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
-                    .post(CreatePaymentResponse.class, createPaymentRequest);
-        } catch (HttpResponseException e) {
-            throw e;
-        }
+            throws HttpResponseException {
+        return createRequestInSession(
+                        Urls.CREATE_PAYMENT.parameter(IdTags.PAYMENT_PRODUCT, paymentProduct))
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public FetchPaymentResponse getPayment(String paymentId, String paymentProduct)
-            throws PaymentException {
-        try {
-            return createRequestInSession(
-                            Urls.FETCH_PAYMENT
-                                    .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
-                                    .parameter(IdTags.PAYMENT_ID, paymentId))
-                    .header(HeaderKeys.X_REQUEST_ID, getRequestId())
-                    .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
-                    .get(FetchPaymentResponse.class);
-        } catch (HttpResponseException e) {
-            throw e;
-        }
+            throws HttpResponseException {
+        return createRequestInSession(
+                        Urls.FETCH_PAYMENT
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                .get(FetchPaymentResponse.class);
     }
 
-    public String getPsuIpAddress() {
-        return "82.117.210.2";
+    private String getPsuIpAddress() {
+        // This is supposed to be the IP address of the PSU, but we can't supply it on sandbox so we
+        // use dummy value
+        return "82.117.210.2"; //
     }
 
-    public String getRequestId() {
+    private String getRequestId() {
         return UUID.randomUUID().toString();
     }
 }

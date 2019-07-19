@@ -18,16 +18,13 @@ public class FetchPaymentResponse {
     private String transactionStatus;
 
     public PaymentResponse toTinkPaymentResponse() {
+        Long unscaledValue = Double.valueOf(instructedAmount.getAmount() * 100).longValue();
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
                         .withAmount(
-                                Amount.valueOf(
-                                        instructedAmount.getCurrency(),
-                                        Double.valueOf(instructedAmount.getAmount() * 100)
-                                                .longValue(),
-                                        2))
+                                Amount.valueOf(instructedAmount.getCurrency(), unscaledValue, 2))
                         .withExecutionDate(null)
                         .withCurrency(instructedAmount.getCurrency())
                         .withStatus(
