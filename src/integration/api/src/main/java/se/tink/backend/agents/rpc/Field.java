@@ -105,10 +105,6 @@ public class Field {
         this.immutable = immutable;
     }
 
-    public void setMasked(boolean masked) {
-        this.masked = masked;
-    }
-
     public void setMaxLength(Integer length) {
         if (length != null && length == 0) {
             this.maxLength = null;
