@@ -16,24 +16,26 @@ public class CrossKeyUtils {
     }
 
     public static List<Field> createOneTimeCodeChallengeFields(String challenge) {
-        Field challengeField = new Field();
+        Field challengeField =
+                Field.builder()
+                        .immutable(true)
+                        .description("Engångskod")
+                        .value(challenge)
+                        .name("challenge")
+                        .helpText(
+                                "Ange koden från ditt kodhäfte, dubbelkolla så att koden du skriver in har rätt plats i kodhäftet")
+                        .build();
 
-        challengeField.setImmutable(true);
-        challengeField.setDescription("Engångskod");
-        challengeField.setValue(challenge);
-        challengeField.setName("challenge");
-        challengeField.setHelpText(
-                "Ange koden från ditt kodhäfte, dubbelkolla så att koden du skriver in har rätt plats i kodhäftet");
-
-        Field responseField = new Field();
-
-        responseField.setDescription("Engångskod");
-        responseField.setName("response");
-        responseField.setNumeric(true);
-        responseField.setHint("NNNN");
-        responseField.setMaxLength(4);
-        responseField.setMinLength(4);
-        responseField.setPattern("([0-9]{4})");
+        Field responseField =
+                Field.builder()
+                        .description("Engångskod")
+                        .name("response")
+                        .numeric(true)
+                        .hint("NNNN")
+                        .maxLength(4)
+                        .minLength(4)
+                        .pattern("([0-9]{4})")
+                        .build();
 
         return Lists.newArrayList(challengeField, responseField);
     }
