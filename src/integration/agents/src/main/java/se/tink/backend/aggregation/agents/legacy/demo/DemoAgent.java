@@ -102,23 +102,25 @@ public class DemoAgent extends AbstractAgent
     }
 
     private static List<Field> createChallengeAndResponse(String code) {
-        Field challengeField = new Field();
+        Field challengeField =
+                Field.builder()
+                        .immutable(true)
+                        .description("Kod")
+                        .value("Kod")
+                        .name("code")
+                        .helpText("Koden är: " + code)
+                        .build();
 
-        challengeField.setImmutable(true);
-        challengeField.setDescription("Kod");
-        challengeField.setValue("Kod");
-        challengeField.setName("code");
-        challengeField.setHelpText("Koden är: " + code);
-
-        Field responseField = new Field();
-
-        responseField.setDescription("Sändkod");
-        responseField.setName("response");
-        responseField.setNumeric(false);
-        responseField.setHint("NNNNN");
-        responseField.setMaxLength(code.length());
-        responseField.setMinLength(code.length());
-        responseField.setPattern("([a-zA-Z0-9]{" + code.length() + "})");
+        Field responseField =
+                Field.builder()
+                        .description("Sändkod")
+                        .name("response")
+                        .numeric(false)
+                        .hint("NNNNN")
+                        .maxLength(code.length())
+                        .minLength(code.length())
+                        .pattern("([a-zA-Z0-9]{" + code.length() + "})")
+                        .build();
 
         return Lists.newArrayList(challengeField, responseField);
     }
