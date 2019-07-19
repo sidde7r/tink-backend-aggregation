@@ -355,43 +355,6 @@ load("@other//:compat.bzl", "compat_repositories")
 
 compat_repositories()
 
-PROTOBUF_VERSION = "3.9.0"
-
-OPENCENSUS_VERSION = "0.21.0"
-
-GRPC_JAVA_VERSION = "1.22.1"
-
-GRPC_JAVA_NANO_VERSION = "1.21.0"
-
-maven_install(
-    name = "grpc",
-    artifacts = [
-        "com.google.protobuf:protobuf-java:%s" % PROTOBUF_VERSION,
-        "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
-        "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
-        "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
-        "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
-        "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
-        "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
-        "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
-        "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
-        "io.perfmark:perfmark-api:0.17.0",
-    ],
-    generate_compat_repositories = True,
-    maven_install_json = "//third_party:grpc_install.json",
-    repositories = [
-        "https://repo1.maven.org/maven2/",
-    ],
-)
-
-load("@grpc//:defs.bzl", "pinned_maven_install")
-
-pinned_maven_install()
-
-load("@grpc//:compat.bzl", "compat_repositories")
-
-compat_repositories()
-
 """
 Import Docker rule
 """
@@ -508,21 +471,64 @@ http_file(
 Import GRPC/Protobuf rules
 """
 
+PROTOBUF_VERSION = "3.9.0"
+
+OPENCENSUS_VERSION = "0.21.0"
+
+GRPC_JAVA_VERSION = "1.22.1"
+
+GRPC_JAVA_NANO_VERSION = "1.21.0"
+
+maven_install(
+    name = "grpc",
+    artifacts = [
+        "com.google.protobuf:protobuf-java:%s" % PROTOBUF_VERSION,
+        "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
+        "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
+        "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
+        "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
+        "io.perfmark:perfmark-api:0.17.0",
+    ],
+    generate_compat_repositories = True,
+    maven_install_json = "//third_party:grpc_install.json",
+    repositories = [
+        "https://repo1.maven.org/maven2/",
+    ],
+)
+
+load("@grpc//:defs.bzl", "pinned_maven_install")
+
+pinned_maven_install()
+
+load("@grpc//:compat.bzl", "compat_repositories")
+
+compat_repositories()
+
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
-    sha256 = "6f5fc69224f2fa9ed7e1376aedf6c5c6239dcfe566beb89d3a1c77c50fb8886b",
-    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-linux-x86_64.exe"],
+    sha256 = "9b2091268704422f9648827a0b729c4287abcfe81ee3a67bb31978e2075c8a04",
+    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-linux-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
 
 http_file(
     name = "protoc_gen_grpc_java_macosx",
-    sha256 = "f7ad13d42e2a2415d021263ae258ca08157e584c54e9fce093f1a5a871a8763a",
-    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-osx-x86_64.exe"],
+    sha256 = "fd01cffceedf6f3b8ebc3679ad22efeeb3e3b8c3b31495f698137297a0bc5fa6",
+    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-osx-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
+)
+
+http_file(
+    name = "protoc_gen_grpc_java_windows_x86_64",
+    sha256 = "9e2534ab1df91e6d52b0811dae406fbe96371c0b552a8f4c618688d83e7bee0b",
+    urls = ["https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-windows-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
 
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "9510dd2afc29e7245e9e884336f848c8a6600a14ae726adb6befdb4f786f0be2",
+    sha256 = "8eb5ca331ab8ca0da2baea7fc0607d86c46c80845deca57109a5d637ccb93bb4",
     strip_prefix = "protobuf-%s" % PROTOBUF_VERSION,
     url = "https://github.com/google/protobuf/archive/v%s.zip" % PROTOBUF_VERSION,
 )
@@ -531,6 +537,10 @@ bind(
     name = "protocol_compiler",
     actual = "@com_google_protobuf//:protoc",
 )
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
 
 STACKB_RULES_PROTO_VERSION = "8afa882b3dff5fec93b22519d34d0099083a7ce2"
 
@@ -543,7 +553,7 @@ http_archive(
 
 http_archive(
     name = "io_grpc_grpc_java",
-    sha256 = "9d23d9fec84e24bd3962f5ef9d1fd61ce939d3f649a22bcab0f19e8167fae8ef",
+    sha256 = "ceade229adade0d7b156f6d17fbc1df9298bfc8d3c4eeaba596f7a4a4d3701fc",
     strip_prefix = "grpc-java-%s" % GRPC_JAVA_VERSION,
     url = "https://github.com/grpc/grpc-java/archive/v%s.zip" % GRPC_JAVA_VERSION,
 )
