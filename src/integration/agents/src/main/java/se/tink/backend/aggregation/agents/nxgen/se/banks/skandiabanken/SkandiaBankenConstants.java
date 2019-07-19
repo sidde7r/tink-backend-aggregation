@@ -59,7 +59,8 @@ public class SkandiaBankenConstants {
         public static final String FETCH_BEARER = "/mobile/v1/oauth2/token";
         public static final String FETCH_ACCOUNTS = "/Customers/V2/Commitments/BankAccounts";
         public static final String FETCH_ACCOUNT_TRANSACTIONS =
-                "/Accounts/V2/BankAccounts/Transactions/{accountId}/{page}/20";
+                "/Accounts/V2/BankAccounts/Transactions/{accountId}/{page}/"
+                        + Fetcher.TRANSACTIONS_PER_BATCH;
         public static final String FETCH_PENDING_ACCOUNT_TRANSACTIONS =
                 "/Accounts/V2/BankAccounts/Reservations/{accountId}";
         public static final String FETCH_CREDIT_CARDS = "/Customers/V3/Commitments/Cards";
@@ -151,7 +152,7 @@ public class SkandiaBankenConstants {
 
     public static class Fetcher {
         public static final int START_PAGE = 1;
-        public static final int TRANSACTIONS_PER_BATCH = 20;
+        public static final int TRANSACTIONS_PER_BATCH = 200;
     }
 
     public static class Authentication {
