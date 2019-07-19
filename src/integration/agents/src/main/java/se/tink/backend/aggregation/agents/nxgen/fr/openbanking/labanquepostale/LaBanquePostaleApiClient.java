@@ -71,10 +71,6 @@ public final class LaBanquePostaleApiClient
         return null;
     }
 
-    public String getXRequestID() {
-        return UUID.randomUUID().toString();
-    }
-
     private RequestBuilder buildRequestWithSignature(final String url, final String payload) {
         final String reqId = BerlinGroupUtils.getRequestId();
         final String date = getFormattedDate();

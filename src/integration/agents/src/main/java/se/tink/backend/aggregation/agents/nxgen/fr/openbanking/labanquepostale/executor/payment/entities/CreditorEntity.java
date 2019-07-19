@@ -15,7 +15,7 @@ public class CreditorEntity {
                 .build();
     }
 
-    public CreditorEntity(Builder builder) {
+    private CreditorEntity(Builder builder) {
         this.name = builder.name;
         this.postalAddress = builder.postalAddress;
         this.organisationId = builder.organisationId;

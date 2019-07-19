@@ -68,14 +68,15 @@ public class LaBanquePostalPaymentExecutor implements PaymentExecutor {
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         // TODO: Every payment id returns same response
         int paymentId = 42;
-        return apiClient.getPayment(paymentId).toTinkPaymentResponse();
+        return apiClient.getPayment(paymentId).toTinkPaymentResponse(false);
     }
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         // TODO: Every payment id returns same response
         String paymentId = "42";
-        Payment payment = apiClient.confirmPayment(paymentId).toTinkPaymentResponse().getPayment();
+        Payment payment =
+                apiClient.confirmPayment(paymentId).toTinkPaymentResponse(true).getPayment();
 
         return new PaymentMultiStepResponse(
                 payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());

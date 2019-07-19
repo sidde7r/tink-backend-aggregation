@@ -18,7 +18,7 @@ public class PaymentTypeInformationEntity {
                 .build();
     }
 
-    public PaymentTypeInformationEntity(Builder builder) {
+    private PaymentTypeInformationEntity(Builder builder) {
         this.serviceLevel = builder.serviceLevel;
         this.localInstrument = builder.localInstrument;
         this.categoryPurpose = builder.categoryPurpose;

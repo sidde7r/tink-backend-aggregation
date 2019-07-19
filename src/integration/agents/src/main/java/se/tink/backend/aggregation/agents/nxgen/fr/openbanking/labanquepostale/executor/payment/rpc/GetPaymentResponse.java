@@ -13,7 +13,7 @@ public class GetPaymentResponse {
     @JsonProperty("_links")
     private GetPaymentLinksEntity links;
 
-    public PaymentResponse toTinkPaymentResponse() {
-        return paymentRequest.toTinkPaymentResponse();
+    public PaymentResponse toTinkPaymentResponse(boolean paid) {
+        return paymentRequest.toTinkPaymentResponse(paid);
     }
 }

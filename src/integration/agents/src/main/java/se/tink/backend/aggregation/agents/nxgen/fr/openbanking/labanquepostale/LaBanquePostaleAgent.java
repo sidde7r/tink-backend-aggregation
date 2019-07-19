@@ -25,7 +25,6 @@ public final class LaBanquePostaleAgent
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        client.setDebugOutput(true);
         clientName = request.getProvider().getPayload();
 
         apiClient = new LaBanquePostaleApiClient(client, sessionStorage);

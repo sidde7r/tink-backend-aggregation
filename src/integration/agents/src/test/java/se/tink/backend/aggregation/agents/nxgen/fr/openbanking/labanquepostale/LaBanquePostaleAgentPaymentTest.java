@@ -29,7 +29,7 @@ public class LaBanquePostaleAgentPaymentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
-        builder.build().testGenericPayment(createListMockedDomesticPayment(4));
+        builder.build().testGenericPayment(createListMockedDomesticPayment(1));
     }
 
     private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {

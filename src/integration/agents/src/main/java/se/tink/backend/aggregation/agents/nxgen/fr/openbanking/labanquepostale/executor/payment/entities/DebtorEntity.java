@@ -15,7 +15,7 @@ public class DebtorEntity {
                 .build();
     }
 
-    public DebtorEntity(Builder builder) {
+    private DebtorEntity(Builder builder) {
         this.name = builder.name;
         this.postalAddress = builder.postalAddress;
         this.privateId = builder.privateId;

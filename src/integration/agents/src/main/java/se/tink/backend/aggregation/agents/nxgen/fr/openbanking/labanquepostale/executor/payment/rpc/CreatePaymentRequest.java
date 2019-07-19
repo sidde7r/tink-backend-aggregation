@@ -55,7 +55,8 @@ public class CreatePaymentRequest {
 
     public CreatePaymentRequest() {}
 
-    public PaymentResponse toTinkPaymentResponse() {
+    // TODO: Responses doesn't return status so it must be hardcoded
+    public PaymentResponse toTinkPaymentResponse(boolean paid) {
         CreditTransferTransactionEntity creditTransferTransactionEntity = getTransactionFromList();
 
         LocalDate executionDate =
@@ -79,7 +80,7 @@ public class CreatePaymentRequest {
                         .withCreditor(new Creditor(new IbanIdentifier(creditorAccount.getIban())))
                         .withAmount(amount)
                         .withCurrency(amount.getCurrency())
-                        .withStatus(PaymentStatus.PENDING)
+                        .withStatus(paid ? PaymentStatus.PAID : PaymentStatus.PENDING)
                         .build());
     }
 
