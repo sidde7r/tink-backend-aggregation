@@ -1448,10 +1448,7 @@ public class NordeaV20Agent extends AbstractAgent
     }
 
     private Optional<String> requestRecipientNameSupplemental() {
-        Field nameField = new Field();
-
-        nameField.setDescription("Mottagarnamn");
-        nameField.setName("name");
+        Field nameField = Field.builder().description("Mottagarnamn").name("name").build();
 
         List<Field> fields = Lists.newArrayList(nameField);
 
