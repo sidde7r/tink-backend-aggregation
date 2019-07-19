@@ -132,13 +132,13 @@ public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthen
     }
 
     private Field responseField() {
-        Field field = new Field();
-        field.setDescription("Response code");
-        field.setName(HandelsbankenConstants.DeviceAuthentication.CODE);
-        field.setNumeric(true);
-        field.setHint("NNN NNN");
-        field.setMaxLength(6);
-        field.setMinLength(6);
-        return field;
+        return Field.builder()
+                .description("Response code")
+                .name(HandelsbankenConstants.DeviceAuthentication.CODE)
+                .numeric(true)
+                .hint("NNN NNN")
+                .maxLength(6)
+                .minLength(6)
+                .build();
     }
 }
