@@ -55,3 +55,22 @@ Agent test server listening on 127.0.0.1:7357
 [python_future]: https://python-future.org/
 [pipenv]: https://github.com/pypa/pipenv
 [virtualenv]: http://docs.python-guide.org/en/latest/dev/virtualenvs/#lower-level-virtualenv
+
+
+## SSL certificate
+
+By default, the server will generate a self-signed certificate every time it runs.
+If you access it with a browser, you'll have to add it to your system's trust store every time it's run, which will result in you having a lot of trusted self-signed certificates that were only used once.
+To prevent this, you can create your own self-signed certificate and use it instead, so you only have to add it once.
+
+To create the key pair:
+```
+$ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -nodes -days 365
+````
+
+If you have a `cert.pem` and `key.pem` in this directory, `run.sh` will pick them up automatically.
+
+Otherwise, pass them in `--cert` and `--key` arguments:
+```
+$ pipenv run python ./agent_test_server.py --cert /path/to/cert.pem --key /path/to/key.pem
+```
