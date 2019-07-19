@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 
 public interface PaymentExecutor {
@@ -14,6 +13,4 @@ public interface PaymentExecutor {
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest);
 
     PaymentResponse cancel(PaymentRequest paymentRequest);
-
-    Optional<PaymentController> constructPaymentController();
 }

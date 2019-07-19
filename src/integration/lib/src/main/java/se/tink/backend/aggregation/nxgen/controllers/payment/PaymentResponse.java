@@ -18,6 +18,11 @@ public class PaymentResponse {
         this.storage = Storage.copyOf(storage);
     }
 
+    public static PaymentResponse of(PaymentRequest paymentRequest) {
+        return new PaymentResponse(
+                paymentRequest.getPayment(), Storage.copyOf(paymentRequest.getStorage()));
+    }
+
     public Payment getPayment() {
         return payment;
     }

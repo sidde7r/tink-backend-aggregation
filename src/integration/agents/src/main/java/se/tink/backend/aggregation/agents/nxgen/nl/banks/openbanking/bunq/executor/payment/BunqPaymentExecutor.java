@@ -16,13 +16,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.fetc
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -33,7 +34,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class BunqPaymentExecutor implements PaymentExecutor {
+public class BunqPaymentExecutor implements FetchablePaymentExecutor {
 
     private BunqApiClient apiClient;
     private SessionStorage sessionStorage;
@@ -81,7 +82,7 @@ public class BunqPaymentExecutor implements PaymentExecutor {
         PaymentStatus paymentStatus;
         String nextStep;
         switch (paymentMultiStepRequest.getStep()) {
-            case AuthenticationStepConstants.STEP_INIT:
+            case SigningStepConstants.STEP_INIT:
                 // Redirect the user to Bunq. User need to log-in and then approve the
                 // draft-payment.
                 // Bunq deeplinks information:

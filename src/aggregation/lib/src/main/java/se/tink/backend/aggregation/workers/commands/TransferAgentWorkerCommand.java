@@ -18,8 +18,9 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -58,6 +59,31 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         super(context, transferRequest.getCredentials(), transferRequest.getSignableOperation());
         this.transferRequest = transferRequest;
         this.metrics = metrics.init(this);
+    }
+
+    private static ClientFilterFactory createHttpLoggingFilterFactory(
+            String logTag,
+            Class<? extends HttpLoggableExecutor> agentClass,
+            Credentials credentials) {
+        Iterable<StringMasker> stringMaskers = createHttpLogMaskers(credentials);
+        return new HttpLoggingFilterFactory(log, logTag, stringMaskers, agentClass);
+    }
+
+    private static Iterable<StringMasker> createHttpLogMaskers(Credentials credentials) {
+        StringMasker stringMasker =
+                new CredentialsStringMasker(
+                        credentials,
+                        ImmutableList.of(
+                                CredentialsStringMasker.CredentialsProperty.PASSWORD,
+                                CredentialsStringMasker.CredentialsProperty.SECRET_KEY,
+                                CredentialsStringMasker.CredentialsProperty.SENSITIVE_PAYLOAD,
+                                CredentialsStringMasker.CredentialsProperty.USERNAME));
+
+        return ImmutableList.of(stringMasker);
+    }
+
+    private static String getLogTagTransfer(Transfer transfer) {
+        return LOG_TAG_TRANSFER + ":" + UUIDUtils.toTinkUUID(transfer.getId());
     }
 
     @Override
@@ -104,15 +130,21 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 } else {
                     transferExecutor.execute(transfer);
                 }
-            } else if (agent instanceof TransferExecutorNxgen) {
-                TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
-                if (transferRequest.isUpdate()) {
-                    transferExecutorNxgen.update(transfer);
+            } else if (agent instanceof SubsequentGenerationAgent) {
+                SubsequentGenerationAgent subsequentGenerationAgent =
+                        (SubsequentGenerationAgent) agent;
+                if (subsequentGenerationAgent.getPaymentController().isPresent()) {
+                    handlePayment(
+                            subsequentGenerationAgent.getPaymentController().get(),
+                            transferRequest);
                 } else {
-                    operationStatusMessage = transferExecutorNxgen.execute(transfer);
+                    TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
+                    if (transferRequest.isUpdate()) {
+                        transferExecutorNxgen.update(transfer);
+                    } else {
+                        operationStatusMessage = transferExecutorNxgen.execute(transfer);
+                    }
                 }
-            } else if (agent instanceof FetchablePaymentController) {
-                handlePayment((FetchablePaymentController) agent, transferRequest);
             }
 
             metricAction.completed();
@@ -208,13 +240,12 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         }
     }
 
-    private void handlePayment(
-            FetchablePaymentController fetchablePaymentController, TransferRequest transferRequest)
+    private void handlePayment(PaymentController paymentController, TransferRequest transferRequest)
             throws PaymentException {
         PaymentResponse createPaymentResponse =
-                fetchablePaymentController.create(PaymentRequest.of(transferRequest));
+                paymentController.create(PaymentRequest.of(transferRequest));
         PaymentMultiStepResponse signPaymentMultiStepResponse =
-                fetchablePaymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
+                paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 
         Map<String, String> map;
         List<Field> fields;
@@ -227,7 +258,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             map = Collections.emptyMap();
 
             signPaymentMultiStepResponse =
-                    fetchablePaymentController.sign(
+                    paymentController.sign(
                             new PaymentMultiStepRequest(
                                     payment,
                                     storage,
@@ -238,31 +269,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             payment = signPaymentMultiStepResponse.getPayment();
             storage = signPaymentMultiStepResponse.getStorage();
         }
-    }
-
-    private static ClientFilterFactory createHttpLoggingFilterFactory(
-            String logTag,
-            Class<? extends HttpLoggableExecutor> agentClass,
-            Credentials credentials) {
-        Iterable<StringMasker> stringMaskers = createHttpLogMaskers(credentials);
-        return new HttpLoggingFilterFactory(log, logTag, stringMaskers, agentClass);
-    }
-
-    private static Iterable<StringMasker> createHttpLogMaskers(Credentials credentials) {
-        StringMasker stringMasker =
-                new CredentialsStringMasker(
-                        credentials,
-                        ImmutableList.of(
-                                CredentialsStringMasker.CredentialsProperty.PASSWORD,
-                                CredentialsStringMasker.CredentialsProperty.SECRET_KEY,
-                                CredentialsStringMasker.CredentialsProperty.SENSITIVE_PAYLOAD,
-                                CredentialsStringMasker.CredentialsProperty.USERNAME));
-
-        return ImmutableList.of(stringMasker);
-    }
-
-    private static String getLogTagTransfer(Transfer transfer) {
-        return LOG_TAG_TRANSFER + ":" + UUIDUtils.toTinkUUID(transfer.getId());
     }
 
     @Override
@@ -292,15 +298,15 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         return "Unrecognized transfer command.";
     }
 
+    @Override
+    public String getMetricName() {
+        return MetricName.METRIC;
+    }
+
     private static class MetricName {
         private static final String METRIC = "agent_transfer";
 
         private static final String UPDATE_TRANSFER = "update";
         private static final String EXECUTE_TRANSFER = "execute";
-    }
-
-    @Override
-    public String getMetricName() {
-        return MetricName.METRIC;
     }
 }

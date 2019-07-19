@@ -15,6 +15,15 @@ public class PaymentListResponse {
         this.getPaymentResponseList().add(paymentResponse);
     }
 
+    public static PaymentListResponse of(List<PaymentRequest> paymentRequests) {
+        List<PaymentResponse> paymentResponseList = new ArrayList<>();
+        paymentRequests.stream()
+                .forEach(
+                        paymentRequest ->
+                                paymentResponseList.add(PaymentResponse.of(paymentRequest)));
+        return new PaymentListResponse(paymentResponseList);
+    }
+
     public List<PaymentResponse> getPaymentResponseList() {
         return paymentResponseList;
     }

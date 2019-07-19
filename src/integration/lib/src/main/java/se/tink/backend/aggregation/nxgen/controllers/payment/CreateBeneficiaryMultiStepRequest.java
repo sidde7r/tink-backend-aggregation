@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.payment;
 import java.util.Collections;
 import java.util.List;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -23,7 +23,7 @@ public class CreateBeneficiaryMultiStepRequest {
         return new PaymentMultiStepRequest(
                 paymentResponse.getPayment(),
                 Storage.copyOf(paymentResponse.getStorage()),
-                AuthenticationStepConstants.STEP_INIT,
+                SigningStepConstants.STEP_INIT,
                 Collections.emptyList(),
                 Collections.emptyList());
     }
