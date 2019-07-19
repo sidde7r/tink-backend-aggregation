@@ -51,16 +51,8 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
         return CredentialsTypes.PASSWORD;
     }
 
-    private static Field newField(String name, String description, String value) {
-        Field field = new Field();
-        field.setName(name);
-        field.setDescription(description);
-        field.setValue(value);
-        return field;
-    }
-
     private static Field newField(String name, String description, String value, String helpText) {
-        Field field = newField(name, description, value);
+        Field field = Field.builder().name(name).description(description).value(value).build();
         field.setHelpText(helpText);
         return field;
     }
@@ -95,7 +87,11 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
                                 "Security Code",
                                 String.format("%04d", random.nextInt(10000)),
                                 catalog.getString(descriptionCode)),
-                        newField(loginInputField, "Input Code", null)),
+                        Field.builder()
+                                .name(loginInputField)
+                                .description("Input Code")
+                                .value(null)
+                                .build()),
                 code1,
                 loginDesciptionField,
                 loginInputField);
@@ -107,7 +103,11 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
                                 "Login Code",
                                 String.format("%04d", random.nextInt(10000)),
                                 catalog.getString(secondDescriptionCode)),
-                        newField(loginChallengeInputField, "Input Code", null)),
+                        Field.builder()
+                                .name(loginChallengeInputField)
+                                .description("Input Code")
+                                .value(null)
+                                .build()),
                 code2,
                 loginChallengeField,
                 loginChallengeInputField);
