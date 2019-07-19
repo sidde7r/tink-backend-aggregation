@@ -101,28 +101,28 @@ public class HandelsbankenSECardDeviceAuthenticator implements MultiFactorAuthen
     }
 
     private Field challengeField(InitNewProfileResponse initNewProfile) {
-        Field field = new Field();
-        field.setImmutable(true);
-        field.setDescription("Kontrollkod");
-        field.setValue(initNewProfile.getChallenge());
-        field.setName("challenge");
-        field.setHelpText(
-                "Sätt i ditt inloggningskort i kortläsaren och tryck på knappen SIGN. "
-                        + "Knappa därefter in kontrollkoden och din PIN-kod till kortet i kortläsaren. "
-                        + "Skriv in svarskoden i fältet nedan.");
-        return field;
+        return Field.builder()
+                .immutable(true)
+                .description("Kontrollkod")
+                .value(initNewProfile.getChallenge())
+                .name("challenge")
+                .helpText(
+                        "Sätt i ditt inloggningskort i kortläsaren och tryck på knappen SIGN. "
+                                + "Knappa därefter in kontrollkoden och din PIN-kod till kortet i kortläsaren. "
+                                + "Skriv in svarskoden i fältet nedan.")
+                .build();
     }
 
     private Field responseField() {
-        Field field = new Field();
-        field.setDescription("Svarskod");
-        field.setName(HandelsbankenConstants.DeviceAuthentication.CODE);
-        field.setNumeric(true);
-        field.setHint("NNN NNN NNN");
-        field.setMaxLength(9);
-        field.setMinLength(
-                8); // Allow 8 digits, to be able to return a helpful error message for that case.
-        field.setPattern("([0-9]{8,9})");
-        return field;
+        return Field.builder()
+                .description("Svarskod")
+                .name(HandelsbankenConstants.DeviceAuthentication.CODE)
+                .numeric(true)
+                .hint("NNN NNN NNN")
+                .maxLength(9)
+                // Allow 8 digits, to be able to return a helpful error message for that case.
+                .minLength(8)
+                .pattern("([0-9]{8,9})")
+                .build();
     }
 }
