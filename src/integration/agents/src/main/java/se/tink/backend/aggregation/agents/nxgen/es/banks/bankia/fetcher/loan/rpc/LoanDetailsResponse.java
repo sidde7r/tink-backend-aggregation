@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rp
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -10,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.Loans;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.entities.AmortizationLiquidationEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.entities.CommissionsEntity;
@@ -113,11 +113,8 @@ public class LoanDetailsResponse {
     @JsonIgnore
     private List<String> getApplicants() {
         return Optional.ofNullable(debtors).orElseGet(Collections::emptyList).stream()
-                .filter(Predicates.not(debtor -> Strings.isNullOrEmpty(debtor.getDebtorName())))
-                .filter(
-                        debtor ->
-                                BankiaConstants.Loans.DEBTOR_CODE.equalsIgnoreCase(
-                                        debtor.getDebtorRoleCode()))
+                .filter(debtor -> !Strings.isNullOrEmpty(debtor.getDebtorName()))
+                .filter(debtor -> Loans.DEBTOR_CODE.equalsIgnoreCase(debtor.getDebtorRoleCode()))
                 .map(DebtorEntity::getDebtorName)
                 .collect(Collectors.toList());
     }
