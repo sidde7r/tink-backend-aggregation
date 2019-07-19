@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 
 public final class DateUtils {
     private static final int MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
-    protected static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
+    static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
     public static final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone("CET");
     private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
     private static final ImmutableSet<String> HOLIDAYS;
