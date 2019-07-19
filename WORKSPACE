@@ -63,9 +63,9 @@ git_repository(
 
 git_repository(
     name = "com_tink_api_grpc",
-    commit = "c216e927af5f196dd3a514023bb3da0e7a65d78d",
+    commit = "f23aeafc40b0105ab41cc0aeb31de754bb450a06",
     remote = "git@github.com:tink-ab/tink-grpc.git",
-    shallow_since = "1562857859 +0000",
+    #shallow_since = "1562857859 +0000",
 )
 
 git_repository(
