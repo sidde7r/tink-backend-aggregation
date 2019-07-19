@@ -105,14 +105,6 @@ public class Field {
         this.immutable = immutable;
     }
 
-    public void setMaxLength(Integer length) {
-        if (length != null && length == 0) {
-            this.maxLength = null;
-        } else {
-            this.maxLength = length;
-        }
-    }
-
     public void setName(String name) {
         this.name = name;
     }
