@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
 public final class DateUtils {
     private static final int MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
     static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
-    public static final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone("CET");
     private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
     private static final ImmutableSet<String> HOLIDAYS;
     private static final ImmutableSet<LocalDate> HOLIDAYS_LOCAL_DATE;
@@ -110,6 +109,11 @@ public final class DateUtils {
 
     private DateUtils() {
         throw new AssertionError();
+    }
+
+    /** @return a Central European Time time zone instance (mutable) */
+    public static TimeZone createCetTimeZone() {
+        return TimeZone.getTimeZone("CET");
     }
 
     /**
@@ -353,11 +357,11 @@ public final class DateUtils {
      * @return
      */
     public static Calendar getCalendar() {
-        return Calendar.getInstance(DEFAULT_TIMEZONE, DEFAULT_LOCALE);
+        return Calendar.getInstance(createCetTimeZone(), DEFAULT_LOCALE);
     }
 
     public static Calendar getCalendar(Locale locale) {
-        return Calendar.getInstance(DEFAULT_TIMEZONE, locale);
+        return Calendar.getInstance(createCetTimeZone(), locale);
     }
 
     public static Calendar getCalendar(Date date) {
@@ -1158,10 +1162,10 @@ public final class DateUtils {
 
     public static int daysBetween(Date date1, Date date2) {
         long days1 =
-                (date1.getTime() + DEFAULT_TIMEZONE.getOffset(date1.getTime()))
+                (date1.getTime() + createCetTimeZone().getOffset(date1.getTime()))
                         / MILLISECONDS_PER_DAY;
         long days2 =
-                (date2.getTime() + DEFAULT_TIMEZONE.getOffset(date2.getTime()))
+                (date2.getTime() + createCetTimeZone().getOffset(date2.getTime()))
                         / MILLISECONDS_PER_DAY;
 
         return (int) (days2 - days1);
@@ -1475,8 +1479,9 @@ public final class DateUtils {
     }
 
     public static final long getCalendarMonthsBetween(Date date1, Date date2) {
-        YearMonth m1 = YearMonth.from(date1.toInstant().atZone(DEFAULT_TIMEZONE.toZoneId()));
-        YearMonth m2 = YearMonth.from(date2.toInstant().atZone(DEFAULT_TIMEZONE.toZoneId()));
+        final TimeZone cetTimeZone = createCetTimeZone();
+        YearMonth m1 = YearMonth.from(date1.toInstant().atZone(cetTimeZone.toZoneId()));
+        YearMonth m2 = YearMonth.from(date2.toInstant().atZone(cetTimeZone.toZoneId()));
         return m1.until(m2, ChronoUnit.MONTHS);
     }
 
