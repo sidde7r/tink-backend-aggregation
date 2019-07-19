@@ -117,13 +117,13 @@ spec:
             secretKeyRef:
               name: aggregation-secrets
               key: creditsafe-password
-        - name: NORDEA_SE_CLIENT_ID
+        - name: NORDEA_CLIENT_ID
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
               key: nordea-client-id
               optional: true
-        - name: NORDEA_SE_CLIENT_SECRET
+        - name: NORDEA_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
