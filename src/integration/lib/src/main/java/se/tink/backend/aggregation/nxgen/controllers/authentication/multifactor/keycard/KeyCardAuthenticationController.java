@@ -94,13 +94,13 @@ public class KeyCardAuthenticationController implements MultiFactorAuthenticator
             helpText = helpText + String.format(" (%s)", keyCardId.get());
         }
 
-        Field keyIndexField = new Field();
-        keyIndexField.setDescription(catalog.getString("Key card index"));
-        keyIndexField.setName("keyCardIndex");
-        keyIndexField.setHelpText(helpText);
-        keyIndexField.setValue(keyCardCodeIndex);
-        keyIndexField.setImmutable(true);
-        return keyIndexField;
+        return Field.builder()
+                .description(catalog.getString("Key card index"))
+                .name("keyCardIndex")
+                .helpText(helpText)
+                .value(keyCardCodeIndex)
+                .immutable(true)
+                .build();
     }
 
     private Field getKeyCardValueField() {
