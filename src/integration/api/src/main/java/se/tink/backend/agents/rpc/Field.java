@@ -97,10 +97,6 @@ public class Field {
         this.helpText = helpText;
     }
 
-    public void setHint(String hint) {
-        this.hint = hint;
-    }
-
     public void setImmutable(boolean immutable) {
         this.immutable = immutable;
     }
