@@ -972,7 +972,7 @@ public final class DateUtils {
         }
     }
 
-    public static final long getCalendarMonthsBetween(Date date1, Date date2) {
+    public static long getCalendarMonthsBetween(Date date1, Date date2) {
         final TimeZone cetTimeZone = createCetTimeZone();
         YearMonth m1 = YearMonth.from(date1.toInstant().atZone(cetTimeZone.toZoneId()));
         YearMonth m2 = YearMonth.from(date2.toInstant().atZone(cetTimeZone.toZoneId()));
