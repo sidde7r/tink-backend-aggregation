@@ -6,7 +6,7 @@ import org.junit.Test;
 public final class FormTest {
     @Test
     public void ensureDefaultConstructor_yieldsEmptyString() {
-        final Form form = new Form();
+        final Form form = Form.builder().build();
         Assert.assertEquals(form.serialize(), "");
     }
 
