@@ -54,7 +54,11 @@ public class SibsRedirectAuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException {
-        throw SessionError.SESSION_EXPIRED.exception();
+        ConsentStatus consentStatus = authenticator.getConsentStatus();
+
+        if (!consentStatus.isAcceptedStatus()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     @Override

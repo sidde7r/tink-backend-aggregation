@@ -15,4 +15,8 @@ public enum ConsentStatus {
     public boolean isFinalStatus() {
         return this == ACTC || this == CANC || this == RJCT;
     }
+
+    public boolean isAcceptedStatus() {
+        return this == ACTC;
+    }
 }
