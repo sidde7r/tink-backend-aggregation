@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsDecoupledAuthenticationController;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CaixaAgent extends SibsBaseAgent {
@@ -22,6 +23,8 @@ public class CaixaAgent extends SibsBaseAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SibsDecoupledAuthenticationController(new SibsAuthenticator(apiClient));
+        final SibsDecoupledAuthenticationController controller =
+                new SibsDecoupledAuthenticationController(new SibsAuthenticator(apiClient));
+        return new AutoAuthenticationController(request, systemUpdater, controller, controller);
     }
 }

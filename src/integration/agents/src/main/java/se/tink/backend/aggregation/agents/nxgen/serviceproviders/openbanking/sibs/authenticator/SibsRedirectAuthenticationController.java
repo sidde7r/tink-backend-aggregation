@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
@@ -54,11 +53,7 @@ public class SibsRedirectAuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException {
-        ConsentStatus consentStatus = authenticator.getConsentStatus();
-
-        if (!consentStatus.isAcceptedStatus()) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
+        authenticator.autoAuthenticate();
     }
 
     @Override

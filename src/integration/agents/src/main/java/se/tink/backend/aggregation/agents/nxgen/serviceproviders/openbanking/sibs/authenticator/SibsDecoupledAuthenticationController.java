@@ -6,7 +6,9 @@ import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
@@ -14,9 +16,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 
-public class SibsDecoupledAuthenticationController implements Authenticator {
+public class SibsDecoupledAuthenticationController
+        implements Authenticator, AutoAuthenticator, MultiFactorAuthenticator {
     private static final Logger logger =
             LoggerFactory.getLogger(SibsDecoupledAuthenticationController.class);
     private static final long SLEEP_TIME = 10L;
@@ -32,6 +37,11 @@ public class SibsDecoupledAuthenticationController implements Authenticator {
     }
 
     @Override
+    public void autoAuthenticate() throws SessionException {
+        authenticator.autoAuthenticate();
+    }
+
+    @Override
     public void authenticate(Credentials credentials) throws AuthenticationException {
         initializeDecoupledConsent(credentials);
 
@@ -41,6 +51,11 @@ public class SibsDecoupledAuthenticationController implements Authenticator {
             logger.warn("Authorization failed, consents status is not accepted.", e);
             throw new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT);
         }
+    }
+
+    @Override
+    public CredentialsTypes getType() {
+        return CredentialsTypes.THIRD_PARTY_APP;
     }
 
     private void initializeDecoupledConsent(Credentials credentials) throws ThirdPartyAppException {
