@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator;
 
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
@@ -35,5 +37,13 @@ public class SibsAuthenticator {
     public ConsentResponse initializeDecoupledConsent(
             String state, String psuIdType, String psuId) {
         return apiClient.createDecoupledAuthConsent(state, psuIdType, psuId);
+    }
+
+    public void autoAuthenticate() throws SessionException {
+        ConsentStatus consentStatus = getConsentStatus();
+
+        if (!consentStatus.isAcceptedStatus()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 }
