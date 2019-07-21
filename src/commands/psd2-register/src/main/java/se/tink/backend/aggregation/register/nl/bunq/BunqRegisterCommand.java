@@ -122,6 +122,7 @@ public class BunqRegisterCommand {
     private static BunqRegisterCommandApiClient createApiClient(
             RegisterEnvironment selectedEnvironment) {
         TinkHttpClient client = new TinkHttpClient();
+        client.setDebugOutput(true);
 
         client.addFilter(new BunqRequiredHeadersFilter(temporaryStorage));
         client.addFilter(new BunqSignatureHeaderFilter(temporaryStorage, client.getUserAgent()));
