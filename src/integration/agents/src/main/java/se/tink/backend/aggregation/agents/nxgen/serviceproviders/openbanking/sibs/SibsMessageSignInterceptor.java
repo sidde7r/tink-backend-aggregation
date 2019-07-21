@@ -21,8 +21,7 @@ import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 
 public class SibsMessageSignInterceptor extends MessageSignInterceptor {
 
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(SibsMessageSignInterceptor.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SibsMessageSignInterceptor.class);
 
     private static final String NEW_LINE = "\n";
     private static final String COLON_SPACE = ": ";
