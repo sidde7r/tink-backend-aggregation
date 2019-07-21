@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.register.nl.bunq;
 
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.register.RegisterEnvironment;
 
 public final class BunqRegisterConstants {
@@ -22,7 +21,6 @@ public final class BunqRegisterConstants {
     public static final class Endpoints {
         public static final String PRODUCTION = "https://api.bunq.com";
         public static final String SANDBOX = "https://public-api.sandbox.bunq.com";
-        public static final URL AUTHORIZE = new URL("https://oauth.sandbox.bunq.com/auth");
     }
 
     public static final class UrlParameterKeys {
