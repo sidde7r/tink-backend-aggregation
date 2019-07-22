@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.authenticator.TargobankSandboxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.configuration.TargobankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.TargobankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher.TargobankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher.TargobankTransactionFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.configuration.Environment;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -113,5 +115,12 @@ public final class TargobankAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        final TargobankPaymentExecutor targobankExecutor = new TargobankPaymentExecutor(apiClient);
+
+        return Optional.of(new PaymentController(targobankExecutor, targobankExecutor));
     }
 }

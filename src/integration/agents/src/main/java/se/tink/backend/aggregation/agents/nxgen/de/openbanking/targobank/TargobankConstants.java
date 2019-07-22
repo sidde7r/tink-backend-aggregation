@@ -35,11 +35,15 @@ public final class TargobankConstants {
         private static String BASE = "https://www.sandbox-bvxs2a.de/targobank/v1";
         private static String CREATE_CONSENT = BASE + "/consents";
         private static String FETCH_ACCOUNTS = BASE + "/accounts";
+        private static String CREATE_PAYMENT = BASE + "/payments/sepa-credit-transfers/";
+        private static String FETCH_PAYMENT = BASE + "/payments/sepa-credit-transfers/{paymentId}";
     }
 
     public static class SandboxUrls {
         public static URL CREATE_CONSENT = new URL(SandboxEndpoints.CREATE_CONSENT);
         public static URL FETCH_ACCOUNTS = new URL(SandboxEndpoints.FETCH_ACCOUNTS);
+        public static URL CREATE_PAYMENT = new URL(SandboxEndpoints.CREATE_PAYMENT);
+        public static URL FETCH_PAYMENT = new URL(SandboxEndpoints.FETCH_PAYMENT);
     }
 
     public static class StorageKeys {
