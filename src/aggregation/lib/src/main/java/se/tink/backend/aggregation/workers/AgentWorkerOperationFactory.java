@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWo
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCommand;
+import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
@@ -201,6 +202,9 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
+            commands.add(
+                    new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
+                            context, createCommandMetricState(request)));
         }
 
         for (RefreshableItem item : nonAccountItems) {
@@ -217,6 +221,9 @@ public class AgentWorkerOperationFactory {
             commands.add(new SelectAccountsToAggregateCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
+                            context, createCommandMetricState(request)));
+            commands.add(
+                    new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
                             context, createCommandMetricState(request)));
         }
         return commands;
@@ -895,6 +902,9 @@ public class AgentWorkerOperationFactory {
             commands.add(new SelectAccountsToAggregateCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
+                            context, createCommandMetricState(request)));
+            commands.add(
+                    new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
                             context, createCommandMetricState(request)));
         }
 

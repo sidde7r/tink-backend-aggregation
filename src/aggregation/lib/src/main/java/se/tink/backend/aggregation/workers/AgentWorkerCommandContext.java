@@ -82,7 +82,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                 aggregatorInfo,
                 supplementalInformationController,
                 controllerWrapper,
-                agentsServiceConfiguration.getAgentDataAvailabilityTrackerConfiguration(),
                 clusterId);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
@@ -207,12 +206,9 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     public void sendAllCachedAccountsToUpdateService() {
 
         compareAccountsBeforeAndAfterUpdate();
-        openTrackingServiceStream();
         for (String uniqueId : allAvailableAccountsByUniqueId.keySet()) {
             sendAccountToUpdateService(uniqueId);
-            sendAccountToTrackingService(uniqueId);
         }
-        closeTrackingServiceStream();
     }
 
     private void compareAccountsBeforeAndAfterUpdate() {

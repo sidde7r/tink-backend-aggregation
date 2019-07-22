@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 
- @Ignore
+@Ignore
 public class AgentDataAvailabilityTrackerClientTest {
 
     private CountDownLatch latch;
