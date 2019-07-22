@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 
 public class DanskeBankApiClient {
@@ -92,12 +93,23 @@ public class DanskeBankApiClient {
     }
 
     public FinalizeAuthenticationResponse finalizeAuthentication(
-            FinalizeAuthenticationRequest request) {
-        String response = postRequest(constants.getFinalizeAuthenticationUrl(), request);
+            FinalizeAuthenticationRequest request) throws LoginException {
+
+        String response;
+
+        try {
+            response = postRequest(constants.getFinalizeAuthenticationUrl(), request);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == 401) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw e;
+        }
 
         FinalizeAuthenticationResponse parsedResponse =
                 DanskeBankDeserializer.convertStringToObject(
                         response, FinalizeAuthenticationResponse.class);
+
         return parsedResponse;
     }
 
