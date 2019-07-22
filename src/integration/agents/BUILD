@@ -169,6 +169,7 @@ junit_test(
         "//src/libraries/transfer:rpc",
         "//src/libraries/user:rpc",
         "//src/libraries/uuid",
+        "//third_party:com_datastax_cassandra_cassandra_driver_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "//third_party:com_fasterxml_jackson_datatype_jackson_datatype_joda",

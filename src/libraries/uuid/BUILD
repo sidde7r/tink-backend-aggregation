@@ -5,8 +5,11 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        # UUID
+        "//third_party:com_datastax_cassandra_cassandra_driver_core",
+
+        # Serialization
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
     ],
 )
 
