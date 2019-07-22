@@ -175,7 +175,7 @@ public class VolksbankApiClient {
         return token;
     }
 
-    private String getRequestId() {
+    private static String getRequestId() {
         return java.util.UUID.randomUUID().toString();
     }
 
