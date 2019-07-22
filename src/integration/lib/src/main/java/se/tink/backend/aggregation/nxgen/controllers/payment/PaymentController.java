@@ -8,11 +8,13 @@ public class PaymentController {
 
     public PaymentController(PaymentExecutor paymentExecutor) {
         this.paymentExecutor = paymentExecutor;
-        if (canFetch()) {
-            this.fetchablePaymentExecutor = (FetchablePaymentExecutor) paymentExecutor;
-        } else {
-            this.fetchablePaymentExecutor = null;
-        }
+        this.fetchablePaymentExecutor = null;
+    }
+
+    public PaymentController(
+            PaymentExecutor paymentExecutor, FetchablePaymentExecutor fetchablePaymentExecutor) {
+        this.paymentExecutor = paymentExecutor;
+        this.fetchablePaymentExecutor = fetchablePaymentExecutor;
     }
 
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
@@ -53,6 +55,6 @@ public class PaymentController {
     }
 
     public boolean canFetch() {
-        return paymentExecutor instanceof FetchablePaymentExecutor;
+        return fetchablePaymentExecutor != null;
     }
 }

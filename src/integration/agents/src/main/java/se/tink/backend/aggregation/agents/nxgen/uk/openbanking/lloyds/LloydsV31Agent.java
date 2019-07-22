@@ -50,7 +50,9 @@ public class LloydsV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
+        UKOpenbankingV31Executor ukOpenbankingV31Executor =
+                new UKOpenbankingV31Executor(apiClient, pisConfig);
         return Optional.of(
-                new PaymentController(new UKOpenbankingV31Executor(apiClient, pisConfig)));
+                new PaymentController(ukOpenbankingV31Executor, ukOpenbankingV31Executor));
     }
 }

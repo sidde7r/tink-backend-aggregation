@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PaymentListResponse {
     private List<PaymentResponse> paymentResponseList;
@@ -16,12 +17,8 @@ public class PaymentListResponse {
     }
 
     public static PaymentListResponse of(List<PaymentRequest> paymentRequests) {
-        List<PaymentResponse> paymentResponseList = new ArrayList<>();
-        paymentRequests.stream()
-                .forEach(
-                        paymentRequest ->
-                                paymentResponseList.add(PaymentResponse.of(paymentRequest)));
-        return new PaymentListResponse(paymentResponseList);
+        return new PaymentListResponse(
+                paymentRequests.stream().map(PaymentResponse::of).collect(Collectors.toList()));
     }
 
     public List<PaymentResponse> getPaymentResponseList() {
