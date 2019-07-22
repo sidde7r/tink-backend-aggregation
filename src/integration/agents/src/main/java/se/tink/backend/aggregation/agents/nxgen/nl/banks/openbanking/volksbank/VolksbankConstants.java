@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 public class VolksbankConstants {
 
     public static class Urls {
-        public static final String HOST = "https://PSD.bancairediensten.nl";
+        public static final String HOST = "https://psd.bancairediensten.nl";
         public static final String BASE_PATH = "/psd2/";
 
         // note: this is placed between BASE_PATH and Paths, for production we only use
