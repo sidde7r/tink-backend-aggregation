@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import com.google.common.base.Strings;
 import javax.ws.rs.core.MediaType;
 import org.json.JSONObject;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.PollCodeTimeoutFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankChallengeAuthenticator.UserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CheckDeviceResponse;
@@ -194,7 +197,7 @@ public class DanskeBankApiClient {
         return DanskeBankDeserializer.convertStringToObject(response, InitOtpResponse.class);
     }
 
-    public PollCodeAppResponse pollCodeApp(String url, String ticket) {
+    public PollCodeAppResponse pollCodeApp(String url, String ticket) throws LoginException {
         PollCodeAppRequest request = new PollCodeAppRequest(ticket);
 
         try {
@@ -203,13 +206,13 @@ public class DanskeBankApiClient {
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .addFilter(
                             new TimeoutRetryFilter(
-                                    DanskeBankConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
-                                    DanskeBankConstants.TimeoutFilter
-                                            .TIMEOUT_RETRY_SLEEP_MILLISECONDS))
+                                    PollCodeTimeoutFilter.NUM_TIMEOUT_RETRIES,
+                                    PollCodeTimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS))
                     .post(PollCodeAppResponse.class, request);
         } catch (HttpClientException e) {
             if (DanskeBankConstants.Errors.READ_TIMEOUT_ERROR.equals(e.getCause().getMessage())) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                        UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
             }
             throw e;
         }

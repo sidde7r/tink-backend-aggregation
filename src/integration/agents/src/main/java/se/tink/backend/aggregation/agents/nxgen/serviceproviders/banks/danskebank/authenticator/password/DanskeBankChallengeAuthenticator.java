@@ -552,7 +552,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         return validateStepUpTrustedDeviceJson.toString();
     }
 
-    private enum UserMessage implements LocalizableEnum {
+    public enum UserMessage implements LocalizableEnum {
         CREDENTIALS_VERIFICATION_ERROR(
                 new LocalizableKey("Wrong challenge response input - Will retry login.")),
         CODE_APP_TIMEOUT_ERROR(new LocalizableKey("Code app authentication timed out.")),
