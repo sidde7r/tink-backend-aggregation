@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.PollRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.PollResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -16,8 +15,8 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
 
     public InitResponse initiateBankIdLogin(String logonPackage) {
         String response =
-                client.request(DanskeBankConstants.Url.BANKID_INIT_LOGON)
-                        .header("Referer", DanskeBankConstants.Url.BANKID_INIT_LOGON)
+                client.request(constants.getBankidInitLogonUrl())
+                        .header("Referer", constants.getBankidInitLogonUrl())
                         .post(String.class, InitRequest.createFromMessage(logonPackage));
 
         return DanskeBankDeserializer.convertStringToObject(response, InitResponse.class);
@@ -25,8 +24,8 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
 
     public PollResponse pollBankId(String reference) {
         String response =
-                client.request(DanskeBankConstants.Url.BANKID_POLL)
-                        .header("Referer", DanskeBankConstants.Url.BANKID_POLL)
+                client.request(constants.getBankidPollUrl())
+                        .header("Referer", constants.getBankidPollUrl())
                         .post(String.class, PollRequest.createFromReference(reference));
 
         return DanskeBankDeserializer.convertStringToObject(response, PollResponse.class);

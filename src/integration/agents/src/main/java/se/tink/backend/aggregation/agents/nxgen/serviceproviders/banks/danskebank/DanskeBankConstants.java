@@ -3,65 +3,143 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import java.text.MessageFormat;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
-public final class DanskeBankConstants {
-    public static class Url {
-        private static final String HOST = "https://apiebank.danskebank.com";
-        private static final String BASE = HOST + "/ebanking/ext";
-        private static final String E4_BASE = BASE + "/e4";
-        private static final String FI_BASE = BASE + "/fi";
+public class DanskeBankConstants {
 
-        public static final String DYNAMIC_JS_AUTHENTICATE =
-                BASE + "/Functions?stage=LogonStep1&secsystem=%s&brand=%s&channel=MOB";
-        public static final String DYNAMIC_JS_AUTHORIZE = BASE + "/Functions?stage=Postlogon";
+    public static LogTag login503Error = LogTag.from("#bind-error-503");
+    public static LogTag loginCodeAppError = LogTag.from("#error-during-codeapp-auth");
+    public static LogTag loginPasswordAuthError = LogTag.from("#error-password-auth");
 
-        // == START Authentication ==
-        public static final String BANKID_INIT_LOGON = BASE + "/swedinitlogon";
-
-        public static final String DEVICE_BIND_CHECK = BASE + "/devicebind/check";
-        public static final String DEVICE_BIND_BIND = BASE + "/devicebind/bind";
-        public static final String DEVICE_LIST_OTP = BASE + "/ListOTP";
-        public static final String DEVICE_INIT_OTP = BASE + "/InitOTP";
-
-        public static final String FINALIZE_AUTHENTICATION = BASE + "/logon";
-        // == END Authentication ==
-
-        // == START BankID polling ==
-        public static final String BANKID_POLL = BASE + "/swedpoll";
-        // == END Polling ==
-
-        // == START Accounts ==
-        public static final String LIST_ACCOUNTS = E4_BASE + "/account/list";
-        public static final String LIST_CUSTODY_ACCOUNTS = FI_BASE + "/initialization/get";
-        // == END Accounts ==
-
-        // == START Loans ==
-        public static final String LIST_LOANS = E4_BASE + "/realestate/loan/list";
-        public static final String LOAN_DETAILS = E4_BASE + "/realestate/loan/detail";
-        // == END Loans ==
-
-        // == START Credit card info ==
-        public static final String LIST_CARD_INFO = BASE + "/kk/api/cards/getlist";
-        // == END Credit card info ==
-
-        // == START Instruments ==
-        public static final String LIST_SECURITIES = FI_BASE + "/marketvalue/listSecurities";
-        public static final String LIST_SECURITY_DETAILS =
-                FI_BASE + "/securityDetails/getSecurityDetails";
-        // == END Instruments ==
-
-        // == START Transactions ==
-        public static final String LIST_TRANSACTIONS = E4_BASE + "/transaction/list";
-        public static final String LIST_UPCOMING_TRANSACTIONS = E4_BASE + "/transaction/future";
-        // == END Transactions
-
-        // == START SessionHandler ==
-        public static final String EXTEND_SESSION = BASE + "/extend";
-        // == END SessionHandler ==
-
-        // == START IdentityData ==
-        public static final String HOUSEHOLD_FI = E4_BASE + "/myProfile/fetchHouseholdFI";
-        // == END IdentityData ==
+    public String getHostUrl() {
+        return "https://apiebank.danskebank.com";
     }
+
+    public String getBaseUrl() {
+        return getHostUrl() + "/ebanking/ext";
+    }
+
+    public String getE4BaseUrl() {
+        return getBaseUrl() + "/e4";
+    }
+
+    public String getFIBaseUrl() {
+        return getBaseUrl() + "/fi";
+    }
+
+    public String getDynamicJsAuthenticateUrl() {
+        return getBaseUrl() + "/Functions?stage=LogonStep1&secsystem=%s&brand=%s&channel=MOB";
+    }
+
+    public String getDynamicJsAuthorizeUrl() {
+        return getBaseUrl() + "/Functions?stage=Postlogon";
+    }
+
+    // == START Authentication ==
+
+    public String getBankidInitLogonUrl() {
+        return getBaseUrl() + "/swedinitlogon";
+    }
+
+    public String getDeviceBindCheckUrl() {
+        return getBaseUrl() + "/devicebind/check";
+    }
+
+    public String getDeviceBindBindUrl() {
+        return getBaseUrl() + "/devicebind/bind";
+    }
+
+    public String getDeviceListOtpUrl() {
+        return getBaseUrl() + "/ListOTP";
+    }
+
+    public String getDeviceInitOtpUrl() {
+        return getBaseUrl() + "/InitOTP";
+    }
+
+    public String getFinalizeAuthenticationUrl() {
+        return getBaseUrl() + "/logon";
+    }
+
+    // == END Authentication ==
+
+    // == START BankID polling ==
+
+    public String getBankidPollUrl() {
+        return getBaseUrl() + "/swedpoll";
+    }
+
+    // == END Polling ==
+
+    // == START Accounts ==
+
+    public String getListAccountsUrl() {
+        return getE4BaseUrl() + "/account/list";
+    }
+
+    public String getListCustodyAccountsUrl() {
+        return getFIBaseUrl() + "/initialization/get";
+    }
+
+    // == END Accounts ==
+
+    // == START Loans ==
+
+    public String getListLoansUrl() {
+        return getE4BaseUrl() + "/realestate/loan/list";
+    }
+
+    public String getLoanDetailsUrl() {
+        return getE4BaseUrl() + "/realestate/loan/detail";
+    }
+
+    // == END Loans ==
+
+    // == START Credit card info ==
+
+    public String getListCardInfoUrl() {
+        return getBaseUrl() + "/kk/api/cards/getlist";
+    }
+
+    // == END Credit card info ==
+
+    // == START Instruments ==
+
+    public String getListSecuritiesUrl() {
+        return getFIBaseUrl() + "/marketvalue/listSecurities";
+    }
+
+    public String getListSecurityDetailsUrl() {
+        return getFIBaseUrl() + "/securityDetails/getSecurityDetails";
+    }
+
+    // == END Instruments ==
+
+    // == START Transactions ==
+
+    public String getListTransactionsUrl() {
+        return getE4BaseUrl() + "/transaction/list";
+    }
+
+    public String getListUpcomingTransactionsUrl() {
+        return getE4BaseUrl() + "/transaction/future";
+    }
+
+    // == END Transactions
+
+    // == START SessionHandler ==
+
+    public String getExtendSessionUrl() {
+        return getBaseUrl() + "/extend";
+    }
+
+    // == END SessionHandler ==
+
+    // == START IdentityData ==
+
+    public String getHouseholdFiUrl() {
+        return getE4BaseUrl() + "/myProfile/fetchHouseholdFI";
+    }
+
+    // == END IdentityData ==
 
     public static class Device {
         public static final String DEVICE_TYPE_CODE_APP = "CODEAPP";
@@ -165,8 +243,8 @@ public final class DanskeBankConstants {
         public static final String READ_TIMEOUT_ERROR = "Read timed out";
     }
 
-    public static class TimeoutFilter {
+    public static class PollCodeTimeoutFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;
-        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
+        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 3000;
     }
 }
