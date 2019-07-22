@@ -42,6 +42,9 @@ agents:
     tink:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
       certificateId: Tink
+    abn:
+      redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+      certificateId: Tink
   sibs:
     tink:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
