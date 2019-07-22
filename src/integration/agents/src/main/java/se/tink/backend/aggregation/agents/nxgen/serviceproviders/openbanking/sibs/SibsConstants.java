@@ -24,6 +24,16 @@ public final class SibsConstants {
                 "/{aspsp-cde}/v1-0-2/accounts/{account-id}/balances";
         public static final String ACCOUNT_TRANSACTIONS =
                 "/{aspsp-cde}/v1-0-2/accounts/{account-id}/transactions";
+        public static final String PAYMENT_INITIATION =
+                "/{aspsp-cde}/v1-0-2/payments/{payment-product}";
+        public static final String GET_PAYMENT_REQUEST =
+                "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}";
+        public static final String UPDATE_PAYMENT_REQUEST =
+                "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}";
+        public static final String DELETE_PAYMENT_REQUEST =
+                "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}";
+        public static final String GET_PAYMENT_STATUS_REQUEST =
+                "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}/status";
     }
 
     public static class StorageKeys {
@@ -39,6 +49,7 @@ public final class SibsConstants {
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_TO = "dateTo";
         public static final String DATE_FROM = "dateFrom";
+        public static final String TPP_REDIRECT_PREFFERED = "tppRedirectPreferred";
     }
 
     public static class QueryValues {
@@ -57,6 +68,7 @@ public final class SibsConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String DIGEST = "Digest";
         public static final String CONSENT_ID = "Consent-ID";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String PSU_ID_TYPE = "PSU-ID-Type";
         public static final String PSU_ID = "PSU-ID";
     }
@@ -89,6 +101,8 @@ public final class SibsConstants {
         public static final String ASPSP_CDE = "aspsp-cde";
         public static final String ACCOUNT_ID = "account-id";
         public static final String CONSENT_ID = "consent-id";
+        public static final String PAYMENT_PRODUCT = "payment-product";
+        public static final String PAYMENT_ID = "payment-id";
     }
 
     public static class SignatureValues {
@@ -101,5 +115,17 @@ public final class SibsConstants {
     public static class CredentialKeys {
 
         public static final String PSU_ID = "username";
+    }
+
+    public static class Storage {
+        public static final String CONSENT_ID = "consentId";
+        public static final String PAYMENT_ID = "paymentId";
+        public static final String PAYMENT_REDIRECT_URI = "paymentRedirectUrl";
+        public static final String PAYMENT_UPDATE_PSU_URI = "updatePsuIdentification";
+        public static final String STATE = "payment_state";
+    }
+
+    public static class SibsSignSteps {
+        public static final String SIBS_PAYMENT_POST_SIGN_STATE = "sibs_payment_post_sign_state";
     }
 }
