@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 public class VolksbankConstants {
 
     public static class Urls {
-        public static final String HOST = "https://PSD.bancairediensten.nl";
+        public static final String HOST = "https://psd.bancairediensten.nl";
         public static final String BASE_PATH = "/psd2/";
 
         // note: this is placed between BASE_PATH and Paths, for production we only use
@@ -40,10 +40,9 @@ public class VolksbankConstants {
 
     public static class TransactionFetcherParams {
         public static final String BOOKING_STATUS = "bookingStatus";
-        public static final String BOOKING_STATUS_VALUE = "both";
-        public static final String DATE_FROM = "dateFrom";
+        public static final String BOOKING_STATUS_VALUE = "booked";
         public static final String PAGE_DIRECTION = "pageDirection";
-        public static final String PAGE_DIRECTION_VALUE = "previous";
+        public static final String PAGE_DIRECTION_VALUE = "next";
         public static final String LIMIT = "limit";
         public static final Integer LIMIT_VALUE = 5;
     }

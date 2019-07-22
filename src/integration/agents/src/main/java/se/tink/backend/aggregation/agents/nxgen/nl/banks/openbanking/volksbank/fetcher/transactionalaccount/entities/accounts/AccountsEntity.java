@@ -4,9 +4,11 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.balances.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
 public class AccountsEntity {
@@ -77,18 +79,20 @@ public class AccountsEntity {
 
         balances.sort((o1, o2) -> o2.getLastChangeDateTime().compareTo(o1.getLastChangeDateTime()));
 
-        BalanceEntity lastBalance = balances.stream().findFirst().get();
+        BalanceEntity lastBalance =
+                balances.stream().findFirst().orElseThrow(IllegalStateException::new);
 
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(VolksbankUtils.getAccountNumber(iban))
-                .setBalance(lastBalance.toAmount().get())
-                .setAlias(name)
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .addHolderName(name)
-                .setApiIdentifier(
-                        getResourceId()) // The apiIdentifier will let us query the bank API for
-                // transactions later
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(VolksbankUtils.getAccountNumber(iban))
+                                .withAccountName(name)
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .withBalance(BalanceModule.of(lastBalance.toAmount()))
+                .setApiIdentifier(getResourceId())
                 .build();
     }
 }

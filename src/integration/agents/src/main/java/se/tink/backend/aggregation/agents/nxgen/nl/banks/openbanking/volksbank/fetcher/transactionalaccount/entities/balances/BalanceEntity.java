@@ -2,9 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
-import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceEntity {
@@ -19,12 +18,8 @@ public class BalanceEntity {
         return lastChangeDateTime;
     }
 
-    public Optional<Amount> toAmount() {
-        return Optional.ofNullable(balanceAmount)
-                .map(
-                        b ->
-                                new Amount(
-                                        balanceAmount.getCurrency(),
-                                        new Double(balanceAmount.getAmount())));
+    public ExactCurrencyAmount toAmount() {
+        return ExactCurrencyAmount.of(
+                new Double(balanceAmount.getAmount()), balanceAmount.getCurrency());
     }
 }
