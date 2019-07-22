@@ -13,16 +13,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class AccountResponse {
     private List<AccountEntity> accounts;
 
-    public AccountResponse() {}
-
-    public AccountResponse(final List<AccountEntity> accounts) {
-        this.accounts = accounts;
-    }
-
-    public void setAccounts(List<AccountEntity> accounts) {
-        this.accounts = accounts;
-    }
-
     public List<AccountEntity> getAccounts() {
         return accounts;
     }

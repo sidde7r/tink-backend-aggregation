@@ -3,11 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sp
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class LinkEntity {
+public class ScaEntity {
+    private String href;
 
-    private ScaRedirectEntity scaRedirect;
-
-    public ScaRedirectEntity getScaRedirect() {
-        return scaRedirect;
+    public String getHref() {
+        return href;
     }
 }

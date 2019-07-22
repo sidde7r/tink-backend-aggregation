@@ -1,16 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public final class SparebankConstants {
-
-    public static final String INTEGRATION_NAME = "sparebank";
-
-    private SparebankConstants() {
-        throw new AssertionError();
-    }
 
     public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<TransactionalAccountType>builder()
@@ -24,10 +17,14 @@ public final class SparebankConstants {
                     .setDefaultTranslationValue(TransactionalAccountType.OTHER)
                     .build();
 
+    private SparebankConstants() {
+        throw new AssertionError();
+    }
+
     public static class Urls {
-        public static final String CONSENTS = "/v1/consents";
-        public static final String FETCH_ACCOUNTS = "/v1/accounts";
-        public static final String FETCH_TRANSACTIONS = "/v1/accounts/{accountId}/transactions";
+        public static final String FETCH_TRANSACTIONS = "/v1/accounts/{resourceId}/transactions";
+        public static final String GET_ACCOUNTS = "/v1/accounts";
+        public static final String GET_SCA_REDIRECT = GET_ACCOUNTS;
         public static final String CREATE_PAYMENT = "/v1/payments/{paymentProduct}";
         public static final String GET_PAYMENT = "/v1/payments/{paymentProduct}/{paymentId}";
         public static final String SIGN_PAYMENT =
@@ -36,17 +33,14 @@ public final class SparebankConstants {
                 "/v1/payments/{paymentProduct}/{paymentId}/status";
     }
 
-    public static class IdTags {
-        public static final String ACCOUNT_ID = "accountId";
-        public static final String PAYMENT_PRODUCT = "paymentProduct";
-        public static final String PAYMENT_ID = "paymentId";
-    }
-
-    public static class StorageKeys {
-        public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
-        public static final String TPP_SESSION_ID = "TppSessionId";
-        public static final String PSU_ID = "PsuId";
-        public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
+    public static class QueryParams {
+        public static final String X_REQUEST_ID = "x-request-id";
+        public static final String TPP_ID = "tpp-id";
+        public static final String TPP_SESSION_ID = "tpp-session-id";
+        public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
+        public static final String TPP_SIGNATURE_CERTIFICATE = "tpp-signature-certificate";
+        public static final String SIGNATURE = "signature";
+        public static final String PSU_IP_ADDRESS = "psu-ip-address";
         public static final String STATE = "state";
     }
 
@@ -62,14 +56,14 @@ public final class SparebankConstants {
         public static final String NORWAY = "NO";
     }
 
-    public static class Accounts {
-        public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
-    }
-
     public static class QueryValues {
         public static final String TRUE = "true";
         public static final String BOTH = "both";
         public static final String BOOKING_STATUS = "both";
+    }
+
+    public static class Accounts {
+        public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
     }
 
     public static class HeaderKeys {
@@ -90,22 +84,42 @@ public final class SparebankConstants {
 
     public static class HeaderValues {
         public static final String BOOKING_STATUS = "both";
+        public static final String PSU_IP_ADDRESS = "134.12.51.1";
+    }
+
+    public static class FormKeys {
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String CLIENT_ID = "client_id";
+        public static final String CLIENT_SECRET = "client_secret";
+    }
+
+    public static class FormValues {
+        public static final String GRANT_TYPE = "client_credentials";
     }
 
     public static class SparebankSignSteps {
         public static final String SAMPLE_STEP = "SAMPLE_STEP";
     }
 
-    public static class Signature {
-        public static final String PSU_ID = "psu-id";
-        public static final String DATE = "date";
-        public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
-        public static final String HEADERS = "headers";
-        public static final String SIGNING_ALGORITHM = "RSA";
+    public static class IdTags {
+        public static final String RESOURCE_ID = "resourceId";
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String PAYMENT_ID = "paymentId";
+    }
+
+    public static class StorageKeys {
+        public static final String ACCOUNT_ID = "account_id";
+        public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
+        public static final String SESSION_ID = "SESSION_ID";
+        public static final String PSU_ID = "PSU_ID";
+        public static final String STATE = "STATE";
     }
 
     public static class DatePatterns {
         public static final String YYYY_MM_DD_PATTERN = "yyyy-MM-dd";
+        public static final String ACCOUNT_ID = "accountId";
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class ErrorMessages {
@@ -121,5 +135,9 @@ public final class SparebankConstants {
                 "Cannot map Sparebank payment status %s to Tink payment status";
         public static final String NO_ACCOUNT_TYPE_FOUND =
                 "No PaymentType found for your AccountIdentifiers pair: %s";
+    }
+
+    public static class Market {
+        public static final String INTEGRATION_NAME = "sparebank";
     }
 }

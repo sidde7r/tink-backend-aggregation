@@ -1,37 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class SparebankAuthenticator {
+    private final SparebankApiClient apiClient;
 
-    protected final SparebankApiClient apiClient;
-    protected final PersistentStorage persistentStorage;
-    protected final SparebankConfiguration configuration;
-
-    public SparebankAuthenticator(
-            SparebankApiClient apiClient,
-            PersistentStorage persistentStorage,
-            SparebankConfiguration configuration) {
+    public SparebankAuthenticator(SparebankApiClient apiClient) {
         this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
-    }
-
-    private SparebankConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     public URL buildAuthorizeUrl(String state) {
-        return apiClient.getAuthorizeUrl(state);
+        try {
+            apiClient.getScaRedirect(state);
+        } catch (HttpResponseException e) {
+            return new URL(e.getResponse().getBody(ScaResponse.class).getRedirectUri());
+        }
+        throw new RuntimeException();
     }
 
-    public void setUpPsuAndSession(String psu_id, String tpp_session) {
-        apiClient.setUpTppSessionIdAndPsuId(tpp_session, psu_id);
+    public void setUpPsuAndSession(String psuId, String tppSessionId) {
+        apiClient.setUpTppSessionIdAndPsuId(tppSessionId, psuId);
     }
 }
