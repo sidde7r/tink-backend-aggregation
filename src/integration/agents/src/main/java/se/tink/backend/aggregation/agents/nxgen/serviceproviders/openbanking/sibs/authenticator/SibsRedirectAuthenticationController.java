@@ -60,14 +60,17 @@ public class SibsRedirectAuthenticationController
     public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException {
         initializeRedirectConsent();
 
+        ThirdPartyAppStatus status;
         try {
-            consentStatusRetryer.call(authenticator::getConsentStatus);
+            ConsentStatus consentStatus =
+                    consentStatusRetryer.call(authenticator::getConsentStatus);
+            status = consentStatus.getThirdPartyAppStatus();
         } catch (ExecutionException | RetryException | IllegalStateException e) {
             logger.warn("Authorization failed, consents status is not accepted.", e);
-            throw new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT);
+            status = ThirdPartyAppStatus.TIMED_OUT;
         }
 
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+        return ThirdPartyAppResponseImpl.create(status);
     }
 
     @Override
