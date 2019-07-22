@@ -36,6 +36,9 @@ public final class FinTsParser {
     private static final Pattern RE_MT940_AMOUNT =
             Pattern.compile("(^\\d{6})(\\d{4})?(D|C|RC|RD)\\D?(\\d*,\\d*)N.*");
 
+    // MT 535 related
+    private static final Pattern RE_MT535_DATA = Pattern.compile("(:16R:*?[\\s\\S]*?:16S:.*)");
+
     public static String[] splitSegments(String data) {
         return RE_SEGMENTS.split(data);
     }
@@ -78,6 +81,15 @@ public final class FinTsParser {
         } else {
             throw new IllegalStateException("Illegal format for tag 61");
         }
+    }
+
+    public static List<String> getMT535Content(String hiwpd) {
+        List<String> matches = new ArrayList<String>();
+        Matcher m = RE_MT535_DATA.matcher(hiwpd);
+        while (m.find()) {
+            matches.add(m.group());
+        }
+        return matches;
     }
 
     private static String extractEncryptedSegments(String message) {

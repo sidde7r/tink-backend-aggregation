@@ -38,6 +38,6 @@ public class HNHBK extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HNHBK;
+        return FinTsConstants.Segments.HNHBK.name();
     }
 }

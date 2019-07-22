@@ -32,29 +32,31 @@ public class FinTsConstants {
                 "Keine aktive Mobilfunknr.Bitte wenden Sie sich an Ihren Berater";
     }
 
-    public static class Segments {
-        public static final String HKSAL = "HKSAL"; // Balance Request
-        public static final String HISAL = "HISAL"; // Balance Response
-        public static final String HKSPA = "HKSPA"; // SEPA information Request
-        public static final String HISPA = "HISPA"; // SEPA information Response
-        public static final String HKIDN = "HKIDN"; // Identification
-        public static final String HKSYN = "HKSYN"; // Synchronization Request
-        public static final String HISYN = "HISYN"; // Synchronization Response
-        public static final String HKVVB = "HKVVB"; // Processing preparation
-        public static final String HKEND = "HKEND"; // End session
-        public static final String HNHBK = "HNHBK"; // Request Header
-        public static final String HNHBS = "HNHBS"; // News completion
-        public static final String HNSHA = "HNSHA"; // Signature hash
-        public static final String HNSHK = "HNSHK"; // Signature Header
-        public static final String HNVSD = "HNVSD"; // Encrypted Data
-        public static final String HNVSK = "HNVSK"; // Encrypted Header
-        public static final String HIRMS = "HIRMS"; // Feedback on Segments
-        public static final String HIRMG = "HIRMG"; // Global feedback
-        public static final String HKKAZ = "HKKAZ"; // Statements/Transactions Request
-        public static final String HIKAZ = "HIKAZ"; // Statements/Transactions Response
-        public static final String HISALS = "HISALS"; // Balance query parameter
-        public static final String HIKAZS = "HIKAZS"; // Account sales/period parameter
-        public static final String HIUPD = "HIUPD"; // Account information
+    public enum Segments {
+        HKSAL, // Balance Request
+        HISAL, // Balance Response
+        HKSPA, // SEPA information Request
+        HISPA, // SEPA information Response
+        HKIDN, // Identification
+        HKSYN, // Synchronization Request
+        HISYN, // Synchronization Response
+        HKVVB, // Processing preparation
+        HKEND, // End session
+        HNHBK, // Request Header
+        HNHBS, // News completion
+        HNSHA, // Signature hash
+        HNSHK, // Signature Header
+        HNVSD, // Encrypted Data
+        HNVSK, // Encrypted Header
+        HIRMS, // Feedback on Segments
+        HIRMG, // Global feedback
+        HKKAZ, // Statements/Transactions Request
+        HIKAZ, // Statements/Transactions Response
+        HKWPD, // Depot Request
+        HIWPD, // Depot Response
+        HISALS, // Balance query parameter
+        HIKAZS, // Account sales/period parameter
+        HIUPD; // Account information
     }
 
     public static class AccountType {

@@ -47,6 +47,6 @@ public class HKSPA extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HKSPA;
+        return FinTsConstants.Segments.HKSPA.name();
     }
 }
