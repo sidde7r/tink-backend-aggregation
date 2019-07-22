@@ -65,7 +65,7 @@ public class SibsRedirectAuthenticationController
             ConsentStatus consentStatus =
                     consentStatusRetryer.call(authenticator::getConsentStatus);
             status = consentStatus.getThirdPartyAppStatus();
-        } catch (ExecutionException | RetryException | IllegalStateException e) {
+        } catch (ExecutionException | RetryException e) {
             logger.warn("Authorization failed, consents status is not accepted.", e);
             status = ThirdPartyAppStatus.TIMED_OUT;
         }

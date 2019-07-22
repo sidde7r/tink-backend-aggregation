@@ -47,7 +47,7 @@ public class SibsDecoupledAuthenticationController
 
         try {
             consentStatusRetryer.call(authenticator::getConsentStatus);
-        } catch (ExecutionException | RetryException | IllegalStateException e) {
+        } catch (ExecutionException | RetryException e) {
             logger.warn("Authorization failed, consents status is not accepted.", e);
             throw new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT);
         }
