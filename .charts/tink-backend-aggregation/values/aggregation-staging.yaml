@@ -64,7 +64,9 @@ agents:
       redirectUrl: https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
   volksbank:
-    enabled: "true"
+    tink:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+      certificateId: Tink
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: true
