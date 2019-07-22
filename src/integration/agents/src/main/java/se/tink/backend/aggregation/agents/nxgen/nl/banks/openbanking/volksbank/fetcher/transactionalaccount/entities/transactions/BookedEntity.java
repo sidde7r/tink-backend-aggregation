@@ -7,8 +7,9 @@ public class BookedEntity {
 
     private Long bankTransactionCode;
     private String bookingDate;
-    private CreditorAccountEntity creditorAccount;
     private String creditorId;
+    private CreditorAccountEntity creditorAccount;
+    private String creditorName;
     private DebtorAccountEntity debtorAccount;
     private String debtorName;
     private String endToEndId;
@@ -34,5 +35,17 @@ public class BookedEntity {
 
     public String getRemittanceInformationUnstructured() {
         return remittanceInformationUnstructured;
+    }
+
+    public String getEntryReference() {
+        return entryReference;
+    }
+
+    public String getDebtorName() {
+        return debtorName;
+    }
+
+    public String getCreditorName() {
+        return creditorName;
     }
 }
