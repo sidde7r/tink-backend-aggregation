@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
-import java.util.Base64;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -12,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.f
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.session.VolksbankSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class VolksbankAgent extends NextGenerationAgent
@@ -29,9 +30,10 @@ public class VolksbankAgent extends NextGenerationAgent
 
     private final VolksbankApiClient volksbankApiClient;
     private final VolksbankHttpClient httpClient;
-    private final VolksbankUtils utils;
-    private final String BANK_PATH;
-    private final String redirectUrl;
+    private final VolksbankUrlFactory urlFactory;
+    private VolksbankConfiguration volksbankConfiguration;
+    private final String clientName;
+    private final boolean isSandbox;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -39,13 +41,17 @@ public class VolksbankAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        BANK_PATH = request.getProvider().getPayload().split(" ")[1];
-        redirectUrl = request.getProvider().getPayload().split(" ")[2];
+        final String[] payload = request.getProvider().getPayload().split(" ");
+
+        clientName = payload[0];
+        final String bankPath = payload[1];
+
+        isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
         this.httpClient = new VolksbankHttpClient(client, "certificate");
-        this.utils = new VolksbankUtils(BANK_PATH);
+        this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
-        volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage, utils);
+        volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage, urlFactory);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -54,12 +60,12 @@ public class VolksbankAgent extends NextGenerationAgent
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final VolksbankConfiguration volksbankConfiguration =
+        volksbankConfiguration =
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
                                 VolksbankConstants.Market.INTEGRATION_NAME,
-                                VolksbankConstants.Market.CLIENT_NAME,
+                                clientName,
                                 VolksbankConfiguration.class)
                         .orElseThrow(
                                 () ->
@@ -68,19 +74,20 @@ public class VolksbankAgent extends NextGenerationAgent
 
         volksbankApiClient.setConfiguration(volksbankConfiguration);
 
-        httpClient.setSslClientCertificate(
-                Base64.getDecoder()
-                        .decode(
-                                volksbankConfiguration
-                                        .getAisConfiguration()
-                                        .getClientCertificateContent()),
-                volksbankConfiguration.getAisConfiguration().getClientCertificatePass());
+        final String certificateId =
+                volksbankConfiguration.getAisConfiguration().getCertificateId();
+
+        final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
+
+        client.setEidasProxy(eidasProxyConfiguration, certificateId);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
+        final URL redirectUrl = volksbankConfiguration.getAisConfiguration().getRedirectUrl();
         VolksbankAuthenticator authenticator =
-                new VolksbankAuthenticator(volksbankApiClient, sessionStorage, redirectUrl, utils);
+                new VolksbankAuthenticator(
+                        volksbankApiClient, sessionStorage, redirectUrl, urlFactory, isSandbox);
 
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
