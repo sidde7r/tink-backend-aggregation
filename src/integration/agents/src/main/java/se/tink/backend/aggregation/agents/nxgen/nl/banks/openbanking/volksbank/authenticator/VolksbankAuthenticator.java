@@ -21,30 +21,33 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final SessionStorage sessionStorage;
     private final URL redirectUri;
     private final VolksbankUrlFactory urlFactory;
+    private final boolean isSandbox;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
             SessionStorage sessionStorage,
             URL redirectUri,
-            VolksbankUrlFactory urlFactory) {
+            VolksbankUrlFactory urlFactory,
+            boolean isSandbox) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.redirectUri = redirectUri;
         this.urlFactory = urlFactory;
+        this.isSandbox = isSandbox;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
         if (!sessionStorage.containsKey(Storage.CONSENT)) {
-            try {
-                final ConsentResponse consent = client.consentRequest();
-                sessionStorage.put(Storage.CONSENT, consent.getConsentId());
-            } catch (NullPointerException e) {
+            if (isSandbox) {
                 // Sandbox behaves a bit differently
                 final String consentResponseString = client.consentRequestString();
                 final String consentId =
                         "SNS" + StringUtils.substringBetween(consentResponseString, "\"SNS", "\"");
                 sessionStorage.put(Storage.CONSENT, consentId);
+            } else {
+                final ConsentResponse consent = client.consentRequest();
+                sessionStorage.put(Storage.CONSENT, consent.getConsentId());
             }
         }
 

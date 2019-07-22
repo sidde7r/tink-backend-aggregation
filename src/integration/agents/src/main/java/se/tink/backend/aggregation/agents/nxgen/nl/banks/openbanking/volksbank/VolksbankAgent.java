@@ -33,6 +33,7 @@ public class VolksbankAgent extends NextGenerationAgent
     private final VolksbankUrlFactory urlFactory;
     private VolksbankConfiguration volksbankConfiguration;
     private final String clientName;
+    private final boolean isSandbox;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -45,7 +46,7 @@ public class VolksbankAgent extends NextGenerationAgent
         clientName = payload[0];
         final String bankPath = payload[1];
 
-        final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
+        isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
         this.httpClient = new VolksbankHttpClient(client, "certificate");
         this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
@@ -86,7 +87,7 @@ public class VolksbankAgent extends NextGenerationAgent
         final URL redirectUrl = volksbankConfiguration.getAisConfiguration().getRedirectUrl();
         VolksbankAuthenticator authenticator =
                 new VolksbankAuthenticator(
-                        volksbankApiClient, sessionStorage, redirectUrl, urlFactory);
+                        volksbankApiClient, sessionStorage, redirectUrl, urlFactory, isSandbox);
 
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
