@@ -86,11 +86,11 @@ public final class EnterCardAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
+        EnterCardBasePaymentExecutor enterCardBasePaymentExecutor =
+                new EnterCardBasePaymentExecutor(
+                        apiClient, supplementalInformationHelper, getClientConfiguration());
+
         return Optional.of(
-                new PaymentController(
-                        new EnterCardBasePaymentExecutor(
-                                apiClient,
-                                supplementalInformationHelper,
-                                getClientConfiguration())));
+                new PaymentController(enterCardBasePaymentExecutor, enterCardBasePaymentExecutor));
     }
 }

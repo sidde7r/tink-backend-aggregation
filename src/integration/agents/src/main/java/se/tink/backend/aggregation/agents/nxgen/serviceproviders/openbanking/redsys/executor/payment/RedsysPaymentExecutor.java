@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -40,7 +41,7 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
-public class RedsysPaymentExecutor implements FetchablePaymentExecutor {
+public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private static final Logger LOG = LoggerFactory.getLogger(RedsysPaymentExecutor.class);
     private final RedsysApiClient apiClient;
     private final ScaRedirectCallbackHandler scaRedirectHandler;

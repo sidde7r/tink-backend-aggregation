@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -33,7 +34,7 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class LansforsakringarPaymentExecutor implements FetchablePaymentExecutor {
+public class LansforsakringarPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private LansforsakringarApiClient apiClient;
 
     public LansforsakringarPaymentExecutor(LansforsakringarApiClient apiClient) {

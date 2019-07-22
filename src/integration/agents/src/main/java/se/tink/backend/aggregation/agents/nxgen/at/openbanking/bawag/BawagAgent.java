@@ -122,6 +122,7 @@ public final class BawagAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new BawagPaymentExecutor(apiClient)));
+        BawagPaymentExecutor bawagPaymentExecutor = new BawagPaymentExecutor(apiClient);
+        return Optional.of(new PaymentController(bawagPaymentExecutor, bawagPaymentExecutor));
     }
 }

@@ -94,7 +94,9 @@ public final class BecAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new BecPaymentExecutor(apiClient)));
+        BecPaymentExecutor becPaymentExecutor = new BecPaymentExecutor(apiClient);
+
+        return Optional.of(new PaymentController(becPaymentExecutor, becPaymentExecutor));
     }
 
     protected SessionHandler constructSessionHandler() {

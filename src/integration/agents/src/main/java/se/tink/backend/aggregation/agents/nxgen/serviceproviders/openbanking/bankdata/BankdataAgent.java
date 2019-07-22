@@ -94,10 +94,14 @@ public abstract class BankdataAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
+        BankdataPaymentExecutorSelector bankdataPaymentExecutorSelector =
+                new BankdataPaymentExecutorSelector(
+                        apiClient, sessionStorage, getClientConfiguration());
+
         return Optional.of(
                 new BankdataPaymentController(
-                        new BankdataPaymentExecutorSelector(
-                                apiClient, sessionStorage, getClientConfiguration()),
+                        bankdataPaymentExecutorSelector,
+                        bankdataPaymentExecutorSelector,
                         supplementalInformationHelper,
                         sessionStorage));
     }

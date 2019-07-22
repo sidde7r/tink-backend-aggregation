@@ -117,8 +117,9 @@ public final class RedsysAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(
-                new PaymentController(
-                        new RedsysPaymentExecutor(apiClient, supplementalInformationHelper)));
+        RedsysPaymentExecutor redsysPaymentExecutor =
+                new RedsysPaymentExecutor(apiClient, supplementalInformationHelper);
+
+        return Optional.of(new PaymentController(redsysPaymentExecutor, redsysPaymentExecutor));
     }
 }

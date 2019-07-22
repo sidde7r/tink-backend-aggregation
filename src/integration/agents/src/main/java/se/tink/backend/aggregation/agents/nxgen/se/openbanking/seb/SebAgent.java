@@ -146,6 +146,8 @@ public final class SebAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new SebPaymentExecutor(apiClient)));
+        SebPaymentExecutor sebPaymentExecutor = new SebPaymentExecutor(apiClient);
+
+        return Optional.of(new PaymentController(sebPaymentExecutor, sebPaymentExecutor));
     }
 }

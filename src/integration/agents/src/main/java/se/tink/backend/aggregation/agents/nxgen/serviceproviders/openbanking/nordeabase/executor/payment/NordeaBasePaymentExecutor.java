@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -35,7 +36,8 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
-public abstract class NordeaBasePaymentExecutor implements FetchablePaymentExecutor {
+public abstract class NordeaBasePaymentExecutor
+        implements PaymentExecutor, FetchablePaymentExecutor {
     private NordeaBaseApiClient apiClient;
 
     public NordeaBasePaymentExecutor(NordeaBaseApiClient apiClient) {

@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.executor.paym
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -20,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentType;
 
-public class BecPaymentExecutor implements FetchablePaymentExecutor {
+public class BecPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private final BecApiClient apiClient;
 
     public BecPaymentExecutor(BecApiClient apiClient) {

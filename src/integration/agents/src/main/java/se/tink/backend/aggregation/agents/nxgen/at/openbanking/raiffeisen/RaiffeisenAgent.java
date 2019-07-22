@@ -106,6 +106,9 @@ public final class RaiffeisenAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new RaiffeisenPaymentExecutor(apiClient)));
+        RaiffeisenPaymentExecutor raiffeisenPaymentExecutor =
+                new RaiffeisenPaymentExecutor(apiClient);
+        return Optional.of(
+                new PaymentController(raiffeisenPaymentExecutor, raiffeisenPaymentExecutor));
     }
 }

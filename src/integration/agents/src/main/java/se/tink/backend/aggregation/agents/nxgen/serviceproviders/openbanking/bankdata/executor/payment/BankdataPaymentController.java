@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -35,9 +36,10 @@ public class BankdataPaymentController extends PaymentController {
 
     public BankdataPaymentController(
             PaymentExecutor paymentExecutor,
+            FetchablePaymentExecutor fetchablePaymentExecutor,
             SupplementalInformationHelper supplementalInformationHelper,
             SessionStorage sessionStorage) {
-        super(paymentExecutor);
+        super(paymentExecutor, fetchablePaymentExecutor);
 
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.sessionStorage = sessionStorage;

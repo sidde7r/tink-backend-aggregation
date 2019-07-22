@@ -132,9 +132,13 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
                                 apiClient, persistentStorage, getClientConfiguration()),
                         credentials);
 
+        Xs2aDevelopersPaymentExecutor xs2aDevelopersPaymentExecutor =
+                new Xs2aDevelopersPaymentExecutor(apiClient);
+
         return Optional.of(
                 new Xs2aDevelopersPaymentController(
-                        new Xs2aDevelopersPaymentExecutor(apiClient),
+                        xs2aDevelopersPaymentExecutor,
+                        xs2aDevelopersPaymentExecutor,
                         new ThirdPartyAppAuthenticationController<>(
                                 controller, supplementalInformationHelper),
                         credentials,

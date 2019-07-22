@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -30,7 +31,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class SbabPaymentExecutor implements FetchablePaymentExecutor {
+public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private static final GenericTypeMapper<PaymentType, TypePair>
             accountIdentifiersToPaymentTypeMapper =
