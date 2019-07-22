@@ -1,8 +1,9 @@
 package se.tink.libraries.account.identifiers;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.giro.validation.LuhnCheck;
+import se.tink.libraries.strings.StringUtils;
 
 public class PaymentCardNumberIdentifier extends AccountIdentifier {
 
@@ -21,7 +22,7 @@ public class PaymentCardNumberIdentifier extends AccountIdentifier {
 
     @Override
     public boolean isValid() {
-        return LuhnCheck.isLastCharCorrectLuhnMod10Check(cardNumber);
+        return !Strings.isNullOrEmpty(cardNumber) && StringUtils.isNumeric(cardNumber);
     }
 
     @Override

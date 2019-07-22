@@ -14,8 +14,10 @@ public class PaymentCardNumberIdentiferTest {
     private final PaymentCardNumberIdentifier VALID_IDENTIFIER =
             new PaymentCardNumberIdentifier("79927398713");
 
-    private final PaymentCardNumberIdentifier INVALID_IDENTIFIER =
-            new PaymentCardNumberIdentifier("7992739820");
+    private final PaymentCardNumberIdentifier INVALID_IDENTIFIER_EMPTY =
+            new PaymentCardNumberIdentifier("");
+    private final PaymentCardNumberIdentifier INVALID_IDENTIFIER_NON_NUMERIC =
+            new PaymentCardNumberIdentifier("123123ASDASD");
 
     @Rule public ExpectedException expectedException = ExpectedException.none();
 
@@ -25,8 +27,13 @@ public class PaymentCardNumberIdentiferTest {
     }
 
     @Test
-    public void isValid_returnsFalse_ifNotValidIdentifier() {
-        assertFalse(INVALID_IDENTIFIER.isValid());
+    public void isValid_returnsFalse_ifIdentifierEmpty() {
+        assertFalse(INVALID_IDENTIFIER_EMPTY.isValid());
+    }
+
+    @Test
+    public void isValid_returnsFalse_ifIdentifierNotNumeric() {
+        assertFalse(INVALID_IDENTIFIER_NON_NUMERIC.isValid());
     }
 
     @Test
