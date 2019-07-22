@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.models;
 
-import com.datastax.driver.core.utils.UUIDs;
+import com.fasterxml.uuid.Generators;
 import com.google.common.base.Preconditions;
 import java.io.Serializable;
 import java.util.Date;
@@ -40,11 +40,11 @@ public class Loan implements Comparable<Loan>, Serializable {
     private Boolean userModifiedType;
 
     public Loan() {
-        this.id = UUIDs.timeBased();
+        this.id = Generators.timeBasedGenerator().generate();
     }
 
     public Loan(Loan toCopy) {
-        this.id = UUIDs.timeBased();
+        this.id = Generators.timeBasedGenerator().generate();
 
         setAccountId(toCopy.getAccountId());
         setAmortized(toCopy.getAmortized());
@@ -69,7 +69,7 @@ public class Loan implements Comparable<Loan>, Serializable {
 
     @Override
     public int compareTo(Loan o) {
-        return new Long(id.timestamp()).compareTo(new Long(o.id.timestamp()));
+        return Long.compare(id.timestamp(), o.id.timestamp());
     }
 
     public UUID getAccountId() {
