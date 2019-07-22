@@ -44,8 +44,7 @@ public class TransactionsEntity implements TransactionKeyPaginatorResponse<Strin
 
     @Override
     public String nextKey() {
-        String url = this.getLinks().getPrevious().getHref().split("\\?")[1];
-        return url;
+        return this.getLinks().getNext().getHref().split("\\?")[1];
     }
 
     @Override
