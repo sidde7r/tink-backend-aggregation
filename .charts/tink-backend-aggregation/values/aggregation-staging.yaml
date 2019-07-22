@@ -62,7 +62,7 @@ agents:
       certificateId: Tink
     cgd:
       redirectUrl: https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback
-      certificateId: cgd
+      certificateId: Tink
   volksbank:
     enabled: "true"
 
