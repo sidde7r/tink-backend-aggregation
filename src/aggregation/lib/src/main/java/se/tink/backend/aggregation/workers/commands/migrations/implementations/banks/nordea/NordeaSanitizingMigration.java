@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordea;
 
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.workers.commands.migrations.ClusterSafeAgentVersionMigration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -32,6 +33,7 @@ public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration 
 
     @Override
     public void migrateData(CredentialsRequest request) {
+        request.getCredentials().setType(CredentialsTypes.MOBILE_BANKID);
         request.getAccounts().forEach(a -> a.setBankId(sanitize(a.getBankId())));
     }
 
