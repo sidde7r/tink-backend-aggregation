@@ -28,10 +28,10 @@ public class ICSSanitizingMigration extends ClusterSafeAgentVersionMigration {
 
     @Override
     public void migrateData(CredentialsRequest request) {
-        request.getAccounts().forEach(account -> account.setId(account.getAccountNumber()));
+        request.getAccounts().forEach(account -> account.setBankId(account.getAccountNumber()));
     }
 
     private boolean shouldMigrate(Account account) {
-        return !account.getUserId().equals(account.getAccountNumber());
+        return !account.getBankId().equals(account.getAccountNumber());
     }
 }
