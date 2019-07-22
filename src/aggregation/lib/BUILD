@@ -137,6 +137,7 @@ junit_test(
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//src/libraries/uuid",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
@@ -156,6 +157,5 @@ junit_test(
         "//third_party:pl_pragmatists_junitparams",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@tink_backend//src/libraries/event_producer_service_client",
-        "@tink_backend//src/libraries/uuid",
     ],
 )
