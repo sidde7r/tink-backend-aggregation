@@ -12,7 +12,7 @@ import org.joda.time.DateTime;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionsEntity implements TransactionKeyPaginatorResponse<String> {
@@ -59,11 +59,11 @@ public class TransactionsEntity implements TransactionKeyPaginatorResponse<Strin
 
                             return Transaction.builder()
                                     .setAmount(
-                                            new Amount(
-                                                    movement.getTransactionAmount().getCurrency(),
+                                            ExactCurrencyAmount.of(
                                                     new Double(
                                                             movement.getTransactionAmount()
-                                                                    .getAmount())))
+                                                                    .getAmount()),
+                                                    movement.getTransactionAmount().getCurrency()))
                                     .setDescription(movement.getRemittanceInformationUnstructured())
                                     .setDate(d)
                                     .build();
