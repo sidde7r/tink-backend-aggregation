@@ -24,7 +24,7 @@ public class NordeaSeAgentTest {
                 new AgentIntegrationTest.Builder("SE", "se-nordea-oauth2")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true);
     }
 

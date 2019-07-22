@@ -35,7 +35,7 @@ public final class NordeaSeConstants {
         public static final String ACCOUNTS_TRANSACTIONS = "ACCOUNTS_TRANSACTIONS";
         public static final String PAYMENTS_MULTIPLE = "PAYMENTS_MULTIPLE";
         public static final String RESPONSE_TYPE = "nordea_token";
-        public static final long DURATION = 12345;
+        public static final long DURATION_MINUTES = 129600;
         public static final String STATE = "production_state";
     }
 

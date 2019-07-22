@@ -9,6 +9,7 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
     @JsonProperty private String redirectUrl;
+    @JsonProperty private String eidasQwac;
 
     public String getClientId() {
         return clientId;
@@ -20,5 +21,9 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
 
     public String getRedirectUrl() {
         return redirectUrl;
+    }
+
+    public String getEidasQwac() {
+        return eidasQwac;
     }
 }

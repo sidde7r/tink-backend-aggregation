@@ -27,9 +27,12 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<AuthorizeResponse> {
     private final NordeaSeApiClient apiClient;
     private static final Logger log = LoggerFactory.getLogger(NordeaSeBankIdAuthenticator.class);
+    private final String language;
 
-    public NordeaSeBankIdAuthenticator(NordeaSeApiClient apiClient, SessionStorage sessionStorage) {
+    public NordeaSeBankIdAuthenticator(
+            NordeaSeApiClient apiClient, SessionStorage sessionStorage, String language) {
         this.apiClient = apiClient;
+        this.language = language;
     }
 
     @Override
@@ -115,7 +118,8 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
 
     private AuthorizeRequest getAuthorizeRequest(String ssn) {
         return new AuthorizeRequest(
-                NordeaSeConstants.FormValues.DURATION,
+                NordeaSeConstants.FormValues.DURATION_MINUTES,
+                language,
                 ssn,
                 apiClient.getConfiguration().getRedirectUrl(),
                 NordeaSeConstants.FormValues.RESPONSE_TYPE,

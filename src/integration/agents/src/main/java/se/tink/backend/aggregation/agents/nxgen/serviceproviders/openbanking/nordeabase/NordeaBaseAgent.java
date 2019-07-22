@@ -12,10 +12,17 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class NordeaBaseAgent extends NextGenerationAgent {
     protected NordeaBaseApiClient apiClient;
+    protected String language;
 
     public NordeaBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+
+        try {
+            this.language = request.getUser().getLocale().split("_")[0];
+        } catch (Exception e) {
+            this.language = NordeaBaseConstants.QueryValues.DEFAULT_LANGUAGE;
+        }
     }
 
     @Override
@@ -34,6 +41,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
                                         new IllegalStateException(
                                                 ErrorMessages.MISSING_CONFIGURATION));
         apiClient.setConfiguration(nordeaConfiguration);
+        this.client.setEidasProxy(
+                configuration.getEidasProxy(), nordeaConfiguration.getEidasQwac());
     }
 
     @Override
