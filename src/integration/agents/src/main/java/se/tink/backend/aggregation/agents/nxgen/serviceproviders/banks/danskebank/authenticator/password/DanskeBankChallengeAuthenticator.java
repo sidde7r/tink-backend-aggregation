@@ -71,7 +71,6 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private WebDriver driver;
     private String keyCardOtpChallenge;
     private String userId;
-    private LogTag login503Error = LogTag.from("#bind-error-503");
 
     public DanskeBankChallengeAuthenticator(
             Catalog catalog,
@@ -245,7 +244,8 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
                             UserMessage.CREDENTIALS_VERIFICATION_ERROR.getKey());
                 }
                 if (response.getStatus() == 503) {
-                    log.infoExtraLong(this.driver.getPageSource(), login503Error);
+                    log.infoExtraLong(
+                            this.driver.getPageSource(), DanskeBankConstants.login503Error);
                 }
 
                 throw hre;
@@ -461,6 +461,8 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             try {
                 finalizeAuthentication();
             } catch (HttpResponseException hre) {
+                log.errorExtraLong(
+                        "Error in logonStepOne", DanskeBankConstants.loginCodeAppError, hre);
                 DanskeBankPasswordErrorHandler.throwError(hre);
             }
         } finally {

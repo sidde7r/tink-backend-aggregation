@@ -5,6 +5,10 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class DanskeBankConstants {
 
+    public static LogTag login503Error = LogTag.from("#bind-error-503");
+    public static LogTag loginCodeAppError = LogTag.from("#error-during-codeapp-auth");
+    public static LogTag loginPasswordAuthError = LogTag.from("#error-password-auth");
+
     public String getHostUrl() {
         return "https://apiebank.danskebank.com";
     }

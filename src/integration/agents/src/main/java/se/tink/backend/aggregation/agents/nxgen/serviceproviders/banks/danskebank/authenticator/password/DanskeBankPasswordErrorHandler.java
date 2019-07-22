@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
@@ -15,8 +14,8 @@ public class DanskeBankPasswordErrorHandler {
     static void throwError(HttpResponseException hre)
             throws AuthenticationException, AuthorizationException {
         HttpResponse response = hre.getResponse();
-        if (response.getStatus() >= 500) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        if (response.getStatus() == 503) {
+            throw hre;
         }
         FinalizeAuthenticationResponse finalizeAuthenticationResponse =
                 DanskeBankDeserializer.convertStringToObject(
