@@ -79,7 +79,6 @@ public class VolksbankApiClient {
                     request.queryParam(
                                     TransactionFetcherParams.BOOKING_STATUS,
                                     TransactionFetcherParams.BOOKING_STATUS_VALUE)
-                            .queryParam(TransactionFetcherParams.DATE_FROM, now)
                             .queryParam(
                                     TransactionFetcherParams.PAGE_DIRECTION,
                                     TransactionFetcherParams.PAGE_DIRECTION_VALUE)
