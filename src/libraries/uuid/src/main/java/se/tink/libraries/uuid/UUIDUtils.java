@@ -1,17 +1,13 @@
 package se.tink.libraries.uuid;
 
+import com.datastax.driver.core.utils.UUIDs;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class UUIDUtils {
-
-    private static final long START_EPOCH = makeEpoch();
-
     private static final Pattern UUID_V4_PATTERN =
             Pattern.compile(
                     "[a-fA-F0-9]{8}-?[a-fA-F0-9]{4}-?4[a-fA-F0-9]{3}-?[89aAbB][a-fA-F0-9]{3}-?[a-fA-F0-9]{12}");
@@ -71,30 +67,8 @@ public class UUIDUtils {
         return Long.toHexString(hi | (val & (hi - 1))).substring(1);
     }
 
-    /**
-     * Return the unix timestamp contained by the provided time-based UUID.
-     *
-     * <p>This method is not equivalent to {@link UUID#timestamp}. More precisely, a version 1 UUID
-     * stores a timestamp that represents the number of 100-nanoseconds intervals since midnight, 15
-     * October 1582 and that is what {@link UUID#timestamp} returns. This method however converts
-     * that timestamp to the equivalent unix timestamp in milliseconds, i.e. a timestamp
-     * representing a number of milliseconds since midnight, January 1, 1970 UTC. In particular the
-     * timestamps returned by this method are comparable to the timestamp returned by {@link
-     * System#currentTimeMillis}, {@link Date#getTime}, etc.
-     *
-     * @param uuid the UUID to return the timestamp of.
-     * @return the unix timestamp of {@code uuid}.
-     * @throws IllegalArgumentException if {@code uuid} is not a version 1 UUID.
-     */
     public static Date UUIDToDate(UUID uuid) {
-        if (uuid.version() != 1) {
-            throw new IllegalArgumentException(
-                    String.format(
-                            "Can only retrieve the unix timestamp for version 1 uuid (provided version %d)",
-                            uuid.version()));
-        }
-
-        return new Date((uuid.timestamp() / 10000) + START_EPOCH);
+        return new Date(UUIDs.unixTimestamp(uuid));
     }
 
     public static String generateUUID() {
@@ -122,19 +96,5 @@ public class UUIDUtils {
      */
     public static boolean isValidUUID(String uuid) {
         return !Strings.isNullOrEmpty(uuid) && isValidTinkUUID(uuid.replace("-", ""));
-    }
-
-    private static long makeEpoch() {
-        // UUID v1 timestamp must be in 100-nanoseconds interval since 00:00:00.000 15 Oct 1582.
-        final Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT-0"));
-        c.set(Calendar.YEAR, 1582);
-        c.set(Calendar.MONTH, Calendar.OCTOBER);
-        c.set(Calendar.DAY_OF_MONTH, 15);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-
-        return c.getTimeInMillis();
     }
 }

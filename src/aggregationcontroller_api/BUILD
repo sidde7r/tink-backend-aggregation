@@ -15,6 +15,7 @@ java_library(
         "//src/libraries/jersey_utils",
         "//src/libraries/signableoperation:rpc",
         "//src/libraries/transfer:rpc",
+        "//third_party:com_datastax_cassandra_cassandra_driver_core",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -22,6 +23,5 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_core",
-        "//third_party:org_slf4j_slf4j_api",
     ],
 )
