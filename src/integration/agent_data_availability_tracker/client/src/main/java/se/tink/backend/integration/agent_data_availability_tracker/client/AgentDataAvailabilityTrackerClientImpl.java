@@ -110,7 +110,7 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         }
     }
 
-    public void endStreamBlocking() {
+    public void endStreamBlocking() throws InterruptedException {
         requestStream.onCompleted();
 
         try {
@@ -119,10 +119,6 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
             log.warn("Waiting for tracking client to catch up for more than 500ms");
         }
 
-        try {
-            latch.await(2, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        latch.await(2, TimeUnit.SECONDS);
     }
 }
