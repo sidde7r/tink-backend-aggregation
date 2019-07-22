@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
