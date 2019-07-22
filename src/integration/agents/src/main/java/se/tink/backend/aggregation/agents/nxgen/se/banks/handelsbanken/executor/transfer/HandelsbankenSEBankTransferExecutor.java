@@ -2,19 +2,25 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.payment.HandelsbankenSEPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.ComponentsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.HandelsbankenSEPaymentAccount;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.HandelsbankenSETransferContext;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignatureResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSpecificationRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSpecificationRequest.AmountableDestination;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSpecificationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferApprovalRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignRequest.AmountableDestination;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ValidateRecipientRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ValidateRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor {
@@ -23,6 +29,7 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
     private final HandelsbankenSessionStorage sessionStorage;
     private final ExecutorExceptionResolver exceptionResolver;
     private final TransferMessageFormatter transferMessageFormatter;
+    private final HandelsbankenSEPaymentExecutor paymentExecutor;
 
     public HandelsbankenSEBankTransferExecutor(
             HandelsbankenSEApiClient client,
@@ -33,6 +40,8 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
         this.sessionStorage = sessionStorage;
         this.exceptionResolver = exceptionResolver;
         this.transferMessageFormatter = transferMessageFormatter;
+        this.paymentExecutor =
+                new HandelsbankenSEPaymentExecutor(client, sessionStorage, exceptionResolver);
     }
 
     @Override
@@ -51,21 +60,27 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
                             HandelsbankenSEPaymentAccount sourceAccount =
                                     getSourceAccount(transfer, transferContext);
 
-                            AmountableDestination destinationAccount =
+                            Optional<AmountableDestination> destinationAccount =
                                     getDestinationAccount(transfer, transferContext);
 
-                            TransferSpecificationResponse transferSpecification =
-                                    getTransferSpecification(
+                            AmountableDestination destination =
+                                    destinationAccount.orElse(
+                                            addNewDestinationAccount(transfer, transferContext));
+
+                            Optional<URL> transferUrl =
+                                    getTransferUrl(destination, transferContext);
+
+                            TransferSignRequest request =
+                                    TransferSignRequest.create(
                                             transfer,
-                                            transferContext,
                                             sourceAccount,
-                                            destinationAccount);
+                                            destination,
+                                            generateTransferMessages(
+                                                    transfer, transferContext, destination));
 
-                            TransferSignatureResponse transferSignature =
-                                    signTransfer(transferSpecification);
-
-                            transferSignature.validateState(exceptionResolver);
+                            signTransfer(transferUrl, request);
                         });
+
         return Optional.empty();
     }
 
@@ -80,44 +95,38 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
                                                 .SOURCE_ACCOUNT_NOT_FOUND));
     }
 
-    private AmountableDestination getDestinationAccount(
+    private Optional<AmountableDestination> getDestinationAccount(
             Transfer transfer, HandelsbankenSETransferContext transferContext) {
         return transferContext
                 .findDestinationAccount(transfer)
-                .map(HandelsbankenSEPaymentAccount::asAmountableDestination)
-                .orElseGet(
-                        () ->
-                                client.validateRecipient(
-                                        transferContext,
-                                        ValidateRecipientRequest.create(transfer)));
+                .map(HandelsbankenSEPaymentAccount::asAmountableDestination);
     }
 
-    private TransferSpecificationResponse getTransferSpecification(
-            Transfer transfer,
-            HandelsbankenSETransferContext transferContext,
-            HandelsbankenSEPaymentAccount sourceAccount,
-            AmountableDestination destinationAccount) {
-        Transferable transferable = chooseTransferable(transferContext, destinationAccount);
-        return client.createTransfer(
-                transferable.toCreatable(exceptionResolver),
-                TransferSpecificationRequest.create(
-                        transfer,
-                        sourceAccount,
-                        destinationAccount,
-                        generateTransferMessages(transfer, transferContext, destinationAccount)));
+    private ValidateRecipientResponse addNewDestinationAccount(
+            Transfer transfer, HandelsbankenSETransferContext transferContext) {
+        return client.validateRecipient(transferContext, ValidateRecipientRequest.create(transfer));
     }
 
-    private Transferable chooseTransferable(
-            HandelsbankenSETransferContext transferContext,
-            AmountableDestination destinationAccount) {
-        return destinationAccount instanceof Transferable
-                ? (Transferable) destinationAccount
-                : transferContext;
+    private Optional<URL> getTransferUrl(
+            AmountableDestination destination, HandelsbankenSETransferContext transferContext) {
+        return destination instanceof ValidateRecipientResponse
+                ? ((ValidateRecipientResponse) destination).toCreatable()
+                : transferContext.toCreatable();
     }
 
-    private TransferSignatureResponse signTransfer(
-            TransferSpecificationResponse transferSpecificationResponse) {
-        return client.signTransfer(transferSpecificationResponse.toSignable(exceptionResolver));
+    private void signTransfer(Optional<URL> url, TransferSignRequest request) {
+        TransferSignResponse transferSignResponse =
+                url.map(requestUrl -> client.signTransfer(requestUrl, request))
+                        .orElseThrow(() -> exception(EndUserMessage.TRANSFER_EXECUTE_FAILED));
+
+        transferSignResponse.validateResponse(exceptionResolver);
+
+        ComponentsEntity componentsEntity = transferSignResponse.getComponentWithForm();
+        TransferApprovalRequest approvalRequest =
+                TransferApprovalRequest.create(
+                        componentsEntity.getFormValue(), componentsEntity.getFormId());
+
+        paymentExecutor.confirmTransfer(transferSignResponse, approvalRequest);
     }
 
     private TransferMessageFormatter.Messages generateTransferMessages(
@@ -137,7 +146,11 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
                 && transferContext.destinationIsOwned(transfer);
     }
 
-    public interface Transferable {
-        HandelsbankenSEApiClient.Creatable toCreatable(ExecutorExceptionResolver exceptionResolver);
+    private TransferExecutionException exception(
+            TransferExecutionException.EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setEndUserMessage(endUserMessage)
+                .setMessage(endUserMessage.toString())
+                .build();
     }
 }

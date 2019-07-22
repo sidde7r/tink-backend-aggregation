@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.BaseSignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.TransferAmount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -12,7 +13,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
-public class TransferSpecificationRequest {
+public class TransferSignRequest implements BaseSignRequest {
 
     private double amount;
     private String message;
@@ -22,14 +23,14 @@ public class TransferSpecificationRequest {
     private String transferDate;
     private String toClearingNo;
 
-    private TransferSpecificationRequest() {}
+    private TransferSignRequest() {}
 
-    public static TransferSpecificationRequest create(
+    public static TransferSignRequest create(
             Transfer transfer,
             AmountableSource source,
             AmountableDestination destination,
             TransferMessageFormatter.Messages messages) {
-        TransferSpecificationRequest request = new TransferSpecificationRequest();
+        TransferSignRequest request = new TransferSignRequest();
         request.transferDate = getCurrentDateAsString();
         request.amount = toAmount(transfer);
         request.message = messages.getDestinationMessage();
