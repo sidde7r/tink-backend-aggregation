@@ -741,8 +741,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_uuid_java_uuid_generator",
-    artifact = "com.fasterxml.uuid:java-uuid-generator:3.2.0",
-    sha1 = "60e8db790e981bb88a0bbecd47f5f9cbeda7a66d",
+    artifact = "com.fasterxml.uuid:java-uuid-generator:3.1.5",
+    sha1 = "8784df945176ab4e8e268fd24508cf882d3378de",
 )
 
 maven_jar(
