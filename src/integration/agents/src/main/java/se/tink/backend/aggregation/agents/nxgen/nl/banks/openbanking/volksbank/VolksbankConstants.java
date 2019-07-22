@@ -40,7 +40,7 @@ public class VolksbankConstants {
 
     public static class TransactionFetcherParams {
         public static final String BOOKING_STATUS = "bookingStatus";
-        public static final String BOOKING_STATUS_VALUE = "both";
+        public static final String BOOKING_STATUS_VALUE = "booked";
         public static final String DATE_FROM = "dateFrom";
         public static final String PAGE_DIRECTION = "pageDirection";
         public static final String PAGE_DIRECTION_VALUE = "previous";
