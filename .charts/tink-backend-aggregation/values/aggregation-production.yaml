@@ -36,8 +36,6 @@ agents:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   monzo:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-  volksbank:
-    enabled: "true"
   bunq:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
@@ -62,6 +60,13 @@ agents:
       certificateId: Tink
     cgd:
       redirectUrl: https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback
+      certificateId: Tink
+  volksbank:
+    tink:
+      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+      certificateId: Tink
+    abn:
+      redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
       certificateId: Tink
 
 

@@ -261,32 +261,6 @@ spec:
               name: aggregation-secrets
               key: ics-root-ca-password
               optional: true
-        {{- if $agentsConfig.volksbank }}
-        - name: VOLKSBANK_AIS_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: volksbank-ais-client-id
-              optional: true
-        - name: VOLKSBANK_AIS_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: volksbank-ais-client-secret
-              optional: true
-        - name: VOLKSBANK_AIS_CERT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: volksbank-ais-cert-password
-              optional: true
-        - name: VOLKSBANK_AIS_CERT
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: volksbank-ais-cert
-              optional: true
-        {{- end }}
         {{- if $agentsConfig.bunq }}
         - name: BUNQ_CLIENT_ID_TINK
           valueFrom:
@@ -509,6 +483,20 @@ spec:
             secretKeyRef:
               name: aggregation-secrets
               key: abnamro-client-ssl-key-password-tink
+              optional: true
+        {{- end }}
+        {{- if $agentsConfig.volksbank }}
+        - name: VOLKSBANK_AIS_CLIENT_ID_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: volksbank-ais-client-id-tink
+              optional: true
+        - name: VOLKSBANK_AIS_CLIENT_SECRET_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: volksbank-ais-client-secret-tink
               optional: true
         {{- end }}
       containers:

@@ -98,11 +98,16 @@ data:
         volksbank:
           tink:
             aisConfiguration:
-              clientId: "VOLKSBANK_AIS_CLIENT_ID_TAG"
-              clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_TAG"
-              clientCertificateContent: "VOLKSBANK_AIS_CERT_TAG"
-              clientCertificatePass: "VOLKSBANK_AIS_CERT_PASSWORD_TAG"
-              redirectUrl: "{{ $agentsConfig.volksbank.redirectUrl }}"
+              clientId: "VOLKSBANK_AIS_CLIENT_ID_TINK_TAG"
+              clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_TINK_TAG"
+              redirectUrl: "{{ $agentsConfig.volksbank.tink.redirectUrl }}"
+              certificateId: "{{ $agentsConfig.volksbank.tink.certificateId }}"
+          abn:
+            aisConfiguration:
+              clientId: "VOLKSBANK_AIS_CLIENT_ID_TINK_TAG"
+              clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_TINK_TAG"
+              redirectUrl: "{{ $agentsConfig.volksbank.abn.redirectUrl }}"
+              certificateId: "{{ $agentsConfig.volksbank.tink.certificateId }}"
         {{- end }}
 
         {{- if $agentsConfig.fints }}
