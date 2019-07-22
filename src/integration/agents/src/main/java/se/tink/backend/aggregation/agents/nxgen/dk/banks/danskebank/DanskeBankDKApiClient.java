@@ -6,6 +6,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 public class DanskeBankDKApiClient extends DanskeBankApiClient {
     protected DanskeBankDKApiClient(
             TinkHttpClient client, DanskeBankDKConfiguration configuration) {
-        super(client, configuration);
+        super(client, configuration, new DanskeBankDKConstants());
     }
 }
