@@ -73,6 +73,14 @@ java_library(
 )
 
 java_library(
+    name = "com_fasterxml_uuid_java_uuid_generator",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_fasterxml_uuid_java_uuid_generator//jar",
+    ],
+)
+
+java_library(
     name = "com_fasterxml_jackson_core_jackson_annotations",
     visibility = ["//visibility:public"],
     exports = [
