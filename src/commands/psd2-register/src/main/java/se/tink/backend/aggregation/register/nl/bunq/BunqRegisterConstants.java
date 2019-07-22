@@ -16,6 +16,8 @@ public final class BunqRegisterConstants {
         public static final String REGISTER_CALLBACK_URL =
                 "/v1/user/{userId}/oauth-client/{oauth-clientId}/callback-url";
         public static final String DELETE_SESSION = "/v1/session/{itemId}";
+        public static final String EIDAS_PROXY_URL =
+                "https://eidas-proxy.staging.aggregation.tink.network";
     }
 
     public static final class Endpoints {

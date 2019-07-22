@@ -45,15 +45,18 @@ public final class BunqRegisterSandboxUtils {
         return x509CertificateToPem(qsealcCert);
     }
 
-    public static String getPaymentServiceProviderCertificateChainAsString() {
-        final String rootCertString;
+    public static String readFileContents(final String path) {
         try {
-            final String path =
-                    "src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register/nl/bunq/resources/rootcert.pem";
-            rootCertString = FileUtils.readFileToString(new File(path), "UTF-8");
+            return FileUtils.readFileToString(new File(path), "UTF-8");
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public static String getPaymentServiceProviderCertificateChainAsString() {
+        final String path =
+                "src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register/nl/bunq/resources/rootcert.pem";
+        final String rootCertString = readFileContents(path);
 
         X509Certificate rootCert = getCertificateFromPemBytes(rootCertString.getBytes());
         return x509CertificateToPem(rootCert);
@@ -159,7 +162,7 @@ public final class BunqRegisterSandboxUtils {
         return null;
     }
 
-    private static String keyToPem(Key key) {
+    public static String keyToPem(Key key) {
         final StringWriter writer = new StringWriter();
         final JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
         try {
