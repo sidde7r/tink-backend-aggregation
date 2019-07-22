@@ -36,7 +36,7 @@ public abstract class BecAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BecApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new BecApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();

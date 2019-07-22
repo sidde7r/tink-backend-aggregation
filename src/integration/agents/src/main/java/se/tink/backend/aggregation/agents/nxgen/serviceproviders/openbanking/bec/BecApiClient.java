@@ -36,23 +36,19 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class BecApiClient {
     private final TinkHttpClient client;
     private String state;
-    private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private BecConfiguration configuration;
     private AgentsServiceConfiguration config;
 
     public BecApiClient(
             TinkHttpClient client,
-            SessionStorage sessionStorage,
             PersistentStorage persistentStorage) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
     }
 

@@ -71,13 +71,11 @@ public abstract class BecConstants {
     }
 
     public static class HeaderKeys {
-        public static final String X_IBM_CLIENT_ID = "x-ibm-client-id";
         public static final String PSU_IP = "psu-ip";
         public static final String X_REQUEST_ID = "x-request-id";
         public static final String DIGEST = "digest";
         public static final String SIGNATURE = "signature";
         public static final String TPP_SIGNATURE_CERTIFICATE = "tpp-signature-certificate";
-        // public static final String TPP_ID = "tpp-id";
         public static final String DATE = "date";
         public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
         public static final String TPP_NOK_REDIRECT_URI = "tpp-nok-redirect-uri";
