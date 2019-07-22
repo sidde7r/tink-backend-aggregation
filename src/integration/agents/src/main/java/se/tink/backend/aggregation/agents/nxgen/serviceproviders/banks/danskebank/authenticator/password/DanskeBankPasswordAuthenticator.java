@@ -5,6 +5,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
@@ -84,7 +85,7 @@ public class DanskeBankPasswordAuthenticator extends DanskeBankAbstractAuthentic
     }
 
     @Override
-    protected FinalizeAuthenticationResponse finalizeAuthentication() {
+    protected FinalizeAuthenticationResponse finalizeAuthentication() throws LoginException {
         // Get encrypted finalize package
         if (this.finalizePackage == null) {
             throw new IllegalStateException("Finalize Package was null, aborting login");

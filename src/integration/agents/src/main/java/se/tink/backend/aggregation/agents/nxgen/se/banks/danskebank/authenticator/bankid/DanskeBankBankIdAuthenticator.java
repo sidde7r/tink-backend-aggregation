@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
@@ -161,7 +162,7 @@ public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticat
     }
 
     @Override
-    protected FinalizeAuthenticationResponse finalizeAuthentication() {
+    protected FinalizeAuthenticationResponse finalizeAuthentication() throws LoginException {
         if (finalizePackage == null) {
             throw new IllegalStateException("Finalize Package was null, aborting login");
         }
