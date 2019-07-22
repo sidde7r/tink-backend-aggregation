@@ -9,20 +9,28 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class BecConfiguration implements ClientConfiguration {
 
-    private String enrollmentID;
     private String eidasQwac;
-
-    public String getEnrollmentId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(enrollmentID),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Enrollment ID"));
-        return enrollmentID;
-    }
+    private String qSealc;
+    private String keyId;
 
     public String getEidasQwac() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(eidasQwac),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
         return eidasQwac;
+    }
+
+    public String getQsealCertificate() {
+        Preconditions.checkNotNull(
+            Strings.emptyToNull(qSealc),
+            String.format(ErrorMessages.INVALID_CONFIGURATION, "Qseal certificate"));
+        return qSealc;
+    }
+
+    public String getKeyId() {
+        Preconditions.checkNotNull(
+            Strings.emptyToNull(keyId),
+            String.format(ErrorMessages.INVALID_CONFIGURATION, "KeyId"));
+        return keyId;
     }
 }

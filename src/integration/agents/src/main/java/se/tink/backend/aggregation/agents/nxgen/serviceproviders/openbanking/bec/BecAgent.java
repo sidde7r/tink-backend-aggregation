@@ -36,7 +36,7 @@ public abstract class BecAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BecApiClient(client, persistentStorage);
+        apiClient = new BecApiClient(client, persistentStorage, getBaseUrl());
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -56,7 +56,7 @@ public abstract class BecAgent extends NextGenerationAgent
     private BecConfiguration getClientConfiguration() {
         return configuration
                 .getIntegrations()
-                .getClientConfiguration(getIntegrationName(), clientName, BecConfiguration.class)
+                .getClientConfiguration(BecConstants.INTEGRATION_NAME, clientName, BecConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
@@ -74,6 +74,7 @@ public abstract class BecAgent extends NextGenerationAgent
                         becController, supplementalInformationHelper),
                 becController);
     }
+    protected abstract String getBaseUrl();
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
@@ -107,8 +108,6 @@ public abstract class BecAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(accountFetcher)));
     }
-
-    protected abstract String getIntegrationName();
 
     @Override
     public Optional<PaymentController> constructPaymentController() {

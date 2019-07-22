@@ -74,10 +74,6 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
             }
         }
 
-        // kör consent request check tills den är OK
-        // Spara consent ID i persistent
-        // använd till auth för accounts och transactions
-
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
