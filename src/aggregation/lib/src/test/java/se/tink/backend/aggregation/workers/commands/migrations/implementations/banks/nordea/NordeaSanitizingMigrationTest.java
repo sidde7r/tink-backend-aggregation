@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
@@ -22,7 +24,7 @@ public class NordeaSanitizingMigrationTest {
     private NordeaSanitizingMigration migration;
 
     private ArrayList<Account> accountList;
-    CredentialsRequest request;
+    private CredentialsRequest request;
     private Account oldFormat;
     private Account newFormat;
     private Account oldInvestment;
@@ -36,6 +38,8 @@ public class NordeaSanitizingMigrationTest {
         provider.setClassName(OLD_AGENT_CLASS);
         request =
                 new CredentialsRequest() {
+                    Credentials credentials;
+
                     @Override
                     public boolean isManual() {
                         return true;
@@ -44,6 +48,16 @@ public class NordeaSanitizingMigrationTest {
                     @Override
                     public CredentialsRequestType getType() {
                         return CredentialsRequestType.UPDATE;
+                    }
+
+                    @Override
+                    public Credentials getCredentials() {
+                        if (credentials == null) {
+                            credentials = new Credentials();
+                            credentials.setType(CredentialsTypes.PASSWORD);
+                        }
+
+                        return credentials;
                     }
                 };
 
@@ -127,5 +141,6 @@ public class NordeaSanitizingMigrationTest {
         assertEquals(2, request.getAccounts().size());
         assertEquals(this.newFormat.getBankId(), request.getAccounts().get(0).getBankId());
         assertEquals(this.newInvestment.getBankId(), request.getAccounts().get(1).getBankId());
+        assertEquals(CredentialsTypes.MOBILE_BANKID, request.getCredentials().getType());
     }
 }
