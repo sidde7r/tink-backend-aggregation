@@ -54,7 +54,7 @@ public class NordeaSanitizingMigrationTest {
                     public Credentials getCredentials() {
                         if (credentials == null) {
                             credentials = new Credentials();
-                            credentials.setType(CredentialsTypes.PASSWORD);
+                            credentials.setType(CredentialsTypes.MOBILE_BANKID);
                         }
 
                         return credentials;
@@ -122,19 +122,57 @@ public class NordeaSanitizingMigrationTest {
         accountList = Lists.newArrayList(newFormat);
         request.setAccounts(accountList);
         assertTrue(migration.isDataMigrated(request));
+
         accountList = Lists.newArrayList(oldFormat);
         request.setAccounts(accountList);
         assertFalse(migration.isDataMigrated(request));
+
         accountList = Lists.newArrayList(newInvestment);
         request.setAccounts(accountList);
         assertTrue(migration.isDataMigrated(request));
+
         accountList = Lists.newArrayList(oldInvestment);
         request.setAccounts(accountList);
         assertFalse(migration.isDataMigrated(request));
+
+        accountList = Lists.newArrayList(newInvestment);
+        request.setAccounts(accountList);
+        request.getCredentials().setType(CredentialsTypes.PASSWORD);
+        assertFalse(migration.isDataMigrated(request));
+
+        accountList = Lists.newArrayList(newInvestment);
+        request.setAccounts(accountList);
+        request.getCredentials().setType(CredentialsTypes.MOBILE_BANKID);
+        assertTrue(migration.isDataMigrated(request));
     }
 
     @Test
     public void migrateData() {
+        request =
+                new CredentialsRequest() {
+                    Credentials credentials;
+
+                    @Override
+                    public boolean isManual() {
+                        return true;
+                    }
+
+                    @Override
+                    public CredentialsRequestType getType() {
+                        return CredentialsRequestType.UPDATE;
+                    }
+
+                    @Override
+                    public Credentials getCredentials() {
+                        if (credentials == null) {
+                            credentials = new Credentials();
+                            credentials.setType(CredentialsTypes.PASSWORD);
+                        }
+
+                        return credentials;
+                    }
+                };
+
         accountList = Lists.newArrayList(oldFormat, oldInvestment);
         request.setAccounts(accountList);
         migration.migrateData(request);

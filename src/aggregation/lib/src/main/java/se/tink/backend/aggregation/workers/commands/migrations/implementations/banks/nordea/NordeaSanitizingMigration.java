@@ -27,8 +27,12 @@ public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration 
 
     @Override
     public boolean isDataMigrated(CredentialsRequest request) {
-        return request.getAccounts().stream()
-                .noneMatch(acc -> acc.getBankId().contains("*") || acc.getBankId().contains(":"));
+        return request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID
+                && request.getAccounts().stream()
+                        .noneMatch(
+                                acc ->
+                                        acc.getBankId().contains("*")
+                                                || acc.getBankId().contains(":"));
     }
 
     @Override
