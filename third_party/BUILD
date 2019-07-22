@@ -55,24 +55,6 @@ java_library(
 )
 
 java_library(
-    name = "com_datastax_cassandra_cassandra_driver_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_codahale_metrics_metrics_core//jar",
-        "@com_datastax_cassandra_cassandra_driver_core//jar",
-        "@com_github_jnr_jffi//jar",
-        "@com_github_jnr_jnr_constants//jar",
-        "@com_github_jnr_jnr_ffi//jar",
-        "@com_github_jnr_jnr_posix//jar",
-        "@com_github_jnr_jnr_x86asm//jar",
-        "@com_google_guava_guava//jar",
-        "@io_netty_netty_codec_http2//jar",
-        "@org_ow2_asm_asm//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
     name = "com_fasterxml_uuid_java_uuid_generator",
     visibility = ["//visibility:public"],
     exports = [
