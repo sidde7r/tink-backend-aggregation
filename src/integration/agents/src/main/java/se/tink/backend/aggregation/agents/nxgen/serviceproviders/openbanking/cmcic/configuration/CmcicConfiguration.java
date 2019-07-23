@@ -14,9 +14,9 @@ public class CmcicConfiguration implements ClientConfiguration {
     private String authBaseUrl;
     private String redirectUrl;
     private String clientId;
-    private String clientSigningKeyPath;
     private String clientSigningCertificatePath;
     private String keyId;
+    private String certificateId;
 
     public String getKeyId() {
         Preconditions.checkNotNull(
@@ -24,14 +24,6 @@ public class CmcicConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Key ID"));
 
         return keyId;
-    }
-
-    public String getClientSigningKeyPath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSigningKeyPath),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client signing key path"));
-
-        return clientSigningKeyPath;
     }
 
     public String getClientSigningCertificatePath() {
@@ -81,5 +73,13 @@ public class CmcicConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Auth Base URL"));
 
         return authBaseUrl;
+    }
+
+    public String getCertificateId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(certificateId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
+
+        return certificateId;
     }
 }

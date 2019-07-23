@@ -7,9 +7,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Signature;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 
 public final class SignatureUtil {
 
@@ -26,11 +26,10 @@ public final class SignatureUtil {
             final String date,
             final String digest,
             final String requestId,
-            final String clientSigningKeyPath) {
+            final EidasProxyConfiguration eidasProxyConf) {
 
         String signature =
-                getSignatureValue(
-                        httpMethod, requestPath, date, digest, requestId, clientSigningKeyPath);
+                getSignatureValue(httpMethod, requestPath, date, digest, requestId, eidasProxyConf);
 
         return CmcicConstants.Signature.KEY_ID_NAME
                 + "\""
@@ -52,7 +51,7 @@ public final class SignatureUtil {
             final String date,
             final String digest,
             final String requestId,
-            final String clientSigningKeyPath) {
+            final EidasProxyConfiguration eidasProxyConf) {
 
         String signatureEntity =
                 CmcicConstants.Signature.SIGNING_STRING
@@ -69,12 +68,8 @@ public final class SignatureUtil {
                         + CmcicConstants.Signature.X_REQUEST_ID
                         + requestId;
 
-        return Base64.getEncoder()
-                .encodeToString(
-                        RSA.signSha256(
-                                JwtUtils.readSigningKey(
-                                        clientSigningKeyPath, Signature.SIGNING_ALGORITHM),
-                                signatureEntity.getBytes()));
+        return new QsealcEidasProxySigner(eidasProxyConf, "Tink")
+                .getSignatureBase64(signatureEntity.getBytes());
     }
 
     public static String getServerTime() {

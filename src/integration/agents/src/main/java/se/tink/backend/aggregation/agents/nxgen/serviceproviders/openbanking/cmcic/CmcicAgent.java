@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.CmcicAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.util.CmcicUtil;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -45,9 +44,9 @@ public abstract class CmcicAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        apiClient.setConfiguration(getClientConfiguration());
-        client.setSslClientCertificate(
-                CmcicUtil.readFile(getClientConfiguration().getClientSigningCertificatePath()), "");
+        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+        this.client.setEidasProxy(
+                configuration.getEidasProxy(), getClientConfiguration().getCertificateId());
     }
 
     protected CmcicConfiguration getClientConfiguration() {
