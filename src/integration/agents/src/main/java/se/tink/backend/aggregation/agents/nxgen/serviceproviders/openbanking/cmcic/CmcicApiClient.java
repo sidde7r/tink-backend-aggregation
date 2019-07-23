@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.util.CodeChallengeUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.util.SignatureUtil;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -34,6 +35,7 @@ public final class CmcicApiClient {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private CmcicConfiguration configuration;
+    private EidasProxyConfiguration eidasProxyConfiguration;
 
     public CmcicApiClient(
             TinkHttpClient client,
@@ -49,8 +51,10 @@ public final class CmcicApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(CmcicConfiguration configuration) {
+    protected void setConfiguration(
+            CmcicConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -75,9 +79,10 @@ public final class CmcicApiClient {
                         date,
                         digest,
                         requestId,
-                        configuration.getClientSigningKeyPath());
+                        eidasProxyConfiguration);
 
         URL requestUrl = baseUrl.concat(path);
+
         return client.request(requestUrl)
                 .addBearerToken(authToken)
                 .accept(MediaType.APPLICATION_JSON)
