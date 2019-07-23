@@ -123,10 +123,13 @@ public class SparebankAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
+        SparebankPaymentExecutor sparebankPaymentExecutor =
+                new SparebankPaymentExecutor(apiClient, sessionStorage, getClientConfiguration());
+
         return Optional.of(
                 new SparebankPaymentController(
-                        new SparebankPaymentExecutor(
-                                apiClient, sessionStorage, getClientConfiguration()),
+                        sparebankPaymentExecutor,
+                        sparebankPaymentExecutor,
                         supplementalInformationHelper,
                         sessionStorage));
     }

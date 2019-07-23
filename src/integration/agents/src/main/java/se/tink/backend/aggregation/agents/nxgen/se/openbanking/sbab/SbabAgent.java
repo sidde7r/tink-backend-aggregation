@@ -55,7 +55,9 @@ public final class SbabAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new SbabPaymentExecutor(apiClient)));
+        SbabPaymentExecutor sbabPaymentExecutor = new SbabPaymentExecutor(apiClient);
+
+        return Optional.of(new PaymentController(sbabPaymentExecutor, sbabPaymentExecutor));
     }
 
     protected SbabConfiguration getClientConfiguration() {

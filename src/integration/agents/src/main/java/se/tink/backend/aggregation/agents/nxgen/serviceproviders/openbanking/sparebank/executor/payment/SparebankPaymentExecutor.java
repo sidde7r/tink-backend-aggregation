@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -38,7 +39,19 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class SparebankPaymentExecutor implements PaymentExecutor {
+public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+    private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
+            accountIdentifiersToPaymentTypeMapper =
+                    GenericTypeMapper
+                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                                    genericBuilder()
+                            .put(
+                                    PaymentType.DOMESTIC,
+                                    new Pair<>(
+                                            AccountIdentifier.Type.NO, AccountIdentifier.Type.NO))
+                            .put(PaymentType.SEPA, new Pair<>(Type.IBAN, Type.IBAN))
+                            .setDefaultTranslationValue(PaymentType.INTERNATIONAL)
+                            .build();
     private SparebankApiClient apiClient;
     private SessionStorage sessionStorage;
     private SparebankConfiguration sparebankConfiguration;
@@ -156,19 +169,6 @@ public class SparebankPaymentExecutor implements PaymentExecutor {
     private String getCurrentDate() {
         return LocalDate.now().format(DateTimeFormatter.ofPattern(DatePatterns.YYYY_MM_DD_PATTERN));
     }
-
-    private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
-            accountIdentifiersToPaymentTypeMapper =
-                    GenericTypeMapper
-                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
-                                    genericBuilder()
-                            .put(
-                                    PaymentType.DOMESTIC,
-                                    new Pair<>(
-                                            AccountIdentifier.Type.NO, AccountIdentifier.Type.NO))
-                            .put(PaymentType.SEPA, new Pair<>(Type.IBAN, Type.IBAN))
-                            .setDefaultTranslationValue(PaymentType.INTERNATIONAL)
-                            .build();
 
     private PaymentType getPaymentType(PaymentRequest paymentRequest) {
         Pair<Type, Type> accountIdentifiers =

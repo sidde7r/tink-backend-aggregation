@@ -87,7 +87,12 @@ public final class NordeaSeAgent extends NordeaBaseAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new NordeaSePaymentExecutorSelector(apiClient)));
+        NordeaSePaymentExecutorSelector nordeaSePaymentExecutorSelector =
+                new NordeaSePaymentExecutorSelector(apiClient, supplementalRequester);
+
+        return Optional.of(
+                new PaymentController(
+                        nordeaSePaymentExecutorSelector, nordeaSePaymentExecutorSelector));
     }
 
     protected SessionHandler constructSessionHandler() {

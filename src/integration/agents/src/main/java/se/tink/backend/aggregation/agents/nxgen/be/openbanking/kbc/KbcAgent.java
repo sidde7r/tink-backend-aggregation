@@ -63,9 +63,10 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
     public Optional<PaymentController> constructPaymentController() {
         BerlinGroupPaymentAuthenticator paymentAuthenticator =
                 new BerlinGroupPaymentAuthenticator(supplementalInformationHelper);
-        return Optional.of(
-                new PaymentController(
-                        new KbcPaymentExecutor(
-                                apiClient, paymentAuthenticator, getConfiguration())));
+
+        KbcPaymentExecutor kbcPaymentExecutor =
+                new KbcPaymentExecutor(apiClient, paymentAuthenticator, getConfiguration());
+
+        return Optional.of(new PaymentController(kbcPaymentExecutor, kbcPaymentExecutor));
     }
 }

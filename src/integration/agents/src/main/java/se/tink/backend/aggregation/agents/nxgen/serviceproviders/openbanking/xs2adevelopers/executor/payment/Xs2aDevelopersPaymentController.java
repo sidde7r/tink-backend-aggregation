@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -19,10 +20,11 @@ public class Xs2aDevelopersPaymentController extends PaymentController {
 
     public Xs2aDevelopersPaymentController(
             PaymentExecutor paymentExecutor,
+            FetchablePaymentExecutor fetchablePaymentExecutor,
             ThirdPartyAppAuthenticationController controller,
             Credentials credentials,
             PersistentStorage persistentStorage) {
-        super(paymentExecutor);
+        super(paymentExecutor, fetchablePaymentExecutor);
         this.controller = controller;
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;

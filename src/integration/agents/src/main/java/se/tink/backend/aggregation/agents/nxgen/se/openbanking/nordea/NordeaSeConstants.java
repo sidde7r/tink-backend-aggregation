@@ -43,10 +43,6 @@ public final class NordeaSeConstants {
         public static final String TOKEN_TYPE = "Bearer";
     }
 
-    public class NordeaSignSteps {
-        public static final String SAMPLE_STEP = "SAMPLE_STEP";
-    }
-
     public class ErrorMessage {
         public static final String CANCEL_ERROR = "nsp.returncode.cava.user_cancel_error";
         public static final String TIME_OUT_ERROR = "nsp.returncode.cava.expired_transaction_error";

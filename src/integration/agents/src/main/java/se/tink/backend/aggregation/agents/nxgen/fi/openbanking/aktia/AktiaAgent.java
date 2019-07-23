@@ -110,7 +110,9 @@ public final class AktiaAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new AktiaPaymentExecutor(apiClient)));
+        AktiaPaymentExecutor aktiaPaymentExecutor = new AktiaPaymentExecutor(apiClient);
+
+        return Optional.of(new PaymentController(aktiaPaymentExecutor, aktiaPaymentExecutor));
     }
 
     @Override

@@ -121,7 +121,9 @@ public final class DnbAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new DndPaymentExecutor(apiClient)));
+        DndPaymentExecutor dndPaymentExecutor = new DndPaymentExecutor(apiClient);
+
+        return Optional.of(new PaymentController(dndPaymentExecutor, dndPaymentExecutor));
     }
 
     private byte[] readFile(String path) {

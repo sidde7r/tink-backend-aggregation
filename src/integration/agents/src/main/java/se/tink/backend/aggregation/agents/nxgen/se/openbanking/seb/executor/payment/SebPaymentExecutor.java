@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.executor.paym
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -25,13 +26,14 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class SebPaymentExecutor implements PaymentExecutor {
+public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private SebApiClient apiClient;
 
@@ -40,7 +42,7 @@ public class SebPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
         String paymentProduct = getPaymentProduct(paymentRequest.getPayment()).getValue();
 
         DebtorAccountEntity debtorAccountEntity = DebtorAccountEntity.of(paymentRequest);
@@ -69,7 +71,7 @@ public class SebPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         String paymentId = paymentRequest.getPayment().getUniqueId();
         String paymentProduct = getPaymentProduct(paymentRequest.getPayment()).getValue();
         return apiClient
@@ -86,16 +88,15 @@ public class SebPaymentExecutor implements PaymentExecutor {
         String paymentProduct = getPaymentProduct(paymentMultiStepRequest.getPayment()).getValue();
         String paymentId = paymentMultiStepRequest.getPayment().getUniqueId();
         switch (paymentMultiStepRequest.getStep()) {
-            case AuthenticationStepConstants.STEP_INIT:
+            case SigningStepConstants.STEP_INIT:
                 PaymentStatusResponse paymentStatusResponse =
                         apiClient.getPaymentStatus(paymentId, paymentProduct);
                 if (paymentStatusResponse.isReadyForSigning()) {
-                    PaymentStatusResponse signingResponse =
-                            apiClient.signPayment(
-                                    paymentId,
-                                    paymentProduct,
-                                    new PaymentSigningRequest(
-                                            paymentStatusResponse.getAuthenticationMethodId()));
+                    apiClient.signPayment(
+                            paymentId,
+                            paymentProduct,
+                            new PaymentSigningRequest(
+                                    paymentStatusResponse.getAuthenticationMethodId()));
                 } else {
                     throw new IllegalStateException("Payment can not be signed at the moment");
                 }
@@ -132,9 +133,7 @@ public class SebPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
-            throws PaymentException {
-        // Mocking of fetch multiple because they don't have the endpoint for fetch multiple
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         List<PaymentResponse> responseList = new ArrayList<>();
         for (PaymentRequest paymentRequest : paymentListRequest.getPaymentRequestList()) {
 
@@ -153,7 +152,7 @@ public class SebPaymentExecutor implements PaymentExecutor {
     }
 
     private PaymentStatus sampleStepSebAutoSignsAfterAFewSeconds(
-            String providerId, String paymentProduct) throws PaymentException {
+            String providerId, String paymentProduct) {
         // Should be enough to get the payment auto signed.
         try {
             Thread.sleep(10000);

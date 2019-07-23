@@ -19,8 +19,6 @@ public enum NordeaPaymentStatus {
     USER_APPROVAL_CANCELLED("UserApprovalCancelled"),
     UNKNOWN("Unknown");
 
-    private String statusText;
-
     private static EnumMap<NordeaPaymentStatus, PaymentStatus> nordeaPaymentStatusToTinkMapper =
             new EnumMap<>(NordeaPaymentStatus.class);
 
@@ -30,15 +28,19 @@ public enum NordeaPaymentStatus {
         nordeaPaymentStatusToTinkMapper.put(PENDING_USER_APPROVAL, PaymentStatus.PENDING);
         nordeaPaymentStatusToTinkMapper.put(PENDING_CONFIRMATION, PaymentStatus.PENDING);
         nordeaPaymentStatusToTinkMapper.put(CONFIRMED, PaymentStatus.SIGNED);
+        nordeaPaymentStatusToTinkMapper.put(
+                USER_APPROVAL_FAILED, PaymentStatus.USER_APPROVAL_FAILED);
+        nordeaPaymentStatusToTinkMapper.put(
+                USER_APPROVAL_TIMEOUT, PaymentStatus.USER_APPROVAL_FAILED);
+        nordeaPaymentStatusToTinkMapper.put(USER_APPROVAL_CANCELLED, PaymentStatus.CANCELLED);
+        nordeaPaymentStatusToTinkMapper.put(ON_HOLD, PaymentStatus.PENDING);
         nordeaPaymentStatusToTinkMapper.put(UNKNOWN, PaymentStatus.UNDEFINED);
     }
 
+    private String statusText;
+
     NordeaPaymentStatus(String status) {
         this.statusText = status;
-    }
-
-    public String getText() {
-        return this.statusText;
     }
 
     public static NordeaPaymentStatus fromString(String text) {
@@ -56,6 +58,10 @@ public enum NordeaPaymentStatus {
                                         "Cannot map Nordea payment status : "
                                                 + nordeaPaymentStatus.toString()
                                                 + " to Tink payment status."));
+    }
+
+    public String getText() {
+        return this.statusText;
     }
 
     @Override

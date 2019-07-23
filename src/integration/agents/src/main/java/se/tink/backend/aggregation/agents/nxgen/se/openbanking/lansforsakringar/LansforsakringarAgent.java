@@ -64,7 +64,12 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new LansforsakringarPaymentExecutor(apiClient)));
+        LansforsakringarPaymentExecutor lansforsakringarPaymentExecutor =
+                new LansforsakringarPaymentExecutor(apiClient);
+
+        return Optional.of(
+                new PaymentController(
+                        lansforsakringarPaymentExecutor, lansforsakringarPaymentExecutor));
     }
 
     @Override
