@@ -26,7 +26,7 @@ public class SbabAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("se", "se-sbab-bankid")
+                new AgentIntegrationTest.Builder("se", "se-sbab-oauth2")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true)
