@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsTransactionStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.Consent;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -67,6 +68,15 @@ public final class SibsUtils {
 
     public static String getRequestId() {
         return UUID.randomUUID().toString().replace(DASH, StringUtils.EMPTY);
+    }
+
+    public static Retryer<SibsTransactionStatus> getPaymentStatusRetryer(
+            long sleepTime, int retryAttempts) {
+        return RetryerBuilder.<SibsTransactionStatus>newBuilder()
+                .retryIfResult(status -> status != null && status.isWaitingStatus())
+                .withWaitStrategy(WaitStrategies.fixedWait(sleepTime, TimeUnit.SECONDS))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
+                .build();
     }
 
     public static Retryer<ConsentStatus> getConsentStatusRetryer(
