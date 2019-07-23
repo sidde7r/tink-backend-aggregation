@@ -5,6 +5,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
@@ -12,12 +13,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankAbstractAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class DanskeBankPasswordAuthenticator extends DanskeBankAbstractAuthenticator
         implements PasswordAuthenticator {
+
+    private static final AggregationLogger log =
+            new AggregationLogger(DanskeBankPasswordAuthenticator.class);
     private final DanskeBankApiClient apiClient;
     private final String deviceId;
     private final DanskeBankConfiguration configuration;
@@ -69,6 +74,8 @@ public class DanskeBankPasswordAuthenticator extends DanskeBankAbstractAuthentic
             // Finalize authentication
             finalizeAuthentication();
         } catch (HttpResponseException hre) {
+            log.errorExtraLong(
+                    "Error in authenticate", DanskeBankConstants.loginPasswordAuthError, hre);
             DanskeBankPasswordErrorHandler.throwError(hre);
         } finally {
             if (driver != null) {
@@ -78,7 +85,7 @@ public class DanskeBankPasswordAuthenticator extends DanskeBankAbstractAuthentic
     }
 
     @Override
-    protected FinalizeAuthenticationResponse finalizeAuthentication() {
+    protected FinalizeAuthenticationResponse finalizeAuthentication() throws LoginException {
         // Get encrypted finalize package
         if (this.finalizePackage == null) {
             throw new IllegalStateException("Finalize Package was null, aborting login");

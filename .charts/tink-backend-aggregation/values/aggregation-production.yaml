@@ -31,10 +31,11 @@ agents:
     openbanking:
       baseUrl: http://demo-financial-institute.internal.production.aggregation.tink.network/openbanking
   collectorSubscriptionKey: true
+  nordea:
+    tink:
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   monzo:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-  volksbank:
-    enabled: "true"
   bunq:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
@@ -55,9 +56,19 @@ agents:
       certificateId: abnamro-QSEALC
   sibs:
     tink:
+      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+      certificateId: Tink
+    cgd:
       redirectUrl: https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback
-      eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
-      certificateId: Tink-qsealc
+      certificateId: cgd
+  volksbank:
+    tink:
+      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+      certificateId: Tink
+    abn:
+      redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+      certificateId: Tink
+
 
   proxyUri: http://10.88.12.185:8080
 

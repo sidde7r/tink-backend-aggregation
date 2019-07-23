@@ -21,8 +21,7 @@ import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 
 public class SibsMessageSignInterceptor extends MessageSignInterceptor {
 
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(SibsMessageSignInterceptor.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SibsMessageSignInterceptor.class);
 
     private static final String NEW_LINE = "\n";
     private static final String COLON_SPACE = ": ";
@@ -65,11 +64,11 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     @Override
     protected void getSignatureAndAddAsHeader(ClientRequest request) {
         List<String> serializedHeaders = new ArrayList<>();
-        List<String> listetToSignatureHeaders = new ArrayList<>();
+        List<String> headersIncludedInSignature = new ArrayList<>();
 
         for (String key : SIGNATURE_HEADERS) {
             if (request.getHeaders().get(key) != null) {
-                listetToSignatureHeaders.add(key);
+                headersIncludedInSignature.add(key);
                 if (request.getHeaders().get(key).size() > 1) {
                     throw new IllegalArgumentException(
                             "Unable to provide more than one value in signature");
@@ -79,10 +78,11 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
             }
         }
 
-        String listetToSignatureHeadersString = StringUtils.join(listetToSignatureHeaders, " ");
+        String headersIncludedInSignatureString =
+                StringUtils.join(headersIncludedInSignature, StringUtils.SPACE);
         String serializedHeadersString = StringUtils.join(serializedHeaders, NEW_LINE);
         String signatureBase64Sha = signMessage(serializedHeadersString);
-        String signature = formSignature(signatureBase64Sha, listetToSignatureHeadersString);
+        String signature = formSignature(signatureBase64Sha, headersIncludedInSignatureString);
         request.getHeaders().add(HeaderKeys.SIGNATURE, signature);
     }
 
@@ -114,7 +114,6 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     private String signMessage(String toSignString) {
         QsealcEidasProxySigner proxySigner =
                 new QsealcEidasProxySigner(eidasConf, configuration.getCertificateId());
-        String signatureBase64Sha = proxySigner.getSignatureBase64(toSignString.getBytes());
-        return signatureBase64Sha;
+        return proxySigner.getSignatureBase64(toSignString.getBytes());
     }
 }

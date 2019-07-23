@@ -28,18 +28,16 @@ public class VolksbankApiClient {
 
     private final VolksbankHttpClient client;
     private final SessionStorage sessionStorage;
-    private final VolksbankUtils utils;
+    private final VolksbankUrlFactory urlFactory;
     private VolksbankConfiguration configuration;
 
     public VolksbankApiClient(
-            VolksbankHttpClient client, SessionStorage sessionStorage, VolksbankUtils utils) {
+            final VolksbankHttpClient client,
+            final SessionStorage sessionStorage,
+            final VolksbankUrlFactory urlFactory) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.utils = utils;
-    }
-
-    public VolksbankUtils getUtils() {
-        return utils;
+        this.urlFactory = urlFactory;
     }
 
     public void setConfiguration(VolksbankConfiguration configuration) {
@@ -54,7 +52,7 @@ public class VolksbankApiClient {
             TransactionalAccount account, Map<String, String> urlParams) {
 
         URL url =
-                utils.buildURL(
+                urlFactory.buildURL(
                         Paths.ACCOUNTS + "/" + account.getApiIdentifier() + Paths.TRANSACTIONS);
 
         RequestBuilder request =
@@ -76,12 +74,11 @@ public class VolksbankApiClient {
                 request = request.queryParam(key, urlParams.get(key));
             }
         } else {
-            String now = utils.getCurrentDateAsString();
+            String now = VolksbankUtils.getCurrentDateAsString();
             request =
                     request.queryParam(
                                     TransactionFetcherParams.BOOKING_STATUS,
                                     TransactionFetcherParams.BOOKING_STATUS_VALUE)
-                            .queryParam(TransactionFetcherParams.DATE_FROM, now)
                             .queryParam(
                                     TransactionFetcherParams.PAGE_DIRECTION,
                                     TransactionFetcherParams.PAGE_DIRECTION_VALUE)
@@ -97,7 +94,9 @@ public class VolksbankApiClient {
 
     public BalancesResponse readBalance(AccountsEntity account) {
 
-        URL url = utils.buildURL(Paths.ACCOUNTS + "/" + account.getResourceId() + Paths.BALANCES);
+        URL url =
+                urlFactory.buildURL(
+                        Paths.ACCOUNTS + "/" + account.getResourceId() + Paths.BALANCES);
 
         String response =
                 client.getTinkClient()
@@ -119,7 +118,7 @@ public class VolksbankApiClient {
 
     public AccountsResponse fetchAccounts() {
 
-        URL url = utils.buildURL(Paths.ACCOUNTS);
+        URL url = urlFactory.buildURL(Paths.ACCOUNTS);
 
         String response =
                 client.getTinkClient()
@@ -140,25 +139,27 @@ public class VolksbankApiClient {
     }
 
     public ConsentResponse consentRequest() {
+        return getResponse(consentRequestString(), ConsentResponse.class);
+    }
 
-        URL url = utils.buildURL(VolksbankConstants.Paths.CONSENT);
+    public String consentRequestString() {
+        final URL url = urlFactory.buildURL(VolksbankConstants.Paths.CONSENT);
+        final URL redirectUrl = configuration.getAisConfiguration().getRedirectUrl();
+        final String clientId = configuration.getAisConfiguration().getClientId();
+        final ConsentRequestBody body =
+                new ConsentRequestBody(
+                        VolksbankUtils.getFutureDateAsString(ConsentParams.VALID_YEAR),
+                        ConsentParams.FREQUENCY_PER_DAY);
 
-        String response =
-                client.getTinkClient()
-                        .request(url)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .header(
-                                HeaderKeys.AUTHORIZATION,
-                                configuration.getAisConfiguration().getClientId())
-                        .body(
-                                new ConsentRequestBody(
-                                        utils.getFutureDateAsString(ConsentParams.VALID_YEAR),
-                                        ConsentParams.FREQUENCY_PER_DAY))
-                        .post(String.class);
-
-        return getResponse(response, ConsentResponse.class);
+        return client.getTinkClient()
+                .request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.REQUEST_ID, getRequestId())
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                .header(HeaderKeys.AUTHORIZATION, clientId)
+                .body(body)
+                .post(String.class);
     }
 
     public OAuth2Token getBearerToken(URL url) {
@@ -174,7 +175,7 @@ public class VolksbankApiClient {
         return token;
     }
 
-    private String getRequestId() {
+    private static String getRequestId() {
         return java.util.UUID.randomUUID().toString();
     }
 

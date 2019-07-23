@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator;
 
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
@@ -19,14 +21,29 @@ public class SibsAuthenticator {
     }
 
     public ConsentStatus getConsentStatus() {
+        String consentStatusString = "unknown state";
         try {
-            return ConsentStatus.valueOf(apiClient.getConsentStatus().getTransactionStatus());
+            consentStatusString = apiClient.getConsentStatus().getTransactionStatus();
+            return ConsentStatus.valueOf(consentStatusString);
         } catch (IllegalArgumentException e) {
-            throw new IllegalStateException(SibsConstants.ErrorMessages.UNKNOWN_TRANSACTION_STATE);
+            throw new IllegalStateException(
+                    SibsConstants.ErrorMessages.UNKNOWN_TRANSACTION_STATE
+                            + "="
+                            + consentStatusString,
+                    e);
         }
     }
 
-    public ConsentResponse initializeConsent(String state, String psuIdType, String psuId) {
+    public ConsentResponse initializeDecoupledConsent(
+            String state, String psuIdType, String psuId) {
         return apiClient.createDecoupledAuthConsent(state, psuIdType, psuId);
+    }
+
+    public void autoAuthenticate() throws SessionException {
+        ConsentStatus consentStatus = getConsentStatus();
+
+        if (!consentStatus.isAcceptedStatus()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 }

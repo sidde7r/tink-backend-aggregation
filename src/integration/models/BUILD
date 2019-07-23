@@ -8,8 +8,8 @@ java_library(
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",
-        "//third_party:com_datastax_cassandra_cassandra_driver_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_fasterxml_uuid_java_uuid_generator",
         "//third_party:com_google_guava_guava",
     ],
 )

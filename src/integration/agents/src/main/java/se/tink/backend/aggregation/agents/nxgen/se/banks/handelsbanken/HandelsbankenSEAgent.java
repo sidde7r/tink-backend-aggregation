@@ -143,22 +143,25 @@ public class HandelsbankenSEAgent
             HandelsbankenSessionStorage sessionStorage,
             AgentContext context) {
 
-        HandelsbankenSEPaymentExecutor paymentExecutor =
-                new HandelsbankenSEPaymentExecutor(client, sessionStorage);
-
         Catalog catalog = context.getCatalog();
+        ExecutorExceptionResolver exceptionResolver = new ExecutorExceptionResolver(catalog);
+
+        HandelsbankenSEPaymentExecutor paymentExecutor =
+                new HandelsbankenSEPaymentExecutor(client, sessionStorage, exceptionResolver);
+
         return Optional.of(
                 new TransferController(
                         paymentExecutor,
                         new HandelsbankenSEBankTransferExecutor(
                                 client,
                                 sessionStorage,
-                                new ExecutorExceptionResolver(catalog),
+                                exceptionResolver,
                                 new TransferMessageFormatter(
                                         catalog,
                                         TransferMessageLengthConfig.createWithMaxLength(14, 12),
                                         new StringNormalizerSwedish(",.-?!/+"))),
-                        new HandelsbankenSEEInvoiceExecutor(client, sessionStorage),
+                        new HandelsbankenSEEInvoiceExecutor(
+                                client, sessionStorage, exceptionResolver),
                         paymentExecutor));
     }
 

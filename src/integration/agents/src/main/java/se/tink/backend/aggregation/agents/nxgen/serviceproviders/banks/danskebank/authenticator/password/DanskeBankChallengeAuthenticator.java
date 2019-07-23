@@ -14,6 +14,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -71,7 +72,6 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private WebDriver driver;
     private String keyCardOtpChallenge;
     private String userId;
-    private LogTag login503Error = LogTag.from("#bind-error-503");
 
     public DanskeBankChallengeAuthenticator(
             Catalog catalog,
@@ -191,6 +191,10 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         switch (pollStatus.toLowerCase()) {
             case DanskeBankConstants.CodeApp.STATUS_OK:
                 break;
+            case DanskeBankConstants.CodeApp.STATUS_OVERWRITTEN:
+                // Caused when a new NemID request for the bank is received after the one created
+                // by this instance; new request might succeed, this one will be 'overwritten'.
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
             case DanskeBankConstants.CodeApp.STATUS_TIMEOUT:
                 throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                         UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
@@ -241,7 +245,8 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
                             UserMessage.CREDENTIALS_VERIFICATION_ERROR.getKey());
                 }
                 if (response.getStatus() == 503) {
-                    log.infoExtraLong(this.driver.getPageSource(), login503Error);
+                    log.infoExtraLong(
+                            this.driver.getPageSource(), DanskeBankConstants.login503Error);
                 }
 
                 throw hre;
@@ -405,7 +410,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     }
 
     @Override
-    protected FinalizeAuthenticationResponse finalizeAuthentication() {
+    protected FinalizeAuthenticationResponse finalizeAuthentication() throws LoginException {
         // Get encrypted finalize package
         if (this.finalizePackage == null) {
             throw new IllegalStateException("Finalize Package was null, aborting login");
@@ -457,6 +462,8 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             try {
                 finalizeAuthentication();
             } catch (HttpResponseException hre) {
+                log.errorExtraLong(
+                        "Error in logonStepOne", DanskeBankConstants.loginCodeAppError, hre);
                 DanskeBankPasswordErrorHandler.throwError(hre);
             }
         } finally {
@@ -548,7 +555,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         return validateStepUpTrustedDeviceJson.toString();
     }
 
-    private enum UserMessage implements LocalizableEnum {
+    public enum UserMessage implements LocalizableEnum {
         CREDENTIALS_VERIFICATION_ERROR(
                 new LocalizableKey("Wrong challenge response input - Will retry login.")),
         CODE_APP_TIMEOUT_ERROR(new LocalizableKey("Code app authentication timed out.")),

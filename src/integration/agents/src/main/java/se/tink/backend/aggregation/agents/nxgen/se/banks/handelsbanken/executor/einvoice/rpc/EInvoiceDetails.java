@@ -28,7 +28,7 @@ public class EInvoiceDetails extends EInvoice implements UpdatablePayment {
         return searchLink(HandelsbankenConstants.URLS.Links.UPDATE);
     }
 
-    public Optional<URL> toApproval() {
-        return searchLink(HandelsbankenConstants.URLS.Links.APPROVAL);
+    public Optional<URL> toSelf() {
+        return searchLink(HandelsbankenConstants.URLS.Links.SELF);
     }
 }

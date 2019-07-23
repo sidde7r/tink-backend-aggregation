@@ -65,7 +65,7 @@ public class OpenIdAuthenticationController
     private final String pseudoId;
     private OAuth2Token clientAccessToken;
 
-    private final String callbackRedirectId;
+    private final String appUriId;
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -73,7 +73,7 @@ public class OpenIdAuthenticationController
             OpenIdApiClient apiClient,
             OpenIdAuthenticator authenticator,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            String callbackUriId,
+            String appUriId,
             Credentials credentials) {
         this(
                 persistentStorage,
@@ -81,7 +81,7 @@ public class OpenIdAuthenticationController
                 apiClient,
                 authenticator,
                 callbackJWTSignatureKeyPair,
-                callbackUriId,
+                appUriId,
                 credentials,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
@@ -93,7 +93,7 @@ public class OpenIdAuthenticationController
             OpenIdApiClient apiClient,
             OpenIdAuthenticator authenticator,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            String callbackUriId,
+            String appUriId,
             Credentials credentials,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
@@ -108,7 +108,7 @@ public class OpenIdAuthenticationController
 
         this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
 
-        this.callbackRedirectId = callbackUriId;
+        this.appUriId = appUriId;
         this.state = getJwtState(pseudoId);
 
         this.nonce = RandomUtils.generateRandomHexEncoded(8);
@@ -290,9 +290,9 @@ public class OpenIdAuthenticationController
         JWTCreator.Builder jwtBuilder =
                 JWT.create().withIssuedAt(new Date()).withClaim("id", pseudoId);
 
-        if (!Strings.isNullOrEmpty(callbackRedirectId)) {
+        if (!Strings.isNullOrEmpty(appUriId)) {
             // smaller claim to be safe on the length of the state
-            jwtBuilder.withClaim("redirectId", callbackRedirectId);
+            jwtBuilder.withClaim("appUriId", appUriId);
         }
 
         String signedState =

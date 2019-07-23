@@ -35,6 +35,6 @@ public class HKKAZ extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HKKAZ;
+        return FinTsConstants.Segments.HKKAZ.name();
     }
 }

@@ -12,7 +12,7 @@ public final class RefreshInformationRequestTest {
     public void testDeserialization_whenLocaleIsSet_localeIsFound() throws IOException {
 
         final String serialized =
-                "{\"credentials\": null, \"provider\": null, \"user\": {\"flags\": [], \"id\": \"77777777777777777777777777777777\", \"profile\": {\"locale\": \"sv_SE\"}, \"username\": null, \"debugUntil\": null}, \"userDeviceId\": null, \"accounts\": [], \"create\": false, \"update\": false, \"callbackRedirectUriId\": null, \"manual\": false, \"itemsToRefresh\": null}";
+                "{\"credentials\": null, \"provider\": null, \"user\": {\"flags\": [], \"id\": \"77777777777777777777777777777777\", \"profile\": {\"locale\": \"sv_SE\"}, \"username\": null, \"debugUntil\": null}, \"userDeviceId\": null, \"accounts\": [], \"create\": false, \"update\": false, \"appUriId\": null, \"manual\": false, \"itemsToRefresh\": null}";
 
         final ObjectMapper stringMapper =
                 new ObjectMapper()

@@ -27,6 +27,6 @@ public class HKSYN extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HKSYN;
+        return FinTsConstants.Segments.HKSYN.name();
     }
 }

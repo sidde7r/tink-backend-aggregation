@@ -23,6 +23,6 @@ public class HKVVB extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HKVVB;
+        return FinTsConstants.Segments.HKVVB.name();
     }
 }

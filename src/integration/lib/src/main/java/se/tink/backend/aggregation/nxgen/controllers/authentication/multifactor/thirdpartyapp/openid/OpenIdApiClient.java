@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpenIdApiClient {
 
@@ -55,7 +56,17 @@ public class OpenIdApiClient {
             return cachedWellKnownResponse;
         }
 
-        cachedWellKnownResponse = httpClient.request(wellKnownURL).get(WellKnownResponse.class);
+        /**
+         * Regarding the well-known URL endpoint, some bank APIs (such as FirstDirect) sends
+         * response with wrong MIME type (such as octet-stream). If we want to cast the response
+         * payload into WellKnownResponse directly, we fail as TinkHttpClient does not know how to
+         * handle application/octet-stream in this case. For this reason, we cast the response
+         * payload into string first and then serialize it by using SerializationUtils class
+         */
+        String response = httpClient.request(wellKnownURL).get(String.class);
+
+        cachedWellKnownResponse =
+                SerializationUtils.deserializeFromString(response, WellKnownResponse.class);
 
         return cachedWellKnownResponse;
     }

@@ -23,6 +23,9 @@ agents:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/mobilebanking
     openbanking:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/openbanking
+  nordea:
+    tink:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   abnamro:
     tink:
       redirectUrl: https://localhost/auth
@@ -61,7 +64,12 @@ agents:
       redirectUrl: https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback
       certificateId: cgd
   volksbank:
-    enabled: "true"
+    tink:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+      certificateId: Tink
+    abn:
+      redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+      certificateId: Tink
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: true

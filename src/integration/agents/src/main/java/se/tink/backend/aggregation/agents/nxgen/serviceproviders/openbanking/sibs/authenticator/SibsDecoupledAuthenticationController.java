@@ -3,19 +3,33 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
 import java.util.concurrent.ExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 
-public class SibsDecoupledAuthenticationController implements Authenticator {
-
-    private final SibsAuthenticator authenticator;
-    private final String state;
+public class SibsDecoupledAuthenticationController
+        implements Authenticator, AutoAuthenticator, MultiFactorAuthenticator {
+    private static final Logger logger =
+            LoggerFactory.getLogger(SibsDecoupledAuthenticationController.class);
     private static final long SLEEP_TIME = 10L;
     private static final int RETRY_ATTEMPTS = 60;
+    private final SibsAuthenticator authenticator;
+    private final String state;
+    private final Retryer<ConsentStatus> consentStatusRetryer =
+            SibsUtils.getConsentStatusRetryer(SLEEP_TIME, RETRY_ATTEMPTS);
 
     public SibsDecoupledAuthenticationController(SibsAuthenticator authenticator) {
         this.authenticator = authenticator;
@@ -23,31 +37,36 @@ public class SibsDecoupledAuthenticationController implements Authenticator {
     }
 
     @Override
-    public void authenticate(Credentials credentials) {
+    public void autoAuthenticate() throws SessionException {
+        authenticator.autoAuthenticate();
+    }
 
-        authenticator.initializeConsent(
-                state,
-                SibsConstants.HeaderValues.CLIENTE_PARTICULAR,
-                credentials.getField(CredentialKeys.PSU_ID));
-
-        Retryer<ConsentStatus> consentStatusRetryer =
-                SibsUtils.getConsentStatusRetryer(SLEEP_TIME, RETRY_ATTEMPTS);
+    @Override
+    public void authenticate(Credentials credentials) throws AuthenticationException {
+        initializeDecoupledConsent(credentials);
 
         try {
-            ConsentStatus status = consentStatusRetryer.call(authenticator::getConsentStatus);
+            consentStatusRetryer.call(authenticator::getConsentStatus);
+        } catch (ExecutionException | RetryException e) {
+            logger.warn("Authorization failed, consents status is not accepted.", e);
+            throw new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT);
+        }
+    }
 
-            if (!status.isAcceptedStatus()) {
-                throw new IllegalStateException(
-                        String.format(
-                                "Authorization failed, consents status is not accepted. Current: %s Expected: %s!",
-                                status.name(), ConsentStatus.ACTC.name()));
-            }
-        } catch (RetryException e) {
-            throw new IllegalStateException(
-                    String.format("Not able to fetch consents after %s attempts!", RETRY_ATTEMPTS),
-                    e);
-        } catch (ExecutionException e) {
-            throw new IllegalStateException("Authorization API error!", e);
+    @Override
+    public CredentialsTypes getType() {
+        return CredentialsTypes.THIRD_PARTY_APP;
+    }
+
+    private void initializeDecoupledConsent(Credentials credentials) throws ThirdPartyAppException {
+        try {
+            authenticator.initializeDecoupledConsent(
+                    state,
+                    SibsConstants.HeaderValues.CLIENTE_PARTICULAR,
+                    credentials.getField(CredentialKeys.PSU_ID));
+        } catch (HttpClientException e) {
+            logger.warn("Authorization failed, cannot create consents.", e);
+            throw new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT);
         }
     }
 }

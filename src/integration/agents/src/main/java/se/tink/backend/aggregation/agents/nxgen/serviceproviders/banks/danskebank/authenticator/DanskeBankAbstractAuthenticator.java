@@ -6,6 +6,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 
@@ -48,5 +49,6 @@ public abstract class DanskeBankAbstractAuthenticator {
         return new PhantomJSDriver(capabilities);
     }
 
-    protected abstract FinalizeAuthenticationResponse finalizeAuthentication();
+    protected abstract FinalizeAuthenticationResponse finalizeAuthentication()
+            throws LoginException;
 }

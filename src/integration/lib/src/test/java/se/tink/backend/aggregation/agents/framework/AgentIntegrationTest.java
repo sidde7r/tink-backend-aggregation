@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.framework;
 
-import static org.junit.Assert.assertEquals;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -273,14 +271,17 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Done with refresh.");
     }
 
-    private void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
+    protected void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
             throws Exception {
 
         if (agent instanceof SubsequentGenerationAgent) {
             PaymentController paymentController =
                     ((SubsequentGenerationAgent) agent)
                             .constructPaymentController()
-                            .orElseThrow(Exception::new);
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    "Agent doesn't implement constructPaymentController method."));
 
             ArrayList<PaymentRequest> paymentRequests = new ArrayList<>();
             for (Payment payment : paymentList) {
@@ -289,16 +290,26 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 PaymentResponse createPaymentResponse =
                         paymentController.create(new PaymentRequest(payment));
 
-                PaymentResponse fetchPaymentResponse =
-                        paymentController.fetch(PaymentRequest.of(createPaymentResponse));
+                if (paymentController.canFetch()) {
+                    PaymentResponse fetchPaymentResponse =
+                            paymentController.fetch(PaymentRequest.of(createPaymentResponse));
 
-                assertEquals(PaymentStatus.PENDING, fetchPaymentResponse.getPayment().getStatus());
+                    Assert.assertEquals(
+                            PaymentStatus.PENDING, fetchPaymentResponse.getPayment().getStatus());
 
-                paymentRequests.add(PaymentRequest.of(fetchPaymentResponse));
+                    paymentRequests.add(PaymentRequest.of(fetchPaymentResponse));
+                } else {
+                    paymentRequests.add(new PaymentRequest(payment));
+                }
             }
 
-            PaymentListResponse paymentListResponse =
-                    paymentController.fetchMultiple(new PaymentListRequest(paymentRequests));
+            PaymentListResponse paymentListResponse = null;
+            if (paymentController.canFetch()) {
+                paymentListResponse =
+                        paymentController.fetchMultiple(new PaymentListRequest(paymentRequests));
+            } else {
+                paymentListResponse = PaymentListResponse.of(paymentRequests);
+            }
 
             for (PaymentResponse paymentResponse : paymentListResponse.getPaymentResponseList()) {
                 Payment retrievedPayment = paymentResponse.getPayment();

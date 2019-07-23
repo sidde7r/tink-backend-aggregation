@@ -1960,16 +1960,17 @@ public class NordeaV20Agent extends AbstractAgent
 
     private String requestIdentificationCode() throws IOException {
 
-        Field responseField = new Field();
-
-        responseField.setDescription(this.catalog.getString("Next unused code"));
-        responseField.setName("response");
-        responseField.setNumeric(true);
-        responseField.setHint("NNNN");
-        responseField.setMaxLength(4);
-        responseField.setMinLength(4);
-        responseField.setMasked(true);
-        responseField.setPattern("([0-9]{4})");
+        Field responseField =
+                Field.builder()
+                        .description(this.catalog.getString("Next unused code"))
+                        .name("response")
+                        .numeric(true)
+                        .hint("NNNN")
+                        .maxLength(4)
+                        .minLength(4)
+                        .masked(true)
+                        .pattern("([0-9]{4})")
+                        .build();
 
         List<Field> fields = Lists.newArrayList(responseField);
 

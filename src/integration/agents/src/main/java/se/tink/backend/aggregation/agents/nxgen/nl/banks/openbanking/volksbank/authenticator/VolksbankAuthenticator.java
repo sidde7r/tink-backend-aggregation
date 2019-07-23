@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
 import java.util.NoSuchElementException;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TokenParams;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -18,28 +19,45 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     private final VolksbankApiClient client;
     private final SessionStorage sessionStorage;
-    private final String redirectUri;
-    private final VolksbankUtils utils;
+    private final URL redirectUri;
+    private final VolksbankUrlFactory urlFactory;
+    private final boolean isSandbox;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
             SessionStorage sessionStorage,
-            String redirectUri,
-            VolksbankUtils utils) {
+            URL redirectUri,
+            VolksbankUrlFactory urlFactory,
+            boolean isSandbox) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.redirectUri = redirectUri;
-        this.utils = utils;
+        this.urlFactory = urlFactory;
+        this.isSandbox = isSandbox;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
+        if (!sessionStorage.containsKey(Storage.CONSENT)) {
+            if (isSandbox) {
+                // Sandbox behaves a bit differently
+                final String consentResponseString = client.consentRequestString();
+                final String consentId =
+                        "SNS" + StringUtils.substringBetween(consentResponseString, "\"SNS", "\"");
+                sessionStorage.put(Storage.CONSENT, consentId);
+            } else {
+                final ConsentResponse consent = client.consentRequest();
+                sessionStorage.put(Storage.CONSENT, consent.getConsentId());
+            }
+        }
 
-        return utils.buildURL(Paths.AUTHORIZE)
+        return urlFactory
+                .buildURL(Paths.AUTHORIZE)
                 .queryParam(QueryParams.SCOPE, QueryParams.SCOPE_VALUE)
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParams.RESPONSE_TYPE_VALUE)
                 .queryParam(QueryParams.STATE, state)
-                .queryParam(QueryParams.REDIRECT_URI, redirectUri)
+                .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString())
+                .queryParam(QueryParams.CONSENT_ID, sessionStorage.get(Storage.CONSENT))
                 .queryParam(
                         QueryParams.CLIENT_ID,
                         client.getConfiguration().getAisConfiguration().getClientId());
@@ -49,7 +67,8 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
 
         URL url =
-                utils.buildURL(Paths.TOKEN)
+                urlFactory
+                        .buildURL(Paths.TOKEN)
                         .queryParam(QueryParams.CODE, code)
                         .queryParam(
                                 QueryParams.CLIENT_ID,
@@ -58,7 +77,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                                 QueryParams.CLIENT_SECRET,
                                 client.getConfiguration().getAisConfiguration().getClientSecret())
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
-                        .queryParam(QueryParams.REDIRECT_URI, redirectUri);
+                        .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString());
 
         OAuth2Token token = client.getBearerToken(url);
 
@@ -89,7 +108,8 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                                                 "Cannot refresh access token, could not fetch refresh token from old token object"));
 
         URL url =
-                utils.buildURL(Paths.TOKEN)
+                urlFactory
+                        .buildURL(Paths.TOKEN)
                         .queryParam(
                                 QueryParams.CLIENT_ID,
                                 client.getConfiguration().getAisConfiguration().getClientId())
@@ -99,8 +119,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.REFRESH_TOKEN)
                         .queryParam(QueryParams.REFRESH_TOKEN, refreshToken);
 
-        OAuth2Token token = client.getBearerToken(url);
-        return token;
+        return client.getBearerToken(url);
     }
 
     @Override

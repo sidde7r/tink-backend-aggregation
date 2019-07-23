@@ -1,23 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity;
 
-public enum ConsentStatus {
-    RCVD, // Recieved
-    PDNG, // Pending
-    PATC,
-    ACTC, // Accepted
-    ACFC,
-    ACSP,
-    ACSC,
-    ACCC,
-    RJCT, // Rejected
-    CANC; // Canceled
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 
-    public boolean isFailingStatus() {
-        return this == RJCT || this == CANC;
+public enum ConsentStatus {
+    RCVD(ThirdPartyAppStatus.WAITING), // Received
+    PDNG(ThirdPartyAppStatus.WAITING), // Pending
+    PATC(ThirdPartyAppStatus.WAITING),
+    ACTC(ThirdPartyAppStatus.DONE), // Accepted
+    ACFC(ThirdPartyAppStatus.WAITING),
+    ACSP(ThirdPartyAppStatus.WAITING),
+    ACSC(ThirdPartyAppStatus.WAITING),
+    ACCC(ThirdPartyAppStatus.WAITING),
+    RJCT(ThirdPartyAppStatus.CANCELLED), // Rejected
+    CANC(ThirdPartyAppStatus.CANCELLED); // Canceled
+
+    private ThirdPartyAppStatus thirdPartyAppStatus;
+
+    ConsentStatus(ThirdPartyAppStatus thirdPartyAppStatus) {
+        this.thirdPartyAppStatus = thirdPartyAppStatus;
     }
 
-    public boolean isWaitingStatus() {
-        return this == RCVD || this == PDNG;
+    public ThirdPartyAppStatus getThirdPartyAppStatus() {
+        return thirdPartyAppStatus;
+    }
+
+    public boolean isFinalStatus() {
+        return this == ACTC || this == CANC || this == RJCT;
     }
 
     public boolean isAcceptedStatus() {

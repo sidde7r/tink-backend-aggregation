@@ -11,7 +11,9 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -70,9 +72,15 @@ public class KeyCardAuthenticationController implements MultiFactorAuthenticator
 
         KeyCardInitValues keyCardInitValues = authenticator.init(username, password);
 
-        Map<String, String> supplementalInformation =
-                supplementalInformationHelper.askSupplementalInformation(
-                        getKeyCardIndexField(keyCardInitValues), getKeyCardValueField());
+        Map<String, String> supplementalInformation;
+
+        try {
+            supplementalInformation =
+                    supplementalInformationHelper.askSupplementalInformation(
+                            getKeyCardIndexField(keyCardInitValues), getKeyCardValueField());
+        } catch (SupplementalInfoException ex) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception();
+        }
 
         authenticator.authenticate(supplementalInformation.get(KEYCARD_VALUE_FIELD_KEY));
     }

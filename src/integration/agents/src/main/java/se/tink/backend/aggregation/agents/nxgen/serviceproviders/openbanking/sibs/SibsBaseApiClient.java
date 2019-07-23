@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
 import com.google.common.base.Preconditions;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
@@ -16,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.Consent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
@@ -59,22 +58,24 @@ public class SibsBaseApiClient {
         this.eidasConf = Preconditions.checkNotNull(eidasConf);
     }
 
-    private String getConsentFromStorage() {
+    private String getConsentIdFromStorage() {
+        Consent consent = getConsentFromStorage();
+        return consent.getConsentId();
+    }
+
+    private Consent getConsentFromStorage() {
         return persistentStorage
-                .get(StorageKeys.CONSENT_ID, String.class)
+                .get(StorageKeys.CONSENT_ID, Consent.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
     public AccountsResponse fetchAccounts() {
         URL accounts = createUrl(SibsConstants.Urls.ACCOUNTS);
-        AccountsResponse response =
-                client.request(accounts)
-                        .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
-                        .header(HeaderKeys.CONSENT_ID, getConsentFromStorage())
-                        .get(AccountsResponse.class);
-
-        return response;
+        return client.request(accounts)
+                .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
+                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .get(AccountsResponse.class);
     }
 
     public BalancesResponse getAccountBalances(String accountId) {
@@ -84,7 +85,7 @@ public class SibsBaseApiClient {
 
         return client.request(accountBalances)
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
-                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage())
+                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .get(BalancesResponse.class);
     }
 
@@ -94,14 +95,13 @@ public class SibsBaseApiClient {
                 createUrl(SibsConstants.Urls.ACCOUNT_TRANSACTIONS)
                         .parameter(PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier());
 
-        SimpleDateFormat formatter = new SimpleDateFormat(Formats.PAGINATION_DATE_FORMAT);
-
         return client.request(accountTransactions)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
-                .queryParam(QueryKeys.DATE_FROM, formatter.format(new Date(0)))
-                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage())
+                .queryParam(
+                        QueryKeys.DATE_FROM, SibsUtils.getPaginationDate(getConsentFromStorage()))
+                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .get(TransactionsResponse.class);
     }
 
@@ -110,7 +110,7 @@ public class SibsBaseApiClient {
 
         return client.request(new URL(baseUrl + key))
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
-                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage())
+                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .get(TransactionsResponse.class);
     }
 
@@ -130,7 +130,7 @@ public class SibsBaseApiClient {
                                         .queryParam(QueryKeys.CODE, SibsUtils.getRequestId()))
                         .post(ConsentResponse.class, consentRequest);
 
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+        saveConsentInPersistentStorage(consentResponse);
 
         return new URL(consentResponse.getLinks().getRedirect());
     }
@@ -153,32 +153,38 @@ public class SibsBaseApiClient {
                         .header(SibsConstants.HeaderKeys.PSU_ID, psuId)
                         .post(ConsentResponse.class, consentRequest);
 
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+        saveConsentInPersistentStorage(consentResponse);
 
         return consentResponse;
+    }
+
+    private void saveConsentInPersistentStorage(ConsentResponse consentResponse) {
+        Consent consent =
+                new Consent(consentResponse.getConsentId(), LocalDateTime.now().toString());
+        persistentStorage.put(StorageKeys.CONSENT_ID, consent);
     }
 
     public ConsentStatusResponse getConsentStatus() {
         URL consentStatus =
                 createUrl(SibsConstants.Urls.CONSENT_STATUS)
-                        .parameter(PathParameterKeys.CONSENT_ID, getConsentFromStorage());
+                        .parameter(PathParameterKeys.CONSENT_ID, getConsentIdFromStorage());
         return client.request(consentStatus).get(ConsentStatusResponse.class);
     }
 
     private ConsentRequest getConsentRequest() {
-        String validOneDay = getOneDayValidConsentStringDate();
+        String valid90Days = get90DaysValidConsentStringDate();
         return new ConsentRequest(
                 new ConsentAccessEntity(SibsConstants.FormValues.ALL_ACCOUNTS),
                 true,
-                validOneDay,
+                valid90Days,
                 SibsConstants.FormValues.FREQUENCY_PER_DAY,
                 false);
     }
 
-    private String getOneDayValidConsentStringDate() {
+    private String get90DaysValidConsentStringDate() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime oneDayLater = now.plusDays(1);
-        return CONSENT_BODY_DATE_FORMATTER.format(oneDayLater);
+        LocalDateTime days90Later = now.plusDays(90);
+        return CONSENT_BODY_DATE_FORMATTER.format(days90Later);
     }
 
     private URL createUrl(String path) {

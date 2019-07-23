@@ -10,11 +10,16 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 public final class Form {
-    private LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
-    private boolean encodeSpacesWithPercent = false;
+    private final LinkedHashMap<String, String> parameters;
+    private final boolean encodeSpacesWithPercent;
 
     private static final String JOINING_DELIMITER = "&";
     private static final String NAME_VALUE_FORMAT = "%s=%s";
+
+    private Form(final Builder builder) {
+        parameters = new LinkedHashMap<>(builder.parameters);
+        encodeSpacesWithPercent = builder.encodeSpacesWithPercent;
+    }
 
     public String serialize() {
         return parameters.entrySet().stream()
@@ -90,10 +95,7 @@ public final class Form {
         }
 
         public Form build() {
-            Form form = new Form();
-            form.parameters = new LinkedHashMap<>(this.parameters);
-            form.encodeSpacesWithPercent = encodeSpacesWithPercent;
-            return form;
+            return new Form(this);
         }
     }
 }

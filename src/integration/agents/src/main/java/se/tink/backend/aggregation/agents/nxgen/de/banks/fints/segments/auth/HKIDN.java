@@ -23,6 +23,6 @@ public class HKIDN extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HKIDN;
+        return FinTsConstants.Segments.HKIDN.name();
     }
 }

@@ -28,7 +28,7 @@ public class OpenbankTransactionalAccountFetcher
                 .fetchAccounts()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
-                .toJavaList();
+                .asJava();
     }
 
     @Override

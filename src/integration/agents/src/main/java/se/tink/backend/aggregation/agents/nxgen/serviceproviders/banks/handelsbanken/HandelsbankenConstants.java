@@ -42,6 +42,7 @@ public class HandelsbankenConstants {
 
         public enum Links implements Linkable {
             ACCOUNTS("accounts"),
+            ACCOUNT_INFO("account-info"),
             ACTIVATE_PROFILE("activateProfile"),
             APPLICATION_ENTRY_POINT("application-entry-point"),
             APPLICATION_EXIT_POINT("application-exit-point"),
@@ -54,6 +55,7 @@ public class HandelsbankenConstants {
             CARDS("cards"),
             CHECK_AGREEMENT("checkAgreement"),
             COMMIT_PROFILE("commitProfile"),
+            CONFIRM_SIGN("confirmsign"),
             CREATE("create"),
             CREATE_PINCODE("createPincode"),
             CREATE_PROFILE("createProfile"),
@@ -76,6 +78,7 @@ public class HandelsbankenConstants {
             PINNED_LOGIN("pinned-login"),
             SECURITIES_HOLDINGS("securities-holdings"),
             SECURITY_HOLDING("security-holding"),
+            SELF("self"),
             SIGNATURE("signature"),
             TRANSACTIONS("transactions"),
             TRANSFER_CONTEXT("transfer-context"),
@@ -83,8 +86,7 @@ public class HandelsbankenConstants {
             UPDATE("update"),
             VALIDATE_SIGNATURE("validateSignature"),
             VERIFY_SECURITY_CODE("verifySecurityCode"),
-            VALIDATE_RECIPIENT("validate-recipient"),
-            ACCOUNT_INFO("account-info");
+            VALIDATE_RECIPIENT("validate-recipient");
 
             private final String name;
 

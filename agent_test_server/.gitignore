@@ -1,2 +1,4 @@
 /.venv/
 /credentials/
+cert.pem
+key.pem

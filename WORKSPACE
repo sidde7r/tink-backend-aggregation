@@ -56,16 +56,16 @@ git_repository(
 
 git_repository(
     name = "tink_backend_integration_openbanking",
-    commit = "ceaf4a7fdea01faa1c87ad79a36ca6bd8d4b2767",
+    commit = "4db086ea3c3461902c852adcfe12dad6310f419b",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
     shallow_since = "1562076445 +0000",
 )
 
 git_repository(
     name = "com_tink_api_grpc",
-    commit = "c216e927af5f196dd3a514023bb3da0e7a65d78d",
+    commit = "f23aeafc40b0105ab41cc0aeb31de754bb450a06",
     remote = "git@github.com:tink-ab/tink-grpc.git",
-    shallow_since = "1562857859 +0000",
+    #shallow_since = "1562857859 +0000",
 )
 
 git_repository(
@@ -737,6 +737,12 @@ maven_jar(
     name = "oauth_signpost_signpost_core",
     artifact = "oauth.signpost:signpost-core:1.2.1.1",
     sha1 = "d1b39a438178bc885d724458de64cee33f1932a6",
+)
+
+maven_jar(
+    name = "com_fasterxml_uuid_java_uuid_generator",
+    artifact = "com.fasterxml.uuid:java-uuid-generator:3.1.5",
+    sha1 = "8784df945176ab4e8e268fd24508cf882d3378de",
 )
 
 maven_jar(

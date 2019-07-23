@@ -10,28 +10,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
-import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class VolksbankUtils {
+public final class VolksbankUtils {
 
-    private String BANK_PATH;
-
-    public VolksbankUtils(String bankPath) {
-        BANK_PATH = bankPath;
+    private VolksbankUtils() {
+        throw new AssertionError();
     }
 
-    public URL buildURL(String uri) {
-
-        StringBuilder s = new StringBuilder();
-        s.append(VolksbankConstants.Urls.HOST);
-        s.append(VolksbankConstants.Urls.BASE_PATH);
-        s.append(BANK_PATH);
-        s.append(VolksbankConstants.Urls.SANDBOX_PATH);
-        s.append(uri);
-        return new URL(s.toString());
-    }
-
-    public byte[] readFile(String path) {
+    public static byte[] readFile(String path) {
         try {
             return Files.readAllBytes(Paths.get(path));
         } catch (IOException e) {
@@ -39,9 +25,10 @@ public class VolksbankUtils {
         }
     }
 
-    public Map<String, String> splitURLQuery(String query) {
-
-        if (query == null) return null;
+    public static Map<String, String> splitURLQuery(String query) {
+        if (query == null) {
+            return null;
+        }
 
         Map<String, String> query_pairs = new HashMap<>();
         String[] pairs = query.split("&");
@@ -56,7 +43,7 @@ public class VolksbankUtils {
         return iban.replace(" ", "").substring(8);
     }
 
-    private DateFormat getDateFormat() {
+    private static DateFormat getDateFormat() {
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df =
                 new SimpleDateFormat(
@@ -65,11 +52,11 @@ public class VolksbankUtils {
         return df;
     }
 
-    public String getCurrentDateAsString() {
+    public static String getCurrentDateAsString() {
         return getDateFormat().format(new Date());
     }
 
-    public String getFutureDateAsString(int year) {
+    public static String getFutureDateAsString(int year) {
         Calendar date = Calendar.getInstance();
         date.setTime(new Date());
         date.add(Calendar.YEAR, year);

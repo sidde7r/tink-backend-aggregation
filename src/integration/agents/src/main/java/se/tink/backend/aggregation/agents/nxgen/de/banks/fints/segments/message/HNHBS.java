@@ -18,6 +18,6 @@ public class HNHBS extends FinTsSegment {
 
     @Override
     public String getType() {
-        return FinTsConstants.Segments.HNHBS;
+        return FinTsConstants.Segments.HNHBS.name();
     }
 }

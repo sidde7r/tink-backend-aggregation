@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class BunqRedirectHandler {
-    final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     /** @param supplementalInformationHelper */
     public BunqRedirectHandler(SupplementalInformationHelper supplementalInformationHelper) {

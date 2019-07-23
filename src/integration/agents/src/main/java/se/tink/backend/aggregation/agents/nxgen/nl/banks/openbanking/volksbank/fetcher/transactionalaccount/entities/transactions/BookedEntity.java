@@ -7,8 +7,9 @@ public class BookedEntity {
 
     private Long bankTransactionCode;
     private String bookingDate;
-    private CreditorAccountEntity creditorAccount;
     private String creditorId;
+    private CreditorAccountEntity creditorAccount;
+    private String creditorName;
     private DebtorAccountEntity debtorAccount;
     private String debtorName;
     private String endToEndId;
@@ -24,27 +25,27 @@ public class BookedEntity {
         return bookingDate;
     }
 
-    public void setBookingDate(String bookingDate) {
-        this.bookingDate = bookingDate;
-    }
-
     public TransactionAmountEntity getTransactionAmount() {
         return transactionAmount;
-    }
-
-    public void setTransactionAmount(TransactionAmountEntity transactionAmount) {
-        this.transactionAmount = transactionAmount;
     }
 
     public String getValueDate() {
         return valueDate;
     }
 
-    public void setValueDate(String valueDate) {
-        this.valueDate = valueDate;
-    }
-
     public String getRemittanceInformationUnstructured() {
         return remittanceInformationUnstructured;
+    }
+
+    public String getEntryReference() {
+        return entryReference;
+    }
+
+    public String getDebtorName() {
+        return debtorName;
+    }
+
+    public String getCreditorName() {
+        return creditorName;
     }
 }

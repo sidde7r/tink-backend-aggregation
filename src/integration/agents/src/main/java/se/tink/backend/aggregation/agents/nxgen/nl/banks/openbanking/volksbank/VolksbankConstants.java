@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 public class VolksbankConstants {
 
     public static class Urls {
-        public static final String HOST = "https://PSD.bancairediensten.nl";
+        public static final String HOST = "https://psd.bancairediensten.nl";
         public static final String BASE_PATH = "/psd2/";
 
         // note: this is placed between BASE_PATH and Paths, for production we only use
@@ -26,6 +26,7 @@ public class VolksbankConstants {
         public static final String CLIENT_SECRET = "client_secret";
         public static final String GRANT_TYPE = "grant_type";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String CONSENT_ID = "consentId";
     }
 
     public static class Paths {
@@ -39,10 +40,9 @@ public class VolksbankConstants {
 
     public static class TransactionFetcherParams {
         public static final String BOOKING_STATUS = "bookingStatus";
-        public static final String BOOKING_STATUS_VALUE = "both";
-        public static final String DATE_FROM = "dateFrom";
+        public static final String BOOKING_STATUS_VALUE = "booked";
         public static final String PAGE_DIRECTION = "pageDirection";
-        public static final String PAGE_DIRECTION_VALUE = "previous";
+        public static final String PAGE_DIRECTION_VALUE = "next";
         public static final String LIMIT = "limit";
         public static final Integer LIMIT_VALUE = 5;
     }
@@ -63,11 +63,11 @@ public class VolksbankConstants {
         public static final String CONTENT_TYPE = "Content-Type";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String AUTHORIZATION = "Authorization";
+        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
     }
 
     public static class Market {
         public static final String INTEGRATION_NAME = "volksbank";
-        public static final String CLIENT_NAME = "tink";
     }
 
     public static class ConsentParams {

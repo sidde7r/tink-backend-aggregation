@@ -6,13 +6,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionsEntity implements TransactionKeyPaginatorResponse<String> {
@@ -43,8 +44,7 @@ public class TransactionsEntity implements TransactionKeyPaginatorResponse<Strin
 
     @Override
     public String nextKey() {
-        String url = this.getLinks().getPrevious().getHref().split("\\?")[1];
-        return url;
+        return this.getLinks().getNext().getHref().split("\\?")[1];
     }
 
     @Override
@@ -52,32 +52,54 @@ public class TransactionsEntity implements TransactionKeyPaginatorResponse<Strin
 
         return booked.stream()
                 .map(
-                        movement -> {
-                            // Format: 2019-01-01T02:30:00.000+00:00
-                            DateTime dt = new DateTime(movement.getBookingDate());
-                            Date d = dt.toDate();
-
-                            return Transaction.builder()
-                                    .setAmount(
-                                            new Amount(
-                                                    movement.getTransactionAmount().getCurrency(),
-                                                    new Double(
-                                                            movement.getTransactionAmount()
-                                                                    .getAmount())))
-                                    .setDescription(movement.getRemittanceInformationUnstructured())
-                                    .setDate(d)
-                                    .build();
-                        })
+                        movement ->
+                                Transaction.builder()
+                                        .setAmount(createAmount(movement))
+                                        .setDescription(createDescription(movement))
+                                        .setDate(createDate(movement))
+                                        .build())
                 .collect(Collectors.toList());
+    }
+
+    private static ExactCurrencyAmount createAmount(final BookedEntity movement) {
+        return ExactCurrencyAmount.of(
+                new Double(movement.getTransactionAmount().getAmount()),
+                movement.getTransactionAmount().getCurrency());
+    }
+
+    private static Date createDate(final BookedEntity movement) {
+        // Observed values:
+        // entryReference: "20181003-80299889"
+        // bookingDate: "2018-10-02"
+        // valueDate: "2018-10-02"
+        // The date shown in the bank app seems to be based on entryReference
+
+        final String dateString =
+                Optional.ofNullable(movement)
+                        .map(BookedEntity::getEntryReference)
+                        .map(s -> s.split("-")[0])
+                        .map(s -> s.substring(0, 6) + "-" + s.substring(6))
+                        .map(s -> s.substring(0, 4) + "-" + s.substring(4))
+                        .orElseThrow(IllegalStateException::new);
+
+        return new DateTime(dateString).toDate();
+    }
+
+    private static String createDescription(final BookedEntity movement) {
+        if (Objects.nonNull(movement.getDebtorName())) {
+            return movement.getDebtorName();
+        } else if (Objects.nonNull(movement.getCreditorName())) {
+            return movement.getCreditorName();
+        } else if (Objects.nonNull(movement.getRemittanceInformationUnstructured())) {
+            final String unstructured = movement.getRemittanceInformationUnstructured();
+            final String[] words = unstructured.split("\\s+");
+            return String.join(" ", words);
+        }
+        throw new IllegalStateException("Couldn't find description");
     }
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        /*
-            TODO: Not returning false causes an infinite loop in pagination as we always
-            get the same key for the next page. We will fix it in production.
-        */
-        // return Optional.of(this.getLinks().getPrevious() != null);
-        return Optional.of(false);
+        return Optional.of(this.getLinks() != null && this.getLinks().getNext() != null);
     }
 }

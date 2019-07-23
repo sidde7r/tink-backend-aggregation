@@ -131,11 +131,11 @@ public class ThreadSafeDateFormat {
     public ThreadSafeDateFormat(String pattern) {
         this(
                 new ThreadSafeDateFormatBuilder(
-                        pattern, DateUtils.DEFAULT_LOCALE, DateUtils.DEFAULT_TIMEZONE));
+                        pattern, DateUtils.DEFAULT_LOCALE, DateUtils.createCetTimeZone()));
     }
 
     public ThreadSafeDateFormat(String pattern, Locale locale) {
-        this(new ThreadSafeDateFormatBuilder(pattern, locale, DateUtils.DEFAULT_TIMEZONE));
+        this(new ThreadSafeDateFormatBuilder(pattern, locale, DateUtils.createCetTimeZone()));
     }
 
     public ThreadSafeDateFormat(String pattern, Locale locale, TimeZone timezone) {

@@ -16,6 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.Jys
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.JyskeKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.JyskeInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.session.JyskeSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.TimeoutFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -27,6 +29,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class JyskeAgent extends NextGenerationAgent
@@ -43,7 +47,7 @@ public class JyskeAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new JyskeApiClient(client);
-
+        configureHttpClient(client);
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
@@ -136,5 +140,13 @@ public class JyskeAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new JyskeSessionHandler(apiClient, credentials);
+    }
+
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.setTimeout(SdcConstants.HTTP_TIMEOUT);
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }
 }

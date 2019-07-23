@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor
 import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
 
 import java.util.Date;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.BaseSignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PaymentRecipient;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -12,7 +13,7 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
-public class CreatePaymentRequest {
+public class PaymentSignRequest implements BaseSignRequest {
     @JsonDouble(outputType = JsonDouble.JsonType.STRING, trailingZeros = false)
     private double amount;
 
@@ -23,9 +24,8 @@ public class CreatePaymentRequest {
     private String accountNumber;
     private int recipientType;
 
-    public static CreatePaymentRequest create(
-            Transfer transfer, PaymentRecipient paymentRecipient) {
-        CreatePaymentRequest request = new CreatePaymentRequest();
+    public static PaymentSignRequest create(Transfer transfer, PaymentRecipient paymentRecipient) {
+        PaymentSignRequest request = new PaymentSignRequest();
         request.amount = transfer.getAmount().getValue();
 
         request.payDate =

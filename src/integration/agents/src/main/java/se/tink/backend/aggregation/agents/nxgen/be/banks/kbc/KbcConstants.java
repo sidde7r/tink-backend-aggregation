@@ -92,7 +92,10 @@ public class KbcConstants {
 
     public static class RequestInput {
         public static final String APP_FAMILY = "PHNIOSV1";
-        public static final String VERSION_NUMBER = "19.5.0";
+        // At the time of writing KBC seems to implement their version check as '> {current}'
+        // This means that v.99.9.9 is considered supported, which should allow us to not have to
+        // update it too often.
+        public static final String VERSION_NUMBER = "99.9.9";
         public static final String APPLICATION_ID = "A031";
         public static final String COMPANY_ID = "0001";
 
