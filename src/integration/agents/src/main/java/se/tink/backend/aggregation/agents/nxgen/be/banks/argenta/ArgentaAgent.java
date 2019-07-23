@@ -82,11 +82,13 @@ public class ArgentaAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        String deviceId = new ArgentaPersistentStorage(this.persistentStorage).getDeviceId();
+        ArgentaPersistentStorage argentaPersistentStorage =
+                new ArgentaPersistentStorage(this.persistentStorage);
+
         ArgentaTransactionalAccountFetcher transactionalAccountFetcher =
-                new ArgentaTransactionalAccountFetcher(apiClient, deviceId);
+                new ArgentaTransactionalAccountFetcher(apiClient, argentaPersistentStorage);
         ArgentaTransactionalTransactionFetcher transactionalTransactionFetcher =
-                new ArgentaTransactionalTransactionFetcher(apiClient, deviceId);
+                new ArgentaTransactionalTransactionFetcher(apiClient, argentaPersistentStorage);
 
         TransactionPagePaginationController<TransactionalAccount>
                 transactionPagePaginationController =
