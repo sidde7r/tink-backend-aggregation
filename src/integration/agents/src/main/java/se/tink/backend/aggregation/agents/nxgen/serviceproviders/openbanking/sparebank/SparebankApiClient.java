@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.Urls;
@@ -55,7 +54,7 @@ public class SparebankApiClient {
             EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
-        client.setEidasProxy(eidasProxyConfiguration, configuration.getEidasCertId());
+        client.setEidasProxy(eidasProxyConfiguration, configuration.getQwacCertId());
     }
 
     public void setPsuId(String psuId) {
@@ -84,7 +83,7 @@ public class SparebankApiClient {
 
     private RequestBuilder createRequest(URL url, Optional<String> digest) {
         Map<String, Object> headers = getHeaders(UUID.randomUUID().toString(), digest);
-        headers.put(QueryParams.SIGNATURE, generateSignatureHeader(headers));
+        headers.put(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
         return client.request(url).headers(headers);
     }
 
@@ -178,7 +177,9 @@ public class SparebankApiClient {
     }
 
     private String generateSignatureHeader(Map<String, Object> headers) {
-        QsealcEidasProxySigner signer = new QsealcEidasProxySigner(eidasProxyConfiguration, "evry");
+        QsealcEidasProxySigner signer =
+                new QsealcEidasProxySigner(
+                        eidasProxyConfiguration, configuration.getQsealcCertId());
 
         StringBuilder signedWithHeaderKeys = new StringBuilder();
         StringBuilder signedWithHeaderKeyValues = new StringBuilder();

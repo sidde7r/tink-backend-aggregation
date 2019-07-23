@@ -37,17 +37,6 @@ public final class SparebankConstants {
                 "/v1/payments/{paymentProduct}/{paymentId}/status";
     }
 
-    public static class QueryParams {
-        public static final String X_REQUEST_ID = "x-request-id";
-        public static final String TPP_ID = "tpp-id";
-        public static final String TPP_SESSION_ID = "tpp-session-id";
-        public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
-        public static final String TPP_SIGNATURE_CERTIFICATE = "tpp-signature-certificate";
-        public static final String SIGNATURE = "signature";
-        public static final String PSU_IP_ADDRESS = "psu-ip-address";
-        public static final String STATE = "state";
-    }
-
     public static class QueryKeys {
         public static final String WITH_BALANCE = "withBalance";
         public static final String LIMIT = "limit";
