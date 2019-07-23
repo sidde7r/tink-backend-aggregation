@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -13,7 +14,7 @@ public class TransactionEntity {
     @JsonProperty("_type")
     private String type;
 
-    private Double amount;
+    private BigDecimal amount;
 
     @JsonProperty("booking_date")
     private Date bookingDate;
@@ -66,8 +67,8 @@ public class TransactionEntity {
         return (narrative != null) ? narrative : typeDescription;
     }
 
-    private Amount getAmount() {
-        return new Amount(currency, amount);
+    private ExactCurrencyAmount getAmount() {
+        return new ExactCurrencyAmount(amount, currency);
     }
 
     private boolean isPending() {

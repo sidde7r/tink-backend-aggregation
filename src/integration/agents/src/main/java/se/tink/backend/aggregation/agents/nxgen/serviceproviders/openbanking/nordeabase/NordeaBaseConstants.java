@@ -62,7 +62,8 @@ public final class NordeaBaseConstants {
     }
 
     public static class QueryValues {
-        public static final String DURATION = "12000";
+        public static final String DURATION_MINUTES = "129600";
+        public static final String DEFAULT_LANGUAGE = "en";
         public static final String SCOPE =
                 "ACCOUNTS_BALANCES,ACCOUNTS_BASIC,"
                         + "ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,PAYMENTS_MULTIPLE";

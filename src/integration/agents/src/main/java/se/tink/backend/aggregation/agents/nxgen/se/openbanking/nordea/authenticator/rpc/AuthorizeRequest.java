@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AuthorizeRequest {
     @JsonProperty private long duration;
 
+    @JsonProperty private String language;
+
     @JsonProperty("psu_id")
     private String psuId;
 
@@ -23,14 +25,16 @@ public class AuthorizeRequest {
 
     public AuthorizeRequest(
             long duration,
+            String language,
             String psuId,
             String redirectUri,
             String responseType,
             List<String> scope,
             String state) {
         this.duration = duration;
-        this.psuId = psuId;
+        this.language = language;
         this.redirectUri = redirectUri;
+        this.psuId = psuId;
         this.responseType = responseType;
         this.scope = scope;
         this.state = state;

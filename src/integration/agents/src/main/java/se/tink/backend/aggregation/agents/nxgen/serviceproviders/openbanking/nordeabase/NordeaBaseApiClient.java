@@ -78,7 +78,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                 .queryParam(NordeaBaseConstants.QueryKeys.STATE, state)
                                 .queryParam(
                                         NordeaBaseConstants.QueryKeys.DURATION,
-                                        NordeaBaseConstants.QueryValues.DURATION)
+                                        NordeaBaseConstants.QueryValues.DURATION_MINUTES)
                                 .queryParam(NordeaBaseConstants.QueryKeys.COUNTRY, country)
                                 .queryParam(
                                         NordeaBaseConstants.QueryKeys.SCOPE,
