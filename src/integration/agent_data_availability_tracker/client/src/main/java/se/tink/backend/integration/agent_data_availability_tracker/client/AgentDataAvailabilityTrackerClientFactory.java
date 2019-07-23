@@ -22,6 +22,6 @@ public class AgentDataAvailabilityTrackerClientFactory {
         }
 
         // Default to noop mock client
-        return new AgentDataAvailabilityTrackerMockClientImlp();
+        return new AgentDataAvailabilityTrackerMockClientImpl();
     }
 }
