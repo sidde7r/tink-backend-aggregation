@@ -52,7 +52,7 @@ public abstract class AbstractRetryFilter extends Filter {
                     continue;
                 }
                 return httpResponse;
-            } catch (HttpClientException e) {
+            } catch (RuntimeException e) {
 
                 if (shouldRetry(e) && !isLastAttempt(retryCount)) {
                     log.warn(
@@ -101,7 +101,7 @@ public abstract class AbstractRetryFilter extends Filter {
      * @param exception the exception to analyze.
      * @return {@code true} if the operation should be retried, {@code false} otherwise.
      */
-    protected boolean shouldRetry(HttpClientException exception) {
+    protected boolean shouldRetry(RuntimeException exception) {
         return false;
     }
 }

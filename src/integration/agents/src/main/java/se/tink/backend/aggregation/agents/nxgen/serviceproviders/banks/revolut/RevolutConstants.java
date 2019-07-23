@@ -69,6 +69,12 @@ public class RevolutConstants {
         }
     }
 
+    public static final class ErrorMessage {
+        public static final String ILLEGAL_CHARACTER = "Illegal character";
+        public static final String TEMPORARY_ERROR = "server encountered a temporary error";
+        public static final String HIKARIPOOL = "HikariPool";
+    }
+
     public static final class Accounts {
         public static final String ACTIVE_STATE = "ACTIVE";
         public static final String REQUIRED_REFERENCE = "requiredReference";
@@ -98,5 +104,10 @@ public class RevolutConstants {
         public static final String REVERTED = "REVERTED";
         public static final String DECLINED = "DECLINED";
         public static final String CANCELLED = "CANCELLED";
+    }
+
+    public static class TimeoutFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 3;
+        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
 }
