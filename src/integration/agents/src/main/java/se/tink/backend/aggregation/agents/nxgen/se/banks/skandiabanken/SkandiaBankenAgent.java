@@ -39,6 +39,7 @@ public class SkandiaBankenAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
+
     private final SkandiaBankenApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -47,7 +48,7 @@ public class SkandiaBankenAgent extends NextGenerationAgent
     public SkandiaBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new SkandiaBankenApiClient(client, sessionStorage);
+        apiClient = new SkandiaBankenApiClient(client, sessionStorage, persistentStorage);
 
         investmentRefreshController =
                 new InvestmentRefreshController(
@@ -131,7 +132,7 @@ public class SkandiaBankenAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SkandiaBankenSessionHandler(apiClient);
+        return new SkandiaBankenSessionHandler(apiClient, persistentStorage);
     }
 
     @Override

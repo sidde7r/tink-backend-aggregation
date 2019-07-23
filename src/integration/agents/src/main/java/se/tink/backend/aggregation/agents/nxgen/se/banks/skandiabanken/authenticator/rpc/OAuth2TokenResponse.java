@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenti
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
-public class BearerTokenResponse {
+public class OAuth2TokenResponse {
+
     @JsonProperty("access_token")
     private String accessToken = "";
 
@@ -25,17 +27,8 @@ public class BearerTokenResponse {
     private String offlineRefreshToken = "";
 
     @JsonIgnore
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    @JsonIgnore
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    @JsonIgnore
-    public String getRefreshToken() {
-        return refreshToken;
+    public OAuth2Token toOAuth2Token() {
+        return OAuth2Token.create(
+                this.tokenType, this.accessToken, this.refreshToken, this.expiresIn);
     }
 }
