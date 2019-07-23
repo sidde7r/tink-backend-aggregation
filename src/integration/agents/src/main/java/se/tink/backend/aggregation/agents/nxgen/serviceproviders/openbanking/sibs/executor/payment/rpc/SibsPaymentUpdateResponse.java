@@ -5,7 +5,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsPaymentLinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsScaMethodsEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsTppMessage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsTppMessageEntity;
 
 public class SibsPaymentUpdateResponse {
 
@@ -18,7 +18,7 @@ public class SibsPaymentUpdateResponse {
 
     private String transactionStatus;
     private String psuMessage;
-    private List<SibsTppMessage> tppMessages;
+    private List<SibsTppMessageEntity> tppMessages;
 
     public SibsScaMethodsEntity getChosenScaMethod() {
         return chosenScaMethod;
@@ -68,11 +68,11 @@ public class SibsPaymentUpdateResponse {
         this.psuMessage = psuMessage;
     }
 
-    public List<SibsTppMessage> getTppMessages() {
+    public List<SibsTppMessageEntity> getTppMessages() {
         return tppMessages;
     }
 
-    public void setTppMessages(List<SibsTppMessage> tppMessages) {
+    public void setTppMessages(List<SibsTppMessageEntity> tppMessages) {
         this.tppMessages = tppMessages;
     }
 }

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsPaymentLinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsTppMessage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsTppMessageEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsTransactionStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
@@ -20,7 +20,7 @@ public class SibsCancelPaymentResponse {
     private SibsPaymentLinkEntity links;
 
     private String psuMessage;
-    private List<SibsTppMessage> tppMessage;
+    private List<SibsTppMessageEntity> tppMessage;
 
     public SibsTransactionStatus getTransactionStatus() {
         return transactionStatus;
@@ -46,18 +46,17 @@ public class SibsCancelPaymentResponse {
         this.psuMessage = psuMessage;
     }
 
-    public List<SibsTppMessage> getTppMessage() {
+    public List<SibsTppMessageEntity> getTppMessage() {
         return tppMessage;
     }
 
-    public void setTppMessage(List<SibsTppMessage> tppMessage) {
+    public void setTppMessage(List<SibsTppMessageEntity> tppMessage) {
         this.tppMessage = tppMessage;
     }
 
     public PaymentResponse toTinkResponse() {
         Payment.Builder paymentBuilder = new Builder();
         Payment build = paymentBuilder.withStatus(getTransactionStatus().getTinkStatus()).build();
-        PaymentResponse response = new PaymentResponse(build, new TemporaryStorage());
-        return response;
+        return new PaymentResponse(build, new TemporaryStorage());
     }
 }

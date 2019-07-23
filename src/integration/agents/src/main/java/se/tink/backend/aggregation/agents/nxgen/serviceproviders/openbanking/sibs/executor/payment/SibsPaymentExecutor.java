@@ -10,19 +10,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentInitiationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategy;
-import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.*;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class SibsPaymentExecutor implements PaymentExecutor {
+public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private SibsBaseApiClient apiClient;
     private SignPaymentStrategy signPaymentStrategy;

@@ -9,9 +9,9 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class SibsRedirectCallbackHandler {
-    final SupplementalInformationHelper supplementalInformationHelper;
-    final long waitFor;
-    final TimeUnit unit;
+    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final long waitFor;
+    private final TimeUnit unit;
 
     /**
      * @param supplementalInformationHelper

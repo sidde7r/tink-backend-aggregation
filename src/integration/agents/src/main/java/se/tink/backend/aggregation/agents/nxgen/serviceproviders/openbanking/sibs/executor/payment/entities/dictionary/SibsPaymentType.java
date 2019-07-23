@@ -6,7 +6,7 @@ public enum SibsPaymentType {
     INSTANT_SEPA_CREDIT_TRANSFERS("instant-sepa-credit-transfers"),
     TARGET_2_PAYMENTS("target-2-payments");
 
-    private String value;
+    private final String value;
 
     SibsPaymentType(String value) {
         this.value = value;

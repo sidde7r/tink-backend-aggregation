@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc;
 
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsTppMessage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsTppMessageEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsTransactionStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SibsGetPaymentStatusResponse {
 
     private SibsTransactionStatus transactionStatus;
-    private List<SibsTppMessage> tppMessages;
+    private List<SibsTppMessageEntity> tppMessages;
 
     public SibsTransactionStatus getTransactionStatus() {
         return transactionStatus;
@@ -19,11 +19,11 @@ public class SibsGetPaymentStatusResponse {
         this.transactionStatus = transactionStatus;
     }
 
-    public List<SibsTppMessage> getTppMessages() {
+    public List<SibsTppMessageEntity> getTppMessages() {
         return tppMessages;
     }
 
-    public void setTppMessages(List<SibsTppMessage> tppMessages) {
+    public void setTppMessages(List<SibsTppMessageEntity> tppMessages) {
         this.tppMessages = tppMessages;
     }
 }

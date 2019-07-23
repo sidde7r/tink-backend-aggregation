@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonInclude(Include.NON_NULL)
 @JsonObject
-public class SibsTppMessage {
+public class SibsTppMessageEntity {
 
     private String category;
     private SibsMessageCode code;

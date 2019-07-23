@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsTppMessage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsTppMessageEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsTransactionStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
@@ -28,110 +28,58 @@ public class SibsGetPaymentResponse {
     private boolean transactionFeeIndicator;
     private String creditorClearingCode;
     private LocalDate requestedExecutionDate;
-    private List<SibsTppMessage> tppMessages;
+    private List<SibsTppMessageEntity> tppMessages;
 
     public SibsTransactionStatus getTransactionStatus() {
         return transactionStatus;
-    }
-
-    public void setTransactionStatus(SibsTransactionStatus transactionStatus) {
-        this.transactionStatus = transactionStatus;
     }
 
     public String getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
-    }
-
     public SibsAccountReferenceEntity getDebtorAccount() {
         return debtorAccount;
-    }
-
-    public void setDebtorAccount(SibsAccountReferenceEntity debtorAccount) {
-        this.debtorAccount = debtorAccount;
     }
 
     public SibsAmountEntity getInstructedAmount() {
         return instructedAmount;
     }
 
-    public void setInstructedAmount(SibsAmountEntity instructedAmount) {
-        this.instructedAmount = instructedAmount;
-    }
-
     public SibsAccountReferenceEntity getCreditorAccount() {
         return creditorAccount;
-    }
-
-    public void setCreditorAccount(SibsAccountReferenceEntity creditorAccount) {
-        this.creditorAccount = creditorAccount;
     }
 
     public String getCreditorAgent() {
         return creditorAgent;
     }
 
-    public void setCreditorAgent(String creditorAgent) {
-        this.creditorAgent = creditorAgent;
-    }
-
     public String getCreditorName() {
         return creditorName;
-    }
-
-    public void setCreditorName(String creditorName) {
-        this.creditorName = creditorName;
     }
 
     public SibsAddressEntity getCreditorAddress() {
         return creditorAddress;
     }
 
-    public void setCreditorAddress(SibsAddressEntity creditorAddress) {
-        this.creditorAddress = creditorAddress;
-    }
-
     public SibsAmountEntity getTransactionFees() {
         return transactionFees;
-    }
-
-    public void setTransactionFees(SibsAmountEntity transactionFees) {
-        this.transactionFees = transactionFees;
     }
 
     public boolean isTransactionFeeIndicator() {
         return transactionFeeIndicator;
     }
 
-    public void setTransactionFeeIndicator(boolean transactionFeeIndicator) {
-        this.transactionFeeIndicator = transactionFeeIndicator;
-    }
-
     public String getCreditorClearingCode() {
         return creditorClearingCode;
-    }
-
-    public void setCreditorClearingCode(String creditorClearingCode) {
-        this.creditorClearingCode = creditorClearingCode;
     }
 
     public LocalDate getRequestedExecutionDate() {
         return requestedExecutionDate;
     }
 
-    public void setRequestedExecutionDate(LocalDate requestedExecutionDate) {
-        this.requestedExecutionDate = requestedExecutionDate;
-    }
-
-    public List<SibsTppMessage> getTppMessages() {
+    public List<SibsTppMessageEntity> getTppMessages() {
         return tppMessages;
-    }
-
-    public void setTppMessages(List<SibsTppMessage> tppMessages) {
-        this.tppMessages = tppMessages;
     }
 
     public PaymentResponse toTinkPaymentResponse(Storage sessionStorage) throws PaymentException {
@@ -145,8 +93,6 @@ public class SibsGetPaymentResponse {
                         .withCurrency(instructedAmount.getCurrency())
                         .withStatus(getTransactionStatus().getTinkStatus())
                         .withUniqueId(getPaymentId());
-        PaymentResponse response =
-                new PaymentResponse(buildingPaymentResponse.build(), sessionStorage);
-        return response;
+        return new PaymentResponse(buildingPaymentResponse.build(), sessionStorage);
     }
 }
