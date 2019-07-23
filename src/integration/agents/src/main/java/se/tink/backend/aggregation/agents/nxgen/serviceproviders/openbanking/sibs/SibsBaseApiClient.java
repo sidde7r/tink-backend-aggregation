@@ -31,8 +31,6 @@ public class SibsBaseApiClient {
 
     private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
             DateTimeFormatter.ofPattern(Formats.CONSENT_BODY_DATE_FORMAT);
-    private static final DateTimeFormatter PAGINATION_DATE_FORMATTER =
-            DateTimeFormatter.ofPattern(Formats.PAGINATION_DATE_FORMAT);
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected SibsConfiguration configuration;
@@ -101,7 +99,7 @@ public class SibsBaseApiClient {
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
-                .queryParam(QueryKeys.DATE_FROM, getPaginationDate())
+                .queryParam(QueryKeys.DATE_FROM, SibsUtils.getPaginationDate(getConsentFromStorage()))
                 .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .get(TransactionsResponse.class);
     }
@@ -160,19 +158,8 @@ public class SibsBaseApiClient {
     }
 
     private void saveConsentInPersistentStorage(ConsentResponse consentResponse) {
-        Consent consent = new Consent(consentResponse.getConsentId(), LocalDateTime.now());
+        Consent consent = new Consent(consentResponse.getConsentId(), LocalDateTime.now().toString());
         persistentStorage.put(StorageKeys.CONSENT_ID, consent);
-    }
-
-    private String getPaginationDate() {
-        Consent consent = getConsentFromStorage();
-        LocalDateTime transactionsFromBeginning = LocalDateTime.of(1970, 1, 1, 0, 0, 0, 0);
-
-        if (consent.isConsentYoungerThan30Minutes()) {
-            return PAGINATION_DATE_FORMATTER.format(transactionsFromBeginning);
-        }
-
-        return PAGINATION_DATE_FORMATTER.format(LocalDateTime.now().minusDays(89));
     }
 
     public ConsentStatusResponse getConsentStatus() {
