@@ -740,6 +740,12 @@ maven_jar(
 )
 
 maven_jar(
+    name = "com_fasterxml_uuid_java_uuid_generator",
+    artifact = "com.fasterxml.uuid:java-uuid-generator:3.1.5",
+    sha1 = "8784df945176ab4e8e268fd24508cf882d3378de",
+)
+
+maven_jar(
     name = "com_fasterxml_jackson_datatype_jackson_datatype_guava",
     artifact = "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.7",
     sha1 = "3fc843def28bb7b7f7fae414cc61b347ba89e5ce",
