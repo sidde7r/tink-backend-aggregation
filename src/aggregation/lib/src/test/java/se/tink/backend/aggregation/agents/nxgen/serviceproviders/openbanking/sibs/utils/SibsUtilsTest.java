@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.Consent;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class SibsUtilsTest {
 
@@ -52,7 +51,8 @@ public class SibsUtilsTest {
 
         String paginationDate = SibsUtils.getPaginationDate(consent);
 
-        String expectedPaginationDate = PAGINATION_DATE_FORMATTER.format(LocalDateTime.now().minusDays(89));
+        String expectedPaginationDate =
+                PAGINATION_DATE_FORMATTER.format(LocalDateTime.now().minusDays(89));
 
         Assertions.assertThat(paginationDate).isEqualTo(expectedPaginationDate);
     }

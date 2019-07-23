@@ -99,7 +99,8 @@ public class SibsBaseApiClient {
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
-                .queryParam(QueryKeys.DATE_FROM, SibsUtils.getPaginationDate(getConsentFromStorage()))
+                .queryParam(
+                        QueryKeys.DATE_FROM, SibsUtils.getPaginationDate(getConsentFromStorage()))
                 .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .get(TransactionsResponse.class);
     }
@@ -158,7 +159,8 @@ public class SibsBaseApiClient {
     }
 
     private void saveConsentInPersistentStorage(ConsentResponse consentResponse) {
-        Consent consent = new Consent(consentResponse.getConsentId(), LocalDateTime.now().toString());
+        Consent consent =
+                new Consent(consentResponse.getConsentId(), LocalDateTime.now().toString());
         persistentStorage.put(StorageKeys.CONSENT_ID, consent);
     }
 

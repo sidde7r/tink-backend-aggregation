@@ -11,8 +11,7 @@ public class Consent {
     private String consentId;
     private String consentCreated;
 
-    public Consent(){
-    }
+    public Consent() {}
 
     public Consent(String consentId, String consentCreated) {
         this.consentId = consentId;
