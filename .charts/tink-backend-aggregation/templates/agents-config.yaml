@@ -94,7 +94,7 @@ data:
             signingKey: "STARLING_SIGNING_KEY"
         {{- end }}
 
-        {{- if eq "true" $agentsConfig.volksbank.enabled }}
+        {{- if $agentsConfig.volksbank }}
         volksbank:
           tink:
             aisConfiguration:
