@@ -9,14 +9,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class Consent {
 
     private String consentId;
-    private LocalDateTime consentCreated;
+    private String consentCreated;
 
-    public Consent(String consentId, LocalDateTime consentCreated) {
+    public Consent() {}
+
+    public Consent(String consentId, String consentCreated) {
         this.consentId = consentId;
         this.consentCreated = consentCreated;
     }
 
-    public LocalDateTime getConsentCreated() {
+    public String getConsentCreated() {
         return consentCreated;
     }
 
@@ -26,6 +28,7 @@ public class Consent {
 
     @JsonIgnore
     public boolean isConsentYoungerThan30Minutes() {
-        return ChronoUnit.MINUTES.between(consentCreated, LocalDateTime.now()) <= 29;
+        LocalDateTime created = LocalDateTime.parse(consentCreated);
+        return ChronoUnit.MINUTES.between(created, LocalDateTime.now()) <= 29;
     }
 }
