@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -25,7 +26,10 @@ public class GetPaymentResponse {
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
-                        .withAmount(instructedAmount.toAmount())
+                        .withAmount(
+                                new Amount(
+                                        instructedAmount.getCurrency(),
+                                        instructedAmount.getAmount()))
                         .withExecutionDate(LocalDate.parse(startDate))
                         .withCurrency(instructedAmount.getCurrency())
                         .withUniqueId(paymentId)

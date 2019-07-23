@@ -18,6 +18,7 @@ public class TransactionEntity {
     private String valueDate;
     private String debtorName;
     private AccountEntity debtorAccount;
+    private String endToEndId;
 
     @JsonIgnore
     public Transaction toBookedTinkTransaction() {

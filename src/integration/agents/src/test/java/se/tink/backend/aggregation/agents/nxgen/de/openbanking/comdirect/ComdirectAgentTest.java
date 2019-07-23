@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.axa;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.comdirect;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 
-public class AxaAgentTest {
+public class ComdirectAgentTest {
+
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 
@@ -21,7 +22,7 @@ public class AxaAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-axa-oauth2")
+                new AgentIntegrationTest.Builder("de", "de-comdirect-oauth2")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)

@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -40,7 +41,9 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
                         payment.getExecutionDate()
                                 .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)),
                         debtor,
-                        new AmountEntity(payment.getAmount()));
+                        new AmountEntity(
+                                ExactCurrencyAmount.of(
+                                        payment.getAmount().getValue(), payment.getCurrency())));
 
         return apiClient
                 .createPayment(createPaymentRequest)
