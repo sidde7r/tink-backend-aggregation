@@ -12,7 +12,7 @@ public class SparebankConfiguration implements ClientConfiguration {
     private String eidasCertId;
     private String redirectUrl;
     private String keyId;
-    private String base64Pem;
+    private String certificate;
     private String tppId;
 
     public String getKeyId() {
@@ -22,11 +22,11 @@ public class SparebankConfiguration implements ClientConfiguration {
         return keyId;
     }
 
-    public String getBase64Pem() {
+    public String getCertificate() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(base64Pem),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base64 Certificate"));
-        return base64Pem;
+                Strings.emptyToNull(certificate),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate"));
+        return certificate;
     }
 
     public String getTppId() {

@@ -21,6 +21,10 @@ public final class SparebankConstants {
         throw new AssertionError();
     }
 
+    public static class Market {
+        public static final String INTEGRATION_NAME = "sparebank";
+    }
+
     public static class Urls {
         public static final String FETCH_TRANSACTIONS = "/v1/accounts/{resourceId}/transactions";
         public static final String GET_ACCOUNTS = "/v1/accounts";
@@ -67,24 +71,23 @@ public final class SparebankConstants {
     }
 
     public static class HeaderKeys {
-        public static final String BOOKING_STATUS = "bookingStatus";
-        public static final String CONSENT_ID = "Consent-ID";
-        public static final String X_REQUEST_ID = "X-Request-ID";
-        public static final String DATE = "Date";
-        public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
-        public static final String SIGNATURE = "Signature";
-        public static final String TPP_REDIRECT_URI = "TPP-Redirect-Uri";
-        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
-        public static final String AUTHORIZATION = "AUTHORIZATION";
-        public static final String TPP_ID = "TPP-ID";
-        public static final String TPP_SESSION_ID = "TPP-SESSION-ID";
-        public static final String PSU_ID = "PSU-ID";
-        public static final String DIGEST = "Digest";
+        public static final String CONSENT_ID = "consent-id";
+        public static final String X_REQUEST_ID = "x-request-id";
+        public static final String DATE = "date";
+        public static final String TPP_SIGNATURE_CERTIFICATE = "tpp-signature-certificate";
+        public static final String SIGNATURE = "signature";
+        public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
+        public static final String PSU_IP_ADDRESS = "psu-ip-address";
+        public static final String AUTHORIZATION = "authorization";
+        public static final String TPP_ID = "tpp-id";
+        public static final String TPP_SESSION_ID = "tpp-session-id";
+        public static final String PSU_ID = "psu-id";
+        public static final String DIGEST = "digest";
+        public static final String ACCEPT = "accept";
     }
 
     public static class HeaderValues {
-        public static final String BOOKING_STATUS = "both";
-        public static final String PSU_IP_ADDRESS = "134.12.51.1";
+        public static final String PSU_IP_ADDRESS = " ";
     }
 
     public static class FormKeys {
@@ -137,7 +140,22 @@ public final class SparebankConstants {
                 "No PaymentType found for your AccountIdentifiers pair: %s";
     }
 
-    public static class Market {
-        public static final String INTEGRATION_NAME = "sparebank";
+    enum HEADERS_TO_SIGN {
+        DATE("date"),
+        DIGEST("digest"),
+        X_REQUEST_ID("x-request-id"),
+        PSU_ID("psu-id"),
+        PSU_CORPORATE_ID("psu-corporate-id"),
+        TPP_REDIRECT_URI("tpp-redirect-uri");
+
+        private String header;
+
+        HEADERS_TO_SIGN(String header) {
+            this.header = header;
+        }
+
+        public String getHeader() {
+            return header;
+        }
     }
 }
