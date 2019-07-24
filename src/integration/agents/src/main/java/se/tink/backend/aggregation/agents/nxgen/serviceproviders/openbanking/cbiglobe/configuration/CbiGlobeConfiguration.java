@@ -84,7 +84,7 @@ public class CbiGlobeConfiguration implements ClientConfiguration {
 
     public String getEidasQwac() {
         Preconditions.checkNotNull(
-            eidasQwac, String.format(ErrorMessages.INVALID_CONFIGURATION, "EIDAS QWAC"));
+                eidasQwac, String.format(ErrorMessages.INVALID_CONFIGURATION, "EIDAS QWAC"));
 
         return eidasQwac;
     }

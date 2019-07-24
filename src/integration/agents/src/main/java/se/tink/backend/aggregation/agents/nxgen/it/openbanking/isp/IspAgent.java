@@ -19,7 +19,6 @@ public class IspAgent extends CbiGlobeAgent
     public IspAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
     }
 
     @Override
