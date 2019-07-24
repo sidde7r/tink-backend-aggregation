@@ -299,14 +299,6 @@ maven_install(
         "com.codahale.metrics:metrics-jersey:3.0.2",
         "com.codahale.metrics:metrics-healthchecks:3.0.2",
         "com.codahale.metrics:metrics-servlets:3.0.2",
-        maven.artifact(
-            group = "com.datastax.cassandra",
-            artifact = "cassandra-driver-core",
-            version = "3.4.0",
-            exclusions = [
-                "io.dropwizard.metrics:metrics-core",
-            ],
-        ),
         "com.sun.jersey:jersey-core:1.18.1",
         "com.sun.jersey:jersey-server:1.18.1",
         "com.sun.jersey:jersey-servlet:1.18.1",
