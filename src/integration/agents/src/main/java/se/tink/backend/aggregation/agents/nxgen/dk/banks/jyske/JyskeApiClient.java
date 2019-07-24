@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.rpc
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.rpc.NemIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.security.Encryptable;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.security.Token;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.filters.JyskeBankUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.rpc.FetchInvestmentResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -33,6 +34,7 @@ public class JyskeApiClient {
 
     public JyskeApiClient(TinkHttpClient client) {
         this.client = client;
+        this.client.addFilter(new JyskeBankUnavailableFilter());
     }
 
     public NemIdLoginResponse nemIdInit(Token token) {
