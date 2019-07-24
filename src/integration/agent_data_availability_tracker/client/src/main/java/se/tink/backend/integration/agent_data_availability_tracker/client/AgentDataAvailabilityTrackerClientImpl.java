@@ -1,10 +1,14 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
-import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
+import io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import io.netty.handler.ssl.SslContext;
+import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import javax.net.ssl.SSLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -27,14 +31,21 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
             agentctServiceStub;
 
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
-    public AgentDataAvailabilityTrackerClientImpl(String host, int port) {
-        this(ManagedChannelBuilder.forAddress(host, port).usePlaintext());
+    public AgentDataAvailabilityTrackerClientImpl(String host, int port) throws SSLException {
+        this(NettyChannelBuilder.forAddress(host, port));
     }
 
     /** Construct client for accessing RouteGuide server using the existing channel. */
-    public AgentDataAvailabilityTrackerClientImpl(ManagedChannelBuilder<?> channelBuilder) {
+    public AgentDataAvailabilityTrackerClientImpl(NettyChannelBuilder channelBuilder)
+            throws SSLException {
+
+        SslContext sslContext;
+
+        sslContext = GrpcSslContexts.forClient().trustManager(new File("/tls/ca.crt")).build();
+
         agentctServiceStub =
-                AgentDataAvailabilityTrackerServiceGrpc.newStub(channelBuilder.build());
+                AgentDataAvailabilityTrackerServiceGrpc.newStub(
+                        channelBuilder.useTransportSecurity().sslContext(sslContext).build());
     }
 
     public void beginStream() {
@@ -110,7 +121,7 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         }
     }
 
-    public void endStreamBlocking() {
+    public void endStreamBlocking() throws InterruptedException {
         requestStream.onCompleted();
 
         try {
@@ -119,10 +130,6 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
             log.warn("Waiting for tracking client to catch up for more than 500ms");
         }
 
-        try {
-            latch.await(2, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        latch.await(2, TimeUnit.SECONDS);
     }
 }

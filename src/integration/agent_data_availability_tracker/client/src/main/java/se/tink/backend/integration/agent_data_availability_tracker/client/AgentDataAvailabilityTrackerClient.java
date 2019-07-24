@@ -9,5 +9,5 @@ public interface AgentDataAvailabilityTrackerClient {
 
     void sendAccount(final String agent, final Account account, final AccountFeatures features);
 
-    void endStreamBlocking();
+    void endStreamBlocking() throws InterruptedException;
 }
