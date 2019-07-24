@@ -15,8 +15,8 @@ java_library(
         "//src/libraries/account:enums",
         "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
-        "@maven//:org_slf4j_slf4j_api",
         "@grpc//:io_grpc_grpc_netty",
         "@grpc//:io_netty_netty_handler",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )
