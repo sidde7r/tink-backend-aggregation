@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.SEBAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -15,13 +16,14 @@ public class SEBAgent extends NextGenerationAgent {
     public SEBAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new SEBApiClient(client);
+        final String userName = credentials.getField(Field.Key.USERNAME);
+        apiClient = new SEBApiClient(client, userName);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                context, new SEBAuthenticator(apiClient), persistentStorage);
+                context, new SEBAuthenticator(apiClient, sessionStorage), persistentStorage);
     }
 
     @Override

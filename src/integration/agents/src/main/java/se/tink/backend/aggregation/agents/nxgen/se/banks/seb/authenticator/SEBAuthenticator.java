@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -10,21 +12,27 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.LoginCodes;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.UserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc.BankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInformation;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class SEBAuthenticator implements BankIdAuthenticator<String> {
     private static final AggregationLogger LOG = new AggregationLogger(SEBAuthenticator.class);
     private final SEBApiClient apiClient;
+    private final SessionStorage sessionStorage;
     private String autoStartToken;
     private String nextReference;
 
-    public SEBAuthenticator(SEBApiClient apiClient) {
+    public SEBAuthenticator(SEBApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -61,6 +69,7 @@ public class SEBAuthenticator implements BankIdAuthenticator<String> {
             case LoginCodes.USER_SIGN:
                 return BankIdStatus.WAITING;
             case LoginCodes.AUTHENTICATED:
+                activateSession();
                 return BankIdStatus.DONE;
             case LoginCodes.ALREADY_IN_PROGRESS:
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
@@ -93,5 +102,27 @@ public class SEBAuthenticator implements BankIdAuthenticator<String> {
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
         return Optional.empty();
+    }
+
+    private void activateSession() throws AuthenticationException, AuthorizationException {
+        apiClient.initiateSession();
+        final UserInformation userInformation = apiClient.activateSession();
+
+        // store values in session
+        final String customerName = StringUtils.trimToNull(userInformation.getUserName());
+        Preconditions.checkNotNull(customerName, "Did not get customer name.");
+        sessionStorage.put(StorageKeys.CUSTOMER_NAME, customerName);
+
+        final String customerNumber = Strings.emptyToNull(userInformation.getSebCustomerNumber());
+        Preconditions.checkNotNull(customerNumber, "Did not get customer number.");
+        sessionStorage.put(StorageKeys.CUSTOMER_NUMBER, customerNumber);
+
+        final String userId = Strings.emptyToNull(userInformation.getShortUserId());
+        Preconditions.checkNotNull(userId, "Did not get short user ID.");
+        sessionStorage.put(StorageKeys.SHORT_USERID, userId);
+
+        final String ssn = Strings.emptyToNull(userInformation.getSSN());
+        Preconditions.checkNotNull(ssn, "Did not get SSN.");
+        sessionStorage.put(StorageKeys.SSN, ssn);
     }
 }
