@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.SparebankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.SparebankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.SparebankTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.utils.SparebankUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -28,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SparebankAgent extends NextGenerationAgent
+public abstract class SparebankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final String clientName;
@@ -38,8 +37,7 @@ public class SparebankAgent extends NextGenerationAgent
     public SparebankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
-        apiClient = new SparebankApiClient(client, sessionStorage);
+        apiClient = new SparebankApiClient(client, sessionStorage, getBaseUrl());
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -49,17 +47,16 @@ public class SparebankAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        client.setSslClientCertificate(
-                SparebankUtils.readFile(getClientConfiguration().getClientKeyStorePath()),
-                getClientConfiguration().getClientKeyStorePassword());
-        apiClient.setConfiguration(getClientConfiguration());
+        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
     }
 
-    protected SparebankConfiguration getClientConfiguration() {
+    protected abstract String getBaseUrl();
+
+    public SparebankConfiguration getClientConfiguration() {
         return configuration
                 .getIntegrations()
                 .getClientConfiguration(
-                        SparebankConstants.INTEGRATION_NAME,
+                        SparebankConstants.Market.INTEGRATION_NAME,
                         clientName,
                         SparebankConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
@@ -69,9 +66,7 @@ public class SparebankAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         final SparebankController controller =
                 new SparebankController(
-                        supplementalInformationHelper,
-                        new SparebankAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                        supplementalInformationHelper, new SparebankAuthenticator(apiClient));
 
         return new AutoAuthenticationController(
                 request,

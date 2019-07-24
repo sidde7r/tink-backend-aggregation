@@ -14,9 +14,9 @@ public class HandelsbankenAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("no", "no-handelsbanken-oauth2")
+                        .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false);
+                        .saveCredentialsAfter(false);
     }
 
     @Test
