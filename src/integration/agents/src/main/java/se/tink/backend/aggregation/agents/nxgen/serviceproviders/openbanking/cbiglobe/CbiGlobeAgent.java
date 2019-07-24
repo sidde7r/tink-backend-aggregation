@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -29,7 +28,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
     protected final String clientName;
     protected CbiGlobeAuthenticationController controller;
     protected CbiGlobeApiClient apiClient;
-    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    protected TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public CbiGlobeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -37,8 +36,6 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
 
         apiClient = new CbiGlobeApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
-
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected abstract String getIntegrationName();
@@ -48,9 +45,9 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
         final CbiGlobeConfiguration clientConfiguration = getClientConfiguration();
         apiClient.setConfiguration(clientConfiguration);
-        client.setSslClientCertificate(
-                CbiGlobeUtils.readFile(clientConfiguration.getKeystorePath()),
-                clientConfiguration.getKeystorePassword());
+        this.client.setDebugOutput(true);
+        this.client.setEidasProxy(
+                configuration.getEidasProxy(), clientConfiguration.getEidasQwac());
     }
 
     protected CbiGlobeConfiguration getClientConfiguration() {
@@ -68,6 +65,8 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new CbiGlobeAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()));
+
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         return new AutoAuthenticationController(
                 request,
@@ -97,7 +96,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
                 new CbiGlobeTransactionalAccountFetcher(apiClient, persistentStorage, controller);
 

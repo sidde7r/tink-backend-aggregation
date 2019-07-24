@@ -16,13 +16,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class IspAgent extends CbiGlobeAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-
     public IspAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
@@ -50,7 +46,8 @@ public class IspAgent extends CbiGlobeAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    @Override
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final IspTransactionalAccountFetcher accountFetcher =
                 new IspTransactionalAccountFetcher(apiClient, persistentStorage, controller);
 
