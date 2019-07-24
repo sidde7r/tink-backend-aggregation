@@ -1,23 +1,30 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
 import com.google.common.base.Strings;
+import javax.net.ssl.SSLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AgentDataAvailabilityTrackerClientFactory {
-
-    private static final String TEST_PROVIDER = "avanza-bankid";
+    private static final Logger log =
+            LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientFactory.class);
 
     public static AgentDataAvailabilityTrackerClient getClient(
             final AgentDataAvailabilityTrackerConfiguration configuration,
-            final String providerName) {
-
+            final boolean forceMockClient) {
         if (configuration != null && !Strings.isNullOrEmpty(configuration.getHost())) {
 
             /*
              *  Temporary limitation to prevent client running on all providers.
              */
-            if (TEST_PROVIDER.equalsIgnoreCase(providerName)) {
-                return new AgentDataAvailabilityTrackerClientImpl(
-                        configuration.getHost(), configuration.getPort());
+            if (!forceMockClient) {
+                try {
+                    return new AgentDataAvailabilityTrackerClientImpl(
+                            configuration.getHost(), configuration.getPort());
+                } catch (SSLException e) {
+
+                    log.error("Could not instantiate client.", e);
+                }
             }
         }
 
