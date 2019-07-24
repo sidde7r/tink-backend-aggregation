@@ -168,6 +168,10 @@ public class SibsBaseApiClient {
         return consentResponse;
     }
 
+    public void removeConsentFromPersistentStorage() {
+        persistentStorage.remove(StorageKeys.CONSENT_ID);
+    }
+
     private void saveConsentInPersistentStorage(ConsentResponse consentResponse) {
         Consent consent =
                 new Consent(consentResponse.getConsentId(), LocalDateTime.now().toString());
