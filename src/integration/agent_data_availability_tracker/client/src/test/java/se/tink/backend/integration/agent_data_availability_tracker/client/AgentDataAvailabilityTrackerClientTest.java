@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import javax.net.ssl.SSLException;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,8 +44,12 @@ public class AgentDataAvailabilityTrackerClientTest {
 
     private void spamClientRunnable() {
 
-        AgentDataAvailabilityTrackerClientImpl transmitter =
-                new AgentDataAvailabilityTrackerClientImpl("192.168.99.100", 30789);
+        AgentDataAvailabilityTrackerClientImpl transmitter = null;
+        try {
+            transmitter = new AgentDataAvailabilityTrackerClientImpl("192.168.99.100", 30789);
+        } catch (SSLException e) {
+            Assert.fail();
+        }
 
         transmitter.beginStream();
         for (int i = 0; i < 50; i++) {
@@ -53,7 +58,11 @@ public class AgentDataAvailabilityTrackerClientTest {
         }
 
         System.out.println("Sent 50 accounts.");
-        transmitter.endStreamBlocking();
+        try {
+            transmitter.endStreamBlocking();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         latch.countDown();
     }
 

@@ -12,9 +12,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBa
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.AutoStartResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.BankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.BearerTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.CreateSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.InitTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.OAuth2TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.entities.Form;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard.rpc.FetchCreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.identity.rpc.IdentityDataResponse;
@@ -27,19 +27,28 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.rpc.FetchApprovedPaymentsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SkandiaBankenApiClient {
+
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
 
-    public SkandiaBankenApiClient(TinkHttpClient httpClient, SessionStorage sessionStorage) {
+    public SkandiaBankenApiClient(
+            TinkHttpClient httpClient,
+            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage) {
         this.httpClient = httpClient;
         this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
     }
 
     public InitTokenResponse fetchInitAccessToken() {
@@ -107,8 +116,6 @@ public class SkandiaBankenApiClient {
     }
 
     public BankIdResponse collectBankId(String token) {
-        final BankIdResponse response = new BankIdResponse();
-
         final Form formBuilder = new Form();
         formBuilder.put(FormKeys.REQUEST_TOKEN, token);
         formBuilder.put(FormKeys.REQUEST_WITH, FormValues.REQUEST_WITH);
@@ -125,7 +132,7 @@ public class SkandiaBankenApiClient {
         return httpClient.request(new URL(redirect)).get(HttpResponse.class);
     }
 
-    public BearerTokenResponse fetchBearerToken(String code) {
+    public OAuth2TokenResponse fetchAuthToken(String code) {
         final Form formBuilder = new Form();
         formBuilder.put(FormKeys.CODE, code);
         formBuilder.put(FormKeys.CODE_VERIFIER, sessionStorage.get(StorageKeys.CODE_VERIFIER));
@@ -135,19 +142,19 @@ public class SkandiaBankenApiClient {
         formBuilder.put(FormKeys.CLIENT_SECRET, FormValues.CLIENT_SECRET_FOR_BEARER);
 
         return httpClient
-                .request(Urls.FETCH_BEARER)
+                .request(Urls.FETCH_AUTH_TOKEN)
                 .header(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1)
                 .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.INIT_ACCESS_TOKEN))
                 .header(HeaderKeys.ADRUM, HeaderValues.ADRUM)
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(BearerTokenResponse.class);
+                .post(OAuth2TokenResponse.class);
     }
 
     public FetchAccountResponse fetchAccounts() {
         return httpClient
                 .request(Urls.FETCH_ACCOUNTS)
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchAccountResponse.class);
     }
@@ -159,7 +166,7 @@ public class SkandiaBankenApiClient {
                         Urls.FETCH_ACCOUNT_TRANSACTIONS
                                 .parameter(IdTags.ACCOUNT_ID, accountId)
                                 .parameter(IdTags.PAGE, page))
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchAccountTransactionsResponse.class);
     }
@@ -169,7 +176,7 @@ public class SkandiaBankenApiClient {
                 .request(
                         Urls.FETCH_PENDING_ACCOUNT_TRANSACTIONS.parameter(
                                 IdTags.ACCOUNT_ID, accountId))
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchAccountTransactionsResponse.class);
     }
@@ -177,7 +184,7 @@ public class SkandiaBankenApiClient {
     public FetchApprovedPaymentsResponse fetchApprovedPayments() {
         return httpClient
                 .request(Urls.FETCH_APPROVED_PAYMENTS)
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchApprovedPaymentsResponse.class);
     }
@@ -185,7 +192,7 @@ public class SkandiaBankenApiClient {
     public FetchCreditCardsResponse fetchCreditCards() {
         return httpClient
                 .request(Urls.FETCH_CREDIT_CARDS)
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchCreditCardsResponse.class);
     }
@@ -193,7 +200,7 @@ public class SkandiaBankenApiClient {
     public FetchInvestmentsResponse fetchInvestments() {
         return httpClient
                 .request(Urls.FETCH_INVESTMENT_ACCOUNTS)
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchInvestmentsResponse.class);
     }
@@ -204,7 +211,7 @@ public class SkandiaBankenApiClient {
                 .request(
                         Urls.FETCH_INVESTMENT_ACCOUNT_DETAILS.parameter(
                                 IdTags.ACCOUNT_ID, investmentAccountNumber))
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchInvestmentAccountDetailsResponse.class);
     }
@@ -214,7 +221,7 @@ public class SkandiaBankenApiClient {
                 .request(
                         Urls.FETCH_INVESTMENT_HOLDINGS.parameter(
                                 IdTags.ACCOUNT_ID, investmentAccountNumber))
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchInvestmentHoldingsResponse.class);
     }
@@ -228,7 +235,7 @@ public class SkandiaBankenApiClient {
                                 .queryParam(
                                         QueryParam.ENCRYPED_NATIONAL_IDENTIFICATION_NUMBER,
                                         encrypedNationalIdentificationNumber))
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(PensionFundsResponse.class);
     }
@@ -236,7 +243,7 @@ public class SkandiaBankenApiClient {
     public IdentityDataResponse fetchIdentityData() {
         return httpClient
                 .request(Urls.FETCH_IDENTITY)
-                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(IdentityDataResponse.class);
     }
@@ -253,5 +260,34 @@ public class SkandiaBankenApiClient {
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post();
+    }
+
+    public OAuth2TokenResponse refreshToken(String refreshToken) {
+        final Form form = new Form();
+        form.put(FormKeys.REFRESH_TOKEN, refreshToken);
+        form.put(FormKeys.CLIENT_SECRET, FormValues.CLIENT_SECRET_FOR_BEARER);
+        form.put(FormKeys.CLIENT_ID, FormValues.CLIENT_ID_SHORT);
+        form.put(FormKeys.GRANT_TYPE, FormValues.REFRESH_TOKEN);
+
+        return httpClient
+                .request(Urls.FETCH_AUTH_TOKEN)
+                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.INIT_ACCESS_TOKEN))
+                .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
+                .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .post(OAuth2TokenResponse.class);
+    }
+
+    private OAuth2Token getValidOAuth2Token() {
+        OAuth2Token oAuth2Token =
+                persistentStorage
+                        .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                        .get();
+
+        if (oAuth2Token.hasAccessExpired()) {
+            oAuth2Token = refreshToken(oAuth2Token.getRefreshToken().get()).toOAuth2Token();
+            persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, oAuth2Token);
+        }
+
+        return oAuth2Token;
     }
 }

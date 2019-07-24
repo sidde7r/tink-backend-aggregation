@@ -8,14 +8,14 @@ public class ConsentTest {
 
     @Test
     public void shouldRecognizeConsentAsYoungerThan30Minutes() {
-        Consent consent = new Consent("dummyId", LocalDateTime.now());
+        Consent consent = new Consent("dummyId", LocalDateTime.now().toString());
 
         Assertions.assertThat(consent.isConsentYoungerThan30Minutes()).isTrue();
     }
 
     @Test
     public void shouldRecognizeConsentAsOlderThan30Minutes() {
-        Consent consent = new Consent("dummyId", LocalDateTime.now().minusMinutes(30L));
+        Consent consent = new Consent("dummyId", LocalDateTime.now().minusMinutes(30L).toString());
 
         Assertions.assertThat(consent.isConsentYoungerThan30Minutes()).isFalse();
     }

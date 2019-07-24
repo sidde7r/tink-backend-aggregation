@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
@@ -25,19 +24,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAut
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -227,7 +219,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         return Optional.ofNullable(transferController);
     }
 
-    private Optional<PaymentController> getPaymentController() {
+    public Optional<PaymentController> getPaymentController() {
         if (paymentController == null) {
             paymentController = constructPaymentController().orElse(null);
         }
@@ -259,42 +251,5 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
 
     public Optional<PaymentController> constructPaymentController() {
         return Optional.empty();
-    }
-
-    public PaymentResponse createPayment(PaymentRequest paymentRequest) throws PaymentException {
-        return getPaymentController()
-                .orElseThrow(
-                        () -> new NotImplementedException("PaymentController not implemented."))
-                .create(paymentRequest);
-    }
-
-    public PaymentResponse fetchPayment(PaymentRequest paymentRequest) throws PaymentException {
-        return getPaymentController()
-                .orElseThrow(
-                        () -> new NotImplementedException("PaymentController not implemented."))
-                .fetch(paymentRequest);
-    }
-
-    public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest)
-            throws PaymentException {
-        return getPaymentController()
-                .orElseThrow(
-                        () -> new NotImplementedException("PaymentController not implemented."))
-                .sign(paymentRequest);
-    }
-
-    public PaymentResponse cancelPayment(PaymentRequest paymentRequest) {
-        return getPaymentController()
-                .orElseThrow(
-                        () -> new NotImplementedException("PaymentController not implemented."))
-                .cancel(paymentRequest);
-    }
-
-    public PaymentListResponse fetchMultiplePayments(PaymentListRequest paymentListRequest)
-            throws PaymentException {
-        return getPaymentController()
-                .orElseThrow(
-                        () -> new NotImplementedException("PaymentController not implemented."))
-                .fetchMultiple(paymentListRequest);
     }
 }

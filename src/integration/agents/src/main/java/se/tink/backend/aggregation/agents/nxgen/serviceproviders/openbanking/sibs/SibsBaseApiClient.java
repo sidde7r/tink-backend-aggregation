@@ -9,11 +9,20 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsCancelPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsGetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsGetPaymentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentInitiationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentInitiationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentUpdateRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentUpdateResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.Consent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.BalancesResponse;
@@ -26,13 +35,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SibsBaseApiClient {
 
     private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
             DateTimeFormatter.ofPattern(Formats.CONSENT_BODY_DATE_FORMAT);
-    private static final DateTimeFormatter PAGINATION_DATE_FORMATTER =
-            DateTimeFormatter.ofPattern(Formats.PAGINATION_DATE_FORMAT);
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected SibsConfiguration configuration;
@@ -101,7 +109,8 @@ public class SibsBaseApiClient {
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
-                .queryParam(QueryKeys.DATE_FROM, getPaginationDate())
+                .queryParam(
+                        QueryKeys.DATE_FROM, SibsUtils.getPaginationDate(getConsentFromStorage()))
                 .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .get(TransactionsResponse.class);
     }
@@ -159,20 +168,14 @@ public class SibsBaseApiClient {
         return consentResponse;
     }
 
-    private void saveConsentInPersistentStorage(ConsentResponse consentResponse) {
-        Consent consent = new Consent(consentResponse.getConsentId(), LocalDateTime.now());
-        persistentStorage.put(StorageKeys.CONSENT_ID, consent);
+    public void removeConsentFromPersistentStorage() {
+        persistentStorage.remove(StorageKeys.CONSENT_ID);
     }
 
-    private String getPaginationDate() {
-        Consent consent = getConsentFromStorage();
-        LocalDateTime transactionsFromBeginning = LocalDateTime.of(1970, 1, 1, 0, 0, 0, 0);
-
-        if (consent.isConsentYoungerThan30Minutes()) {
-            return PAGINATION_DATE_FORMATTER.format(transactionsFromBeginning);
-        }
-
-        return PAGINATION_DATE_FORMATTER.format(LocalDateTime.now().minusDays(89));
+    private void saveConsentInPersistentStorage(ConsentResponse consentResponse) {
+        Consent consent =
+                new Consent(consentResponse.getConsentId(), LocalDateTime.now().toString());
+        persistentStorage.put(StorageKeys.CONSENT_ID, consent);
     }
 
     public ConsentStatusResponse getConsentStatus() {
@@ -202,5 +205,103 @@ public class SibsBaseApiClient {
         String baseUrl = configuration.getBaseUrl();
         return new URL(baseUrl + path)
                 .parameter(PathParameterKeys.ASPSP_CDE, configuration.getAspspCode());
+    }
+
+    public SibsPaymentInitiationResponse createPayment(
+            SibsPaymentInitiationRequest sibsPaymentRequest,
+            SibsPaymentType sibsPaymentType,
+            String state) {
+        URL createPaymentUrl = createUrl(SibsConstants.Urls.PAYMENT_INITIATION);
+
+        return client.request(
+                        createPaymentUrl.parameter(
+                                PathParameterKeys.PAYMENT_PRODUCT, sibsPaymentType.getValue()))
+                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, "127.0.0.1")
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage())
+                .header(
+                        HeaderKeys.TPP_REDIRECT_URI,
+                        new URL(configuration.getRedirectUrl()).queryParam(QueryKeys.STATE, state))
+                .queryParam(SibsConstants.QueryKeys.TPP_REDIRECT_PREFFERED, "true")
+                .post(SibsPaymentInitiationResponse.class, sibsPaymentRequest);
+    }
+
+    public SibsGetPaymentResponse getPayment(String uniqueId, SibsPaymentType sibsPaymentType) {
+
+        URL getPayment = createUrl(SibsConstants.Urls.GET_PAYMENT_REQUEST);
+        return client.request(
+                        getPayment
+                                .parameter(
+                                        PathParameterKeys.PAYMENT_PRODUCT,
+                                        sibsPaymentType.getValue())
+                                .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage())
+                .get(SibsGetPaymentResponse.class);
+    }
+
+    public SibsPaymentUpdateResponse updatePayment(
+            String uniqueId,
+            SibsPaymentType sibsPaymentType,
+            SibsPaymentUpdateRequest sibsPaymentUpdateRequest) {
+
+        URL updatePaymentUrl = createUrl(SibsConstants.Urls.UPDATE_PAYMENT_REQUEST);
+
+        return client.request(
+                        updatePaymentUrl
+                                .parameter(
+                                        PathParameterKeys.PAYMENT_PRODUCT,
+                                        sibsPaymentType.getValue())
+                                .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
+                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage())
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .put(SibsPaymentUpdateResponse.class, sibsPaymentUpdateRequest);
+    }
+
+    public SibsPaymentUpdateResponse updatePaymentforPsuId(
+            String updatePsuIdUrl, SibsPaymentUpdateRequest sibsPaymentUpdateRequest) {
+
+        URL updatePaymentUrl = createUrl(updatePsuIdUrl);
+
+        return client.request(updatePaymentUrl)
+                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage())
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .put(SibsPaymentUpdateResponse.class, sibsPaymentUpdateRequest);
+    }
+
+    public SibsCancelPaymentResponse cancelPayment(
+            String uniqueId, SibsPaymentType sibsPaymentType) {
+        URL cancelPaymentUrl = createUrl(SibsConstants.Urls.DELETE_PAYMENT_REQUEST);
+
+        return client.request(
+                        cancelPaymentUrl
+                                .parameter(
+                                        PathParameterKeys.PAYMENT_PRODUCT,
+                                        sibsPaymentType.getValue())
+                                .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
+                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, "127.0.0.1")
+                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage())
+                .delete(SibsCancelPaymentResponse.class);
+    }
+
+    public SibsGetPaymentStatusResponse getPaymentStatus(
+            String uniqueId, SibsPaymentType sibsPaymentType) {
+        URL paymentStatusUrl = createUrl(SibsConstants.Urls.GET_PAYMENT_STATUS_REQUEST);
+
+        return client.request(
+                        paymentStatusUrl
+                                .parameter(
+                                        PathParameterKeys.PAYMENT_PRODUCT,
+                                        sibsPaymentType.getValue())
+                                .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
+                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage())
+                .get(SibsGetPaymentStatusResponse.class);
+    }
+
+    public URL buildAuthorizeUrlForPayment(SessionStorage sessionStorage) {
+        return new URL(sessionStorage.get(Storage.PAYMENT_REDIRECT_URI));
     }
 }

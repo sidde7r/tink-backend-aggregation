@@ -244,10 +244,6 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                             UserMessage.CREDENTIALS_VERIFICATION_ERROR.getKey());
                 }
-                if (response.getStatus() == 503) {
-                    log.infoExtraLong(
-                            this.driver.getPageSource(), DanskeBankConstants.login503Error);
-                }
 
                 throw hre;
             }
@@ -462,8 +458,6 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             try {
                 finalizeAuthentication();
             } catch (HttpResponseException hre) {
-                log.errorExtraLong(
-                        "Error in logonStepOne", DanskeBankConstants.loginCodeAppError, hre);
                 DanskeBankPasswordErrorHandler.throwError(hre);
             }
         } finally {

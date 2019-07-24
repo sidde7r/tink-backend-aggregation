@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBa
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.BankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.BearerTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.CreateSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.InitTokenResponse;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -27,6 +26,7 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
     private final SkandiaBankenApiClient apiClient;
     private final SessionStorage sessionStorage;
     private String autoStartToken;
+    private OAuth2Token oAuth2Token;
 
     public SkandiaBankenAuthenticator(
             SkandiaBankenApiClient apiClient, SessionStorage sessionStorage) {
@@ -136,14 +136,7 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
     }
 
     private void fetchBearerToken(String code) {
-        final BearerTokenResponse bearerTokenResponse = apiClient.fetchBearerToken(code);
-        final String accessToken = bearerTokenResponse.getAccessToken();
-        final String tokenType = bearerTokenResponse.getTokenType();
-        final String refreshToken = bearerTokenResponse.getRefreshToken();
-        final String bearerToken = String.format("%s %s", tokenType, accessToken);
-
-        sessionStorage.put(StorageKeys.BEARER_TOKEN, bearerToken);
-        sessionStorage.put(StorageKeys.REFRESH_TOKEN, refreshToken);
+        oAuth2Token = apiClient.fetchAuthToken(code).toOAuth2Token();
     }
 
     private String generateCodeVerifier() {
@@ -161,11 +154,11 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
 
     @Override
     public Optional<OAuth2Token> getAccessToken() {
-        return Optional.empty();
+        return Optional.ofNullable(oAuth2Token);
     }
 
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
-        return Optional.empty();
+        return Optional.ofNullable(apiClient.refreshToken(refreshToken).toOAuth2Token());
     }
 }

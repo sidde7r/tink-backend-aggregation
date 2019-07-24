@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.http.filter;
 
 import java.net.SocketTimeoutException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * This filter will back off and retry a given amount of times if the http request fails because of
@@ -19,7 +19,9 @@ public class TimeoutRetryFilter extends AbstractRetryFilter {
     }
 
     @Override
-    protected boolean shouldRetry(HttpClientException exception) {
-        return exception.getCause() instanceof SocketTimeoutException;
+    protected boolean shouldRetry(RuntimeException exception) {
+        // Matches SocketTimeoutException or any eventual subclass in any depth of the causal chain;
+        // recursive chains are properly handled.
+        return ExceptionUtils.indexOfType(exception, SocketTimeoutException.class) >= 0;
     }
 }

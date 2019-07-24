@@ -27,7 +27,7 @@ public class SkandiaBankenConstants {
         public static final URL OAUTH_CHOOSER_AUTHORIZE =
                 new URL(LOGIN_BASE + Endpoints.OAUTH_CHOOSER_AUTHORIZE);
         public static final URL BANKID_COLLECT = new URL(LOGIN_BASE + Endpoints.BANKID_COLLECT);
-        public static final URL FETCH_BEARER = new URL(BASE + Endpoints.FETCH_BEARER);
+        public static final URL FETCH_AUTH_TOKEN = new URL(BASE + Endpoints.FETCH_AUTH_TOKEN);
         public static final URL FETCH_ACCOUNTS = new URL(BASE + Endpoints.FETCH_ACCOUNTS);
         public static final URL FETCH_ACCOUNT_TRANSACTIONS =
                 new URL(BASE + Endpoints.FETCH_ACCOUNT_TRANSACTIONS);
@@ -56,7 +56,7 @@ public class SkandiaBankenConstants {
                 "/mobiltbankid/autostartauthenticate";
         public static final String OAUTH_CHOOSER_AUTHORIZE = "/mobiltbankid/fromchooserautostart/";
         public static final String BANKID_COLLECT = "/mobiltbankid/collecting";
-        public static final String FETCH_BEARER = "/mobile/v1/oauth2/token";
+        public static final String FETCH_AUTH_TOKEN = "/mobile/v1/oauth2/token";
         public static final String FETCH_ACCOUNTS = "/Customers/V2/Commitments/BankAccounts";
         public static final String FETCH_ACCOUNT_TRANSACTIONS =
                 "/Accounts/V2/BankAccounts/Transactions/{accountId}/{page}/"
@@ -139,6 +139,7 @@ public class SkandiaBankenConstants {
         public static final String CLIENT_ID_MEDIUM = "e_mobile_anonymous_medium";
         public static final String CLIENT_ID_SHORT = "e_mobile_identified_short";
         public static final String GRANT_TYPE = "client_credentials";
+        public static final String REFRESH_TOKEN = "refresh_token";
         public static final String REQUEST_WITH = "XMLHttpRequest";
         public static final String GRANT_TYPE_FOR_BEARER = "authorization_code";
     }

@@ -54,7 +54,7 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
                     sessionStorage, persistentStorage, temporaryStorage);
             CreateSessionUserResponse createSessionUserResponse =
                     apiClient.createSessionUser(
-                            sessionStorage.get(BunqBaseConstants.StorageKeys.USER_API_KEY));
+                            persistentStorage.get(BunqBaseConstants.StorageKeys.USER_API_KEY));
             persistentStorage.put(
                     BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN,
                     createSessionUserResponse.getToken());

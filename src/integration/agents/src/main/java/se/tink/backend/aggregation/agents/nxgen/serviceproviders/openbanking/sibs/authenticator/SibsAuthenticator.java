@@ -5,8 +5,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class SibsAuthenticator {
 
@@ -40,10 +42,31 @@ public class SibsAuthenticator {
     }
 
     public void autoAuthenticate() throws SessionException {
-        ConsentStatus consentStatus = getConsentStatus();
-
+        ConsentStatus consentStatus;
+        try {
+            consentStatus = getConsentStatus();
+        } catch (HttpResponseException e) {
+            handleInvalidConsents(e);
+            return;
+        }
         if (!consentStatus.isAcceptedStatus()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
+    }
+
+    private void handleInvalidConsents(HttpResponseException rethrowIfNotConsentProblems)
+            throws SessionException {
+        final String message = rethrowIfNotConsentProblems.getResponse().getBody(String.class);
+        if (isConsentsProblem(message)) {
+            apiClient.removeConsentFromPersistentStorage();
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+        throw rethrowIfNotConsentProblems;
+    }
+
+    private boolean isConsentsProblem(String message) {
+        return message.contains(MessageCodes.CONSENT_INVALID.name())
+                || message.contains(MessageCodes.CONSENT_EXPIRED.name())
+                || message.contains(MessageCodes.CONSENT_UNKNOWN.name());
     }
 }

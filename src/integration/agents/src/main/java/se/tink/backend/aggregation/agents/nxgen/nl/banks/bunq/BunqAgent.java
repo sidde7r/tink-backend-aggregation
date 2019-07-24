@@ -21,7 +21,7 @@ public class BunqAgent extends BunqBaseAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new BunqApiClient(client, getBackendHost());
-        sessionStorage.put(
+        persistentStorage.put(
                 BunqBaseConstants.StorageKeys.USER_API_KEY,
                 credentials.getField(Field.Key.PASSWORD));
     }

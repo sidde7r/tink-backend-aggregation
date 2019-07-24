@@ -498,6 +498,18 @@ spec:
               name: aggregation-secrets
               key: volksbank-ais-client-secret-tink
               optional: true
+        - name: VOLKSBANK_AIS_CLIENT_ID_ABN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: volksbank-ais-client-id-abn
+              optional: true
+        - name: VOLKSBANK_AIS_CLIENT_SECRET_ABN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: volksbank-ais-client-secret-abn
+              optional: true
         {{- end }}
       containers:
       - name: tink-backend-aggregation
