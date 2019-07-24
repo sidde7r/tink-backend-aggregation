@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -46,9 +45,9 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
         final CbiGlobeConfiguration clientConfiguration = getClientConfiguration();
         apiClient.setConfiguration(clientConfiguration);
-        client.setSslClientCertificate(
-                CbiGlobeUtils.readFile(clientConfiguration.getKeystorePath()),
-                clientConfiguration.getKeystorePassword());
+        this.client.setDebugOutput(true);
+        this.client.setEidasProxy(
+                configuration.getEidasProxy(), clientConfiguration.getEidasQwac());
     }
 
     protected CbiGlobeConfiguration getClientConfiguration() {

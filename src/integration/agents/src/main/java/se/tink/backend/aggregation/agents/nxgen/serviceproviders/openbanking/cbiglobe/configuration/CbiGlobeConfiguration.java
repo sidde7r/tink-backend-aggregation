@@ -17,6 +17,7 @@ public class CbiGlobeConfiguration implements ClientConfiguration {
     private String aspspCode;
     private String aspspProductCode;
     private String psuId;
+    private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -79,5 +80,12 @@ public class CbiGlobeConfiguration implements ClientConfiguration {
                 psuId, String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU ID"));
 
         return psuId;
+    }
+
+    public String getEidasQwac() {
+        Preconditions.checkNotNull(
+            eidasQwac, String.format(ErrorMessages.INVALID_CONFIGURATION, "EIDAS QWAC"));
+
+        return eidasQwac;
     }
 }
