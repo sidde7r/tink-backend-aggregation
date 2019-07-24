@@ -20,6 +20,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
         "//src/libraries/amount",
-        "//third_party:com_google_guava_guava",
+        "@maven//:com_google_guava_guava",
     ],
 )
