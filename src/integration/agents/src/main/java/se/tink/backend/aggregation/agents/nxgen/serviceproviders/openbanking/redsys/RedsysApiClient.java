@@ -118,7 +118,9 @@ public final class RedsysApiClient {
     }
 
     private String makeApiUrl(String path, Object... args) {
-        assert path.startsWith("/");
+        if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
         if (args.length > 0) {
             path = String.format(path, args);
         }
