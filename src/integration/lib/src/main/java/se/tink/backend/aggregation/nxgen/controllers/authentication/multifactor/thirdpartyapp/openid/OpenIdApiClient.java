@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
@@ -215,7 +217,7 @@ public class OpenIdApiClient {
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
 
-    public URL buildAuthorizeUrl(String state, String nonce) {
+    public URL buildAuthorizeUrl(String state, String nonce, String callbackUri) {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
         ClientInfo clientInfo = providerConfiguration.getClientInfo();
 
@@ -232,6 +234,10 @@ public class OpenIdApiClient {
                                         new IllegalStateException(
                                                 "Provider does not support the mandatory scopes."));
 
+        String redirectUri =
+                Optional.ofNullable(Strings.emptyToNull(callbackUri))
+                        .orElse(softwareStatement.getRedirectUri());
+
         /*  'response_type=id_token' only supports 'response_mode=fragment',
          *  setting 'response_mode=query' has no effect the the moment.
          */
@@ -242,8 +248,7 @@ public class OpenIdApiClient {
                 .queryParam(OpenIdConstants.Params.SCOPE, scope)
                 .queryParam(OpenIdConstants.Params.STATE, state)
                 .queryParam(OpenIdConstants.Params.NONCE, nonce)
-                .queryParam(
-                        OpenIdConstants.Params.REDIRECT_URI, softwareStatement.getRedirectUri());
+                .queryParam(OpenIdConstants.Params.REDIRECT_URI, redirectUri);
     }
 
     public void attachAuthFilter(OAuth2Token token) {

@@ -11,7 +11,8 @@ public class LloydsAuthenticator extends UkOpenBankingAuthenticator {
     }
 
     @Override
-    public URL decorateAuthorizeUrl(URL authorizeUrl, String state, String nonce) {
-        return super.decorateAuthorizeUrl(authorizeUrl, state, nonce);
+    public URL decorateAuthorizeUrl(
+            URL authorizeUrl, String state, String nonce, String callbackUri) {
+        return super.decorateAuthorizeUrl(authorizeUrl, state, nonce, callbackUri);
     }
 }

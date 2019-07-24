@@ -74,7 +74,7 @@ public class OpenIdApiClientTest {
 
     @Test
     public void testAuthorizeConsent() {
-        URL authUrl = apiClient.buildAuthorizeUrl("state-test", "nonce-test");
+        URL authUrl = apiClient.buildAuthorizeUrl("state-test", "nonce-test", "callbackUri-test");
         System.out.println(authUrl.toString());
         Assert.assertTrue(!Strings.isNullOrEmpty(authUrl.toString()));
     }

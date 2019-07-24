@@ -197,12 +197,13 @@ public class OpenIdAuthenticationController
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
 
-        URL authorizeUrl = apiClient.buildAuthorizeUrl(state, nonce);
+        URL authorizeUrl = apiClient.buildAuthorizeUrl(state, nonce, callbackUri);
 
         apiClient.attachAuthFilter(clientAccessToken);
         try {
             // Let the agent add to or change the URL before we send it to the front-end.
-            authorizeUrl = authenticator.decorateAuthorizeUrl(authorizeUrl, state, nonce);
+            authorizeUrl =
+                    authenticator.decorateAuthorizeUrl(authorizeUrl, state, nonce, callbackUri);
         } finally {
             apiClient.detachAuthFilter();
         }

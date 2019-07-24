@@ -50,7 +50,8 @@ public class UkOpenBankingPaymentsAuthenticator implements OpenIdAuthenticator {
     }
 
     @Override
-    public URL decorateAuthorizeUrl(URL authorizeUrl, String state, String nonce) {
+    public URL decorateAuthorizeUrl(
+            URL authorizeUrl, String state, String nonce, String callbackUri) {
 
         intentId =
                 ukOpenBankingPis.getBankTransferIntentId(

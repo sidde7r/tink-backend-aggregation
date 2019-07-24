@@ -16,8 +16,9 @@ public class BarclaysAuthenticator extends UkOpenBankingAuthenticator {
     }
 
     @Override
-    public URL decorateAuthorizeUrl(URL authorizeUrl, String state, String nonce) {
-        URL url = super.decorateAuthorizeUrl(authorizeUrl, state, nonce);
+    public URL decorateAuthorizeUrl(
+            URL authorizeUrl, String state, String nonce, String callbackUri) {
+        URL url = super.decorateAuthorizeUrl(authorizeUrl, state, nonce, callbackUri);
         return url.queryParam(AUTHONDEVICE, YES);
     }
 }

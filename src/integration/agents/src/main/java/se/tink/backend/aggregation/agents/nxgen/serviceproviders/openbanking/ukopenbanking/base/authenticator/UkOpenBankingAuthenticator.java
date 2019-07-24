@@ -25,7 +25,8 @@ public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
     }
 
     @Override
-    public URL decorateAuthorizeUrl(URL authorizeUrl, String state, String nonce) {
+    public URL decorateAuthorizeUrl(
+            URL authorizeUrl, String state, String nonce, String callbackUri) {
         String intentId = apiClient.fetchIntentIdString(ukOpenBankingAisConfig);
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
@@ -38,6 +39,7 @@ public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
                         .withSoftwareStatement(softwareStatement)
                         .withState(state)
                         .withNonce(nonce)
+                        .withCallbackUri(callbackUri)
                         .withWellknownConfiguration(wellKnownConfiguration)
                         .withIntentId(intentId)
                         .build());
