@@ -24,9 +24,7 @@ public class BalanceEntity {
     @JsonProperty private AmountEntity balanceAmount;
     @JsonProperty private boolean creditLimitIncluded;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
-    // actual format includes microseconds, docs say it's ms
-    private Date lastChangeDateTime;
+    @JsonProperty private String lastChangeDateTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date referenceDate;
@@ -34,10 +32,6 @@ public class BalanceEntity {
     @JsonIgnore
     public ExactCurrencyAmount getAmount() {
         return balanceAmount.toTinkAmount();
-    }
-
-    public Date getLastChangeDateTime() {
-        return lastChangeDateTime;
     }
 
     public Date getReferenceDate() {
