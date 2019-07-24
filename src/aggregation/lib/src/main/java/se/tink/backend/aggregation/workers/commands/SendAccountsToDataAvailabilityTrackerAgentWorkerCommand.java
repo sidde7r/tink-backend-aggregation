@@ -24,7 +24,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     /*
      *  Temporary limitation to prevent client running on all providers.
      */
-    private static final String TEST_PROVIDER = "avanza-bankid";
+    private static final String TEST_MARKET = "SE";
 
     private static final String METRIC_NAME = "agent_refresh";
     private static final String METRIC_ACTION = "send_accounts_to_data_availability_tracker";
@@ -49,10 +49,10 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
 
         this.agentName = request.getProvider().getClassName();
 
+        boolean forceMockClient = !TEST_MARKET.equalsIgnoreCase(request.getProvider().getMarket());
+
         this.agentDataAvailabilityTrackerClient =
-                AgentDataAvailabilityTrackerClientFactory.getClient(
-                        configuration,
-                        TEST_PROVIDER.equalsIgnoreCase(request.getProvider().getName()));
+                AgentDataAvailabilityTrackerClientFactory.getClient(configuration, forceMockClient);
     }
 
     @Override
