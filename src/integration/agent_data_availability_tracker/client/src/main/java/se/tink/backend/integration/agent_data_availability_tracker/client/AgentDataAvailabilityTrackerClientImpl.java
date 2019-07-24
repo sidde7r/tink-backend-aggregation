@@ -1,5 +1,6 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
+import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NettyChannelBuilder;
@@ -24,11 +25,13 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     private static final Logger log =
             LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientImpl.class);
 
+    private final ManagedChannel channel;
+    private final AgentDataAvailabilityTrackerServiceGrpc.AgentDataAvailabilityTrackerServiceStub
+            agentctServiceStub;
+
     private StreamObserver<TrackAccountRequest> requestStream;
 
     private CountDownLatch latch;
-    private AgentDataAvailabilityTrackerServiceGrpc.AgentDataAvailabilityTrackerServiceStub
-            agentctServiceStub;
 
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
     public AgentDataAvailabilityTrackerClientImpl(String host, int port) throws SSLException {
@@ -44,9 +47,8 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                         .trustManager(new File("/etc/client-certificate/ca.crt"))
                         .build();
 
-        agentctServiceStub =
-                AgentDataAvailabilityTrackerServiceGrpc.newStub(
-                        channelBuilder.useTransportSecurity().sslContext(sslContext).build());
+        channel = channelBuilder.useTransportSecurity().sslContext(sslContext).build();
+        agentctServiceStub = AgentDataAvailabilityTrackerServiceGrpc.newStub(channel);
     }
 
     public void beginStream() {
@@ -132,5 +134,7 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         }
 
         latch.await(2, TimeUnit.SECONDS);
+
+        channel.shutdown().awaitTermination(1000, TimeUnit.MILLISECONDS);
     }
 }
