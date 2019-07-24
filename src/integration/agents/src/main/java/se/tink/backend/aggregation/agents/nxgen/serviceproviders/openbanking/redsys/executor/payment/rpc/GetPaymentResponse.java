@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.serializers.LocalDateDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class GetPaymentResponse {
@@ -40,13 +40,13 @@ public class GetPaymentResponse {
     }
 
     @JsonIgnore
-    public Amount getAmount() {
+    public ExactCurrencyAmount getAmount() {
         return instructedAmount.toTinkAmount();
     }
 
     @JsonIgnore
     public String getCurrency() {
-        return instructedAmount.toTinkAmount().getCurrency();
+        return instructedAmount.toTinkAmount().getCurrencyCode();
     }
 
     @JsonIgnore

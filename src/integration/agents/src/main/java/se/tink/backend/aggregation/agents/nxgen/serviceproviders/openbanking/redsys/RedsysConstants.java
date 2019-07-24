@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public final class RedsysConstants {
 
@@ -13,10 +13,10 @@ public final class RedsysConstants {
     }
 
     // partial ISO 20022 ExternalCashAccountType1Code
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "CACC")
-                    .put(AccountTypes.SAVINGS, "SVGS")
+    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
+                    .put(TransactionalAccountType.CHECKING, "CACC", "TRAN")
+                    .put(TransactionalAccountType.SAVINGS, "SVGS")
                     .build();
 
     public static class ErrorMessages {
@@ -160,8 +160,11 @@ public final class RedsysConstants {
     }
 
     public static class BalanceType {
-        public static final String EXPECTED = "expected";
-        public static final String INTERIM_BOOKED = "interimBooked";
         public static final String CLOSING_BOOKED = "closingBooked";
+        public static final String EXPECTED = "expected";
+        public static final String OPENING_BOOKED = "openingBooked";
+        public static final String INTERIM_AVAILABLE = "interimAvailable";
+        public static final String INTERIM_BOOKED = "interimBooked";
+        public static final String FORWARD_AVAILABLE = "forwardAvailable";
     }
 }

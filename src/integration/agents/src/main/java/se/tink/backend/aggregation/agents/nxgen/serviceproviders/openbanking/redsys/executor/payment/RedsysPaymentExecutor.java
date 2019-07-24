@@ -35,6 +35,8 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -74,10 +76,12 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                 AccountReferenceEntity.ofIban(payment.getCreditor().getAccountNumber());
         final AccountReferenceEntity debtorAccount =
                 AccountReferenceEntity.ofIban(payment.getDebtor().getAccountNumber());
+        final ExactCurrencyAmount amount =
+                ExactCurrencyAmount.of(payment.getAmount().getValue(), payment.getCurrency());
 
         CreatePaymentRequest.Builder requestBuilder =
                 new CreatePaymentRequest.Builder()
-                        .withAmount(payment.getAmount())
+                        .withAmount(amount)
                         .withCreditorAccount(creditorAccount)
                         .withDebtorAccount(debtorAccount)
                         .withCreditorName(payment.getCreditor().getName())
@@ -122,12 +126,16 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         final String paymentId = payment.getUniqueId();
 
         final GetPaymentResponse response = apiClient.fetchPayment(paymentId, product);
+        final Amount amount =
+                new Amount(
+                        response.getAmount().getCurrencyCode(),
+                        response.getAmount().getExactValue());
 
         Payment.Builder builder =
                 new Payment.Builder()
                         .withCreditor(new Creditor(response.getCreditorAccount()))
                         .withDebtor(new Debtor(response.getDebtorAccount()))
-                        .withAmount(response.getAmount())
+                        .withAmount(amount)
                         .withExecutionDate(response.getRequestedExecutionDate())
                         .withCurrency(response.getCurrency())
                         .withUniqueId(paymentId)

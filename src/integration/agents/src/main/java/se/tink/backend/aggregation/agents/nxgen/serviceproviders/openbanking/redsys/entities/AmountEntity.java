@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -12,16 +12,14 @@ public class AmountEntity {
     @JsonProperty private String amount;
 
     @JsonIgnore
-    public Amount toTinkAmount() {
-        // decimal separator is inconsistent between banks
-        return new Amount(currency, StringUtils.parseAmount(amount));
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(StringUtils.parseAmount(amount), currency);
     }
 
-    public static AmountEntity withAmount(Amount amount) {
-        // FIXME: which decimal separator to use?
+    public static AmountEntity withAmount(ExactCurrencyAmount amount) {
         AmountEntity entity = new AmountEntity();
-        entity.currency = amount.getCurrency();
-        entity.amount = amount.toBigDecimal().toPlainString();
+        entity.currency = amount.getCurrencyCode();
+        entity.amount = amount.getExactValue().toPlainString();
         return entity;
     }
 }

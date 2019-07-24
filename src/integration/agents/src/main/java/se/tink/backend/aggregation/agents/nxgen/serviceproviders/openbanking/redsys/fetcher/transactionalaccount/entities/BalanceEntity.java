@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceEntity {
@@ -32,7 +32,7 @@ public class BalanceEntity {
     private Date referenceDate;
 
     @JsonIgnore
-    public Amount getAmount() {
+    public ExactCurrencyAmount getAmount() {
         return balanceAmount.toTinkAmount();
     }
 
@@ -57,7 +57,8 @@ public class BalanceEntity {
                 .collect(Collectors.toList());
     }
 
-    public static Amount getBalanceOfType(List<BalanceEntity> balances, String... types) {
+    public static ExactCurrencyAmount getBalanceOfType(
+            List<BalanceEntity> balances, String... types) {
         List<BalanceEntity> balancesOfType = Lists.newArrayList();
         for (String balanceType : types) {
             balancesOfType = getBalancesOfType(balances, balanceType);
