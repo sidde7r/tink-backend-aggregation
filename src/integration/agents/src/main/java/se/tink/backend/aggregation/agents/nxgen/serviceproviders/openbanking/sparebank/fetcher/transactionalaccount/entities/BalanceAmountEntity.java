@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.entities;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceAmountEntity {
@@ -12,7 +12,7 @@ public class BalanceAmountEntity {
         return currency;
     }
 
-    public Amount toAmount() {
-        return new Amount(currency, Double.parseDouble(amount));
+    public ExactCurrencyAmount toAmount() {
+        return ExactCurrencyAmount.of(Double.parseDouble(amount), currency);
     }
 }

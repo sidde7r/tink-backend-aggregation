@@ -12,8 +12,10 @@ public final class SparebankConstants {
                             "Current",
                             "Current",
                             "Commission",
-                            "TransactingAccount")
+                            "TransactingAccount",
+                            "ALLTID 18-33")
                     .put(TransactionalAccountType.SAVINGS, "Savings")
+                    .put(TransactionalAccountType.SAVINGS, "SPAREKONTO")
                     .setDefaultTranslationValue(TransactionalAccountType.OTHER)
                     .build();
 
