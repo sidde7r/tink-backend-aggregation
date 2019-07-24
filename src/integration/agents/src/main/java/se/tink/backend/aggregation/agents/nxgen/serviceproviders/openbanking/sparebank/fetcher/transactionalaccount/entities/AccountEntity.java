@@ -56,7 +56,7 @@ public class AccountEntity {
                         .withType(type)
                         .withId(
                                 IdModule.builder()
-                                        .withUniqueIdentifier(bban)
+                                        .withUniqueIdentifier(getUniqueIdentifier())
                                         .withAccountNumber(getAccountNumber())
                                         .withAccountName(Optional.ofNullable(name).orElse(""))
                                         .addIdentifier(getIdentifier())
@@ -77,31 +77,23 @@ public class AccountEntity {
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .orElse(getDefaultAmount());
+                .orElseThrow(() -> new IllegalStateException("No amount found"));
     }
 
-    protected String getUniqueIdentifier() {
+    private String getUniqueIdentifier() {
+        return bban;
+    }
+
+    private String getAccountNumber() {
         return iban;
     }
 
-    protected String getAccountNumber() {
-        return iban;
-    }
-
-    protected AccountIdentifier getIdentifier() {
+    private AccountIdentifier getIdentifier() {
         return new IbanIdentifier(iban);
     }
 
-    protected List<BalanceEntity> getBalances() {
-        return balances;
-    }
-
-    protected boolean doesMatchWithAccountCurrency(final BalanceEntity balance) {
+    private boolean doesMatchWithAccountCurrency(final BalanceEntity balance) {
         return !balance.isClosingBooked() && balance.isInCurrency(currency);
-    }
-
-    protected ExactCurrencyAmount getDefaultAmount() {
-        return ExactCurrencyAmount.of(0, currency);
     }
 
     protected String getTransactionLink() {
