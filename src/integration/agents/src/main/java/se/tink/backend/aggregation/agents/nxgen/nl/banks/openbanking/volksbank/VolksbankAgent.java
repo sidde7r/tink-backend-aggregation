@@ -52,7 +52,7 @@ public class VolksbankAgent extends NextGenerationAgent
         this.httpClient = new VolksbankHttpClient(client, "certificate");
         this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
-        volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage, urlFactory);
+        volksbankApiClient = new VolksbankApiClient(httpClient, persistentStorage, urlFactory);
 
         consentFetcher = new ConsentFetcher(volksbankApiClient, persistentStorage, isSandbox);
 
@@ -101,7 +101,7 @@ public class VolksbankAgent extends NextGenerationAgent
         VolksbankAuthenticator authenticator =
                 new VolksbankAuthenticator(
                         volksbankApiClient,
-                        sessionStorage,
+                        persistentStorage,
                         redirectUrl,
                         urlFactory,
                         consentFetcher);

@@ -11,24 +11,24 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     private final VolksbankApiClient client;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final URL redirectUri;
     private final VolksbankUrlFactory urlFactory;
     private final ConsentFetcher consentFetcher;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
-            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             URL redirectUri,
             VolksbankUrlFactory urlFactory,
             ConsentFetcher consentFetcher) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
         this.urlFactory = urlFactory;
         this.consentFetcher = consentFetcher;
@@ -74,7 +74,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
 
         OAuth2Token oldToken =
-                sessionStorage
+                persistentStorage
                         .get(Storage.OAUTH_TOKEN, OAuth2Token.class)
                         .orElseThrow(
                                 () ->
@@ -105,6 +105,6 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        sessionStorage.put(Storage.OAUTH_TOKEN, accessToken);
+        persistentStorage.put(Storage.OAUTH_TOKEN, accessToken);
     }
 }
