@@ -42,9 +42,7 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     public AgentDataAvailabilityTrackerClientImpl(NettyChannelBuilder channelBuilder)
             throws SSLException {
 
-        SslContext sslContext;
-
-        sslContext =
+        final SslContext sslContext =
                 GrpcSslContexts.forClient()
                         .trustManager(new File("/etc/client-certificate/ca.crt"))
                         .build();
