@@ -49,7 +49,7 @@ public class VolksbankApiClient {
     }
 
     public TransactionResponse readTransactions(
-            TransactionalAccount account, Map<String, String> urlParams) {
+            TransactionalAccount account, Map<String, String> urlParams, final String consentId) {
 
         URL url =
                 urlFactory.buildURL(
@@ -60,7 +60,7 @@ public class VolksbankApiClient {
                         .request(url)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, sessionStorage.get(Storage.CONSENT))
+                        .header(HeaderKeys.CONSENT_ID, consentId)
                         .addBearerToken(
                                 sessionStorage
                                         .get(Storage.OAUTH_TOKEN, OAuth2Token.class)
@@ -92,7 +92,7 @@ public class VolksbankApiClient {
         return getResponse(response, TransactionResponse.class);
     }
 
-    public BalancesResponse readBalance(AccountsEntity account) {
+    public BalancesResponse readBalance(AccountsEntity account, final String consentId) {
 
         URL url =
                 urlFactory.buildURL(
@@ -103,7 +103,7 @@ public class VolksbankApiClient {
                         .request(url)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, sessionStorage.get(Storage.CONSENT))
+                        .header(HeaderKeys.CONSENT_ID, consentId)
                         .addBearerToken(
                                 sessionStorage
                                         .get(Storage.OAUTH_TOKEN, OAuth2Token.class)
@@ -116,7 +116,7 @@ public class VolksbankApiClient {
         return getResponse(response, BalancesResponse.class);
     }
 
-    public AccountsResponse fetchAccounts() {
+    public AccountsResponse fetchAccounts(final String consentId) {
 
         URL url = urlFactory.buildURL(Paths.ACCOUNTS);
 
@@ -125,7 +125,7 @@ public class VolksbankApiClient {
                         .request(url)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, sessionStorage.get(Storage.CONSENT))
+                        .header(HeaderKeys.CONSENT_ID, consentId)
                         .addBearerToken(
                                 sessionStorage
                                         .get(Storage.OAUTH_TOKEN, OAuth2Token.class)

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
 import java.util.NoSuchElementException;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
@@ -9,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TokenParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUrlFactory;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -21,35 +19,25 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final SessionStorage sessionStorage;
     private final URL redirectUri;
     private final VolksbankUrlFactory urlFactory;
-    private final boolean isSandbox;
+    private final ConsentFetcher consentFetcher;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
             SessionStorage sessionStorage,
             URL redirectUri,
             VolksbankUrlFactory urlFactory,
-            boolean isSandbox) {
+            ConsentFetcher consentFetcher) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.redirectUri = redirectUri;
         this.urlFactory = urlFactory;
-        this.isSandbox = isSandbox;
+        this.consentFetcher = consentFetcher;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        if (!sessionStorage.containsKey(Storage.CONSENT)) {
-            if (isSandbox) {
-                // Sandbox behaves a bit differently
-                final String consentResponseString = client.consentRequestString();
-                final String consentId =
-                        "SNS" + StringUtils.substringBetween(consentResponseString, "\"SNS", "\"");
-                sessionStorage.put(Storage.CONSENT, consentId);
-            } else {
-                final ConsentResponse consent = client.consentRequest();
-                sessionStorage.put(Storage.CONSENT, consent.getConsentId());
-            }
-        }
+
+        final String consentId = consentFetcher.fetchConsent();
 
         return urlFactory
                 .buildURL(Paths.AUTHORIZE)
@@ -57,7 +45,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParams.RESPONSE_TYPE_VALUE)
                 .queryParam(QueryParams.STATE, state)
                 .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString())
-                .queryParam(QueryParams.CONSENT_ID, sessionStorage.get(Storage.CONSENT))
+                .queryParam(QueryParams.CONSENT_ID, consentId)
                 .queryParam(
                         QueryParams.CLIENT_ID,
                         client.getConfiguration().getAisConfiguration().getClientId());
@@ -79,14 +67,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
                         .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString());
 
-        OAuth2Token token = client.getBearerToken(url);
-
-        if (!sessionStorage.containsKey(Storage.CONSENT)) {
-            ConsentResponse consent = client.consentRequest();
-            sessionStorage.put(Storage.CONSENT, consent.getConsentId());
-        }
-
-        return token;
+        return client.getBearerToken(url);
     }
 
     @Override
