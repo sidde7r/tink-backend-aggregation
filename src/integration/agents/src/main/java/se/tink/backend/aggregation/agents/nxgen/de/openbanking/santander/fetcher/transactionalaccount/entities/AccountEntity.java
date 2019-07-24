@@ -31,26 +31,6 @@ public class AccountEntity {
     @JsonProperty("_links")
     private AccountLinksEntity links;
 
-    protected TransactionalAccount toCheckingAccount() {
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(iban)
-                                .withAccountName(name)
-                                .addIdentifier(
-                                        new IbanIdentifier(iban.substring(iban.length() - 18)))
-                                .build())
-                .withBalance(BalanceModule.of(getBalance()))
-                .putInTemporaryStorage(SantanderConstants.StorageKeys.ACCOUNT_ID, iban)
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(resourceId)
-                .putInTemporaryStorage(
-                        SantanderConstants.StorageKeys.TRANSACTIONS_URL, getTransactionLink())
-                .build();
-    }
-
     public TransactionalAccount toTinkAccount() {
         return BerlinGroupConstants.ACCOUNT_TYPE_MAPPER
                 .translate(cashAccountType)
@@ -91,9 +71,18 @@ public class AccountEntity {
         this.balances = balances;
     }
 
+    private TransactionalAccount toCheckingAccount() {
+        return toTransactionalAccount(TransactionalAccountType.CHECKING);
+    }
+
     private TransactionalAccount toSavingsAccount() {
+        return toTransactionalAccount(TransactionalAccountType.SAVINGS);
+    }
+
+    private TransactionalAccount toTransactionalAccount(TransactionalAccountType type) {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.SAVINGS)
+                .withType(type)
+                .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -102,7 +91,6 @@ public class AccountEntity {
                                 .addIdentifier(
                                         new IbanIdentifier(iban.substring(iban.length() - 18)))
                                 .build())
-                .withBalance(BalanceModule.of(getBalance()))
                 .putInTemporaryStorage(SantanderConstants.StorageKeys.ACCOUNT_ID, iban)
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)

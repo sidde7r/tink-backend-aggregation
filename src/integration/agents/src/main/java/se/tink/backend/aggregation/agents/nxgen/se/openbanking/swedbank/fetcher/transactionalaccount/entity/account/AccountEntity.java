@@ -35,6 +35,7 @@ public class AccountEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance(currency)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -42,7 +43,6 @@ public class AccountEntity {
                                 .withAccountName(cashAccountType)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance(currency)))
                 .putInTemporaryStorage(SwedbankConstants.StorageKeys.ACCOUNT_ID, iban)
                 .setApiIdentifier(id)
                 .setBankIdentifier(id)

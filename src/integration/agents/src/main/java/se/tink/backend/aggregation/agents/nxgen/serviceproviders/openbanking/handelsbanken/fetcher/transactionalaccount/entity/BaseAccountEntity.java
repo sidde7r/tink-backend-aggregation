@@ -32,27 +32,18 @@ public class BaseAccountEntity {
     }
 
     public TransactionalAccount createCheckingAccount(BalanceEntity balance) {
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(getAccountNumber())
-                                .withAccountNumber(getAccountNumber())
-                                .withAccountName(name)
-                                .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                                .build())
-                .withBalance(BalanceModule.of(getAmount(balance)))
-                .addHolderName(ownerName)
-                .setApiIdentifier(accountId)
-                .setBankIdentifier(getAccountNumber())
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
-                .build();
+        return createTransactionalAccount(TransactionalAccountType.CHECKING, balance);
     }
 
     public TransactionalAccount createSavingsAccount(BalanceEntity balance) {
+        return createTransactionalAccount(TransactionalAccountType.SAVINGS, balance);
+    }
+
+    private TransactionalAccount createTransactionalAccount(
+            TransactionalAccountType type, BalanceEntity balance) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
+                .withBalance(BalanceModule.of(getAmount(balance)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getAccountNumber())
@@ -61,7 +52,6 @@ public class BaseAccountEntity {
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                                 .build())
-                .withBalance(BalanceModule.of(getAmount(balance)))
                 .addHolderName(ownerName)
                 .setApiIdentifier(accountId)
                 .setBankIdentifier(getAccountNumber())

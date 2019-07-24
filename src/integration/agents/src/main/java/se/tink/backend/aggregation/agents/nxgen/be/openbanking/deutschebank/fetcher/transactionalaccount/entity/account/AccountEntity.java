@@ -63,6 +63,7 @@ public class AccountEntity implements BerlinGroupAccountEntity {
     private TransactionalAccount toTinkAccountWithType(TransactionalAccountType type) {
         return TransactionalAccount.nxBuilder()
                 .withType(type)
+                .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier())
@@ -70,7 +71,6 @@ public class AccountEntity implements BerlinGroupAccountEntity {
                                 .withAccountName(name)
                                 .addIdentifier(getIdentifier())
                                 .build())
-                .withBalance(BalanceModule.of(getBalance()))
                 .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(getUniqueIdentifier())

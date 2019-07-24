@@ -71,6 +71,7 @@ public class AccountsEntity {
     private TransactionalAccount parseAccount(TransactionalAccountType accountType) {
         return TransactionalAccount.nxBuilder()
                 .withType(accountType)
+                .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(bban)
@@ -82,7 +83,6 @@ public class AccountsEntity {
                                 .addIdentifier(new SwedishIdentifier(bban))
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .withBalance(BalanceModule.of(getAvailableBalance()))
                 .addHolderName(getOwnerName())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(bban)

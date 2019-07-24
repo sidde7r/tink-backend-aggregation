@@ -30,6 +30,7 @@ public class AccountEntity {
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
@@ -37,7 +38,6 @@ public class AccountEntity {
                                 .withAccountName(product)
                                 .addIdentifier(new SwedishIdentifier(accountNumber))
                                 .build())
-                .withBalance(BalanceModule.of(getBalance()))
                 .putInTemporaryStorage(VolvoFinansConstants.StorageKeys.ACCOUNT_ID, resourceId)
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)

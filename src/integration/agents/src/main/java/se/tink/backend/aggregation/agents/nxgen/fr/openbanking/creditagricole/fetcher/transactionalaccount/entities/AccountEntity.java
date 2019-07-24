@@ -41,6 +41,7 @@ public class AccountEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withType(transactionalAccountType)
+                .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -48,7 +49,6 @@ public class AccountEntity {
                                 .withAccountName(name)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .withBalance(BalanceModule.of(getAvailableBalance()))
                 .setApiIdentifier(resourceId)
                 .build();
     }

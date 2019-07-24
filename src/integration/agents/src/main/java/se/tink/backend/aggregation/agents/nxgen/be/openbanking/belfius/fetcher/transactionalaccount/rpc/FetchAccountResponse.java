@@ -42,6 +42,7 @@ public class FetchAccountResponse {
         return TransactionalAccount.nxBuilder()
                 // TODO: API returns a hard codded string for type, we cannot test it
                 .withType(TransactionalAccountType.CHECKING)
+                .withBalance(BalanceModule.of(new Amount(currency, balance)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -50,7 +51,6 @@ public class FetchAccountResponse {
                                 .withAccountName("")
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .withBalance(BalanceModule.of(new Amount(currency, balance)))
                 .setApiIdentifier(logicalId)
                 // TODO: API doesn't return account name
                 .addHolderName("")
