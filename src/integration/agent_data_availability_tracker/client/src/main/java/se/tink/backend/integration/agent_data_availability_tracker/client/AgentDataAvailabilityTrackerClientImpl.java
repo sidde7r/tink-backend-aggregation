@@ -41,7 +41,10 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
 
         SslContext sslContext;
 
-        sslContext = GrpcSslContexts.forClient().trustManager(new File("/tls/ca.crt")).build();
+        sslContext =
+                GrpcSslContexts.forClient()
+                        .trustManager(new File("/etc/client-certificate/ca.crt"))
+                        .build();
 
         agentctServiceStub =
                 AgentDataAvailabilityTrackerServiceGrpc.newStub(
