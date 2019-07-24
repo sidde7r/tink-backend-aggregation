@@ -63,9 +63,8 @@ public class OpenIdAuthenticationController
     private final String nonce;
 
     private final String pseudoId;
+    private final String callbackUri;
     private OAuth2Token clientAccessToken;
-
-    private final String appUriId;
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -74,6 +73,7 @@ public class OpenIdAuthenticationController
             OpenIdAuthenticator authenticator,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
             String appUriId,
+            String callbackUri,
             Credentials credentials) {
         this(
                 persistentStorage,
@@ -82,6 +82,7 @@ public class OpenIdAuthenticationController
                 authenticator,
                 callbackJWTSignatureKeyPair,
                 appUriId,
+                callbackUri,
                 credentials,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
@@ -94,6 +95,7 @@ public class OpenIdAuthenticationController
             OpenIdAuthenticator authenticator,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
             String appUriId,
+            String callbackUri,
             Credentials credentials,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
@@ -105,11 +107,10 @@ public class OpenIdAuthenticationController
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
+        this.callbackUri = callbackUri;
 
         this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
-
-        this.appUriId = appUriId;
-        this.state = getJwtState(pseudoId);
+        this.state = getJwtState(pseudoId, appUriId);
 
         this.nonce = RandomUtils.generateRandomHexEncoded(8);
     }
@@ -279,9 +280,10 @@ public class OpenIdAuthenticationController
      * actual JWToken signature.
      *
      * @param pseudoId
+     * @param appUriId
      * @return
      */
-    private String getJwtState(String pseudoId) {
+    private String getJwtState(String pseudoId, String appUriId) {
 
         if (!callbackJWTSignatureKeyPair.isEnabled()) {
             logger.info("Callback JWT not enabled, using pseudoId as state. State: {}", pseudoId);
