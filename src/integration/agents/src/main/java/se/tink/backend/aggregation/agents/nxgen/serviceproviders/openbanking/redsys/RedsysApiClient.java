@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.PaymentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.AccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
@@ -288,11 +289,15 @@ public final class RedsysApiClient {
 
     public ListAccountsResponse fetchAccounts() {
         consentController.askForConsentIfNeeded();
-        final String consentId = getConsentId();
         return createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
+                .header(HeaderKeys.CONSENT_ID, getConsentId())
                 .get(ListAccountsResponse.class);
+    }
+
+    public AccountBalancesResponse fetchAccountBalances(String accountId) {
+        return createSignedRequest(makeApiUrl(Urls.BALANCES, accountId))
+                .header(HeaderKeys.CONSENT_ID, getConsentId())
+                .get(AccountBalancesResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(String accountId, Date fromDate, Date toDate) {
@@ -306,7 +311,7 @@ public final class RedsysApiClient {
                         .header(HeaderKeys.CONSENT_ID, consentId)
                         .queryParam(QueryKeys.DATE_FROM, df.format(fromDate))
                         .queryParam(QueryKeys.DATE_TO, df.format(toDate))
-                        .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
+                        .queryParam(QueryKeys.WITH_BALANCE, QueryValues.FALSE)
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
 
         return request.get(TransactionsResponse.class);

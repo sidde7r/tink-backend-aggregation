@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class TransactionsResponse implements TransactionKeyPaginatorResponse<String> {
@@ -29,14 +27,6 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Str
 
     @JsonProperty private String psuMessage;
     @JsonProperty private List<TppMessageEntity> tppMessages;
-
-    @JsonIgnore
-    private Amount getLatestBalance() {
-        return balances.stream()
-                .max(Comparator.comparing(BalanceEntity::getReferenceDate))
-                .map(BalanceEntity::getAmount)
-                .orElse(null);
-    }
 
     @JsonIgnore
     public Optional<LinkEntity> getLink(String linkName) {

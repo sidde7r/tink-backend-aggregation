@@ -2,7 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -25,7 +29,19 @@ public class RedsysTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         ListAccountsResponse accountsResponse = apiClient.fetchAccounts();
-        return accountsResponse.toTinkAccounts();
+        return accountsResponse.getAccounts().stream()
+                .map(this::toTinkAccount)
+                .collect(Collectors.toList());
+    }
+
+    private TransactionalAccount toTinkAccount(AccountEntity account) {
+        final List<BalanceEntity> accountBalances;
+        if (account.hasBalances()) {
+            accountBalances = account.getBalances();
+        } else {
+            accountBalances = apiClient.fetchAccountBalances(account.getResourceId()).getBalances();
+        }
+        return account.toTinkAccount(accountBalances);
     }
 
     @Override
