@@ -16,6 +16,6 @@ junit_test(
         "//src/libraries/account:enums",
         "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
-        "@maven//:com_google_guava_guava",
+        "//third_party:com_google_guava_guava",
     ],
 )
