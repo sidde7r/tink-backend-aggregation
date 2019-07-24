@@ -273,7 +273,11 @@ public final class RedsysApiClient {
                 HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
                 RedsysUtils.getEncodedSigningCertificate(clientSigningCertificate));
 
-        RequestBuilder request = client.request(url).addBearerToken(token).headers(allHeaders);
+        RequestBuilder request =
+                client.request(url)
+                        .addBearerToken(token)
+                        .headers(allHeaders)
+                        .accept(MediaType.APPLICATION_JSON);
 
         if (payload != null) {
             request = request.body(serializedPayload, MediaType.APPLICATION_JSON);
