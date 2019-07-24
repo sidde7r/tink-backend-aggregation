@@ -29,7 +29,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
     protected final String clientName;
     protected CbiGlobeAuthenticationController controller;
     protected CbiGlobeApiClient apiClient;
-    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    protected TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public CbiGlobeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -37,8 +37,6 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
 
         apiClient = new CbiGlobeApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
-
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected abstract String getIntegrationName();
@@ -69,6 +67,8 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
                         new CbiGlobeAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()));
 
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
@@ -97,7 +97,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
                 new CbiGlobeTransactionalAccountFetcher(apiClient, persistentStorage, controller);
 

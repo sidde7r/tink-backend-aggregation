@@ -30,6 +30,8 @@ public class BPSondrioAgent extends CbiGlobeAgent {
                         new BPSondrioAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()));
 
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
