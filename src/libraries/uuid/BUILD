@@ -1,15 +1,12 @@
 load("//tools/bzl:junit.bzl", "junit_test")
-load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library_maven(
+java_library(
     name = "uuid",
     srcs = glob(["src/main/**/*.java"]),
-    groupId = "se.tink.libraries.uuid",
     visibility = ["//visibility:public"],
     deps = [
-        "@maven//:com_fasterxml_jackson_core_jackson_core",
-        "@maven//:com_fasterxml_jackson_core_jackson_databind",
-        "@maven//:com_google_guava_guava",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_guava_guava",
     ],
 )
 
@@ -17,7 +14,7 @@ junit_test(
     name = "uuid_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":uuid",
-        "@maven//:org_assertj_assertj_core",
+        "//src/libraries/uuid",
+        "//third_party:org_assertj_assertj_core",
     ],
 )
