@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc;
 
-import static com.google.common.base.Predicates.not;
+import static io.vavr.Predicates.not;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;

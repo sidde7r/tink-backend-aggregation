@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.creditcard;
 
-import static com.google.common.base.Predicates.not;
+import static io.vavr.Predicates.not;
 
 import java.util.Optional;
 import org.assertj.core.util.Strings;
