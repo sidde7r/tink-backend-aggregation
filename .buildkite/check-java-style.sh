@@ -19,5 +19,5 @@ trap handle_result EXIT
 
 ./bazel-wrapper build //tools/format:google-java-format
 
-find $(git rev-parse --show-toplevel) -type f -name "*.java" -not -path "*/tools/create_agent/*" \
+find $(git rev-parse --show-toplevel) -type f -name "*.java" \
     | xargs -n500 bazel-bin/tools/format/google-java-format --aosp --dry-run --set-exit-if-changed

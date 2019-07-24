@@ -7,6 +7,6 @@ java_library(
         "//src/integration/agents",
         "//src/integration/lib",  # TODO: remove this dependency
         "//src/libraries/metrics",  # TODO: remove this dependency
-        "@maven//:com_google_inject_guice",
+        "//third_party:com_google_inject_guice",
     ],
 )

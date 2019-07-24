@@ -6,5 +6,5 @@ alias(
 
 alias(
     name = "client-lib-test",
-    actual = "//src/integration/agent_data_availability_tracker/lib/src/test/java/se/tink/backend/integration/agent_data_availability_tracker/client:transmitter-lib-test",
+    actual = "//src/integration/agent_data_availability_tracker/lib/src/test/java/se/tink/backend/integration/agent_data_availability_tracker/client:agent-data-availability-tracker-client-lib-test",
 )

@@ -13,8 +13,8 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "@maven//:net_bytebuddy_byte_buddy",
-        "@maven//:org_objenesis_objenesis",
+        "//third_party:net_bytebuddy_byte_buddy",
+        "//third_party:org_objenesis_objenesis",
     ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/bunq",
@@ -23,7 +23,7 @@ junit_test(
         "//src/libraries/account_identifier",
         "//src/libraries/amount",
         "//src/libraries/payment:rpc",
-        "@maven//:org_iban4j_iban4j",
-        "@maven//:org_mockito_mockito_core",
+        "//third_party:org_iban4j_iban4j",
+        "//third_party:org_mockito_mockito_core",
     ],
 )
