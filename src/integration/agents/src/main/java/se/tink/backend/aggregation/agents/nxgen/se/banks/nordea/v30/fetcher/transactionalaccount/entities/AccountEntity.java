@@ -78,6 +78,7 @@ public class AccountEntity implements GeneralAccountEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withType(getTinkAccountType())
+                .withBalance(BalanceModule.of(new Amount(currency, availableBalance)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(maskAccountNumber())
@@ -87,7 +88,6 @@ public class AccountEntity implements GeneralAccountEntity {
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                                 .build())
-                .withBalance(BalanceModule.of(new Amount(currency, availableBalance)))
                 .addHolderName(generalGetName())
                 .setApiIdentifier(accountNumber)
                 .build();

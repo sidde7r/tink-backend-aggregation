@@ -279,6 +279,7 @@ public class AccountDetailsResponse {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.from(toTinkAccountType()))
+                .withBalance(BalanceModule.of(Amount.inSEK(ownCapital)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountId)
@@ -286,7 +287,6 @@ public class AccountDetailsResponse {
                                 .withAccountName(accountName)
                                 .addIdentifier(new SwedishIdentifier(accountId))
                                 .build())
-                .withBalance(BalanceModule.of(Amount.inSEK(ownCapital)))
                 .addHolderName(holderName.toString())
                 .setBankIdentifier(accountId)
                 .build();

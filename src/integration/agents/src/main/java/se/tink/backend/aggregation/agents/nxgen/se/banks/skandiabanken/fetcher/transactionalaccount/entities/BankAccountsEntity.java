@@ -103,6 +103,7 @@ public class BankAccountsEntity {
     public TransactionalAccount toTinkTransactionalAccount() {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.from(getAccountType()))
+                .withBalance(BalanceModule.of(balance.getAmount()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(number)
@@ -110,7 +111,6 @@ public class BankAccountsEntity {
                                 .withAccountName(getDisplayName())
                                 .addIdentifier(new SwedishIdentifier(number))
                                 .build())
-                .withBalance(BalanceModule.of(balance.getAmount()))
                 .addHolderName(holder.getHolderName())
                 .setApiIdentifier(encryptedNumber)
                 .setBankIdentifier(encryptedNumber)
