@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
 import java.util.NoSuchElementException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
@@ -14,6 +16,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class VolksbankAuthenticator implements OAuth2Authenticator {
+
+    private final Logger logger = LoggerFactory.getLogger(VolksbankAuthenticator.class);
 
     private final VolksbankApiClient client;
     private final PersistentStorage persistentStorage;
@@ -72,6 +76,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
+        logger.info("SNS - Refreshing access token");
 
         OAuth2Token oldToken =
                 persistentStorage
