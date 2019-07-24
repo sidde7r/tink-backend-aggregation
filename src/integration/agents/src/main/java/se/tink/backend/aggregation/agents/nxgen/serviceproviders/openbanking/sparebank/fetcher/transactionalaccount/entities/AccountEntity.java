@@ -54,6 +54,7 @@ public class AccountEntity {
         return Optional.of(
                 TransactionalAccount.nxBuilder()
                         .withType(type)
+                        .withBalance(BalanceModule.of(getBalance()))
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(getUniqueIdentifier())
@@ -62,7 +63,6 @@ public class AccountEntity {
                                         .addIdentifier(getIdentifier())
                                         .addIdentifier(AccountIdentifier.create(Type.NO, bban))
                                         .build())
-                        .withBalance(BalanceModule.of(getBalance()))
                         .setApiIdentifier(resourceId)
                         .setBankIdentifier(resourceId)
                         .addHolderName(Optional.ofNullable(name).orElse(""))

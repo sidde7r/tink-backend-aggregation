@@ -34,6 +34,7 @@ public class AccountEntity {
                         FidorConstants.ACCOUNT_TYPE_MAPPER
                                 .translate(product)
                                 .orElse(TransactionalAccountType.OTHER))
+                .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -41,7 +42,6 @@ public class AccountEntity {
                                 .withAccountName("")
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .withBalance(BalanceModule.of(getAvailableBalance()))
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
                 .setApiIdentifier(iban)
                 .setBankIdentifier(iban)

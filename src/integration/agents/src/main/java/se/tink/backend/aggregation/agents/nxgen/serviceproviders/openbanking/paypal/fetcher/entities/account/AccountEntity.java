@@ -20,6 +20,7 @@ public class AccountEntity {
     public TransactionalAccount toTinkAccount(AccountBalanceResponse accountBalanceResponse) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(email)
@@ -27,7 +28,6 @@ public class AccountEntity {
                                 .withAccountName(email)
                                 .addIdentifier(AccountIdentifier.create(Type.TINK, email))
                                 .build())
-                .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance()))
                 .build();
     }
 }

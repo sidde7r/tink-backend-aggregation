@@ -33,6 +33,7 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.CHECKING)
+                        .withBalance(BalanceModule.of(balanceInfo.toAmount()))
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(accountNumber)
@@ -40,7 +41,6 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
                                         .withAccountName(accountNumber)
                                         .addIdentifier(new IbanIdentifier(accountNumber))
                                         .build())
-                        .withBalance(BalanceModule.of(balanceInfo.toAmount()))
                         .addHolderName(holderName)
                         .putInTemporaryStorage(StorageKey.ACCOUNT_CONSENT_ID, accountNumber)
                         .build();

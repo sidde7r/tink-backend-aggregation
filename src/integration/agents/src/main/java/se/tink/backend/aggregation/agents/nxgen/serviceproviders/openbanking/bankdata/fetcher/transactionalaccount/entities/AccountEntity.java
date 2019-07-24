@@ -50,6 +50,7 @@ public class AccountEntity {
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withBalance(BalanceModule.of(getBalance().get()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -57,7 +58,6 @@ public class AccountEntity {
                                 .withAccountName(Strings.isNullOrEmpty(name) ? product : name)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .withBalance(BalanceModule.of(getBalance().get()))
                 .putInTemporaryStorage(BankdataConstants.StorageKeys.ACCOUNT_ID, iban)
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)

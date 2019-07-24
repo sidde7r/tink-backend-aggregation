@@ -26,6 +26,7 @@ public class AccountEntityResponse {
     public TransactionalAccount toTinkAccount(final BalancesResponse balancesResponse) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withBalance(BalanceModule.of(getAmount(balancesResponse)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(bban)
@@ -33,7 +34,6 @@ public class AccountEntityResponse {
                                 .withAccountName(name)
                                 .addIdentifier(AccountIdentifier.create(Type.NO, bban))
                                 .build())
-                .withBalance(BalanceModule.of(getAmount(balancesResponse)))
                 .setApiIdentifier(bban)
                 .setBankIdentifier(bban)
                 .build();

@@ -82,6 +82,7 @@ public class AccountEntity {
     private TransactionalAccount parseAccount(TransactionalAccountType accountType) {
         return TransactionalAccount.nxBuilder()
                 .withType(accountType)
+                .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getLast4Bban())
@@ -94,7 +95,6 @@ public class AccountEntity {
                                         AccountIdentifier.create(
                                                 AccountIdentifier.Type.SE, getBban()))
                                 .build())
-                .withBalance(BalanceModule.of(getAvailableBalance()))
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
                 .setApiIdentifier(id)
                 .build();

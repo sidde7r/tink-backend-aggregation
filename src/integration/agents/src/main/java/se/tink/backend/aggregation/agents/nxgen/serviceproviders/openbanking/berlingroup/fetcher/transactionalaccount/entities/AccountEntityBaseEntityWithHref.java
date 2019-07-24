@@ -50,27 +50,18 @@ public class AccountEntityBaseEntityWithHref implements BerlinGroupAccountEntity
 
     @Override
     public TransactionalAccount toCheckingAccount() {
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(getUniqueIdentifier())
-                                .withAccountNumber(getAccountNumber())
-                                .withAccountName(cashAccountType)
-                                .addIdentifier(getIdentifier())
-                                .build())
-                .withBalance(BalanceModule.of(getBalance()))
-                .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(getUniqueIdentifier())
-                .addHolderName(name)
-                .build();
+        return toTransactionalAccount(TransactionalAccountType.CHECKING);
     }
 
     @Override
     public TransactionalAccount toSavingsAccount() {
+        return toTransactionalAccount(TransactionalAccountType.SAVINGS);
+    }
+
+    private TransactionalAccount toTransactionalAccount(TransactionalAccountType type) {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.SAVINGS)
+                .withType(type)
+                .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier())
@@ -78,7 +69,6 @@ public class AccountEntityBaseEntityWithHref implements BerlinGroupAccountEntity
                                 .withAccountName(cashAccountType)
                                 .addIdentifier(getIdentifier())
                                 .build())
-                .withBalance(BalanceModule.of(getBalance()))
                 .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(getUniqueIdentifier())
