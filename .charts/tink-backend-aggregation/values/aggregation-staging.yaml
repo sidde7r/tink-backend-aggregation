@@ -26,6 +26,9 @@ agents:
   nordea:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+  bankdata:
+    tink:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   abnamro:
     tink:
       redirectUrl: https://localhost/auth
