@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -42,7 +40,7 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
 
     @Override
     public void autoAuthenticate()
-            throws SessionException, BankServiceException, AuthorizationException {
+            throws SessionException, BankServiceException {
         throw SessionError.SESSION_EXPIRED.exception();
     }
 
@@ -52,8 +50,7 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(String reference)
-            throws AuthenticationException, AuthorizationException {
+    public ThirdPartyAppResponse<String> collect(String reference) {
 
         Map<String, String> supplementalInformation =
                 this.supplementalInformationHelper

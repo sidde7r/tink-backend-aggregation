@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.swedbank;
 
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.swedbank.SwedbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.Urls;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 

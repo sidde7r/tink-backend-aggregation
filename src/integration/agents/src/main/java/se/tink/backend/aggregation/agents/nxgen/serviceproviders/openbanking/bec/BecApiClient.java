@@ -2,12 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 
 import static se.tink.libraries.serialization.utils.SerializationUtils.serializeToString;
 
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.ApiService;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HEADERS_TO_SIGN;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.IdTags;
@@ -24,7 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.utils.SignatureUtils;
+import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -32,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -58,30 +64,45 @@ public final class BecApiClient {
         this.config = configuration;
     }
 
-    public RequestBuilder createRequest(URL url, String requestBody) {
-        String xRequestId = UUID.randomUUID().toString();
-        String digest = SignatureUtils.createDigest(requestBody);
-        String redirectUri =
-                new URL(HeaderValues.TPP_REDIRECT_URI).queryParam("state", state).toString();
-        String signatureParameters = SignatureUtils.createSignatureParameters(xRequestId,digest,redirectUri);
-        QsealcEidasProxySigner qsealSigner = new QsealcEidasProxySigner(config.getEidasProxy(), becConfiguration
-            .getEidasQwac());
-        String signature = SignatureUtils.createSignature(qsealSigner,signatureParameters,becConfiguration.getKeyId());
+    private Map<String, Object> getHeaders(String requestId, String digest) {
+        String redirectUrl =
+            new URL(becConfiguration.getRedirectUrl())
+                .queryParam(QueryKeys.STATE, state)
+                .toString();
 
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
-                .header(HeaderKeys.PSU_IP, HeaderValues.PSU_IP)
-                .header(HeaderKeys.X_REQUEST_ID, xRequestId)
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUri)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUri)
-                .header(HeaderKeys.DIGEST, digest)
-                .header(HeaderKeys.SIGNATURE, signature)
-                .header(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, becConfiguration.getQsealCertificate());
+        Map<String, Object> headers =
+            new HashMap<String, Object>() {
+                {
+                    put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON_TYPE);
+                    put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+                    put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
+                    put(HeaderKeys.PSU_IP, HeaderValues.PSU_IP);
+                    put(HeaderKeys.X_REQUEST_ID, requestId);
+                    put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+                    put(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+                    put(HeaderKeys.DIGEST, digest);
+                    put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, becConfiguration.getQsealCertificate());
+                }
+            };
+
+        return headers;
     }
 
-    public ConsentResponse getConsent(String state) {
+
+    public RequestBuilder createRequest(URL url, String requestBody) {
+
+        String requestId = UUID.randomUUID().toString();
+        String digest = createDigest(requestBody);
+
+        Map<String, Object> headers = getHeaders(requestId, digest);
+        headers.put(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
+
+        return client.request(url)
+            .type(MediaType.APPLICATION_JSON_TYPE)
+            .headers(headers);
+    }
+
+    public ConsentResponse getConsent(String state) throws HttpResponseException {
         this.state = state;
         ConsentRequest body = createConsentRequestBody();
         ConsentResponse response =
@@ -94,11 +115,10 @@ public final class BecApiClient {
         return createRequest(new URL(baseUrl + ApiService.GET_CONSENT_STATUS)
                                         .parameter(StorageKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID)),
             FormValues.EMPTY_STRING)
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                         .get(ConsentResponse.class);
     }
-//further improvements?
+
     public ConsentRequest createConsentRequestBody() {
         AccessEntity access = new AccessEntity("allAccounts");
         ConsentRequest consentRequest =
@@ -143,5 +163,35 @@ public final class BecApiClient {
                                         paymentId),
             FormValues.EMPTY_STRING)
                 .get(GetPaymentResponse.class);
+    }
+
+    private String generateSignatureHeader(Map<String, Object> headers) {
+        QsealcEidasProxySigner signer =
+            new QsealcEidasProxySigner(
+                config.getEidasProxy(), becConfiguration.getEidasQwac());
+
+        StringBuilder signedWithHeaderKeys = new StringBuilder();
+        StringBuilder signedWithHeaderKeyValues = new StringBuilder();
+
+        Arrays.stream(HEADERS_TO_SIGN.values())
+            .map(HEADERS_TO_SIGN::getHeader)
+            .filter(headers::containsKey)
+            .forEach(
+                header -> {
+                    signedWithHeaderKeyValues.append(
+                        String.format("%s: %s\n", header, headers.get(header)));
+                    signedWithHeaderKeys.append(
+                        (signedWithHeaderKeys.length() == 0) ? header : " " + header);
+                });
+
+        String signature =
+            signer.getSignatureBase64(signedWithHeaderKeyValues.toString().trim().getBytes());
+
+        return String.format(
+            "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"",
+            becConfiguration.getKeyId(), signedWithHeaderKeys.toString(), signature);
+    }
+    private String createDigest(String body) {
+        return "SHA-256=" + Base64.getEncoder().encodeToString(Hash.sha256(body));
     }
 }

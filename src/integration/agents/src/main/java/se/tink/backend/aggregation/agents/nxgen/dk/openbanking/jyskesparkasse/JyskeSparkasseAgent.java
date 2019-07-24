@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.jyskesparkasse;
 
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.jyskesparkasse.JyskeSparkasseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecAgent;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;

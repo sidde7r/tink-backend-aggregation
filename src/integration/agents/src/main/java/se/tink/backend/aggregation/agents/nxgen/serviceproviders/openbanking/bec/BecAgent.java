@@ -74,7 +74,6 @@ public abstract class BecAgent extends NextGenerationAgent
                         becController, supplementalInformationHelper),
                 becController);
     }
-    protected abstract String getBaseUrl();
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
@@ -119,4 +118,6 @@ public abstract class BecAgent extends NextGenerationAgent
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
     }
+
+    protected abstract String getBaseUrl();
 }
