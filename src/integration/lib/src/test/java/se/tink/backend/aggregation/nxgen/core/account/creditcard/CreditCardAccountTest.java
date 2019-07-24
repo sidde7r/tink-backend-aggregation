@@ -1,24 +1,26 @@
 package se.tink.backend.aggregation.nxgen.core.account.creditcard;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CreditCardAccountTest {
 
     private final CreditCardModule CARD_MODULE =
             CreditCardModule.builder()
                     .withCardNumber("5254 - 7078 1002 9393")
+                    .withBalance(ExactCurrencyAmount.of(579.3, "EUR"))
+                    .withAvailableCredit(ExactCurrencyAmount.of(420.7, "EUR"))
                     .withCardAlias("Kalle Anka-Kortet")
                     .build();
 
@@ -33,20 +35,12 @@ public class CreditCardAccountTest {
     @Test(expected = NullPointerException.class)
     public void noCardDetails() {
         // Build an otherwise correct account
-        CreditCardAccount.nxBuilder()
-                .withCardDetails(null)
-                .withId(ID_MODULE)
-                .withBalance(BalanceModule.of(Amount.inEUR(2)))
-                .build();
+        CreditCardAccount.nxBuilder().withCardDetails(null).withId(ID_MODULE).build();
     }
 
     @Test(expected = NullPointerException.class)
     public void nullArguments() {
-        CreditCardAccount.nxBuilder()
-                .withCardDetails(CARD_MODULE)
-                .withId(null)
-                .withBalance(null)
-                .build();
+        CreditCardAccount.nxBuilder().withCardDetails(CARD_MODULE).withId(null).build();
     }
 
     @SuppressWarnings("unused")
@@ -86,12 +80,6 @@ public class CreditCardAccountTest {
                                                 new PaymentCardNumberIdentifier("4532101207732467"))
                                         .setProductName("Kalle Anka-Kortet")
                                         .build())
-                        .withBalance(
-                                BalanceModule.builder()
-                                        .withBalance(Amount.inEUR(579.3))
-                                        .setAvailableCredit(Amount.inEUR(420.7))
-                                        .setInterestRate(0.14765)
-                                        .build())
                         .addHolderName("Jürgen Flughaubtkopf")
                         .setApiIdentifier("2a3ffe-38320c")
                         .putInTemporaryStorage("box", box)
@@ -114,10 +102,8 @@ public class CreditCardAccountTest {
 
         assertEquals(579.3, account.getBalance().getValue(), 0);
         assertEquals("EUR", account.getBalance().getCurrency());
-        assertTrue(account.getBalanceModule().getAvailableCredit().isPresent());
-        assertEquals(420.7, account.getBalanceModule().getAvailableCredit().get().getValue(), 0);
-        assertTrue(account.getBalanceModule().getInterestRate().isPresent());
-        assertEquals(0.14765, account.getBalanceModule().getInterestRate().get(), 0);
+        assertNotNull(account.getAvailableCredit());
+        assertEquals(420.7, account.getAvailableCredit().getValue(), 0);
 
         assertTrue(storage.isPresent());
         assertEquals("TestString", storage.get().x);

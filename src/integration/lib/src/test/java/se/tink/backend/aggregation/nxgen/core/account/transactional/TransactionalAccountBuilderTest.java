@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
@@ -37,8 +38,8 @@ public class TransactionalAccountBuilderTest {
         // Build an otherwise correct account
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.from(AccountTypes.LOAN))
-                .withId(ID_MODULE)
                 .withBalance(BalanceModule.of(Amount.inEUR(2)))
+                .withId(ID_MODULE)
                 .build();
     }
 
@@ -46,8 +47,8 @@ public class TransactionalAccountBuilderTest {
     public void nullArguments() {
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
-                .withId(null)
                 .withBalance(null)
+                .withId(null)
                 .build();
     }
 
@@ -55,8 +56,8 @@ public class TransactionalAccountBuilderTest {
     public void nullBalance() {
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
-                .withId(ID_MODULE)
                 .withBalance(null)
+                .withId(ID_MODULE)
                 .build();
     }
 
@@ -64,8 +65,8 @@ public class TransactionalAccountBuilderTest {
     public void nullId() {
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
-                .withId(null)
                 .withBalance(BalanceModule.of(Amount.inEUR(2)))
+                .withId(null)
                 .build();
     }
 
@@ -73,8 +74,8 @@ public class TransactionalAccountBuilderTest {
     public void nullFlagList() {
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
-                .withId(ID_MODULE)
                 .withBalance(BalanceModule.of(Amount.inSEK(2572.28)))
+                .withId(ID_MODULE)
                 .addAccountFlags((AccountFlag) null)
                 .build();
     }
@@ -84,8 +85,8 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.SAVINGS)
-                        .withId(ID_MODULE)
                         .withBalance(BalanceModule.of(Amount.inSEK(2572.28)))
+                        .withId(ID_MODULE)
                         .addAccountFlags(AccountFlag.BUSINESS, AccountFlag.BUSINESS)
                         .addAccountFlags(AccountFlag.MANDATE)
                         .build();
@@ -102,13 +103,13 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.OTHER)
-                        .withId(ID_MODULE)
                         .withBalance(
                                 BalanceModule.builder()
                                         .withBalance(Amount.inSEK(398.32))
                                         .setInterestRate(0.0015)
                                         .setAvailableCredit(Amount.inSEK(4500))
                                         .build())
+                        .withId(ID_MODULE)
                         .putInTemporaryStorage("box", box)
                         .build();
 
@@ -145,8 +146,8 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.SAVINGS)
-                        .withId(ID_MODULE)
                         .withBalance(BalanceModule.of(Amount.inNOK(3483.23)))
+                        .withId(ID_MODULE)
                         .addHolderName("Britte Larsen")
                         .addHolderName("Britte Larsen")
                         .addHolderName("Sigvird Larsen")
@@ -160,8 +161,8 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.SAVINGS)
-                        .withId(ID_MODULE)
                         .withBalance(BalanceModule.of(Amount.inDKK(20)))
+                        .withId(ID_MODULE)
                         .setApiIdentifier("2a3ffe-38320c")
                         .build();
 
@@ -175,6 +176,12 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.SAVINGS)
+                        .withBalance(
+                                BalanceModule.builder()
+                                        .withBalance(Amount.inEUR(579.3))
+                                        .setAvailableCredit(Amount.inEUR(420.7))
+                                        .setInterestRate(0.00155)
+                                        .build())
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier("321-573-128")
@@ -184,12 +191,6 @@ public class TransactionalAccountBuilderTest {
                                                 new SepaEurIdentifier("DE75512108001245126199"))
                                         .addIdentifier(new IbanIdentifier("DE75512108001245126199"))
                                         .setProductName("UltraSavings ZeroFX")
-                                        .build())
-                        .withBalance(
-                                BalanceModule.builder()
-                                        .withBalance(Amount.inEUR(579.3))
-                                        .setAvailableCredit(Amount.inEUR(420.7))
-                                        .setInterestRate(0.00155)
                                         .build())
                         .addHolderName("Jürgen Flughaubtkopf")
                         .setApiIdentifier("2a3ffe-38320c")
@@ -213,10 +214,8 @@ public class TransactionalAccountBuilderTest {
 
         assertEquals(579.3, account.getBalance().getValue(), 0);
         assertEquals("EUR", account.getBalance().getCurrency());
-        assertTrue(account.getBalanceModule().getAvailableCredit().isPresent());
-        assertEquals(420.7, account.getBalanceModule().getAvailableCredit().get().getValue(), 0);
-        assertTrue(account.getBalanceModule().getInterestRate().isPresent());
-        assertEquals(0.00155, account.getBalanceModule().getInterestRate().get(), 0);
+        assertNotNull(account.getAvailableCredit());
+        assertEquals(420.7, account.getAvailableCredit().getValue(), 0);
 
         assertTrue(storage.isPresent());
         assertEquals("TestString", storage.get().x);

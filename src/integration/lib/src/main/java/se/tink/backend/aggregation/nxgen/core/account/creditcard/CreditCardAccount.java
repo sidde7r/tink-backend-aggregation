@@ -18,8 +18,11 @@ public class CreditCardAccount extends Account {
         super(builder);
     }
 
-    CreditCardAccount(CreditCardAccountBuilder builder) {
-        super(builder);
+    CreditCardAccount(
+            CreditCardAccountBuilder builder,
+            ExactCurrencyAmount balance,
+            ExactCurrencyAmount availableCredit) {
+        super(builder, balance, availableCredit);
         this.cardModule = builder.getCardModule();
     }
 

@@ -8,18 +8,15 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.BuildStep;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithBalanceStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithIdStep;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.enums.AccountFlag;
 
 public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B>>
-        implements WithIdStep<B>, WithBalanceStep<B>, BuildStep<A, B> {
+        implements WithIdStep<B>, BuildStep<A, B> {
 
     private IdModule idModule;
-    private BalanceModule balanceModule;
     private String apiIdentifier;
     private final List<HolderName> holderNames = new ArrayList<>();
     private final List<AccountFlag> accountFlags = new ArrayList<>();
@@ -28,16 +25,9 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     protected abstract B buildStep();
 
     @Override
-    public WithBalanceStep<B> withId(@Nonnull IdModule id) {
+    public B withId(@Nonnull IdModule id) {
         Preconditions.checkNotNull(id, "Id Module must not be null.");
         this.idModule = id;
-        return this;
-    }
-
-    @Override
-    public B withBalance(@Nonnull BalanceModule balance) {
-        Preconditions.checkNotNull(balance, "Balance Module must not be null.");
-        this.balanceModule = balance;
         return buildStep();
     }
 
@@ -79,10 +69,6 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
 
     public IdModule getIdModule() {
         return idModule;
-    }
-
-    public BalanceModule getBalanceModule() {
-        return balanceModule;
     }
 
     public String getApiIdentifier() {

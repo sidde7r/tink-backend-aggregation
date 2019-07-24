@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BuildStep;
@@ -40,7 +39,6 @@ import se.tink.libraries.user.rpc.User;
 public abstract class Account {
     static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
     private static final Logger logger = LoggerFactory.getLogger(Account.class);
-    protected BalanceModule balanceModule;
     protected IdModule idModule;
     protected String name;
     protected String productName;
@@ -55,16 +53,17 @@ public abstract class Account {
     private ExactCurrencyAmount exactAvailableCredit;
 
     // Exists for interoperability only, do not ever use
-    protected Account(AccountBuilder<? extends Account, ?> builder) {
+    protected Account(
+            AccountBuilder<? extends Account, ?> builder,
+            ExactCurrencyAmount balance,
+            ExactCurrencyAmount availableCredit) {
         // These exist for interoperability and will eventually be removed
         this.name = builder.getIdModule().getAccountName();
         this.accountNumber = builder.getIdModule().getAccountNumber();
-        this.exactAvailableCredit =
-                builder.getBalanceModule().getExactAvaliableCredit().orElse(null);
-        this.exactBalance = builder.getBalanceModule().getExactBalance();
+        this.exactAvailableCredit = availableCredit;
+        this.exactBalance = balance;
         this.identifiers = builder.getIdModule().getIdentifiers();
         this.uniqueIdentifier = builder.getIdModule().getUniqueId();
-        this.balanceModule = builder.getBalanceModule();
         this.idModule = builder.getIdModule();
         this.apiIdentifier = builder.getApiIdentifier();
         this.holderName = builder.getHolderNames().stream().findFirst().orElse(null);
@@ -163,25 +162,11 @@ public abstract class Account {
     public Amount getBalance() {
         return Optional.ofNullable(exactBalance)
                 .map(e -> new Amount(e.getCurrencyCode(), e.getDoubleValue()))
-                .orElseGet(
-                        () ->
-                                new Amount(
-                                        balanceModule.getExactBalance().getCurrencyCode(),
-                                        balanceModule.getExactBalance().getDoubleValue()));
+                .orElse(null);
     }
 
     public ExactCurrencyAmount getExactBalance() {
-        return Optional.ofNullable(exactBalance)
-                .map(ExactCurrencyAmount::of)
-                .orElseGet(
-                        () ->
-                                ExactCurrencyAmount.of(
-                                        balanceModule.getExactBalance().getDoubleValue(),
-                                        balanceModule.getExactBalance().getCurrencyCode()));
-    }
-
-    public BalanceModule getBalanceModule() {
-        return balanceModule;
+        return exactBalance;
     }
 
     public IdModule getIdModule() {

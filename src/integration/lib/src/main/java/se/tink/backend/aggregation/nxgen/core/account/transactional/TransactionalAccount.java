@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.nxgen.core.account.transactional;
 import com.google.common.collect.ImmutableList;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithBalanceStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithIdStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.WithTypeStep;
 import se.tink.libraries.amount.Amount;
@@ -17,12 +20,15 @@ public class TransactionalAccount extends Account {
 
     private TransactionalAccountType accountType;
 
-    TransactionalAccount(TransactionalAccountBuilder builder) {
-        super(builder);
+    TransactionalAccount(TransactionalAccountBuilder builder, BalanceModule balanceModule) {
+        super(
+                builder,
+                balanceModule.getExactBalance(),
+                balanceModule.getExactAvaliableCredit().orElse(null));
         this.accountType = builder.getTransactionalType();
     }
 
-    public static WithTypeStep<TransactionalBuildStep> nxBuilder() {
+    public static WithTypeStep<WithBalanceStep<WithIdStep<TransactionalBuildStep>>> nxBuilder() {
         return new TransactionalAccountBuilder();
     }
 
