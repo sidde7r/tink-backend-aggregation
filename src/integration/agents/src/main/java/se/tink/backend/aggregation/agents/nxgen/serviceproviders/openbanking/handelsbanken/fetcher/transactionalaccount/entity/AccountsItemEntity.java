@@ -58,16 +58,16 @@ public class AccountsItemEntity {
         return accountType;
     }
 
-    public TransactionalAccount createCheckingAccount(BalanceEntity balance) {
+    public TransactionalAccount createCheckingAccount(BalancesItemEntity balance) {
         return createTransactionalAccount(TransactionalAccountType.CHECKING, balance);
     }
 
-    public TransactionalAccount createSavingsAccount(BalanceEntity balance) {
+    public TransactionalAccount createSavingsAccount(BalancesItemEntity balance) {
         return createTransactionalAccount(TransactionalAccountType.SAVINGS, balance);
     }
 
     private TransactionalAccount createTransactionalAccount(
-            TransactionalAccountType type, BalanceEntity balance) {
+            TransactionalAccountType type, BalancesItemEntity balance) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
                 .withBalance(BalanceModule.of(getAmount(balance)))
