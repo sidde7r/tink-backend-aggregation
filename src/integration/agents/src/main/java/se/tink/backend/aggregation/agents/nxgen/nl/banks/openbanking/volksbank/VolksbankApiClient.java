@@ -22,21 +22,21 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class VolksbankApiClient {
 
     private final VolksbankHttpClient client;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final VolksbankUrlFactory urlFactory;
     private VolksbankConfiguration configuration;
 
     public VolksbankApiClient(
             final VolksbankHttpClient client,
-            final SessionStorage sessionStorage,
+            final PersistentStorage persistentStorage,
             final VolksbankUrlFactory urlFactory) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.urlFactory = urlFactory;
     }
 
@@ -49,7 +49,7 @@ public class VolksbankApiClient {
     }
 
     public TransactionResponse readTransactions(
-            TransactionalAccount account, Map<String, String> urlParams) {
+            TransactionalAccount account, Map<String, String> urlParams, final String consentId) {
 
         URL url =
                 urlFactory.buildURL(
@@ -60,9 +60,9 @@ public class VolksbankApiClient {
                         .request(url)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, sessionStorage.get(Storage.CONSENT))
+                        .header(HeaderKeys.CONSENT_ID, consentId)
                         .addBearerToken(
-                                sessionStorage
+                                persistentStorage
                                         .get(Storage.OAUTH_TOKEN, OAuth2Token.class)
                                         .orElseThrow(
                                                 () ->
@@ -92,7 +92,7 @@ public class VolksbankApiClient {
         return getResponse(response, TransactionResponse.class);
     }
 
-    public BalancesResponse readBalance(AccountsEntity account) {
+    public BalancesResponse readBalance(AccountsEntity account, final String consentId) {
 
         URL url =
                 urlFactory.buildURL(
@@ -103,9 +103,9 @@ public class VolksbankApiClient {
                         .request(url)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, sessionStorage.get(Storage.CONSENT))
+                        .header(HeaderKeys.CONSENT_ID, consentId)
                         .addBearerToken(
-                                sessionStorage
+                                persistentStorage
                                         .get(Storage.OAUTH_TOKEN, OAuth2Token.class)
                                         .orElseThrow(
                                                 () ->
@@ -116,7 +116,7 @@ public class VolksbankApiClient {
         return getResponse(response, BalancesResponse.class);
     }
 
-    public AccountsResponse fetchAccounts() {
+    public AccountsResponse fetchAccounts(final String consentId) {
 
         URL url = urlFactory.buildURL(Paths.ACCOUNTS);
 
@@ -125,9 +125,9 @@ public class VolksbankApiClient {
                         .request(url)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, sessionStorage.get(Storage.CONSENT))
+                        .header(HeaderKeys.CONSENT_ID, consentId)
                         .addBearerToken(
-                                sessionStorage
+                                persistentStorage
                                         .get(Storage.OAUTH_TOKEN, OAuth2Token.class)
                                         .orElseThrow(
                                                 () ->

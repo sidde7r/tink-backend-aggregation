@@ -5,11 +5,11 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.ConsentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.VolksbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.session.VolksbankSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -33,7 +33,7 @@ public class VolksbankAgent extends NextGenerationAgent
     private final VolksbankUrlFactory urlFactory;
     private VolksbankConfiguration volksbankConfiguration;
     private final String clientName;
-    private final boolean isSandbox;
+    private final ConsentFetcher consentFetcher;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -46,14 +46,26 @@ public class VolksbankAgent extends NextGenerationAgent
         clientName = payload[0];
         final String bankPath = payload[1];
 
-        isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
+        final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
         this.httpClient = new VolksbankHttpClient(client, "certificate");
         this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
-        volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage, urlFactory);
+        volksbankApiClient = new VolksbankApiClient(httpClient, persistentStorage, urlFactory);
 
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        consentFetcher = new ConsentFetcher(volksbankApiClient, persistentStorage, isSandbox);
+
+        transactionalAccountRefreshController =
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new VolksbankTransactionalAccountFetcher(
+                                volksbankApiClient, consentFetcher),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(
+                                        new VolksbankTransactionFetcher(
+                                                volksbankApiClient, consentFetcher))));
     }
 
     @Override
@@ -87,7 +99,11 @@ public class VolksbankAgent extends NextGenerationAgent
         final URL redirectUrl = volksbankConfiguration.getAisConfiguration().getRedirectUrl();
         VolksbankAuthenticator authenticator =
                 new VolksbankAuthenticator(
-                        volksbankApiClient, sessionStorage, redirectUrl, urlFactory, isSandbox);
+                        volksbankApiClient,
+                        persistentStorage,
+                        redirectUrl,
+                        urlFactory,
+                        consentFetcher);
 
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
@@ -123,20 +139,8 @@ public class VolksbankAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new VolksbankTransactionalAccountFetcher(volksbankApiClient),
-                new TransactionFetcherController<>(
-                        this.transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(
-                                new VolksbankTransactionFetcher(volksbankApiClient))));
-    }
-
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new VolksbankSessionHandler();
+        return SessionHandler.alwaysFail();
     }
 }
