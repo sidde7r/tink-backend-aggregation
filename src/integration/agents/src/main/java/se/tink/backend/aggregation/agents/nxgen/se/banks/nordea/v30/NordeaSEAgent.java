@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.NordeaBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.NordeaPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaExecutorHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaPaymentExecutor;
@@ -37,6 +39,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.session.Nord
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
@@ -90,7 +94,6 @@ public class NordeaSEAgent extends NextGenerationAgent
         creditCardRefreshController = constructCreditCardRefreshController();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-
         configureHttpClient(client);
     }
 
@@ -98,10 +101,27 @@ public class NordeaSEAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(
-                context,
-                new NordeaBankIdAuthenticator(apiClient, sessionStorage),
-                persistentStorage);
+        BankIdAuthenticationController<BankIdResponse> bankIdAuthenticationController =
+                new BankIdAuthenticationController<>(
+                        context,
+                        new NordeaBankIdAuthenticator(apiClient, sessionStorage),
+                        persistentStorage);
+
+        NordeaPasswordAuthenticator passwordAuthenticator =
+                new NordeaPasswordAuthenticator(
+                        request,
+                        context,
+                        apiClient,
+                        persistentStorage,
+                        sessionStorage,
+                        bankIdAuthenticationController);
+
+        AutoAuthenticationController passwordAuthenticationController =
+                new AutoAuthenticationController(
+                        request, systemUpdater, passwordAuthenticator, passwordAuthenticator);
+
+        return new TypedAuthenticationController(
+                bankIdAuthenticationController, passwordAuthenticationController);
     }
 
     @Override

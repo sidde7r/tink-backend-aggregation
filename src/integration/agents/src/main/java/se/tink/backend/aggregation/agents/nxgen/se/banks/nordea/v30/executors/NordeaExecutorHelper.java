@@ -31,7 +31,7 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaExecutorHelper {
-
+    // TODO extend BankIdSignHelper
     private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
             new NordeaAccountIdentifierFormatter();
     private final AgentContext context;
@@ -174,7 +174,7 @@ public class NordeaExecutorHelper {
         BankIdStatus status;
         for (int i = 1; i < NordeaSEConstants.Transfer.MAX_POLL_ATTEMPTS; i++) {
             try {
-                ResultSignResponse signResponse = apiClient.pollSignTransfer(orderRef, i);
+                ResultSignResponse signResponse = apiClient.pollSign(orderRef, i);
                 status = signResponse.getBankIdStatus();
 
                 switch (status) {

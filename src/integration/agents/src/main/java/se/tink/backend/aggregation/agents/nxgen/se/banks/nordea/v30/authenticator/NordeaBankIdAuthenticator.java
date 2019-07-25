@@ -79,9 +79,7 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
             throws AuthenticationException, AuthorizationException {
         try {
             ResultBankIdResponse response = getPollResponse(reference);
-            sessionStorage.put(StorageKeys.ACCESS_TOKEN, response.getAccessToken());
-            sessionStorage.put(StorageKeys.REFRESH_TOKEN, response.getRefreshToken());
-            sessionStorage.put(StorageKeys.TOKEN_TYPE, response.getTokenType());
+            response.storeTokens(sessionStorage);
         } catch (HttpResponseException e) {
             final BankIdResponse resp = e.getResponse().getBody(BankIdResponse.class);
             if (NordeaBankIdStatus.AGREEMENTS_UNAVAILABLE.equalsIgnoreCase(resp.getError())) {
