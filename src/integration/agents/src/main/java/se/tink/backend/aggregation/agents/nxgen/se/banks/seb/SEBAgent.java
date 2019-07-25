@@ -12,18 +12,20 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SEBAgent extends NextGenerationAgent {
     private final SEBApiClient apiClient;
+    private final SEBSessionStorage sebSessionStorage;
 
     public SEBAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         final String userName = credentials.getField(Field.Key.USERNAME);
         apiClient = new SEBApiClient(client, userName);
+        sebSessionStorage = new SEBSessionStorage(sessionStorage);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                context, new SEBAuthenticator(apiClient, sessionStorage), persistentStorage);
+                context, new SEBAuthenticator(apiClient, sebSessionStorage), persistentStorage);
     }
 
     @Override
