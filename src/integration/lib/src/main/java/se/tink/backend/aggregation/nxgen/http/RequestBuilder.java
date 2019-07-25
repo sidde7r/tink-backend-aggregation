@@ -189,6 +189,66 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return body(body).put(c);
     }
 
+    ///
+
+    /**
+     * Invoke the PATCH method with no request body or response.
+     *
+     * <p>If the status code is less than 300 and a representation is present then that
+     * representation is ignored.
+     *
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300.
+     * @throws HttpClientException if the client handler fails to process the request or response.
+     */
+    public void patch() throws HttpResponseException, HttpClientException {
+        voidHandle(build(HttpMethod.PATCH));
+    }
+
+    /**
+     * Invoke the PATCH method with a request body but no response.
+     *
+     * <p>If the status code is less than 300 and a representation is present then that
+     * representation is ignored.
+     *
+     * @param body the request body.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300.
+     * @throws HttpClientException if the client handler fails to process the request or response.
+     */
+    public void patch(Object body) throws HttpResponseException, HttpClientException {
+        body(body).patch();
+    }
+
+    /**
+     * Invoke the PATCH method with no request body that returns a response.
+     *
+     * @param <T> the type of the response.
+     * @param c the type of the returned response.
+     * @return an instance of type <code>c</code>.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
+     */
+    public <T> T patch(Class<T> c) throws HttpResponseException, HttpClientException {
+        return handle(c, build(HttpMethod.PATCH));
+    }
+
+    /**
+     * Invoke the PATCH method with a request body that returns a response.
+     *
+     * @param <T> the type of the response.
+     * @param c the type of the returned response.
+     * @param body the request body.
+     * @return an instance of type <code>c</code>.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
+     */
+    public <T> T patch(Class<T> c, Object body) throws HttpResponseException, HttpClientException {
+        return body(body).patch(c);
+    }
+
     /**
      * Invoke the POST method with no request body or response.
      *
