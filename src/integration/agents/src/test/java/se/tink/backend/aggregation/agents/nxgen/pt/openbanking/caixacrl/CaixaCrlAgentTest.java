@@ -13,7 +13,7 @@ public class CaixaCrlAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-caixacrl-redirect")
+                new AgentIntegrationTest.Builder("pt", "pt-caixacrl-oauth2")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

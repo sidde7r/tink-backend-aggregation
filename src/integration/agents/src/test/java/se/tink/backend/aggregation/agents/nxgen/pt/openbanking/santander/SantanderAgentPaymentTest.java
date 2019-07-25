@@ -25,7 +25,7 @@ public class SantanderAgentPaymentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-santander-redirect")
+                new AgentIntegrationTest.Builder("pt", "pt-santander-oauth2")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

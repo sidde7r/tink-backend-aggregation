@@ -24,7 +24,7 @@ public class CaixaAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-caixa-decoupled")
+                new AgentIntegrationTest.Builder("pt", "pt-caixa-oauth2")
                         .addCredentialField(CredentialKeys.PSU_ID, TEST_PSU_ID)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
