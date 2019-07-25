@@ -20,4 +20,9 @@ public class AgentDataAvailabilityTrackerMockClientImpl
     public void endStreamBlocking() {
         // Noop
     }
+
+    @Override
+    public boolean isMockClient() {
+        return true;
+    }
 }

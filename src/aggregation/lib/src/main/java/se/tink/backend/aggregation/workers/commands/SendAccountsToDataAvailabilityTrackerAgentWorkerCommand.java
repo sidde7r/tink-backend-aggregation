@@ -77,7 +77,13 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                                                 agentName, pair.first, pair.second));
                 agentDataAvailabilityTrackerClient.endStreamBlocking();
 
-                action.completed();
+                if (agentDataAvailabilityTrackerClient.isMockClient()) {
+
+                    action.cancelled();
+                } else {
+                    action.completed();
+                }
+
             } catch (Exception e) {
                 action.failed();
                 log.error("Failed sending accounts to tracking service.", e);
