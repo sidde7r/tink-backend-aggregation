@@ -42,6 +42,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
     private final UkOpenBankingPis ukOpenBankingPis;
     private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private final String appUriId;
+    private final String callbackUri;
 
     public UkOpenBankingBankTransferExecutor(
             Catalog catalog,
@@ -54,6 +55,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
             UkOpenBankingPis ukOpenBankingPis,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
             String appUriId,
+            String callbackUri,
             URL wellKnownURL) {
         this.catalog = catalog;
         this.credentials = credentials;
@@ -64,6 +66,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
         this.ukOpenBankingPis = ukOpenBankingPis;
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
         this.appUriId = appUriId;
+        this.callbackUri = callbackUri;
 
         this.apiClient =
                 new UkOpenBankingApiClient(
@@ -151,6 +154,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
                         paymentAuthenticator,
                         callbackJWTSignatureKeyPair,
                         appUriId,
+                        callbackUri,
                         credentials);
 
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =

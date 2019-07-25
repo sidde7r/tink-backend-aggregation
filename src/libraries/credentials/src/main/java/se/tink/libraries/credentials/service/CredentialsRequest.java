@@ -21,6 +21,8 @@ public abstract class CredentialsRequest {
     private User user;
     private String userDeviceId;
     private List<Account> accounts;
+    private String appUriId;
+    private String callbackUri;
 
     // TODO: Remove with new AgentWorker
     protected boolean create;
@@ -33,8 +35,6 @@ public abstract class CredentialsRequest {
 
     @JsonIgnore
     public abstract CredentialsRequestType getType();
-
-    private String appUriId;
 
     public CredentialsRequest() {}
 
@@ -144,5 +144,13 @@ public abstract class CredentialsRequest {
 
     public void setAppUriId(String appUriId) {
         this.appUriId = appUriId;
+    }
+
+    public String getCallbackUri() {
+        return callbackUri;
+    }
+
+    public void setCallbackUri(String callbackUri) {
+        this.callbackUri = callbackUri;
     }
 }

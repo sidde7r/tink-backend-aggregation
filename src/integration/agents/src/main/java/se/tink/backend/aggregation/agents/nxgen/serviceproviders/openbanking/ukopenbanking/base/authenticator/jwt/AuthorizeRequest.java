@@ -4,6 +4,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAuthenticatorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.entities.AuthorizeRequestClaims;
@@ -27,6 +28,7 @@ public class AuthorizeRequest {
         private String intentId;
         private String state;
         private String nonce;
+        private String callbackUri;
         private ImmutableList.Builder<String> scopes =
                 ImmutableList.<String>builder().add(OpenIdConstants.Scopes.OPEN_ID);
 
@@ -70,6 +72,11 @@ public class AuthorizeRequest {
             return this;
         }
 
+        public Builder withCallbackUri(String callbackUri) {
+            this.callbackUri = callbackUri;
+            return this;
+        }
+
         public String build() {
             Preconditions.checkNotNull(
                     wellknownConfiguration, "WellknownConfiguration must be specified.");
@@ -94,8 +101,12 @@ public class AuthorizeRequest {
 
             String issuer = wellknownConfiguration.getIssuer();
             String clientId = clientInfo.getClientId();
-            String redirectUri = softwareStatement.getRedirectUri();
             String scope = scopes.build().stream().collect(Collectors.joining(" "));
+
+            String redirectUri =
+                    Optional.ofNullable(callbackUri)
+                            .filter(s -> !s.isEmpty())
+                            .orElse(softwareStatement.getRedirectUri());
 
             String responseTypes =
                     OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
