@@ -10,6 +10,7 @@ public class BpmAgent extends CbiGlobeAgent {
     public BpmAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        apiClient = new BpmApiClient(client, persistentStorage);
     }
 
     @Override
