@@ -92,7 +92,6 @@ public class AccountsItemEntity {
 
     private ExactCurrencyAmount getAmount(BalancesItemEntity balance) {
         return new ExactCurrencyAmount(
-                balance.getAmountEntity().getContent(),
-                balance.getAmountEntity().getCurrency());
+                balance.getAmountEntity().getContent(), balance.getAmountEntity().getCurrency());
     }
 }

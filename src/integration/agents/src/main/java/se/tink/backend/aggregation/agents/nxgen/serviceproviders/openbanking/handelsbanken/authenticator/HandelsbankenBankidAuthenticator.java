@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -20,9 +22,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<SessionResponse> {
 
@@ -104,11 +103,11 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
 
         TokenResponse response = apiClient.getRefreshToken();
 
-        return Optional.of(OAuth2Token.create(
-                HandelsbankenBaseConstants.QueryKeys.BEARER,
-                response.getAccessToken(),
-                sessionStorage.get(StorageKeys.REFRESH_TOKEN),
-                response.getExpiresIn()));
+        return Optional.of(
+                OAuth2Token.create(
+                        HandelsbankenBaseConstants.QueryKeys.BEARER,
+                        response.getAccessToken(),
+                        sessionStorage.get(StorageKeys.REFRESH_TOKEN),
+                        response.getExpiresIn()));
     }
-
 }

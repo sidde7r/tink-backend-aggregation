@@ -32,5 +32,4 @@ public class TokenResponse {
     public int getExpiresIn() {
         return expiresIn;
     }
-
 }

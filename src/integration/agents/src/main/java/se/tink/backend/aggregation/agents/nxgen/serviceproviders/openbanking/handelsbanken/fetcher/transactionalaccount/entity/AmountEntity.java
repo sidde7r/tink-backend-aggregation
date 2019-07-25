@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.math.BigDecimal;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AmountEntity {

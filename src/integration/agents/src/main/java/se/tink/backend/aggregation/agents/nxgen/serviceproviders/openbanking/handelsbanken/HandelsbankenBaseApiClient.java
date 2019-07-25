@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
+import java.util.Date;
+import java.util.UUID;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.HeaderKeys;
@@ -24,10 +27,6 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-import javax.ws.rs.core.MediaType;
-import java.util.Date;
-import java.util.UUID;
-
 public class HandelsbankenBaseApiClient {
 
     private final TinkHttpClient client;
@@ -47,9 +46,14 @@ public class HandelsbankenBaseApiClient {
         return this.configuration;
     }
 
-    private OAuth2Token getOauthFromSession(){
-        return sessionStorage.get(HandelsbankenBaseConstants.StorageKeys.ACCESS_TOKEN, OAuth2Token.class)
-                .orElseThrow(()-> new IllegalStateException(HandelsbankenBaseConstants.ExceptionMessages.TOKEN_NOT_FOUND));
+    private OAuth2Token getOauthFromSession() {
+        return sessionStorage
+                .get(HandelsbankenBaseConstants.StorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        HandelsbankenBaseConstants.ExceptionMessages
+                                                .TOKEN_NOT_FOUND));
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -110,7 +114,9 @@ public class HandelsbankenBaseApiClient {
                 .body(new AuthorizationRequest(HandelsbankenBaseConstants.BodyValues.ALL_ACCOUNTS))
                 .header(HeaderKeys.X_IBM_CLIENT_ID, clientId)
                 .header(HeaderKeys.COUNTRY, HandelsbankenBaseConstants.Market.COUNTRY)
-                .header(HeaderKeys.AUTHORIZATION, HandelsbankenBaseConstants.HeaderKeys.BEARER + code)
+                .header(
+                        HeaderKeys.AUTHORIZATION,
+                        HandelsbankenBaseConstants.HeaderKeys.BEARER + code)
                 .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
                 .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
@@ -118,8 +124,6 @@ public class HandelsbankenBaseApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .post(AuthorizationResponse.class);
     }
-
-
 
     public SessionResponse getSessionId(String personalId, String consentId) {
 
@@ -151,7 +155,10 @@ public class HandelsbankenBaseApiClient {
         final Form params =
                 Form.builder()
                         .put(BodyKeys.GRANT_TYPE, BodyValues.REFRESH_TOKEN)
-                        .put(BodyKeys.REFRESH_TOKEN, sessionStorage.get(HandelsbankenBaseConstants.StorageKeys.REFRESH_TOKEN))
+                        .put(
+                                BodyKeys.REFRESH_TOKEN,
+                                sessionStorage.get(
+                                        HandelsbankenBaseConstants.StorageKeys.REFRESH_TOKEN))
                         .put(BodyKeys.CLIENT_ID, configuration.getAppId())
                         .build();
 
