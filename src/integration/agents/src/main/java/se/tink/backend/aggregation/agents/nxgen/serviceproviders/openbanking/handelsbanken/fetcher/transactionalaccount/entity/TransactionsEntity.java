@@ -3,7 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class LinksTransactionsEntity {
+public class TransactionsEntity {
 
     private String href;
+
+    public String getHref() {
+        return href;
+    }
 }

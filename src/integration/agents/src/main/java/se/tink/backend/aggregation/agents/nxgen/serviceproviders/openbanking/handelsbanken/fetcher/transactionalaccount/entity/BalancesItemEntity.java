@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BalanceEntity {
+public class BalancesItemEntity {
 
     @JsonProperty("amount")
-    private TransactionAmountEntity transactionAmountEntity;
+    private AmountEntity amountEntity;
 
     private String balanceType;
 
-    public TransactionAmountEntity getTransactionAmountEntity() {
-        return transactionAmountEntity;
+    public AmountEntity getAmountEntity() {
+        return amountEntity;
     }
 
     public String getBalanceType() {

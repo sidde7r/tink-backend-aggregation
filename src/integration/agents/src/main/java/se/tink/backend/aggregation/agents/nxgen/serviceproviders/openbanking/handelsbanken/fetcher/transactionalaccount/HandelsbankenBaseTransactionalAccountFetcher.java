@@ -1,21 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount;
 
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.AccountBalance;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.AccountsItemEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.BalancesItemEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.AccountBalance;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.BalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.BalancesEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.BaseAccountEntity;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class HandelsbankenBaseTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -23,9 +27,11 @@ public class HandelsbankenBaseTransactionalAccountFetcher
 
     private final HandelsbankenBaseApiClient apiClient;
     private HandelsbankenBaseAccountConverter converter;
+    private SessionStorage sessionStorage;
 
-    public HandelsbankenBaseTransactionalAccountFetcher(HandelsbankenBaseApiClient apiClient) {
+    public HandelsbankenBaseTransactionalAccountFetcher(HandelsbankenBaseApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
     }
 
     public void setConverter(HandelsbankenBaseAccountConverter converter) {
@@ -33,14 +39,14 @@ public class HandelsbankenBaseTransactionalAccountFetcher
     }
 
     private Optional<TransactionalAccount> mapToTransactionalAccount(
-            BaseAccountEntity accountEntity) {
-        BalancesEntity balances = apiClient.getAccountDetails(accountEntity.getAccountId());
-        BalanceEntity availableBalance =
+            AccountsItemEntity accountEntity) {
+        BalanceAccountResponse balances = apiClient.getAccountDetails(accountEntity.getAccountId());
+        BalancesItemEntity availableBalance =
                 balances.getBalances().stream()
                         .filter(
                                 balance ->
                                         balance.getBalanceType()
-                                                .equalsIgnoreCase(AccountBalance.TYPE))
+                                                .equalsIgnoreCase(AccountBalance.AVAILABLE_BALANCE))
                         .findFirst()
                         .orElseThrow(
                                 () ->
@@ -61,7 +67,25 @@ public class HandelsbankenBaseTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        return apiClient.getTransactions(
-                account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID), fromDate, toDate);
+        Optional<Date> maxDate = getMaxDateFromSession();
+        if(maxDate.isPresent()){
+            if(fromDate.compareTo(maxDate.get()) < 0){
+                fromDate = maxDate.get();
+            }
+        }
+
+        try {
+            return apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
+        } catch (HttpResponseException e) {
+            String exceptionMessage = e.getResponse().getBody(String.class);
+            if(exceptionMessage.contains("Invalid time interval")) {
+                return PaginatorResponseImpl.createEmpty(false);
+            }
+            throw e;
+        }
+    }
+
+    private Optional<Date> getMaxDateFromSession(){
+        return sessionStorage.get(HandelsbankenBaseConstants.StorageKeys.MAX_FETCH_PERIOD_MONTHS, Date.class);
     }
 }
