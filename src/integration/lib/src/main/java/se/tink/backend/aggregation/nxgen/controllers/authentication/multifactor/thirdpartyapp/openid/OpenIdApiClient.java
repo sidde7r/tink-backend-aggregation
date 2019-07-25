@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -235,7 +234,8 @@ public class OpenIdApiClient {
                                                 "Provider does not support the mandatory scopes."));
 
         String redirectUri =
-                Optional.ofNullable(Strings.emptyToNull(callbackUri))
+                Optional.ofNullable(callbackUri)
+                        .filter(s -> !s.isEmpty())
                         .orElse(softwareStatement.getRedirectUri());
 
         /*  'response_type=id_token' only supports 'response_mode=fragment',

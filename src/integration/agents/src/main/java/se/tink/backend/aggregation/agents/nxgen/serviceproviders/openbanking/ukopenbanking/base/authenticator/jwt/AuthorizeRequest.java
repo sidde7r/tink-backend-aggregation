@@ -104,7 +104,8 @@ public class AuthorizeRequest {
             String scope = scopes.build().stream().collect(Collectors.joining(" "));
 
             String redirectUri =
-                    Optional.ofNullable(Strings.emptyToNull(callbackUri))
+                    Optional.ofNullable(callbackUri)
+                            .filter(s -> !s.isEmpty())
                             .orElse(softwareStatement.getRedirectUri());
 
             String responseTypes =
