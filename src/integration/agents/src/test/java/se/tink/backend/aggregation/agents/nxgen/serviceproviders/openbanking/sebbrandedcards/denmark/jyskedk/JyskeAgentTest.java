@@ -1,0 +1,16 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbrandedcards.denmark.jyskedk;
+
+import org.junit.Ignore;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebAgentBaseTest;
+
+@Ignore
+public class JyskeAgentTest extends SebAgentBaseTest {
+
+    private static final String PROVIDER_NAME = "dk-jyskeseb-oauth2";
+
+    private static final String MARKET = "dk";
+
+    public JyskeAgentTest() {
+        super(PROVIDER_NAME, MARKET);
+    }
+}
