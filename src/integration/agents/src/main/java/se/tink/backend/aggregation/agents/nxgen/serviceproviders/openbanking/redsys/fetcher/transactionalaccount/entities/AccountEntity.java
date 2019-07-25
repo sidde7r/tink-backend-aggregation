@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
@@ -75,12 +76,17 @@ public class AccountEntity {
             idBuilder.setProductName(details);
         }
 
-        return TransactionalAccount.nxBuilder()
-                .withType(accountType)
-                .withBalance(BalanceModule.of(balance))
-                .withId(idBuilder.build())
-                .setApiIdentifier(resourceId)
-                .build();
+        TransactionalBuildStep builder =
+                TransactionalAccount.nxBuilder()
+                        .withType(accountType)
+                        .withBalance(BalanceModule.of(balance))
+                        .withId(idBuilder.build())
+                        .setApiIdentifier(resourceId);
+        if (links != null) {
+            links.forEach((key, link) -> builder.putInTemporaryStorage(key, link.getHref()));
+        }
+
+        return builder.build();
     }
 
     @JsonIgnore

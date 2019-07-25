@@ -14,7 +14,6 @@ public class RedsysConfiguration implements ClientConfiguration {
     private String baseAPIUrl;
     private String clientId;
     private String redirectUrl;
-    private String aspsp;
     private String clientSigningKeyPath;
     private String clientSigningKeyPassword;
     private String clientSigningCertificate;
@@ -51,14 +50,6 @@ public class RedsysConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
-    }
-
-    public String getAspsp() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(aspsp),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "ASPSP"));
-
-        return aspsp;
     }
 
     public String getClientSigningCertificateId() {

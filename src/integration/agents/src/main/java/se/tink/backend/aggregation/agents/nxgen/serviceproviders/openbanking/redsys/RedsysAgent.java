@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -8,6 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.RedsysPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.RedsysTransactionalAccountFetcher;
@@ -22,14 +24,17 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class RedsysAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+public abstract class RedsysAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                AspspConfiguration {
 
     private final String clientName;
     private final RedsysApiClient apiClient;
@@ -42,7 +47,11 @@ public final class RedsysAgent extends NextGenerationAgent
 
         apiClient =
                 new RedsysApiClient(
-                        client, sessionStorage, persistentStorage, supplementalInformationHelper);
+                        client,
+                        sessionStorage,
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        this);
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
@@ -104,12 +113,18 @@ public final class RedsysAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    protected TransactionalAccountRefreshController
-            constructTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final RedsysTransactionalAccountFetcher accountFetcher =
                 new RedsysTransactionalAccountFetcher(apiClient);
-        final TransactionPaginator<TransactionalAccount> paginator =
-                new TransactionKeyPaginationController<>(accountFetcher);
+
+        final TransactionPaginator<TransactionalAccount> paginator;
+        if (supportsTransactionKeyPagination()) {
+            paginator = new TransactionKeyPaginationController<>(accountFetcher);
+        } else {
+            paginator =
+                    new TransactionDatePaginationController<>(
+                            accountFetcher, 4, 90, ChronoUnit.DAYS);
+        }
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

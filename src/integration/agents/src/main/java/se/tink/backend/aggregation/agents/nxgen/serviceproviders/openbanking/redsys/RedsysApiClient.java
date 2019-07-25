@@ -14,7 +14,6 @@ import java.util.TimeZone;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
-import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
@@ -27,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
@@ -44,6 +44,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
@@ -64,16 +66,19 @@ public final class RedsysApiClient {
     private EidasProxyConfiguration eidasProxyConfiguration;
     private RedsysConsentController consentController;
     private X509Certificate clientSigningCertificate;
+    private AspspConfiguration aspspConfiguration;
 
     public RedsysApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper) {
+            SupplementalInformationHelper supplementalInformationHelper,
+            AspspConfiguration aspspConfiguration) {
         this.client = client;
         client.setDebugOutput(true);
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
+        this.aspspConfiguration = aspspConfiguration;
         this.consentController =
                 new RedsysConsentController(this, persistentStorage, supplementalInformationHelper);
     }
@@ -114,7 +119,7 @@ public final class RedsysApiClient {
         assert path.startsWith("/");
         return String.format(
                 "%s/%s%s",
-                getConfiguration().getBaseAuthUrl(), getConfiguration().getAspsp(), path);
+                getConfiguration().getBaseAuthUrl(), aspspConfiguration.getAspspCode(), path);
     }
 
     private String makeApiUrl(String path, Object... args) {
@@ -125,7 +130,8 @@ public final class RedsysApiClient {
             path = String.format(path, args);
         }
         return String.format(
-                "%s/%s%s", getConfiguration().getBaseAPIUrl(), getConfiguration().getAspsp(), path);
+                "%s/%s%s",
+                getConfiguration().getBaseAPIUrl(), aspspConfiguration.getAspspCode(), path);
     }
 
     public URL getAuthorizeUrl(String state, String codeChallenge) {
@@ -200,7 +206,7 @@ public final class RedsysApiClient {
 
     public OAuth2Token refreshToken(final String refreshToken) {
         final String url = makeAuthUrl(Urls.REFRESH);
-        final String aspsp = getConfiguration().getAspsp();
+        final String aspsp = aspspConfiguration.getAspspCode();
         final String clientId = getAuthClientId();
 
         final String payload =
@@ -291,9 +297,13 @@ public final class RedsysApiClient {
 
     public ListAccountsResponse fetchAccounts() {
         consentController.askForConsentIfNeeded();
-        return createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
-                .header(HeaderKeys.CONSENT_ID, getConsentId())
-                .get(ListAccountsResponse.class);
+        RequestBuilder builder =
+                createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
+                        .header(HeaderKeys.CONSENT_ID, getConsentId());
+        if (aspspConfiguration.shouldRequestAccountsWithBalance()) {
+            builder = builder.queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE);
+        }
+        return builder.get(ListAccountsResponse.class);
     }
 
     public AccountBalancesResponse fetchAccountBalances(String accountId) {
@@ -302,32 +312,27 @@ public final class RedsysApiClient {
                 .get(AccountBalancesResponse.class);
     }
 
-    public TransactionsResponse fetchTransactions(String accountId, Date fromDate, Date toDate) {
+    public PaginatorResponse fetchTransactions(String accountId, Date fromDate, Date toDate) {
         final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        // consentController.askForConsentIfNeeded();
         final String consentId = getConsentId();
         RequestBuilder request =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId))
                         .header(HeaderKeys.CONSENT_ID, consentId)
                         .queryParam(QueryKeys.DATE_FROM, df.format(fromDate))
                         .queryParam(QueryKeys.DATE_TO, df.format(toDate))
-                        .queryParam(QueryKeys.WITH_BALANCE, QueryValues.FALSE)
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
 
-        return request.get(TransactionsResponse.class);
+        final TransactionsResponse response = request.get(TransactionsResponse.class);
+        return PaginatorResponseImpl.create(response.getTinkTransactions());
     }
 
     public TransactionsResponse fetchTransactions(String accountId, @Nullable String path) {
         if (path == null) {
-            // fetch from 90 days ago until now
-            final Date toDate = new Date();
-            final Date fromDate = new DateTime(toDate).minusDays(90).toDate();
-            return fetchTransactions(accountId, fromDate, toDate);
+            path = makeApiUrl(Urls.TRANSACTIONS, accountId);
         }
 
-        // consentController.askForConsentIfNeeded();
         RequestBuilder request =
                 createSignedRequest(makeApiUrl(path)).header(HeaderKeys.CONSENT_ID, getConsentId());
         return request.get(TransactionsResponse.class);

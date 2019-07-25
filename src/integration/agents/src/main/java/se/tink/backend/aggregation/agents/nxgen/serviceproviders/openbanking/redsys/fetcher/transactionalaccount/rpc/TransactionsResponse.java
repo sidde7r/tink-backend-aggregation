@@ -41,15 +41,18 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Str
         return transactions.getTinkTransactions();
     }
 
+    private Optional<LinkEntity> getNextLink() {
+        return transactions.getLink(Links.NEXT);
+    }
+
     @Override
     public Optional<Boolean> canFetchMore() {
-        final Optional<LinkEntity> nextLink = transactions.getLink(Links.NEXT);
-        return Optional.of(nextLink.isPresent());
+        return Optional.of(getNextLink().isPresent());
     }
 
     @Override
     public String nextKey() {
-        final Optional<LinkEntity> nextLink = transactions.getLink(Links.NEXT);
+        final Optional<LinkEntity> nextLink = getNextLink();
         if (nextLink.isPresent()) {
             return nextLink.get().getHref();
         }

@@ -47,6 +47,8 @@ public final class RedsysConstants {
         public static final String CONSENT_ID = "consentId";
         public static final String SCA_REDIRECT = "scaRedirect";
         public static final String SCA_STATE = "scaState";
+        public static final String TRANSACTIONS_URL = "transactionsUrl";
+        public static final String BALANCES_URL = "balancesUrl";
     }
 
     public static class QueryKeys {
