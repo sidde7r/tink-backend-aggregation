@@ -13,7 +13,7 @@ public class BancoBpiAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-bancobpi-redirect")
+                new AgentIntegrationTest.Builder("pt", "pt-bancobpi-oauth2")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

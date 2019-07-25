@@ -13,7 +13,7 @@ public class AtlanticoEuropaAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-atlanticoeuropa-redirect")
+                new AgentIntegrationTest.Builder("pt", "pt-atlanticoeuropa-oauth2")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

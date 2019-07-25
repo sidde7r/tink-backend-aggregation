@@ -13,7 +13,7 @@ public class BancoMontepioAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-bancomontepio-redirect")
+                new AgentIntegrationTest.Builder("pt", "pt-bancomontepio-oauth2")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

@@ -13,7 +13,7 @@ public class BpgAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-bpg-redirect")
+                new AgentIntegrationTest.Builder("pt", "pt-bpg-oauth2")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

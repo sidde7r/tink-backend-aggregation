@@ -13,7 +13,7 @@ public class CreditoAgricolaAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-creditoagricola-redirect")
+                new AgentIntegrationTest.Builder("pt", "pt-creditoagricola-oauth2")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
