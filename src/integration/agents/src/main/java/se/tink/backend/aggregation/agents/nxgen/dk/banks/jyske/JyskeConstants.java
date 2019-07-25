@@ -107,6 +107,11 @@ public final class JyskeConstants {
         public static final int INROLL_BAD_REQUEST = 1;
     }
 
+    public static final class ErrorMessages {
+        public static final String BANK_UNAVAILABLE_DURING_MIDNIGHT =
+                "mobilbanken er lukket hverdage og ";
+    }
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.SAVINGS, "Jyske Munnypot", "Opsparing")
