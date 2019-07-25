@@ -26,15 +26,11 @@ public class CreditCardAccountBuilder extends AccountBuilder<CreditCardAccount, 
 
     @Override
     public CreditCardAccount build() {
-        Preconditions.checkNotNull(getBalanceModule(), "Balance Module must not be null.");
-        Preconditions.checkState(
-                getBalanceModule().getAvailableCredit().isPresent(),
-                "A credit card must have a credit.");
-
-        return new CreditCardAccount(this);
+        return new CreditCardAccount(
+                this, cardModule.getBalance(), cardModule.getAvailableCredit());
     }
 
-    public CreditCardModule getCardModule() {
+    CreditCardModule getCardModule() {
         return cardModule;
     }
 }

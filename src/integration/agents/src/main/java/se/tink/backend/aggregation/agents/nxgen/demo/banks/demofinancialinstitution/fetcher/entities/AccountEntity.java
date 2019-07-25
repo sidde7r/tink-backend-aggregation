@@ -125,6 +125,7 @@ public class AccountEntity {
             TransactionalAccountType transactionalAccountType) {
         return TransactionalAccount.nxBuilder()
                 .withType(transactionalAccountType)
+                .withBalance(BalanceModule.of(new Amount(currency, balance)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
@@ -133,7 +134,6 @@ public class AccountEntity {
                                 // TODO: What should the identifier be? Clearing etc?
                                 .addIdentifier(new SwedishIdentifier(accountNumber))
                                 .build())
-                .withBalance(BalanceModule.of(new Amount(currency, balance)))
                 .addHolderName(username)
                 .setApiIdentifier(accountNumber)
                 .setBankIdentifier(accountNumber)

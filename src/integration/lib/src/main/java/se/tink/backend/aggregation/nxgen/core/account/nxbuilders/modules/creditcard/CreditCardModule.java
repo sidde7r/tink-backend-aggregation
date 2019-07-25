@@ -1,15 +1,21 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard;
 
 import com.google.common.base.Preconditions;
+import javax.annotation.Nonnull;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class CreditCardModule {
 
     private final String cardNumber;
     private final String cardAlias;
+    private ExactCurrencyAmount balance;
+    private ExactCurrencyAmount availableCredit;
 
     private CreditCardModule(Builder builder) {
         this.cardAlias = builder.cardAlias;
         this.cardNumber = builder.cardNumber;
+        this.balance = builder.balance;
+        this.availableCredit = builder.availableCredit;
     }
 
     public static CardNumberStep<CardModuleBuildStep> builder() {
@@ -24,28 +30,55 @@ public final class CreditCardModule {
         return cardAlias;
     }
 
+    public ExactCurrencyAmount getBalance() {
+        return balance;
+    }
+
+    public ExactCurrencyAmount getAvailableCredit() {
+        return availableCredit;
+    }
+
     private static class Builder
             implements CardNumberStep<CardModuleBuildStep>,
+                    CardBalanceStep<CardModuleBuildStep>,
+                    CardCreditStep<CardModuleBuildStep>,
                     CardAliasStep<CardModuleBuildStep>,
                     CardModuleBuildStep {
         private String cardNumber;
         private String cardAlias;
+        private ExactCurrencyAmount balance;
+        private ExactCurrencyAmount availableCredit;
 
         @Override
-        public CardAliasStep<CardModuleBuildStep> withCardNumber(String cardNumber) {
+        public CardBalanceStep<CardModuleBuildStep> withCardNumber(@Nonnull String cardNumber) {
             Preconditions.checkNotNull(cardNumber, "Card Number must not be null.");
-            String number = cardNumber.replaceAll("\\D+", "");
+            final String trimmedNumber = cardNumber.replaceAll("\\D+", "");
 
             Preconditions.checkArgument(
-                    number.length() >= 12,
-                    "Not enough digits. Should be minimum 12 and most likely 16 digits!");
+                    trimmedNumber.length() >= 4, "Card number must be at least four digits.");
 
-            this.cardNumber = number;
+            this.cardNumber = cardNumber;
             return this;
         }
 
         @Override
-        public CardModuleBuildStep withCardAlias(String cardAlias) {
+        public CardCreditStep<CardModuleBuildStep> withBalance(
+                @Nonnull ExactCurrencyAmount balance) {
+            Preconditions.checkNotNull(balance, "Balance must not be null.");
+            this.balance = balance;
+            return this;
+        }
+
+        @Override
+        public CardAliasStep<CardModuleBuildStep> withAvailableCredit(
+                @Nonnull ExactCurrencyAmount availableCredit) {
+            Preconditions.checkNotNull(availableCredit, "Available Credit must not be null.");
+            this.availableCredit = availableCredit;
+            return this;
+        }
+
+        @Override
+        public CardModuleBuildStep withCardAlias(@Nonnull String cardAlias) {
             Preconditions.checkNotNull(cardAlias, "Card Alias must not be null");
             this.cardAlias = cardAlias;
             return this;

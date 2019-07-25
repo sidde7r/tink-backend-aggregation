@@ -4,5 +4,5 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 
 public interface WithIdStep<T> {
 
-    WithBalanceStep<T> withId(IdModule id);
+    T withId(IdModule id);
 }

@@ -59,6 +59,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         return Optional.of(
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.from(accountType))
+                        .withBalance(BalanceModule.of(findBalanceAmount().asAmount()))
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(number)
@@ -67,7 +68,6 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                                         .addIdentifier(new SwedishIdentifier(accountNumber))
                                         .addIdentifier(new SwedishSHBInternalIdentifier(number))
                                         .build())
-                        .withBalance(BalanceModule.of(findBalanceAmount().asAmount()))
                         .addHolderName(holderName)
                         .setApiIdentifier(number)
                         .setBankIdentifier(number)

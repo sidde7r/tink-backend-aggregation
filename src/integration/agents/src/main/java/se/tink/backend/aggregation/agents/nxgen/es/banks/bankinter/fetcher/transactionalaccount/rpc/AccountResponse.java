@@ -77,6 +77,7 @@ public class AccountResponse extends HtmlResponse {
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.CHECKING)
+                        .withBalance(BalanceModule.of(getBalance()))
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(accountIdentifier.getIdentifier())
@@ -84,7 +85,6 @@ public class AccountResponse extends HtmlResponse {
                                         .withAccountName(getAccountName())
                                         .addIdentifier(accountIdentifier)
                                         .build())
-                        .withBalance(BalanceModule.of(getBalance()))
                         .setApiIdentifier(Integer.toString(accountIndex));
 
         final List<String> holderNames = getHolderNames(accountInfo);
