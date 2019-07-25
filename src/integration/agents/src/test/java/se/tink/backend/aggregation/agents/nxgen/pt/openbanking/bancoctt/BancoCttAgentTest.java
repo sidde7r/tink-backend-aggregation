@@ -13,7 +13,7 @@ public class BancoCttAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-bancoctt-oauth2")
+                new AgentIntegrationTest.Builder("pt", "pt-bancoctt-redirect")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

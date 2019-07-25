@@ -13,7 +13,7 @@ public class NovoBancoAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-novobanco-oauth2")
+                new AgentIntegrationTest.Builder("pt", "pt-novobanco-redirect")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

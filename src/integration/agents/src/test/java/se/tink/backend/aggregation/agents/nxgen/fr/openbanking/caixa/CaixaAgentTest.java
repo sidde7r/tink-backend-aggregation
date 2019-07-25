@@ -13,7 +13,7 @@ public class CaixaAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fr", "fr-caixa-oauth2")
+                new AgentIntegrationTest.Builder("fr", "fr-caixa-decoupled")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

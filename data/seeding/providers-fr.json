@@ -458,7 +458,7 @@
                 }
             ],
             "multiFactor": true,
-            "name": "fr-caixa-oauth2",
+            "name": "fr-caixa-decoupled",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "payload": "tink",
             "popular": true,

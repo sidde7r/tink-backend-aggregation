@@ -13,7 +13,7 @@ public class ActivoBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-activobank-oauth2")
+                new AgentIntegrationTest.Builder("pt", "pt-activobank-redirect")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
