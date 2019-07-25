@@ -33,7 +33,6 @@ public abstract class BerlinGroupAgent<
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        client.setDebugOutput(true);
 
         clientId = request.getProvider().getPayload();
         clientName = request.getProvider().getPayload();

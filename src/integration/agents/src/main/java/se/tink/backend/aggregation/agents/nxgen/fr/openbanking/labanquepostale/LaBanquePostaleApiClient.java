@@ -50,7 +50,7 @@ public final class LaBanquePostaleApiClient
         return accountResponse;
     }
 
-    public TransactionResponse fetchTransactionsLaBanquePortal(String url) {
+    public TransactionResponse fetchTransactionsLaBanquePostal(String url) {
         if (url.startsWith("v1/")) {
             url =
                     url.substring(
