@@ -52,7 +52,8 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
         boolean forceMockClient = !TEST_MARKET.equalsIgnoreCase(request.getProvider().getMarket());
 
         this.agentDataAvailabilityTrackerClient =
-                AgentDataAvailabilityTrackerClientFactory.getClient(configuration, forceMockClient);
+                AgentDataAvailabilityTrackerClientFactory.getInstance()
+                        .getClient(configuration, forceMockClient);
     }
 
     @Override
