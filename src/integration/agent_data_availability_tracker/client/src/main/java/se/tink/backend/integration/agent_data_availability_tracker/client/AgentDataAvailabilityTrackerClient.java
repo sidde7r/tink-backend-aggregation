@@ -10,4 +10,6 @@ public interface AgentDataAvailabilityTrackerClient {
     void sendAccount(final String agent, final Account account, final AccountFeatures features);
 
     void endStreamBlocking() throws InterruptedException;
+
+    boolean isMockClient();
 }

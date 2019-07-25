@@ -139,4 +139,9 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
 
         channel.shutdown().awaitTermination(1000, TimeUnit.MILLISECONDS);
     }
+
+    @Override
+    public boolean isMockClient() {
+        return false;
+    }
 }
