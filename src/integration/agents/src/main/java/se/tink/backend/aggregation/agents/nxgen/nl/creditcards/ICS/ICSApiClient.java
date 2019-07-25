@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
-import static com.google.common.base.Predicates.not;
+import static io.vavr.Predicates.not;
 
 import com.google.common.base.Strings;
 import java.util.Date;
