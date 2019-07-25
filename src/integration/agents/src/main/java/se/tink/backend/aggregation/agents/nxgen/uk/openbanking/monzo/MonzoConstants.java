@@ -10,7 +10,10 @@ public class MonzoConstants {
     public static final String INTEGRATION_NAME = "monzo";
 
     public static final AccountTypeMapper ACCOUNT_TYPE =
-            AccountTypeMapper.builder().put(AccountTypes.CHECKING, "uk_retail").build();
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.CHECKING, "uk_retail")
+                    .put(AccountTypes.CHECKING, "uk_retail_joint")
+                    .build();
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
