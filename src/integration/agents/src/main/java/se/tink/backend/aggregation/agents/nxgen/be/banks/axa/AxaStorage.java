@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import org.assertj.core.util.Preconditions;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateOtpChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.StoreRegistrationCdResponse;
@@ -140,6 +141,21 @@ public final class AxaStorage {
         sessionStorage.put(AxaConstants.Storage.ACCESS_TOKEN.name(), accessToken);
     }
 
+    public void sessionStoreActivationPassword(@Nonnull final String activationPassword) {
+        Preconditions.checkNotNull(activationPassword);
+        sessionStorage.put(AxaConstants.Storage.ACTIVATION_PASSWORD.name(), activationPassword);
+    }
+
+    public void sessionStoreChallenge(final String challenge) {
+        Preconditions.checkNotNull(challenge);
+        sessionStorage.put(AxaConstants.Storage.CHALLENGE.name(), challenge);
+    }
+
+    public void sessionStoreUcrid(final String ucrid) {
+        Preconditions.checkNotNull(ucrid);
+        sessionStorage.put(AxaConstants.Storage.UCRID.name(), ucrid);
+    }
+
     public Optional<Digipass> getDigipass() {
         final String digipassSerialized =
                 persistentStorage.get(AxaConstants.Storage.DIGIPASS.name());
@@ -205,6 +221,18 @@ public final class AxaStorage {
 
     public Optional<String> getLanguage() {
         return Optional.ofNullable(persistentStorage.get(AxaConstants.Storage.LANGUAGE.name()));
+    }
+
+    public Optional<String> getActivationPassword() {
+        return Optional.ofNullable(sessionStorage.get(Storage.ACTIVATION_PASSWORD.name()));
+    }
+
+    public Optional<String> getChallenge() {
+        return Optional.ofNullable(sessionStorage.get(Storage.CHALLENGE.name()));
+    }
+
+    public Optional<String> getUcrid() {
+        return Optional.ofNullable(sessionStorage.get(Storage.UCRID.name()));
     }
 
     public String serializePersistentStorage() {
