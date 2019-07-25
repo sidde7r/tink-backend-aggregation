@@ -27,7 +27,7 @@ public class CemahAgentPaymentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-cemah-oauth2")
+                new AgentIntegrationTest.Builder("pt", "pt-cemah-redirect")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

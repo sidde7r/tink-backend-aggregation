@@ -13,7 +13,7 @@ public class BankinterAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-bankinter-oauth2")
+                new AgentIntegrationTest.Builder("pt", "pt-bankinter-redirect")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

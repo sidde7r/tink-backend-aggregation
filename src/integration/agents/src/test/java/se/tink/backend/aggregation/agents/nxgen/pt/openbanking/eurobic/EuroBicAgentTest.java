@@ -13,7 +13,7 @@ public class EuroBicAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-eurobic-oauth2")
+                new AgentIntegrationTest.Builder("pt", "pt-eurobic-redirect")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.santander;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
+// @Ignore
 public class SantanderAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -13,7 +12,7 @@ public class SantanderAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-santander-oauth2")
+                new AgentIntegrationTest.Builder("pt", "pt-santander-redirect")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
