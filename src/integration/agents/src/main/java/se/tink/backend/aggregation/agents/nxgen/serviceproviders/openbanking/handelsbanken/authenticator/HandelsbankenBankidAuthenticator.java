@@ -107,7 +107,7 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
                 OAuth2Token.create(
                         HandelsbankenBaseConstants.QueryKeys.BEARER,
                         response.getAccessToken(),
-                        sessionStorage.get(StorageKeys.REFRESH_TOKEN),
+                        refreshToken,
                         response.getExpiresIn()));
     }
 }

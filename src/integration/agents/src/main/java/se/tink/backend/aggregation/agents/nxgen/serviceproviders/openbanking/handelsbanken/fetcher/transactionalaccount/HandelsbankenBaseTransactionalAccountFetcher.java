@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.AccountBalance;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.AccountsItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.BalancesItemEntity;
@@ -43,10 +42,7 @@ public class HandelsbankenBaseTransactionalAccountFetcher
         BalanceAccountResponse balances = apiClient.getAccountDetails(accountEntity.getAccountId());
         BalancesItemEntity availableBalance =
                 balances.getBalances().stream()
-                        .filter(
-                                balance ->
-                                        balance.getBalanceType()
-                                                .equalsIgnoreCase(AccountBalance.AVAILABLE_BALANCE))
+                        .filter(BalancesItemEntity::isBalance)
                         .findFirst()
                         .orElseThrow(
                                 () ->
@@ -67,12 +63,8 @@ public class HandelsbankenBaseTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        Optional<Date> maxDate = getMaxDateFromSession();
-        if (maxDate.isPresent()) {
-            if (fromDate.compareTo(maxDate.get()) < 0) {
-                fromDate = maxDate.get();
-            }
-        }
+
+        fromDate = checkMaxDate(fromDate);
 
         try {
             return apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
@@ -83,6 +75,16 @@ public class HandelsbankenBaseTransactionalAccountFetcher
             }
             throw e;
         }
+    }
+
+    private Date checkMaxDate(Date fromDate) {
+        Optional<Date> maxDate = getMaxDateFromSession();
+        if (maxDate.isPresent()) {
+            if (fromDate.compareTo(maxDate.get()) < 0) {
+                return maxDate.get();
+            }
+        }
+        return fromDate;
     }
 
     private Optional<Date> getMaxDateFromSession() {
