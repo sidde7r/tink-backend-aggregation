@@ -92,15 +92,16 @@ public class SupremeCardAgent extends AbstractAgent
 
     private Optional<String> askUserForSsn() {
         final String supplementalResponseKey = "response";
-        Field field = new Field();
-
-        field.setDescription("Personnummer");
-        field.setName(supplementalResponseKey);
-        field.setNumeric(true);
-        field.setHint("ÅÅÅÅMMDDXXXX");
-        field.setMaxLength(12);
-        field.setMinLength(12);
-        field.setPattern("^(19|20)\\d{2}(0\\d|1[0-2])([0-2]\\d|3[0-1])\\d{4}$"); // SSN regex
+        Field field =
+                Field.builder()
+                        .description("Personnummer")
+                        .name(supplementalResponseKey)
+                        .numeric(true)
+                        .hint("ÅÅÅÅMMDDXXXX")
+                        .maxLength(12)
+                        .minLength(12)
+                        .pattern("^(19|20)\\d{2}(0\\d|1[0-2])([0-2]\\d|3[0-1])\\d{4}$") // SSN regex
+                        .build();
 
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(Lists.newArrayList(field)));

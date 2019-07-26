@@ -125,10 +125,6 @@ public class Field {
         this.numeric = numeric;
     }
 
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
     public void setValue(String value) {
         this.value = value;
     }

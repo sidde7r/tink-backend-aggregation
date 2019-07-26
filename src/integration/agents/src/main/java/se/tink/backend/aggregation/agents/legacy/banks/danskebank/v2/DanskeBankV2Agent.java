@@ -970,23 +970,25 @@ public class DanskeBankV2Agent extends AbstractAgent
     }
 
     private List<Field> getChallengeSupplementalFields(String challenge) {
-        Field challengeField = new Field();
+        Field challengeField =
+                Field.builder()
+                        .immutable(true)
+                        .description("Skärmkod")
+                        .value(challenge)
+                        .name("challenge")
+                        .helpText("Skriv skärmkoden i din säkerhetsdosa för att skapa en sändkod")
+                        .build();
 
-        challengeField.setImmutable(true);
-        challengeField.setDescription("Skärmkod");
-        challengeField.setValue(challenge);
-        challengeField.setName("challenge");
-        challengeField.setHelpText("Skriv skärmkoden i din säkerhetsdosa för att skapa en sändkod");
-
-        Field responseField = new Field();
-
-        responseField.setDescription("Sändkod");
-        responseField.setName("response");
-        responseField.setNumeric(true);
-        responseField.setHint("(6-8 siffror)");
-        responseField.setMaxLength(8);
-        responseField.setMinLength(6);
-        responseField.setPattern("([0-9]{6}|[0-9]{8})");
+        Field responseField =
+                Field.builder()
+                        .description("Sändkod")
+                        .name("response")
+                        .numeric(true)
+                        .hint("(6-8 siffror)")
+                        .maxLength(8)
+                        .minLength(6)
+                        .pattern("([0-9]{6}|[0-9]{8})")
+                        .build();
 
         return Lists.newArrayList(challengeField, responseField);
     }

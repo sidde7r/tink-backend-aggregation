@@ -53,8 +53,8 @@ public class AvanzaInvestmentFetcherTest {
 
         assertEquals(Amount.inSEK(449894.55), account.getBalance());
 
-        assertEquals(1, account.getPortfolios().size());
-        Portfolio portfolio = account.getPortfolios().iterator().next();
+        assertEquals(1, account.getSystemPortfolios().size());
+        Portfolio portfolio = account.getSystemPortfolios().iterator().next();
         assertEquals(new Double(3719.61), portfolio.getCashValue());
         assertEquals(new Double(446175.0), portfolio.getTotalValue());
     }

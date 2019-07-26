@@ -237,15 +237,15 @@ public class SwedbankTransferHelper {
     }
 
     private Field getNameField() {
-        Field nameField = new Field();
-        nameField.setDescription(catalog.getString("Recipient name"));
-        nameField.setName("name");
-        nameField.setPattern(".+");
-        nameField.setHelpText(
-                catalog.getString(
-                        "Because this is the first time you transfer money to this"
-                                + " account, you'll need to register a name for it."));
-        return nameField;
+        return Field.builder()
+                .description(catalog.getString("Recipient name"))
+                .name("name")
+                .pattern(".+")
+                .helpText(
+                        catalog.getString(
+                                "Because this is the first time you transfer money to this"
+                                        + " account, you'll need to register a name for it."))
+                .build();
     }
 
     private Optional<PaymentBaseinfoResponse> getConfirmResponse(LinkEntity linkEntity) {

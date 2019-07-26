@@ -83,7 +83,7 @@ public class BankiaInvestmentFetcherTest {
         InvestmentAccount account = fetcher.fetchInvestmentAccount(SINGLE_PAGE_ACCOUNT_ENTITY);
 
         assertNotNull(account);
-        assertEquals(0, account.getPortfolios().get(0).getInstruments().size());
+        assertEquals(0, account.getSystemPortfolios().get(0).getInstruments().size());
         verify(mockApiClient, times(1)).getPositionsWallet(SINGLE_PAGE_ACCOUNT, "");
     }
 
@@ -98,7 +98,7 @@ public class BankiaInvestmentFetcherTest {
         InvestmentAccount account = fetcher.fetchInvestmentAccount(TWO_PAGE_ACCOUNT_ENTITY);
 
         assertNotNull(account);
-        assertEquals(3, account.getPortfolios().get(0).getInstruments().size());
+        assertEquals(3, account.getSystemPortfolios().get(0).getInstruments().size());
         verify(mockApiClient, times(2)).getPositionsWallet(eq(TWO_PAGE_ACCOUNT), any());
     }
 
@@ -112,7 +112,7 @@ public class BankiaInvestmentFetcherTest {
         InvestmentAccount account = fetcher.fetchInvestmentAccount(TOO_MANY_PAGES_ENTITIY);
 
         assertNotNull(account);
-        assertEquals(3, account.getPortfolios().get(0).getInstruments().size());
+        assertEquals(3, account.getSystemPortfolios().get(0).getInstruments().size());
         verify(mockApiClient, times(1)).getPositionsWallet(eq(TOO_MANY_PAGES), eq(""));
         verify(mockApiClient, times(2)).getPositionsWallet(eq(TOO_MANY_PAGES), eq("A"));
     }

@@ -1,0 +1,211 @@
+package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument;
+
+import com.google.common.base.Preconditions;
+import javax.annotation.Nonnull;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Instrument.Type;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
+import se.tink.libraries.amount.ExactCurrencyAmount;
+
+public final class InstrumentModule {
+    private final InstrumentIdModule instrumentIdModule;
+    private final double averageAcquisitionPrice;
+    private final String currency;
+    private final double marketValue;
+    private final double price;
+    private final double quantity;
+    private final double profit;
+    private final String ticker;
+    private final InstrumentType type;
+    private final String rawType;
+
+    public Instrument toSystemInstrument() {
+        Instrument systemInstrument = new Instrument();
+        systemInstrument.setUniqueIdentifier(this.instrumentIdModule.getUniqueIdentifier());
+        systemInstrument.setIsin(this.instrumentIdModule.getIsin());
+        systemInstrument.setMarketPlace(this.instrumentIdModule.getMarketPlace());
+        systemInstrument.setAverageAcquisitionPriceFromAmount(
+                ExactCurrencyAmount.of(this.averageAcquisitionPrice, this.currency));
+        systemInstrument.setCurrency(this.currency);
+        systemInstrument.setMarketValue(this.marketValue);
+        systemInstrument.setName(this.instrumentIdModule.getName());
+        systemInstrument.setPrice(this.price);
+        systemInstrument.setQuantity(this.quantity);
+        systemInstrument.setProfit(this.profit);
+        systemInstrument.setTicker(this.ticker);
+        systemInstrument.setType(this.type.toSystemType());
+        systemInstrument.setRawType(this.rawType);
+        return systemInstrument;
+    }
+
+    private InstrumentModule(Builder builder) {
+        this.instrumentIdModule = builder.instrumentIdModule;
+        this.averageAcquisitionPrice = builder.averageAcquisitionPrice;
+        this.currency = builder.currency;
+        this.marketValue = builder.marketValue;
+        this.price = builder.price;
+        this.quantity = builder.quantity;
+        this.profit = builder.profit;
+        this.ticker = builder.ticker;
+        this.type = builder.type;
+        this.rawType = builder.rawType;
+    }
+
+    public static InstrumentTypeStep<InstrumentBuildStep> builder() {
+        return new Builder();
+    }
+
+    InstrumentIdModule getInstrumentIdModule() {
+        return instrumentIdModule;
+    }
+
+    public double getAverageAcquisitionPrice() {
+        return averageAcquisitionPrice;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public double getMarketValue() {
+        return marketValue;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public double getProfit() {
+        return profit;
+    }
+
+    public String getTicker() {
+        return ticker;
+    }
+
+    public InstrumentType getType() {
+        return type;
+    }
+
+    public String getRawType() {
+        return rawType;
+    }
+
+    private static class Builder
+            implements InstrumentBuildStep,
+                    InstrumentTypeStep<InstrumentBuildStep>,
+                    InstrumentIdStep<InstrumentBuildStep>,
+                    MarketPriceStep<InstrumentBuildStep>,
+                    CurrencyStep<InstrumentBuildStep>,
+                    MarketValueStep<InstrumentBuildStep>,
+                    AcquisitionPriceStep<InstrumentBuildStep>,
+                    QuantityStep<InstrumentBuildStep>,
+                    ProfitStep<InstrumentBuildStep>,
+                    TickerStep<InstrumentBuildStep> {
+        private InstrumentIdModule instrumentIdModule;
+        private double averageAcquisitionPrice;
+        private String currency;
+        private double marketValue;
+        private double price;
+        private double quantity;
+        private double profit;
+        private String ticker;
+        private InstrumentType type;
+        private String rawType;
+
+        @Override
+        public CurrencyStep<InstrumentBuildStep> withAverageAcquisitionPrice(
+                double averageAcquisitionPrice) {
+            Preconditions.checkArgument(
+                    averageAcquisitionPrice >= 0,
+                    "Average Acquisition Price  must not be negative.");
+            this.averageAcquisitionPrice = averageAcquisitionPrice;
+            return this;
+        }
+
+        @Override
+        public InstrumentBuildStep setRawType(String rawType) {
+            this.rawType = rawType;
+            return this;
+        }
+
+        @Override
+        public InstrumentModule build() {
+            return new InstrumentModule(this);
+        }
+
+        @Override
+        public MarketValueStep<InstrumentBuildStep> withMarketPrice(double marketPrice) {
+            this.price = marketPrice;
+            return this;
+        }
+
+        @Override
+        public AcquisitionPriceStep<InstrumentBuildStep> withMarketValue(double marketValue) {
+            this.marketValue = marketValue;
+            return this;
+        }
+
+        @Override
+        public TickerStep<InstrumentBuildStep> withProfit(double profit) {
+            this.profit = profit;
+            return this;
+        }
+
+        @Override
+        public ProfitStep<InstrumentBuildStep> withQuantity(double quantity) {
+            Preconditions.checkArgument(quantity >= 0, "Quantity must not be negative.");
+            this.quantity = quantity;
+            return this;
+        }
+
+        @Override
+        public InstrumentBuildStep withTicker(@Nonnull String ticker) {
+            Preconditions.checkNotNull(ticker, "Ticker must not be null.");
+            this.ticker = ticker;
+            return this;
+        }
+
+        @Override
+        public MarketPriceStep<InstrumentBuildStep> withId(
+                @Nonnull InstrumentIdModule instrumentIdModule) {
+            Preconditions.checkNotNull(instrumentIdModule, "InstrumentIdModule must not be null.");
+            this.instrumentIdModule = instrumentIdModule;
+            return this;
+        }
+
+        @Override
+        public InstrumentIdStep<InstrumentBuildStep> withType(@Nonnull InstrumentType type) {
+            Preconditions.checkNotNull(type, "InstrumentType must not be null.");
+            this.type = type;
+            return this;
+        }
+
+        @Override
+        public QuantityStep<InstrumentBuildStep> withCurrency(@Nonnull String currency) {
+            Preconditions.checkNotNull(currency, "Currency must not be null.");
+            this.currency = currency;
+            return this;
+        }
+    }
+
+    public enum InstrumentType {
+        FUND(Type.FUND),
+        STOCK(Type.STOCK),
+        OTHER(Type.OTHER);
+
+        private final Type systemType;
+
+        InstrumentType(Type type) {
+            this.systemType = type;
+        }
+
+        public Type toSystemType() {
+            return this.systemType;
+        }
+    }
+}

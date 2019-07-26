@@ -5,9 +5,13 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.investment.InvestmentBuildStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.investment.WithPortfoliosStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -18,30 +22,41 @@ public class InvestmentAccount extends Account {
                     .add(AccountTypes.PENSION)
                     .build();
 
-    private List<Portfolio> portfolios;
+    private List<Portfolio> systemPortfolios;
 
     private InvestmentAccount(
             Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder) {
         super(builder);
-        this.portfolios = builder.getPortfolios();
+        this.systemPortfolios = builder.getPortfolios();
     }
 
+    InvestmentAccount(InvestmentAccountBuilder builder) {
+        super(builder, builder.getExactBalance(), null);
+        this.systemPortfolios =
+                builder.getPortfolioModules().stream()
+                        .map(PortfolioModule::toSystemPortfolio)
+                        .collect(Collectors.toList());
+    }
+
+    public static WithPortfoliosStep<InvestmentBuildStep> nxBuilder() {
+        return new InvestmentAccountBuilder();
+    }
+
+    /** @deprecated use {@link #nxBuilder()} instead */
     public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
             String uniqueIdentifier) {
         return new DefaultInvestmentAccountsBuilder(uniqueIdentifier);
     }
 
-    /**
-     * @deprecated Use {@link #builder(String)} and {@link Builder#setCashBalance(Amount)} instead
-     */
+    /** @deprecated Use {@link #nxBuilder()} instead */
     public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
             String uniqueIdentifier, Amount balance) {
         return builder(uniqueIdentifier).setBalance(balance);
     }
 
-    public List<Portfolio> getPortfolios() {
-        return Optional.ofNullable(this.portfolios)
-                .<List<Portfolio>>map(p -> ImmutableList.copyOf(p))
+    public List<Portfolio> getSystemPortfolios() {
+        return Optional.ofNullable(this.systemPortfolios)
+                .<List<Portfolio>>map(ImmutableList::copyOf)
                 .orElseGet(Collections::emptyList);
     }
 
