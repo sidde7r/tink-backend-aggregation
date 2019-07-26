@@ -67,7 +67,7 @@ public class AccountEntity {
                 IdModule.builder()
                         .withUniqueIdentifier(iban)
                         .withAccountNumber(iban)
-                        .withAccountName(name)
+                        .withAccountName(Strings.nullToEmpty(name))
                         .addIdentifier(AccountIdentifier.create(Type.IBAN, iban));
 
         if (!Strings.isNullOrEmpty(product)) {
