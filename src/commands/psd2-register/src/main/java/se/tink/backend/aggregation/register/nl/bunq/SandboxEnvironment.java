@@ -111,14 +111,14 @@ public final class SandboxEnvironment implements Environment {
         }
         X509CertificateHolder certificateHolder = builder.build(sigGen);
 
-        X509Certificate x509Certificate = null;
+        final X509Certificate x509Certificate;
         try {
             x509Certificate =
                     new JcaX509CertificateConverter()
                             .setProvider("BC")
                             .getCertificate(certificateHolder);
         } catch (CertificateException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
 
         return x509Certificate;
