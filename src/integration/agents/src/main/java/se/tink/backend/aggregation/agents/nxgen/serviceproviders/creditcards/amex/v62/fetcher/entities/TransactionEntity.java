@@ -17,6 +17,8 @@ public class TransactionEntity {
     private AmountEntity amount;
     private List<String> description;
 
+    @JsonIgnore private boolean isPending;
+
     public String getSuppIndex() {
         return suppIndex;
     }
@@ -46,17 +48,28 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
-    public Transaction toTransaction(AmericanExpressV62Configuration config, boolean isPending) {
+    public boolean isPending() {
+        return isPending;
+    }
+
+    @JsonIgnore
+    public TransactionEntity setPending(boolean pending) {
+        this.isPending = pending;
+        return this;
+    }
+
+    @JsonIgnore
+    public Transaction toTransaction(AmericanExpressV62Configuration configuration) {
         return Transaction.builder()
-                .setAmount(config.toAmount(amount.getRawValue()))
+                .setAmount(configuration.toAmount(amount.getRawValue()))
                 .setDate(getDate())
-                .setPending(isPending)
+                .setPending(isPending())
                 .setDescription(getDescriptionString())
                 .build();
     }
 
     @JsonIgnore
-    public String getDescriptionString() {
+    private String getDescriptionString() {
         return description.stream().collect(Collectors.joining("\n"));
     }
 }

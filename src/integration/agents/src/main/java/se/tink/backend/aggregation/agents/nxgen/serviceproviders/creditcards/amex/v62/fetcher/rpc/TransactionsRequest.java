@@ -12,21 +12,16 @@ public class TransactionsRequest {
 
     @JsonIgnore private boolean canStillFetch;
 
+    public TransactionsRequest(List<Integer> billingIndexList, int sortedIndex) {
+        this.billingIndexList = billingIndexList;
+        this.sortedIndex = sortedIndex;
+    }
+
     public List<Integer> getBillingIndexList() {
         return billingIndexList;
     }
 
-    public TransactionsRequest setBillingIndexList(List<Integer> billingIndexList) {
-        this.billingIndexList = billingIndexList;
-        return this;
-    }
-
     public int getSortedIndex() {
         return sortedIndex;
-    }
-
-    public TransactionsRequest setSortedIndex(int sortedIndex) {
-        this.sortedIndex = sortedIndex;
-        return this;
     }
 }

@@ -1,69 +1,45 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Storage.TIME_LINES;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Storage.TRANSACTIONS;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Storage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class AmericanExpressV62TransactionFetcher
         implements TransactionPagePaginator<CreditCardAccount> {
 
     private final AmericanExpressV62Configuration config;
-    private final Storage instanceStorage;
+    private final AmericanExpressV62Storage instanceStorage;
 
     private AmericanExpressV62TransactionFetcher(
-            AmericanExpressV62Configuration config, final Storage instanceStorage) {
+            AmericanExpressV62Configuration config,
+            final AmericanExpressV62Storage instanceStorage) {
         this.config = config;
         this.instanceStorage = instanceStorage;
     }
 
     public static AmericanExpressV62TransactionFetcher create(
-            AmericanExpressV62Configuration config, Storage instanceStorage) {
+            AmericanExpressV62Configuration config, AmericanExpressV62Storage instanceStorage) {
         return new AmericanExpressV62TransactionFetcher(config, instanceStorage);
     }
 
     @Override
-    /**
-     * Fetches the transactions from two parts of the Amex api, the actual transactions and the
-     * 'timeline'. The 'timeline' is some sort of overview, where pending transactions end up. We
-     * parse the timeline to fetch them.
-     */
+    /** Fetches the transactions from saved data. */
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-        Set<Transaction> transactions = new HashSet<>();
-        // Fetch transactions
-        Set<TransactionResponse> transactionResponses =
-                instanceStorage
-                        .get(TRANSACTIONS, new TypeReference<Set<TransactionResponse>>() {})
-                        .orElse(Collections.emptySet());
-        for (TransactionResponse response : transactionResponses) {
-            if (!response.isValidResponse()) {
-                continue;
-            }
-            final String suppIndex = response.getSuppIndexForAccount(account);
-            transactions.addAll(response.toTinkTransactions(config, false, suppIndex));
-        }
+        Set<TransactionEntity> transactionEntitySet =
+                instanceStorage.getAccountTransactions(account.getAccountNumber());
 
-        // Fetch timeline and parse pending transactions from it.
-        Set<TimelineResponse> timelineResponses =
-                instanceStorage
-                        .get(TIME_LINES, new TypeReference<Set<TimelineResponse>>() {})
-                        .orElse(Collections.emptySet());
-        for (TimelineResponse timelineResponse : timelineResponses) {
-            final String suppIndex = timelineResponse.getSuppIndexForAccount(account);
-            transactions.addAll(timelineResponse.getPendingTransactions(config, suppIndex));
-        }
+        Set<Transaction> transactions =
+                transactionEntitySet.stream()
+                        .map(transactionEntity -> transactionEntity.toTransaction(config))
+                        .collect(Collectors.toSet());
+
         return PaginatorResponseImpl.create(transactions, false);
     }
 }

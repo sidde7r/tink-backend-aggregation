@@ -61,14 +61,6 @@ public class CardEntity {
                 .orElse(ZERO);
     }
 
-    public String getCardProductName() {
-        return cardProductName;
-    }
-
-    public int getSortedIndex() {
-        return sortedIndex;
-    }
-
     public String getCardNumberDisplay() {
         return cardNumberDisplay;
     }

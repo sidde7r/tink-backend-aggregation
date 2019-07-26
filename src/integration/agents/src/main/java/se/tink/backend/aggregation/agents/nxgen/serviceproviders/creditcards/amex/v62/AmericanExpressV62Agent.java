@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.AmericanExpressV62CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.AmericanExpressV62TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.session.AmericanExpressV62SessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Storage;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -25,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.filter.ServiceUnavailableBankServiceErrorFilter;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AmericanExpressV62Agent extends NextGenerationAgent
@@ -34,7 +34,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
     private final AmericanExpressV62ApiClient apiClient;
     private final AmericanExpressV62Configuration config;
     private final MultiIpGateway gateway;
-    private final Storage instanceStorage;
+    private final AmericanExpressV62Storage instanceStorage;
     private final CreditCardRefreshController creditCardRefreshController;
 
     protected AmericanExpressV62Agent(
@@ -49,7 +49,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
                 new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
         this.config = config;
         this.gateway = new MultiIpGateway(client, credentials);
-        this.instanceStorage = new Storage();
+        this.instanceStorage = new AmericanExpressV62Storage();
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
     }
