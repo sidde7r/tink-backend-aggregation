@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -17,7 +18,7 @@ public class CbiGlobeTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
 
-    private final CbiGlobeApiClient apiClient;
+    protected final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final CbiGlobeAuthenticationController controller;
 
@@ -45,7 +46,8 @@ public class CbiGlobeTransactionalAccountFetcher
             TransactionalAccount account, Date fromDate, Date toDate) {
         // Bank allows to fetch transactions for last 90 days
         fromDate = calculateFromDate(toDate);
-        return apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
+        return apiClient.getTransactions(
+                account.getApiIdentifier(), fromDate, toDate, QueryValues.BOTH);
     }
 
     protected Date calculateFromDate(Date toDate) {

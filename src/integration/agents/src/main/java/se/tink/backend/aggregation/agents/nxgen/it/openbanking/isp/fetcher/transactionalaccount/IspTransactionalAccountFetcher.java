@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.isp.fetcher.transactionalaccount;
 
 import java.util.Date;
-import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class IspTransactionalAccountFetcher extends CbiGlobeTransactionalAccountFetcher {
@@ -17,7 +19,10 @@ public class IspTransactionalAccountFetcher extends CbiGlobeTransactionalAccount
     }
 
     @Override
-    protected Date calculateFromDate(Date toDate) {
-        return new DateTime(toDate).minusDays(15).toDate();
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        fromDate = calculateFromDate(toDate);
+        return apiClient.getTransactions(
+                account.getApiIdentifier(), fromDate, toDate, QueryValues.BOOKED);
     }
 }
