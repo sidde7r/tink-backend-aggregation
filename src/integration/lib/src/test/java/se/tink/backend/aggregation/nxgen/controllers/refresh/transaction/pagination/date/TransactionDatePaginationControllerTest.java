@@ -4,9 +4,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController.MAX_CONSECUTIVE_EMPTY_PAGES;
 
+import com.google.common.collect.Lists;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +18,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.pair.Pair;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionDatePaginationControllerTest {
@@ -24,10 +28,14 @@ public class TransactionDatePaginationControllerTest {
     @Mock private Account account;
 
     private TransactionDatePaginationController<Account> paginationController;
+    private int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
+    private int MONTHS_TO_FETCH = 3;
 
     @Before
     public void setup() {
-        paginationController = new TransactionDatePaginationController<>(paginator);
+        paginationController =
+                new TransactionDatePaginationController<>(
+                        paginator, MAX_CONSECUTIVE_EMPTY_PAGES, MONTHS_TO_FETCH, ChronoUnit.MONTHS);
     }
 
     @Test(expected = NullPointerException.class)
@@ -55,5 +63,34 @@ public class TransactionDatePaginationControllerTest {
         verify(paginator, times(MAX_CONSECUTIVE_EMPTY_PAGES))
                 .getTransactionsFor(any(Account.class), any(Date.class), any(Date.class));
         Assert.assertFalse(paginationController.fetchTransactionsFor(account).canFetchMore().get());
+    }
+
+    @Test
+    public void ensureWeFetchWithExpectedPeriods() {
+        List<Pair<Date, Date>> periods = Lists.newArrayList();
+        when(paginator.getTransactionsFor(any(Account.class), any(Date.class), any(Date.class)))
+                .then(
+                        call -> {
+                            periods.add(Pair.of(call.getArgument(1), call.getArgument(2)));
+                            return PaginatorResponseImpl.createEmpty();
+                        });
+
+        for (int i = 1; i <= MAX_CONSECUTIVE_EMPTY_PAGES; i++) {
+            PaginatorResponse response = paginationController.fetchTransactionsFor(account);
+            Assert.assertTrue(response.getTinkTransactions().isEmpty());
+            boolean shouldBeAbleToFetchMore = i < MAX_CONSECUTIVE_EMPTY_PAGES;
+            Assert.assertEquals(shouldBeAbleToFetchMore, response.canFetchMore().get());
+        }
+
+        Assert.assertEquals(MAX_CONSECUTIVE_EMPTY_PAGES, periods.size());
+
+        for (int i = 0; i < periods.size(); i++) {
+            Pair<Date, Date> period = periods.get(i);
+            Assert.assertEquals(period.first, DateUtils.addMonths(period.second, -MONTHS_TO_FETCH));
+            if (i > 0) {
+                Pair<Date, Date> nextPeriod = periods.get(i - 1);
+                Assert.assertEquals(DateUtils.addDays(period.second, 1), nextPeriod.first);
+            }
+        }
     }
 }
