@@ -69,6 +69,7 @@ public final class CbiGlobeConstants {
         public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String CODE = "code";
         public static final String BOTH = "both";
+        public static final String BOOKED = "booked";
     }
 
     public static class HeaderKeys {

@@ -110,10 +110,10 @@ public class CbiGlobeApiClient {
     }
 
     public GetTransactionsResponse getTransactions(
-            String apiIdentifier, Date fromDate, Date toDate) {
+            String apiIdentifier, Date fromDate, Date toDate, String bookingType) {
         return createRequestWithConsent(
                         Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
-                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
+                .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
                 .queryParam(
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
