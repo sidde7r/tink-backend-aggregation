@@ -71,6 +71,14 @@ data:
             redirectUrl: "{{ $agentsConfig.nordea.tink.redirectUrl }}"
         {{- end }}
 
+        {{- if $agentsConfig.bankdata }}
+        bankdata:
+          tink:
+            clientId: "BANKDATA_CLIENT_ID"
+            apiKey: "BANKDATA_API_KEY"
+            redirectUrl: "{{ $agentsConfig.bankdata.redirectUrl }}"
+        {{- end }}
+
         {{- if $agentsConfig.monzo }}
         monzo:
           tink:
