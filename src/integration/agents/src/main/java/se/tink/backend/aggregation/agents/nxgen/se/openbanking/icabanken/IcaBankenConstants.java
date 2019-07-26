@@ -66,7 +66,7 @@ public final class IcaBankenConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
 
         public static class PaymentProduct {
-            public static final String SEPA = "CrossBorderCreditTransfers"; // SepaCreditTransfer";
+            public static final String SEPA = "SepaCreditTransfer";
             public static final String INTERNATIONAL = "CrossBorderCreditTransfers";
         }
     }
