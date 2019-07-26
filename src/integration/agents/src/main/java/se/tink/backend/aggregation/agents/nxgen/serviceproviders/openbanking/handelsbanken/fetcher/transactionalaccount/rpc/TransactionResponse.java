@@ -1,24 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.TransactionsItemEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class TransactionsResponse implements PaginatorResponse {
+public class TransactionResponse implements PaginatorResponse {
 
-    private List<TransactionEntity> transactions = Collections.emptyList();
+    private List<TransactionsItemEntity> transactions;
+
+    public List<TransactionsItemEntity> getTransactions() {
+        return transactions;
+    }
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.stream()
-                .map(TransactionEntity::toTinkTransaction)
+                .map(TransactionsItemEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 
