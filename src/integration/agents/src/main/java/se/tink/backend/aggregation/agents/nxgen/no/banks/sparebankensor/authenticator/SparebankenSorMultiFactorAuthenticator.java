@@ -196,16 +196,15 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
     }
 
     private Field getActivationCodeField() {
-        Field activationCodeValue = new Field();
-        activationCodeValue.setDescription(catalog.getString("Activation code"));
-        activationCodeValue.setName(ACTIVATION_CODE_FIELD_KEY);
-        activationCodeValue.setNumeric(true);
-        activationCodeValue.setMinLength(ACTIVATION_CODE_LENGTH);
-        activationCodeValue.setMaxLength(ACTIVATION_CODE_LENGTH);
-        activationCodeValue.setHint(StringUtils.repeat("N", ACTIVATION_CODE_LENGTH));
-        activationCodeValue.setPattern(String.format("([0-9]{%d})", ACTIVATION_CODE_LENGTH));
-        activationCodeValue.setPatternError("The activation code you entered is not valid");
-
-        return activationCodeValue;
+        return Field.builder()
+                .description(catalog.getString("Activation code"))
+                .name(ACTIVATION_CODE_FIELD_KEY)
+                .numeric(true)
+                .minLength(ACTIVATION_CODE_LENGTH)
+                .maxLength(ACTIVATION_CODE_LENGTH)
+                .hint(StringUtils.repeat("N", ACTIVATION_CODE_LENGTH))
+                .pattern(String.format("([0-9]{%d})", ACTIVATION_CODE_LENGTH))
+                .patternError("The activation code you entered is not valid")
+                .build();
     }
 }

@@ -163,18 +163,15 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
     }
 
     private Field getActivationCodeField() {
-        Field activationCodeField = new Field();
-        activationCodeField.setDescription(
-                catalog.getString(ActivationCodeFieldConstants.DESCRIPTION));
-        activationCodeField.setName(ActivationCodeFieldConstants.NAME);
-        activationCodeField.setNumeric(true);
-        activationCodeField.setMinLength(ActivationCodeFieldConstants.LENGTH);
-        activationCodeField.setMaxLength(ActivationCodeFieldConstants.LENGTH);
-        activationCodeField.setHint(StringUtils.repeat("N", ActivationCodeFieldConstants.LENGTH));
-        activationCodeField.setPattern(
-                String.format("([0-9]{%d})", ActivationCodeFieldConstants.LENGTH));
-        activationCodeField.setPatternError(ActivationCodeFieldConstants.PATTERN_ERROR);
-
-        return activationCodeField;
+        return Field.builder()
+                .description(catalog.getString(ActivationCodeFieldConstants.DESCRIPTION))
+                .name(ActivationCodeFieldConstants.NAME)
+                .numeric(true)
+                .minLength(ActivationCodeFieldConstants.LENGTH)
+                .maxLength(ActivationCodeFieldConstants.LENGTH)
+                .hint(StringUtils.repeat("N", ActivationCodeFieldConstants.LENGTH))
+                .pattern(String.format("([0-9]{%d})", ActivationCodeFieldConstants.LENGTH))
+                .patternError(ActivationCodeFieldConstants.PATTERN_ERROR)
+                .build();
     }
 }

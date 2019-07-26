@@ -104,16 +104,15 @@ public class KeyCardAuthenticationController implements MultiFactorAuthenticator
     }
 
     private Field getKeyCardValueField() {
-        Field codeCardValue = new Field();
-        codeCardValue.setDescription(catalog.getString("Key card code"));
-        codeCardValue.setName(KEYCARD_VALUE_FIELD_KEY);
-        codeCardValue.setNumeric(true);
-        codeCardValue.setMinLength(keyCardValueLength);
-        codeCardValue.setMaxLength(keyCardValueLength);
-        codeCardValue.setHint(StringUtils.repeat("N", keyCardValueLength));
-        codeCardValue.setPattern(String.format("([0-9]{%d})", keyCardValueLength));
-        codeCardValue.setPatternError("The code you entered is not valid");
-
-        return codeCardValue;
+        return Field.builder()
+                .description(catalog.getString("Key card code"))
+                .name(KEYCARD_VALUE_FIELD_KEY)
+                .numeric(true)
+                .minLength(keyCardValueLength)
+                .maxLength(keyCardValueLength)
+                .hint(StringUtils.repeat("N", keyCardValueLength))
+                .pattern(String.format("([0-9]{%d})", keyCardValueLength))
+                .patternError("The code you entered is not valid")
+                .build();
     }
 }

@@ -75,17 +75,16 @@ public class SmsOtpAuthenticationPasswordController<T> implements MultiFactorAut
     }
 
     private Field getOtpField() {
-        Field otpValue = new Field();
-        otpValue.setDescription(catalog.getString("SMS code"));
-        otpValue.setHelpText("");
-        otpValue.setName(OTP_VALUE_FIELD_KEY);
-        otpValue.setNumeric(true);
-        otpValue.setMinLength(otpValueLength);
-        otpValue.setMaxLength(otpValueLength);
-        otpValue.setHint(StringUtils.repeat("N", otpValueLength));
-        otpValue.setPattern(String.format("([0-9]{%d})", otpValueLength));
-        otpValue.setPatternError("The code you entered is not valid");
-
-        return otpValue;
+        return Field.builder()
+                .description(catalog.getString("SMS code"))
+                .helpText("")
+                .name(OTP_VALUE_FIELD_KEY)
+                .numeric(true)
+                .minLength(otpValueLength)
+                .maxLength(otpValueLength)
+                .hint(StringUtils.repeat("N", otpValueLength))
+                .pattern(String.format("([0-9]{%d})", otpValueLength))
+                .patternError("The code you entered is not valid")
+                .build();
     }
 }
