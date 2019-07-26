@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.register.nl.bunq.environment.sandbox;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -18,7 +16,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.io.FileUtils;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -30,6 +27,7 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.register.nl.bunq.BunqRegisterUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
 // Generate test certificates following instructions from here
@@ -45,25 +43,17 @@ public final class BunqRegisterSandboxUtils {
         return x509CertificateToPem(qsealcCert);
     }
 
-    public static String readFileContents(final String path) {
-        try {
-            return FileUtils.readFileToString(new File(path), "UTF-8");
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     public static String getPaymentServiceProviderCertificateChainAsString() {
         final String path =
                 "src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register/nl/bunq/resources/rootcert.pem";
-        final String rootCertString = readFileContents(path);
+        final String rootCertString = BunqRegisterUtils.readFileContents(path);
 
         X509Certificate rootCert = getCertificateFromPemBytes(rootCertString.getBytes());
         return x509CertificateToPem(rootCert);
     }
 
     public static String getClientPublicKeySignatureAsString(PublicKey publicKey, String token) {
-        String clientPublicKeySignatureString = keyToPem(publicKey) + token;
+        String clientPublicKeySignatureString = BunqRegisterUtils.keyToPem(publicKey) + token;
 
         byte[] clientPublicKeySignature =
                 clientPublicKeySignatureString.getBytes(StandardCharsets.UTF_8);
@@ -160,18 +150,5 @@ public final class BunqRegisterSandboxUtils {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public static String keyToPem(Key key) {
-        final StringWriter writer = new StringWriter();
-        final JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
-        try {
-            pemWriter.writeObject(key);
-            pemWriter.flush();
-            pemWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return writer.toString();
     }
 }

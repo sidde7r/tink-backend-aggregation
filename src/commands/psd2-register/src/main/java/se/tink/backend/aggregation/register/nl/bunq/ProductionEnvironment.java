@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.eidas.Signer;
-import se.tink.backend.aggregation.register.nl.bunq.environment.sandbox.BunqRegisterSandboxUtils;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.RegisterAsPSD2ProviderRequest;
 
 public final class ProductionEnvironment implements Environment {
@@ -26,8 +25,8 @@ public final class ProductionEnvironment implements Environment {
     public RegisterAsPSD2ProviderRequest createRegisterRequest(
             final PublicKey installationPublicKey, final String psd2ClientAuthToken) {
 
-        final String qsealc = BunqRegisterSandboxUtils.readFileContents(qsealcPath);
-        final String qsealcChain = BunqRegisterSandboxUtils.readFileContents(qsealcChainPath);
+        final String qsealc = BunqRegisterUtils.readFileContents(qsealcPath);
+        final String qsealcChain = BunqRegisterUtils.readFileContents(qsealcChainPath);
         final String signature =
                 getClientPublicKeySignatureAsStringWithProxy(
                         installationPublicKey, psd2ClientAuthToken);
@@ -37,8 +36,7 @@ public final class ProductionEnvironment implements Environment {
     private String getClientPublicKeySignatureAsStringWithProxy(
             final PublicKey publicKey, final String token) {
 
-        String clientPublicKeySignatureString =
-                BunqRegisterSandboxUtils.keyToPem(publicKey) + token;
+        String clientPublicKeySignatureString = BunqRegisterUtils.keyToPem(publicKey) + token;
 
         byte[] clientPublicKeySignature =
                 clientPublicKeySignatureString.getBytes(StandardCharsets.UTF_8);
