@@ -107,13 +107,13 @@ data:
               clientId: "VOLKSBANK_AIS_CLIENT_ID_ABN_TAG"
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_ABN_TAG"
               redirectUrl: "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
-              certificateId: "Tink"
+              certificateId: "abnamro2"
           abn:
             aisConfiguration:
               clientId: "VOLKSBANK_AIS_CLIENT_ID_ABN_TAG"
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_ABN_TAG"
               redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
-              certificateId: "abnamro"
+              certificateId: "abnamro2"
         {{- end }}
 
         {{- if $agentsConfig.fints }}
