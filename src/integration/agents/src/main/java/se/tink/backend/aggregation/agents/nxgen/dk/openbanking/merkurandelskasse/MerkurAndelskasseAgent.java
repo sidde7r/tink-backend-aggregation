@@ -8,9 +8,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MerkurAndelskasseAgent extends BecAgent {
 
-    public MerkurAndelskasseAgent(CredentialsRequest request,
-        AgentContext context,
-        SignatureKeyPair signatureKeyPair) {
+    public MerkurAndelskasseAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 

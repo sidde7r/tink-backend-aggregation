@@ -8,9 +8,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MonsBankAgent extends BecAgent {
 
-    public MonsBankAgent(CredentialsRequest request,
-        AgentContext context,
-        SignatureKeyPair signatureKeyPair) {
+    public MonsBankAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 

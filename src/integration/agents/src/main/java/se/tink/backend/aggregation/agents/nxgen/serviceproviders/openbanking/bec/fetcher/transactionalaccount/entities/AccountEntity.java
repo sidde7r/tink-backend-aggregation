@@ -1,14 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -17,29 +21,76 @@ public class AccountEntity {
     private LinksEntity links;
 
     private String bic;
+    private String name;
     private String currency;
     private String iban;
     private String product;
+    private String bban;
     private String resourceId;
+    private String cashAccountType;
     private List<BalanceEntity> balances;
 
-    public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(iban)
-                .setBalance(getBalance())
-                .setAlias(bic)
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .setProductName(product)
-                .setApiIdentifier(resourceId)
-                .build();
+    public Optional<TransactionalAccount> toTinkAccount(BalancesItemEntity balancesItemEntity) {
+        TransactionalAccountType type = getAccountType();
+        balancesItemEntity.setCurrencyIfNull(currency);
+        switch (type) {
+            case SAVINGS:
+                return toSavingsAccount(balancesItemEntity.getBalanceAmount());
+            case CHECKING:
+                return toCheckingAccount(balancesItemEntity.getBalanceAmount());
+            default:
+                return Optional.empty();
+        }
     }
 
-    private Amount getBalance() {
-        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
-                .filter(BalanceEntity::isAvailable)
-                .findFirst()
-                .map(BalanceEntity::getAmount)
-                .orElse(BalanceEntity.Default);
+    private Optional<TransactionalAccount> toSavingsAccount(ExactCurrencyAmount balance) {
+        return toAccount(TransactionalAccountType.SAVINGS, balance);
+    }
+
+    private Optional<TransactionalAccount> toCheckingAccount(ExactCurrencyAmount balance) {
+        return toAccount(TransactionalAccountType.CHECKING, balance);
+    }
+
+    private Optional<TransactionalAccount> toAccount(
+            TransactionalAccountType type, ExactCurrencyAmount balance) {
+        return Optional.of(
+                TransactionalAccount.nxBuilder()
+                        .withType(type)
+                        .withBalance(BalanceModule.of(balance))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(getUniqueIdentifier())
+                                        .withAccountNumber(getAccountNumber())
+                                        .withAccountName(Optional.ofNullable(name).orElse(iban))
+                                        .addIdentifier(getIdentifier())
+                                        .addIdentifier(AccountIdentifier.create(Type.DK, bban))
+                                        .build())
+                        .setApiIdentifier(resourceId)
+                        .setBankIdentifier(resourceId)
+                        .addHolderName(Optional.ofNullable(name).orElse(""))
+                        .putInTemporaryStorage(BecConstants.StorageKeys.ACCOUNT_ID, resourceId)
+                        .build());
+    }
+
+    private String getUniqueIdentifier() {
+        return iban;
+    }
+
+    private String getAccountNumber() {
+        return iban;
+    }
+
+    private AccountIdentifier getIdentifier() {
+        return new IbanIdentifier(iban);
+    }
+
+    private TransactionalAccountType getAccountType() {
+        return BecConstants.ACCOUNT_TYPE_MAPPER
+                .translate(Optional.ofNullable(cashAccountType).orElse(product))
+                .orElse(TransactionalAccountType.OTHER);
+    }
+
+    public String getResourceId() {
+        return resourceId;
     }
 }

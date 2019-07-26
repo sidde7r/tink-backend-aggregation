@@ -8,4 +8,8 @@ public class LinksEntity {
     private LinkDetailsEntity balances;
     private LinkDetailsEntity transactions;
     private LinkDetailsEntity account;
+
+    public String getBalances() {
+        return balances.getHref();
+    }
 }

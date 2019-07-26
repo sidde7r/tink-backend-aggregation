@@ -17,5 +17,4 @@ public class ArbejdernesAgent extends BecAgent {
     protected String getBaseUrl() {
         return Urls.BASE_URL;
     }
-
 }

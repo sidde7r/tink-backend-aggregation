@@ -8,11 +8,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class DanskeAndelsKassersBankAgent extends BecAgent {
 
-
     public DanskeAndelsKassersBankAgent(
-        CredentialsRequest request,
-        AgentContext context,
-        SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 

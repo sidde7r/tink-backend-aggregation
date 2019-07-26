@@ -17,9 +17,9 @@ public class TransactionsEntity {
 
     public Collection<? extends Transaction> getTinkTransactions() {
         return Stream.concat(
-                        Optional.of(booked).orElse(Collections.emptyList()).stream()
+                        Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
                                 .map(BookedEntity::toTinkTransaction),
-                        Optional.of(pending).orElse(Collections.emptyList()).stream()
+                        Optional.ofNullable(pending).orElse(Collections.emptyList()).stream()
                                 .map(PendingEntity::toTinkTransaction))
                 .collect(Collectors.toList());
     }

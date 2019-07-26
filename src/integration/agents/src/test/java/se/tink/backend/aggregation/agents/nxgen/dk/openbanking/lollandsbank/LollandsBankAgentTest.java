@@ -12,10 +12,10 @@ public class LollandsBankAgentTest {
     @Before
     public void setup() {
         builder =
-            new AgentIntegrationTest.Builder("dk", "dk-lollandsbank-oauth2")
-                .expectLoggedIn(false)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+                new AgentIntegrationTest.Builder("dk", "dk-lollandsbank-oauth2")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test

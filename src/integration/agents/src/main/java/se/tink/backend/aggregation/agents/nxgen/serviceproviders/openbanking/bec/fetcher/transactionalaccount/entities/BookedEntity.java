@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class BookedEntity {
 
     private Date bookingDate;
-    private String creditorAccount;
+    private CreditorAccountEntity creditorAccount;
     private String entryReference;
     private AmountEntity transactionAmount;
     private String transactionId;

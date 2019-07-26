@@ -6,16 +6,16 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 @Ignore
-public class MollerupSparkasseAgentTest{
+public class MollerupSparkasseAgentTest {
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
         builder =
-            new AgentIntegrationTest.Builder("dk", "dk-mollerupsparkasse-oauth2")
-                .expectLoggedIn(false)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+                new AgentIntegrationTest.Builder("dk", "dk-mollerupsparkasse-oauth2")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test

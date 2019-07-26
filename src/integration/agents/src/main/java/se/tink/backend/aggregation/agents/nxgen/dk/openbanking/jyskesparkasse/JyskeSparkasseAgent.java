@@ -8,9 +8,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class JyskeSparkasseAgent extends BecAgent {
 
-    public JyskeSparkasseAgent(CredentialsRequest request,
-        AgentContext context,
-        SignatureKeyPair signatureKeyPair) {
+    public JyskeSparkasseAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 

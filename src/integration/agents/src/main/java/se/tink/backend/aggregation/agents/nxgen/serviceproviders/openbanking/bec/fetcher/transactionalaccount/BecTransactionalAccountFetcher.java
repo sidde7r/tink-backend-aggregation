@@ -2,7 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.BalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -19,7 +24,18 @@ public class BecTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.getAccounts();
+        GetAccountsResponse response = apiClient.getAccounts();
+
+        return response.getAccounts().stream()
+                .map(this::transformAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    private Optional<TransactionalAccount> transformAccount(AccountEntity accountEntity) {
+        BalancesResponse balancesResponse = apiClient.getBalances(accountEntity);
+        return accountEntity.toTinkAccount(balancesResponse.getBalance());
     }
 
     @Override

@@ -12,10 +12,10 @@ public class JyskeSparkasseAgentTest {
     @Before
     public void setup() {
         builder =
-            new AgentIntegrationTest.Builder("dk", "dk-jyskesparkasse-oauth2")
-                .expectLoggedIn(false)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+                new AgentIntegrationTest.Builder("dk", "dk-jyskesparkasse-oauth2")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test
@@ -23,4 +23,3 @@ public class JyskeSparkasseAgentTest {
         builder.build().testRefresh();
     }
 }
-

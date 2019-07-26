@@ -3,11 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class LinkDetailsEntity {
+public class CreditorAccountEntity {
+    private String iban;
 
-    private String href;
-
-    public String getHref() {
-        return href;
+    public String getIban() {
+        return iban;
     }
 }

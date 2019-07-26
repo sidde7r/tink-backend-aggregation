@@ -8,9 +8,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class FynskeBankAgent extends BecAgent {
 
-    public FynskeBankAgent(CredentialsRequest request,
-        AgentContext context,
-        SignatureKeyPair signatureKeyPair) {
+    public FynskeBankAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
@@ -18,5 +17,4 @@ public class FynskeBankAgent extends BecAgent {
     protected String getBaseUrl() {
         return Urls.BASE_URL;
     }
-
 }

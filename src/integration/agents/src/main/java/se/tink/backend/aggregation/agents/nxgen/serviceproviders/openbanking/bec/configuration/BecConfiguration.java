@@ -23,22 +23,22 @@ public class BecConfiguration implements ClientConfiguration {
 
     public String getQsealCertificate() {
         Preconditions.checkNotNull(
-            Strings.emptyToNull(qSealc),
-            String.format(ErrorMessages.INVALID_CONFIGURATION, "Qseal certificate"));
+                Strings.emptyToNull(qSealc),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Qseal certificate"));
         return qSealc;
     }
 
     public String getKeyId() {
         Preconditions.checkNotNull(
-            Strings.emptyToNull(keyId),
-            String.format(ErrorMessages.INVALID_CONFIGURATION, "KeyId"));
+                Strings.emptyToNull(keyId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "KeyId"));
         return keyId;
     }
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
-            Strings.emptyToNull(tppRedirectUrl),
-            String.format(ErrorMessages.INVALID_CONFIGURATION, "TPP redirect url"));
+                Strings.emptyToNull(tppRedirectUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "TPP redirect url"));
         return tppRedirectUrl;
     }
 }

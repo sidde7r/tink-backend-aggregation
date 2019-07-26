@@ -8,8 +8,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class FrorupAndelskasseAgent extends BecAgent {
 
-    public FrorupAndelskasseAgent(CredentialsRequest request, AgentContext context,
-        SignatureKeyPair signatureKeyPair) {
+    public FrorupAndelskasseAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 

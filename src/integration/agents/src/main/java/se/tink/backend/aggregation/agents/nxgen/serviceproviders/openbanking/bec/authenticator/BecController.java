@@ -39,8 +39,7 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
     }
 
     @Override
-    public void autoAuthenticate()
-            throws SessionException, BankServiceException {
+    public void autoAuthenticate() throws SessionException, BankServiceException {
         throw SessionError.SESSION_EXPIRED.exception();
     }
 
