@@ -66,6 +66,11 @@ public class CbiGlobeApiClient {
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
     }
 
+    protected RequestBuilder createAccountsRequestWithConsent() {
+        return createRequestInSession(Urls.ACCOUNTS)
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
+    }
+
     private OAuth2Token getTokenFromStorage() {
         return persistentStorage
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
@@ -96,7 +101,7 @@ public class CbiGlobeApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        return createRequestWithConsent(Urls.ACCOUNTS).get(GetAccountsResponse.class);
+        return createAccountsRequestWithConsent().get(GetAccountsResponse.class);
     }
 
     public GetBalancesResponse getBalances(String resourceId) {

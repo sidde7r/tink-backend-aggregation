@@ -83,6 +83,12 @@ public final class CbiGlobeConstants {
         public static final String TPP_NOK_REDIRECT_URI = "tpp-nok-redirect-uri";
         public static final String CONSENT_ID = "consent-id";
         public static final String PSU_ID_TYPE = "psu-id-type";
+        public static final String PSU_IP_ADDRESS = "psu-ip-address";
+    }
+
+    public static class HeaderValues {
+
+        public static final String DEFAULT_PSU_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class FormKeys {}
