@@ -50,7 +50,7 @@ public final class SandboxEnvironment implements Environment {
         return x509CertificateToPem(qsealcCert);
     }
 
-    public static String getPaymentServiceProviderCertificateChainAsString() {
+    private static String getPaymentServiceProviderCertificateChainAsString() {
         final String path =
                 "src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register/nl/bunq/resources/rootcert.pem";
         final String rootCertString = BunqRegisterUtils.readFileContents(path);
