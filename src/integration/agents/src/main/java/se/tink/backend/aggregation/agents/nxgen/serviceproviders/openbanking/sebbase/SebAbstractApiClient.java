@@ -6,7 +6,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebAccountsAndCardsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenResponse;
@@ -31,47 +30,24 @@ public abstract class SebAbstractApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    public TinkHttpClient getClient() {
-        return this.client;
-    }
-
     public void setConfiguration(SebConfiguration configuration) {
         this.configuration = configuration;
     }
+
+    public void setTokenToSession(OAuth2Token token) {
+        sessionStorage.put(SebCommonConstants.StorageKeys.TOKEN, token);
+    }
+
+    public abstract RequestBuilder getAuthorizeUrl();
+
+    public abstract OAuth2Token getToken(TokenRequest request);
 
     public SebConfiguration getConfiguration() {
         return configuration;
     }
 
-    public OAuth2Token getToken(String url, TokenRequest request) {
-        return client.request(new URL(url))
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(TokenResponse.class, request.toData())
-                .toTinkToken();
-    }
-
-    public OAuth2Token refreshToken(String url, RefreshRequest request) throws SessionException {
-        try {
-            return client.request(new URL(url))
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .post(TokenResponse.class, request.toData())
-                    .toTinkToken();
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == 401) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-            throw e;
-        }
-    }
-
-    public RequestBuilder buildAuthorizeUrl() {
-        return client.request(new URL(SebAccountsAndCardsConstants.Urls.BASE_AUTH_URL));
-    }
-
-    public void setTokenToSession(OAuth2Token token) {
-        sessionStorage.put(SebCommonConstants.StorageKeys.TOKEN, token);
+    public TinkHttpClient getClient() {
+        return this.client;
     }
 
     protected OAuth2Token getTokenFromSession() {
@@ -98,4 +74,19 @@ public abstract class SebAbstractApiClient {
             String bankIdentifier, LocalDate fromDate, LocalDate toDate);
 
     public abstract Collection<CreditCardAccount> fetchCardAccounts();
+
+    public OAuth2Token refreshToken(String url, RefreshRequest request) throws SessionException {
+        try {
+            return client.request(new URL(url))
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(TokenResponse.class, request.toData())
+                    .toTinkToken();
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == 401) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+            throw e;
+        }
+    }
 }

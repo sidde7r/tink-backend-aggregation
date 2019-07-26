@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalancesEntity {
@@ -17,14 +16,9 @@ public class BalancesEntity {
         return balanceType.equalsIgnoreCase(SebCommonConstants.Accounts.AVAILABLE_BALANCE);
     }
 
-    public Amount toAmount() {
+    public ExactCurrencyAmount toAmount() {
         return Optional.ofNullable(balanceAmount)
-                .map(b -> new Amount(b.getCurrency(), b.getAmount()))
-                .orElse(BalancesEntity.getDefault());
-    }
-
-    @JsonIgnore
-    public static Amount getDefault() {
-        return Amount.inSEK(0);
+                .map(b -> new ExactCurrencyAmount(b.getAmount(), b.getCurrency()))
+                .orElseThrow(() -> new IllegalStateException("Could not parse amount"));
     }
 }

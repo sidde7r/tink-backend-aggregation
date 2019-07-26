@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.BalancesEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CardAccountEntity {
@@ -59,29 +61,46 @@ public class CardAccountEntity {
     }
 
     @JsonIgnore
-    public static CreditCardAccount toTinkTransaction(CardAccountEntity cardAccount) {
-        return CreditCardAccount.builder(cardAccount.createUniqueIdFromMaskedPane())
-                .setAvailableCredit(cardAccount.getAvaliableCredit())
-                .setBalance(cardAccount.getAvailableBalance())
-                .setBankIdentifier(cardAccount.getResourceId())
-                .setName(cardAccount.getProduct())
-                .setAccountNumber(cardAccount.getMaskedPan())
+    public CreditCardAccount toTinkTransaction() {
+
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(
+                        CreditCardModule.builder()
+                                .withCardNumber(resourceId)
+                                .withBalance(getAvailableBalance())
+                                .withAvailableCredit(getAvaliableCredit())
+                                .withCardAlias(name)
+                                .build())
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(name)
+                                .withAccountNumber(name)
+                                .withAccountName(product)
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.PAYMENT_CARD_NUMBER,
+                                                maskedPan))
+                                .build())
+                .setApiIdentifier(resourceId)
                 .build();
     }
 
     @JsonIgnore
-    private Amount getAvaliableCredit() {
-        return new Amount(getCreditLimit().getCurrency(), getCreditLimit().getAmount());
+    private ExactCurrencyAmount getAvaliableCredit() {
+        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
+                .filter(BalanceEntity::isAvailableCredit)
+                .findFirst()
+                .map(BalanceEntity::toAmount)
+                .get();
     }
 
     @JsonIgnore
-    private Amount getAvailableBalance() {
-
+    private ExactCurrencyAmount getAvailableBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
-                .filter(BalanceEntity::isAvailableBalance)
+                .filter(BalanceEntity::isBalance)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .orElse(BalancesEntity.getDefault());
+                .get();
     }
 
     @JsonIgnore

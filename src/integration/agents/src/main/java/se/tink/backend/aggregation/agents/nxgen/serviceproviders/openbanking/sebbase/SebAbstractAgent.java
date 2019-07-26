@@ -44,7 +44,7 @@ public abstract class SebAbstractAgent<C extends SebAbstractApiClient> extends N
                                 SebConfiguration.class)
                         .orElseThrow(() -> new IllegalStateException("SEB configuration missing."));
 
-        getApiClient().setConfiguration(sebConfiguration);
+        apiClient.setConfiguration(sebConfiguration);
         client.setEidasProxy(configuration.getEidasProxy(), sebConfiguration.getEidasQwac());
     }
 

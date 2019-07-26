@@ -22,7 +22,7 @@ public class SebAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        return client.buildAuthorizeUrl()
+        return client.getAuthorizeUrl()
                 .queryParam(
                         SebCommonConstants.QueryKeys.CLIENT_ID,
                         client.getConfiguration().getClientId())
@@ -49,8 +49,7 @@ public class SebAuthenticator implements OAuth2Authenticator {
                         SebCommonConstants.QueryValues.GRANT_TYPE,
                         SebCommonConstants.QueryValues.SCOPE);
 
-        return client.getToken(
-                SebCommonConstants.Urls.BASE_URL + SebCommonConstants.Urls.TOKEN, request);
+        return client.getToken(request);
     }
 
     @Override

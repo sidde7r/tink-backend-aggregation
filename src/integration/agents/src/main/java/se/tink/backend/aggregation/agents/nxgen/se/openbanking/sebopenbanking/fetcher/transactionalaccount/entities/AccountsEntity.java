@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountsEntity {
@@ -98,13 +98,13 @@ public class AccountsEntity {
         return Strings.isNullOrEmpty(ownerName) ? owner.getName() : ownerName;
     }
 
-    private Amount getAvailableBalance() {
+    private ExactCurrencyAmount getAvailableBalance() {
 
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(BalancesEntity::isAvailableBalance)
                 .findFirst()
                 .map(BalancesEntity::toAmount)
-                .orElse(BalancesEntity.getDefault());
+                .get();
     }
 
     private String getName() {
