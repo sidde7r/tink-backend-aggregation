@@ -100,14 +100,14 @@ public final class SandboxEnvironment implements Environment {
                 new X509v1CertificateBuilder(
                         x500Name, sn, from, to, x500Name, subjectPublicKeyInfo);
 
-        ContentSigner sigGen = null;
+        final ContentSigner sigGen;
         try {
             sigGen =
                     new JcaContentSignerBuilder("SHA1withRSA")
                             .setProvider("BC")
                             .build(testCertificatesKeyPair.getPrivate());
         } catch (OperatorCreationException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
         X509CertificateHolder certificateHolder = builder.build(sigGen);
 
