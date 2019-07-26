@@ -88,7 +88,7 @@ public final class CbiGlobeConstants {
 
     public static class HeaderValues {
 
-        public static final String DEFAULT_PSU_IP_ADDRESS = "127.0.0.1";
+        public static final String DEFAULT_PSU_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class FormKeys {}
