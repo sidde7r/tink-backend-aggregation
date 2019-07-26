@@ -150,15 +150,12 @@ public class HandelsbankenBaseApiClient {
         return getSessionId(ssn, authResponse.getConsentId());
     }
 
-    public TokenResponse getRefreshToken() {
+    public TokenResponse getRefreshToken(String refreshToken) {
 
         final Form params =
                 Form.builder()
                         .put(BodyKeys.GRANT_TYPE, BodyValues.REFRESH_TOKEN)
-                        .put(
-                                BodyKeys.REFRESH_TOKEN,
-                                sessionStorage.get(
-                                        HandelsbankenBaseConstants.StorageKeys.REFRESH_TOKEN))
+                        .put(BodyKeys.REFRESH_TOKEN, refreshToken)
                         .put(BodyKeys.CLIENT_ID, configuration.getAppId())
                         .build();
 
