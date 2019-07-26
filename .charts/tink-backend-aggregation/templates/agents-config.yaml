@@ -76,7 +76,7 @@ data:
           tink:
             clientId: "BANKDATA_CLIENT_ID"
             apiKey: "BANKDATA_API_KEY"
-            redirectUrl: "{{ $agentsConfig.bankdata.redirectUrl }}"
+            redirectUrl: "{{ $agentsConfig.bankdata.tink.redirectUrl }}"
         {{- end }}
 
         {{- if $agentsConfig.monzo }}
