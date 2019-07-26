@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date;
 
 import com.google.common.base.Preconditions;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -15,8 +16,8 @@ public class TransactionDatePaginationController<A extends Account>
         implements TransactionPaginator<A> {
     private static final AggregationLogger log =
             new AggregationLogger(TransactionDatePaginationController.class);
-    static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
-    private static final int MONTHS_TO_FETCH = 3;
+    private static final int DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES = 4;
+    private static final int DEFAULT_MONTHS_TO_FETCH = 3;
 
     private final TransactionDatePaginator<A> paginator;
 
@@ -24,15 +25,33 @@ public class TransactionDatePaginationController<A extends Account>
     private Date toDate;
     private int consecutiveEmptyPages = 0;
     private final int consecutiveEmptyPagesLimit;
+    private final ChronoUnit unitToFetch;
+    private final int amountToFetch;
 
     public TransactionDatePaginationController(TransactionDatePaginator<A> paginator) {
-        this(paginator, MAX_CONSECUTIVE_EMPTY_PAGES);
+        this(paginator, DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES);
     }
 
     public TransactionDatePaginationController(
             TransactionDatePaginator<A> paginator, int consecutiveEmptyPagesLimit) {
+        this(paginator, consecutiveEmptyPagesLimit, DEFAULT_MONTHS_TO_FETCH, ChronoUnit.MONTHS);
+    }
+
+    public TransactionDatePaginationController(
+            TransactionDatePaginator<A> paginator,
+            int consecutiveEmptyPagesLimit,
+            int amountToFetch,
+            ChronoUnit unitToFetch) {
         this.paginator = Preconditions.checkNotNull(paginator);
         this.consecutiveEmptyPagesLimit = consecutiveEmptyPagesLimit;
+        this.unitToFetch = unitToFetch;
+        this.amountToFetch = amountToFetch;
+        Preconditions.checkState(amountToFetch >= 1, "Amount to fetch must be 1 or more.");
+        Preconditions.checkState(
+                unitToFetch == ChronoUnit.DAYS
+                        || unitToFetch == ChronoUnit.WEEKS
+                        || unitToFetch == ChronoUnit.MONTHS,
+                "Invalid time unit for pagination: " + unitToFetch.toString());
     }
 
     @Override
@@ -45,7 +64,7 @@ public class TransactionDatePaginationController<A extends Account>
     @Override
     public PaginatorResponse fetchTransactionsFor(A account) {
         toDate = calculateToDate();
-        fromDate = DateUtils.addMonths(toDate, -MONTHS_TO_FETCH);
+        fromDate = calculateFromDate(toDate);
 
         PaginatorResponse response = paginator.getTransactionsFor(account, fromDate, toDate);
 
@@ -85,5 +104,19 @@ public class TransactionDatePaginationController<A extends Account>
         }
 
         return DateUtils.addDays(fromDate, -1); // Day before the previous fromDate
+    }
+
+    private Date calculateFromDate(Date toDate) {
+        switch (unitToFetch) {
+            case DAYS:
+                return DateUtils.addDays(toDate, -amountToFetch);
+            case WEEKS:
+                return DateUtils.addDays(toDate, -7 * amountToFetch);
+            case MONTHS:
+                return DateUtils.addMonths(toDate, -amountToFetch);
+            default:
+                throw new IllegalStateException(
+                        "Unsupported pagination unit: " + unitToFetch.toString());
+        }
     }
 }

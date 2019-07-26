@@ -4,7 +4,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController.MAX_CONSECUTIVE_EMPTY_PAGES;
 
 import java.util.Date;
 import org.junit.Assert;
@@ -24,6 +23,7 @@ public class TransactionDatePaginationControllerTest {
     @Mock private Account account;
 
     private TransactionDatePaginationController<Account> paginationController;
+    private int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
 
     @Before
     public void setup() {
