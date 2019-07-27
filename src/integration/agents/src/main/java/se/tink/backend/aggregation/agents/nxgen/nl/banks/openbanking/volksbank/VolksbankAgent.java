@@ -48,7 +48,7 @@ public class VolksbankAgent extends NextGenerationAgent
 
         final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
-        this.httpClient = new VolksbankHttpClient(client, "certificate");
+        this.httpClient = new VolksbankHttpClient(client);
         this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
         volksbankApiClient = new VolksbankApiClient(httpClient, persistentStorage, urlFactory);
