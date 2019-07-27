@@ -15,6 +15,7 @@ public class HandelsbankenSEPaymentContext extends BaseResponse {
 
     private HandelsbankenSEAccountContext fromAccounts;
     private List<PaymentRecipient> recipients;
+    private String firstPayDate; // E.g. "2019-01-02"
 
     public URL toLookupRecipient() {
         return findLink(HandelsbankenConstants.URLS.Links.LOOKUP_RECIPIENT);
@@ -43,5 +44,9 @@ public class HandelsbankenSEPaymentContext extends BaseResponse {
                                         .map(PaymentRecipient::retrieveGeneralAccountEntities)
                                         .collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);
+    }
+
+    public String retrieveFirstPayDate() {
+        return firstPayDate;
     }
 }
