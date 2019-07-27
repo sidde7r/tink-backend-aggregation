@@ -41,18 +41,15 @@ public class VolksbankTransactionalAccountFetcher implements AccountFetcher<Tran
         List<AccountsEntity> accounts =
                 apiClient.fetchAccounts(consentId, oauth2Token).getAccounts();
 
-        List<TransactionalAccount> response =
-                accounts.stream()
-                        .map(
-                                account -> {
-                                    List<BalanceEntity> balances =
-                                            apiClient
-                                                    .readBalance(account, consentId, oauth2Token)
-                                                    .getBalances();
-                                    return account.toTinkAccount(balances);
-                                })
-                        .collect(Collectors.toList());
-
-        return response;
+        return accounts.stream()
+                .map(
+                        account -> {
+                            List<BalanceEntity> balances =
+                                    apiClient
+                                            .readBalance(account, consentId, oauth2Token)
+                                            .getBalances();
+                            return account.toTinkAccount(balances);
+                        })
+                .collect(Collectors.toList());
     }
 }
