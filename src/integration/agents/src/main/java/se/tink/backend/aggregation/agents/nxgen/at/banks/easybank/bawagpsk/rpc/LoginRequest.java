@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc;
 
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Authentication;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Body;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Context;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.DisposerContext;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Envelope;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.FinancialInstitute;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.LoginRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.constants.RpcConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Authentication;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Body;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Context;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.DisposerContext;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Envelope;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.FinancialInstitute;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.LoginRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.utils.EntitiesUtils;
 
 public class LoginRequest {
     private Envelope envelope;
@@ -26,21 +26,21 @@ public class LoginRequest {
     private LoginRequestEntity createRequest(
             final String username, final String password, final String shortName) {
         FinancialInstitute fininst = new FinancialInstitute();
-        fininst.setBankCode(BawagPskConstants.Client.BANK_CODE);
+        fininst.setBankCode(RpcConstants.Client.BANK_CODE);
         fininst.setShortName(shortName);
 
         DisposerContext dcontext = new DisposerContext();
 
         // DisposerNumber == Username + zero padding
         dcontext.setDisposerNumber(
-                StringUtils.leftPad(username, BawagPskConstants.DISPOSER_NUMBER_LENGTH, '0'));
+                StringUtils.leftPad(username, RpcConstants.DISPOSER_NUMBER_LENGTH, '0'));
         dcontext.setFinancialInstitute(fininst);
 
         Context context = new Context();
-        context.setChannel(BawagPskConstants.CHANNEL);
-        context.setLanguage(BawagPskConstants.LANGUAGE);
-        context.setDevID(BawagPskConstants.DEV_ID);
-        context.setDeviceIdentifier(BawagPskConstants.DEVICE_IDENTIFIER);
+        context.setChannel(RpcConstants.CHANNEL);
+        context.setLanguage(RpcConstants.LANGUAGE);
+        context.setDevID(RpcConstants.DEV_ID);
+        context.setDeviceIdentifier(RpcConstants.DEVICE_IDENTIFIER);
 
         Authentication authentication = new Authentication();
         authentication.setPin(password);
@@ -49,12 +49,12 @@ public class LoginRequest {
         loginRequestEntity.setDisposerContext(dcontext);
         loginRequestEntity.setContext(context);
         loginRequestEntity.setAuthentication(authentication);
-        loginRequestEntity.setIsIncludeLoginImage(BawagPskConstants.IS_INCLUDE_LOGIN_IMAGE);
+        loginRequestEntity.setIsIncludeLoginImage(RpcConstants.IS_INCLUDE_LOGIN_IMAGE);
 
         return loginRequestEntity;
     }
 
     public String getXml() {
-        return BawagPskUtils.entityToXml(envelope);
+        return EntitiesUtils.entityToXml(envelope);
     }
 }

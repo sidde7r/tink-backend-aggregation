@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc;
 
 import java.time.LocalDateTime;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Body;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Context;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Envelope;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.FinancialInstitute;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.GetAccountStatementItemsRequestEntity;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ProductID;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.StatementSearchCriteria;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.constants.RpcConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Body;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Context;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Envelope;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.FinancialInstitute;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.GetAccountStatementItemsRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.ProductID;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.StatementSearchCriteria;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.utils.EntitiesUtils;
 
 public class GetAccountStatementItemsRequest {
     private Envelope envelope;
@@ -21,22 +21,22 @@ public class GetAccountStatementItemsRequest {
             final LocalDateTime fromDateTime,
             final LocalDateTime toDateTime) {
         Context context = new Context();
-        context.setChannel(BawagPskConstants.CHANNEL);
-        context.setLanguage(BawagPskConstants.LANGUAGE);
-        context.setDevID(BawagPskConstants.DEV_ID);
-        context.setDeviceIdentifier(BawagPskConstants.DEVICE_IDENTIFIER);
+        context.setChannel(RpcConstants.CHANNEL);
+        context.setLanguage(RpcConstants.LANGUAGE);
+        context.setDevID(RpcConstants.DEV_ID);
+        context.setDeviceIdentifier(RpcConstants.DEVICE_IDENTIFIER);
 
         FinancialInstitute institute = new FinancialInstitute();
-        institute.setBankCode(BawagPskConstants.Server.BANK_CODE);
-        institute.setBIC(BawagPskConstants.Server.BIC);
-        institute.setCode(BawagPskConstants.Server.CODE);
-        institute.setShortName(BawagPskConstants.Server.SHORT_NAME);
+        institute.setBankCode(RpcConstants.Server.BANK_CODE);
+        institute.setBIC(RpcConstants.Server.BIC);
+        institute.setCode(RpcConstants.Server.CODE);
+        institute.setShortName(RpcConstants.Server.SHORT_NAME);
 
         StatementSearchCriteria criteria = new StatementSearchCriteria();
         criteria.setMinDatePosted(fromDateTime);
         criteria.setMaxDatePosted(toDateTime);
-        criteria.setSortingColumn(BawagPskConstants.BOOKING_DATE);
-        criteria.setTransactionType(BawagPskConstants.TRANSACTION_TYPE);
+        criteria.setSortingColumn(RpcConstants.BOOKING_DATE);
+        criteria.setTransactionType(RpcConstants.TRANSACTION_TYPE);
 
         GetAccountStatementItemsRequestEntity request = new GetAccountStatementItemsRequestEntity();
         request.setServerSessionID(serverSessionID);
@@ -54,6 +54,6 @@ public class GetAccountStatementItemsRequest {
     }
 
     public String getXml() {
-        return BawagPskUtils.entityToXml(envelope);
+        return EntitiesUtils.entityToXml(envelope);
     }
 }
