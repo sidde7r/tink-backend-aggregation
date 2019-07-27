@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.ConsentFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions.TransactionsEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -39,11 +38,8 @@ public class VolksbankTransactionFetcher
                         .get(Storage.OAUTH_TOKEN, OAuth2Token.class)
                         .orElseThrow(() -> new NoSuchElementException("Missing Oauth token!"));
 
-        final TransactionsEntity response =
-                apiClient
-                        .readTransactions(
-                                account, VolksbankUtils.splitURLQuery(key), consentId, oauthToken)
-                        .getTransactions();
-        return response;
+        return apiClient
+                .readTransactions(account, VolksbankUtils.splitURLQuery(key), consentId, oauthToken)
+                .getTransactions();
     }
 }
