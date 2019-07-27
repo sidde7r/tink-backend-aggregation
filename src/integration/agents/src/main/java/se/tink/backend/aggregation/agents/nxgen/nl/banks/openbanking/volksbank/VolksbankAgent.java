@@ -29,7 +29,6 @@ public class VolksbankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final VolksbankApiClient volksbankApiClient;
-    private final VolksbankHttpClient httpClient;
     private final VolksbankUrlFactory urlFactory;
     private VolksbankConfiguration volksbankConfiguration;
     private final String clientName;
@@ -48,10 +47,9 @@ public class VolksbankAgent extends NextGenerationAgent
 
         final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
-        this.httpClient = new VolksbankHttpClient(client);
         this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
-        volksbankApiClient = new VolksbankApiClient(httpClient, persistentStorage, urlFactory);
+        volksbankApiClient = new VolksbankApiClient(client, persistentStorage, urlFactory);
 
         consentFetcher = new ConsentFetcher(volksbankApiClient, persistentStorage, isSandbox);
 

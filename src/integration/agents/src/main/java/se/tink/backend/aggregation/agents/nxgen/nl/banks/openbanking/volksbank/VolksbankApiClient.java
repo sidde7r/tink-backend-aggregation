@@ -21,18 +21,19 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.f
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class VolksbankApiClient {
 
-    private final VolksbankHttpClient client;
+    private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final VolksbankUrlFactory urlFactory;
     private VolksbankConfiguration configuration;
 
     public VolksbankApiClient(
-            final VolksbankHttpClient client,
+            final TinkHttpClient client,
             final PersistentStorage persistentStorage,
             final VolksbankUrlFactory urlFactory) {
         this.client = client;
@@ -56,8 +57,7 @@ public class VolksbankApiClient {
                         Paths.ACCOUNTS + "/" + account.getApiIdentifier() + Paths.TRANSACTIONS);
 
         RequestBuilder request =
-                client.getTinkClient()
-                        .request(url)
+                client.request(url)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.REQUEST_ID, getRequestId())
                         .header(HeaderKeys.CONSENT_ID, consentId)
@@ -99,8 +99,7 @@ public class VolksbankApiClient {
                         Paths.ACCOUNTS + "/" + account.getResourceId() + Paths.BALANCES);
 
         String response =
-                client.getTinkClient()
-                        .request(url)
+                client.request(url)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.REQUEST_ID, getRequestId())
                         .header(HeaderKeys.CONSENT_ID, consentId)
@@ -121,8 +120,7 @@ public class VolksbankApiClient {
         URL url = urlFactory.buildURL(Paths.ACCOUNTS);
 
         String response =
-                client.getTinkClient()
-                        .request(url)
+                client.request(url)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.REQUEST_ID, getRequestId())
                         .header(HeaderKeys.CONSENT_ID, consentId)
@@ -151,8 +149,7 @@ public class VolksbankApiClient {
                         VolksbankUtils.getFutureDateAsString(ConsentParams.VALID_YEAR),
                         ConsentParams.FREQUENCY_PER_DAY);
 
-        return client.getTinkClient()
-                .request(url)
+        return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.REQUEST_ID, getRequestId())
@@ -165,8 +162,7 @@ public class VolksbankApiClient {
     public OAuth2Token getBearerToken(URL url) {
 
         OAuth2Token token =
-                client.getTinkClient()
-                        .request(url)
+                client.request(url)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                         .header(HeaderKeys.REQUEST_ID, getRequestId())
