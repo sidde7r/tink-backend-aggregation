@@ -74,7 +74,6 @@ public class VolksbankApiClient {
                 request = request.queryParam(key, urlParams.get(key));
             }
         } else {
-            String now = VolksbankUtils.getCurrentDateAsString();
             request =
                     request.queryParam(
                                     TransactionFetcherParams.BOOKING_STATUS,
