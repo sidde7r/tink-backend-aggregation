@@ -161,14 +161,12 @@ public class VolksbankApiClient {
 
     public OAuth2Token getBearerToken(URL url) {
 
-        OAuth2Token token =
-                client.request(url)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                        .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .post(TokenResponse.class)
-                        .toOauthToken();
-        return token;
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .header(HeaderKeys.REQUEST_ID, getRequestId())
+                .post(TokenResponse.class)
+                .toOauthToken();
     }
 
     private static String getRequestId() {
@@ -184,8 +182,7 @@ public class VolksbankApiClient {
         response = response.substring(response.indexOf("\n") + 1);
 
         try {
-            E realResponse = new ObjectMapper().readValue(response, contentClass);
-            return realResponse;
+            return new ObjectMapper().readValue(response, contentClass);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
