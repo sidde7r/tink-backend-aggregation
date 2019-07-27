@@ -49,7 +49,7 @@ public class VolksbankAgent extends NextGenerationAgent
 
         this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
-        volksbankApiClient = new VolksbankApiClient(client, persistentStorage, urlFactory);
+        volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
         consentFetcher = new ConsentFetcher(volksbankApiClient, persistentStorage, isSandbox);
 
@@ -58,12 +58,14 @@ public class VolksbankAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new VolksbankTransactionalAccountFetcher(
-                                volksbankApiClient, consentFetcher),
+                                volksbankApiClient, consentFetcher, persistentStorage),
                         new TransactionFetcherController<>(
                                 this.transactionPaginationHelper,
                                 new TransactionKeyPaginationController<>(
                                         new VolksbankTransactionFetcher(
-                                                volksbankApiClient, consentFetcher))));
+                                                volksbankApiClient,
+                                                consentFetcher,
+                                                persistentStorage))));
     }
 
     @Override
