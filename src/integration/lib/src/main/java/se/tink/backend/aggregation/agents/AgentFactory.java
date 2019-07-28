@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
@@ -43,17 +44,42 @@ public class AgentFactory {
         return create(agentClass, request, context);
     }
 
+    /**
+     * @return An agent constructed using its {@link AgentsServiceConfiguration } constructor or, if
+     *     it doesn't exist, its {@link SignatureKeyPair } constructor.
+     */
     public Agent create(
             Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context)
             throws Exception {
-        Constructor<?> agentConstructor =
-                agentClass.getConstructor(
-                        CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
 
-        Agent agent =
-                (Agent)
-                        agentConstructor.newInstance(
-                                request, context, configuration.getSignatureKeyPair());
+        final Class<?>[] altParameterList = {
+            CredentialsRequest.class, AgentContext.class, AgentsServiceConfiguration.class
+        };
+
+        final boolean hasAlternativeConstructor =
+                Arrays.stream(agentClass.getConstructors())
+                        .anyMatch(c -> Arrays.equals(c.getParameterTypes(), altParameterList));
+
+        final Agent agent;
+
+        if (hasAlternativeConstructor) {
+            Constructor<?> agentConstructor =
+                    agentClass.getConstructor(
+                            CredentialsRequest.class,
+                            AgentContext.class,
+                            AgentsServiceConfiguration.class);
+
+            agent = (Agent) agentConstructor.newInstance(request, context, configuration);
+        } else {
+            Constructor<?> agentConstructor =
+                    agentClass.getConstructor(
+                            CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
+
+            SignatureKeyPair signatureKeyPair = configuration.getSignatureKeyPair();
+
+            agent = (Agent) agentConstructor.newInstance(request, context, signatureKeyPair);
+        }
+
         agent.setConfiguration(configuration);
 
         return agent;
