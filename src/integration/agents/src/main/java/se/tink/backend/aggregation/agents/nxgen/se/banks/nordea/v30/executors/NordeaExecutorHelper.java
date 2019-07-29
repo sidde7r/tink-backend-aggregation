@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
+import com.google.common.base.Predicates;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.List;
 import java.util.Optional;
@@ -74,6 +75,7 @@ public class NordeaExecutorHelper {
     /** Check if payment destination account exist as unconfirmed among user's beneificiaries, */
     protected Optional<BeneficiariesEntity> validateDestinationAccount(Transfer transfer) {
         return apiClient.fetchBeneficiaries().getBeneficiaries().stream()
+                .filter(Predicates.or(BeneficiariesEntity::isLBAN, BeneficiariesEntity::isPgOrBg))
                 .filter(
                         beneficiary ->
                                 isAccountIdentifierEquals(

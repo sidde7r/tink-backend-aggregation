@@ -43,6 +43,12 @@ public class BeneficiariesEntity implements GeneralAccountEntity {
     }
 
     @JsonIgnore
+    public boolean isLBAN() {
+        return NordeaSEConstants.PaymentAccountTypes.LBAN.equalsIgnoreCase(accountNumberType)
+                || NordeaSEConstants.PaymentAccountTypes.NDASE.equalsIgnoreCase(accountNumberType);
+    }
+
+    @JsonIgnore
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
         switch (accountNumberType.toUpperCase()) {
