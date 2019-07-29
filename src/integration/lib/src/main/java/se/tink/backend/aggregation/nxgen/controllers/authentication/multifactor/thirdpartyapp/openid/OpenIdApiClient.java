@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
@@ -26,7 +27,6 @@ public class OpenIdApiClient {
     protected final TinkHttpClient httpClient;
     protected final SoftwareStatement softwareStatement;
     protected final ProviderConfiguration providerConfiguration;
-    private final OpenIdConstants.ClientMode clientMode;
     private final URL wellKnownURL;
 
     // Internal caching. Do not use these fields directly, always use the getters!
@@ -38,12 +38,10 @@ public class OpenIdApiClient {
             TinkHttpClient httpClient,
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration,
-            OpenIdConstants.ClientMode clientMode,
             URL wellKnownURL) {
         this.httpClient = httpClient;
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
-        this.clientMode = clientMode;
         this.wellKnownURL = wellKnownURL;
 
         // Softw. Transp. key
@@ -92,13 +90,13 @@ public class OpenIdApiClient {
         return cachedProviderKeys;
     }
 
-    private TokenRequestForm createTokenRequestForm(String grantType) {
+    private TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
 
         // Token request does not use OpenId scope
         String scope =
                 wellknownConfiguration
-                        .verifyAndGetScopes(Collections.singletonList(clientMode.getValue()))
+                        .verifyAndGetScopes(Collections.singletonList(mode.getValue()))
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
@@ -197,26 +195,27 @@ public class OpenIdApiClient {
         return requestBuilder;
     }
 
-    public OAuth2Token requestClientCredentials() {
-        TokenRequestForm postData = createTokenRequestForm("client_credentials");
+    public OAuth2Token requestClientCredentials(ClientMode scope) {
+        TokenRequestForm postData = createTokenRequestForm("client_credentials", scope);
 
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
 
-    public OAuth2Token refreshAccessToken(String refreshToken) {
+    public OAuth2Token refreshAccessToken(String refreshToken, ClientMode scope) {
         TokenRequestForm postData =
-                createTokenRequestForm("refresh_token").withRefreshToken(refreshToken);
+                createTokenRequestForm("refresh_token", scope).withRefreshToken(refreshToken);
 
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
 
-    public OAuth2Token exchangeAccessCode(String code) {
-        TokenRequestForm postData = createTokenRequestForm("authorization_code").withCode(code);
+    public OAuth2Token exchangeAccessCode(String code, ClientMode scope) {
+        TokenRequestForm postData =
+                createTokenRequestForm("authorization_code", scope).withCode(code);
 
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
 
-    public URL buildAuthorizeUrl(String state, String nonce, String callbackUri) {
+    public URL buildAuthorizeUrl(String state, String nonce, ClientMode mode, String callbackUri) {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
         ClientInfo clientInfo = providerConfiguration.getClientInfo();
 
@@ -226,8 +225,7 @@ public class OpenIdApiClient {
         String scope =
                 wellknownConfiguration
                         .verifyAndGetScopes(
-                                Arrays.asList(
-                                        OpenIdConstants.Scopes.OPEN_ID, clientMode.getValue()))
+                                Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, mode.getValue()))
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(

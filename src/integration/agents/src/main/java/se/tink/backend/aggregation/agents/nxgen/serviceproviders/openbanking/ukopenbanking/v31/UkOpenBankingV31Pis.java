@@ -5,12 +5,12 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.ResponseKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -22,15 +22,13 @@ import se.tink.libraries.payment.rpc.Reference;
 public class UkOpenBankingV31Pis implements UkOpenBankingPis {
 
     private final UkOpenBankingPisConfig ukOpenBankingPisConfig;
-    private final String internalTransferId;
-    private final String externalTransferId;
     private final boolean mustNotHaveSourceAccountSpecified;
+    private final String internalTransferId;
 
     public UkOpenBankingV31Pis(UkOpenBankingPisConfig ukOpenBankingPisConfig) {
         this.ukOpenBankingPisConfig = ukOpenBankingPisConfig;
         this.mustNotHaveSourceAccountSpecified = false;
         this.internalTransferId = RandomUtils.generateRandomHexEncoded(15);
-        this.externalTransferId = RandomUtils.generateRandomHexEncoded(15);
     }
 
     @Override
@@ -39,34 +37,17 @@ public class UkOpenBankingV31Pis implements UkOpenBankingPis {
     }
 
     @Override
-    public String getBankTransferIntentId(
-            UkOpenBankingApiClient apiClient,
-            @Nullable AccountIdentifier sourceIdentifier,
-            AccountIdentifier destinationIdentifier,
-            Amount amount,
-            String referenceText)
+    public PaymentResponse getBankTransferIntentId(
+            UkOpenBankingApiClient apiClient, PaymentRequest paymentRequest)
             throws TransferExecutionException {
 
         // TODO: Currently we only support domestic transfers. In the future, we need to detect if
         // the payment is domestic or international and support both of them.
 
         // TODO: What to do with commented-out fields below?
-        Payment payment =
-                new Payment.Builder()
-                        .withCreditor(
-                                new Creditor(
-                                        destinationIdentifier,
-                                        destinationIdentifier.getName().orElse("Unknown Person")))
-                        .withDebtor(new Debtor(sourceIdentifier))
-                        .withAmount(amount)
-                        .withReference(new Reference("TRANSFER", referenceText))
-                        .withUniqueId(internalTransferId)
-                        // .withExecutionDate()
-                        // .withStatus()
-                        // .withType()
-                        .build();
 
-        DomesticPaymentConsentRequest consentRequest = new DomesticPaymentConsentRequest(payment);
+        DomesticPaymentConsentRequest consentRequest =
+                new DomesticPaymentConsentRequest(paymentRequest.getPayment());
 
         DomesticPaymentConsentResponse consentResponse =
                 apiClient.createDomesticPaymentConsent(
@@ -74,8 +55,7 @@ public class UkOpenBankingV31Pis implements UkOpenBankingPis {
                         consentRequest,
                         DomesticPaymentConsentResponse.class);
 
-        PaymentResponse paymentResponse = consentResponse.toTinkPaymentResponse();
-        return paymentResponse.getStorage().get(ResponseKeys.CONSENT_ID_KEY);
+        return consentResponse.toTinkPaymentResponse();
 
         // TODO: Do we need to go check the status of the consent (see below)?
 

@@ -152,7 +152,9 @@ public class OpenIdAuthenticationController
 
             try {
 
-                accessToken = apiClient.refreshAccessToken(refreshToken);
+                accessToken =
+                        apiClient.refreshAccessToken(
+                                refreshToken, authenticator.getClientCredentialScope());
             } catch (HttpResponseException e) {
 
                 logger.info(
@@ -186,7 +188,8 @@ public class OpenIdAuthenticationController
 
     @Override
     public ThirdPartyAppResponse<String> init() {
-        clientAccessToken = apiClient.requestClientCredentials();
+        clientAccessToken =
+                apiClient.requestClientCredentials(authenticator.getClientCredentialScope());
         if (!clientAccessToken.isValid()) {
             throw new IllegalStateException("Client access token is not valid.");
         }
@@ -197,7 +200,9 @@ public class OpenIdAuthenticationController
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
 
-        URL authorizeUrl = apiClient.buildAuthorizeUrl(state, nonce, callbackUri);
+        URL authorizeUrl =
+                apiClient.buildAuthorizeUrl(
+                        state, nonce, authenticator.getClientCredentialScope(), callbackUri);
 
         apiClient.attachAuthFilter(clientAccessToken);
         try {
@@ -253,7 +258,8 @@ public class OpenIdAuthenticationController
         //                .orElseThrow(() -> new IllegalStateException("callbackData did not contain
         // id_token."));
 
-        OAuth2Token accessToken = apiClient.exchangeAccessCode(code);
+        OAuth2Token accessToken =
+                apiClient.exchangeAccessCode(code, authenticator.getClientCredentialScope());
 
         if (!accessToken.isValid()) {
             throw new IllegalStateException("Invalid access token.");

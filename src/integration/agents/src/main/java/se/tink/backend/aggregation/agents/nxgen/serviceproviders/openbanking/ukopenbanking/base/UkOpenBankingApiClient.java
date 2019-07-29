@@ -1,16 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base;
 
+import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.TinkJwtCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.HttpHeaders;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.JWTSignatureHeaders.HEADERS;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.JWTSignatureHeaders.PAYLOAD;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.OpenIdSignUtils;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -21,9 +30,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             TinkHttpClient httpClient,
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration,
-            OpenIdConstants.ClientMode clientMode,
             URL wellKnownURL) {
-        super(httpClient, softwareStatement, providerConfiguration, clientMode, wellKnownURL);
+        super(httpClient, softwareStatement, providerConfiguration, wellKnownURL);
     }
 
     public <T> T createPaymentIntentId(
@@ -110,9 +118,45 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                         RandomUtils.generateRandomHexEncoded(8));
     }
 
+    private RequestBuilder createPISRequest(URL url, Object request) {
+        return createRequest(url)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .header(
+                        UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
+                        RandomUtils.generateRandomHexEncoded(8))
+                .header(HttpHeaders.X_JWS_SIGNATURE, createJWTSignature(request));
+    }
+
+    private String createJWTSignature(Object request) {
+        String keyId = softwareStatement.getSigningKeyId();
+        Algorithm algorithm =
+                OpenIdSignUtils.getSignatureAlgorithm(softwareStatement.getSigningKey());
+
+        Map<String, Object> jwtHeaders = new LinkedHashMap<>();
+        jwtHeaders.put(HEADERS.KID, keyId);
+        jwtHeaders.put(HEADERS.B64, false);
+        jwtHeaders.put(HEADERS.IAT, new Date().getTime() - 1000);
+        jwtHeaders.put(HEADERS.ISS, softwareStatement.getSoftwareId());
+        String[] crit = {HEADERS.B64, HEADERS.IAT, HEADERS.ISS};
+        jwtHeaders.put(HEADERS.CRIT, crit);
+
+        ObjectMapper oMapper = new ObjectMapper();
+        Map<String, Object> payloadClaims = oMapper.convertValue(request, Map.class);
+
+        String signature =
+                TinkJwtCreator.create()
+                        .withHeader(jwtHeaders)
+                        .withClaim(PAYLOAD.DATA, payloadClaims.get(PAYLOAD.DATA))
+                        .withClaim(PAYLOAD.RISK, payloadClaims.get(PAYLOAD.RISK))
+                        .sign(algorithm);
+
+        String[] jwtParts = signature.split("\\.");
+        return jwtParts[0] + ".." + jwtParts[2];
+    }
+
     public <T> T createDomesticPaymentConsent(
             UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createPISRequest(pisConfig.createDomesticPaymentConsentURL())
+        return createPISRequest(pisConfig.createDomesticPaymentConsentURL(), request)
                 .post(responseType, request);
     }
 
@@ -124,7 +168,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public <T> T executeDomesticPayment(
             UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createPISRequest(pisConfig.createDomesticPaymentURL()).post(responseType, request);
+        return createPISRequest(pisConfig.createDomesticPaymentURL(), request)
+                .post(responseType, request);
     }
 
     public <T> T getDomesticFundsConfirmation(

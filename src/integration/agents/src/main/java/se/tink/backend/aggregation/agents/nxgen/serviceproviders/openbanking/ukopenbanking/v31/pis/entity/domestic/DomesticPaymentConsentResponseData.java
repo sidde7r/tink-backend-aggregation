@@ -38,6 +38,7 @@ public class DomesticPaymentConsentResponseData {
                         .withCreditor(initiation.getCreditor())
                         .withCurrency(initiation.toTinkAmount().getCurrency())
                         .withReference(initiation.getReference())
+                        .withUniqueId(initiation.getInstructionIdentification())
                         .build();
 
         Storage storage = new Storage();

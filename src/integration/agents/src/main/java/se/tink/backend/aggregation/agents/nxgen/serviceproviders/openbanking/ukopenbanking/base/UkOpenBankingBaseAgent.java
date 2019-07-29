@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransferDestinationFetcher;
@@ -56,7 +56,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     private final TinkHttpClient paymentsHttpClient;
     protected UkOpenBankingApiClient apiClient;
     protected SoftwareStatement softwareStatement;
-    private ProviderConfiguration providerConfiguration;
+    protected ProviderConfiguration providerConfiguration;
     private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private boolean disableSslVerification;
 
@@ -198,21 +198,21 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             ProviderConfiguration providerConfiguration,
             OpenIdConstants.ClientMode clientMode) {
         return new UkOpenBankingApiClient(
-                httpClient, softwareStatement, providerConfiguration, clientMode, wellKnownURL);
+                httpClient, softwareStatement, providerConfiguration, wellKnownURL);
     }
 
     @Override
     protected abstract Authenticator constructAuthenticator();
 
     protected Authenticator constructAuthenticator(UkOpenBankingAisConfig aisConfig) {
-        UkOpenBankingAuthenticator authenticator =
-                new UkOpenBankingAuthenticator(apiClient, aisConfig);
+        UkOpenBankingAisAuthenticator authenticator =
+                new UkOpenBankingAisAuthenticator(apiClient, aisConfig);
         return createOpenIdFlowWithAuthenticator(
                 authenticator, callbackJWTSignatureKeyPair.isEnabled());
     }
 
     protected final Authenticator createOpenIdFlowWithAuthenticator(
-            UkOpenBankingAuthenticator authenticator, boolean enabled) {
+            UkOpenBankingAisAuthenticator authenticator, boolean enabled) {
         callbackJWTSignatureKeyPair.setEnabled(enabled);
         return OpenIdAuthenticationFlow.create(
                 request,
