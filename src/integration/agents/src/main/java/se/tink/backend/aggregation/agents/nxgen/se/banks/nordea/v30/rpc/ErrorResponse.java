@@ -2,8 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 @JsonObject
 public class ErrorResponse {
@@ -11,6 +15,19 @@ public class ErrorResponse {
 
     @JsonProperty("error_description")
     private String errorDescription;
+
+    /**
+     * @throws HttpResponseException if the http response doesn't have application/json content type
+     *     header
+     */
+    public static ErrorResponse of(HttpResponseException e) throws HttpResponseException {
+        HttpResponse response = e.getResponse();
+        if (Objects.nonNull(response)
+                && MediaType.APPLICATION_JSON_TYPE.equals(response.getType())) {
+            return response.getBody(ErrorResponse.class);
+        }
+        throw e;
+    }
 
     @JsonIgnore
     public boolean isInvalidAccessToken() {

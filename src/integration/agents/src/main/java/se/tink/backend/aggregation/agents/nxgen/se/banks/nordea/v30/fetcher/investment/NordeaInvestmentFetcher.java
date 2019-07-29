@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSECons
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class NordeaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
@@ -26,7 +25,7 @@ public class NordeaInvestmentFetcher implements AccountFetcher<InvestmentAccount
         try {
             return apiClient.fetchInvestments().toTinkInvestmentAccounts();
         } catch (HttpResponseException e) {
-            if (isShouldNotFetchInvestmentError(e.getResponse())) {
+            if (isShouldNotFetchInvestmentError(e)) {
                 return Collections.emptyList();
             }
 
@@ -34,8 +33,8 @@ public class NordeaInvestmentFetcher implements AccountFetcher<InvestmentAccount
         }
     }
 
-    private boolean isShouldNotFetchInvestmentError(HttpResponse response) {
-        ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+    private boolean isShouldNotFetchInvestmentError(HttpResponseException hre) {
+        ErrorResponse errorResponse = ErrorResponse.of(hre);
         // user not having agreement for investments could spoil the refresh
         if (errorResponse.hasNoAgreement()) {
             LOG.debug(NordeaSEConstants.LogMessages.NO_INVESTMENTS);
