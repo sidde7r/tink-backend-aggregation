@@ -63,7 +63,6 @@ public class AgentWorkerCommandMetricState {
                 new MetricAction(
                         this,
                         metricCacheLoader,
-                        credentials,
                         MetricId.newId("agent_command")
                                 .label("operation_type", operationType.getMetricName()));
 
@@ -149,7 +148,6 @@ public class AgentWorkerCommandMetricState {
         return new MetricAction(
                 this,
                 metricCacheLoader,
-                credentials,
                 MetricId.newId(command.getMetricName())
                         .label(action)
                         .label("provider_type", provider.getMetricTypeName())

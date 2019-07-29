@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.workers.metrics;
 
 import com.google.common.base.Preconditions;
 import java.util.List;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.Timer;
 
@@ -10,21 +9,18 @@ public class MetricAction {
     private final AgentWorkerCommandMetricState state;
     private final MetricCacheLoader metricCacheLoader;
     private final MetricId metricPath;
-    private final Credentials credentials;
 
     private Timer.Context timer;
 
     MetricAction(
             AgentWorkerCommandMetricState state,
             MetricCacheLoader metricCacheLoader,
-            Credentials credentials,
             MetricId metricPath) {
         Preconditions.checkArgument(state != null, "No MetricState provided");
         Preconditions.checkArgument(metricCacheLoader != null, "No MetricLoader provided");
 
         this.state = state;
         this.metricCacheLoader = metricCacheLoader;
-        this.credentials = credentials;
         this.metricPath = metricPath;
     }
 

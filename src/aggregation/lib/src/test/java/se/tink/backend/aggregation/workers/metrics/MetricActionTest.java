@@ -27,7 +27,7 @@ public class MetricActionTest {
         loader = mock(MetricCacheLoader.class);
         state = mockMetricState();
         credentials = mockCredentials();
-        action = new MetricAction(state, loader, credentials, ACTION_NAME);
+        action = new MetricAction(state, loader, ACTION_NAME);
     }
 
     private AgentWorkerCommandMetricState mockMetricState() {
@@ -53,12 +53,12 @@ public class MetricActionTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureInstantiationThrowsException_whenState_isNull() {
-        new MetricAction(null, loader, credentials, MetricId.newId("invalid-instantiation"));
+        new MetricAction(null, loader, MetricId.newId("invalid-instantiation"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureInstantiationThrowsException_whenMetricLoader_isNull() {
-        new MetricAction(state, null, credentials, MetricId.newId("invalid-instantiation"));
+        new MetricAction(state, null, MetricId.newId("invalid-instantiation"));
     }
 
     @Test(expected = IllegalStateException.class)
