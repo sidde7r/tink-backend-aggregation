@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils.calculateFromDate;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
-import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
@@ -18,7 +19,7 @@ public class CbiGlobeTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
 
-    protected final CbiGlobeApiClient apiClient;
+    private final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final CbiGlobeAuthenticationController controller;
 
@@ -48,9 +49,5 @@ public class CbiGlobeTransactionalAccountFetcher
         fromDate = calculateFromDate(toDate);
         return apiClient.getTransactions(
                 account.getApiIdentifier(), fromDate, toDate, QueryValues.BOTH);
-    }
-
-    protected Date calculateFromDate(Date toDate) {
-        return new DateTime(toDate).minusDays(90).toDate();
     }
 }
