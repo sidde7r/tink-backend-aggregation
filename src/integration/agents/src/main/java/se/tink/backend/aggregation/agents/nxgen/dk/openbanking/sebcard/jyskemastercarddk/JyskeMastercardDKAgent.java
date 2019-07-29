@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sebcard.sas;
+package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sebcard.jyskemastercarddk;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbrandedcards.SebBrandedCardsAgent;
@@ -6,10 +6,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SasAgent extends SebBrandedCardsAgent {
+public class JyskeMastercardDKAgent extends SebBrandedCardsAgent {
 
-    public SasAgent(
+    public JyskeMastercardDKAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, SebBrandedCardsConstants.BrandedCardsDenmark.SAS);
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                SebBrandedCardsConstants.BrandedCardsDenmark.JYSKE);
     }
 }

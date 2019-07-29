@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sebcard.globecard;
+package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sebcard.saseurobonusmastercarddk;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbrandedcards.SebBrandedCardsAgent;
@@ -6,14 +6,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class GlobecardAgent extends SebBrandedCardsAgent {
+public class SasEurobonusMastercardDKAgent extends SebBrandedCardsAgent {
 
-    public GlobecardAgent(
+    public SasEurobonusMastercardDKAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(
-                request,
-                context,
-                signatureKeyPair,
-                SebBrandedCardsConstants.BrandedCardsDenmark.GLOBECARD);
+        super(request, context, signatureKeyPair, SebBrandedCardsConstants.BrandedCardsDenmark.SAS);
     }
 }

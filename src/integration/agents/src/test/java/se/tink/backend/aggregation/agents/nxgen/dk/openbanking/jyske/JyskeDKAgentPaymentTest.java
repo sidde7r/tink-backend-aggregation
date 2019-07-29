@@ -19,12 +19,12 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 @Ignore
-public class JyskeAgentPaymentTest {
+public class JyskeDKAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DK", "dk-jyske-oauth2")
+                new AgentIntegrationTest.Builder("DK", "dk-jyskemastercarddk-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
