@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2;
 
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -9,7 +10,8 @@ public interface OAuth2Authenticator {
 
     URL buildAuthorizeUrl(String state);
 
-    OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException;
+    OAuth2Token exchangeAuthorizationCode(String code)
+            throws BankServiceException, AuthenticationException;
 
     /**
      * If refreshing doesn't work you must throw a {@link SessionException} or {@link
