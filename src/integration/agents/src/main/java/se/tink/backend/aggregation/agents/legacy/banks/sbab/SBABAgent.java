@@ -5,11 +5,8 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collections;
@@ -66,7 +63,6 @@ import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -400,41 +396,6 @@ public class SBABAgent extends AbstractAgent
         return accounts;
     }
 
-    private DocumentContainer getAmortizationDocumentation(String loanNumber) throws Exception {
-        DocumentContainer amortizationDocumentation =
-                userDataClient.getAmortizationDocumentation(loanNumber);
-        String identifier = AMORTIZATION_DOCUMENTATION + "-" + loanNumber;
-        amortizationDocumentation.setIdentifier(identifier);
-
-        return amortizationDocumentation;
-    }
-
-    private boolean isUpdateAmortizationDocument() throws UnsupportedEncodingException {
-        if (lastCredentialsUpdate == null) {
-            return true;
-        }
-
-        // Hash the credentials id and take modulus 28 to get an integer in the range [0, 27].
-        // This will be the number of days added to the first day of the month to get the date
-        // that we will update the amortization documentation for this credential.
-        // This is done to not download the documentation for all users the same day.
-        // The number 27 is chosen with respect to that february only have 28 days in a none leap
-        // year.
-        int dayOfMonth =
-                Hashing.murmur3_32()
-                                .hashString(
-                                        credentials.getId().replace("-", ""),
-                                        Charset.forName("UTF-8"))
-                                .asInt()
-                        % 28;
-
-        LocalDate now = LocalDate.now();
-        LocalDate dateToUpdateAmortizationDocument =
-                lastCredentialsUpdate.withDayOfMonth(1).plusDays(dayOfMonth);
-
-        return now.isAfter(dateToUpdateAmortizationDocument);
-    }
-
     private void requestBankIdSupplemental() {
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
@@ -460,16 +421,10 @@ public class SBABAgent extends AbstractAgent
         try {
             Map<Account, AccountFeatures> accounts = new HashMap<>();
             Map<Account, Loan> loanAccountMapping = userDataClient.getLoans();
-            boolean updateAmortizationDocument = isUpdateAmortizationDocument();
 
             for (Account account : loanAccountMapping.keySet()) {
                 Loan loan = loanAccountMapping.get(account);
                 accounts.put(account, AccountFeatures.createForLoan(loan));
-
-                if (updateAmortizationDocument) {
-                    systemUpdater.updateDocument(
-                            getAmortizationDocumentation(loan.getLoanNumber()));
-                }
             }
             return new FetchLoanAccountsResponse(accounts);
         } catch (Exception e) {

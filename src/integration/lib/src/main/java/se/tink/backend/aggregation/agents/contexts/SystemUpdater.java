@@ -6,7 +6,6 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
-import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -24,8 +23,6 @@ public interface SystemUpdater {
             Credentials credentials, boolean doStatusUpdate);
 
     void updateFraudDetailsContent(List<FraudDetailsContent> detailsContent);
-
-    void updateDocument(DocumentContainer container);
 
     List<Account> getUpdatedAccounts();
 

@@ -12,8 +12,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInfo
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationResponse;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
@@ -92,10 +90,6 @@ public class ControllerWrapper {
 
     public Response processEinvoices(UpdateTransfersRequest request) {
         return client.processEinvoices(configuration, request);
-    }
-
-    public UpdateDocumentResponse updateDocument(UpdateDocumentRequest request) {
-        return client.updateDocument(configuration, request);
     }
 
     public Response updateFraudDetails(UpdateFraudDetailsRequest request) {

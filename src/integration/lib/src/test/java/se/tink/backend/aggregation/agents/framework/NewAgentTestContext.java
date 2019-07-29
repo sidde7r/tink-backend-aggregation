@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -340,11 +339,6 @@ public final class NewAgentTestContext extends AgentContext {
     @Override
     public void sendIdentityToIdentityAggregatorService(IdentityData identityData) {
         this.identityData = identityData;
-    }
-
-    @Override
-    public void updateDocument(DocumentContainer contianer) {
-        // noop
     }
 
     public void validateFetchedData(AisValidator validator) {
