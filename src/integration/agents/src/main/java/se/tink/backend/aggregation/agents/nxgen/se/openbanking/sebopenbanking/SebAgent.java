@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.SebTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebAbstractAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.SebCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.SebCardTransactionsFetcher;
@@ -18,22 +18,20 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class SebAccountsAndCardsAgent extends SebAbstractAgent<SebAccountsAndCardsApiClient>
+public final class SebAgent extends SebBaseAgent<SebApiClient>
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public SebAccountsAndCardsAgent(
+    public SebAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        this.apiClient = new SebApiClient(client, sessionStorage);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
     }
 
     @Override
-    protected SebAccountsAndCardsApiClient getApiClient() {
-        if (this.apiClient == null) {
-            this.apiClient = new SebAccountsAndCardsApiClient(client, sessionStorage);
-        }
+    protected SebApiClient getApiClient() {
         return this.apiClient;
     }
 

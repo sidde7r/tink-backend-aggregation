@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebAccountsAndCardsConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.session.SEBSessionHandler;
@@ -17,13 +17,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class SebAbstractAgent<C extends SebAbstractApiClient> extends NextGenerationAgent
+public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor {
 
     protected C apiClient;
     protected CreditCardRefreshController creditCardRefreshController;
+    protected SebConfiguration sebConfiguration;
 
-    protected SebAbstractAgent(
+    protected SebBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = getApiClient();
@@ -35,12 +36,12 @@ public abstract class SebAbstractAgent<C extends SebAbstractApiClient> extends N
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final SebConfiguration sebConfiguration =
+        sebConfiguration =
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
-                                SebAccountsAndCardsConstants.Market.INTEGRATION_NAME,
-                                SebAccountsAndCardsConstants.Market.CLIENT_NAME,
+                                SebConstants.Market.INTEGRATION_NAME,
+                                SebConstants.Market.CLIENT_NAME,
                                 SebConfiguration.class)
                         .orElseThrow(() -> new IllegalStateException("SEB configuration missing."));
 
@@ -50,7 +51,8 @@ public abstract class SebAbstractAgent<C extends SebAbstractApiClient> extends N
 
     @Override
     protected Authenticator constructAuthenticator() {
-        SebAuthenticator authenticator = new SebAuthenticator(apiClient, sessionStorage);
+        SebAuthenticator authenticator =
+                new SebAuthenticator(apiClient, sessionStorage, sebConfiguration);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,

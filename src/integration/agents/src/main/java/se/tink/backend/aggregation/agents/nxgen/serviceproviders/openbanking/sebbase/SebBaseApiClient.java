@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -19,23 +20,19 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public abstract class SebAbstractApiClient {
+public abstract class SebBaseApiClient {
 
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     protected SebConfiguration configuration;
 
-    public SebAbstractApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public SebBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
 
     public void setConfiguration(SebConfiguration configuration) {
         this.configuration = configuration;
-    }
-
-    public void setTokenToSession(OAuth2Token token) {
-        sessionStorage.put(SebCommonConstants.StorageKeys.TOKEN, token);
     }
 
     public abstract RequestBuilder getAuthorizeUrl();
@@ -46,24 +43,10 @@ public abstract class SebAbstractApiClient {
         return configuration;
     }
 
-    public TinkHttpClient getClient() {
-        return this.client;
-    }
-
     protected OAuth2Token getTokenFromSession() {
         return sessionStorage
                 .get(SebCommonConstants.StorageKeys.TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
-    }
-
-    protected RequestBuilder createRequestInSession(URL url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(SebCommonConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
-                .header(
-                        SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        SebCommonConstants.getPsuIpAddress())
-                .addBearerToken(getTokenFromSession());
     }
 
     protected String getRequestId() {
@@ -71,9 +54,37 @@ public abstract class SebAbstractApiClient {
     }
 
     public abstract FetchCardAccountsTransactions fetchCardTransactions(
-            String bankIdentifier, LocalDate fromDate, LocalDate toDate);
+            String accountId, LocalDate fromDate, LocalDate toDate);
+
+    public RequestBuilder buildCardTransactionsFetch(
+            URL url, LocalDate fromDate, LocalDate toDate) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(SebCommonConstants.DATE_FORMAT);
+
+        return createRequestInSession(url)
+                .queryParam(SebCommonConstants.QueryKeys.DATE_FROM, fromDate.format(formatter))
+                .queryParam(SebCommonConstants.QueryKeys.DATE_TO, toDate.format(formatter))
+                .queryParam(
+                        SebCommonConstants.QueryKeys.BOOKING_STATUS,
+                        SebCommonConstants.QueryValues.PENDING_AND_BOOKED_TRANSACTIONS);
+    }
 
     public abstract Collection<CreditCardAccount> fetchCardAccounts();
+
+    protected RequestBuilder createRequestInSession(URL url) {
+        return createRequest(url)
+                .header(SebCommonConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(
+                        SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
+                        SebCommonConstants.getPsuIpAddress())
+                .addBearerToken(getTokenFromSession());
+    }
+
+    protected RequestBuilder createRequest(URL url) {
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED);
+    }
 
     public OAuth2Token refreshToken(String url, RefreshRequest request) throws SessionException {
         try {

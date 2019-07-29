@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebAbstractApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenResponse;
@@ -20,32 +17,30 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class SebAccountsAndCardsApiClient extends SebAbstractApiClient {
+public class SebApiClient extends SebBaseApiClient {
 
-    public SebAccountsAndCardsApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public SebApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         super(client, sessionStorage);
     }
 
     @Override
     public RequestBuilder getAuthorizeUrl() {
-        return client.request(new URL(SebAccountsAndCardsConstants.Urls.BASE_AUTH_URL));
+        return client.request(new URL(SebConstants.Urls.BASE_AUTH_URL));
     }
 
     @Override
     public OAuth2Token getToken(TokenRequest request) {
-        return client.request(
-                        new URL(SebCommonConstants.Urls.BASE_URL + SebCommonConstants.Urls.TOKEN))
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .accept(MediaType.APPLICATION_JSON)
+        return createRequest(
+                        new URL(SebCommonConstants.Urls.BASE_URL)
+                                .concat(SebCommonConstants.Urls.TOKEN))
                 .post(TokenResponse.class, request.toData())
                 .toTinkToken();
     }
 
     public FetchAccountResponse fetchAccounts() {
         return createRequestInSession(
-                        new URL(
-                                SebCommonConstants.Urls.BASE_URL
-                                        + SebAccountsAndCardsConstants.Urls.ACCOUNTS))
+                        new URL(SebCommonConstants.Urls.BASE_URL)
+                                .concat(SebConstants.Urls.ACCOUNTS))
                 .queryParam(
                         SebCommonConstants.QueryKeys.WITH_BALANCE,
                         SebCommonConstants.QueryValues.WITH_BALANCE)
@@ -55,7 +50,7 @@ public class SebAccountsAndCardsApiClient extends SebAbstractApiClient {
     public FetchTransactionsResponse fetchTransactions(
             String urlAddress, boolean appendQueryParams) {
 
-        URL url = new URL(SebCommonConstants.Urls.BASE_URL + urlAddress);
+        URL url = new URL(SebCommonConstants.Urls.BASE_URL).concat(urlAddress);
 
         RequestBuilder requestBuilder = createRequestInSession(url);
 
@@ -72,28 +67,22 @@ public class SebAccountsAndCardsApiClient extends SebAbstractApiClient {
 
     public Collection<CreditCardAccount> fetchCardAccounts() {
         return createRequestInSession(
-                        new URL(
-                                SebCommonConstants.Urls.BASE_URL
-                                        + SebAccountsAndCardsConstants.Urls.CREDIT_CARD_ACCOUNTS))
+                        new URL(SebCommonConstants.Urls.BASE_URL)
+                                .concat(SebConstants.Urls.CREDIT_CARD_ACCOUNTS))
                 .get(FetchCardAccountResponse.class)
                 .getTransactions();
     }
 
+    @Override
     public FetchCardAccountsTransactions fetchCardTransactions(
             String accountId, LocalDate fromDate, LocalDate toDate) {
 
         URL url =
-                new URL(
-                                SebCommonConstants.Urls.BASE_URL
-                                        + SebAccountsAndCardsConstants.Urls
-                                                .CREDIT_CARD_TRANSACTIONS)
+                new URL(SebCommonConstants.Urls.BASE_URL)
+                        .concat(SebConstants.Urls.CREDIT_CARD_TRANSACTIONS)
                         .parameter(SebCommonConstants.IdTags.ACCOUNT_ID, accountId);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(SebCommonConstants.DATE_FORMAT);
-
-        return createRequestInSession(url)
-                .queryParam(SebCommonConstants.QueryKeys.DATE_FROM, fromDate.format(formatter))
-                .queryParam(SebCommonConstants.QueryKeys.DATE_TO, toDate.format(formatter))
+        return buildCardTransactionsFetch(url, fromDate, toDate)
                 .get(FetchCardAccountsTransactions.class);
     }
 }

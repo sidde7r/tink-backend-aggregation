@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.f
 
 import java.util.Collection;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebAccountsAndCardsApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebAccountsAndCardsConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -16,9 +16,9 @@ public class SebTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, String> {
 
-    private final SebAccountsAndCardsApiClient apiClient;
+    private final SebApiClient apiClient;
 
-    public SebTransactionalAccountFetcher(SebAccountsAndCardsApiClient apiClient) {
+    public SebTransactionalAccountFetcher(SebApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -38,9 +38,9 @@ public class SebTransactionalAccountFetcher
 
         URL url =
                 Optional.ofNullable(key)
-                        .map(k -> new URL(SebAccountsAndCardsConstants.Urls.BASE_AIS + k))
+                        .map(k -> new URL(SebConstants.Urls.BASE_AIS).concat(k))
                         .orElse(
-                                new URL(SebAccountsAndCardsConstants.Urls.TRANSACTIONS)
+                                new URL(SebConstants.Urls.TRANSACTIONS)
                                         .parameter(
                                                 SebCommonConstants.IdTags.ACCOUNT_ID,
                                                 account.getApiIdentifier()));

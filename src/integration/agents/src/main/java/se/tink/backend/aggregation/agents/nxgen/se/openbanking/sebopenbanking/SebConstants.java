@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
 
-public abstract class SebAccountsAndCardsConstants {
+public abstract class SebConstants {
 
     public static class Urls {
 

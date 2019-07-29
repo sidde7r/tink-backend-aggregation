@@ -61,14 +61,14 @@ public class CardAccountEntity {
     }
 
     @JsonIgnore
-    public CreditCardAccount toTinkTransaction() {
+    public CreditCardAccount toTinkAccount() {
 
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(resourceId)
+                                .withCardNumber(createUniqueIdFromMaskedPane())
                                 .withBalance(getAvailableBalance())
-                                .withAvailableCredit(getAvaliableCredit())
+                                .withAvailableCredit(getAvailableCredit())
                                 .withCardAlias(name)
                                 .build())
                 .withId(
@@ -86,12 +86,12 @@ public class CardAccountEntity {
     }
 
     @JsonIgnore
-    private ExactCurrencyAmount getAvaliableCredit() {
+    private ExactCurrencyAmount getAvailableCredit() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(BalanceEntity::isAvailableCredit)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .get();
+                .orElseThrow(() -> new IllegalStateException("Could not get available credit"));
     }
 
     @JsonIgnore
@@ -100,11 +100,11 @@ public class CardAccountEntity {
                 .filter(BalanceEntity::isBalance)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .get();
+                .orElseThrow(() -> new IllegalStateException("Could not get available balance"));
     }
 
     @JsonIgnore
     private String createUniqueIdFromMaskedPane() {
-        return maskedPan.split("[*]+")[1];
+        return maskedPan.replace("*", "0");
     }
 }

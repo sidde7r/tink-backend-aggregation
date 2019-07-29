@@ -104,7 +104,7 @@ public class AccountsEntity {
                 .filter(BalancesEntity::isAvailableBalance)
                 .findFirst()
                 .map(BalancesEntity::toAmount)
-                .get();
+                .orElseThrow(() -> new IllegalStateException("Could not get balance"));
     }
 
     private String getName() {
