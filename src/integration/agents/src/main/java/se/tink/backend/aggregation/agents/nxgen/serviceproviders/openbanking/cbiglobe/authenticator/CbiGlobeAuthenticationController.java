@@ -30,14 +30,13 @@ public class CbiGlobeAuthenticationController
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CbiGlobeAuthenticator authenticator;
-    private final String state;
+    private String state;
 
     public CbiGlobeAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
             CbiGlobeAuthenticator authenticator) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.state = generateRandomState();
     }
 
     private static String generateRandomState() {
@@ -65,6 +64,7 @@ public class CbiGlobeAuthenticationController
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         this.authenticator.getToken();
+        this.state = generateRandomState();
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
                         this.state, this.authenticator.createConsentRequestAccount());
@@ -93,6 +93,7 @@ public class CbiGlobeAuthenticationController
     }
 
     public void openThirdPartyApp(GetAccountsResponse getAccountsResponse) {
+        this.state = generateRandomState();
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
                         this.state,
