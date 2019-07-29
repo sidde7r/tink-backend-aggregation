@@ -277,6 +277,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         additionalInfo.addProperty("accountNumber", account.getAccountNumber());
         additionalInfo.addProperty("accountType", account.getType().name());
         additionalInfo.addProperty("balance", account.getBalance());
+        additionalInfo.addProperty("currencyCode", account.getCurrencyCode());
         additionalInfo.addProperty("holderName", account.getHolderName());
         additionalInfo.addProperty(
                 "iban",
