@@ -133,11 +133,10 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
             latch.await(500, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             log.warn("Waiting for tracking client to catch up for more than 500ms");
+        } finally {
+            latch.await(3, TimeUnit.SECONDS);
+            channel.shutdown().awaitTermination(2000, TimeUnit.MILLISECONDS);
         }
-
-        latch.await(2, TimeUnit.SECONDS);
-
-        channel.shutdown().awaitTermination(1000, TimeUnit.MILLISECONDS);
     }
 
     @Override
