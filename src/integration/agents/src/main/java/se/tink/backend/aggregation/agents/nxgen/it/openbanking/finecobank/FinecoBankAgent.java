@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -13,12 +14,17 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authen
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.configuration.FinecoBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.FinecoBankCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.FinecoBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.FinecoBankTransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.FinecoBankPaymentController;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.FinecoBankPaymentExecutor;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -119,6 +125,15 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
                                 accountFetcher, 1, 90, ChronoUnit.DAYS)));
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(
+                new FinecoBankPaymentController(
+                        new FinecoBankPaymentExecutor(apiClient, sessionStorage),
+                        supplementalInformationHelper,
+                        sessionStorage));
     }
 
     @Override

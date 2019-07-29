@@ -25,6 +25,7 @@ public class FinecoBankConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
+
         return redirectUrl;
     }
 
