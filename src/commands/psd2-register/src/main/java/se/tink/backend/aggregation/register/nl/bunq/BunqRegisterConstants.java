@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.register.nl.bunq;
 
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.register.RegisterEnvironment;
 
 public final class BunqRegisterConstants {
@@ -17,12 +16,13 @@ public final class BunqRegisterConstants {
         public static final String REGISTER_CALLBACK_URL =
                 "/v1/user/{userId}/oauth-client/{oauth-clientId}/callback-url";
         public static final String DELETE_SESSION = "/v1/session/{itemId}";
+        public static final String EIDAS_PROXY_URL =
+                "https://eidas-proxy.staging.aggregation.tink.network";
     }
 
     public static final class Endpoints {
         public static final String PRODUCTION = "https://api.bunq.com";
         public static final String SANDBOX = "https://public-api.sandbox.bunq.com";
-        public static final URL AUTHORIZE = new URL("https://oauth.sandbox.bunq.com/auth");
     }
 
     public static final class UrlParameterKeys {

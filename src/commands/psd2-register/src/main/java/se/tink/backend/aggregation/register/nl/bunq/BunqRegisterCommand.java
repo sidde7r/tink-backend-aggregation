@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.register.nl.bunq;
 
+import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.KeyPair;
-import java.security.PublicKey;
 import java.security.Security;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -21,11 +21,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.auth
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.filter.BunqRequiredHeadersFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.filter.BunqSignatureHeaderFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.aggregation.register.RegisterEnvironment;
-import se.tink.backend.aggregation.register.nl.bunq.environment.sandbox.BunqRegisterSandboxUtils;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.AddOAuthClientIdResponse;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.GetClientIdAndSecretResponse;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.RegisterAsPSD2ProviderRequest;
@@ -38,12 +36,15 @@ public class BunqRegisterCommand {
     private static final String PRODUCTION_OPTION_NAME = "p";
     private static final String SANDBOX_OPTION_NAME = "s";
     private static final String REDIRECT_URL_OPTION_NAME = "r";
+    private static final String QSEALC_PATH = "q";
+    private static final String QSEALC_CHAIN_PATH = "c";
+    private static final String CERTIFICATE_ID = "i";
 
-    private static BunqRegistrationResponse bunqRegistrationResponse =
-            new BunqRegistrationResponse();
+    private static BunqRegistrationResponse.Builder bunqRegistrationResponse =
+            BunqRegistrationResponse.builder();
     private static TemporaryStorage temporaryStorage = new TemporaryStorage();
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
         Options options = createOptions();
@@ -63,10 +64,32 @@ public class BunqRegisterCommand {
         RegisterEnvironment selectedEnvironment;
         if (cmd.hasOption(PRODUCTION_OPTION_NAME)) {
             selectedEnvironment = RegisterEnvironment.PRODUCTION;
+            Preconditions.checkState(cmd.hasOption(QSEALC_PATH), "Conditionally required");
+            Preconditions.checkState(cmd.hasOption(QSEALC_CHAIN_PATH), "Conditionally required");
+            Preconditions.checkState(cmd.hasOption(CERTIFICATE_ID), "Conditionally required");
         } else if (cmd.hasOption(SANDBOX_OPTION_NAME)) {
             selectedEnvironment = RegisterEnvironment.SANDBOX;
         } else {
             selectedEnvironment = RegisterEnvironment.UNKNOWN;
+        }
+
+        final String qsealcPath = cmd.getOptionValue(QSEALC_PATH);
+        final String qsealcChainPath = cmd.getOptionValue(QSEALC_CHAIN_PATH);
+
+        final Environment environment;
+        switch (selectedEnvironment) {
+            case PRODUCTION:
+                environment =
+                        new ProductionEnvironment(
+                                qsealcPath, qsealcChainPath, cmd.getOptionValue(CERTIFICATE_ID));
+                break;
+            case SANDBOX:
+                environment = new SandboxEnvironment();
+                break;
+            case UNKNOWN:
+            default:
+                throw new IllegalArgumentException(
+                        "Selected environment is not valid, choose production or sandbox");
         }
 
         String redirectUrl = cmd.getOptionValue(REDIRECT_URL_OPTION_NAME);
@@ -74,16 +97,15 @@ public class BunqRegisterCommand {
         BunqRegisterCommandApiClient apiClient = createApiClient(selectedEnvironment);
 
         CreateSessionPSD2ProviderResponse psd2Session =
-                registerAsPSD2ServiceProvider(apiClient, selectedEnvironment);
+                registerAsPSD2ServiceProvider(apiClient, environment);
         String psd2UserId = String.valueOf(psd2Session.getUserPaymentServiceProvider().getId());
         registerOAuthCallback(apiClient, psd2UserId, redirectUrl);
         cleanupSession(apiClient, psd2Session);
 
-        System.out.println(
-                "\n### RESPONSE ###\n\n"
-                        + bunqRegistrationResponse.toString()
-                        + "\n\n################\n");
-        String outFile = saveResponse(bunqRegistrationResponse.toString());
+        final String yamlOutput = bunqRegistrationResponse.build().toYaml();
+
+        System.out.println("\n### RESPONSE ###\n\n" + yamlOutput + "\n\n################\n");
+        String outFile = saveResponse(yamlOutput);
         System.out.println(String.format("Done! \nRegistration response saved to: %s", outFile));
     }
 
@@ -117,12 +139,38 @@ public class BunqRegisterCommand {
                         .build();
         options.addOption(redirectUrlOption);
 
+        Option qsealcPathOption =
+                Option.builder(QSEALC_PATH)
+                        .longOpt("qsealc-path")
+                        .hasArg()
+                        .desc("Path to the QSeal certificate in PEM format")
+                        .build();
+
+        options.addOption(qsealcPathOption);
+
+        Option qsealcChainPathOption =
+                Option.builder(QSEALC_CHAIN_PATH)
+                        .longOpt("qsealc-chain-path")
+                        .hasArg()
+                        .desc("Path to a file containing the root and intermediate certificates")
+                        .build();
+        options.addOption(qsealcChainPathOption);
+
+        Option certificateIdOption =
+                Option.builder(CERTIFICATE_ID)
+                        .longOpt("certificate-id")
+                        .hasArg()
+                        .desc("Identifier for the private key the proxy will use for signing")
+                        .build();
+        options.addOption(certificateIdOption);
+
         return options;
     }
 
     private static BunqRegisterCommandApiClient createApiClient(
             RegisterEnvironment selectedEnvironment) {
         TinkHttpClient client = new TinkHttpClient();
+        client.setDebugOutput(true);
 
         client.addFilter(new BunqRequiredHeadersFilter(temporaryStorage));
         client.addFilter(new BunqSignatureHeaderFilter(temporaryStorage, client.getUserAgent()));
@@ -138,36 +186,12 @@ public class BunqRegisterCommand {
         return new BunqRegisterCommandApiClient(client, baseApiEndpoint);
     }
 
-    private static RegisterAsPSD2ProviderRequest getRegistrationPSD2RegisterRequestForEnvironment(
-            RegisterEnvironment selectedEnvironment,
-            PublicKey installationPublicKey,
-            String psd2ClientAuthToken) {
-        switch (selectedEnvironment) {
-            case PRODUCTION:
-                throw new NotImplementedException(
-                        "Registration towards Bunq's for our production environment is not yet implemented.");
-
-            case SANDBOX:
-                return new RegisterAsPSD2ProviderRequest(
-                        BunqRegisterSandboxUtils.getQSealCCertificateAsString(),
-                        BunqRegisterSandboxUtils
-                                .getPaymentServiceProviderCertificateChainAsString(),
-                        BunqRegisterSandboxUtils.getClientPublicKeySignatureAsString(
-                                installationPublicKey, psd2ClientAuthToken));
-
-            case UNKNOWN:
-            default:
-                throw new IllegalArgumentException(
-                        "Selected environment is not valid, choose production or sandbox");
-        }
-    }
-
     // Bunq uses an endpoint to register a PSD2 provider, instead of the usual developer portal used
     // by other banks, this only needs to be run once per QSealC certificate used to obtain the PSD2
     // API key that can then be saved as a secret and used to create future session/register
     // devices.
     private static CreateSessionPSD2ProviderResponse registerAsPSD2ServiceProvider(
-            BunqRegisterCommandApiClient apiClient, RegisterEnvironment selectedEnvironment) {
+            BunqRegisterCommandApiClient apiClient, Environment environment) {
         KeyPair keyPair = RSA.generateKeyPair(2048);
         bunqRegistrationResponse.setPsd2InstallationKeyPair(
                 SerializationUtils.serializeKeyPair(keyPair));
@@ -189,8 +213,8 @@ public class BunqRegisterCommand {
         // Use the installation Token and your unique PSD2 certificate to call POST
         // v1/payment-service-provider-credential. This will register your software.
         RegisterAsPSD2ProviderRequest registerAsPSD2ProviderRequest =
-                getRegistrationPSD2RegisterRequestForEnvironment(
-                        selectedEnvironment, keyPair.getPublic(), psd2ClientAuthToken.getToken());
+                environment.createRegisterRequest(
+                        keyPair.getPublic(), psd2ClientAuthToken.getToken());
         RegisterAsPSD2ProviderResponse registerSoftwareResponse =
                 apiClient.registerAsPSD2Provider(registerAsPSD2ProviderRequest);
 
