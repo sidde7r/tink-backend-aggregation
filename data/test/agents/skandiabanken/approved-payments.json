@@ -200,6 +200,42 @@
         "Invoice": null
     },
     {
+        "EncryptedPaymentId": "h0nQLP5iNlCJDLAaS4uzzo-4sxjBnJekvGIICDeM4IxMZJypR36j7wWMqSOEwRvxm9lpNrg_Zmje__ysLWBixbEy74hro-eIJlFkX7OQqpb6",
+        "Amount": 123.0,
+        "Date": "2019-07-30T00:00:00+02:00",
+        "Type": 1234,
+        "TypeName": "UnknownPayment",
+        "TypeDisplayName": "Unknown payment",
+        "PaymentType": 1234,
+        "PaymentTypeName": "UnknownPaymentType",
+        "PaymentTypeDisplayName": "Unknown payment",
+        "Status": 2,
+        "StatusName": "Approved",
+        "StatusDisplayName": "Godkänd",
+        "IsChangeable": false,
+        "IsDeletable": true,
+        "HasError": false,
+        "ErrorMessage": null,
+        "HasInformation": false,
+        "InformationMessage": null,
+        "Sender": {
+            "Name": null,
+            "BankAccountTransactionNote": "Överföring 1234 5678900",
+            "BankAccount": {
+                "BankAccountNumber": "23456789012",
+                "BankAccountDisplayName": "2345-678.901-2"
+            },
+            "Address": null
+        },
+        "Recipient": {
+            "Name": null,
+            "RecipientNumber": "12345678900",
+            "Reference": "Överf. M. Öberg"
+        },
+        "IsInvoice": false,
+        "Invoice": null
+    },
+    {
         "EncryptedPaymentId": "HwvK7V0CkHCbOqSrHn_gG5hZyVUCc9Q5X4VcYQqEauh85BO4aeDMm6YUMU2SJTDMRPPwprCC0Qcbhyhvv96R7MI58hvAWe7OJfpFcsT_hSX",
         "Amount": 535.03,
         "Date": "2019-07-06T00:00:00+02:00",

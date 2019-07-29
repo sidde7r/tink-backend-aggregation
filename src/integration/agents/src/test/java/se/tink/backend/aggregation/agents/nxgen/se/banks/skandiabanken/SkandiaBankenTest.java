@@ -26,7 +26,7 @@ public class SkandiaBankenTest {
         final FetchApprovedPaymentsResponse response =
                 loadTestResponse("approved-payments.json", FetchApprovedPaymentsResponse.class);
 
-        assertEquals(6, response.size());
+        assertEquals(7, response.size());
     }
 
     private TransactionalAccount mockedTransactionalAccount(String accountNumber) {

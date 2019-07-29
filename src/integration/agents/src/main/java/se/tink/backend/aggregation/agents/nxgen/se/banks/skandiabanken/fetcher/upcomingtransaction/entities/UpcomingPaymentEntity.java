@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Optional;
@@ -17,11 +19,12 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class UpcomingPaymentEntity {
-    private AggregationLogger logger = new AggregationLogger(UpcomingPaymentEntity.class);
+    private static AggregationLogger logger = new AggregationLogger(UpcomingPaymentEntity.class);
 
     @JsonProperty("Amount")
     private double amount;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     @JsonProperty("Date")
     private Date date;
 
@@ -85,14 +88,17 @@ public class UpcomingPaymentEntity {
     @JsonProperty("TypeName")
     private String typeName;
 
+    @JsonIgnore
     public String getSenderAccountNumber() {
         return sender.getBankAccount().getBankAccountNumber();
     }
 
+    @JsonIgnore
     private Amount getAmount() {
         return Amount.inSEK(amount).negate();
     }
 
+    @JsonIgnore
     public boolean isApproved() {
         return statusName.equalsIgnoreCase(PaymentStatus.APPROVED);
     }
