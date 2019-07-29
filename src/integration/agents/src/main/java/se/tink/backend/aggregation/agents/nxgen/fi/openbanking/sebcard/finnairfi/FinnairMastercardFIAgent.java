@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class FinnairFIAgent extends SebBrandedCardsAgent {
+public class FinnairMastercardFIAgent extends SebBrandedCardsAgent {
 
-    public FinnairFIAgent(
+    public FinnairMastercardFIAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(
                 request,

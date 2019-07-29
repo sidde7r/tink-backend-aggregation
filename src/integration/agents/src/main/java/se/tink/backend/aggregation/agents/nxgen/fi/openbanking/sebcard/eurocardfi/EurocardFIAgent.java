@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.sebcard.eurocard;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.sebcard.eurocardfi;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbrandedcards.SebBrandedCardsAgent;
@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class EurocardAgent extends SebBrandedCardsAgent {
+public class EurocardFIAgent extends SebBrandedCardsAgent {
 
-    public EurocardAgent(
+    public EurocardFIAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(
                 request,
