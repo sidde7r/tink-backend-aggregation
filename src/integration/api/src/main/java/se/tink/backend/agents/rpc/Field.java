@@ -97,32 +97,8 @@ public class Field {
         this.helpText = helpText;
     }
 
-    public void setHint(String hint) {
-        this.hint = hint;
-    }
-
-    public void setImmutable(boolean immutable) {
-        this.immutable = immutable;
-    }
-
-    public void setMaxLength(Integer length) {
-        if (length != null && length == 0) {
-            this.maxLength = null;
-        } else {
-            this.maxLength = length;
-        }
-    }
-
-    public void setMinLength(Integer minLength) {
-        this.minLength = minLength;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setNumeric(boolean numeric) {
-        this.numeric = numeric;
     }
 
     public void setValue(String value) {
@@ -244,7 +220,11 @@ public class Field {
             field.hint = hint;
             field.immutable = immutable;
             field.masked = masked;
-            field.setMaxLength(maxLength);
+            if (maxLength != null && maxLength == 0) {
+                field.maxLength = null;
+            } else {
+                field.maxLength = maxLength;
+            }
             field.minLength = minLength;
             field.name = name;
             field.numeric = numeric;

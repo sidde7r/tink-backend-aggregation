@@ -119,26 +119,26 @@ public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthen
     }
 
     private Field challengeField(SecurityCardResponse authenticate) {
-        Field field = new Field();
-        field.setImmutable(true);
-        field.setDescription("Challenge code");
-        field.setValue(authenticate.getSecurityKeyIndex());
-        field.setName("challenge");
-        field.setHelpText(
-                String.format(
-                        "Find the code in your codesheet (%s) for the indicated key.",
-                        authenticate.getSecurityKeyCardId()));
-        return field;
+        return Field.builder()
+                .immutable(true)
+                .description("Challenge code")
+                .value(authenticate.getSecurityKeyIndex())
+                .name("challenge")
+                .helpText(
+                        String.format(
+                                "Find the code in your codesheet (%s) for the indicated key.",
+                                authenticate.getSecurityKeyCardId()))
+                .build();
     }
 
     private Field responseField() {
-        Field field = new Field();
-        field.setDescription("Response code");
-        field.setName(HandelsbankenConstants.DeviceAuthentication.CODE);
-        field.setNumeric(true);
-        field.setHint("NNN NNN");
-        field.setMaxLength(6);
-        field.setMinLength(6);
-        return field;
+        return Field.builder()
+                .description("Response code")
+                .name(HandelsbankenConstants.DeviceAuthentication.CODE)
+                .numeric(true)
+                .hint("NNN NNN")
+                .maxLength(6)
+                .minLength(6)
+                .build();
     }
 }

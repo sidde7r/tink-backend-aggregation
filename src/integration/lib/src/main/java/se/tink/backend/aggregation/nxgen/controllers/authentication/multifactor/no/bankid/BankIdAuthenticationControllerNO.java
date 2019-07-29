@@ -63,14 +63,15 @@ public class BankIdAuthenticationControllerNO implements MultiFactorAuthenticato
     }
 
     private void displayBankIdReference(Credentials credentials, String bankIdReference) {
-        Field field = new Field();
-
-        field.setName("name");
-        field.setImmutable(true);
-        field.setDescription("Reference");
-        field.setValue(bankIdReference);
-        field.setHelpText(
-                "Continue by clicking update when you have verified the reference and signed with Mobile BankID.");
+        Field field =
+                Field.builder()
+                        .name("name")
+                        .immutable(true)
+                        .description("Reference")
+                        .value(bankIdReference)
+                        .helpText(
+                                "Continue by clicking update when you have verified the reference and signed with Mobile BankID.")
+                        .build();
 
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(Lists.newArrayList(field)));
