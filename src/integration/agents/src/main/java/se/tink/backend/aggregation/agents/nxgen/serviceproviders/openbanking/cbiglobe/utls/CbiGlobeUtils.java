@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.joda.time.DateTime;
 
 public class CbiGlobeUtils {
     private CbiGlobeUtils() {
@@ -37,5 +38,9 @@ public class CbiGlobeUtils {
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex.getCause());
         }
+    }
+
+    public static Date calculateFromDate(Date toDate) {
+        return new DateTime(toDate).minusDays(90).toDate();
     }
 }
