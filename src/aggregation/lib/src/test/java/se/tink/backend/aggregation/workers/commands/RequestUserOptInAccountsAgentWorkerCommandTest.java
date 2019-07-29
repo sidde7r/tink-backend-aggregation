@@ -95,4 +95,34 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
 
         Assert.assertFalse(credentials.getSupplementalInformation().contains("portfolioTypes"));
     }
+
+    @Test
+    public void ensureSupplementalInformationHaveCurrencyCode() throws Exception {
+        // Arrange
+        Account account = new Account();
+        account.setBankId(StringUtils.generateUUID());
+        account.setType(AccountTypes.CHECKING);
+        account.setCurrencyCode("USD");
+
+        AccountFeatures features = AccountFeatures.createEmpty();
+        Credentials credentials = new Credentials();
+
+        List<Account> accountsInRequest = Lists.newArrayList(account);
+        List<Pair<Account, AccountFeatures>> accountsInContext =
+                Lists.newArrayList(Pair.of(account, features));
+
+        Mockito.when(request.getAccounts()).thenReturn(accountsInRequest);
+        Mockito.when(request.getCredentials()).thenReturn(credentials);
+        Mockito.when(context.getCachedAccountsWithFeatures()).thenReturn(accountsInContext);
+        Mockito.when(context.requestSupplementalInformation(credentials)).thenReturn("{}");
+
+        // Act
+        command.execute();
+
+        // Assert
+        Assert.assertTrue(
+                credentials
+                        .getSupplementalInformation()
+                        .contains("\\\"currencyCode\\\":\\\"USD\\\""));
+    }
 }
