@@ -1531,6 +1531,52 @@
             "type": "BANK"
         },
         {
+            "className": "nxgen.se.banks.nordea.v30.NordeaSEAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "Nordea",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                },
+                {
+                    "description": "PIN",
+                    "helpText": "Use the same code that you use in the bank's mobile app after you log in with Bank ID once. If you forgot your code, you can choose a new one in the bank's mobile app. By filling in this, transactions can be downloaded automatically in the background, so you do not need to use Bank ID every time.",
+                    "hint": "NNNN",
+                    "immutable": true,
+                    "masked": true,
+                    "maxLength": 4,
+                    "minLength": 0,
+                    "name": "password",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "([0-9]{4})?",
+                    "patternError": "Please enter four digits.",
+                    "sensitive": true
+                }
+            ],
+            "groupDisplayName": "Nordea",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "se-nordea-password",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "transactional": true,
+            "tutorialUrl": "http://www.nordea.se/privat/vardagstjanster/internet-mobil-telefon/mobilbanken.html",
+            "type": "BANK"
+        },
+        {
             "className": "nxgen.se.banks.sbab.SbabAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "currency": "SEK",

@@ -5,8 +5,21 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.TagValues;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.AuthDeviceRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.AuthDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.ConfirmEnrollmentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.ConfirmEnrollmentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.EnrollmentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.EnrollmentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.InitDeviceAuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.PasswordTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.PasswordTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.ResultBankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.VerifyPersonalCodeRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.VerifyPersonalCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.entities.Form;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.CompleteTransferResponse;
@@ -57,7 +70,7 @@ public class NordeaSEApiClient {
         formBuilder.put(NordeaSEConstants.FormParams.CODE, response.getCode());
         formBuilder.put(NordeaSEConstants.FormParams.USERNAME, ssn);
 
-        return getAccessToken(formBuilder);
+        return getBankIdAccessToken(formBuilder);
     }
 
     private BankIdResponse sendBankIdRequest(Form form) {
@@ -68,12 +81,20 @@ public class NordeaSEApiClient {
                 .post(BankIdResponse.class);
     }
 
-    private ResultBankIdResponse getAccessToken(Form form) {
+    private ResultBankIdResponse getBankIdAccessToken(Form form) {
         return httpClient
                 .request(NordeaSEConstants.Urls.LOGIN_BANKID)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(ResultBankIdResponse.class);
+    }
+
+    public PasswordTokenResponse getPasswordAccessToken(Form request) {
+        return httpClient
+                .request(NordeaSEConstants.Urls.PASSWORD_TOKEN)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(request, MediaType.APPLICATION_FORM_URLENCODED)
+                .post(PasswordTokenResponse.class);
     }
 
     public FetchAccountResponse fetchAccount() {
@@ -233,9 +254,9 @@ public class NordeaSEApiClient {
         return requestRefreshablePost(request, SignatureResponse.class);
     }
 
-    public ResultSignResponse pollSignTransfer(String orderRef, int pollSequence) {
+    public ResultSignResponse pollSign(String orderRef, int pollSequence) {
         final URL url =
-                NordeaSEConstants.Urls.POLL_SIGN_TRANSFER
+                NordeaSEConstants.Urls.POLL_SIGN
                         .parameter(NordeaSEConstants.IdTags.ORDER_REF, orderRef)
                         .queryParam(
                                 NordeaSEConstants.QueryParams.POLLING_SEQUENCE,
@@ -331,6 +352,24 @@ public class NordeaSEApiClient {
         return request.put(responseType);
     }
 
+    private <T> T requestRefreshablePatch(RequestBuilder request, Class<T> responseType) {
+        try {
+            return request.header(
+                            HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, NordeaSEConstants.HeaderParams.LANGUAGE)
+                    .patch(responseType);
+
+        } catch (HttpResponseException hre) {
+            tryRefreshAccessToken(hre);
+            // use the new access token
+            request.overrideHeader(
+                    HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
+        }
+
+        // retry request with new access token
+        return request.patch(responseType);
+    }
+
     private void tryRefreshAccessToken(HttpResponseException hre) {
         HttpResponse response = hre.getResponse();
         ErrorResponse error = response.getBody(ErrorResponse.class);
@@ -343,27 +382,46 @@ public class NordeaSEApiClient {
     }
 
     private void refreshAccessToken(String refreshToken) {
+        String tokenAuthMethod =
+                sessionStorage.get(NordeaSEConstants.StorageKeys.TOKEN_AUTH_METHOD);
+        if (NordeaSEConstants.AuthMethod.NASA.equals(tokenAuthMethod)) {
+            refreshPasswordAccessToken(refreshToken);
+        } else {
+            refreshBankIdAccessToken(refreshToken);
+        }
+    }
+
+    private void refreshPasswordAccessToken(String refreshToken) {
+        PasswordTokenResponse response =
+                getPasswordAccessToken(PasswordTokenRequest.of(refreshToken));
+        response.storeTokens(sessionStorage);
+    }
+
+    private void refreshBankIdAccessToken(String refreshToken) {
         Form formBuilder = new Form(NordeaSEConstants.DEFAULT_FORM_PARAMS);
         formBuilder.put(
                 NordeaSEConstants.FormParams.GRANT_TYPE,
                 NordeaSEConstants.StorageKeys.REFRESH_TOKEN);
         formBuilder.put(NordeaSEConstants.StorageKeys.REFRESH_TOKEN, refreshToken);
 
-        ResultBankIdResponse response = getAccessToken(formBuilder);
+        ResultBankIdResponse response = getBankIdAccessToken(formBuilder);
         response.storeTokens(sessionStorage);
     }
 
     public void logout() {
+        String tokenAuthMethod =
+                sessionStorage.get(NordeaSEConstants.StorageKeys.TOKEN_AUTH_METHOD);
+        URL url =
+                NordeaSEConstants.AuthMethod.NASA.equals(tokenAuthMethod)
+                        ? NordeaSEConstants.Urls.LOGOUT_PASSWORD
+                        : NordeaSEConstants.Urls.LOGOUT_BANKID;
         Form formBuilder = new Form();
         formBuilder.put(NordeaSEConstants.FormParams.TOKEN, getAccessToken());
         formBuilder.put(
                 NordeaSEConstants.FormParams.TOKEN_TYPE_HINT,
                 NordeaSEConstants.FormParams.TOKEN_TYPE);
 
-        httpClient
-                .request(NordeaSEConstants.Urls.LOGOUT)
-                .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED)
-                .post();
+        httpClient.request(url).body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED).post();
     }
 
     private String getTokenType() {
@@ -376,5 +434,61 @@ public class NordeaSEApiClient {
 
     private String getRefreshToken() {
         return sessionStorage.get(NordeaSEConstants.StorageKeys.REFRESH_TOKEN);
+    }
+
+    public EnrollmentResponse enrollForPersonalCode(EnrollmentRequest enrollmentRequest) {
+        final RequestBuilder request =
+                httpClient
+                        .request(
+                                NordeaSEConstants.Urls.ENROLL.parameter(
+                                        IdTags.APPLICATION_ID, TagValues.APPLICATION_ID))
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .body(enrollmentRequest, MediaType.APPLICATION_JSON_TYPE);
+        return requestRefreshablePost(request, EnrollmentResponse.class);
+    }
+
+    public ConfirmEnrollmentResponse confirmEnrollment(
+            ConfirmEnrollmentRequest confirmEnrollmentRequest, String id) {
+        final RequestBuilder request =
+                httpClient
+                        .request(
+                                NordeaSEConstants.Urls.CONFIRM_ENROLLMENT
+                                        .parameter(IdTags.APPLICATION_ID, TagValues.APPLICATION_ID)
+                                        .parameter(IdTags.ENROLLMENT_ID, id))
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .body(confirmEnrollmentRequest, MediaType.APPLICATION_JSON_TYPE);
+        return requestRefreshablePatch(request, ConfirmEnrollmentResponse.class);
+    }
+
+    public InitDeviceAuthResponse initDeviceAuthentication(String enrollmentId) {
+        final RequestBuilder request =
+                httpClient
+                        .request(
+                                NordeaSEConstants.Urls.INIT_DEVICE_AUTH
+                                        .parameter(IdTags.APPLICATION_ID, TagValues.APPLICATION_ID)
+                                        .parameter(IdTags.ENROLLMENT_ID, enrollmentId))
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
+        return requestRefreshablePost(request, InitDeviceAuthResponse.class);
+    }
+
+    public AuthDeviceResponse authenticateDevice(
+            AuthDeviceRequest authDeviceRequest, String enrollmentId) {
+        final RequestBuilder request =
+                httpClient
+                        .request(
+                                NordeaSEConstants.Urls.COMPLETE_DEVICE_AUTH
+                                        .parameter(IdTags.APPLICATION_ID, TagValues.APPLICATION_ID)
+                                        .parameter(IdTags.ENROLLMENT_ID, enrollmentId))
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .body(authDeviceRequest, MediaType.APPLICATION_JSON_TYPE);
+        return requestRefreshablePost(request, AuthDeviceResponse.class);
+    }
+
+    public VerifyPersonalCodeResponse verifyPersonalCode(VerifyPersonalCodeRequest verifyRequest) {
+        return httpClient
+                .request(NordeaSEConstants.Urls.VERIFY_PERSONAL_CODE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(verifyRequest, MediaType.APPLICATION_JSON_TYPE)
+                .put(VerifyPersonalCodeResponse.class, verifyRequest);
     }
 }

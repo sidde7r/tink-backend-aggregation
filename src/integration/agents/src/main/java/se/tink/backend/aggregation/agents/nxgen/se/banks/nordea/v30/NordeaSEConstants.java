@@ -14,7 +14,7 @@ public class NordeaSEConstants {
 
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
             ImmutableMap.<String, String>builder()
-                    .put(FormParams.AUTH_METHOD, "bankid_se")
+                    .put(FormParams.AUTH_METHOD, AuthMethod.BANKID_SE)
                     .put(FormParams.CLIENT_ID, "NDHMSE")
                     .put(FormParams.COUNTRY, "SE")
                     .put(FormParams.GRANT_TYPE, "password")
@@ -46,6 +46,7 @@ public class NordeaSEConstants {
         public static final String BASE = "https://private.nordea.se/api/dbf/";
 
         public static final URL LOGIN_BANKID = new URL(BASE + ApiService.LOGIN_BANKID);
+        public static final URL PASSWORD_TOKEN = new URL(BASE + ApiService.PASSWORD_TOKEN);
         public static final URL FETCH_ACCOUNTS = new URL(BASE + ApiService.FETCH_ACCOUNTS);
         public static final URL FETCH_ACCOUNT_TRANSACTIONS =
                 new URL(BASE + ApiService.FETCH_TRANSACTIONS);
@@ -63,15 +64,24 @@ public class NordeaSEConstants {
         public static final URL EXECUTE_TRANSFER = new URL(BASE + ApiService.FETCH_PAYMENTS);
         public static final URL CONFIRM_TRANSFER = new URL(BASE + ApiService.CONFIRM_TRANSFER);
         public static final URL SIGN_TRANSFER = new URL(BASE + ApiService.SIGN_TRANSFER);
-        public static final URL POLL_SIGN_TRANSFER = new URL(BASE + ApiService.POLL_SIGN_TRANSFER);
+        public static final URL POLL_SIGN = new URL(BASE + ApiService.POLL_SIGN);
         public static final URL COMPLETE_TRANSFER = new URL(BASE + ApiService.COMPLETE_TRANSFER);
-        public static final URL LOGOUT = new URL(BASE + ApiService.LOGOUT);
+        public static final URL LOGOUT_BANKID = new URL(BASE + ApiService.LOGOUT_BANKID);
         public static final URL UPDATE_PAYMENT = new URL(BASE + ApiService.FETCH_PAYMENTS_DETAILS);
+        public static final URL ENROLL = new URL(BASE + ApiService.ENROLL);
+        public static final URL CONFIRM_ENROLLMENT = new URL(BASE + ApiService.CONFIRM_ENROLLMENT);
+        public static final URL INIT_DEVICE_AUTH = new URL(BASE + ApiService.INIT_DEVICE_AUTH);
+        public static final URL COMPLETE_DEVICE_AUTH =
+                new URL(BASE + ApiService.COMPLETE_DEVICE_AUTH);
+        public static final URL VERIFY_PERSONAL_CODE =
+                new URL(BASE + ApiService.VERIFY_PERSONAL_CODE);
+        public static final URL LOGOUT_PASSWORD = new URL(BASE + ApiService.LOGIN_PASSWORD);
     }
 
     public static class ApiService {
         public static final String LOGIN_BANKID =
                 "se/authentication-bankid-v1/security/oauth/token";
+        public static final String PASSWORD_TOKEN = "ca/token-service-v3/oauth/token";
         public static final String FETCH_ACCOUNTS = "ca/accounts-v1/accounts/";
         public static final String FETCH_TRANSACTIONS =
                 "ca/accounts-v1/accounts/{accountNumber}/transactions";
@@ -86,11 +96,22 @@ public class NordeaSEConstants {
         public static final String FETCH_BENEFICIARIES = "ca/beneficiary-v1/beneficiaries";
         public static final String CONFIRM_TRANSFER = "se/payments-v2/payments/confirm";
         public static final String SIGN_TRANSFER = "ca/signing-v1/signing/bankid_se/signature/";
-        public static final String POLL_SIGN_TRANSFER =
+        public static final String POLL_SIGN =
                 "ca/signing-v1/signing/bankid_se/signature/{orderRef}";
         public static final String COMPLETE_TRANSFER =
                 "se/payments-v2/payments/complete/{orderRef}";
-        public static final String LOGOUT = "ca/token-revocation-v1/token/revoke";
+        public static final String LOGOUT_BANKID = "ca/token-revocation-v1/token/revoke";
+        public static final String ENROLL =
+                "ca/trusted-applications-v2/applications/{applicationId}/enrolments";
+        public static final String CONFIRM_ENROLLMENT =
+                "ca/trusted-applications-v2/applications/{applicationId}/enrolments/{enrollmentId}";
+        public static final String INIT_DEVICE_AUTH =
+                "ca/trusted-applications-v2/applications/{applicationId}/enrolments/{enrollmentId}/nonce";
+        public static final String COMPLETE_DEVICE_AUTH =
+                "ca/trusted-applications-v2/applications/{applicationId}/enrolments/{enrollmentId}/token";
+        public static final String VERIFY_PERSONAL_CODE =
+                "ca/personal-code-v1/personal-codes/verify";
+        public static final String LOGIN_PASSWORD = "ca/token-service-v3/oauth/token/revoke";
     }
 
     public static class QueryParams {
@@ -115,6 +136,8 @@ public class NordeaSEConstants {
         public static final String TOKEN = "token";
         public static final String TOKEN_TYPE_HINT = "token_type_hint";
         public static final String TOKEN_TYPE = "access_token";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String CODE_VERIFIER = "code_verifier";
     }
 
     public static class IdTags {
@@ -123,6 +146,12 @@ public class NordeaSEConstants {
         public static final String LOAN_ID = "loanId";
         public static final String PAYMENT_ID = "paymentId";
         public static final String ORDER_REF = "orderRef";
+        public static final String APPLICATION_ID = "applicationId";
+        public static final String ENROLLMENT_ID = "enrollmentId";
+    }
+
+    public static class TagValues {
+        public static final String APPLICATION_ID = "zrIIeWA0LqJHJJ0ZSZr1";
     }
 
     public static class StorageKeys {
@@ -130,12 +159,20 @@ public class NordeaSEConstants {
         public static final String TOKEN_TYPE = "token_type";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String SSN = "ssn";
+        public static final String TOKEN_AUTH_METHOD = "auth_type";
+        public static final String SENSITIVE_PAYLOAD_PASSWORD = "password";
+        public static final String DEVICE_TOKEN = "DeviceToken";
+        public static final String PERSONAL_CODE_ENROLLMENT_ID = "personalCodeEnrollmentId";
+        public static final String DEVICE_PRIVATE_KEY = "devicePrivateKey";
+        public static final String DEVICE_PUBLIC_KEY = "devicePublicKey";
+        public static final String PERSONAL_CODE_VALID_UNTIL = "personalCodeValidUntil";
     }
 
     public static final class NordeaBankIdStatus {
         public static final String AGREEMENTS_UNAVAILABLE = "agreements_unavailable";
         public static final String EXTERNAL_AUTHENTICATION_REQUIRED =
                 "external_authentication_required";
+        public static final String AUTHENTICATION_CANCELLED = "authentication_cancelled";
         public static final String EXTERNAL_AUTHENTICATION_PENDING =
                 "external_authentication_pending";
         public static final String SIGN_PENDING = "SIGN_PENDING";
@@ -244,5 +281,18 @@ public class NordeaSEConstants {
         public static final LogTag CREDIT_TRANSACTIONS_ERROR =
                 LogTag.from("NORDEA_SE_TRANSACTIONS_ERROR");
         public static final LogTag LOAN_ACCOUNT = LogTag.from("NORDEA_SE_LOAN_ACCOUNT");
+    }
+
+    public class AuthMethod {
+        public static final String NASA = "nasa";
+        public static final String BANKID_SE = "bankid_se";
+    }
+
+    public class EnrollmentState {
+        public static final String ACTIVE = "active";
+    }
+
+    public class EnrollmentType {
+        public static final String PERSONAL_CODE = "personal_code";
     }
 }

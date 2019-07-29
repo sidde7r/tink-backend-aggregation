@@ -30,6 +30,8 @@ public class BankIdResponse {
             case NordeaBankIdStatus.EXTERNAL_AUTHENTICATION_PENDING:
             case NordeaBankIdStatus.EXTERNAL_AUTHENTICATION_REQUIRED:
                 return BankIdStatus.WAITING;
+            case NordeaBankIdStatus.AUTHENTICATION_CANCELLED:
+                return BankIdStatus.CANCELLED;
             default:
                 log.warn("Unknown bankID status: {}", status);
                 return BankIdStatus.FAILED_UNKNOWN;

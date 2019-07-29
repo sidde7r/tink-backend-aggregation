@@ -73,5 +73,8 @@ public class ResultBankIdResponse {
         sessionStorage.put(NordeaSEConstants.StorageKeys.ACCESS_TOKEN, accessToken);
         sessionStorage.put(NordeaSEConstants.StorageKeys.REFRESH_TOKEN, refreshToken);
         sessionStorage.put(NordeaSEConstants.StorageKeys.TOKEN_TYPE, tokenType);
+        sessionStorage.put(
+                NordeaSEConstants.StorageKeys.TOKEN_AUTH_METHOD,
+                NordeaSEConstants.AuthMethod.BANKID_SE);
     }
 }
