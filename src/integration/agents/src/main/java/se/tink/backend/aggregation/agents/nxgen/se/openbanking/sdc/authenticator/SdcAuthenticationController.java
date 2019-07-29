@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.assertj.core.util.Preconditions;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -49,7 +49,7 @@ public class SdcAuthenticationController
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(String reference) throws LoginException {
+    public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException {
 
         Optional<Map<String, String>> stringStringMap =
                 supplementalInformationHelper.waitForSupplementalInformation(
