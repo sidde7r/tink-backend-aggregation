@@ -36,10 +36,6 @@ public class CardAccountEntity {
         return currency;
     }
 
-    public String getMaskedPan() {
-        return maskedPan;
-    }
-
     public String getName() {
         return name;
     }
@@ -66,14 +62,14 @@ public class CardAccountEntity {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(createUniqueIdFromMaskedPane())
+                                .withCardNumber(maskedPan)
                                 .withBalance(getAvailableBalance())
                                 .withAvailableCredit(getAvailableCredit())
                                 .withCardAlias(name)
                                 .build())
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(name)
+                                .withUniqueIdentifier(maskedPan)
                                 .withAccountNumber(name)
                                 .withAccountName(product)
                                 .addIdentifier(
@@ -101,10 +97,5 @@ public class CardAccountEntity {
                 .findFirst()
                 .map(BalanceEntity::toAmount)
                 .orElseThrow(() -> new IllegalStateException("Could not get available balance"));
-    }
-
-    @JsonIgnore
-    private String createUniqueIdFromMaskedPane() {
-        return maskedPan.replace("*", "0");
     }
 }

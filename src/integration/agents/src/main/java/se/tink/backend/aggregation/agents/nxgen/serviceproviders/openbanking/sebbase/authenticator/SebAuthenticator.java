@@ -70,16 +70,11 @@ public class SebAuthenticator implements OAuth2Authenticator {
                 client.refreshToken(
                         SebCommonConstants.Urls.BASE_URL.concat(SebCommonConstants.Urls.TOKEN),
                         request);
-        setTokenToSession(token);
         return token;
     }
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        setTokenToSession(accessToken);
-    }
-
-    private void setTokenToSession(OAuth2Token token) {
-        sessionStorage.put(SebCommonConstants.StorageKeys.TOKEN, token);
+        sessionStorage.put(SebCommonConstants.StorageKeys.TOKEN, accessToken);
     }
 }

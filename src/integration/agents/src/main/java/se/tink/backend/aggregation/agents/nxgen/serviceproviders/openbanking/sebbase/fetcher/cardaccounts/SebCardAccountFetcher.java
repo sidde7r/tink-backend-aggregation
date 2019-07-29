@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 
 public class SebCardAccountFetcher<A extends Account> implements AccountFetcher<CreditCardAccount> {
 
-    private SebBaseApiClient client;
+    private final SebBaseApiClient client;
 
     public SebCardAccountFetcher(SebBaseApiClient client) {
         this.client = client;

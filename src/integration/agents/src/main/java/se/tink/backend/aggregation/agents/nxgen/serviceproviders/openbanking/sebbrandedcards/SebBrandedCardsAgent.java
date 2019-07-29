@@ -44,7 +44,7 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                new SebCardAccountFetcher(apiClient),
+                new SebCardAccountFetcher<>(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionMonthPaginationController<>(

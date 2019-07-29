@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.session.SEBSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.session.SebSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -69,6 +69,6 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SEBSessionHandler(apiClient, sessionStorage);
+        return new SebSessionHandler(apiClient, sessionStorage);
     }
 }

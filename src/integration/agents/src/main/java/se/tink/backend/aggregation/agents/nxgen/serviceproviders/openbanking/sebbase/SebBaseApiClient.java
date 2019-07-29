@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
@@ -50,7 +52,7 @@ public abstract class SebBaseApiClient {
     }
 
     protected String getRequestId() {
-        return java.util.UUID.randomUUID().toString();
+        return UUID.randomUUID().toString();
     }
 
     public abstract FetchCardAccountsTransactions fetchCardTransactions(
@@ -94,7 +96,7 @@ public abstract class SebBaseApiClient {
                     .post(TokenResponse.class, request.toData())
                     .toTinkToken();
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == 401) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
             throw e;

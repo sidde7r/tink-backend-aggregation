@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class SebCardTransactionsFetcher implements TransactionMonthPaginator<CreditCardAccount> {
 
-    private SebBaseApiClient client;
+    private final SebBaseApiClient client;
 
     public SebCardTransactionsFetcher(SebBaseApiClient client) {
         this.client = client;

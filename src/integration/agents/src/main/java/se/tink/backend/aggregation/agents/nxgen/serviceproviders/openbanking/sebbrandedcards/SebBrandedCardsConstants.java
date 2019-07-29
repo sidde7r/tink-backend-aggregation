@@ -23,44 +23,47 @@ public abstract class SebBrandedCardsConstants {
         public static final String BRAND_ID = "brandId";
     }
 
-    public static class BrandedCardsSweden {
-        public static final String CIRCLE_K = "stse";
-        public static final String EUROCARD = "ecse";
-        public static final String FINNAIR = "fase";
-        public static final String INGO = "jese";
-        public static final String NK = "nkse";
-        public static final String NORDIC_CHOICE_CLUB = "cose";
-        public static final String OPEL = "opse";
-        public static final String QUINTESSENTIALLY = "quse";
-        public static final String SAAB = "sbse";
-        public static final String SAS = "sase";
-        public static final String SJ = "sjse";
-        public static final String WALLET = "wase";
-    }
+    public static class BrandedCards {
 
-    public static class BrandedCardsNorway {
-        public static final String CIRCLE_K = "stno";
-        public static final String ESSO = "esno";
-        public static final String EUROCARD = "ecno";
-        public static final String FINNAIR = "fano";
-        public static final String GLOBECARD = "gcno";
-        public static final String NORDIC_CHOICE_CLUB = "cono";
-        public static final String SAS = "sano";
-        public static final String SEB_SELECTED = "ssno";
-        public static final String VOLVO_KORTET = "vono";
-    }
+        public static class Sweden {
+            public static final String CIRCLE_K = "stse";
+            public static final String EUROCARD = "ecse";
+            public static final String FINNAIR = "fase";
+            public static final String INGO = "jese";
+            public static final String NK = "nkse";
+            public static final String NORDIC_CHOICE_CLUB = "cose";
+            public static final String OPEL = "opse";
+            public static final String QUINTESSENTIALLY = "quse";
+            public static final String SAAB = "sbse";
+            public static final String SAS = "sase";
+            public static final String SJ = "sjse";
+            public static final String WALLET = "wase";
+        }
 
-    public static class BrandedCardsDenmark {
-        public static final String EUROCARD = "ecdk";
-        public static final String GLOBECARD = "gcdk";
-        public static final String JYSKE = "jydk";
-        public static final String QUINTESSENTIALLY = "qudk";
-        public static final String SAS = "sadk";
-    }
+        public static class Norway {
+            public static final String CIRCLE_K = "stno";
+            public static final String ESSO = "esno";
+            public static final String EUROCARD = "ecno";
+            public static final String FINNAIR = "fano";
+            public static final String GLOBECARD = "gcno";
+            public static final String NORDIC_CHOICE_CLUB = "cono";
+            public static final String SAS = "sano";
+            public static final String SEB_SELECTED = "ssno";
+            public static final String VOLVO_KORTET = "vono";
+        }
 
-    public static class BrandedCardsFinland {
-        public static final String EUROCARD = "ecfi";
-        public static final String FINNAIR = "fafi";
-        public static final String SAS = "safi";
+        public static class Denmark {
+            public static final String EUROCARD = "ecdk";
+            public static final String GLOBECARD = "gcdk";
+            public static final String JYSKE = "jydk";
+            public static final String QUINTESSENTIALLY = "qudk";
+            public static final String SAS = "sadk";
+        }
+
+        public static class Finland {
+            public static final String EUROCARD = "ecfi";
+            public static final String FINNAIR = "fafi";
+            public static final String SAS = "safi";
+        }
     }
 }
