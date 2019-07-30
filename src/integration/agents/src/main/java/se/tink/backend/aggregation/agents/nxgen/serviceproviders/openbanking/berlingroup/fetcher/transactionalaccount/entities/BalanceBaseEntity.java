@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Accounts;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceBaseEntity {
@@ -25,7 +25,7 @@ public class BalanceBaseEntity {
         return balanceAmount.getCurrency().equalsIgnoreCase(currency);
     }
 
-    public Amount toAmount() {
+    public ExactCurrencyAmount toAmount() {
         return balanceAmount.toAmount();
     }
 

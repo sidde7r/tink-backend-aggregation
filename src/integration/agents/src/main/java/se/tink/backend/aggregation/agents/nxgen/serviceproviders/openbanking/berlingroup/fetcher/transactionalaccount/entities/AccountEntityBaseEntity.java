@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
@@ -97,7 +97,7 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
     }
 
     @Override
-    public Amount getBalance() {
+    public ExactCurrencyAmount getBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
@@ -111,8 +111,8 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
     }
 
     @Override
-    public Amount getDefaultAmount() {
-        return new Amount(currency, 0);
+    public ExactCurrencyAmount getDefaultAmount() {
+        return ExactCurrencyAmount.of(0, currency);
     }
 
     public String getIban() {

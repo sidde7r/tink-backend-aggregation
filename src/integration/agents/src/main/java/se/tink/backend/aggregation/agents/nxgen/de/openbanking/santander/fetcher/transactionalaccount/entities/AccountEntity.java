@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -43,7 +43,7 @@ public class AccountEntity {
         return accountType == AccountTypes.CHECKING;
     }
 
-    private Amount getBalance() {
+    private ExactCurrencyAmount getBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
@@ -55,8 +55,8 @@ public class AccountEntity {
         return balance.isClosingBooked() && balance.isInCurrency(currency);
     }
 
-    private Amount getDefaultAmount() {
-        return new Amount(currency, 0);
+    private ExactCurrencyAmount getDefaultAmount() {
+        return ExactCurrencyAmount.of(0, currency);
     }
 
     private String getTransactionLink() {
