@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authent
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditScaAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditUserData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditUserDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.executor.payment.rpc.UnicreditCreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.util.UnicreditBaseUtils;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -48,8 +50,12 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
                         .header(HeaderKeys.TPP_REDIRECT_PREFERED, false)
                         .post(getConsentResponseType(), getConsentRequest());
 
+        URL url =
+                new URL(getConfiguration().getBaseUrl() + Endpoints.UPDATE_CONSENT)
+                        .parameter(PathParameters.CONSENT_ID, consentResponse.getConsentId());
+
         UnicreditUserDataResponse unicreditUserDataResponse =
-                getUnicreditUserDataResponse(password, consentResponse.getConsentId());
+                getUnicreditUserDataResponse(password, url);
 
         updateConsentWithOtp(unicreditUserDataResponse.getScaRedirect());
 
@@ -65,12 +71,9 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
                                 getCredentials().getField(Key.OTP_INPUT)));
     }
 
-    public UnicreditUserDataResponse getUnicreditUserDataResponse(
-            String password, String consentId) {
+    public UnicreditUserDataResponse getUnicreditUserDataResponse(String password, URL url) {
 
-        return getConsentUpdateRequest(
-                        new URL(getConfiguration().getBaseUrl() + Endpoints.UPDATE_CONSENT)
-                                .parameter(PathParameters.CONSENT_ID, consentId))
+        return getConsentUpdateRequest(url)
                 .put(UnicreditUserDataResponse.class, new UnicreditUserData(password));
     }
 
@@ -99,5 +102,16 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
     protected String getTransactionsDateFrom() {
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(
                 DateUtils.addDays(new Date(), -QueryValues.MAX_PERIOD_IN_DAYS));
+    }
+
+    @Override
+    protected Class<? extends CreatePaymentResponse> getCreatePaymentResponseType() {
+        return UnicreditCreatePaymentResponse.class;
+    }
+
+    @Override
+    protected String getScaRedirectUrlFromCreatePaymentResponse(
+            CreatePaymentResponse consentResponse) {
+        return getConfiguration().getBaseUrl() + consentResponse.getScaRedirect();
     }
 }

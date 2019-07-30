@@ -9,4 +9,8 @@ public class BuddybankConstants {
     public static class Market {
         public static final String INTEGRATION_NAME = "buddybank-it";
     }
+
+    public static class ErrorMessages {
+        public static final String PICKUP_CODE_FAILURE = "Unexpected pickup code message format";
+    }
 }

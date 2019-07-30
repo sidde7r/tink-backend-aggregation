@@ -8,6 +8,7 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.unicredit.authenticator.entity.UnicreditConsentAccessEntity;
@@ -25,6 +26,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentProduct;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -77,6 +82,11 @@ public abstract class UnicreditBaseApiClient {
     protected abstract Class<? extends ConsentResponse> getConsentResponseType();
 
     protected abstract URL getScaRedirectUrlFromConsentResponse(ConsentResponse consentResponse);
+
+    protected abstract Class<? extends CreatePaymentResponse> getCreatePaymentResponseType();
+
+    protected abstract String getScaRedirectUrlFromCreatePaymentResponse(
+            CreatePaymentResponse consentResponse);
 
     protected UnicreditConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
@@ -189,5 +199,52 @@ public abstract class UnicreditBaseApiClient {
 
     public void removeConsentFromPersistentStorage() {
         persistentStorage.remove(StorageKeys.CONSENT_ID);
+    }
+
+    public CreatePaymentResponse createSepaPayment(CreatePaymentRequest request) {
+
+        CreatePaymentResponse createPaymentResponse =
+                createRequest(
+                                new URL(
+                                                getConfiguration().getBaseUrl()
+                                                        + Endpoints.PAYMENT_INITIATION)
+                                        .parameter(
+                                                PathParameters.PAYMENT_PRODUCT,
+                                                UnicreditPaymentProduct
+                                                        .INSTANT_SEPA_CREDIT_TRANSFERS
+                                                        .toString()))
+                        .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                        .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                        .header(
+                                HeaderKeys.PSU_ID_TYPE,
+                                credentials.getField(Key.ADDITIONAL_INFORMATION))
+                        .header(
+                                HeaderKeys.TPP_REDIRECT_URI,
+                                new URL(getConfiguration().getRedirectUrl())
+                                        .queryParam(
+                                                HeaderKeys.STATE,
+                                                persistentStorage.get(StorageKeys.STATE))
+                                        .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
+                        .post(getCreatePaymentResponseType(), request);
+
+        persistentStorage.put(
+                createPaymentResponse.getPaymentId(),
+                getScaRedirectUrlFromCreatePaymentResponse(createPaymentResponse));
+
+        return createPaymentResponse;
+    }
+
+    public FetchPaymentResponse fetchPayment(String paymentId) {
+
+        return createRequest(
+                        new URL(getConfiguration().getBaseUrl() + Endpoints.FETCH_PAYMENT)
+                                .parameter(
+                                        PathParameters.PAYMENT_PRODUCT,
+                                        UnicreditPaymentProduct.INSTANT_SEPA_CREDIT_TRANSFERS
+                                                .toString())
+                                .parameter(PathParameters.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .get(FetchPaymentResponse.class);
     }
 }
