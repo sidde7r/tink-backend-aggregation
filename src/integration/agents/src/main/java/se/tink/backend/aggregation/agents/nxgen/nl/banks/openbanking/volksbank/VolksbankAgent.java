@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.f
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -37,8 +36,10 @@ public class VolksbankAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public VolksbankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         final String[] payload = request.getProvider().getPayload().split(" ");
 
@@ -66,14 +67,9 @@ public class VolksbankAgent extends NextGenerationAgent
                                                 volksbankApiClient,
                                                 consentFetcher,
                                                 persistentStorage))));
-    }
-
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         volksbankConfiguration =
-                configuration
+                agentsServiceConfiguration
                         .getIntegrations()
                         .getClientConfiguration(
                                 VolksbankConstants.Market.INTEGRATION_NAME,
@@ -89,7 +85,8 @@ public class VolksbankAgent extends NextGenerationAgent
         final String certificateId =
                 volksbankConfiguration.getAisConfiguration().getCertificateId();
 
-        final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
+        final EidasProxyConfiguration eidasProxyConfiguration =
+                agentsServiceConfiguration.getEidasProxy();
 
         client.setEidasProxy(eidasProxyConfiguration, certificateId);
     }
