@@ -93,10 +93,6 @@ public class CbiGlobeApiClient {
                         .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
                         .header(HeaderKeys.TPP_NOK_REDIRECT_URI, configuration.getRedirectUrl());
 
-        if (!configuration.getPsuId().isEmpty()) {
-            request.header(HeaderKeys.PSU_ID, configuration.getPsuId());
-        }
-
         return request.post(ConsentResponse.class, consentRequest);
     }
 
