@@ -65,7 +65,7 @@ public class BarclaysAgentTest {
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
-                        .withReference(new Reference("TRANSFER", "test transfer by Tink"))
+                        .withReference(new Reference("TRANSFER", "test Tink"))
                         .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
                         .build());
 

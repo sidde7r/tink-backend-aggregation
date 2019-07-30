@@ -7,14 +7,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Payment.Builder;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class DomesticPaymentResponseInitiation {
-    private String status;
     private SupplementaryData supplementaryData;
     private List<String> localInstrument;
     private DebtorAccount debtorAccount;
@@ -25,13 +23,15 @@ public class DomesticPaymentResponseInitiation {
     private InstructedAmount instructedAmount;
     private CreditorPostalAddress creditorPostalAddress;
 
-    public PaymentResponse toTinkPaymentResponse(String consentId, String domesticPaymentId) {
+    public PaymentResponse toTinkPaymentResponse(
+            String consentId, String domesticPaymentId, String status) {
         Payment payment =
                 new Builder()
                         .withReference(remittanceInformation.createTinkReference())
                         .withCreditor(creditorAccount.toCreditor())
                         .withAmount(instructedAmount.toTinkAmount())
-                        .withStatus(getPaymentStatus())
+                        .withDebtor(debtorAccount.toDebtor())
+                        .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))
                         .build();
 
         Storage storage = new Storage();
@@ -39,9 +39,5 @@ public class DomesticPaymentResponseInitiation {
         storage.put(UkOpenBankingV31Constants.Storage.PAYMENT_ID, domesticPaymentId);
 
         return new PaymentResponse(payment, storage);
-    }
-
-    private PaymentStatus getPaymentStatus() {
-        return UkOpenBankingV31Constants.toPaymentStatus(status);
     }
 }

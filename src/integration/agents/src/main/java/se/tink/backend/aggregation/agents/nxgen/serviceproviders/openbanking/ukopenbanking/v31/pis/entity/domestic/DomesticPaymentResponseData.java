@@ -11,8 +11,9 @@ public class DomesticPaymentResponseData {
     private String domesticPaymentId;
     private String consentId;
     private DomesticPaymentResponseInitiation initiation;
+    private String status;
 
     public PaymentResponse toTinkPaymentResponse() {
-        return initiation.toTinkPaymentResponse(consentId, domesticPaymentId);
+        return initiation.toTinkPaymentResponse(consentId, domesticPaymentId, status);
     }
 }

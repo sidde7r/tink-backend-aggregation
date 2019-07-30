@@ -213,7 +213,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         switch (paymentMultiStepRequest.getPayment().getStatus()) {
             case CREATED:
                 // Directly executing the payment after authorizing the payment consent
-                // successfully.
+                // successfully. Steps for funds check needs to be done before authorizing the
+                // consent.  Step.AUTHORIZE
                 return new PaymentMultiStepResponse(
                         paymentMultiStepRequest, Step.EXECUTE_PAYMENT, new ArrayList<>());
             case REJECTED:
