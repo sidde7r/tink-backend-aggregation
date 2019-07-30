@@ -89,18 +89,6 @@ public class Field {
         return additionalInfo;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setHelpText(String helpText) {
-        this.helpText = helpText;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setValue(String value) {
         this.value = value;
     }

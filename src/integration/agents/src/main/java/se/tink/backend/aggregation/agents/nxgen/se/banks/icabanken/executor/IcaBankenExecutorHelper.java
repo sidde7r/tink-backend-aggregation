@@ -190,11 +190,10 @@ public class IcaBankenExecutorHelper {
     }
 
     private Field getNameInputField() {
-        Field nameField = new Field();
-        nameField.setDescription(IcaBankenConstants.Transfers.RECIPIENT_NAME_FIELD_DESCRIPTION);
-        nameField.setName(IcaBankenConstants.Transfers.RECIPIENT_NAME_FIELD_NAME);
-
-        return nameField;
+        return Field.builder()
+                .description(IcaBankenConstants.Transfers.RECIPIENT_NAME_FIELD_DESCRIPTION)
+                .name(IcaBankenConstants.Transfers.RECIPIENT_NAME_FIELD_NAME)
+                .build();
     }
 
     /**

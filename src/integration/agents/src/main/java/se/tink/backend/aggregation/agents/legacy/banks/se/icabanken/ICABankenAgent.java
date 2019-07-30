@@ -328,10 +328,7 @@ public class ICABankenAgent extends AbstractAgent
     }
 
     private String requestSupplementalDestinationName() {
-        Field nameField = new Field();
-
-        nameField.setDescription("Mottagarnamn");
-        nameField.setName("name");
+        Field nameField = Field.builder().description("Mottagarnamn").name("name").build();
 
         List<Field> fields = Lists.newArrayList(nameField);
 

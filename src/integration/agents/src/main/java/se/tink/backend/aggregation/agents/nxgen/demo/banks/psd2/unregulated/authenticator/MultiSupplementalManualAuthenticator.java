@@ -51,20 +51,6 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
         return CredentialsTypes.PASSWORD;
     }
 
-    private static Field newField(String name, String description, String value) {
-        Field field = new Field();
-        field.setName(name);
-        field.setDescription(description);
-        field.setValue(value);
-        return field;
-    }
-
-    private static Field newField(String name, String description, String value, String helpText) {
-        Field field = newField(name, description, value);
-        field.setHelpText(helpText);
-        return field;
-    }
-
     private static void checkAnswers(Map<String, String> answer, String code, String... fieldNames)
             throws LoginException {
         Preconditions.checkNotNull(answer);
@@ -90,24 +76,34 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
 
         checkAnswers(
                 supplementalInformationHelper.askSupplementalInformation(
-                        newField(
-                                loginDesciptionField,
-                                "Security Code",
-                                String.format("%04d", random.nextInt(10000)),
-                                catalog.getString(descriptionCode)),
-                        newField(loginInputField, "Input Code", null)),
+                        Field.builder()
+                                .name(loginDesciptionField)
+                                .description("Security Code")
+                                .value(String.format("%04d", random.nextInt(10000)))
+                                .helpText(catalog.getString(descriptionCode))
+                                .build(),
+                        Field.builder()
+                                .name(loginInputField)
+                                .description("Input Code")
+                                .value(null)
+                                .build()),
                 code1,
                 loginDesciptionField,
                 loginInputField);
 
         checkAnswers(
                 supplementalInformationHelper.askSupplementalInformation(
-                        newField(
-                                loginChallengeField,
-                                "Login Code",
-                                String.format("%04d", random.nextInt(10000)),
-                                catalog.getString(secondDescriptionCode)),
-                        newField(loginChallengeInputField, "Input Code", null)),
+                        Field.builder()
+                                .name(loginChallengeField)
+                                .description("Login Code")
+                                .value(String.format("%04d", random.nextInt(10000)))
+                                .helpText(catalog.getString(secondDescriptionCode))
+                                .build(),
+                        Field.builder()
+                                .name(loginChallengeInputField)
+                                .description("Input Code")
+                                .value(null)
+                                .build()),
                 code2,
                 loginChallengeField,
                 loginChallengeInputField);
