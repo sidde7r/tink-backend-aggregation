@@ -4,6 +4,12 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 
 public interface Agent {
 
+    /**
+     * @deprecated Use the constructor with parameter list (CredentialsRequest, AgentContext,
+     *     AgentsServiceConfiguration) for your agent instead. Use {@link
+     *     AgentsServiceConfiguration#getSignatureKeyPair()} to retrieve the SignatureKeyPair.
+     */
+    @Deprecated
     void setConfiguration(AgentsServiceConfiguration configuration);
 
     Class<? extends Agent> getAgentClass();
