@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.executor.payment;
 
 import java.util.Collection;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.NordeaBasePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
+import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -21,8 +24,12 @@ public class NordeaNoPaymentExecutorSelector extends NordeaBasePaymentExecutor {
                                     new Pair<>(Type.NO, Type.IBAN))
                             .build();
 
-    public NordeaNoPaymentExecutorSelector(NordeaBaseApiClient apiClient) {
+    private final SupplementalRequester supplementalRequester;
+
+    public NordeaNoPaymentExecutorSelector(
+            NordeaBaseApiClient apiClient, SupplementalRequester supplementalRequester) {
         super(apiClient);
+        this.supplementalRequester = supplementalRequester;
     }
 
     @Override
@@ -42,5 +49,10 @@ public class NordeaNoPaymentExecutorSelector extends NordeaBasePaymentExecutor {
     @Override
     protected Collection<PaymentType> getSupportedPaymentTypes() {
         return accountIdentifiersToPaymentTypeMapper.getMappedTypes();
+    }
+
+    @Override
+    protected Signer getSigner() {
+        return new BankIdSigningController(supplementalRequester, new NordeaNoBankIdSigner(this));
     }
 }
