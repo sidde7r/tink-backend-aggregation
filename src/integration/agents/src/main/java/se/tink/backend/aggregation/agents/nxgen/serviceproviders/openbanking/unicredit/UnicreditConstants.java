@@ -50,7 +50,7 @@ public final class UnicreditConstants {
 
     public static class QueryValues {
         public static final String BOTH = "both";
-        public static final String TRANSACTION_FROM_DATE = "1970-01-01";
+        public static final String TRANSACTION_FROM_DATE = "2019-05-01";
     }
 
     public static class HeaderKeys {
@@ -73,6 +73,7 @@ public final class UnicreditConstants {
     public static class FormValues {
 
         public static final String ALL_ACCOUNTS = "allAccounts";
+        public static final int FREQUENCY_PER_DAY = 4;
     }
 
     public class Formats {

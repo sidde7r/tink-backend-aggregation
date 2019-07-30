@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.UnicreditAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.UnicreditAuthenticator;
@@ -47,12 +46,12 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        apiClient.setConfiguration(getClientConfiguration());
+        UnicreditConfiguration unicreditConfiguration = getClientConfiguration();
+
+        apiClient.setConfiguration(unicreditConfiguration);
 
         client.disableSignatureRequestHeader();
-        client.setSslClientCertificate(
-                BerlinGroupUtils.readFile(getClientConfiguration().getClientKeyStorePath()),
-                getClientConfiguration().getClientKeyStorePassword());
+        client.setEidasProxy(configuration.getEidasProxy(), unicreditConfiguration.getEidasQwac());
     }
 
     protected UnicreditConfiguration getClientConfiguration() {

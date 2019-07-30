@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authent
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.rpc.UnicreditConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.rpc.UnicreditConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -37,7 +38,7 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
                                         getCredentials().getField(Key.LOGIN_INPUT)))),
                 true,
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(c.getTime()),
-                100,
+                FormValues.FREQUENCY_PER_DAY,
                 false);
     }
 
