@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public interface BerlinGroupAccountEntity {
 
@@ -17,11 +17,11 @@ public interface BerlinGroupAccountEntity {
 
     TransactionalAccount toSavingsAccount();
 
-    Amount getBalance();
+    ExactCurrencyAmount getBalance();
 
     boolean doesMatchWithAccountCurrency(final BalanceBaseEntity balance);
 
-    Amount getDefaultAmount();
+    ExactCurrencyAmount getDefaultAmount();
 
     String getBalancesLink();
 
