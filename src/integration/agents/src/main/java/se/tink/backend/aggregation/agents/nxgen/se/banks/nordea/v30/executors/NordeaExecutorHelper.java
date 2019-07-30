@@ -126,22 +126,16 @@ public class NordeaExecutorHelper {
     }
 
     public void confirm(String id) {
-        try {
-            ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(id);
-            ConfirmTransferResponse confirmTransferResponse =
-                    apiClient.confirmBankTransfer(confirmTransferRequest);
 
-            SignatureRequest signatureRequest = new SignatureRequest();
-            SignatureEntity signatureEntity =
-                    new SignatureEntity(confirmTransferResponse.getResult());
-            signatureRequest.add(signatureEntity);
-            // sign external transfer or einvoice
-            sign(signatureRequest, id);
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                throw transferError();
-            }
-        }
+        ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(id);
+        ConfirmTransferResponse confirmTransferResponse =
+                apiClient.confirmBankTransfer(confirmTransferRequest);
+
+        SignatureRequest signatureRequest = new SignatureRequest();
+        SignatureEntity signatureEntity = new SignatureEntity(confirmTransferResponse.getResult());
+        signatureRequest.add(signatureEntity);
+        // sign external transfer or einvoice
+        sign(signatureRequest, id);
     }
 
     public void sign(SignatureRequest signatureRequest, String transferId) {
@@ -259,7 +253,7 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    protected TransferExecutionException paymentFailedError() {
+    public TransferExecutionException paymentFailedError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
                 .setEndUserMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
@@ -331,7 +325,7 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    public TransferExecutionException eInvoiceFailedError() {
+    public TransferExecutionException eInvoiceNotFoundError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.LogMessages.EINVOICE_NOT_FOUND)
                 .setEndUserMessage(
@@ -373,13 +367,6 @@ public class NordeaExecutorHelper {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION)
                 .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION))
-                .build();
-    }
-
-    private TransferExecutionException transferError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.ErrorCodes.TRANSFER_ERROR)
-                .setEndUserMessage(NordeaSEConstants.ErrorCodes.TRANSFER_ERROR)
                 .build();
     }
 
