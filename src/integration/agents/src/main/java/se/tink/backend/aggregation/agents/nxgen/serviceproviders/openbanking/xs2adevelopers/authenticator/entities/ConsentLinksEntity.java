@@ -35,7 +35,7 @@ public class ConsentLinksEntity {
 
     public String getScaStatus() {
         if (scaStatus == null && scaStatusInternal != null) {
-            return getUrlFromNode(scaOAuthInternal);
+            return getUrlFromNode(scaStatusInternal);
         }
         return scaStatus;
     }
