@@ -73,6 +73,7 @@ public final class UnicreditConstants {
     public static class FormValues {
 
         public static final String ALL_ACCOUNTS = "allAccounts";
+        public static final int FREQUENCY_PER_DAY = 4;
     }
 
     public class Formats {
