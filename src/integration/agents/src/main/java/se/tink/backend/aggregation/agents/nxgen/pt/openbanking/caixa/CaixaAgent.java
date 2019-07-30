@@ -38,7 +38,8 @@ public class CaixaAgent extends SibsBaseAgent {
         SignPaymentStrategy signPaymentStrategy =
                 SignPaymentStrategyFactory.buildSignPaymentDecoupledStrategy(
                         apiClient, credentials);
-        return Optional.of(
-                new PaymentController(new SibsPaymentExecutor(apiClient, signPaymentStrategy)));
+        SibsPaymentExecutor sibsPaymentExecutor =
+                new SibsPaymentExecutor(apiClient, signPaymentStrategy);
+        return Optional.of(new PaymentController(sibsPaymentExecutor, sibsPaymentExecutor));
     }
 }

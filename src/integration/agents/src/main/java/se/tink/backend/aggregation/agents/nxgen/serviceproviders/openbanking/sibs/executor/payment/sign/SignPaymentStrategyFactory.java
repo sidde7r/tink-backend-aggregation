@@ -7,15 +7,17 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 
 public class SignPaymentStrategyFactory {
 
+    private static final Long WAIT_FOR_RESPONSE_IN_SECONDS = 600L;
+
     private SignPaymentStrategyFactory() {}
 
     public static SignPaymentStrategy buildSignPaymentRedirectStrategy(
             SibsBaseApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper) {
-        long waitFor = 60;
         TimeUnit unit = TimeUnit.SECONDS;
         SibsRedirectCallbackHandler redirectCallbackHandler =
-                new SibsRedirectCallbackHandler(supplementalInformationHelper, waitFor, unit);
+                new SibsRedirectCallbackHandler(
+                        supplementalInformationHelper, WAIT_FOR_RESPONSE_IN_SECONDS, unit);
         SibsRedirectSignPaymentStrategy redirectSignPaymentStrategy =
                 new SibsRedirectSignPaymentStrategy(apiClient, redirectCallbackHandler);
         return redirectSignPaymentStrategy;
