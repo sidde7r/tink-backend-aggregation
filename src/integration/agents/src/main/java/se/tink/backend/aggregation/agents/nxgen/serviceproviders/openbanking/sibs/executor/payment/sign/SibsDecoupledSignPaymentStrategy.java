@@ -45,21 +45,23 @@ public class SibsDecoupledSignPaymentStrategy extends AbstractSibsSignPaymentStr
     }
 
     @Override
-    protected void verifyStatusAfterSigning(
+    protected SibsTransactionStatus verifyStatusAfterSigning(
             PaymentMultiStepRequest paymentMultiStepRequest,
             SibsPaymentType paymentType,
             Payment payment)
             throws PaymentException {
         Retryer<SibsTransactionStatus> consentStatusRetryer =
                 SibsUtils.getPaymentStatusRetryer(SLEEP_TIME, RETRY_ATTEMPTS);
-
+        SibsTransactionStatus status = null;
         try {
-            SibsTransactionStatus status =
+            status =
                     consentStatusRetryer.call(
                             () -> getCurrentStatus(paymentMultiStepRequest, paymentType));
             checkStatusAfterSign(status);
+            payment.setStatus(status.getTinkStatus());
         } catch (RetryException | ExecutionException e) {
             throw new PaymentException("Payment status verification fails.", e);
         }
+        return status;
     }
 }

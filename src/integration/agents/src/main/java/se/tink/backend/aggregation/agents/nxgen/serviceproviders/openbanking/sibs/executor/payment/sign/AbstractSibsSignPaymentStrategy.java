@@ -36,7 +36,9 @@ public abstract class AbstractSibsSignPaymentStrategy implements SignPaymentStra
                 nextStep = SibsConstants.SibsSignSteps.SIBS_PAYMENT_POST_SIGN_STATE;
                 break;
             case SibsConstants.SibsSignSteps.SIBS_PAYMENT_POST_SIGN_STATE:
-                verifyStatusAfterSigning(paymentMultiStepRequest, paymentType, payment);
+                SibsTransactionStatus sibsTransactionStatus =
+                        verifyStatusAfterSigning(paymentMultiStepRequest, paymentType, payment);
+                payment.setStatus(sibsTransactionStatus.getTinkStatus());
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
                 break;
             default:
@@ -49,7 +51,7 @@ public abstract class AbstractSibsSignPaymentStrategy implements SignPaymentStra
         return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
     }
 
-    protected abstract void verifyStatusAfterSigning(
+    protected abstract SibsTransactionStatus verifyStatusAfterSigning(
             PaymentMultiStepRequest paymentMultiStepRequest,
             SibsPaymentType paymentType,
             Payment payment)

@@ -22,7 +22,7 @@ public class SibsRedirectSignPaymentStrategy extends AbstractSibsSignPaymentStra
     }
 
     @Override
-    protected void verifyStatusAfterSigning(
+    protected SibsTransactionStatus verifyStatusAfterSigning(
             PaymentMultiStepRequest paymentMultiStepRequest,
             SibsPaymentType paymentType,
             Payment payment)
@@ -30,6 +30,7 @@ public class SibsRedirectSignPaymentStrategy extends AbstractSibsSignPaymentStra
         SibsTransactionStatus transactionStatus =
                 getCurrentStatus(paymentMultiStepRequest, paymentType);
         checkStatusAfterSign(transactionStatus);
+        return transactionStatus;
     }
 
     @Override
