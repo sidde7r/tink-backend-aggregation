@@ -81,8 +81,13 @@ public class StarlingAgent extends NextGenerationAgent
 
         aisConfiguration = starlingConfiguration.getAisConfiguration();
         pisConfiguration = starlingConfiguration.getPisConfiguration();
+
+        /*
+        TODO: enable these when starting to work on PIS
+
         signingKeyUid = starlingConfiguration.getKeyUid();
         signingKey = starlingConfiguration.getSigningKey();
+        */
     }
 
     @Override
