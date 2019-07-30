@@ -23,7 +23,6 @@ public class BalanceEntity {
     @JsonProperty private String balanceType;
     @JsonProperty private AmountEntity balanceAmount;
     @JsonProperty private boolean creditLimitIncluded;
-
     @JsonProperty private String lastChangeDateTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC")
@@ -54,10 +53,22 @@ public class BalanceEntity {
     public static ExactCurrencyAmount getBalanceOfType(
             List<BalanceEntity> balances, String... types) {
         List<BalanceEntity> balancesOfType = Lists.newArrayList();
-        for (String balanceType : types) {
-            balancesOfType = getBalancesOfType(balances, balanceType);
-            if (!balancesOfType.isEmpty()) {
-                break;
+        if (balances == null) {
+            // No balances (sandbox)
+            log.error("Account has no balances. Is this sandbox?");
+            return ExactCurrencyAmount.of(1337.42, "EUR");
+        } else if (balances.stream()
+                .allMatch(balanceEntity -> Strings.isNullOrEmpty(balanceEntity.getBalanceType()))) {
+            // Balances without type (sandbox)
+            log.error("Account balances have no balanceType. Is this sandbox?");
+            balancesOfType.addAll(balances);
+        } else {
+            // Get first matching balance type
+            for (String balanceType : types) {
+                balancesOfType = getBalancesOfType(balances, balanceType);
+                if (!balancesOfType.isEmpty()) {
+                    break;
+                }
             }
         }
 

@@ -5,16 +5,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BankinterAgent extends RedsysAgent {
+public class EuroCajaRuralAgent extends RedsysAgent {
 
-    public BankinterAgent(
+    public EuroCajaRuralAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
     @Override
     public String getAspspCode() {
-        return "bankinter";
+        return "EUROCAJARURAL";
     }
 
     @Override
