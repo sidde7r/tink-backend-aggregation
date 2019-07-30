@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Body;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Disposer;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Envelope;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Failure;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.LoginResponseEntity;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.OK;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Product;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ProductID;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Products;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ResponseMessage;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.constants.RpcConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Body;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Disposer;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Envelope;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Failure;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.LoginResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.OK;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Product;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.ProductID;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Products;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.ResponseMessage;
 
 public final class LoginResponse {
     private Envelope envelope;
@@ -40,9 +40,7 @@ public final class LoginResponse {
                         .collect(Collectors.toList());
 
         if (!list.isEmpty()) {
-            return list.get(0)
-                    .trim()
-                    .equalsIgnoreCase(BawagPskConstants.Messages.INCORRECT_CREDENTIALS);
+            return list.get(0).trim().equalsIgnoreCase(RpcConstants.Messages.INCORRECT_CREDENTIALS);
         }
 
         return false;
@@ -60,7 +58,7 @@ public final class LoginResponse {
         if (!list.isEmpty()) {
             return list.get(0) // TODO assert one and only one element
                     .trim()
-                    .equalsIgnoreCase(BawagPskConstants.Messages.ACCOUNT_LOCKED);
+                    .equalsIgnoreCase(RpcConstants.Messages.ACCOUNT_LOCKED);
         }
 
         return false;

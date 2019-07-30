@@ -1,21 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Body;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Context;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Envelope;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.LogoutRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.constants.RpcConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Body;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Context;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Envelope;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.LogoutRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.utils.EntitiesUtils;
 
 public class LogoutRequest {
     private Envelope envelope;
 
     public LogoutRequest(final String serverSessionID) {
         Context context = new Context();
-        context.setChannel(BawagPskConstants.CHANNEL);
-        context.setLanguage(BawagPskConstants.LANGUAGE);
-        context.setDevID(BawagPskConstants.DEV_ID);
-        context.setDeviceIdentifier(BawagPskConstants.DEVICE_IDENTIFIER);
+        context.setChannel(RpcConstants.CHANNEL);
+        context.setLanguage(RpcConstants.LANGUAGE);
+        context.setDevID(RpcConstants.DEV_ID);
+        context.setDeviceIdentifier(RpcConstants.DEVICE_IDENTIFIER);
 
         LogoutRequestEntity request = new LogoutRequestEntity();
         request.setServerSessionID(serverSessionID);
@@ -30,6 +30,6 @@ public class LogoutRequest {
     }
 
     public String getXml() {
-        return BawagPskUtils.entityToXml(envelope);
+        return EntitiesUtils.entityToXml(envelope);
     }
 }
