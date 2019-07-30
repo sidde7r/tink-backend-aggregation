@@ -33,6 +33,8 @@ agents:
     openbanking:
       baseUrl: http://demo-financial-institute.internal.production.aggregation.tink.network/openbanking
   collectorSubscriptionKey: true
+  starling:
+    redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   nordea:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
