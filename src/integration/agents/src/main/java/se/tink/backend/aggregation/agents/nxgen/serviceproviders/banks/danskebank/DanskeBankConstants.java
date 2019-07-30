@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import java.text.MessageFormat;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class DanskeBankConstants {
 
@@ -189,11 +190,30 @@ public class DanskeBankConstants {
         private static final String DEVICE_ID = " ";
         private static final String DEVICE_NAME = "Tink";
         public static final String USER_AGENT =
-                "Mozilla/5.0 (iPhone; CPU iPhone OS 10_1_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Mobile/14B100";
+                DeviceProfileConfiguration.IOS_STABLE.getUserAgentEntity().getMozillaVersion()
+                        + " "
+                        + DeviceProfileConfiguration.IOS_STABLE
+                                .getUserAgentEntity()
+                                .getSystemAndBrowserInfo()
+                        + " "
+                        + DeviceProfileConfiguration.IOS_STABLE.getUserAgentEntity().getPlatform()
+                        + " "
+                        + DeviceProfileConfiguration.IOS_STABLE
+                                .getUserAgentEntity()
+                                .getPlatformDetails()
+                        + " "
+                        + DeviceProfileConfiguration.IOS_STABLE
+                                .getUserAgentEntity()
+                                .getExtensions();
+        // "Mozilla/5.0 (iPhone; CPU iPhone OS 10_1_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML,
+        // like Gecko) Mobile/14B100";
         private static final String LANGUAGE = "en";
         private static final String PRODUCT_SUB = "10.1.1";
-        private static final String PLATFORM = "iOS";
-        private static final String SCREEN_RESOLUTION = "750x1334";
+        private static final String PLATFORM = DeviceProfileConfiguration.IOS_STABLE.getOs();
+        private static final String SCREEN_RESOLUTION =
+                DeviceProfileConfiguration.IOS_STABLE.getScreenWidth()
+                        + "x"
+                        + DeviceProfileConfiguration.IOS_STABLE.getScreenHeight();
         private static final String TIMEZONE = "Europe/Stockholm";
         private static final String TIMEZONE_OFFSET = "3600.000000";
         private static final String FONT =
