@@ -47,6 +47,7 @@ public class SebCommonConstants {
         public static final String GRANT_TYPE = "authorization_code";
         public static final String BOOKED_TRANSACTIONS = "booked";
         public static final String WITH_BALANCE = "true";
+        public static final String PENDING_AND_BOOKED_TRANSACTIONS = "both";
     }
 
     public static class HeaderKeys {
@@ -65,6 +66,8 @@ public class SebCommonConstants {
 
     public static class Accounts {
         public static final String AVAILABLE_BALANCE = "interimAvailable";
+        public static final String AVAILABLE_BALANCE_MISSPELLED = "interimAvaliable";
+        public static final String AVAILABLE_BALANCE_EXPECTED = "expected";
         public static final String STATUS_ENABLED = "enabled";
     }
 
@@ -74,5 +77,11 @@ public class SebCommonConstants {
 
     public static class ACCOUNT_TYPES {
         public static final String SAVINGS = "sparkonto";
+    }
+
+    public static class ERROR {
+        public static final String PAGINATING_ERROR_CODE = "301";
+        public static final String PAGINATING_ERROR_MESSAGE =
+                "Unhandeled HostRC code: 2000 Error message is available.";
     }
 }

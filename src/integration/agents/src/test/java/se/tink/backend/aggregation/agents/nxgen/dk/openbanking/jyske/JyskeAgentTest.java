@@ -22,7 +22,7 @@ public class JyskeAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-jyske-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-jyskemastercarddk-oauth2")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .loadCredentialsBefore(false)

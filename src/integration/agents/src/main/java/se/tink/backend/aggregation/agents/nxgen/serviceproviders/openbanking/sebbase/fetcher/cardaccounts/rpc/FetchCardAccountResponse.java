@@ -29,7 +29,7 @@ public class FetchCardAccountResponse {
         return Optional.ofNullable(cardAccounts)
                 .map(Collection::stream)
                 .orElse(Stream.empty())
-                .map(CardAccountEntity::toTinkTransaction)
+                .map(CardAccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
 }

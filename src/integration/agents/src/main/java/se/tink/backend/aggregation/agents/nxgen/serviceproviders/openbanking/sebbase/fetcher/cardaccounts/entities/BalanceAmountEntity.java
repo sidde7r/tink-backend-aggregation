@@ -10,7 +10,7 @@ public class BalanceAmountEntity {
     private String currency;
 
     public BigDecimal getAmount() {
-        return amount;
+        return amount.negate();
     }
 
     public String getCurrency() {
