@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
@@ -131,7 +132,11 @@ public class FetchLoanDetailsResponse {
 
     @JsonIgnore
     private Amount getInstalmentValue() {
-        return new Amount(NordeaSEConstants.CURRENCY, followingPayment.getInstalment());
+        if (Objects.nonNull(followingPayment)) {
+            return new Amount(NordeaSEConstants.CURRENCY, followingPayment.getInstalment());
+        } else {
+            return null;
+        }
     }
 
     // TODO: Map all the different Nordea loan type accounts
