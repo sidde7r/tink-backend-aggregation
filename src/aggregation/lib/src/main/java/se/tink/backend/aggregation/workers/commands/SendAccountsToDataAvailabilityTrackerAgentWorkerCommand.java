@@ -26,7 +26,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
      */
     private static final String TEST_MARKET = "SE";
 
-    private static final String METRIC_NAME = "agent_refresh";
+    private static final String METRIC_NAME = "data_availability_tracker_refresh";
     private static final String METRIC_ACTION = "send_accounts_to_data_availability_tracker";
 
     private final AgentWorkerCommandContext context;
