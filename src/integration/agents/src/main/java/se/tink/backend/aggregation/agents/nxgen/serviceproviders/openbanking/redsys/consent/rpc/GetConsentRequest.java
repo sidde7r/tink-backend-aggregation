@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -20,12 +22,12 @@ public class GetConsentRequest {
     public GetConsentRequest(
             AccessEntity access,
             boolean recurringIndicator,
-            String validUntil,
+            LocalDate validUntil,
             int frequencyPerDay,
             boolean combinedServiceIndicator) {
         this.access = access;
         this.recurringIndicator = recurringIndicator;
-        this.validUntil = validUntil;
+        this.validUntil = validUntil.format(DateTimeFormatter.ISO_LOCAL_DATE);
         this.frequencyPerDay = frequencyPerDay;
         this.combinedServiceIndicator = combinedServiceIndicator;
     }

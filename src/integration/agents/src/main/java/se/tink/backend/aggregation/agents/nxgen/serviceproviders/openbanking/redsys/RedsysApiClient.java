@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import java.security.cert.X509Certificate;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Locale;
@@ -173,11 +174,12 @@ public final class RedsysApiClient {
 
     public Pair<String, URL> requestConsent(String scaState) {
         final String url = makeApiUrl(Urls.CONSENTS);
+        final LocalDate consentValidUntil = LocalDate.now().plusDays(90);
         final GetConsentRequest getConsentRequest =
                 new GetConsentRequest(
-                        new AccessEntity(null, null, null, null, FormValues.ALL_ACCOUNTS),
+                        AccessEntity.ALL_PSD2,
                         FormValues.TRUE,
-                        FormValues.VALID_UNTIL,
+                        consentValidUntil,
                         FormValues.FREQUENCY_PER_DAY,
                         FormValues.FALSE);
 

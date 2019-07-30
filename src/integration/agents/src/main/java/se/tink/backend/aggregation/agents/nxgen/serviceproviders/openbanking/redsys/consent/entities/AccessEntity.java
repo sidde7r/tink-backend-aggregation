@@ -3,10 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormValues;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccessEntity {
+    public static AccessEntity ALL_PSD2 =
+            new AccessEntity(null, null, null, null, FormValues.ALL_ACCOUNTS);
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty
     private List<AccountInfoEntity> accounts;
