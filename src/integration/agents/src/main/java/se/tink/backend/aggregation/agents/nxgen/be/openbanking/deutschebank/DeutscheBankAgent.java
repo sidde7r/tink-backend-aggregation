@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.auth
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -63,7 +63,7 @@ public final class DeutscheBankAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        String iban = credentials.getField(CredentialKeys.IBAN);
+        String iban = credentials.getField(Xs2aDevelopersConstants.CredentialKeys.IBAN);
 
         final DeutscheBankAuthenticatorController deutscheBankAuthenticatorController =
                 new DeutscheBankAuthenticatorController(

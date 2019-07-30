@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.BalanceTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceEntity {
-    public static final Amount DEFAULT = Amount.inEUR(0);
+    public static final ExactCurrencyAmount DEFAULT = ExactCurrencyAmount.of(0, "EUR");
 
     private AmountEntity balanceAmount;
     private String balanceType;
@@ -20,7 +20,11 @@ public class BalanceEntity {
     }
 
     @JsonIgnore
-    public Amount toAmount() {
+    public ExactCurrencyAmount toAmount() {
         return balanceAmount.toAmount();
+    }
+
+    public AmountEntity getBalanceAmount() {
+        return balanceAmount;
     }
 }

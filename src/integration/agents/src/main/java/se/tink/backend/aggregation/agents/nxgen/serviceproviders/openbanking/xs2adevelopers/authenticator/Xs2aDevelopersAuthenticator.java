@@ -38,9 +38,17 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
         this.iban = iban;
     }
 
-    private Xs2aDevelopersConfiguration getConfiguration() {
+    public Xs2aDevelopersConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public PersistentStorage getPersistentStorage() {
+        return persistentStorage;
+    }
+
+    public Xs2aDevelopersApiClient getApiClient() {
+        return apiClient;
     }
 
     @Override

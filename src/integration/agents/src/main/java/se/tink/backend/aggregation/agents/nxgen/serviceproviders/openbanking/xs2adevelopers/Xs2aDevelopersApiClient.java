@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.comdirect.ComdirectConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderKeys;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -37,7 +39,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class Xs2aDevelopersApiClient {
 
-    private final TinkHttpClient client;
+    protected final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private Xs2aDevelopersConfiguration configuration;
 
@@ -56,9 +58,17 @@ public class Xs2aDevelopersApiClient {
     }
 
     protected RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .type(MediaType.APPLICATION_JSON);
+
+        RequestBuilder result =
+                client.request(url)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .type(MediaType.APPLICATION_JSON);
+
+        if (configuration.getBaseUrl().equals(ComdirectConstants.BASE_URL)) {
+            result.header(HeaderKeys.X_TINK_DEBUG, HeaderKeys.TRUST_ALL);
+        }
+
+        return result;
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -133,6 +143,18 @@ public class Xs2aDevelopersApiClient {
 
     public GetTransactionsResponse getTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
+        return createFetchingRequest(
+                        new URL(configuration.getBaseUrl() + ApiServices.GET_TRANSACTIONS)
+                                .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier()))
+                .queryParam(
+                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
+                .get(GetTransactionsResponse.class);
+    }
+
+    public GetTransactionsResponse getCreditTransactions(
+            CreditCardAccount account, Date fromDate, Date toDate) {
         return createFetchingRequest(
                         new URL(configuration.getBaseUrl() + ApiServices.GET_TRANSACTIONS)
                                 .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier()))

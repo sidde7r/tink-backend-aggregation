@@ -17,8 +17,10 @@ public final class Xs2aDevelopersConstants {
                             "start2bank zichtrekening",
                             "0-Euro-Konto Vorteil",
                             "b.compact account",
-                            "Current Account")
-                    .put(AccountTypes.SAVINGS, "SAV")
+                            "Current Account",
+                            "Girokonto")
+                    .put(AccountTypes.SAVINGS, "SAV", "Tagesgeldkonto")
+                    .put(AccountTypes.CREDIT_CARD, "Prepaid-Kreditkarte")
                     .build();
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
@@ -35,6 +37,7 @@ public final class Xs2aDevelopersConstants {
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String UNKNOWN_ACCOUNT_TYPE = "Unknown account type.";
         public static final String MISSING_AUTHENTICATOR = "Cannot find authenticator.";
+        public static final String PARSING_URL = "Could not parse URL";
     }
 
     public static class ApiServices {
@@ -92,6 +95,8 @@ public final class Xs2aDevelopersConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String PSU_IP_ADDRESS = "PSU-IP-ADDRESS";
         public static final String X_REQUEST_ID = "X-Request-ID";
+        public static final String X_TINK_DEBUG = "X-Tink-Debug";
+        public static final String TRUST_ALL = "trust_all";
     }
 
     public static class FormKeys {
@@ -126,6 +131,12 @@ public final class Xs2aDevelopersConstants {
     public static class BalanceTypes {
         public static final ImmutableList<String> BALANCES =
                 ImmutableList.of("authorised", "expected");
+    }
+
+    public static class Transactions {
+        public static final int EMPTY_PAGES_RESPONSE_LIMIT = 1;
+        public static final int ERROR_CODE_MAX_ACCESS_EXCEEDED = 429;
+        public static final String HREF = "href";
     }
 
     public static class CredentialKeys {

@@ -13,22 +13,20 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-public class Xs2aDevelopersTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>,
-                TransactionDatePaginator<TransactionalAccount> {
+public class Xs2aDevelopersCreditCardAccountFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
 
     private final Xs2aDevelopersApiClient apiClient;
 
-    public Xs2aDevelopersTransactionalAccountFetcher(Xs2aDevelopersApiClient apiClient) {
+    public Xs2aDevelopersCreditCardAccountFetcher(Xs2aDevelopersApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
     @Override
-    public Collection<TransactionalAccount> fetchAccounts() {
-
+    public Collection<CreditCardAccount> fetchAccounts() {
         GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
 
         return getAccountsResponse.getAccountList().stream()
@@ -38,17 +36,20 @@ public class Xs2aDevelopersTransactionalAccountFetcher
                 .collect(Collectors.toList());
     }
 
-    private Optional<TransactionalAccount> transformAccount(AccountEntity accountEntity) {
-        BalanceEntity balanceEntity = apiClient.getBalance(accountEntity).getBalances().get(0);
-        return accountEntity.toTinkAccount(balanceEntity);
+    private Optional<CreditCardAccount> transformAccount(AccountEntity transactionAccountEntity) {
+        BalanceEntity balanceEntity =
+                apiClient.getBalance(transactionAccountEntity).getBalances().get(0);
+        return transactionAccountEntity.toTinkCreditAccount(balanceEntity);
     }
 
     @Override
     public PaginatorResponse getTransactionsFor(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+            CreditCardAccount account, Date fromDate, Date toDate) {
         try {
             return PaginatorResponseImpl.create(
-                    apiClient.getTransactions(account, fromDate, toDate).toTinkTransactions());
+                    apiClient
+                            .getCreditTransactions(account, fromDate, toDate)
+                            .toTinkTransactions());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == Transactions.ERROR_CODE_MAX_ACCESS_EXCEEDED) {
                 return PaginatorResponseImpl.createEmpty(false);

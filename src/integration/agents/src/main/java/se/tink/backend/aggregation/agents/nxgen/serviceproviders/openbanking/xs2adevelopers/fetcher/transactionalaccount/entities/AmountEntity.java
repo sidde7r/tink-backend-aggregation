@@ -1,25 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
 
-    private Double amount;
+    private BigDecimal amount;
     private String currency;
 
     public AmountEntity() {}
 
-    public AmountEntity(Amount amount) {
-        this.amount = amount.getValue();
-        this.currency = amount.getCurrency();
+    public AmountEntity(ExactCurrencyAmount amount) {
+        this.amount = amount.getExactValue();
+        this.currency = amount.getCurrencyCode();
     }
 
     @JsonIgnore
-    public Amount toAmount() {
-        return new Amount(currency, amount);
+    public ExactCurrencyAmount toAmount() {
+        return new ExactCurrencyAmount(amount, currency);
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
     }
 
     public String getCurrency() {
