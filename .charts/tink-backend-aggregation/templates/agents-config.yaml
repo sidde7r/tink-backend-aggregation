@@ -541,6 +541,34 @@ data:
             aspspCode: "BST"
         {{- end }}
 
+        {{- if $agentsConfig.unicredit }}
+        unicredit-at:
+          tink:
+            baseUrl: "https://api.bankaustria.at"
+            certificateId: "{{ $agentsConfig.unicredit.tink.certificateId }}"
+            redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
+        unicredit-de:
+          tink:
+            baseUrl: "https://api.unicredit.de"
+            certificateId: "{{ $agentsConfig.unicredit.tink.certificateId }}"
+            redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
+        unicredit-hu:
+          tink:
+            baseUrl: "https://api.unicreditbank.hu"
+            certificateId: "{{ $agentsConfig.unicredit.tink.certificateId }}"
+            redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
+        unicredit-it:
+          tink:
+            baseUrl: "https://api.unicredit.it"
+            certificateId: "{{ $agentsConfig.unicredit.tink.certificateId }}"
+            redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
+        buddybank-it:
+          tink:
+            baseUrl: "https://api.buddybank.it"
+            certificateId: "{{ $agentsConfig.unicredit.tink.certificateId }}"
+            redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
+        {{- end }}
+
         {{- if $agentsConfig.abnamro }}
         abnamro:
           tink:

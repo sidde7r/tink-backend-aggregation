@@ -71,6 +71,10 @@ agents:
   volksbank:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+  unicredit:
+    tink:
+      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+      certificateId: Tink
 
 
   proxyUri: http://10.88.12.185:8080
