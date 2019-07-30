@@ -37,7 +37,7 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
                                         getCredentials().getField(Key.LOGIN_INPUT)))),
                 true,
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(c.getTime()),
-                100,
+                4,
                 false);
     }
 

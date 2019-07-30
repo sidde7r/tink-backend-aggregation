@@ -32,7 +32,7 @@ public class BuddybankApiClient extends UnicreditBaseApiClient {
                 new BuddybankConsentAccessEntity(FormValues.ALL_ACCOUNTS),
                 true,
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(c.getTime()),
-                100,
+                4,
                 false);
     }
 

@@ -97,7 +97,7 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
                 new UnicreditConsentAccessEntity(FormValues.ALL_ACCOUNTS),
                 true,
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(c.getTime()),
-                100,
+                4,
                 false);
     }
 

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 @Ignore
 public class UnicreditAgentTest {
 
-    private static final String TEST_PSU_ID_TYPE = "ALL";
+    private static final String TEST_PSU_ID_TYPE = "BUSINESSNET";
 
     private AgentIntegrationTest.Builder builder;
 
