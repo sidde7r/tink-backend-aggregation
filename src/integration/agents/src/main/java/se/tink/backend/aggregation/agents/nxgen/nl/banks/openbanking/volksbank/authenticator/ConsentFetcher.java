@@ -48,4 +48,8 @@ public final class ConsentFetcher {
         }
         return consentId;
     }
+
+    public String getClientId() {
+        return clientId;
+    }
 }

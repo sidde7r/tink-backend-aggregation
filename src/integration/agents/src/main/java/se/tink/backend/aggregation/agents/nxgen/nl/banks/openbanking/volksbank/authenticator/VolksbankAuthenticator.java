@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TokenParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUrlFactory;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -25,7 +24,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final URL redirectUri;
     private final VolksbankUrlFactory urlFactory;
     private final ConsentFetcher consentFetcher;
-    private final VolksbankConfiguration configuration;
+    private final String clientSecret;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
@@ -33,13 +32,13 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
             URL redirectUri,
             VolksbankUrlFactory urlFactory,
             ConsentFetcher consentFetcher,
-            VolksbankConfiguration configuration) {
+            String clientSecret) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
         this.urlFactory = urlFactory;
         this.consentFetcher = consentFetcher;
-        this.configuration = configuration;
+        this.clientSecret = clientSecret;
     }
 
     @Override
@@ -54,8 +53,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 .queryParam(QueryParams.STATE, state)
                 .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString())
                 .queryParam(QueryParams.CONSENT_ID, consentId)
-                .queryParam(
-                        QueryParams.CLIENT_ID, configuration.getAisConfiguration().getClientId());
+                .queryParam(QueryParams.CLIENT_ID, consentFetcher.getClientId());
     }
 
     @Override
@@ -65,12 +63,8 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 urlFactory
                         .buildURL(Paths.TOKEN)
                         .queryParam(QueryParams.CODE, code)
-                        .queryParam(
-                                QueryParams.CLIENT_ID,
-                                configuration.getAisConfiguration().getClientId())
-                        .queryParam(
-                                QueryParams.CLIENT_SECRET,
-                                configuration.getAisConfiguration().getClientSecret())
+                        .queryParam(QueryParams.CLIENT_ID, consentFetcher.getClientId())
+                        .queryParam(QueryParams.CLIENT_SECRET, clientSecret)
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
                         .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString());
 
@@ -99,12 +93,8 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
         URL url =
                 urlFactory
                         .buildURL(Paths.TOKEN)
-                        .queryParam(
-                                QueryParams.CLIENT_ID,
-                                configuration.getAisConfiguration().getClientId())
-                        .queryParam(
-                                QueryParams.CLIENT_SECRET,
-                                configuration.getAisConfiguration().getClientSecret())
+                        .queryParam(QueryParams.CLIENT_ID, consentFetcher.getClientId())
+                        .queryParam(QueryParams.CLIENT_SECRET, clientSecret)
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.REFRESH_TOKEN)
                         .queryParam(QueryParams.REFRESH_TOKEN, refreshToken);
 
