@@ -1,23 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.account.Links;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.account.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FetchAccountResponse {
 
     @JsonProperty("_links")
-    private Links links;
+    private LinksEntity links;
 
-    private Double balance;
+    private BigDecimal balance;
 
     private String currency;
 
@@ -30,38 +32,35 @@ public class FetchAccountResponse {
 
     private String type;
 
-    public Links getLinks() {
+    public LinksEntity getLinks() {
         return links;
     }
 
-    public void setLinks(Links links) {
+    public void setLinks(LinksEntity links) {
         this.links = links;
     }
 
     public TransactionalAccount toTinkAccount(String logicalId) {
         return TransactionalAccount.nxBuilder()
-                // TODO: API returns a hard codded string for type, we cannot test it
                 .withType(TransactionalAccountType.CHECKING)
-                .withBalance(BalanceModule.of(new Amount(currency, balance)))
+                .withBalance(BalanceModule.of(new ExactCurrencyAmount(balance, currency)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                // TODO: API doesn't return account name
-                                .withAccountName("")
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .withAccountName(type)
+                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                                 .build())
+                .addHolderName(type)
                 .setApiIdentifier(logicalId)
-                // TODO: API doesn't return account name
-                .addHolderName("")
                 .build();
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

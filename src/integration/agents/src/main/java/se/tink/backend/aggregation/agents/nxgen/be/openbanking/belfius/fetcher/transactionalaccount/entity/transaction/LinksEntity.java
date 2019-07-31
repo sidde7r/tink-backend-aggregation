@@ -3,33 +3,33 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Links {
+public class LinksEntity {
 
-    private Account account;
-    private Next next;
-    private Self self;
+    private AccountEntity account;
+    private NextEntity next;
+    private SelfEntity self;
 
-    public Account getAccount() {
+    public AccountEntity getAccount() {
         return account;
     }
 
-    public void setAccount(Account account) {
+    public void setAccount(AccountEntity account) {
         this.account = account;
     }
 
-    public Next getNext() {
+    public NextEntity getNext() {
         return next;
     }
 
-    public void setNext(Next next) {
+    public void setNext(NextEntity next) {
         this.next = next;
     }
 
-    public Self getSelf() {
+    public SelfEntity getSelf() {
         return self;
     }
 
-    public void setSelf(Self self) {
+    public void setSelf(SelfEntity self) {
         this.self = self;
     }
 }

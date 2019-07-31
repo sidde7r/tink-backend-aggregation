@@ -1,66 +1,53 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.transaction.Embedded;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.transaction.Links;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.transaction.EmbeddedEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.transaction.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-public class FetchTransactionsResponse implements TransactionKeyPaginatorResponse<URL> {
+public class FetchTransactionsResponse {
 
     @JsonProperty("_embedded")
-    private Embedded embedded;
+    private EmbeddedEntity embedded;
 
     @JsonProperty("_links")
-    private Links links;
+    private LinksEntity links;
 
-    public Embedded getEmbedded() {
+    public EmbeddedEntity getEmbedded() {
         return embedded;
     }
 
-    public void setEmbedded(Embedded embedded) {
+    public void setEmbedded(EmbeddedEntity embedded) {
         this.embedded = embedded;
     }
 
-    public Links getLinks() {
+    public LinksEntity getLinks() {
         return links;
     }
 
-    public void setLinks(Links links) {
+    public void setLinks(LinksEntity links) {
         this.links = links;
     }
 
-    @Override
-    public URL nextKey() {
-        return new URL(links.getNext().getHref());
-    }
-
-    @Override
-    public Collection<? extends Transaction> getTinkTransactions() {
+    @JsonIgnore
+    public Collection<? extends Transaction> toTinkTransactions() {
         return embedded.getTransactions().stream()
                 .map(
                         transaction ->
                                 Transaction.builder()
                                         .setDescription(transaction.getRemittanceInfo())
                                         .setAmount(
-                                                new Amount(
-                                                        transaction.getCurrency(),
-                                                        transaction.getAmount()))
+                                                new ExactCurrencyAmount(
+                                                        transaction.getAmount(),
+                                                        transaction.getCurrency()))
                                         .setDate(transaction.getExecutionDate())
                                         .build())
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Optional<Boolean> canFetchMore() {
-        // TODO: API pagination doesn't work
-        return Optional.of(false);
     }
 }

@@ -12,6 +12,8 @@ public class BelfiusConfiguration implements ClientConfiguration {
     private String clientId;
     private String redirectUrl;
     private String baseUrl;
+    private String certificateId;
+    private String clientSecret;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -35,5 +37,21 @@ public class BelfiusConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base url"));
 
         return baseUrl;
+    }
+
+    public String getCertificateId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(certificateId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
+
+        return certificateId;
+    }
+
+    public String getClientSecret() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientSecret),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
+
+        return clientSecret;
     }
 }

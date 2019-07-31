@@ -13,9 +13,11 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -31,7 +33,7 @@ public final class BelfiusAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BelfiusApiClient(client);
+        apiClient = new BelfiusApiClient(client, persistentStorage, credentials);
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -43,8 +45,8 @@ public final class BelfiusAgent extends NextGenerationAgent
 
         apiClient.setConfiguration(getClientConfiguration());
 
-        // TODO Belfius uses a self-signed certificate
-        client.disableSslVerification();
+        this.client.setEidasProxy(
+                configuration.getEidasProxy(), getClientConfiguration().getCertificateId());
     }
 
     protected BelfiusConfiguration getClientConfiguration() {
@@ -57,8 +59,20 @@ public final class BelfiusAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                new BelfiusAuthenticator(apiClient, persistentStorage, getClientConfiguration()));
+        final OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new BelfiusAuthenticator(
+                                apiClient, persistentStorage, getClientConfiguration()),
+                        credentials);
+
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
@@ -91,7 +105,7 @@ public final class BelfiusAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController<>(accountFetcher)));
     }
 
     @Override

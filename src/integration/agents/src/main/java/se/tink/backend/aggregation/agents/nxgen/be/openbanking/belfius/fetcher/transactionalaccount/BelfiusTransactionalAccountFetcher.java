@@ -2,19 +2,20 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class BelfiusTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-                TransactionKeyPaginator<TransactionalAccount, URL> {
+                TransactionDatePaginator<TransactionalAccount> {
 
     private final BelfiusApiClient apiClient;
 
@@ -31,15 +32,20 @@ public class BelfiusTransactionalAccountFetcher
         return accounts.stream()
                 .map(
                         logicalId -> {
-                            FetchAccountResponse response = apiClient.fetchAccountById(logicalId);
+                            FetchAccountResponse response = apiClient.fetchAccountById();
                             return response.toTinkAccount(logicalId);
                         })
                 .collect(Collectors.toList());
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
-            TransactionalAccount account, URL nextUrl) {
-        return apiClient.fetchTransactionsForAccount(account.getApiIdentifier());
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        try {
+            return PaginatorResponseImpl.create(
+                    apiClient.fetchTransactionsForAccount(fromDate, toDate).toTinkTransactions());
+        } catch (Exception e) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
     }
 }

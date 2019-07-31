@@ -1,14 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.transaction;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Transaction {
+public class TransactionEntity {
 
-    private Double amount;
+    private BigDecimal amount;
     private String communication;
 
     @JsonProperty("communication_type")
@@ -32,11 +34,33 @@ public class Transaction {
     @JsonProperty("transaction_ref")
     private String transactionRef;
 
-    public Double getAmount() {
+    @JsonCreator
+    public TransactionEntity(
+            @JsonProperty("communication_type") String communicationType,
+            @JsonProperty("counterparty_account") String counterpartyAccount,
+            @JsonProperty("counterparty_info") String counterpartyInfo,
+            @JsonProperty("currency") String currency,
+            @JsonProperty("execution_date") Date executionDate,
+            @JsonProperty("remittance_info") String remittanceInfo,
+            @JsonProperty("transaction_ref") String transactionRef,
+            @JsonProperty("amount") BigDecimal amount,
+            @JsonProperty("communication") String communication) {
+        this.remittanceInfo = remittanceInfo.replace("\n", " ").replace("\r", " ");
+        this.amount = amount;
+        this.communicationType = communicationType;
+        this.counterpartyAccount = counterpartyAccount;
+        this.counterpartyInfo = counterpartyInfo;
+        this.currency = currency;
+        this.executionDate = executionDate;
+        this.transactionRef = transactionRef;
+        this.communication = communication;
+    }
+
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

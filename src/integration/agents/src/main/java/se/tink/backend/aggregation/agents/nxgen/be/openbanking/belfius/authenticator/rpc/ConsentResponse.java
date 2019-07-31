@@ -1,0 +1,22 @@
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.annotation.Generated;
+
+@Generated("com.robohorse.robopojogenerator")
+public class ConsentResponse {
+
+    @JsonProperty("consent_uri")
+    private String consentUri;
+
+    @JsonProperty("language")
+    private String language;
+
+    public String getConsentUri() {
+        return consentUri;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+}

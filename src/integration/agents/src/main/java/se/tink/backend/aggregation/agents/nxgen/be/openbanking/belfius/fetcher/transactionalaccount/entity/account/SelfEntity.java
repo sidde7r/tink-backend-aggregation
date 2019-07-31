@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Self {
+public class SelfEntity {
 
     private String href;
 

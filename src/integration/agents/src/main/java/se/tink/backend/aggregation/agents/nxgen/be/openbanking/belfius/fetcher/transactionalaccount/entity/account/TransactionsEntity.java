@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.transaction;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.account;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Next {
+public class TransactionsEntity {
 
     private String href;
 
