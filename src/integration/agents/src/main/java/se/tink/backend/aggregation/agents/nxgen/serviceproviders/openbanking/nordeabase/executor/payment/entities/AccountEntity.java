@@ -5,7 +5,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
+import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.NorwegianIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
@@ -42,28 +44,28 @@ public class AccountEntity {
     }
 
     public AccountIdentifier toTinkAccountIdentifier() {
-        AccountIdentifier accountIdentifier;
         switch (toTinkAccountType()) {
             case IBAN:
-                accountIdentifier = new IbanIdentifier(value);
-                break;
+                return new IbanIdentifier(value);
 
             case SE:
-                accountIdentifier = new SwedishIdentifier(value);
-                break;
+                return new SwedishIdentifier(value);
 
             case SE_BG:
-                accountIdentifier = new BankGiroIdentifier(value);
-                break;
+                return new BankGiroIdentifier(value);
 
             case SE_PG:
-                accountIdentifier = new PlusGiroIdentifier(value);
-                break;
+                return new PlusGiroIdentifier(value);
+
+            case NO:
+                return new NorwegianIdentifier(value);
+
+            case DK:
+                return new DanishIdentifier(value);
 
             default:
                 throw new IllegalArgumentException(
                         "Unrecognized Tink account type " + toTinkAccountType());
         }
-        return accountIdentifier;
     }
 }

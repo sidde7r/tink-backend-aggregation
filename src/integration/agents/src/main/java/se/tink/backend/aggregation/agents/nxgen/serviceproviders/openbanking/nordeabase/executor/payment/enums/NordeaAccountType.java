@@ -27,6 +27,8 @@ public enum NordeaAccountType {
         tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.SE, BBAN_SE);
         tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.SE_BG, BGNR);
         tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.SE_PG, PGNR);
+        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.NO, BBAN_NO);
+        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.DK, BBAN_DK);
     }
 
     public String toString() {

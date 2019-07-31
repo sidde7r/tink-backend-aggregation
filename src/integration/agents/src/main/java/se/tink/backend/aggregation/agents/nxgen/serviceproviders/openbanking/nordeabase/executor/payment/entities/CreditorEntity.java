@@ -41,6 +41,7 @@ public class CreditorEntity {
                                         .name(),
                                 paymentRequest.getPayment().getCurrency(),
                                 paymentRequest.getPayment().getCreditor().getAccountNumber()))
+                .withMessage("Message")
                 .build();
     }
 
