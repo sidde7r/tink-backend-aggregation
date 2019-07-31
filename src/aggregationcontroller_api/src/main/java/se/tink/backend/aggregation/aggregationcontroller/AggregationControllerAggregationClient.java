@@ -24,8 +24,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInfo
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsSensitiveRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
@@ -144,11 +142,6 @@ public class AggregationControllerAggregationClient {
     public Response processEinvoices(
             HostConfiguration hostConfiguration, UpdateTransfersRequest request) {
         return getUpdateService(hostConfiguration).processEinvoices(request);
-    }
-
-    public UpdateDocumentResponse updateDocument(
-            HostConfiguration hostConfiguration, UpdateDocumentRequest request) {
-        return getUpdateService(hostConfiguration).updateDocument(request);
     }
 
     public Response updateFraudDetails(

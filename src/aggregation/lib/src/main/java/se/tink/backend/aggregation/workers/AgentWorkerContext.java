@@ -32,7 +32,6 @@ import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
@@ -41,7 +40,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.enums.StatisticMode;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -535,15 +533,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                         account, transferDestinationPatterns.get(account));
             }
         }
-    }
-
-    @Override
-    public void updateDocument(DocumentContainer container) {
-        UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest();
-        updateDocumentRequest.setUserId(request.getUser().getId());
-        updateDocumentRequest.setDocumentContainer(container);
-
-        controllerWrapper.updateDocument(updateDocumentRequest);
     }
 
     @Override

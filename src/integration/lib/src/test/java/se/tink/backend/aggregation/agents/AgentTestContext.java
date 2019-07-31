@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -317,15 +316,6 @@ public class AgentTestContext extends AgentContext {
     public void sendIdentityToIdentityAggregatorService(IdentityData identityData) {
         // TODO: implement sending identity data
         throw new NotImplementedException("Method not implemented");
-    }
-
-    @Override
-    public void updateDocument(DocumentContainer contianer) {
-        log.info(
-                "-------------------------------------------------------DOCUMENT---------------------------------------------------------------------");
-        log.info(String.format("Identifier: %s", contianer.getIdentifier()));
-        log.info(
-                "-------------------------------------------------------DOCUMENT---------------------------------------------------------------------");
     }
 
     public void processEinvoices() {
