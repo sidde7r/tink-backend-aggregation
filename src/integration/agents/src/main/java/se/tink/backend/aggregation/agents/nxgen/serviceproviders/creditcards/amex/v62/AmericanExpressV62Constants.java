@@ -95,8 +95,7 @@ public final class AmericanExpressV62Constants {
     }
 
     public class Storage {
-        public static final String TIME_LINES = "timeLines";
-        public static final String TRANSACTIONS = "transactions";
+        public static final String ALL_SUB_ACCOUNTS = "allSubAccounts";
     }
 
     public static final class StatusCode {

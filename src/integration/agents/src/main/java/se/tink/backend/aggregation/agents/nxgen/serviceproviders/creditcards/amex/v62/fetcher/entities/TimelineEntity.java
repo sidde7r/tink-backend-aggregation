@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +10,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TimelineEntity {
@@ -17,32 +18,12 @@ public class TimelineEntity {
     private String message;
     private String messageType;
     private String statusCode;
-    private List<SubcardEntity> cardList;
+    private List<SubcardEntity> cardList = new ArrayList<>();
     private List<TimelineItemsEntity> timelineItems;
     private Map<String, TransactionEntity> transactionMap;
 
     public List<SubcardEntity> getCardList() {
         return cardList;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public int getSortedIndex() {
-        return sortedIndex;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getMessageType() {
-        return messageType;
-    }
-
-    public String getStatusCode() {
-        return statusCode;
     }
 
     public List<TimelineItemsEntity> getTimelineItems() {
@@ -53,6 +34,7 @@ public class TimelineEntity {
         return transactionMap;
     }
 
+    @JsonIgnore
     public List<CreditCardAccount> getCreditCardAccounts(
             final AmericanExpressV62Configuration configuration) {
         return cardList.stream()
@@ -60,25 +42,22 @@ public class TimelineEntity {
                 .collect(Collectors.toList());
     }
 
-    public Set<Transaction> getTransactions(
-            final AmericanExpressV62Configuration configuration, final String suppIndex) {
+    @JsonIgnore
+    public Set<TransactionEntity> getTransactions(final String suppIndex) {
         Map<String, Boolean> transactionPendingMap = new HashMap<>();
+
         // Fetch all pending transaction ids from timeline sub items.
         timelineItems.stream()
                 .flatMap(timeLineItem -> timeLineItem.getSubItems().stream())
                 .filter(SubItemsEntity::isPending)
                 .forEach(
                         subItem -> transactionPendingMap.put(subItem.getId(), subItem.isPending()));
+
         // Map pending transaction ids to the transaction map to get transaction details.
         return getTransactionMap().entrySet().stream()
                 .filter(entry -> suppIndex.equalsIgnoreCase(entry.getValue().getSuppIndex()))
-                .map(
-                        entry ->
-                                entry.getValue()
-                                        .toTransaction(
-                                                configuration,
-                                                transactionPendingMap.getOrDefault(
-                                                        entry.getKey(), false)))
+                .filter(entry -> transactionPendingMap.containsKey(entry.getKey()))
+                .map(entry -> entry.getValue().setPending(true))
                 .collect(Collectors.toSet());
     }
 }

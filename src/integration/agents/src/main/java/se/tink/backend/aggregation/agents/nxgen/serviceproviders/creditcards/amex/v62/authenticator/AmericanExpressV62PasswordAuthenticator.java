@@ -17,10 +17,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Storage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.strings.StringUtils;
 
@@ -31,13 +31,13 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
     private final AmericanExpressV62ApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
-    private final Storage instanceStorage;
+    private final AmericanExpressV62Storage instanceStorage;
 
     public AmericanExpressV62PasswordAuthenticator(
             AmericanExpressV62ApiClient apiClient,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            final Storage instanceStorage) {
+            final AmericanExpressV62Storage instanceStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
@@ -106,7 +106,7 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
                         // Double filtering for backward compatibility
                         .filter(AmericanExpressV62Predicates.cancelledCardSummaryValuePredicate)
                         .collect(Collectors.toList());
-        instanceStorage.put(AmericanExpressV62Constants.Tags.CARD_LIST, cardList);
+        instanceStorage.saveCreditCardList(cardList);
     }
 
     private String generateAndStoreUuidFromValue(String tag, String value) {

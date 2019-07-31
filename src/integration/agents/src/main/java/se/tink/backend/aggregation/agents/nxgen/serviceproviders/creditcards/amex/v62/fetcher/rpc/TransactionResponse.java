@@ -5,14 +5,11 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditca
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.ActivityListEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.BillingInfoDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TransactionDetailsEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.ValuesItem;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionResponse {
@@ -65,33 +62,11 @@ public class TransactionResponse {
     }
 
     @JsonIgnore
-    public List<Transaction> toTinkTransactions(
-            final AmericanExpressV62Configuration config,
-            final boolean isPending,
-            final String suppIndex) {
-        List<Transaction> transactions = new ArrayList<>();
-        transactionDetails
-                .getActivityList()
-                .forEach(
-                        activity ->
-                                transactions.addAll(
-                                        activity.getTransactions(config, isPending, suppIndex)));
-        return transactions;
-    }
-
-    /**
-     * Fetches the suppIndex for an account. In the response, each account is assigned an index
-     * (suppIndex) to connect the account with a transaction. We have to check the transaction
-     * details for the suppIndex of the account by mapping the holderName.
-     *
-     * @param account
-     * @return
-     */
-    public String getSuppIndexForAccount(final CreditCardAccount account) {
-        return transactionDetails.getFilterOptions().getCardmembers().getValues().stream()
-                .filter(v -> v.getLabel().equalsIgnoreCase(account.getHolderName().toString()))
-                .map(ValuesItem::getType)
-                .findAny()
-                .orElse("");
+    public List<TransactionEntity> getTransactionList() {
+        return transactionDetails.getActivityList().stream()
+                .filter(activityListEntity -> !activityListEntity.getTransactionList().isEmpty())
+                .findFirst()
+                .map(ActivityListEntity::getTransactionList)
+                .orElse(new ArrayList<>());
     }
 }

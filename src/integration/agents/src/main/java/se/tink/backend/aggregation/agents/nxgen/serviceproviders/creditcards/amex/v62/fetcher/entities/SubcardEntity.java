@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 @JsonObject
 public class SubcardEntity {
+
     private String cardMemberName;
     private String cardProductName;
     private String suppIndex;
