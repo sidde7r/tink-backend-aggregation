@@ -30,7 +30,6 @@ public class VolksbankAgent extends NextGenerationAgent
     private final VolksbankApiClient volksbankApiClient;
     private final VolksbankUrlFactory urlFactory;
     private final VolksbankConfiguration volksbankConfiguration;
-    private final String clientName;
     private final ConsentFetcher consentFetcher;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -43,7 +42,7 @@ public class VolksbankAgent extends NextGenerationAgent
 
         final String[] payload = request.getProvider().getPayload().split(" ");
 
-        clientName = payload[0];
+        final String clientName = payload[0];
         final String bankPath = payload[1];
 
         final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
