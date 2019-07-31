@@ -89,10 +89,13 @@ public class TransactionalAccountBuilderTest {
                         .withId(ID_MODULE)
                         .addAccountFlags(AccountFlag.BUSINESS, AccountFlag.BUSINESS)
                         .addAccountFlags(AccountFlag.MANDATE)
+                        .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                         .build();
 
         Assert.assertArrayEquals(
-                new AccountFlag[] {AccountFlag.BUSINESS, AccountFlag.MANDATE},
+                new AccountFlag[] {
+                    AccountFlag.BUSINESS, AccountFlag.MANDATE, AccountFlag.PSD2_PAYMENT_ACCOUNT
+                },
                 account.getAccountFlags().toArray());
     }
 
