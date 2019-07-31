@@ -2,10 +2,20 @@ package se.tink.backend.aggregation.eidas;
 
 public final class EidasProxyConstants {
 
-    public static class Algorithm {
-        public static final String EIDAS_RSA_SHA256 = "sign-rsa-sha256/";
-        public static final String EIDAS_JWS_EC256 = "sign-jws-ec256/";
-        public static final String EIDAS_PSS_SHA256 = "sign-pss-sha256/";
+    public enum Algorithm {
+        EIDAS_RSA_SHA256("sign-rsa-sha256/"),
+        EIDAS_JWS_EC256("sign-jws-ec256/"),
+        EIDAS_PSS_SHA256("sign-pss-sha256/");
+
+        private final String signingType;
+
+        Algorithm(String signingType) {
+            this.signingType = signingType;
+        }
+
+        public String getSigningType() {
+            return this.signingType;
+        }
     }
 
     public static class Eidas {

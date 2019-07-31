@@ -38,7 +38,8 @@ public class EcJwsProxySigner implements Signer {
         }
 
         final String signingString = Base64.getEncoder().encodeToString(signingBytes);
-        final URL url = eidasProxyBaseUrl.concatWithSeparator(Algorithm.EIDAS_JWS_EC256);
+        final URL url =
+                eidasProxyBaseUrl.concatWithSeparator(Algorithm.EIDAS_JWS_EC256.getSigningType());
 
         logger.info("Requesting QSealC signature from {}", url);
         final String signatureString =

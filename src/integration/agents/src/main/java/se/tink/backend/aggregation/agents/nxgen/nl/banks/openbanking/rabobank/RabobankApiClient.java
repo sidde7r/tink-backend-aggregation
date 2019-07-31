@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidas.EidasProxyConstants.Algorithm;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CompositePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
@@ -221,7 +222,8 @@ public class RabobankApiClient {
         final String certificateId = rabobankConfiguration.getCertificateId();
 
         final byte[] signatureBytes =
-                new QsealcEidasProxySigner(eidasProxyConf, certificateId)
+                new QsealcEidasProxySigner(
+                                eidasProxyConf, certificateId, Algorithm.EIDAS_RSA_SHA256)
                         .getSignature(signingString.getBytes());
 
         final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);
