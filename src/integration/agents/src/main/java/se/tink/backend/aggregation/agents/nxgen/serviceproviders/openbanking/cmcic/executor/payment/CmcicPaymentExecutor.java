@@ -230,7 +230,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
