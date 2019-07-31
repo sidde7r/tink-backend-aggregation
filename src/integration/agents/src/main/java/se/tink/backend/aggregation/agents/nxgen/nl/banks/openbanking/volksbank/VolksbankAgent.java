@@ -29,7 +29,7 @@ public class VolksbankAgent extends NextGenerationAgent
 
     private final VolksbankApiClient volksbankApiClient;
     private final VolksbankUrlFactory urlFactory;
-    private VolksbankConfiguration volksbankConfiguration;
+    private final VolksbankConfiguration volksbankConfiguration;
     private final String clientName;
     private final ConsentFetcher consentFetcher;
 
