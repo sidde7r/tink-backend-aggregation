@@ -47,6 +47,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class CmcicPaymentExecutor implements PaymentExecutor {
 
@@ -224,7 +225,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor {
     @Override
     public CreateBeneficiaryMultiStepResponse createBeneficiary(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
