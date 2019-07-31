@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.ent
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.minidev.json.annotate.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -16,12 +17,11 @@ public class DebtorAccountEntity {
     private String iban;
     private String bban;
 
-    public DebtorAccountEntity() {}
-
     @JsonIgnore
-    private DebtorAccountEntity(Builder builder) {
-        this.iban = builder.iban;
-        this.bban = builder.bban;
+    private DebtorAccountEntity(
+            @JsonProperty("iban") String iban, @JsonProperty("bban") String bban) {
+        this.iban = iban;
+        this.bban = bban;
     }
 
     @JsonIgnore
@@ -37,28 +37,9 @@ public class DebtorAccountEntity {
     public static DebtorAccountEntity of(PaymentRequest paymentRequest) {
         String accountNumber = paymentRequest.getPayment().getDebtor().getAccountNumber();
         if (paymentRequest.getPayment().getDebtor().getAccountIdentifierType() == Type.IBAN) {
-            return new DebtorAccountEntity.Builder().withIban(accountNumber).build();
+            return new DebtorAccountEntity(accountNumber, null);
         } else {
-            return new DebtorAccountEntity.Builder().withBban(accountNumber).build();
-        }
-    }
-
-    public static class Builder {
-        private String iban;
-        private String bban;
-
-        public Builder withIban(String iban) {
-            this.iban = iban;
-            return this;
-        }
-
-        public Builder withBban(String bban) {
-            this.bban = bban;
-            return this;
-        }
-
-        public DebtorAccountEntity build() {
-            return new DebtorAccountEntity(this);
+            return new DebtorAccountEntity(null, accountNumber);
         }
     }
 }
