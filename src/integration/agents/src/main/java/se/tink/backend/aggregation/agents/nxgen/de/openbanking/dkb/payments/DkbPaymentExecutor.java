@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.enti
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -19,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
-public class DkbPaymentExecutor implements PaymentExecutor {
+public class DkbPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private DkbApiClient apiClient;
 
     public DkbPaymentExecutor(DkbApiClient apiClient) {
@@ -58,14 +59,10 @@ public class DkbPaymentExecutor implements PaymentExecutor {
                         ? PaymentProducts.INSTANT_SEPA_CREDIT_TRANSFER
                         : PaymentProducts.CROSS_BORDER_CREDIT_TRANSFERS;
 
+        // UrlEcnoder.encode() can't be used becuase it encodes spaces to +, and we need %20. So we
+        // use this method instead.
         String paymentId =
-                UrlEscapers.urlFragmentEscaper()
-                        .escape(
-                                paymentRequest
-                                        .getPayment()
-                                        .getUniqueId()); // UrlEcnoder.encode() can't be used
-        // becuase it encodes spaces to +, and we
-        // need %20. So we use this method instead.
+                UrlEscapers.urlFragmentEscaper().escape(paymentRequest.getPayment().getUniqueId());
         return apiClient.getPayment(paymentId, paymentProduct).toTinkPaymentResponse();
     }
 

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc;
 
+import net.minidev.json.annotate.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.entities.CreditorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.entities.DebtorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.entities.InstructedAmountEntity;
@@ -17,6 +18,7 @@ public class FetchPaymentResponse {
     private String creditorName;
     private String transactionStatus;
 
+    @JsonIgnore
     public PaymentResponse toTinkPaymentResponse() {
         Long unscaledValue = Double.valueOf(instructedAmount.getAmount() * 100).longValue();
         Payment.Builder buildingPaymentResponse =

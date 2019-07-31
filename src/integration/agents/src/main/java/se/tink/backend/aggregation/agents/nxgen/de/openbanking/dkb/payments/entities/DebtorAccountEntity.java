@@ -24,6 +24,7 @@ public class DebtorAccountEntity {
         this.bban = builder.bban;
     }
 
+    @JsonIgnore
     public Debtor toTinkDebtor() {
         return iban != null
                 ? new Debtor(new IbanIdentifier(iban))

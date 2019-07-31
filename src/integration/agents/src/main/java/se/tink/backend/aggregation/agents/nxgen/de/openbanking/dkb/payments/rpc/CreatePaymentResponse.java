@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc;
 
+import net.minidev.json.annotate.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.enums.DkbPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -12,6 +13,7 @@ public class CreatePaymentResponse {
     private String transactionStatus;
     private String paymentId;
 
+    @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
         Payment.Builder buildingPaymentResponse =

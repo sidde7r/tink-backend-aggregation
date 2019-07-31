@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc;
 
+import net.minidev.json.annotate.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.entities.CreditorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.entities.DebtorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.entities.InstructedAmountEntity;
@@ -12,6 +13,7 @@ public class CreatePaymentRequest {
     private CreditorAccountEntity creditorAccount;
     private String creditorName;
 
+    @JsonIgnore
     private CreatePaymentRequest(Builder builder) {
         this.debtorAccount = builder.debtorAccount;
         this.creditorAccount = builder.creditorAccount;
