@@ -63,9 +63,12 @@ public class VolksbankAgent extends NextGenerationAgent
 
         volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
+        final URL redirectUrl = volksbankConfiguration.getAisConfiguration().getRedirectUrl();
+        final String clientId = volksbankConfiguration.getAisConfiguration().getClientId();
+
         consentFetcher =
                 new ConsentFetcher(
-                        volksbankApiClient, persistentStorage, isSandbox, volksbankConfiguration);
+                        volksbankApiClient, persistentStorage, isSandbox, redirectUrl, clientId);
 
         final String certificateId =
                 volksbankConfiguration.getAisConfiguration().getCertificateId();
