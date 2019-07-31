@@ -136,8 +136,7 @@ public class SibsBaseApiClient {
                         .header(
                                 SibsConstants.HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(configuration.getRedirectUrl())
-                                        .queryParam(QueryKeys.STATE, state)
-                                        .queryParam(QueryKeys.CODE, SibsUtils.getRequestId()))
+                                        .queryParam(QueryKeys.STATE, state))
                         .post(ConsentResponse.class, consentRequest);
 
         saveConsentInPersistentStorage(consentResponse);
@@ -157,8 +156,7 @@ public class SibsBaseApiClient {
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(configuration.getRedirectUrl())
-                                        .queryParam(QueryKeys.STATE, state)
-                                        .queryParam(QueryKeys.CODE, SibsUtils.getRequestId()))
+                                        .queryParam(QueryKeys.STATE, state))
                         .header(SibsConstants.HeaderKeys.PSU_ID_TYPE, psuIdType)
                         .header(SibsConstants.HeaderKeys.PSU_ID, psuId)
                         .post(ConsentResponse.class, consentRequest);
