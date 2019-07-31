@@ -470,6 +470,30 @@ spec:
               name: aggregation-secrets
               key: sibs-certificate-serial-number-cgd
               optional: true
+        - name: CIC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: cic-client-id
+              optional: true
+        - name: CREDITMUTUEL_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: creditmutuel-client-id
+              optional: true
+        - name: CMCIC_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: cmcic-key-id
+              optional: true
+        - name: CMCIC_CLIENT_SIGNING_CERTIFICATE_PATH
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: cmcic-client-signing-certificate-path
+              optional: true
         {{- end }}
         {{- if $agentsConfig.abnamro }}
         - name: ABN_AMRO_CLIENT_ID_TINK

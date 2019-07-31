@@ -597,6 +597,29 @@ data:
             baseUrl: "{{ $agentsConfig.demoFinancialInstitution.openbanking.baseUrl }}"
         {{- end }}
 
+        {{- if $agentsConfig.cmcic }}
+          cic:
+            tink:
+              baseUrl: "https://oauth2-apiii.e-i.com"
+              basePath: "/cic/"
+              authBaseUrl: "https://www.cic.fr/oauth2/en/banque/oauth2_authorization.aspx"
+              redirectUrl: "{{ $agentsConfig.cmcic.tink.redirectUrl }}"
+              clientId: "CIC_CLIENT_ID_TAG"
+              keyId: "CMCIC_KEY_ID_TAG"
+              clientSigningCertificatePath: "CMCIC_CLIENT_SIGNING_CERTIFICATE_PATH_TAG"
+              certificateId: "{{ $agentsConfig.cmcic.tink.certificateId }}"
+          creditmutuel:
+            tink:
+              baseUrl: "https://oauth2-apisi.e-i.com"
+              basePath: "/cm/"
+              authBaseUrl: "https://www.creditmutuel.fr/oauth2/en/banque/oauth2_authorization.aspx"
+              redirectUrl: "{{ $agentsConfig.cmcic.tink.redirectUrl }}"
+              clientId: "CREDITMUTUEL_CLIENT_ID_TAG"
+              keyId: "CMCIC_KEY_ID_TAG"
+              clientSigningCertificatePath: "CMCIC_CLIENT_SIGNING_CERTIFICATE_PATH_TAG"
+              certificateId: "{{ $agentsConfig.cmcic.tink.certificateId }}"
+        {{- end }}
+
       abnAmro:
 
       {{- if $agentsConfig.abnAmro }}
