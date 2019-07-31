@@ -4,7 +4,6 @@ import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidas.EidasProxyConstants.Url;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -17,11 +16,26 @@ public final class QsealcEidasProxySigner implements Signer {
     private final TinkHttpClient httpClient;
     private final URL eidasProxyBaseUrl;
     private final String certificateId;
+    private String signingType;
 
+    @Deprecated
     public QsealcEidasProxySigner(
             final EidasProxyConfiguration proxyConfig, final String certificateId) {
         this.eidasProxyBaseUrl = new URL(proxyConfig.getHost());
         this.certificateId = certificateId;
+        this.httpClient = new TinkHttpClient();
+        this.httpClient.setEidasSign(proxyConfig);
+        httpClient.setTimeout(TIMEOUT_MS);
+        httpClient.setDebugOutput(true);
+    }
+
+    public QsealcEidasProxySigner(
+            final EidasProxyConfiguration proxyConfig,
+            final String certificateId,
+            final String signingType) {
+        this.eidasProxyBaseUrl = new URL(proxyConfig.getHost());
+        this.certificateId = certificateId;
+        this.signingType = signingType;
         this.httpClient = new TinkHttpClient();
         this.httpClient.setEidasSign(proxyConfig);
         httpClient.setTimeout(TIMEOUT_MS);
@@ -40,7 +54,7 @@ public final class QsealcEidasProxySigner implements Signer {
 
     private String getSignatureFromProxy(final byte[] signingBytes) {
         final String signingString = Base64.getEncoder().encodeToString(signingBytes);
-        final URL url = eidasProxyBaseUrl.concatWithSeparator(Url.EIDAS_SIGN);
+        final URL url = eidasProxyBaseUrl.concatWithSeparator(this.signingType);
 
         logger.info("Requesting QSealC signature from {}", url);
         return httpClient
