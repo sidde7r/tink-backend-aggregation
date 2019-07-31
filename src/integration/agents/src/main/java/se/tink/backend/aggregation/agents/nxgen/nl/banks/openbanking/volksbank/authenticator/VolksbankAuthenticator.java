@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TokenParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUrlFactory;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -24,18 +25,21 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final URL redirectUri;
     private final VolksbankUrlFactory urlFactory;
     private final ConsentFetcher consentFetcher;
+    private final VolksbankConfiguration configuration;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
             PersistentStorage persistentStorage,
             URL redirectUri,
             VolksbankUrlFactory urlFactory,
-            ConsentFetcher consentFetcher) {
+            ConsentFetcher consentFetcher,
+            VolksbankConfiguration configuration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
         this.urlFactory = urlFactory;
         this.consentFetcher = consentFetcher;
+        this.configuration = configuration;
     }
 
     @Override
@@ -51,8 +55,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString())
                 .queryParam(QueryParams.CONSENT_ID, consentId)
                 .queryParam(
-                        QueryParams.CLIENT_ID,
-                        client.getConfiguration().getAisConfiguration().getClientId());
+                        QueryParams.CLIENT_ID, configuration.getAisConfiguration().getClientId());
     }
 
     @Override
@@ -64,10 +67,10 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .queryParam(QueryParams.CODE, code)
                         .queryParam(
                                 QueryParams.CLIENT_ID,
-                                client.getConfiguration().getAisConfiguration().getClientId())
+                                configuration.getAisConfiguration().getClientId())
                         .queryParam(
                                 QueryParams.CLIENT_SECRET,
-                                client.getConfiguration().getAisConfiguration().getClientSecret())
+                                configuration.getAisConfiguration().getClientSecret())
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
                         .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString());
 
@@ -98,10 +101,10 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .buildURL(Paths.TOKEN)
                         .queryParam(
                                 QueryParams.CLIENT_ID,
-                                client.getConfiguration().getAisConfiguration().getClientId())
+                                configuration.getAisConfiguration().getClientId())
                         .queryParam(
                                 QueryParams.CLIENT_SECRET,
-                                client.getConfiguration().getAisConfiguration().getClientSecret())
+                                configuration.getAisConfiguration().getClientSecret())
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.REFRESH_TOKEN)
                         .queryParam(QueryParams.REFRESH_TOKEN, refreshToken);
 

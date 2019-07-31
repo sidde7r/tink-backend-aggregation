@@ -61,9 +61,11 @@ public class VolksbankAgent extends NextGenerationAgent
                                         new IllegalStateException(
                                                 "Volksbank configuration missing."));
 
-        volksbankApiClient = new VolksbankApiClient(client, urlFactory, volksbankConfiguration);
+        volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
-        consentFetcher = new ConsentFetcher(volksbankApiClient, persistentStorage, isSandbox);
+        consentFetcher =
+                new ConsentFetcher(
+                        volksbankApiClient, persistentStorage, isSandbox, volksbankConfiguration);
 
         final String certificateId =
                 volksbankConfiguration.getAisConfiguration().getCertificateId();
@@ -74,18 +76,18 @@ public class VolksbankAgent extends NextGenerationAgent
         client.setEidasProxy(eidasProxyConfiguration, certificateId);
 
         transactionalAccountRefreshController =
-            new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new VolksbankTransactionalAccountFetcher(
-                    volksbankApiClient, consentFetcher, persistentStorage),
-                new TransactionFetcherController<>(
-                    this.transactionPaginationHelper,
-                    new TransactionKeyPaginationController<>(
-                        new VolksbankTransactionFetcher(
-                            volksbankApiClient,
-                            consentFetcher,
-                            persistentStorage))));
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new VolksbankTransactionalAccountFetcher(
+                                volksbankApiClient, consentFetcher, persistentStorage),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(
+                                        new VolksbankTransactionFetcher(
+                                                volksbankApiClient,
+                                                consentFetcher,
+                                                persistentStorage))));
     }
 
     @Override
@@ -97,7 +99,8 @@ public class VolksbankAgent extends NextGenerationAgent
                         persistentStorage,
                         redirectUrl,
                         urlFactory,
-                        consentFetcher);
+                        consentFetcher,
+                        volksbankConfiguration);
 
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
