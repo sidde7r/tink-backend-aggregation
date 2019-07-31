@@ -626,6 +626,11 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return this;
     }
 
+    public RequestBuilder queryParamRaw(String key, String value) {
+        url = url.queryParamRaw(key, value);
+        return this;
+    }
+
     /**
      * Method adding query parameters to the request. Each entry in map will be added as separate
      * query parameter, with {@link String} as key which will be used as name and {@link String} as
