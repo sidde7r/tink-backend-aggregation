@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
@@ -164,7 +163,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         HalPaymentRequestEntity paymentRequestEntity =
                 apiClient.fetchPayment(paymentRequest.getPayment().getUniqueId());
 
@@ -234,8 +233,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
-            throws PaymentException {
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         return new PaymentListResponse(paymentResponses);
     }
 }
