@@ -40,7 +40,6 @@ public class CicPaymentTest {
             Creditor creditor = mock(Creditor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
             doReturn("FR7630066109720002000100130").when(creditor).getAccountNumber();
-            doReturn(Iban.random(CountryCode.SE).toString()).when(creditor).getAccountNumber();
 
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.SE).when(debtor).getAccountIdentifierType();
