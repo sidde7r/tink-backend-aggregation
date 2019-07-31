@@ -68,6 +68,14 @@ public final class URL {
         return Optional.of(urlEncode(key) + "=" + urlEncode(value));
     }
 
+    private Optional<String> toQueryStringRaw(String key, String value) {
+        if (Strings.isNullOrEmpty(key) || value == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(key + "=" + value);
+    }
+
     /**
      * Decodes a URL that is UTF-8 encoded.
      *
@@ -115,6 +123,13 @@ public final class URL {
      */
     public URL queryParam(String key, String value) {
         return toQueryString(key, value)
+                .map(this::prependQueryIfPresent)
+                .map(s -> new URL(url, s))
+                .orElse(this);
+    }
+
+    public URL queryParamRaw(String key, String value) {
+        return toQueryStringRaw(key, value)
                 .map(this::prependQueryIfPresent)
                 .map(s -> new URL(url, s))
                 .orElse(this);
