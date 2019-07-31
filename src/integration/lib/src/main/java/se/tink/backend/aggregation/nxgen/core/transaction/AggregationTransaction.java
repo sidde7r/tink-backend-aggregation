@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
@@ -26,22 +27,38 @@ public abstract class AggregationTransaction {
     private final String description;
     private final Date date;
     private final String rawDetails;
+    private final TransactionTypes type;
+    private final Map<TransactionPayloadTypes, String> payload;
 
     @Deprecated
     protected AggregationTransaction(
-            Amount amount, Date date, String description, String rawDetails) {
+            Amount amount,
+            Date date,
+            String description,
+            String rawDetails,
+            TransactionTypes type,
+            Map<TransactionPayloadTypes, String> payload) {
         this.amount = ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency());
         this.date = date;
         this.description = description;
         this.rawDetails = rawDetails;
+        this.type = type;
+        this.payload = payload;
     }
 
     protected AggregationTransaction(
-            ExactCurrencyAmount amount, Date date, String description, String rawDetails) {
+            ExactCurrencyAmount amount,
+            Date date,
+            String description,
+            String rawDetails,
+            TransactionTypes type,
+            Map<TransactionPayloadTypes, String> payload) {
         this.amount = ExactCurrencyAmount.of(amount);
         this.date = date;
         this.description = description;
         this.rawDetails = rawDetails;
+        this.type = type;
+        this.payload = payload;
     }
 
     @Deprecated
@@ -66,7 +83,7 @@ public abstract class AggregationTransaction {
     }
 
     public TransactionTypes getType() {
-        return TransactionTypes.DEFAULT;
+        return type;
     }
 
     public Transaction toSystemTransaction(User user) {
@@ -84,6 +101,9 @@ public abstract class AggregationTransaction {
             transaction.setPayload(
                     TransactionPayloadTypes.DETAILS,
                     addCurrencyIfEligible(multiCurrencyEnabled, getRawDetails()));
+        }
+        if (payload != null) {
+            payload.forEach((key, value) -> transaction.setPayload(key, value));
         }
 
         return transaction;
@@ -114,6 +134,8 @@ public abstract class AggregationTransaction {
         private String description;
         private Date date;
         private String rawDetails;
+        private TransactionTypes type = TransactionTypes.DEFAULT;
+        private Map<TransactionPayloadTypes, String> payload = Maps.newHashMap();
 
         @Deprecated
         Amount getAmount() {
@@ -179,6 +201,24 @@ public abstract class AggregationTransaction {
                     this.rawDetails = SerializationUtils.serializeToString(rawDetails);
                 }
             }
+            return this;
+        }
+
+        public TransactionTypes getType() {
+            return type;
+        }
+
+        public Builder setType(TransactionTypes type) {
+            this.type = type;
+            return this;
+        }
+
+        public Map<TransactionPayloadTypes, String> getPayload() {
+            return payload;
+        }
+
+        public Builder setPayload(TransactionPayloadTypes key, String value) {
+            payload.put(key, value);
             return this;
         }
 

@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.user.rpc.User;
@@ -35,7 +37,7 @@ public class Transaction extends AggregationTransaction {
             String description,
             boolean pending,
             String rawDetails) {
-        this(amount, date, description, pending, rawDetails, null);
+        this(amount, date, description, pending, rawDetails, null, TransactionTypes.DEFAULT, null);
     }
 
     protected Transaction(
@@ -44,8 +46,10 @@ public class Transaction extends AggregationTransaction {
             String description,
             boolean pending,
             String rawDetails,
-            String externalId) {
-        super(amount, date, description, rawDetails);
+            String externalId,
+            TransactionTypes type,
+            Map<TransactionPayloadTypes, String> payload) {
+        super(amount, date, description, rawDetails, type, payload);
         this.pending = pending;
         this.externalId = externalId;
     }
@@ -123,8 +127,19 @@ public class Transaction extends AggregationTransaction {
             return this;
         }
 
+        @Override
         public Builder setRawDetails(Object rawDetails) {
             return (Builder) super.setRawDetails(rawDetails);
+        }
+
+        @Override
+        public Builder setType(TransactionTypes type) {
+            return (Builder) super.setType(type);
+        }
+
+        @Override
+        public Builder setPayload(TransactionPayloadTypes key, String value) {
+            return (Builder) super.setPayload(key, value);
         }
 
         String getExternalId() {
@@ -139,7 +154,9 @@ public class Transaction extends AggregationTransaction {
                     getDescription(),
                     isPending(),
                     getRawDetails(),
-                    getExternalId());
+                    getExternalId(),
+                    getType(),
+                    getPayload());
         }
     }
 }
