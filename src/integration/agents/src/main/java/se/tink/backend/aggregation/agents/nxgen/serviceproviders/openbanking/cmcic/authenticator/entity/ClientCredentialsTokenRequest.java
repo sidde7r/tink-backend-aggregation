@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity;
 
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormKeys;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class ClientCredentialsTokenRequest extends AbstractForm {
 
     private ClientCredentialsTokenRequest(String clientId, String grantType, String scope) {
-        put("client_id", clientId);
-        put("grant_type", grantType);
-        put("scope", scope);
+        put(FormKeys.CLIENT_ID, clientId);
+        put(FormKeys.GRANT_TYPE, grantType);
+        put(FormKeys.SCOPE, scope);
     }
 
     public static ClientCredentialsTokenRequestBuilder builder() {

@@ -86,7 +86,12 @@ public final class CmcicConstants {
         public static final String CONTENT_TYPE = "content-type";
     }
 
-    public static class FormKeys {}
+    public static class FormKeys {
+
+        public static final String CLIENT_ID = "client_id";
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String SCOPE = "scope";
+    }
 
     public static class FormValues {
         public static final String EMPTY = "";
