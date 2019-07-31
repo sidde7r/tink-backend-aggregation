@@ -213,8 +213,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         paymentMultiStepRequest.getPayment().setStatus(PaymentStatus.SIGNED);
         return new PaymentMultiStepResponse(
                 paymentMultiStepRequest.getPayment(),
