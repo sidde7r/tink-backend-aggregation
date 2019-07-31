@@ -66,7 +66,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
 
         String id = UUID.randomUUID().toString().replace("-", "");
