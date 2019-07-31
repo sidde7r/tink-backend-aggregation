@@ -11,6 +11,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.DeviceIdentification;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
@@ -83,5 +84,11 @@ public class Payload {
     public UserInformation getUserInformation() {
         Preconditions.checkNotNull(vodb);
         return vodb.userInformation;
+    }
+
+    @JsonIgnore
+    public List<AccountEntity> getAccountEntities() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.accountEntities;
     }
 }

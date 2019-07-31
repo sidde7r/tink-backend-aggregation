@@ -82,4 +82,9 @@ public class Response {
     public UserInformation getUserInformation() {
         return payload.getUserInformation();
     }
+
+    @JsonIgnore
+    public List<AccountEntity> getAccountEntities() {
+        return payload.getAccountEntities();
+    }
 }

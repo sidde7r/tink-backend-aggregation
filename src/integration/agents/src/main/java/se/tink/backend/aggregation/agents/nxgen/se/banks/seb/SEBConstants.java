@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -14,6 +16,7 @@ public class SEBConstants {
         public static final URL COLLECT_BANKID = new URL(BASE + Endpoints.COLLECT_BANKID);
         public static final URL INITIATE_SESSION = new URL(BASE + Endpoints.INITIATE_SESSION);
         public static final URL ACTIVATE_SESSION = new URL(BASE + Endpoints.ACTIVATE_SESSION);
+        public static final URL LIST_ACCOUNTS = new URL(BASE + Endpoints.LIST_ACCOUNTS);
     }
 
     public static class Endpoints {
@@ -22,6 +25,7 @@ public class SEBConstants {
         private static final String API_BASE = "/1000/ServiceFactory/PC_BANK/PC_Bank";
         public static final String INITIATE_SESSION = API_BASE + "Init11Session01.asmx/Execute";
         public static final String ACTIVATE_SESSION = API_BASE + "Aktivera01Session01.asmx/Execute";
+        public static final String LIST_ACCOUNTS = API_BASE + "Lista01Konton_privat01.asmx/Execute";
     }
 
     public static class HeaderKeys {
@@ -50,10 +54,13 @@ public class SEBConstants {
 
     public static class ServiceInputKeys {
         public static final String CUSTOMER_TYPE = "CUSTOMERTYPE";
+        public static final String CUSTOMER_ID = "KUND_ID";
+        public static final String ACCOUNT_TYPE = "KONTO_TYP";
     }
 
     public static class ServiceInputValues {
         public static final String PRIVATE = "P";
+        public static final String DEFAULT_ACCOUNT_TYPE = "ICKEFOND";
     }
 
     public static class StorageKeys {
@@ -61,6 +68,7 @@ public class SEBConstants {
         public static final String CUSTOMER_NUMBER = "customerNumber";
         public static final String SHORT_USERID = "shortUserId";
         public static final String SSN = "ssn";
+        public static final String ACCOUNT_CUSTOMER_ID = "customerId";
     }
 
     public static class SystemCode {
@@ -97,4 +105,24 @@ public class SEBConstants {
             return userMessage;
         }
     }
+
+    public static final GenericTypeMapper<AccountTypes, Integer> ACCOUNT_TYPE_MAPPER =
+            GenericTypeMapper.<AccountTypes, Integer>genericBuilder()
+                    .put(
+                            AccountTypes.CHECKING,
+                            1, // PRIVATKONTO
+                            3, // PERSONALLONEKONTO
+                            17) // SPECIALINLONEKONTO
+                    .put(
+                            AccountTypes.SAVINGS,
+                            16, // ENKLA_SPARKONTOT
+                            12) // ENKLA_SPARKONTOT_FORETAG
+                    .put(
+                            AccountTypes.INVESTMENT,
+                            54, // ISK_KAPITALKONTO
+                            22, // FUND
+                            27, // IPS
+                            35) // PLACERINGSKONTO
+                    .put(AccountTypes.OTHER, 2) // can be NOTARIATKONTO, SKOGSKONTO, FRETAGSKONTO
+                    .build();
 }

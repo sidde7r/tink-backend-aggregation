@@ -134,4 +134,13 @@ public class SEBApiClient {
         Preconditions.checkNotNull(userInformation);
         return userInformation;
     }
+
+    public Response fetchAccounts(String customerId, String accountType) {
+        final Request request =
+                new Request.Builder()
+                        .addServiceInput(ServiceInputKeys.CUSTOMER_ID, customerId)
+                        .addServiceInput(ServiceInputKeys.ACCOUNT_TYPE, accountType)
+                        .build();
+        return post(Urls.LIST_ACCOUNTS, request);
+    }
 }
