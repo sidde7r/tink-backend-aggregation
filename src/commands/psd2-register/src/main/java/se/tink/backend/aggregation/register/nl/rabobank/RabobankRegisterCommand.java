@@ -17,6 +17,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import se.tink.backend.aggregation.eidas.EidasProxyConstants.Algorithm;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.eidas.Signer;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -137,7 +138,10 @@ public final class RabobankRegisterCommand {
         final int exp = (int) (System.currentTimeMillis() / 1000) + 6 * 60 * 60;
 
         final Signer jwsSigner =
-                new QsealcEidasProxySigner(RabobankRegisterConstants.eidasProxyConf, certificateId);
+                new QsealcEidasProxySigner(
+                        RabobankRegisterConstants.eidasProxyConf,
+                        certificateId,
+                        Algorithm.EIDAS_RSA_SHA256);
 
         final JwsRequest body = JwsRequest.create(qsealcB64, jwsSigner, exp, email, organization);
 

@@ -6,15 +6,14 @@ import java.io.IOException;
 import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.eidas.EidasProxyConstants.Algorithm;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Eidas;
-import se.tink.backend.aggregation.eidas.EidasProxyConstants.Url;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class EcJwsProxySigner implements Signer {
 
     private static Logger logger = LoggerFactory.getLogger(EcJwsProxySigner.class);
-    private static int TIMEOUT_MS = 5000;
 
     private final TinkHttpClient httpClient;
     private final String certificateId;
@@ -39,7 +38,8 @@ public class EcJwsProxySigner implements Signer {
         }
 
         final String signingString = Base64.getEncoder().encodeToString(signingBytes);
-        final URL url = eidasProxyBaseUrl.concatWithSeparator(Url.JWS_EC256_SIGN);
+        final URL url =
+                eidasProxyBaseUrl.concatWithSeparator(Algorithm.EIDAS_JWS_EC256.getSigningType());
 
         logger.info("Requesting QSealC signature from {}", url);
         final String signatureString =

@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.agents.utils.jersey.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidas.EidasProxyConstants.Algorithm;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 
 public class SibsMessageSignInterceptor extends MessageSignInterceptor {
@@ -113,7 +114,8 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
 
     private String signMessage(String toSignString) {
         QsealcEidasProxySigner proxySigner =
-                new QsealcEidasProxySigner(eidasConf, configuration.getCertificateId());
+                new QsealcEidasProxySigner(
+                        eidasConf, configuration.getCertificateId(), Algorithm.EIDAS_RSA_SHA256);
         return proxySigner.getSignatureBase64(toSignString.getBytes());
     }
 }

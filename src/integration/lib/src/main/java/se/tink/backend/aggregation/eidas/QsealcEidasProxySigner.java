@@ -4,7 +4,6 @@ import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidas.EidasProxyConstants.Url;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -17,11 +16,21 @@ public final class QsealcEidasProxySigner implements Signer {
     private final TinkHttpClient httpClient;
     private final URL eidasProxyBaseUrl;
     private final String certificateId;
+    private final String signingType;
 
+    @Deprecated
     public QsealcEidasProxySigner(
             final EidasProxyConfiguration proxyConfig, final String certificateId) {
+        this(proxyConfig, certificateId, EidasProxyConstants.Algorithm.EIDAS_RSA_SHA256);
+    }
+
+    public QsealcEidasProxySigner(
+            final EidasProxyConfiguration proxyConfig,
+            final String certificateId,
+            final EidasProxyConstants.Algorithm algorithm) {
         this.eidasProxyBaseUrl = new URL(proxyConfig.getHost());
         this.certificateId = certificateId;
+        this.signingType = algorithm.getSigningType();
         this.httpClient = new TinkHttpClient();
         this.httpClient.setEidasSign(proxyConfig);
         httpClient.setTimeout(TIMEOUT_MS);
@@ -40,12 +49,12 @@ public final class QsealcEidasProxySigner implements Signer {
 
     private String getSignatureFromProxy(final byte[] signingBytes) {
         final String signingString = Base64.getEncoder().encodeToString(signingBytes);
-        final URL url = eidasProxyBaseUrl.concatWithSeparator(Url.EIDAS_SIGN);
+        final URL url = eidasProxyBaseUrl.concatWithSeparator(signingType);
 
         logger.info("Requesting QSealC signature from {}", url);
         return httpClient
                 .request(url)
-                .header("X-Tink-Eidas-Sign-Certificate-Id", this.certificateId)
+                .header("X-Tink-Eidas-Sign-Certificate-Id", certificateId)
                 .type("application/octet-stream")
                 .body(signingString)
                 .post(String.class);
