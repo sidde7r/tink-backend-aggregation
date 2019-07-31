@@ -18,7 +18,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
+//@Ignore
 public class BeoBankPaymentTest {
 
     @Test

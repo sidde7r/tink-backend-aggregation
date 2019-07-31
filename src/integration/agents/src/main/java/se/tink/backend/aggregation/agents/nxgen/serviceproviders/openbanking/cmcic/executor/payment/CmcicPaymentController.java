@@ -54,7 +54,7 @@ public class CmcicPaymentController extends PaymentController {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
-    public ThirdPartyAppResponse<String> collect(String reference) {
+    private ThirdPartyAppResponse<String> collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
@@ -95,7 +95,7 @@ public class CmcicPaymentController extends PaymentController {
         String id = paymentMultiStepRequest.getPayment().getUniqueId();
         URL authorizeUrl = new URL(sessionStorage.get(id));
         openThirdPartyApp(authorizeUrl);
-        collect(ref.getReference());
+        collect();
 
         return super.sign(paymentMultiStepRequest);
     }
