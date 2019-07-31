@@ -49,24 +49,6 @@ public class VolksbankAgent extends NextGenerationAgent
 
         this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
-        volksbankApiClient = new VolksbankApiClient(client, urlFactory);
-
-        consentFetcher = new ConsentFetcher(volksbankApiClient, persistentStorage, isSandbox);
-
-        transactionalAccountRefreshController =
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new VolksbankTransactionalAccountFetcher(
-                                volksbankApiClient, consentFetcher, persistentStorage),
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
-                                        new VolksbankTransactionFetcher(
-                                                volksbankApiClient,
-                                                consentFetcher,
-                                                persistentStorage))));
-
         volksbankConfiguration =
                 agentsServiceConfiguration
                         .getIntegrations()
@@ -79,7 +61,9 @@ public class VolksbankAgent extends NextGenerationAgent
                                         new IllegalStateException(
                                                 "Volksbank configuration missing."));
 
-        volksbankApiClient.setConfiguration(volksbankConfiguration);
+        volksbankApiClient = new VolksbankApiClient(client, urlFactory, volksbankConfiguration);
+
+        consentFetcher = new ConsentFetcher(volksbankApiClient, persistentStorage, isSandbox);
 
         final String certificateId =
                 volksbankConfiguration.getAisConfiguration().getCertificateId();
@@ -88,6 +72,20 @@ public class VolksbankAgent extends NextGenerationAgent
                 agentsServiceConfiguration.getEidasProxy();
 
         client.setEidasProxy(eidasProxyConfiguration, certificateId);
+
+        transactionalAccountRefreshController =
+            new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new VolksbankTransactionalAccountFetcher(
+                    volksbankApiClient, consentFetcher, persistentStorage),
+                new TransactionFetcherController<>(
+                    this.transactionPaginationHelper,
+                    new TransactionKeyPaginationController<>(
+                        new VolksbankTransactionFetcher(
+                            volksbankApiClient,
+                            consentFetcher,
+                            persistentStorage))));
     }
 
     @Override

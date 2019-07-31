@@ -26,14 +26,14 @@ public class VolksbankApiClient {
 
     private final TinkHttpClient client;
     private final VolksbankUrlFactory urlFactory;
-    private VolksbankConfiguration configuration;
+    private final VolksbankConfiguration configuration;
 
-    public VolksbankApiClient(final TinkHttpClient client, final VolksbankUrlFactory urlFactory) {
+    public VolksbankApiClient(
+            final TinkHttpClient client,
+            final VolksbankUrlFactory urlFactory,
+            final VolksbankConfiguration configuration) {
         this.client = client;
         this.urlFactory = urlFactory;
-    }
-
-    public void setConfiguration(VolksbankConfiguration configuration) {
         this.configuration = configuration;
     }
 
