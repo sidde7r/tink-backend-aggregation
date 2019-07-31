@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
 import java.util.Optional;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
@@ -21,6 +23,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
  */
 public class NordeaPaymentExecutor implements PaymentExecutor {
 
+    private static final Logger log = LoggerFactory.getLogger(NordeaPaymentExecutor.class);
     private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
             new NordeaAccountIdentifierFormatter();
     private NordeaSEApiClient apiClient;
@@ -42,12 +45,17 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
      * that id instead. Otherwise, proceeds to create a new payment
      */
     private void createNewOrConfirmExisting(Transfer transfer) {
-        final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
+        try {
+            final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
 
-        if (payment.isPresent()) {
-            executorHelper.confirm(payment.get().getApiIdentifier());
-        } else {
-            createNewPayment(transfer);
+            if (payment.isPresent()) {
+                executorHelper.confirm(payment.get().getApiIdentifier());
+            } else {
+                createNewPayment(transfer);
+            }
+        } catch (HttpResponseException e) {
+            log.warn("Payment execution failed", e);
+            throw executorHelper.paymentFailedError();
         }
     }
 
@@ -114,8 +122,10 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
             executorHelper.confirm(paymentResponse.getApiIdentifier());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                log.warn("Payment execution failed", e);
                 throw executorHelper.paymentFailedError();
             }
+            throw e;
         }
     }
 }

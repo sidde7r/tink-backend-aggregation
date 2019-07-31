@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer;
 
-import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
@@ -83,7 +82,7 @@ public class NordeaTransferDestinationFetcher implements TransferDestinationFetc
                                                         account.getPermissions()
                                                                 .isCanTransferToAccount()),
                                 apiClient.fetchBeneficiaries().getBeneficiaries().stream()
-                                        .filter(Predicates.not(BeneficiariesEntity::isPgOrBg)))
+                                        .filter(BeneficiariesEntity::isLBAN))
                         .collect(Collectors.toList());
 
         return new TransferDestinationPatternBuilder()

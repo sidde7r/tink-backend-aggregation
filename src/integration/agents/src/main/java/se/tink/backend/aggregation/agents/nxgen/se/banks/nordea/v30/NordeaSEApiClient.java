@@ -42,7 +42,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.rpc.FetchBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -286,12 +285,10 @@ public class NordeaSEApiClient {
                     .peek(this::refreshAccessToken)
                     .getOrElseThrow(SessionError.SESSION_EXPIRED::exception);
         } catch (HttpResponseException hre) {
-
-            ErrorResponse error = hre.getResponse().getBody(ErrorResponse.class);
+            ErrorResponse error = ErrorResponse.of(hre);
             if (error.isInvalidRefreshToken()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
-
             throw hre;
         }
     }
@@ -371,9 +368,7 @@ public class NordeaSEApiClient {
     }
 
     private void tryRefreshAccessToken(HttpResponseException hre) {
-        HttpResponse response = hre.getResponse();
-        ErrorResponse error = response.getBody(ErrorResponse.class);
-
+        ErrorResponse error = ErrorResponse.of(hre);
         if (error.tokenRequired() || error.isInvalidAccessToken()) {
             refreshAccessToken(getRefreshToken());
         } else {

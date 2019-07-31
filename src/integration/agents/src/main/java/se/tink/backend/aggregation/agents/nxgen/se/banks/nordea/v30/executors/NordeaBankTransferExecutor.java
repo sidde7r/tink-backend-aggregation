@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.AccountIdentifier;
@@ -24,8 +27,10 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaBankTransferExecutor implements BankTransferExecutor {
 
+    private static final Logger log = LoggerFactory.getLogger(NordeaBankTransferExecutor.class);
     private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
             new NordeaAccountIdentifierFormatter();
+
     private final Catalog catalog;
     private NordeaSEApiClient apiClient;
     private NordeaExecutorHelper executorHelper;
@@ -39,12 +44,17 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
 
     @Override
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
-        final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
+        try {
+            final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
 
-        if (payment.isPresent()) {
-            executorHelper.confirm(payment.get().getApiIdentifier());
-        } else {
-            createNewTransfer(transfer);
+            if (payment.isPresent()) {
+                executorHelper.confirm(payment.get().getApiIdentifier());
+            } else {
+                createNewTransfer(transfer);
+            }
+        } catch (HttpResponseException e) {
+            log.warn("Transfer execution failed", e);
+            throw executorHelper.transferFailedError();
         }
         return Optional.empty();
     }
