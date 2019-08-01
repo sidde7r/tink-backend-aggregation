@@ -76,8 +76,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
                 if (isAbleToRefreshItem(agent, item)) {
                     action.completed();
-                } else {
-                    action.stop();
                 }
             } catch (BankServiceException e) {
                 // The way frontend works now the message will not be displayed to the user.
