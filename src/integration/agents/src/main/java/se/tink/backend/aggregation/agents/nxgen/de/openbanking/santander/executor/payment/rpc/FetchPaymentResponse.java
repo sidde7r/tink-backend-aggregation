@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.entities.CreditorAddressEntity;
@@ -38,6 +39,7 @@ public class FetchPaymentResponse {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
+    @JsonIgnore
     public PaymentResponse toTinkPayment(String paymentId, PaymentType paymentType) {
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()

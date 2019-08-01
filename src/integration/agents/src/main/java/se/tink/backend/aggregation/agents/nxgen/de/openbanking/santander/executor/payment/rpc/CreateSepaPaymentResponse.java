@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.entities.PaymentLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.enums.SantanderPaymentStatus;
@@ -33,6 +34,7 @@ public class CreateSepaPaymentResponse {
         return links.getSelf();
     }
 
+    @JsonIgnore
     public PaymentResponse toTinkPayment(Debtor debtor, Creditor creditor, PaymentType type) {
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()

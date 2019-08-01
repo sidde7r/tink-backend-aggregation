@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.entities.DebtorEntity;
@@ -18,6 +19,7 @@ public class CreatePaymentRequest {
     private String remittanceInformationUnstructured;
     private String requestedExecutionDate;
 
+    @JsonIgnore
     public CreatePaymentRequest(Builder builder) {
         this.endToEndIdentification = builder.endToEndIdentification;
         this.debtorAccount = builder.debtorAccount;
