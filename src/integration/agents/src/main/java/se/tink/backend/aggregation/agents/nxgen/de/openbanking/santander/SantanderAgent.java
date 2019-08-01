@@ -101,6 +101,9 @@ public final class SantanderAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new SantanderPaymentExecutorSelector(apiClient)));
+        final SantanderPaymentExecutorSelector paymentExecutorSelector =
+                new SantanderPaymentExecutorSelector(apiClient);
+
+        return Optional.of(new PaymentController(paymentExecutorSelector, paymentExecutorSelector));
     }
 }
