@@ -275,33 +275,5 @@ public class CreditTransferTransactionEntity {
                     transactionStatus,
                     statusReasonInformation);
         }
-
-        public String toString() {
-            return "CreditTransferTransactionEntity.CreditTransferTransactionEntityBuilder(paymentId="
-                    + this.paymentId
-                    + ", requestedExecutionDate="
-                    + this.requestedExecutionDate
-                    + ", endDate="
-                    + this.endDate
-                    + ", executionRule="
-                    + this.executionRule
-                    + ", frequency="
-                    + this.frequency
-                    + ", instructedAmount="
-                    + this.instructedAmount
-                    + ", beneficiary="
-                    + this.beneficiary
-                    + ", ultimateCreditor="
-                    + this.ultimateCreditor
-                    + ", regulatoryReportingCodes="
-                    + this.regulatoryReportingCodes
-                    + ", remittanceInformation="
-                    + this.remittanceInformation
-                    + ", transactionStatus="
-                    + this.transactionStatus
-                    + ", statusReasonInformation="
-                    + this.statusReasonInformation
-                    + ")";
-        }
     }
 }
