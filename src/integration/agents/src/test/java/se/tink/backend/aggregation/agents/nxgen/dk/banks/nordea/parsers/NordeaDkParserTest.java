@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.parsers;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.junit.Test;
@@ -10,8 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.parsers.NordeaV20Parser;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class NordeaDkParserTest {
     @Test
@@ -60,7 +61,9 @@ public class NordeaDkParserTest {
                         + "}"
                         + "}";
 
-        TransactionsResponse response = SerializationUtils.deserializeFromString(INVALID_TRANSACTION, TransactionsResponse.class);
+        TransactionsResponse response =
+                SerializationUtils.deserializeFromString(
+                        INVALID_TRANSACTION, TransactionsResponse.class);
         NordeaV20Parser parser =
                 new NordeaDkParser(new NordeaDkTransactionParser(), new Credentials());
 
@@ -72,6 +75,5 @@ public class NordeaDkParserTest {
 
         assertNotNull(transactions);
         assertTrue(0 == transactions.size());
-
     }
 }
