@@ -26,7 +26,6 @@ public class PortfolioModuleTest {
                     .withCurrency("SEK")
                     .withQuantity(20d)
                     .withProfit(100d)
-                    .withTicker("ticker")
                     .build();
 
     @Test(expected = NullPointerException.class)

@@ -39,7 +39,7 @@ public class InvestmentAccountBuilder extends AccountBuilder<InvestmentAccount, 
     }
 
     @Override
-    public InvestmentBalanceStep<InvestmentBuildStep> addPortfolios(
+    public InvestmentBalanceStep<InvestmentBuildStep> withPortfolios(
             @Nonnull List<PortfolioModule> portfolioModules) {
         Preconditions.checkNotNull(portfolioModules, "Portfolios List must not be null.");
         Preconditions.checkArgument(portfolioModules.size() > 0, "Portfolios must not be empty.");
@@ -48,10 +48,10 @@ public class InvestmentAccountBuilder extends AccountBuilder<InvestmentAccount, 
     }
 
     @Override
-    public InvestmentBalanceStep<InvestmentBuildStep> addPortfolios(
+    public InvestmentBalanceStep<InvestmentBuildStep> withPortfolios(
             @Nonnull PortfolioModule... portfolioModules) {
         Preconditions.checkNotNull(portfolioModules, "Portfolios Array must not be null.");
-        return this.addPortfolios(Arrays.asList(portfolioModules));
+        return this.withPortfolios(Arrays.asList(portfolioModules));
     }
 
     @Override

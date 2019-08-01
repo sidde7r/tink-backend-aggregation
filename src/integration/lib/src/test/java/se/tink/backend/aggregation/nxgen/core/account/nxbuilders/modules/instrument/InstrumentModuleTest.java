@@ -56,20 +56,6 @@ public class InstrumentModuleTest {
                 .withQuantity(-20);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void missingTicker() {
-        InstrumentModule.builder()
-                .withType(InstrumentType.FUND)
-                .withId(INSTRUMENT_ID_MODULE)
-                .withMarketPrice(5d)
-                .withMarketValue(20d)
-                .withAverageAcquisitionPrice(7d)
-                .withCurrency("SEK")
-                .withQuantity(20d)
-                .withProfit(100d)
-                .withTicker(null);
-    }
-
     @Test
     public void buildTest() {
         InstrumentModule instrumentModule =
@@ -82,7 +68,33 @@ public class InstrumentModuleTest {
                         .withCurrency("SEK")
                         .withQuantity(20d)
                         .withProfit(100d)
-                        .withTicker("ticker")
+                        .build();
+
+        assertEquals(InstrumentType.FUND, instrumentModule.getType());
+        assertSame(INSTRUMENT_ID_MODULE, instrumentModule.getInstrumentIdModule());
+        assertEquals(5, instrumentModule.getPrice(), 0);
+        assertEquals(20, instrumentModule.getMarketValue(), 0);
+        assertEquals(7, instrumentModule.getAverageAcquisitionPrice(), 0);
+        assertEquals("SEK", instrumentModule.getCurrency());
+        assertEquals(20, instrumentModule.getQuantity(), 0);
+        assertEquals(100, instrumentModule.getProfit(), 0);
+        assertNull(instrumentModule.getTicker());
+        assertNull(instrumentModule.getRawType());
+    }
+
+    @Test
+    public void buildWithTicker() {
+        InstrumentModule instrumentModule =
+                InstrumentModule.builder()
+                        .withType(InstrumentType.FUND)
+                        .withId(INSTRUMENT_ID_MODULE)
+                        .withMarketPrice(5d)
+                        .withMarketValue(20d)
+                        .withAverageAcquisitionPrice(7d)
+                        .withCurrency("SEK")
+                        .withQuantity(20d)
+                        .withProfit(100d)
+                        .setTicker("ticker")
                         .build();
 
         assertEquals(InstrumentType.FUND, instrumentModule.getType());
@@ -109,7 +121,7 @@ public class InstrumentModuleTest {
                         .withCurrency("SEK")
                         .withQuantity(20d)
                         .withProfit(100d)
-                        .withTicker("ticker")
+                        .setTicker("ticker")
                         .setRawType("fund")
                         .build();
 
@@ -137,7 +149,7 @@ public class InstrumentModuleTest {
                         .withCurrency("SEK")
                         .withQuantity(20d)
                         .withProfit(100d)
-                        .withTicker("ticker")
+                        .setTicker("ticker")
                         .setRawType("STOCK")
                         .build();
 
