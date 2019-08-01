@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
 import java.security.SecureRandom;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -18,6 +22,8 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -31,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.cryptography.ECDSAUtils;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -47,11 +54,14 @@ public class OAuth2AuthenticationController
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OAuth2Authenticator authenticator;
+    private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private final Credentials credentials;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
 
     private final String state;
+    private final String pseudoId;
+    private final String callbackUri;
 
     // This wait time is for the whole user authentication. Different banks have different
     // cumbersome authentication flows.
@@ -61,11 +71,17 @@ public class OAuth2AuthenticationController
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            String appUriId,
+            String callbackUri,
             Credentials credentials) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
+                callbackJWTSignatureKeyPair,
+                appUriId,
+                callbackUri,
                 credentials,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
@@ -75,23 +91,49 @@ public class OAuth2AuthenticationController
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            String appUriId,
+            String callbackUri,
             Credentials credentials,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
+        this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
+        this.callbackUri = callbackUri;
 
-        this.state = generateRandomState();
+        this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
+        this.state = getJwtState(pseudoId, appUriId);
     }
 
-    private static String generateRandomState() {
-        byte[] randomData = new byte[32];
-        random.nextBytes(randomData);
-        return encoder.encodeToString(randomData);
+    private String getJwtState(String pseudoId, String appUriId) {
+        if (!callbackJWTSignatureKeyPair.isEnabled()) {
+            logger.info("Callback JWT not enabled, using pseudoId as state. State: {}", pseudoId);
+            return pseudoId;
+        }
+        JWTCreator.Builder jwtBuilder =
+                JWT.create().withIssuedAt(new Date()).withClaim("id", pseudoId);
+
+        if (!Strings.isNullOrEmpty(appUriId)) {
+            // smaller claim to be safe on the length of the state
+            jwtBuilder.withClaim("appUriId", appUriId);
+        }
+
+        String signedState =
+                jwtBuilder.sign(
+                        Algorithm.ECDSA256(
+                                ECDSAUtils.getPublicKeyByPath(
+                                        callbackJWTSignatureKeyPair.getPublicKeyPath()),
+                                ECDSAUtils.getPrivateKeyByPath(
+                                        callbackJWTSignatureKeyPair.getPrivateKeyPath())));
+
+        logger.info("JWT state: {}", signedState);
+
+        return signedState;
     }
 
     @Override
