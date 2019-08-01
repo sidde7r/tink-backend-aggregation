@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.parser.NordeaDkT
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.parsers.NordeaV20Parser;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaDkParserTest {
     @Test
@@ -28,5 +29,51 @@ public class NordeaDkParserTest {
         assertNotNull(transactions);
         assertTrue(1 == transactions.size());
         assertTrue(-100 == transactions.iterator().next().getAmount().getValue());
+    }
+
+    @Test
+    public void parseInvalidTransaction() {
+
+        final String INVALID_TRANSACTION =
+                "{"
+                        + "\"getAccountTransactionsOut\": {"
+                        + "\"accountId\": {},"
+                        + "\"continueKey\": {},"
+                        + "\"accountTransaction\": {"
+                        + "\"transactionKey\": {},"
+                        + "\"transactionDate\": {"
+                        + "\"$\": \"2090-03-30\""
+                        + "},"
+                        + "\"transactionText\": {},"
+                        + "\"transactionCounterpartyName\": {"
+                        + "\"$\": \"Netbank gebyr  1.4.2016-31.3.2017\""
+                        + "},"
+                        + "\"transactionCurrency\": {"
+                        + "\"$\": \"DKK\""
+                        + "},"
+                        + "\"transactionAmount\": {"
+                        + "\"$\": -100.00"
+                        + "},"
+                        + "\"isCoverReservationTransaction\": {"
+                        + "\"$\": false"
+                        + "}"
+                        + "}"
+                        + "}"
+                        + "}";
+
+        TransactionsResponse response =
+                SerializationUtils.deserializeFromString(
+                        INVALID_TRANSACTION, TransactionsResponse.class);
+        NordeaV20Parser parser =
+                new NordeaDkParser(new NordeaDkTransactionParser(), new Credentials());
+
+        Collection<Transaction> transactions =
+                response.getTransactions().stream()
+                        .filter(parser::isTransactionDateSane)
+                        .map(parser::parseTransaction)
+                        .collect(Collectors.toList());
+
+        assertNotNull(transactions);
+        assertTrue(0 == transactions.size());
     }
 }

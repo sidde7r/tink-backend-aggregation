@@ -87,6 +87,7 @@ public class NordeaV20TransactionalAccountFetcher
         Collection<Transaction> transactions =
                 response.getTransactions().stream()
                         .filter(te -> !fetchedTransactionKeys.contains(te.getTransactionKey()))
+                        .filter(parser::isTransactionDateSane)
                         .map(parser::parseTransaction)
                         .collect(Collectors.toList());
 

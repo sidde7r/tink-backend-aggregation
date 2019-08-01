@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.parsers;
 
+import java.util.Date;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.DateUtils;
 
 public abstract class NordeaV20Parser {
 
@@ -39,6 +41,10 @@ public abstract class NordeaV20Parser {
                 .setDescription(transactionParser.getDescription(te))
                 .setPending(transactionParser.isPending(te))
                 .build();
+    }
+
+    public boolean isTransactionDateSane(TransactionEntity te) {
+        return transactionParser.getDate(te).before(DateUtils.addYears(new Date(), 10));
     }
 
     public CreditCardTransaction.Builder parseTransaction(CreditCardTransactionEntity cte) {
