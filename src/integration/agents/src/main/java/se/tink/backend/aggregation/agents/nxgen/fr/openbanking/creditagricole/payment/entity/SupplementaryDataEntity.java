@@ -27,8 +27,7 @@ public class SupplementaryDataEntity {
     @JsonProperty("unsuccessfulReportUrl")
     private String unsuccessfulReportUrl = null;
 
-    public SupplementaryDataEntity() {}
-
+    @JsonCreator
     private SupplementaryDataEntity(
             List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach,
             AppliedAuthenticationApproachEntity appliedAuthenticationApproach,
