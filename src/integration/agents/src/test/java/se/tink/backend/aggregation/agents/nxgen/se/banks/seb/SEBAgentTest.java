@@ -25,7 +25,6 @@ public class SEBAgentTest {
         testBuilder =
                 new AgentIntegrationTest.Builder("se", "se-seb-bankid")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
-                        .expectLoggedIn(false)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(false)

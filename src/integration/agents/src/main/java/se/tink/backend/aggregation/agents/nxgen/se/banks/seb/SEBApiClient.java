@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.UUID;
@@ -138,6 +139,8 @@ public class SEBApiClient {
     }
 
     public Response fetchAccounts(String customerId, String accountType) {
+        Preconditions.checkNotNull(Strings.emptyToNull(customerId));
+        Preconditions.checkNotNull(Strings.emptyToNull(accountType));
         final Request request =
                 new Request.Builder()
                         .addServiceInput(ServiceInputKeys.CUSTOMER_ID, customerId)
