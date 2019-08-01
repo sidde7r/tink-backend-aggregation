@@ -9,10 +9,9 @@ public final class LaBanquePostaleConstants {
         public static final String FETCH_TRANSACTIONS = BASE_URL + "/accounts/%s/transactions";
         public static final String FETCH_BALANCES = BASE_URL + "/accounts/%s/balances";
         public static final String BASE_URL_WITH_SLASH = BASE_URL + "/";
-        public static final String PAYMENT_INITIATION = Urls.BASE_URL + "/payment-requests";
-        public static final String GET_PAYMENT = Urls.BASE_URL + "/payment-requests/%s";
-        public static final String CONFIRM_PAYMENT =
-                Urls.BASE_URL + "/payment-requests/%s/confirmation";
+        public static final String PAYMENT_INITIATION = BASE_URL + "/payment-requests";
+        public static final String GET_PAYMENT = BASE_URL + "/payment-requests/%s";
+        public static final String CONFIRM_PAYMENT = BASE_URL + "/payment-requests/%s/confirmation";
     }
 
     public static class HeaderKeys {

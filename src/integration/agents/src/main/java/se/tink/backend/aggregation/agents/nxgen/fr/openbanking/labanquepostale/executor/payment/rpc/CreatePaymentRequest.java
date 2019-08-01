@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +57,7 @@ public class CreatePaymentRequest {
     public CreatePaymentRequest() {}
 
     // TODO: Responses doesn't return status so it must be hardcoded
+    @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(boolean paid) {
         CreditTransferTransactionEntity creditTransferTransactionEntity = getTransactionFromList();
 
@@ -84,6 +86,7 @@ public class CreatePaymentRequest {
                         .build());
     }
 
+    @JsonIgnore
     private CreditTransferTransactionEntity getTransactionFromList() {
         return Optional.ofNullable(creditTransferTransaction).orElse(Lists.emptyList()).stream()
                 .findFirst()

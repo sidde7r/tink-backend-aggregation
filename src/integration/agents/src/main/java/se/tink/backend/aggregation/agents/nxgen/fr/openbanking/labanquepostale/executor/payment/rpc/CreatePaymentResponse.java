@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.entities.AppliedAuthenticationApproachEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.entities.LinkEntity;
@@ -15,8 +16,8 @@ public class CreatePaymentResponse {
     @JsonProperty("_links")
     private LinkEntity links;
 
+    @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(PaymentType sepa) {
-
         return new PaymentResponse(new Payment.Builder().build());
     }
 }
