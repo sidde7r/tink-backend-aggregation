@@ -48,7 +48,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
                         persistentStorage,
                         supplementalInformationHelper,
                         redirectOAuth2Authenticator,
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new ThirdPartyAppAuthenticationController<>(
                 oAuth2AuthenticationController, supplementalInformationHelper);

@@ -98,7 +98,8 @@ public class StarlingAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new StarlingAuthenticator(apiClient, aisConfiguration),
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         ThirdPartyAppAuthenticationController<String> thirdPartyController =
                 new ThirdPartyAppAuthenticationController<>(

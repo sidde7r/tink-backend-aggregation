@@ -61,7 +61,8 @@ public class MonzoAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new MonzoAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()),
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new AutoAuthenticationController(
                 request,

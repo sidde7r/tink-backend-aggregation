@@ -107,7 +107,8 @@ public class VolksbankAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
         return new AutoAuthenticationController(
                 request,
                 context,

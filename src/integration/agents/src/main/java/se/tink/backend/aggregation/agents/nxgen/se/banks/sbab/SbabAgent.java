@@ -88,7 +88,8 @@ public class SbabAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new SbabAuthenticator(apiClient, sessionStorage),
-                        credentials),
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request),
                 supplementalInformationHelper);
     }
 

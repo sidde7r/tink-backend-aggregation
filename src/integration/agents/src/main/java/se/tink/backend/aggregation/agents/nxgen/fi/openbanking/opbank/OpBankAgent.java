@@ -67,7 +67,8 @@ public final class OpBankAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new OpBankAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()),
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new AutoAuthenticationController(
                 request,
