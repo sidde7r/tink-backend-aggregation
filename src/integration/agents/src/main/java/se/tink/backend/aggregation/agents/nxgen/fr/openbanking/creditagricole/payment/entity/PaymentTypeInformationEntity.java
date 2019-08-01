@@ -20,9 +20,7 @@ public class PaymentTypeInformationEntity {
     @JsonProperty("categoryPurpose")
     private CategoryPurposeCodeEntity categoryPurpose = null;
 
-    public PaymentTypeInformationEntity() {}
-
-    private PaymentTypeInformationEntity(
+    public PaymentTypeInformationEntity(
             PriorityCodeEntity instructionPriority,
             ServiceLevelCodeEntity serviceLevel,
             String localInstrument,
@@ -31,10 +29,6 @@ public class PaymentTypeInformationEntity {
         this.serviceLevel = serviceLevel;
         this.localInstrument = localInstrument;
         this.categoryPurpose = categoryPurpose;
-    }
-
-    public static PaymentTypeInformationEntityBuilder builder() {
-        return new PaymentTypeInformationEntityBuilder();
     }
 
     public PriorityCodeEntity getInstructionPriority() {
@@ -67,55 +61,5 @@ public class PaymentTypeInformationEntity {
 
     public void setCategoryPurpose(CategoryPurposeCodeEntity categoryPurpose) {
         this.categoryPurpose = categoryPurpose;
-    }
-
-    public static class PaymentTypeInformationEntityBuilder {
-
-        private PriorityCodeEntity instructionPriority;
-        private ServiceLevelCodeEntity serviceLevel;
-        private String localInstrument;
-        private CategoryPurposeCodeEntity categoryPurpose;
-
-        PaymentTypeInformationEntityBuilder() {}
-
-        public PaymentTypeInformationEntityBuilder instructionPriority(
-                PriorityCodeEntity instructionPriority) {
-            this.instructionPriority = instructionPriority;
-            return this;
-        }
-
-        public PaymentTypeInformationEntityBuilder serviceLevel(
-                ServiceLevelCodeEntity serviceLevel) {
-            this.serviceLevel = serviceLevel;
-            return this;
-        }
-
-        public PaymentTypeInformationEntityBuilder localInstrument(String localInstrument) {
-            this.localInstrument = localInstrument;
-            return this;
-        }
-
-        public PaymentTypeInformationEntityBuilder categoryPurpose(
-                CategoryPurposeCodeEntity categoryPurpose) {
-            this.categoryPurpose = categoryPurpose;
-            return this;
-        }
-
-        public PaymentTypeInformationEntity build() {
-            return new PaymentTypeInformationEntity(
-                    instructionPriority, serviceLevel, localInstrument, categoryPurpose);
-        }
-
-        public String toString() {
-            return "PaymentTypeInformationEntity.PaymentTypeInformationEntityBuilder(instructionPriority="
-                    + this.instructionPriority
-                    + ", serviceLevel="
-                    + this.serviceLevel
-                    + ", localInstrument="
-                    + this.localInstrument
-                    + ", categoryPurpose="
-                    + this.categoryPurpose
-                    + ")";
-        }
     }
 }
