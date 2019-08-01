@@ -39,7 +39,8 @@ public final class FinecoBankConstants {
                 "Cannot map: %s to Fineco payment status";
         public static final String FINECO_STATUS_MAPPING_ERROR =
                 "Cannot map: %s to Fineco payment status";
-        public static final String STATE_MISSING_ERROR = "State could not be retrieved from storage";
+        public static final String STATE_MISSING_ERROR =
+                "State could not be retrieved from storage";
     }
 
     public static class Urls {

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.HeaderKeys;
@@ -241,8 +240,7 @@ public final class FinecoBankApiClient {
     public String getStateFromStorage() {
         return sessionStorage
                 .get(StorageKeys.STATE, String.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(ErrorMessages.STATE_MISSING_ERROR));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.STATE_MISSING_ERROR));
     }
 
     private String getPsuIpAddress() {

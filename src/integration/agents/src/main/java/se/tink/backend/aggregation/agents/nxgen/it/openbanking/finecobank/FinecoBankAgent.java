@@ -129,11 +129,11 @@ public final class FinecoBankAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        FinecoBankPaymentExecutor executor = new FinecoBankPaymentExecutor(apiClient, sessionStorage);
+        FinecoBankPaymentExecutor executor =
+                new FinecoBankPaymentExecutor(apiClient, sessionStorage);
         return Optional.of(
-                new FinecoBankPaymentController(executor,executor,
-                        supplementalInformationHelper,
-                        sessionStorage));
+                new FinecoBankPaymentController(
+                        executor, executor, supplementalInformationHelper, sessionStorage));
     }
 
     @Override
