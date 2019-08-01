@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInformation;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.strings.StringUtils;
 
 public class SEBSessionStorage {
@@ -34,5 +36,17 @@ public class SEBSessionStorage {
 
     public String getCustomerNumber() {
         return sessionStorage.get(StorageKeys.CUSTOMER_NUMBER);
+    }
+
+    private String getCustomerName() {
+        return sessionStorage.get(StorageKeys.CUSTOMER_NAME);
+    }
+
+    private String getSSN() {
+        return sessionStorage.get(StorageKeys.SSN);
+    }
+
+    public IdentityData getIdentityData() {
+        return SeIdentityData.of(getCustomerName(), getSSN());
     }
 }

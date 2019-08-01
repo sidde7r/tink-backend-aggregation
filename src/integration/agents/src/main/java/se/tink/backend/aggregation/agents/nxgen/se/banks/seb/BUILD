@@ -11,6 +11,7 @@ java_library(
         "//src/libraries/amount",
         "//src/libraries/credentials:service",
         "//src/libraries/i18n",
+        "//src/libraries/identity_data",
         "//src/libraries/serialization",
         "//src/libraries/signableoperation:enums",
         "//src/libraries/social_security_number",

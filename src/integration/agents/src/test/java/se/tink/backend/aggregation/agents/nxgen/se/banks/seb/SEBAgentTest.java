@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class SEBAgentTest {
 
@@ -24,6 +25,9 @@ public class SEBAgentTest {
         testBuilder =
                 new AgentIntegrationTest.Builder("se", "se-seb-bankid")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
+                        .expectLoggedIn(false)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
