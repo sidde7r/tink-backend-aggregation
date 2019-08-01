@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
@@ -33,7 +34,7 @@ public class InstrumentIdModuleTest {
 
     @Test(expected = NullPointerException.class)
     public void missingMarketPlace() {
-        InstrumentIdModule.of("SE0378331005", null, "name", "12345");
+        InstrumentIdModule.of("SE0378331005", null, "name");
     }
 
     @Test
@@ -52,5 +53,36 @@ public class InstrumentIdModuleTest {
         assertEquals("SE", idModule.getMarketPlace());
         assertEquals("name", idModule.getName());
         assertEquals("SE0378331005" + "SE", idModule.getUniqueIdentifier());
+    }
+
+    @Test
+    public void builderTest() {
+        InstrumentIdModule idModule =
+                InstrumentIdModule.builder()
+                        .withUniqueIdentifier("12345")
+                        .withIsin("SE0378331005")
+                        .withName("name")
+                        .build();
+
+        assertEquals("SE0378331005", idModule.getIsin());
+        assertEquals("name", idModule.getName());
+        assertEquals("12345", idModule.getUniqueIdentifier());
+        assertNull(idModule.getMarketPlace());
+    }
+
+    @Test
+    public void builderWithMarketTest() {
+        InstrumentIdModule idModule =
+                InstrumentIdModule.builder()
+                        .withUniqueIdentifier("12345")
+                        .withIsin("SE0378331005")
+                        .withName("name")
+                        .setMarketPlace("SE")
+                        .build();
+
+        assertEquals("SE0378331005", idModule.getIsin());
+        assertEquals("name", idModule.getName());
+        assertEquals("12345", idModule.getUniqueIdentifier());
+        assertEquals("SE", idModule.getMarketPlace());
     }
 }

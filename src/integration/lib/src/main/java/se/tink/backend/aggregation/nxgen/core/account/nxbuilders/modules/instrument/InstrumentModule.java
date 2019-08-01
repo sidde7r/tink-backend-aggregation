@@ -104,8 +104,7 @@ public final class InstrumentModule {
                     MarketValueStep<InstrumentBuildStep>,
                     AcquisitionPriceStep<InstrumentBuildStep>,
                     QuantityStep<InstrumentBuildStep>,
-                    ProfitStep<InstrumentBuildStep>,
-                    TickerStep<InstrumentBuildStep> {
+                    ProfitStep<InstrumentBuildStep> {
         private InstrumentIdModule instrumentIdModule;
         private double averageAcquisitionPrice;
         private String currency;
@@ -151,7 +150,7 @@ public final class InstrumentModule {
         }
 
         @Override
-        public TickerStep<InstrumentBuildStep> withProfit(double profit) {
+        public InstrumentBuildStep withProfit(double profit) {
             this.profit = profit;
             return this;
         }
@@ -164,8 +163,7 @@ public final class InstrumentModule {
         }
 
         @Override
-        public InstrumentBuildStep withTicker(@Nonnull String ticker) {
-            Preconditions.checkNotNull(ticker, "Ticker must not be null.");
+        public InstrumentBuildStep setTicker(String ticker) {
             this.ticker = ticker;
             return this;
         }

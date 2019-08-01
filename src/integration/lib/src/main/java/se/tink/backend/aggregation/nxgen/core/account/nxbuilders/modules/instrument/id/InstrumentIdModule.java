@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instru
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import javax.annotation.Nonnull;
 
 public final class InstrumentIdModule {
     private final String uniqueIdentifier;
@@ -9,21 +10,16 @@ public final class InstrumentIdModule {
     private final String marketPlace;
     private final String name;
 
-    private InstrumentIdModule(
-            String isin, String marketPlace, String name, String uniqueIdentifier) {
-        Preconditions.checkNotNull(isin, "isin must not be null.");
-        Preconditions.checkArgument(isin.matches("[A-Z]{2}[a-zA-Z0-9]{9}\\d"));
-        Preconditions.checkNotNull(marketPlace, "MarketPlace must not be null.");
-        Preconditions.checkNotNull(name, "Name must not be null.");
-        Preconditions.checkNotNull(uniqueIdentifier, "Instrument identifier must not be null.");
-        Preconditions.checkArgument(
-                !Strings.isNullOrEmpty(uniqueIdentifier),
-                "Instrument identifier must not be empty.");
+    private InstrumentIdModule(Builder builder) {
 
-        this.uniqueIdentifier = uniqueIdentifier;
-        this.isin = isin;
-        this.marketPlace = marketPlace;
-        this.name = name;
+        this.uniqueIdentifier = builder.uniqueIdentifier;
+        this.isin = builder.isin;
+        this.marketPlace = builder.marketPlace;
+        this.name = builder.name;
+    }
+
+    public static InstrumentUniqueIdStep<InstrumentIdBuildStep> builder() {
+        return new Builder();
     }
 
     /**
@@ -36,15 +32,23 @@ public final class InstrumentIdModule {
      *     characters (National Securities Identifying Number, NSIN, which identifies the security,
      *     padded as necessary with leading zeros), and one numerical check digit
      *     <p>Example: SE0378331005
-     * @param marketPlace instrument stock market place e.g. 'NASDAQ'
+     * @param marketPlace (nullable) instrument stock market place e.g. 'NASDAQ'
      * @param name instrument name e.g. 'Apple Inc.'
      * @param uniqueIdentifier Normally the uniqueIdentifier should be isin + market. If isin and
      *     market is hard to get hold of and the bank / broker have some other way to identify the
      *     instrument we can use that.
      */
     public static InstrumentIdModule of(
-            String isin, String marketPlace, String name, String uniqueIdentifier) {
-        return new InstrumentIdModule(isin, marketPlace, name, uniqueIdentifier);
+            @Nonnull String isin,
+            String marketPlace,
+            @Nonnull String name,
+            @Nonnull String uniqueIdentifier) {
+        return builder()
+                .withUniqueIdentifier(uniqueIdentifier)
+                .withIsin(isin)
+                .withName(name)
+                .setMarketPlace(marketPlace)
+                .build();
     }
 
     /**
@@ -59,8 +63,11 @@ public final class InstrumentIdModule {
      * @param marketPlace instrument stock market place e.g. 'NASDAQ'
      * @param name instrument name e.g. 'Apple Inc.'
      */
-    public static InstrumentIdModule of(String isin, String marketPlace, String name) {
-        return new InstrumentIdModule(isin, marketPlace, name, isin + marketPlace);
+    public static InstrumentIdModule of(
+            @Nonnull String isin, @Nonnull String marketPlace, @Nonnull String name) {
+        // marketPlace should not be null because it will be used to generate the unique identifier
+        Preconditions.checkNotNull(marketPlace, "MarketPlace must not be null.");
+        return of(isin, marketPlace, name, isin + marketPlace);
     }
 
     public String getUniqueIdentifier() {
@@ -77,5 +84,53 @@ public final class InstrumentIdModule {
 
     public String getName() {
         return name;
+    }
+
+    private static class Builder
+            implements InstrumentIsinStep<InstrumentIdBuildStep>,
+                    InstrumentNameStep<InstrumentIdBuildStep>,
+                    InstrumentUniqueIdStep<InstrumentIdBuildStep>,
+                    InstrumentIdBuildStep {
+        private String uniqueIdentifier;
+        private String isin;
+        private String marketPlace;
+        private String name;
+
+        @Override
+        public InstrumentNameStep<InstrumentIdBuildStep> withIsin(@Nonnull String isin) {
+            Preconditions.checkNotNull(isin, "isin must not be null.");
+            Preconditions.checkArgument(isin.matches("[A-Z]{2}[a-zA-Z0-9]{9}\\d"));
+            this.isin = isin;
+            return this;
+        }
+
+        @Override
+        public InstrumentIdBuildStep withName(@Nonnull String name) {
+            Preconditions.checkNotNull(name, "Name must not be null.");
+            this.name = name;
+            return this;
+        }
+
+        @Override
+        public InstrumentIsinStep<InstrumentIdBuildStep> withUniqueIdentifier(
+                @Nonnull String uniqueIdentifier) {
+            Preconditions.checkNotNull(uniqueIdentifier, "Instrument identifier must not be null.");
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(uniqueIdentifier),
+                    "Instrument identifier must not be empty.");
+            this.uniqueIdentifier = uniqueIdentifier;
+            return this;
+        }
+
+        @Override
+        public InstrumentIdBuildStep setMarketPlace(String marketPlace) {
+            this.marketPlace = marketPlace;
+            return this;
+        }
+
+        @Override
+        public InstrumentIdModule build() {
+            return new InstrumentIdModule(this);
+        }
     }
 }

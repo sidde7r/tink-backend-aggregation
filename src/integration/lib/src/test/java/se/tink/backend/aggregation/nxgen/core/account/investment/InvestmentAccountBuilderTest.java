@@ -48,30 +48,29 @@ public class InvestmentAccountBuilderTest {
                                     .withCurrency("SEK")
                                     .withQuantity(20d)
                                     .withProfit(100d)
-                                    .withTicker("ticker")
                                     .build())
                     .build();
 
     @Test(expected = NullPointerException.class)
     public void missingPortfolioArray() {
-        InvestmentAccount.nxBuilder().addPortfolios((PortfolioModule) null);
+        InvestmentAccount.nxBuilder().withPortfolios((PortfolioModule) null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void emptyPortfolioArray() {
-        InvestmentAccount.nxBuilder().addPortfolios();
+        InvestmentAccount.nxBuilder().withPortfolios();
     }
 
     @Test(expected = NullPointerException.class)
     public void missingPortfolioList() {
-        InvestmentAccount.nxBuilder().addPortfolios((List<PortfolioModule>) null);
+        InvestmentAccount.nxBuilder().withPortfolios((List<PortfolioModule>) null);
     }
 
     @Test(expected = NullPointerException.class)
     public void missingPortfolio() {
         List<PortfolioModule> portfolioModules = Lists.newArrayList();
         portfolioModules.add(null);
-        InvestmentAccount.nxBuilder().addPortfolios(portfolioModules);
+        InvestmentAccount.nxBuilder().withPortfolios(portfolioModules);
     }
 
     @Test(expected = NullPointerException.class)
@@ -116,7 +115,7 @@ public class InvestmentAccountBuilderTest {
     public void buildWithPortfoliosArray() {
         InvestmentAccount account =
                 InvestmentAccount.nxBuilder()
-                        .addPortfolios(PORTFOLIO_MODULE)
+                        .withPortfolios(PORTFOLIO_MODULE)
                         .withCashBalance(ExactCurrencyAmount.of(200, "SEK"))
                         .withId(ID_MODULE)
                         .build();
@@ -141,7 +140,7 @@ public class InvestmentAccountBuilderTest {
     public void buildWithPortfoliosList() {
         InvestmentAccount account =
                 InvestmentAccount.nxBuilder()
-                        .addPortfolios(Lists.newArrayList(PORTFOLIO_MODULE))
+                        .withPortfolios(Lists.newArrayList(PORTFOLIO_MODULE))
                         .withCashBalance(ExactCurrencyAmount.of(200, "SEK"))
                         .withId(ID_MODULE)
                         .build();
@@ -212,7 +211,7 @@ public class InvestmentAccountBuilderTest {
     public void buildWithCalculatedBalance() {
         InvestmentAccount account =
                 InvestmentAccount.nxBuilder()
-                        .addPortfolios(PORTFOLIO_MODULE)
+                        .withPortfolios(PORTFOLIO_MODULE)
                         .withZeroCashBalance("SEK")
                         .withId(ID_MODULE)
                         .setApiIdentifier("65423-13445")
@@ -236,7 +235,7 @@ public class InvestmentAccountBuilderTest {
     public void buildWithCashBalance() {
         InvestmentAccount account =
                 InvestmentAccount.nxBuilder()
-                        .addPortfolios(
+                        .withPortfolios(
                                 PortfolioModule.builder()
                                         .withType(PortfolioType.ISK)
                                         .withUniqueIdentifier("52010456235")
@@ -257,7 +256,6 @@ public class InvestmentAccountBuilderTest {
                                                         .withCurrency("SEK")
                                                         .withQuantity(50)
                                                         .withProfit(20.3)
-                                                        .withTicker("ticker")
                                                         .build())
                                         .build())
                         .withCashBalance(ExactCurrencyAmount.of(100, "SEK"))

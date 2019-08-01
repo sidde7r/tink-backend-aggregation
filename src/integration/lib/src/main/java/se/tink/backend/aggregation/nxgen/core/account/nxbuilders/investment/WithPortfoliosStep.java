@@ -5,9 +5,9 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfol
 
 public interface WithPortfoliosStep<T> {
 
-    InvestmentBalanceStep<T> addPortfolios(List<PortfolioModule> portfolioModules);
+    InvestmentBalanceStep<T> withPortfolios(List<PortfolioModule> portfolioModules);
 
-    InvestmentBalanceStep<T> addPortfolios(PortfolioModule... portfolioModules);
+    InvestmentBalanceStep<T> withPortfolios(PortfolioModule... portfolioModules);
 
     /** Used when the investment account has no holdings. */
     InvestmentBalanceStep<T> withoutPortfolios();
