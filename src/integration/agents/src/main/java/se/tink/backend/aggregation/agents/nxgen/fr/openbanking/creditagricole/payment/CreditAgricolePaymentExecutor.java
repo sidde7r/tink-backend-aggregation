@@ -98,9 +98,7 @@ public class CreditAgricolePaymentExecutor implements PaymentExecutor, Fetchable
                         .build();
 
         PaymentIdentificationEntity paymentId =
-                PaymentIdentificationEntity.builder()
-                        .instructionId(FormValues.INSTRUCTION_ID)
-                        .build();
+                new PaymentIdentificationEntity(null, FormValues.INSTRUCTION_ID, null);
 
         AmountTypeEntity instructedAmount =
                 new AmountTypeEntity(

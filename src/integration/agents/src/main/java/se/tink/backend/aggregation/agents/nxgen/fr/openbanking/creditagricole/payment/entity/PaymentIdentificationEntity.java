@@ -19,15 +19,10 @@ public class PaymentIdentificationEntity {
     private String endToEndId = null;
 
     @JsonCreator
-    private PaymentIdentificationEntity(
-            String resourceId, String instructionId, String endToEndId) {
+    public PaymentIdentificationEntity(String resourceId, String instructionId, String endToEndId) {
         this.resourceId = resourceId;
         this.instructionId = instructionId;
         this.endToEndId = endToEndId;
-    }
-
-    public static PaymentIdentificationEntityBuilder builder() {
-        return new PaymentIdentificationEntityBuilder();
     }
 
     public String getResourceId() {
@@ -52,43 +47,5 @@ public class PaymentIdentificationEntity {
 
     public void setEndToEndId(String endToEndId) {
         this.endToEndId = endToEndId;
-    }
-
-    public static class PaymentIdentificationEntityBuilder {
-
-        private String resourceId;
-        private String instructionId;
-        private String endToEndId;
-
-        PaymentIdentificationEntityBuilder() {}
-
-        public PaymentIdentificationEntityBuilder resourceId(String resourceId) {
-            this.resourceId = resourceId;
-            return this;
-        }
-
-        public PaymentIdentificationEntityBuilder instructionId(String instructionId) {
-            this.instructionId = instructionId;
-            return this;
-        }
-
-        public PaymentIdentificationEntityBuilder endToEndId(String endToEndId) {
-            this.endToEndId = endToEndId;
-            return this;
-        }
-
-        public PaymentIdentificationEntity build() {
-            return new PaymentIdentificationEntity(resourceId, instructionId, endToEndId);
-        }
-
-        public String toString() {
-            return "PaymentIdentificationEntity.PaymentIdentificationEntityBuilder(resourceId="
-                    + this.resourceId
-                    + ", instructionId="
-                    + this.instructionId
-                    + ", endToEndId="
-                    + this.endToEndId
-                    + ")";
-        }
     }
 }
