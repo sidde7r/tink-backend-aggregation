@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshContro
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.secrets.SecretsController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -67,6 +68,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     private Authenticator authenticator;
     private SessionController sessionController;
     private PaymentController paymentController;
+    private SecretsController secretsController;
 
     protected SubsequentGenerationAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {

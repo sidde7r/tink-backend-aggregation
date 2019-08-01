@@ -23,6 +23,7 @@ java_library(
         "annotations",
         "//src/aggregation/api",
         "//src/integration/agent_data_availability_tracker/client",
+        "//src/integration/tpp_secrets_service/client",
         "//src/integration/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",

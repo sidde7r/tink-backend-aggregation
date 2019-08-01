@@ -1,4 +1,5 @@
 {{- $agentsConfig := .Values.agents | default dict }}
+{{- $tppSecretsServiceConfig := .Values.tppSecretsServiceConfiguration | default dict }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -27,6 +28,15 @@ data:
       agentDataAvailabilityTrackerConfiguration:
         host: agent-data-availability-tracker.agent-data-availability-tracker.svc.cluster.local
         port: 443
+      {{- end }}
+
+      {{- if $tppSecretsServiceConfig }}
+      tppSecretServiceConfiguration:
+        host: {{ $tppSecretsServiceConfig.host }}
+        port: {{ $tppSecretsServiceConfig.port }}
+        caPath: /etc/client-certificate/ca.crt
+        tlsCrtPath: /etc/client-certificate/tls.crt
+        tlsKeyPath: /etc/client-certificate/tls.key
       {{- end }}
 
       {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
