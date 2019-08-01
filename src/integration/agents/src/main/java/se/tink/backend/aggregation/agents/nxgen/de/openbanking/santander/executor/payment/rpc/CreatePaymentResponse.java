@@ -12,7 +12,7 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
-public class CreateSepaPaymentResponse {
+public class CreatePaymentResponse {
 
     private String transactionStatus;
     private String paymentId;

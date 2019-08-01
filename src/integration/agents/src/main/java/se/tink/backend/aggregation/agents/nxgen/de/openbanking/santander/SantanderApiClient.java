@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authent
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.configuration.SantanderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc.CreateSepaPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
@@ -130,7 +130,7 @@ public final class SantanderApiClient {
         return java.util.UUID.randomUUID().toString();
     }
 
-    public CreateSepaPaymentResponse createSepaPayment(CreatePaymentRequest request) {
+    public CreatePaymentResponse createSepaPayment(CreatePaymentRequest request) {
         return client.request(Urls.SEPA_PAYMENT)
                 .addBearerToken(getTokenFromStorage())
                 .header(HeaderKeys.X_IBM_CLIENT_ID, getConfiguration().getClientId())
@@ -138,7 +138,7 @@ public final class SantanderApiClient {
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .body(request.toData(), MediaType.APPLICATION_JSON_TYPE)
-                .post(CreateSepaPaymentResponse.class);
+                .post(CreatePaymentResponse.class);
     }
 
     public FetchPaymentResponse fetchPayment(String paymentId) {
