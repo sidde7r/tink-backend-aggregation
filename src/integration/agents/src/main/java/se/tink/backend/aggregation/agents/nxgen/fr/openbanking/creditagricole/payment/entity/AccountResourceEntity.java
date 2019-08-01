@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.payment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class AccountResourceEntity {
     @JsonProperty("_links")
     private AccountLinksEntity links = null;
 
+    @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return CheckingAccount.builder()
                 .setUniqueIdentifier(accountId.getIban())
