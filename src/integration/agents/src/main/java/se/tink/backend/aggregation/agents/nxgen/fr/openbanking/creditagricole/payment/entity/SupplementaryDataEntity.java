@@ -224,19 +224,5 @@ public class SupplementaryDataEntity {
                     successfulReportUrl,
                     unsuccessfulReportUrl);
         }
-
-        public String toString() {
-            return "SupplementaryDataEntity.SupplementaryDataEntityBuilder(acceptedAuthenticationApproach="
-                    + this.acceptedAuthenticationApproach
-                    + ", appliedAuthenticationApproach="
-                    + this.appliedAuthenticationApproach
-                    + ", scaHint="
-                    + this.scaHint
-                    + ", successfulReportUrl="
-                    + this.successfulReportUrl
-                    + ", unsuccessfulReportUrl="
-                    + this.unsuccessfulReportUrl
-                    + ")";
-        }
     }
 }
