@@ -31,17 +31,17 @@ public class SantanderPaymentExecutorSelector implements FetchablePaymentExecuto
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
+
         PaymentType type =
                 SantanderConstants.PAYMENT_TYPE_MAPPER
-                        .translate(paymentRequest.getPayment().getCreditorAndDebtorAccountType())
+                        .translate(payment.getCreditorAndDebtorAccountType())
                         .orElse(PaymentType.UNDEFINED);
-
-        Payment payment = paymentRequest.getPayment();
 
         AmountEntity amount =
                 new AmountEntity(
-                        paymentRequest.getPayment().getAmount().getCurrency(),
-                        paymentRequest.getPayment().getAmount().getValue().toString());
+                        payment.getAmount().getCurrency(),
+                        payment.getAmount().getValue().toString());
 
         DebtorEntity debtor =
                 new DebtorEntity(payment.getDebtor().getAccountNumber(), payment.getCurrency());
