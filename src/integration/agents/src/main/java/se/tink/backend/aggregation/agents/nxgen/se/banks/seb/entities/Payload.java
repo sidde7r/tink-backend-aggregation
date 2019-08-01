@@ -12,6 +12,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionQuery;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
@@ -55,6 +60,13 @@ public class Payload {
             getVodb().deviceIdentification = (DeviceIdentification) component;
         } else if (component instanceof HardwareInformation) {
             getVodb().hardwareInformation = (HardwareInformation) component;
+        } else if (component instanceof TransactionQuery) {
+            getVodb().transactionQuery = (TransactionQuery) component;
+        } else if (component instanceof PendingTransactionQuery) {
+            getVodb().pendingTransactionQuery = (PendingTransactionQuery) component;
+        } else {
+            throw new NotImplementedException(
+                    "Request component not implemented: " + component.getClass().toString());
         }
     }
 
@@ -90,5 +102,23 @@ public class Payload {
     public List<AccountEntity> getAccountEntities() {
         Preconditions.checkNotNull(vodb);
         return vodb.accountEntities;
+    }
+
+    @JsonIgnore
+    public TransactionQuery getTransactionQuery() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.transactionQuery;
+    }
+
+    @JsonIgnore
+    public List<TransactionEntity> getTransactions() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.transactions;
+    }
+
+    @JsonIgnore
+    public List<PendingTransactionEntity> getPendingTransactions() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.pendingTransactions;
     }
 }

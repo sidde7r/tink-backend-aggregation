@@ -22,6 +22,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc.B
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.SystemStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInformation;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionQuery;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Request;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Response;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -142,5 +144,15 @@ public class SEBApiClient {
                         .addServiceInput(ServiceInputKeys.ACCOUNT_TYPE, accountType)
                         .build();
         return post(Urls.LIST_ACCOUNTS, request);
+    }
+
+    public Response fetchTransactions(TransactionQuery query) {
+        final Request request = new Request.Builder().addComponent(query).build();
+        return post(Urls.LIST_TRANSACTIONS, request);
+    }
+
+    public Response fetchPendingTransactions(PendingTransactionQuery query) {
+        final Request request = new Request.Builder().addComponent(query).build();
+        return post(Urls.LIST_PENDING_TRANSACTIONS, request);
     }
 }

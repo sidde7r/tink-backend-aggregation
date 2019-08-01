@@ -87,4 +87,19 @@ public class Response {
     public List<AccountEntity> getAccountEntities() {
         return payload.getAccountEntities();
     }
+
+    @JsonIgnore
+    public TransactionQuery getTransactionQuery() {
+        return payload.getTransactionQuery();
+    }
+
+    @JsonIgnore
+    public List<TransactionEntity> getTransactions() {
+        return payload.getTransactions();
+    }
+
+    @JsonIgnore
+    public List<PendingTransactionEntity> getPendingTransactions() {
+        return payload.getPendingTransactions();
+    }
 }

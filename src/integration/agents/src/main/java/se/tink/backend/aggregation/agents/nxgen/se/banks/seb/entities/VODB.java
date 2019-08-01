@@ -8,6 +8,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionQuery;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -27,4 +31,17 @@ class VODB {
 
     @JsonProperty("PCBW4211")
     public List<AccountEntity> accountEntities;
+
+    @JsonProperty("PCBW4341")
+    public TransactionQuery transactionQuery;
+
+    @JsonProperty("PCBW431Z")
+    public PendingTransactionQuery pendingTransactionQuery;
+
+    @JsonProperty("PCBW4342")
+    public List<TransactionEntity> transactions;
+
+    // Reserved transactions
+    @JsonProperty("PCBW4311")
+    public List<PendingTransactionEntity> pendingTransactions;
 }

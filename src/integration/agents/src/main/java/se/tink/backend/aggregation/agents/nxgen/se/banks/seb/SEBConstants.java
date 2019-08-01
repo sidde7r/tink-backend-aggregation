@@ -17,6 +17,9 @@ public class SEBConstants {
         public static final URL INITIATE_SESSION = new URL(BASE + Endpoints.INITIATE_SESSION);
         public static final URL ACTIVATE_SESSION = new URL(BASE + Endpoints.ACTIVATE_SESSION);
         public static final URL LIST_ACCOUNTS = new URL(BASE + Endpoints.LIST_ACCOUNTS);
+        public static final URL LIST_TRANSACTIONS = new URL(BASE + Endpoints.LIST_TRANSACTIONS);
+        public static final URL LIST_PENDING_TRANSACTIONS =
+                new URL(BASE + Endpoints.LIST_PENDING_TRANSACTIONS);
     }
 
     public static class Endpoints {
@@ -26,6 +29,10 @@ public class SEBConstants {
         public static final String INITIATE_SESSION = API_BASE + "Init11Session01.asmx/Execute";
         public static final String ACTIVATE_SESSION = API_BASE + "Aktivera01Session01.asmx/Execute";
         public static final String LIST_ACCOUNTS = API_BASE + "Lista01Konton_privat01.asmx/Execute";
+        public static final String LIST_TRANSACTIONS =
+                API_BASE + "Lista01Rorelse_ftg03.asmx/Execute";
+        public static final String LIST_PENDING_TRANSACTIONS =
+                API_BASE + "Lista01Skydd01.asmx/Execute";
     }
 
     public static class HeaderKeys {
@@ -61,6 +68,14 @@ public class SEBConstants {
     public static class ServiceInputValues {
         public static final String PRIVATE = "P";
         public static final String DEFAULT_ACCOUNT_TYPE = "ICKEFOND";
+    }
+
+    public static class TransactionType { // ROR_TYP
+        public static final String OTHER = "1";
+        public static final String CARD_TRANSACTION = "2";
+        public static final String FOREIGN_CARD_TRANSACTION = "5";
+        public static final String FOREIGN_WITHDRAWAL = "7";
+        public static final String INVOICE_PAYMENT = "8"; // has BG, OCR
     }
 
     public static class StorageKeys {
