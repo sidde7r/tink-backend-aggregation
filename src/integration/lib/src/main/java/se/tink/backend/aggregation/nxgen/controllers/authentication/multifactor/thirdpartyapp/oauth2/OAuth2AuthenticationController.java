@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.cryptography.ECDSAUtils;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -72,17 +73,13 @@ public class OAuth2AuthenticationController
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            String appUriId,
-            String callbackUri,
-            Credentials credentials) {
+            CredentialsRequest credentialsRequest) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
                 callbackJWTSignatureKeyPair,
-                appUriId,
-                callbackUri,
-                credentials,
+                credentialsRequest,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
     }
@@ -92,22 +89,20 @@ public class OAuth2AuthenticationController
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            String appUriId,
-            String callbackUri,
-            Credentials credentials,
+            CredentialsRequest credentialsRequest,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
-        this.credentials = credentials;
+        this.credentials = credentialsRequest.getCredentials();
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
-        this.callbackUri = callbackUri;
+        this.callbackUri = credentialsRequest.getCallbackUri();
 
         this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
-        this.state = getJwtState(pseudoId, appUriId);
+        this.state = getJwtState(pseudoId, credentialsRequest.getAppUriId());
     }
 
     private String getJwtState(String pseudoId, String appUriId) {
