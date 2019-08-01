@@ -74,7 +74,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                     RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
                 }
 
-                if (isApplicable(item, agent)) {
+                if (isAbleToRefreshItem(agent, item)) {
                     action.completed();
                 } else {
                     action.stop();
@@ -99,7 +99,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         return AgentWorkerCommandResult.CONTINUE;
     }
 
-    private boolean isApplicable(RefreshableItem item, Agent agent) {
+    private boolean isAbleToRefreshItem(Agent agent, RefreshableItem item) {
         switch (item) {
             case ACCOUNTS:
             case TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS:
