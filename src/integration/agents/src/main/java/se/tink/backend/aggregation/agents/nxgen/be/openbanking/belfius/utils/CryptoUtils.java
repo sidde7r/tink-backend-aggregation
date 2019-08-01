@@ -6,7 +6,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-public class CryptoUtils {
+public final class CryptoUtils {
+
+    private CryptoUtils() {
+        throw new AssertionError();
+    }
 
     public static String getCodeVerifier() {
         SecureRandom sr = new SecureRandom();
@@ -23,7 +27,7 @@ public class CryptoUtils {
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
         md.update(bytes, 0, bytes.length);
         byte[] digest = md.digest();

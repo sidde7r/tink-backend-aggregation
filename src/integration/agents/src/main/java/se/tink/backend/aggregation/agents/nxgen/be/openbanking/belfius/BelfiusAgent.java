@@ -5,12 +5,12 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -27,34 +27,36 @@ public final class BelfiusAgent extends NextGenerationAgent
 
     private final String clientName;
     private final BelfiusApiClient apiClient;
+    private final BelfiusConfiguration belfiusConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BelfiusAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        apiClient = new BelfiusApiClient(client, persistentStorage, credentials);
-        clientName = request.getProvider().getPayload();
+        this.clientName = request.getProvider().getPayload();
 
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.belfiusConfiguration =
+                agentsServiceConfiguration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                BelfiusConstants.INTEGRATION_NAME,
+                                clientName,
+                                BelfiusConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                ErrorMessages.MISSING_CONFIGURATION));
+        super.setConfiguration(agentsServiceConfiguration);
 
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        apiClient.setConfiguration(getClientConfiguration());
+        this.apiClient = new BelfiusApiClient(client, this.belfiusConfiguration);
 
         this.client.setEidasProxy(
-                configuration.getEidasProxy(), getClientConfiguration().getCertificateId());
-    }
-
-    protected BelfiusConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        BelfiusConstants.INTEGRATION_NAME, clientName, BelfiusConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                agentsServiceConfiguration.getEidasProxy(),
+                this.belfiusConfiguration.getCertificateId());
     }
 
     @Override
@@ -64,7 +66,10 @@ public final class BelfiusAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new BelfiusAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()),
+                                apiClient,
+                                persistentStorage,
+                                this.belfiusConfiguration,
+                                credentials.getField(CredentialKeys.IBAN)),
                         credentials);
 
         return new AutoAuthenticationController(
@@ -97,7 +102,7 @@ public final class BelfiusAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final BelfiusTransactionalAccountFetcher accountFetcher =
-                new BelfiusTransactionalAccountFetcher(apiClient);
+                new BelfiusTransactionalAccountFetcher(apiClient, persistentStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

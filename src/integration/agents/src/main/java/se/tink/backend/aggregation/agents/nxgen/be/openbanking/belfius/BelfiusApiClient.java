@@ -3,13 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.CredentialKeys;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.QueryKeys;
@@ -27,15 +25,12 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class BelfiusApiClient {
 
     private final TinkHttpClient client;
-    private BelfiusConfiguration configuration;
-    private final PersistentStorage persistentStorage;
-    private final Credentials credentials;
+    private final BelfiusConfiguration configuration;
 
     private static final ObjectMapper OBJECT_MAPPER;
 
@@ -44,14 +39,8 @@ public final class BelfiusApiClient {
         OBJECT_MAPPER.configure(Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
     }
 
-    public BelfiusApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
+    public BelfiusApiClient(TinkHttpClient client, BelfiusConfiguration configuration) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
-    }
-
-    protected void setConfiguration(BelfiusConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -71,16 +60,16 @@ public final class BelfiusApiClient {
                 .header(HeaderKeys.REQUEST_ID, UUID.randomUUID());
     }
 
-    public ConsentResponse[] getConsent(URL url) {
+    public List<ConsentResponse> getConsent(URL url, String iban, String code) {
 
-        String code = CryptoUtils.getCodeVerifier();
-        persistentStorage.put(StorageKeys.CODE, code);
+        ConsentResponse[] consentResponses =
+                createRequestInSession(url)
+                        .queryParam(QueryKeys.IBAN, iban)
+                        .header(HeaderKeys.CODE_CHALLENGE, CryptoUtils.getCodeChallenge(code))
+                        .header(HeaderKeys.CODE_CHALLENGE_METHOD, HeaderValues.CODE_CHALLENGE_TYPE)
+                        .get(ConsentResponse[].class);
 
-        return createRequestInSession(url)
-                .queryParam(QueryKeys.IBAN, credentials.getField(CredentialKeys.IBAN))
-                .header(HeaderKeys.CODE_CHALLENGE, CryptoUtils.getCodeChallenge(code))
-                .header(HeaderKeys.CODE_CHALLENGE_METHOD, HeaderValues.CODE_CHALLENGE_TYPE)
-                .get(ConsentResponse[].class);
+        return Arrays.asList(consentResponses);
     }
 
     public TokenResponse postToken(URL url, String tokenEntity) {
@@ -91,38 +80,19 @@ public final class BelfiusApiClient {
                 .post(TokenResponse.class);
     }
 
-    public FetchAccountResponse fetchAccountById() {
-
-        final OAuth2Token oAuth2Token =
-                persistentStorage
-                        .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SessionError.SESSION_EXPIRED.exception()));
+    public FetchAccountResponse fetchAccountById(OAuth2Token oAuth2Token, String logicalId) {
 
         return createRequestInSession(
-                        new URL(
-                                configuration.getBaseUrl()
-                                        + Urls.FETCH_ACCOUNT_PATH
-                                        + persistentStorage.get(StorageKeys.LOGICAL_ID)))
+                        new URL(configuration.getBaseUrl() + Urls.FETCH_ACCOUNT_PATH + logicalId))
                 .addBearerToken(oAuth2Token)
                 .get(FetchAccountResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactionsForAccount(Date fromDate, Date toDate) {
-        URL url =
+    public FetchTransactionsResponse fetchTransactionsForAccount(
+            Date fromDate, Date toDate, OAuth2Token oAuth2Token, String logicalId) {
+        final URL url =
                 new URL(configuration.getBaseUrl() + Urls.FETCH_TRANSACTIONS_PATH)
-                        .parameter(
-                                StorageKeys.LOGICAL_ID,
-                                persistentStorage.get(StorageKeys.LOGICAL_ID));
-        final OAuth2Token oAuth2Token =
-                persistentStorage
-                        .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SessionError.SESSION_EXPIRED.exception()));
+                        .parameter(StorageKeys.LOGICAL_ID, logicalId);
 
         HttpResponse httpResponse =
                 createRequestInSession(url)
@@ -140,7 +110,7 @@ public final class BelfiusApiClient {
             return OBJECT_MAPPER.readValue(
                     httpResponse.getBodyInputStream(), FetchTransactionsResponse.class);
         } catch (IOException e) {
-            throw new IllegalStateException(ErrorMessages.IO_FETCH_TRANSACTION, e);
+            throw new IllegalStateException(e);
         }
     }
 }

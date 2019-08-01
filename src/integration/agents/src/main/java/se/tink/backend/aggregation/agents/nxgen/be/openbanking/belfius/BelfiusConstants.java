@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -24,8 +25,8 @@ public final class BelfiusConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
-        public static final String IO_FETCH_TRANSACTION =
-                "IOException parsing FetchTransactionResponse";
+        public static final ImmutableList<Integer> TRANSACTION_ERROR_CODES =
+                ImmutableList.of(403, 404, 429);
     }
 
     public static class Urls {
@@ -58,10 +59,12 @@ public final class BelfiusConstants {
         public static final String CODE = "code";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CODE_VERIFIER = "code_verifier";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class HeaderValues {
@@ -80,7 +83,7 @@ public final class BelfiusConstants {
 
     public static class QueryKeys {
         public static final String IBAN = "iban";
-        public static final String STATE = "&state=";
+        public static final String STATE = "state";
         public static final String FROM_DATE = "date_from";
         public static final String TO_DATE = "date_to";
     }
