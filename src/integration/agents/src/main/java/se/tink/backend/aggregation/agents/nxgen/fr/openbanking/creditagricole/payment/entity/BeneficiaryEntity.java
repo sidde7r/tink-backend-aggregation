@@ -124,19 +124,5 @@ public class BeneficiaryEntity {
         public BeneficiaryEntity build() {
             return new BeneficiaryEntity(id, isTrusted, creditorAgent, creditor, creditorAccount);
         }
-
-        public String toString() {
-            return "BeneficiaryEntity.BeneficiaryEntityBuilder(id="
-                    + this.id
-                    + ", isTrusted="
-                    + this.isTrusted
-                    + ", creditorAgent="
-                    + this.creditorAgent
-                    + ", creditor="
-                    + this.creditor
-                    + ", creditorAccount="
-                    + this.creditorAccount
-                    + ")";
-        }
     }
 }
