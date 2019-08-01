@@ -84,17 +84,15 @@ public class CreditAgricolePaymentExecutor implements PaymentExecutor, Fetchable
                         .build();
 
         AccountIdentificationEntity debtorAccount =
-                AccountIdentificationEntity.builder()
-                        .iban(paymentRequest.getPayment().getDebtor().getAccountNumber())
-                        .build();
+                new AccountIdentificationEntity(
+                        paymentRequest.getPayment().getDebtor().getAccountNumber(), null);
 
         PartyIdentificationEntity creditor =
                 PartyIdentificationEntity.builder().name(FormValues.BENEFICIARY_NAME).build();
 
         AccountIdentificationEntity creditorAccount =
-                AccountIdentificationEntity.builder()
-                        .iban(paymentRequest.getPayment().getCreditor().getAccountNumber())
-                        .build();
+                new AccountIdentificationEntity(
+                        paymentRequest.getPayment().getCreditor().getAccountNumber(), null);
 
         BeneficiaryEntity beneficiary =
                 BeneficiaryEntity.builder()
