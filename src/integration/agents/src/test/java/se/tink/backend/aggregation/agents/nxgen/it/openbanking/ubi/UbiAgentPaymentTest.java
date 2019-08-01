@@ -23,10 +23,10 @@ public class UbiAgentPaymentTest {
     public void testPayments() throws Exception {
 
         AgentIntegrationTest.Builder builder =
-            new AgentIntegrationTest.Builder("it", "it-ubi-oauth2")
-                .expectLoggedIn(false)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+                new AgentIntegrationTest.Builder("it", "it-ubi-oauth2")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
 
         builder.build().testGenericPayment(createListMockedDomesticPayment(4));
     }
@@ -49,13 +49,13 @@ public class UbiAgentPaymentTest {
             String currency = "EUR";
 
             listOfMockedPayments.add(
-                new Payment.Builder()
-                    .withCreditor(creditor)
-                    .withDebtor(debtor)
-                    .withAmount(amount)
-                    .withExecutionDate(executionDate)
-                    .withCurrency(currency)
-                    .build());
+                    new Payment.Builder()
+                            .withCreditor(creditor)
+                            .withDebtor(debtor)
+                            .withAmount(amount)
+                            .withExecutionDate(executionDate)
+                            .withCurrency(currency)
+                            .build());
         }
 
         return listOfMockedPayments;

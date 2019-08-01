@@ -23,10 +23,10 @@ public class MpsAgentPaymentTest {
     public void testPayments() throws Exception {
 
         CbiGlobeAgentIntegrationTest.Builder builder =
-            new CbiGlobeAgentIntegrationTest.Builder("it", "it-mps-oauth2")
-                .expectLoggedIn(false)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+                new CbiGlobeAgentIntegrationTest.Builder("it", "it-mps-oauth2")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
 
         builder.build().testGenericPayment(createListMockedDomesticPayment(4));
     }
@@ -49,13 +49,13 @@ public class MpsAgentPaymentTest {
             String currency = "EUR";
 
             listOfMockedPayments.add(
-                new Payment.Builder()
-                    .withCreditor(creditor)
-                    .withDebtor(debtor)
-                    .withAmount(amount)
-                    .withExecutionDate(executionDate)
-                    .withCurrency(currency)
-                    .build());
+                    new Payment.Builder()
+                            .withCreditor(creditor)
+                            .withDebtor(debtor)
+                            .withAmount(amount)
+                            .withExecutionDate(executionDate)
+                            .withCurrency(currency)
+                            .build());
         }
 
         return listOfMockedPayments;

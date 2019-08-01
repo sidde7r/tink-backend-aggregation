@@ -34,10 +34,10 @@ import se.tink.libraries.payment.enums.PaymentType;
 
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private CbiGlobeApiClient apiClient;
-    private List<PaymentResponse> paymentResponses = new ArrayList<>();
+    private final CbiGlobeApiClient apiClient;
+    private final List<PaymentResponse> paymentResponses = new ArrayList<>();
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private PersistentStorage persistentStorage;
+    private final PersistentStorage persistentStorage;
 
     public CbiGlobePaymentExecutor(
             CbiGlobeApiClient apiClient,
