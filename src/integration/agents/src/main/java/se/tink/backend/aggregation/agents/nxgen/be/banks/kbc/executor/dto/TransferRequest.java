@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
@@ -14,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.Agreem
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.BelgianDateUtils;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.MessageType;
@@ -106,7 +107,8 @@ public class TransferRequest {
             cancelTransfer(KbcConstants.TransferMessage.DUE_DATE_TOO_FAR_IN_FUTURE.getKey().get());
         }
 
-        if (!BelgianDateUtils.isBusinessDay(date)) {
+        CountryDateHelper countryDateHelper = new CountryDateHelper(new Locale("nl", "BE"));
+        if (!countryDateHelper.isBusinessDay(date)) {
             cancelTransfer(
                     TransferExecutionException.EndUserMessage.INVALID_DUEDATE_NOT_BUSINESSDAY
                             .getKey()
