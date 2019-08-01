@@ -488,12 +488,6 @@ spec:
               name: aggregation-secrets
               key: cmcic-key-id
               optional: true
-        - name: CMCIC_CLIENT_SIGNING_CERTIFICATE_PATH
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: cmcic-client-signing-certificate-path
-              optional: true
         {{- end }}
         {{- if $agentsConfig.abnamro }}
         - name: ABN_AMRO_CLIENT_ID_TINK

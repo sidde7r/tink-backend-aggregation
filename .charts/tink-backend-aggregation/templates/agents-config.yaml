@@ -606,7 +606,6 @@ data:
               redirectUrl: "{{ $agentsConfig.cmcic.tink.redirectUrl }}"
               clientId: "CIC_CLIENT_ID_TAG"
               keyId: "CMCIC_KEY_ID_TAG"
-              clientSigningCertificatePath: "CMCIC_CLIENT_SIGNING_CERTIFICATE_PATH_TAG"
               certificateId: "{{ $agentsConfig.cmcic.tink.certificateId }}"
           creditmutuel:
             tink:
@@ -616,7 +615,6 @@ data:
               redirectUrl: "{{ $agentsConfig.cmcic.tink.redirectUrl }}"
               clientId: "CREDITMUTUEL_CLIENT_ID_TAG"
               keyId: "CMCIC_KEY_ID_TAG"
-              clientSigningCertificatePath: "CMCIC_CLIENT_SIGNING_CERTIFICATE_PATH_TAG"
               certificateId: "{{ $agentsConfig.cmcic.tink.certificateId }}"
         {{- end }}
 
