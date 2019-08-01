@@ -19,6 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
@@ -79,6 +81,11 @@ public class CbiGlobeApiClient {
         }
 
         return rb;
+    }
+
+    private RequestBuilder createRequestWithConsentSandbox(URL url) {
+        return createRequestInSession(url)
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
     }
 
     protected RequestBuilder createAccountsRequestWithConsent() {
@@ -156,5 +163,24 @@ public class CbiGlobeApiClient {
 
     public void removeConsentFromPersistentStorage() {
         persistentStorage.remove(StorageKeys.CONSENT_ID);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+        URL redirectUrl =
+                new URL(configuration.getRedirectUrl())
+                        .queryParam(QueryKeys.STATE, QueryValues.STATE);
+        return createRequestWithConsentSandbox(Urls.PAYMENT)
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS)
+                .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public CreatePaymentResponse getPayment(String uniqueId) {
+        return createRequestWithConsentSandbox(
+                        Urls.FETCH_PAYMENT.parameter(IdTags.PAYMENT_ID, uniqueId))
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS)
+                .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
+                .get(CreatePaymentResponse.class);
     }
 }

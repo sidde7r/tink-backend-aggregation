@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -9,13 +10,17 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration.Environment;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -46,8 +51,14 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         final CbiGlobeConfiguration clientConfiguration = getClientConfiguration();
         apiClient.setConfiguration(clientConfiguration);
         this.client.setDebugOutput(true);
-        this.client.setEidasProxy(
-                configuration.getEidasProxy(), clientConfiguration.getEidasQwac());
+        if (clientConfiguration.getEnvironment() == Environment.PRODUCTION) {
+            this.client.setEidasProxy(
+                    configuration.getEidasProxy(), clientConfiguration.getEidasQwac());
+        } else {
+            client.setSslClientCertificate(
+                    CbiGlobeUtils.readFile(clientConfiguration.getKeystorePath()),
+                    clientConfiguration.getKeystorePassword());
+        }
     }
 
     protected CbiGlobeConfiguration getClientConfiguration() {
@@ -112,5 +123,13 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        CbiGlobePaymentExecutor paymentExecutor =
+                new CbiGlobePaymentExecutor(
+                        apiClient, supplementalInformationHelper, persistentStorage);
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }
