@@ -46,7 +46,7 @@ public final class SantanderConstants {
         public static final String PIS_PRODUCT = "/scb-openapis/sx/v1";
         public static final String SEPA_PAYMENT = PIS_PRODUCT + "/payments/sepa-credit-transfers";
         public static final String FETCH_PAYMENT =
-                PIS_PRODUCT + "/payments" + "/{paymentProduct}/{paymentId}/";
+                PIS_PRODUCT + "/payments/{paymentProduct}/{paymentId}/";
     }
 
     public static class StorageKeys {
