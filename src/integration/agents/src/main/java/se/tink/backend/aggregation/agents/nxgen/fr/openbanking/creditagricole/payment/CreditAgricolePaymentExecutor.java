@@ -198,8 +198,9 @@ public class CreditAgricolePaymentExecutor implements PaymentExecutor, Fetchable
                                         new IbanIdentifier(payment.getDebtorAccount().getIban())))
                         .withExecutionDate(
                                 parseDate(
-                                                payment.getCreditTransferTransaction()
-                                                        .get(0)
+                                                payment.getCreditTransferTransaction().stream()
+                                                        .findFirst()
+                                                        .orElseThrow(IllegalStateException::new)
                                                         .getRequestedExecutionDate())
                                         .toLocalDate())
                         .build());
