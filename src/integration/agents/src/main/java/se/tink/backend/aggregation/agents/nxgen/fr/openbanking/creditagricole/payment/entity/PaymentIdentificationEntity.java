@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.payment.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,8 +18,7 @@ public class PaymentIdentificationEntity {
     @JsonProperty("endToEndId")
     private String endToEndId = null;
 
-    public PaymentIdentificationEntity() {}
-
+    @JsonCreator
     private PaymentIdentificationEntity(
             String resourceId, String instructionId, String endToEndId) {
         this.resourceId = resourceId;
