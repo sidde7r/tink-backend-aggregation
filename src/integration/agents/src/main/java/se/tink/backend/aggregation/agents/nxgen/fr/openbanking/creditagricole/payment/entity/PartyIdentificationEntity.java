@@ -22,7 +22,7 @@ public class PartyIdentificationEntity {
 
     public PartyIdentificationEntity() {}
 
-    private PartyIdentificationEntity(
+    public PartyIdentificationEntity(
             String name,
             PostalAddressEntity postalAddress,
             GenericOrganisationIdentificationEntity organisationId,
@@ -31,10 +31,6 @@ public class PartyIdentificationEntity {
         this.postalAddress = postalAddress;
         this.organisationId = organisationId;
         this.privateId = privateId;
-    }
-
-    public static PartyIdentificationEntityBuilder builder() {
-        return new PartyIdentificationEntityBuilder();
     }
 
     public String getName() {
@@ -67,53 +63,5 @@ public class PartyIdentificationEntity {
 
     public void setPrivateId(GenericPrivateIdentificationEntity privateId) {
         this.privateId = privateId;
-    }
-
-    public static class PartyIdentificationEntityBuilder {
-
-        private String name;
-        private PostalAddressEntity postalAddress;
-        private GenericOrganisationIdentificationEntity organisationId;
-        private GenericPrivateIdentificationEntity privateId;
-
-        PartyIdentificationEntityBuilder() {}
-
-        public PartyIdentificationEntityBuilder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public PartyIdentificationEntityBuilder postalAddress(PostalAddressEntity postalAddress) {
-            this.postalAddress = postalAddress;
-            return this;
-        }
-
-        public PartyIdentificationEntityBuilder organisationId(
-                GenericOrganisationIdentificationEntity organisationId) {
-            this.organisationId = organisationId;
-            return this;
-        }
-
-        public PartyIdentificationEntityBuilder privateId(
-                GenericPrivateIdentificationEntity privateId) {
-            this.privateId = privateId;
-            return this;
-        }
-
-        public PartyIdentificationEntity build() {
-            return new PartyIdentificationEntity(name, postalAddress, organisationId, privateId);
-        }
-
-        public String toString() {
-            return "PartyIdentificationEntity.PartyIdentificationEntityBuilder(name="
-                    + this.name
-                    + ", postalAddress="
-                    + this.postalAddress
-                    + ", organisationId="
-                    + this.organisationId
-                    + ", privateId="
-                    + this.privateId
-                    + ")";
-        }
     }
 }

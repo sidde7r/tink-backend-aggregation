@@ -74,9 +74,8 @@ public class CreditAgricolePaymentExecutor implements PaymentExecutor, Fetchable
         String id = UUID.randomUUID().toString().replace("-", "");
 
         PartyIdentificationEntity initiatingParty =
-                PartyIdentificationEntity.builder()
-                        .name(payment.getDebtor().getAccountNumber())
-                        .build();
+                new PartyIdentificationEntity(
+                        payment.getDebtor().getAccountNumber(), null, null, null);
 
         PaymentTypeInformationEntity paymentTypeInformation =
                 new PaymentTypeInformationEntity(null, ServiceLevelCodeEntity.SEPA, null, null);
@@ -86,7 +85,7 @@ public class CreditAgricolePaymentExecutor implements PaymentExecutor, Fetchable
                         paymentRequest.getPayment().getDebtor().getAccountNumber(), null);
 
         PartyIdentificationEntity creditor =
-                PartyIdentificationEntity.builder().name(FormValues.BENEFICIARY_NAME).build();
+                new PartyIdentificationEntity(FormValues.BENEFICIARY_NAME, null, null, null);
 
         AccountIdentificationEntity creditorAccount =
                 new AccountIdentificationEntity(
