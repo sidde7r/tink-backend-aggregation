@@ -142,7 +142,6 @@ public abstract class BecConstants {
         public static final String TRUE = "true";
         public static final String BOTH = "both";
         public static final String BOOKED = "booked";
-        public static final String TPP_REDIRECT_URI = HeaderValues.TPP_REDIRECT_URI;
     }
 
     public static class HeaderKeys {
@@ -167,8 +166,6 @@ public abstract class BecConstants {
     }
 
     public static class HeaderValues {
-        public static final String TPP_REDIRECT_URI =
-                "https://localhost:7357/api/v1/credentials/third-party/callback";
         public static final String PSU_IP = "34.240.159.190";
     }
 
