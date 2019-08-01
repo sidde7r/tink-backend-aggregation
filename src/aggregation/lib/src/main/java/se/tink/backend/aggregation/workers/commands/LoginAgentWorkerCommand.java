@@ -49,6 +49,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
         private static final String IS_LOGGED_IN = "is-logged-in";
         private static final String LOGIN = "login";
+        private static final String LOGIN_MANUAL = "login-manual";
+        private static final String LOGIN_AUTO = "login-auto";
         private static final String LOGOUT = "logout";
         private static final String ACQUIRE_LOCK = "acquire-lock";
         private static final String RELEASE_LOCK = "release-lock";
@@ -63,6 +65,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     private final User user;
     private Agent agent;
     private final SupplementalInformationController supplementalInformationController;
+    private final boolean isManual;
 
     private InterProcessSemaphoreMutex lock;
 
@@ -79,6 +82,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.user = request.getUser();
         this.supplementalInformationController =
                 new SupplementalInformationController(context, request.getCredentials());
+        this.isManual = request.isManual();
     }
 
     @Override
@@ -220,6 +224,10 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         ArrayList<Context> loginTimerContext =
                 state.getTimerContexts(state.LOGIN_TIMER_NAME, credentials.getType());
         MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGIN));
+        MetricAction actionLoginType =
+                isManual
+                        ? metrics.buildAction(metricForAction(MetricName.LOGIN_MANUAL))
+                        : metrics.buildAction(metricForAction(MetricName.LOGIN_AUTO));
 
         try {
             // TODO auth: temporarily use the annotation to filter agents that are migrated to use
@@ -227,14 +235,17 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
                 progressiveLogin();
                 action.completed();
+                actionLoginType.completed();
                 return AgentWorkerCommandResult.CONTINUE;
             } else if (agent.login()) {
                 action.completed();
+                actionLoginType.completed();
                 return AgentWorkerCommandResult.CONTINUE;
             } else {
                 log.warn("Login failed due to agent.login() returned false");
 
                 action.failed();
+                actionLoginType.failed();
                 return AgentWorkerCommandResult.ABORT;
             }
         } catch (BankIdException e) {
@@ -243,24 +254,28 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                     CredentialsStatus.UNCHANGED,
                     context.getCatalog().getString(e.getUserMessage()));
             action.cancelled();
+            actionLoginType.cancelled();
             return AgentWorkerCommandResult.ABORT;
         } catch (BankServiceException e) {
             statusUpdater.updateStatus(
                     CredentialsStatus.TEMPORARY_ERROR,
                     context.getCatalog().getString(e.getUserMessage()));
             action.unavailable();
+            actionLoginType.unavailable();
             return AgentWorkerCommandResult.ABORT;
         } catch (AuthenticationException | AuthorizationException e) {
             statusUpdater.updateStatus(
                     CredentialsStatus.AUTHENTICATION_ERROR,
                     context.getCatalog().getString(e.getUserMessage()));
             action.cancelled();
+            actionLoginType.cancelled();
             return AgentWorkerCommandResult.ABORT;
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
             action.failed();
+            actionLoginType.failed();
             return AgentWorkerCommandResult.ABORT;
 
         } finally {
