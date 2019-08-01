@@ -63,6 +63,7 @@ public class SEBAuthenticator implements BankIdAuthenticator<String> {
         switch (bankIdResponse.getRfa().toUpperCase()) {
             case LoginCodes.START_BANKID:
             case LoginCodes.USER_SIGN:
+            case LoginCodes.WAITING_FOR_BANKID:
                 return BankIdStatus.WAITING;
             case LoginCodes.AUTHENTICATED:
                 activateSession();

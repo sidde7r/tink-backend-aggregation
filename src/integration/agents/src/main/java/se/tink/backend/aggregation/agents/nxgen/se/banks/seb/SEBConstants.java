@@ -52,6 +52,7 @@ public class SEBConstants {
         public static final String USER_SIGN = "RFA9";
         public static final String AUTHENTICATED = "RFA100";
         public static final String AUTHORIZATION_REQUIRED = "RFA101";
+        public static final String WAITING_FOR_BANKID = "RFA15A";
         public static final String COLLECT_BANKID = "RFA102";
     }
 
