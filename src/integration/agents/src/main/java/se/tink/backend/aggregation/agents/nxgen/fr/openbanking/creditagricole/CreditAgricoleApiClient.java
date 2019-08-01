@@ -10,10 +10,14 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.Cr
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.configuration.CreditAgricoleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.payment.entity.HalPaymentRequestCreation;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.payment.entity.HalPaymentRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.payment.entity.PaymentRequestResourceEntity;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class CreditAgricoleApiClient {
 
@@ -58,5 +62,22 @@ public final class CreditAgricoleApiClient {
     public GetTransactionsResponse getTransactions(String id) {
         return createRequestInSession(Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, id))
                 .get(GetTransactionsResponse.class);
+    }
+
+    public HalPaymentRequestCreation makePayment(
+            PaymentRequestResourceEntity paymentRequestResourceEntity) {
+
+        String body = SerializationUtils.serializeToString(paymentRequestResourceEntity);
+
+        return createRequestInSession(Urls.CREATE_PAYMENT_REQUEST)
+                .type(MediaType.APPLICATION_JSON)
+                .post(HalPaymentRequestCreation.class, body);
+    }
+
+    public HalPaymentRequestEntity fetchPayment(String uniqueId) {
+        return createRequestInSession(
+                        Urls.FETCH_PAYMENT_REQUEST.parameter(
+                                IdTags.PAYMENT_REQUEST_RESOURCE_ID, uniqueId))
+                .get(HalPaymentRequestEntity.class);
     }
 }

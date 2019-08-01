@@ -31,15 +31,24 @@ public final class CreditAgricoleConstants {
 
         public static final URL ACCOUNTS = new URL(BASE_URL + ApiServices.ACCOUNTS);
         public static final URL TRANSACTIONS = new URL(BASE_URL + ApiServices.TRANSACTIONS);
+        public static final URL FETCH_PAYMENT_REQUEST =
+                new URL(BASE_URL + ApiServices.FETCH_PAYMENT_REQUEST);
+        public static final URL CREATE_PAYMENT_REQUEST =
+                new URL(BASE_URL + ApiServices.CREATE_PAYMENT_REQUEST);
+        public static final String SUCCESS_REPORT_PATH = "?code=123&state=";
     }
 
     public static class ApiServices {
         public static final String ACCOUNTS = "/dsp2/v1.5/accounts";
         public static final String TRANSACTIONS = "/dsp2/v1.5/accounts/{accountId}/transactions";
+        public static final String FETCH_PAYMENT_REQUEST =
+                "/dsp2/v1.5/payment-requests/{paymentRequestResourceId}";
+        public static final String CREATE_PAYMENT_REQUEST = "/dsp2/v1.5/payment-requests/";
     }
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
+        public static final String STATE = "STATE";
     }
 
     public static class HeaderKeys {
@@ -48,6 +57,7 @@ public final class CreditAgricoleConstants {
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
+        public static final String PAYMENT_REQUEST_RESOURCE_ID = "paymentRequestResourceId";
     }
 
     public static class BalanceTypes {
@@ -57,5 +67,14 @@ public final class CreditAgricoleConstants {
 
     public static class BookingStatus {
         public static final String PENDING = "PENDING";
+    }
+
+    public class DateFormat {
+        public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    }
+
+    public class FormValues {
+        public static final String BENEFICIARY_NAME = "myMerchant";
+        public static final String INSTRUCTION_ID = "MyInstrId";
     }
 }
