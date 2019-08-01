@@ -1,13 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.payment.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class TransactionEntity {
@@ -37,21 +33,6 @@ public class TransactionEntity {
 
     @JsonProperty("remittanceInformation")
     private RemittanceInformationEntity remittanceInformation = null;
-
-    @JsonIgnore
-    public Transaction toTinkTransaction(TransactionalAccount account) {
-        return Transaction.builder()
-                .setAmount(getAmount())
-                .setDate(bookingDate)
-                .setPending(status == TransactionStatusEntity.PDNG)
-                .setDescription(String.join(" ", remittanceInformation.getUnstructured()))
-                .build();
-    }
-
-    private Amount getAmount() {
-        return new Amount(
-                transactionAmount.getCurrency(), Double.parseDouble(transactionAmount.getAmount()));
-    }
 
     public String getResourceId() {
         return resourceId;
