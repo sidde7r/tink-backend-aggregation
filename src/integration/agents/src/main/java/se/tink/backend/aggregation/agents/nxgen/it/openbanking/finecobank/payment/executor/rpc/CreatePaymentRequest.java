@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -12,6 +13,7 @@ public class CreatePaymentRequest {
     private String creditorName;
     private String remittanceInformationUnstructured;
 
+    @JsonIgnore
     private CreatePaymentRequest(Builder builder) {
         this.instructedAmount = builder.instructedAmount;
         this.debtorAccount = builder.debtorAccount;

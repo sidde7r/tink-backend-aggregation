@@ -242,7 +242,7 @@ public final class FinecoBankApiClient {
         return sessionStorage
                 .get(StorageKeys.STATE, String.class)
                 .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+                        () -> new IllegalStateException(ErrorMessages.STATE_MISSING_ERROR));
     }
 
     private String getPsuIpAddress() {
