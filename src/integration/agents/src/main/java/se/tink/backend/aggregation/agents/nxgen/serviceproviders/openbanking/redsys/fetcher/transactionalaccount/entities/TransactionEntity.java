@@ -77,10 +77,21 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
+    private Date getDate() {
+        if (bookingDate != null) {
+            return bookingDate;
+        } else if (valueDate != null) {
+            return valueDate;
+        } else {
+            throw new IllegalStateException("Transaction has no date.");
+        }
+    }
+
+    @JsonIgnore
     private Transaction toTinkTransaction(boolean pending) {
         return Transaction.builder()
                 .setAmount(transactionAmount.toTinkAmount())
-                .setDate(valueDate)
+                .setDate(getDate())
                 .setDescription(getDescription())
                 .setPending(pending)
                 .build();
