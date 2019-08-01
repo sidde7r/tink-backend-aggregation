@@ -8,11 +8,12 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 public class MonzoConstants {
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/London");
     public static final String INTEGRATION_NAME = "monzo";
+    public static final String UK_RETAIL = "uk_retail";
+    public static final String UK_RETAIL_JOINT = "uk_retail_joint";
 
     public static final AccountTypeMapper ACCOUNT_TYPE =
             AccountTypeMapper.builder()
-                    .put(AccountTypes.CHECKING, "uk_retail")
-                    .put(AccountTypes.CHECKING, "uk_retail_joint")
+                    .put(AccountTypes.CHECKING, UK_RETAIL, UK_RETAIL_JOINT)
                     .build();
 
     public static class ErrorMessages {
