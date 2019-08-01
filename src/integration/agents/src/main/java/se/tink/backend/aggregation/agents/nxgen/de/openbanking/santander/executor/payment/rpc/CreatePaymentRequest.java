@@ -20,7 +20,7 @@ public class CreatePaymentRequest {
     private String requestedExecutionDate;
 
     @JsonIgnore
-    public CreatePaymentRequest(Builder builder) {
+    private CreatePaymentRequest(Builder builder) {
         this.endToEndIdentification = builder.endToEndIdentification;
         this.debtorAccount = builder.debtorAccount;
         this.creditorAccount = builder.creditorAccount;
