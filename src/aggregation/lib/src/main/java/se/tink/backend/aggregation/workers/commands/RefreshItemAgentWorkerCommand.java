@@ -7,7 +7,15 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -65,7 +73,12 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 } else {
                     RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
                 }
-                action.completed();
+
+                if (isAbleToRefreshItem(agent, item)) {
+                    action.completed();
+                } else {
+                    action.stop();
+                }
             } catch (BankServiceException e) {
                 // The way frontend works now the message will not be displayed to the user.
                 context.updateStatus(
@@ -84,6 +97,37 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         }
 
         return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    private boolean isAbleToRefreshItem(Agent agent, RefreshableItem item) {
+        switch (item) {
+            case ACCOUNTS:
+            case TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS:
+                return true;
+            case EINVOICES:
+                return agent instanceof RefreshEInvoiceExecutor;
+            case TRANSFER_DESTINATIONS:
+                return agent instanceof RefreshTransferDestinationExecutor;
+            case CHECKING_ACCOUNTS:
+            case CHECKING_TRANSACTIONS:
+                return agent instanceof RefreshCheckingAccountsExecutor;
+            case SAVING_ACCOUNTS:
+            case SAVING_TRANSACTIONS:
+                return agent instanceof RefreshSavingsAccountsExecutor;
+            case CREDITCARD_ACCOUNTS:
+            case CREDITCARD_TRANSACTIONS:
+                return agent instanceof RefreshCreditCardAccountsExecutor;
+            case LOAN_ACCOUNTS:
+            case LOAN_TRANSACTIONS:
+                return agent instanceof RefreshLoanAccountsExecutor;
+            case INVESTMENT_ACCOUNTS:
+            case INVESTMENT_TRANSACTIONS:
+                return agent instanceof RefreshInvestmentAccountsExecutor;
+            case IDENTITY_DATA:
+                return agent instanceof RefreshIdentityDataExecutor;
+            default:
+                return false;
+        }
     }
 
     @Override
