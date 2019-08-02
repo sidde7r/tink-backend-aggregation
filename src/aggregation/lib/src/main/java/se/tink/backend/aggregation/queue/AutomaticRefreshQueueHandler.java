@@ -59,7 +59,8 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                         ClientInfo.of(
                                 refreshInformation.getClientName(),
                                 refreshInformation.getClusterId(),
-                                refreshInformation.getAggregatorId());
+                                refreshInformation.getAggregatorId(),
+                                refreshInformation.getAppId());
             } else {
                 ClientConfiguration configuration =
                         clientConfigurationProvider.getClientConfiguration(
@@ -68,7 +69,12 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                         ClientInfo.of(
                                 configuration.getClientName(),
                                 configuration.getClusterId(),
-                                configuration.getAggregatorId());
+                                configuration.getAggregatorId(),
+                                null);
+                logger.info(
+                        "ClientName : {}, AppId : {}",
+                        refreshInformation.getClientName(),
+                        refreshInformation.getAppId());
             }
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerRefreshOperationCreatorWrapper =
                     AgentWorkerRefreshOperationCreatorWrapper.of(
