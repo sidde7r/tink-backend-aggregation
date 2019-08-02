@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.storage.database.providers.ClientConfiguratio
 public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientInfo>
         implements InjectableProvider<ClientContext, Type> {
     private static final String CLIENT_API_KEY_HEADER = "X-Tink-Client-Api-Key";
+    private static final String APP_ID_HEADER_KEY = "X-Tink-App-Id";
 
     private static final String CLUSTER_NAME_HEADER = ClusterId.CLUSTER_NAME_HEADER;
     private static final String CLUSTER_ENVIRONMENT_HEADER = ClusterId.CLUSTER_ENVIRONMENT_HEADER;
@@ -49,9 +50,10 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
     public ClientInfo getValue(HttpContext c) {
         HttpRequestContext request = c.getRequest();
         String apiKey = request.getHeaderValue(CLIENT_API_KEY_HEADER);
+        String appId = request.getHeaderValue(APP_ID_HEADER_KEY);
 
-        if (!Strings.isNullOrEmpty(apiKey)) {
-            return getClientInfoUsingApiKey(apiKey);
+        if (!Strings.isNullOrEmpty(apiKey) && !Strings.isNullOrEmpty(appId)) {
+            return getClientInfoUsingApiKey(apiKey, appId);
         }
 
         String name = request.getHeaderValue(CLUSTER_NAME_HEADER);
@@ -60,22 +62,22 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
         throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
 
-    private ClientInfo getClientInfoUsingApiKey(String apiKey) {
+    private ClientInfo getClientInfoUsingApiKey(String apiKey, String appId) {
         try {
             ClientConfiguration clientConfig =
                     clientConfigurationProvider.getClientConfiguration(apiKey);
-            return convertFromClientConfiguration(clientConfig);
+            return createClientInfo(clientConfig, appId);
         } catch (ClientNotValid e) {
             logger.error("Api key {} is not valid. no entry found in database.", apiKey);
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
     }
 
-    private ClientInfo convertFromClientConfiguration(ClientConfiguration clientConfiguration) {
+    private ClientInfo createClientInfo(ClientConfiguration clientConfiguration, String appId) {
         String clientName = clientConfiguration.getClientName();
         String clusterId = clientConfiguration.getClusterId();
         String aggregatorId = clientConfiguration.getAggregatorId();
 
-        return ClientInfo.of(clientName, clusterId, aggregatorId);
+        return ClientInfo.of(clientName, clusterId, aggregatorId, appId);
     }
 }
