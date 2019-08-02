@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.e
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -26,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class LaBanquePostalPaymentExecutor implements PaymentExecutor {
+public class LaBanquePostalPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private LaBanquePostaleApiClient apiClient;
 
     public LaBanquePostalPaymentExecutor(LaBanquePostaleApiClient apiClient) {
