@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -20,12 +22,12 @@ public final class UpcomingTransaction extends AggregationTransaction {
     @Deprecated
     protected UpcomingTransaction(
             Amount amount, Date date, String description, Transfer upcomingTransfer) {
-        this(amount, date, description, upcomingTransfer, null);
+        this(amount, date, description, upcomingTransfer, null, TransactionTypes.DEFAULT, null);
     }
 
     protected UpcomingTransaction(
             ExactCurrencyAmount amount, Date date, String description, Transfer upcomingTransfer) {
-        this(amount, date, description, upcomingTransfer, null);
+        this(amount, date, description, upcomingTransfer, null, TransactionTypes.DEFAULT, null);
     }
 
     @Deprecated
@@ -34,8 +36,10 @@ public final class UpcomingTransaction extends AggregationTransaction {
             Date date,
             String description,
             Transfer upcomingTransfer,
-            String rawDetails) {
-        super(amount, date, description, rawDetails);
+            String rawDetails,
+            TransactionTypes type,
+            Map<TransactionPayloadTypes, String> payload) {
+        super(amount, date, description, rawDetails, type, payload);
         this.upcomingTransfer = upcomingTransfer;
     }
 
@@ -44,8 +48,10 @@ public final class UpcomingTransaction extends AggregationTransaction {
             Date date,
             String description,
             Transfer upcomingTransfer,
-            String rawDetails) {
-        super(amount, date, description, rawDetails);
+            String rawDetails,
+            TransactionTypes type,
+            Map<TransactionPayloadTypes, String> payload) {
+        super(amount, date, description, rawDetails, type, payload);
         this.upcomingTransfer = upcomingTransfer;
     }
 
@@ -126,8 +132,19 @@ public final class UpcomingTransaction extends AggregationTransaction {
             return (Builder) super.setDescription(description);
         }
 
+        @Override
         public Builder setRawDetails(Object rawDetails) {
             return (Builder) super.setRawDetails(rawDetails);
+        }
+
+        @Override
+        public Builder setType(TransactionTypes type) {
+            return (Builder) super.setType(type);
+        }
+
+        @Override
+        public Builder setPayload(TransactionPayloadTypes key, String value) {
+            return (Builder) super.setPayload(key, value);
         }
 
         @Override
@@ -137,7 +154,9 @@ public final class UpcomingTransaction extends AggregationTransaction {
                     getDate(),
                     getDescription(),
                     upcomingTransfer,
-                    getRawDetails());
+                    getRawDetails(),
+                    getType(),
+                    getPayload());
         }
     }
 }
