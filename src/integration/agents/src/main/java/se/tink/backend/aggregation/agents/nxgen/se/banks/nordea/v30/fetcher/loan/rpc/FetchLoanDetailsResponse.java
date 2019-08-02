@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
@@ -131,12 +133,12 @@ public class FetchLoanDetailsResponse {
     }
 
     @JsonIgnore
-    private Amount getInstalmentValue() {
+    private ExactCurrencyAmount getInstalmentValue() {
+        BigDecimal amount = null;
         if (Objects.nonNull(followingPayment)) {
-            return new Amount(NordeaSEConstants.CURRENCY, followingPayment.getInstalment());
-        } else {
-            return null;
+            amount = BigDecimal.valueOf(followingPayment.getInstalment());
         }
+        return new ExactCurrencyAmount(amount, NordeaSEConstants.CURRENCY);
     }
 
     // TODO: Map all the different Nordea loan type accounts
