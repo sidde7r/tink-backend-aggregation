@@ -2,5 +2,6 @@ package se.tink.libraries.account.enums;
 
 public enum AccountFlag {
     BUSINESS,
-    MANDATE
+    MANDATE,
+    PSD2_PAYMENT_ACCOUNT
 }
