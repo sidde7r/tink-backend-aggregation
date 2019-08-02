@@ -36,10 +36,12 @@ public class SupplementalInformationController {
             String key, long waitFor, TimeUnit unit) {
         return supplementalRequester
                 .waitForSupplementalInformation(key, waitFor, unit)
-                .map(
-                        s ->
-                                SerializationUtils.deserializeFromString(
-                                        s, new TypeReference<HashMap<String, String>>() {}));
+                .map(SupplementalInformationController::stringToMap);
+    }
+
+    private static Map<String, String> stringToMap(final String string) {
+        return SerializationUtils.deserializeFromString(
+                string, new TypeReference<HashMap<String, String>>() {});
     }
 
     public Map<String, String> askSupplementalInformation(Field... fields)
