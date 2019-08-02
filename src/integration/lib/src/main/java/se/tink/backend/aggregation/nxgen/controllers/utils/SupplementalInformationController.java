@@ -34,12 +34,12 @@ public class SupplementalInformationController {
 
     public Optional<Map<String, String>> waitForSupplementalInformation(
             String key, long waitFor, TimeUnit unit) {
-        Optional<String> supplementalInformation =
-                supplementalRequester.waitForSupplementalInformation(key, waitFor, unit);
-        return supplementalInformation.map(
-                s ->
-                        SerializationUtils.deserializeFromString(
-                                s, new TypeReference<HashMap<String, String>>() {}));
+        return supplementalRequester
+                .waitForSupplementalInformation(key, waitFor, unit)
+                .map(
+                        s ->
+                                SerializationUtils.deserializeFromString(
+                                        s, new TypeReference<HashMap<String, String>>() {}));
     }
 
     public Map<String, String> askSupplementalInformation(Field... fields)
