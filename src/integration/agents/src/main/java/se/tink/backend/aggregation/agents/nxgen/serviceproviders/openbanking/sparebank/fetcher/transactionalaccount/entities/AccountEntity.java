@@ -103,6 +103,6 @@ public class AccountEntity {
     private TransactionalAccountType getAccountType() {
         return SparebankConstants.ACCOUNT_TYPE_MAPPER
                 .translate(Optional.ofNullable(cashAccountType).orElse(product))
-                .orElse(TransactionalAccountType.OTHER);
+                .orElse(TransactionalAccountType.CHECKING);
     }
 }

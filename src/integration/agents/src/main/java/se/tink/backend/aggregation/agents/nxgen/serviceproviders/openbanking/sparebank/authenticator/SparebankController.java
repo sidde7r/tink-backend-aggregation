@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator;
 
-import com.google.common.base.Preconditions;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Base64.Encoder;
@@ -30,6 +29,7 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SparebankAuthenticator authenticator;
     private final String state;
+    private String errorMessage;
 
     public SparebankController(
             final SupplementalInformationHelper supplementalInformationHelper,
@@ -63,16 +63,19 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
                                         new IllegalStateException(
                                                 "No supplemental info found in api response"));
 
-        String psuId =
-                Preconditions.checkNotNull(supplementalInformation.getOrDefault("psu-id", null));
+        Optional<String> psuId =
+                Optional.ofNullable(supplementalInformation.getOrDefault("psu-id", null));
 
-        String tppSessionId =
-                Preconditions.checkNotNull(
-                        supplementalInformation.getOrDefault("tpp-session-id", null));
+        Optional<String> tppSessionId =
+                Optional.ofNullable(supplementalInformation.getOrDefault("tpp-session-id", null));
 
-        authenticator.setUpPsuAndSession(psuId, tppSessionId);
-
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+        if (psuId.isPresent() && tppSessionId.isPresent()) {
+            authenticator.setUpPsuAndSession(psuId.get(), tppSessionId.get());
+            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+        } else {
+            errorMessage = supplementalInformation.getOrDefault("message", null);
+            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.CANCELLED);
+        }
     }
 
     @Override
@@ -94,7 +97,7 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
 
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
-        return Optional.empty();
+        return Optional.ofNullable(errorMessage).map(LocalizableKey::of);
     }
 
     private String formatSupplementalKey(final String key) {
