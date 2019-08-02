@@ -3,7 +3,7 @@ package se.tink.backend.integration.tpp_secrets_service.client;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-public enum TppSecretsServiceClusterLocation {
+public enum TppSecretsServiceLocation {
     @JsonAlias({"within-cluster"})
     WITHIN_CLUSTER("within-cluster"),
     @JsonAlias({"outside-cluster-local"})
@@ -15,13 +15,13 @@ public enum TppSecretsServiceClusterLocation {
 
     private final String location;
 
-    TppSecretsServiceClusterLocation(String location) {
+    TppSecretsServiceLocation(String location) {
         this.location = location;
     }
 
     @JsonCreator
-    public static TppSecretsServiceClusterLocation fromString(String location) {
-        return TppSecretsServiceClusterLocation.valueOf(location.toLowerCase());
+    public static TppSecretsServiceLocation fromString(String location) {
+        return TppSecretsServiceLocation.valueOf(location.toLowerCase());
     }
 
     public String getLocation() {

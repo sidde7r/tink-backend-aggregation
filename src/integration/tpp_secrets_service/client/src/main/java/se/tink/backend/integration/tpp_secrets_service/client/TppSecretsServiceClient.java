@@ -102,7 +102,7 @@ public class TppSecretsServiceClient {
         File caCertPath = getCaCertPath(configuration);
         SslContextBuilder sslContextBuilder = GrpcSslContexts.forClient().trustManager(caCertPath);
 
-        switch (configuration.getTppSecretsServiceClusterLocation()) {
+        switch (configuration.getTppSecretsServiceLocation()) {
             case WITHIN_CLUSTER:
                 if (configuration.getTlsCrtPath() != null
                         && configuration.getTlsKeyPath() != null) {
@@ -176,7 +176,7 @@ public class TppSecretsServiceClient {
     }
 
     private File getCaCertPath(TppSecretsServiceConfiguration configuration) {
-        switch (configuration.getTppSecretsServiceClusterLocation()) {
+        switch (configuration.getTppSecretsServiceLocation()) {
             case WITHIN_CLUSTER:
                 if (configuration.getCaPath() != null) {
                     return new File(configuration.getCaPath());

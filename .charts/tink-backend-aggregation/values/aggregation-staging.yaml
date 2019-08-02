@@ -97,4 +97,4 @@ clients:
     aggregatorIdentifier: "Provision Job Testing"
 
 tppSecretsServiceConfiguration:
-  tppSecretsServiceClusterLocation: "within-cluster"
+  tppSecretsServiceLocation: "within-cluster"

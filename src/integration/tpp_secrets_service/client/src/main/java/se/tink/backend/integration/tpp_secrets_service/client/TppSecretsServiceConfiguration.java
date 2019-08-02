@@ -17,14 +17,14 @@ public class TppSecretsServiceConfiguration {
     private String caPath;
     private String tlsCrtPath;
     private String tlsKeyPath;
-    private TppSecretsServiceClusterLocation tppSecretsServiceClusterLocation;
+    private TppSecretsServiceLocation tppSecretsServiceLocation;
 
-    public TppSecretsServiceClusterLocation getTppSecretsServiceClusterLocation() {
+    public TppSecretsServiceLocation getTppSecretsServiceLocation() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(tppSecretsServiceClusterLocation.toString()),
-                String.format(INVALID_CONFIGURATION, "tppSecretsServiceClusterLocation"));
+                Strings.emptyToNull(tppSecretsServiceLocation.toString()),
+                String.format(INVALID_CONFIGURATION, "tppSecretsServiceLocation"));
 
-        return tppSecretsServiceClusterLocation;
+        return tppSecretsServiceLocation;
     }
 
     public String getCaPath() {

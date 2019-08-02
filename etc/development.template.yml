@@ -518,7 +518,7 @@ agentsServiceConfiguration:
   tppSecretsServiceConfiguration:
     host: host: "tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local" # add to your /etc/hosts with the (minikube ip)
     port: 30787
-    tppSecretsServiceClusterLocation: "outside-cluster-staging"
+    tppSecretsServiceLocation: "outside-cluster-staging"
   testConfiguration:
     debugOutput: false
     censorSensitiveHeaders: true
