@@ -259,7 +259,8 @@ public class AgentWorkerOperationFactory {
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         controllerWrapper,
-                        clientInfo.getClusterId());
+                        clientInfo.getClusterId(),
+                        clientInfo.getAppId());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -352,7 +353,8 @@ public class AgentWorkerOperationFactory {
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         controllerWrapper,
-                        clientInfo.getClusterId());
+                        clientInfo.getClusterId(),
+                        clientInto.getAppId());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -415,7 +417,8 @@ public class AgentWorkerOperationFactory {
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         controllerWrapper,
-                        clientInfo.getClusterId());
+                        clientInfo.getClusterId(),
+                        clientInto.getAppId());
 
         String operationName = "execute-transfer";
 
@@ -449,7 +452,8 @@ public class AgentWorkerOperationFactory {
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         controllerWrapper,
-                        clientInfo.getClusterId());
+                        clientInfo.getClusterId(),
+                        clientInto.getAppId());
         context.setWhitelistRefresh(true);
 
         String operationName = "execute-whitelisted-transfer";
@@ -541,7 +545,8 @@ public class AgentWorkerOperationFactory {
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         controllerWrapper,
-                        clientInfo.getClusterId());
+                        clientInfo.getClusterId(),
+                        clientInto.getAppId());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -574,7 +579,8 @@ public class AgentWorkerOperationFactory {
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         controllerWrapper,
-                        clientInfo.getClusterId());
+                        clientInfo.getClusterId(),
+                        clientInto.getAppId());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -606,7 +612,8 @@ public class AgentWorkerOperationFactory {
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         controllerWrapper,
-                        clientInfo.getClusterId());
+                        clientInfo.getClusterId(),
+                        clientInto.getAppId());
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -648,7 +655,8 @@ public class AgentWorkerOperationFactory {
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         controllerWrapper,
-                        clientInfo.getClusterId());
+                        clientInfo.getClusterId(),
+                        clientInto.getAppId());
 
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -716,7 +724,8 @@ public class AgentWorkerOperationFactory {
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         controllerWrapper,
-                        clientInfo.getClusterId());
+                        clientInfo.getClusterId(),
+                        clientInto.getAppId());
 
         context.setWhitelistRefresh(true);
         CryptoWrapper cryptoWrapper =
@@ -810,7 +819,8 @@ public class AgentWorkerOperationFactory {
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         controllerWrapper,
-                        clientInfo.getClusterId());
+                        clientInfo.getClusterId(),
+                        clientInto.getAppId());
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 

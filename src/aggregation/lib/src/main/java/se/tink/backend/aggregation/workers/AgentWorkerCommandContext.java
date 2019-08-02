@@ -74,7 +74,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
             AggregatorInfo aggregatorInfo,
             SupplementalInformationController supplementalInformationController,
             ControllerWrapper controllerWrapper,
-            String clusterId) {
+            String clusterId,
+            String appId) {
         super(
                 request,
                 metricRegistry,
@@ -82,7 +83,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                 aggregatorInfo,
                 supplementalInformationController,
                 controllerWrapper,
-                clusterId);
+                clusterId,
+                appId);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();

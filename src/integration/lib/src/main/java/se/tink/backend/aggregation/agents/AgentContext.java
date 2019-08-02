@@ -14,6 +14,15 @@ public abstract class AgentContext implements CompositeAgentContext {
     private AggregatorInfo aggregatorInfo;
     private String clusterId;
     private MetricRegistry metricRegistry;
+    private String appId;
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
 
     public String getClusterId() {
         return clusterId;

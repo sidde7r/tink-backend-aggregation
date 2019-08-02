@@ -61,6 +61,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     protected final MetricRefreshController metricRefreshController;
     // TODO auth: remove helper and controller when refactor is done
     protected final SupplementalInformationFormer supplementalInformationFormer;
+    protected final String appId;
 
     private TransferController transferController;
     private Authenticator authenticator;
@@ -97,6 +98,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
                         request.getType());
         this.supplementalInformationFormer =
                 new SupplementalInformationFormer(request.getProvider());
+        this.appId = context.getAppId();
     }
 
     @Override

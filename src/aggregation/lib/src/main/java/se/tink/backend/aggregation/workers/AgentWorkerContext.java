@@ -81,7 +81,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             AggregatorInfo aggregatorInfo,
             SupplementalInformationController supplementalInformationController,
             ControllerWrapper controllerWrapper,
-            String clusterId) {
+            String clusterId,
+            String appId) {
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
@@ -95,6 +96,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         setClusterId(clusterId);
         setAggregatorInfo(aggregatorInfo);
+        setAppId(appId);
 
         if (request.getUser() != null) {
             this.catalog = Catalog.getCatalog(request.getUser().getProfile().getLocale());
