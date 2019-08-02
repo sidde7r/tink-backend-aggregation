@@ -86,7 +86,7 @@ public class DualAgentIntegrationTest {
                 });
 
         assertEquals(0, accounts.keySet().size());
-        assertEquals(0, transactions.keySet().size());
+        assertEquals(0, transactions.values().stream().mapToInt(Map::size).sum());
     }
 
     private void logAccounts(
