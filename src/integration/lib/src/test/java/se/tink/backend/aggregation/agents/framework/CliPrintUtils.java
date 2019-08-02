@@ -34,6 +34,9 @@ public class CliPrintUtils {
     // I.e. encapsuleTitle("test", 10, '-') --> "-- test --"
     private static String encapsuleTitle(String title, int maxLength, char c) {
         title = String.format(" %s ", title);
+        if (title.length() > maxLength) {
+            title = title.substring(0, maxLength - 3) + "...";
+        }
         int headerStart = (maxLength / 2) - (title.length() / 2);
         String header = Strings.repeat(String.valueOf(c), headerStart) + title;
         return Strings.padEnd(header, maxLength, c);
