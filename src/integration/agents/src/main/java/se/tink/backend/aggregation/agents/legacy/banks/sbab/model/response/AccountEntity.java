@@ -9,6 +9,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.strings.StringUtils;
 
@@ -108,6 +109,7 @@ public class AccountEntity implements GeneralAccountEntity {
     public Optional<Account> toTinkAccount() {
         Account account = new Account();
         account.setType(AccountTypes.SAVINGS);
+        account.putFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
         account.setAccountNumber(getAccountNumber());
         account.setBankId(getAccountNumber());
         account.putIdentifier(new SwedishIdentifier(accountNumber));
