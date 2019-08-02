@@ -23,9 +23,9 @@ public class FinTsAccountFetcher implements AccountFetcher<TransactionalAccount>
         apiClient.getAccounts().stream()
                 .filter(
                         sepaAccount ->
-                                sepaAccount.getExtensions() != null
+                                !sepaAccount.getSupportedSegments().isEmpty()
                                         && sepaAccount
-                                                .getExtensions()
+                                                .getSupportedSegments()
                                                 .contains(FinTsConstants.Segments.HKSAL.name()))
                 .forEach(apiClient::getBalance);
 

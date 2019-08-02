@@ -1,16 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
+import java.util.List;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.authenticator.FinTsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.session.FinTsSessionHandler;
@@ -23,16 +28,19 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.Investme
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class FinTsAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshInvestmentAccountsExecutor {
+                RefreshInvestmentAccountsExecutor,
+                RefreshTransferDestinationExecutor {
     private FinTsApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     public FinTsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -55,6 +63,10 @@ public class FinTsAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new FinTsInvestmentFetcher(apiClient));
+
+        this.transferDestinationRefreshController =
+                new TransferDestinationRefreshController(
+                        metricRefreshController, new FinTsTransferDestinationFetcher(apiClient));
     }
 
     @Override
@@ -125,5 +137,10 @@ public class FinTsAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
         return investmentRefreshController.fetchInvestmentTransactions();
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 }

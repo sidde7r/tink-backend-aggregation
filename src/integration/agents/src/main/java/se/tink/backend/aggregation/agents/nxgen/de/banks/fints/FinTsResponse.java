@@ -152,7 +152,7 @@ public class FinTsResponse {
             for (String de : degs) {
                 String[] splits = de.split("::", 2);
                 if (FinTsConstants.StatusCode.TAN_VERSION.equals(splits[0])) {
-                    return Arrays.asList(FinTsParser.getTanMech(splits[1]));
+                    return FinTsParser.getTanMech(splits[1]);
                 }
             }
         }

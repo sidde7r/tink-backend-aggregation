@@ -33,6 +33,10 @@ public class FinTsConstants {
     }
 
     public enum Segments {
+        HKCCS, // Transfer Request
+        HICCS, // Transfer Response
+        HKCDE, // Payment Request
+        HICDE, // Payment Response
         HKSAL, // Balance Request
         HISAL, // Balance Response
         HKSPA, // SEPA information Request
@@ -54,6 +58,7 @@ public class FinTsConstants {
         HIKAZ, // Statements/Transactions Response
         HKWPD, // Depot Request
         HIWPD, // Depot Response
+        HIBPA, // Bank parameter
         HISALS, // Balance query parameter
         HIKAZS, // Account sales/period parameter
         HIUPD; // Account information
