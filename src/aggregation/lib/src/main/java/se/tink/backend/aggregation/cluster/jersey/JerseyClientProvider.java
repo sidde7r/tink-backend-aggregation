@@ -52,7 +52,7 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
         String apiKey = request.getHeaderValue(CLIENT_API_KEY_HEADER);
         String appId = request.getHeaderValue(APP_ID_HEADER_KEY);
 
-        if (!Strings.isNullOrEmpty(apiKey) && !Strings.isNullOrEmpty(appId)) {
+        if (!Strings.isNullOrEmpty(apiKey)) {
             return getClientInfoUsingApiKey(apiKey, appId);
         }
 

@@ -62,19 +62,25 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                                 refreshInformation.getAggregatorId(),
                                 refreshInformation.getAppId());
             } else {
+                /**
+                 * Below logger is to verify if this else condition is ever met. Eventually will
+                 * remove else condition if its not in use.
+                 */
+                logger.info(
+                        "ClientName : {}, AppId : {}",
+                        refreshInformation.getClientName(),
+                        refreshInformation.getAppId());
                 ClientConfiguration configuration =
                         clientConfigurationProvider.getClientConfiguration(
                                 refreshInformation.getName(), refreshInformation.getEnvironment());
+
+                /* passing appId as null as we don't store appId in data base entity ClientConfiguration */
                 clientInfo =
                         ClientInfo.of(
                                 configuration.getClientName(),
                                 configuration.getClusterId(),
                                 configuration.getAggregatorId(),
                                 null);
-                logger.info(
-                        "ClientName : {}, AppId : {}",
-                        refreshInformation.getClientName(),
-                        refreshInformation.getAppId());
             }
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerRefreshOperationCreatorWrapper =
                     AgentWorkerRefreshOperationCreatorWrapper.of(
