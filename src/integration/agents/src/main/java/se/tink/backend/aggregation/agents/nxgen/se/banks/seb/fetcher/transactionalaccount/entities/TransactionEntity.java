@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.TransactionType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -65,8 +67,6 @@ public class TransactionEntity {
     @JsonProperty("ROR_TYP")
     private String transactionType;
 
-    // May contain inköpsställe (Taxa 4x35: "ROR_X_INFO": "TAXA 4X35                DKK
-    // 382,42-   KURS 1,1990")
     // foreign transaction info (with ROR_TYP "5")
     // swish payment ID ("[0-9A-F]{32} [0-9]{16}" with VERIF_NR 5490990789)
     @JsonProperty("ROR_X_INFO")
@@ -140,13 +140,33 @@ public class TransactionEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
-        Builder builder = Transaction.builder().setDate(getDate()).setAmount(getAmount());
+        Builder builder =
+                Transaction.builder()
+                        .setDate(getDate())
+                        .setAmount(getAmount())
+                        .setType(getTransactionType(verificationNumber));
         String description = getDescription();
 
         if (isForeignTransaction()) {
+            final String region = getDescription();
             final Matcher matcher = FOREIGN_TRANSACTION_PATTERN.matcher(additionalInformation);
             if (matcher.find()) {
                 description = matcher.group("description");
+                final String localCurrency = matcher.group("localCurrency");
+                final double localAmount =
+                        StringUtils.parseAmountEU(
+                                matcher.group("localAmountSign") + matcher.group("localAmount"));
+                final double exchangeRate =
+                        StringUtils.parseAmountEU(matcher.group("exchangeRate"));
+                builder =
+                        builder.setPayload(TransactionPayloadTypes.LOCAL_REGION, region)
+                                .setPayload(TransactionPayloadTypes.LOCAL_CURRENCY, localCurrency)
+                                .setPayload(
+                                        TransactionPayloadTypes.AMOUNT_IN_LOCAL_CURRENCY,
+                                        String.valueOf(localAmount))
+                                .setPayload(
+                                        TransactionPayloadTypes.EXCHANGE_RATE,
+                                        String.valueOf(exchangeRate));
             } else {
                 LOGGER.error("Could not parse foreign transaction: " + additionalInformation);
             }
@@ -182,5 +202,38 @@ public class TransactionEntity {
     private boolean isForeignTransaction() {
         return TransactionType.FOREIGN_CARD_TRANSACTION.equalsIgnoreCase(transactionType)
                 && !Strings.isNullOrEmpty(additionalInformation);
+    }
+
+    public static TransactionTypes getTransactionType(String transactionTypeCode) {
+        if (transactionTypeCode == null) {
+            return TransactionTypes.DEFAULT;
+        }
+
+        switch (transactionTypeCode) {
+            case "5490990004": // 7: SEB Transfer.
+            case "5490990006": // 7: SEB Transfer.
+            case "5490990005": // 8: External transfer.
+            case "5490990007": // 8: External transfer.
+            case "5490990014": // 8: External transfer.
+            case "5490990015": // 8: External transfer.
+            case "5490990016": // 8: External transfer.
+            case "5490990017": // 8: External transfer.
+            case "5490990000": // 9: Standing transfer.
+            case "5490990003": // 10: External standing transfer.
+            case "5490990789": // 13: Swish.
+                return TransactionTypes.TRANSFER;
+            case "5490990250": // 15: Loan instalment.
+                return TransactionTypes.DEFAULT;
+        }
+
+        if (transactionTypeCode.matches("^5484\\d{6}$")) {
+            // Card transaction.
+            return TransactionTypes.CREDIT_CARD;
+        } else if (transactionTypeCode.matches("^5\\d{3}99068[1237]$")) {
+            // Foreign payment.
+            return TransactionTypes.TRANSFER;
+        }
+
+        return TransactionTypes.DEFAULT;
     }
 }
