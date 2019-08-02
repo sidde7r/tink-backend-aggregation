@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -8,6 +9,7 @@ public class InstructedAmountRequest {
     private final String currency;
     private final String amount;
 
+    @JsonIgnore
     private InstructedAmountRequest(String currency, String amount) {
         this.currency = currency;
         this.amount = amount;

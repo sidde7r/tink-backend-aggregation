@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.SamlinkConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.entity.CreditorAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.entity.CreditorAddress;
@@ -26,6 +27,7 @@ public class FetchPaymentResponse {
     private InstructedAmountResponse instructedAmount;
     private String remittanceInformationUnstructured;
 
+    @JsonIgnore
     public PaymentResponse toTinkPayment(boolean isSepa) {
         Payment payment =
                 new Payment.Builder()

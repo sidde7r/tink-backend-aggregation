@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -10,10 +11,12 @@ public class CreditorAccountRequest {
 
     private String iban;
 
+    @JsonIgnore
     public CreditorAccountRequest(String iban) {
         this.iban = iban;
     }
 
+    @JsonIgnore
     public Creditor toTinkCreditor() {
         return new Creditor(AccountIdentifier.create(Type.IBAN, iban));
     }

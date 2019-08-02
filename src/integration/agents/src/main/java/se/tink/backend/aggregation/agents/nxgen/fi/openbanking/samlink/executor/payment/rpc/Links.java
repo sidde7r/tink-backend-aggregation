@@ -24,12 +24,4 @@ public class Links {
     public void setSelf(Href self) {
         this.self = self;
     }
-
-    public Href getUpdatePsuAuthentication() {
-        return updatePsuAuthentication;
-    }
-
-    public void setUpdatePsuAuthentication(Href updatePsuAuthentication) {
-        this.updatePsuAuthentication = updatePsuAuthentication;
-    }
 }

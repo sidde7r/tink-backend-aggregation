@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.SamlinkConstants;
@@ -45,6 +46,7 @@ public class CreatePaymentResponse {
         this.transactionStatus = transactionStatus;
     }
 
+    @JsonIgnore
     public PaymentResponse toTinkPayment(
             CreditorAccountRequest creditor,
             DebtorAccountRequest debtor,

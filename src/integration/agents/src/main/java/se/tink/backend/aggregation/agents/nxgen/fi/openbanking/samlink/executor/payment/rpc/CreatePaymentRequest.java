@@ -18,6 +18,7 @@ public class CreatePaymentRequest {
 
     @JsonIgnore private final boolean isSepa;
 
+    @JsonIgnore
     private CreatePaymentRequest(
             CreditorAccountRequest creditorAccount,
             CreditorAddress creditorAddress,
