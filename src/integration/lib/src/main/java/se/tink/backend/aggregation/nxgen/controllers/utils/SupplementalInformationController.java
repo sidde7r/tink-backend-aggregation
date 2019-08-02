@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SupplementalInformationController {
@@ -73,6 +74,12 @@ public class SupplementalInformationController {
 
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(payload));
         credentials.setStatus(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
+
+        final String deepLinkUrl =
+                Optional.ofNullable(payload.getIos()).map(Ios::getDeepLinkUrl).orElse("<none>");
+
+        logger.info("Opening third party app with deep link URL {}", deepLinkUrl);
+
         supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 }
