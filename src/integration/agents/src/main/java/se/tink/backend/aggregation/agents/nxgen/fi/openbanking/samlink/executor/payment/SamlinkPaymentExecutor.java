@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -20,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class SamlinkPaymentExecutor implements PaymentExecutor {
+public class SamlinkPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final SamlinkApiClient apiClient;
 

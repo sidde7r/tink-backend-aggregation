@@ -55,6 +55,7 @@ public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, Samli
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new SamlinkPaymentExecutor(getApiClient())));
+        SamlinkPaymentExecutor executor = new SamlinkPaymentExecutor(getApiClient());
+        return Optional.of(new PaymentController(executor, executor));
     }
 }
