@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -101,5 +103,10 @@ public class Response {
     @JsonIgnore
     public List<PendingTransactionEntity> getPendingTransactions() {
         return payload.getPendingTransactions();
+    }
+
+    @JsonIgnore
+    public Collection<UpcomingTransactionEntity> getUpcomingTransactions() {
+        return payload.getUpcomingTransactions();
     }
 }

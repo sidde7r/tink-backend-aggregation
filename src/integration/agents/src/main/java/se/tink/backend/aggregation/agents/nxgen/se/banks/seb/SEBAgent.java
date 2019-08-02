@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.SEBAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.TransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.session.SEBSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -52,8 +53,8 @@ public class SEBAgent extends NextGenerationAgent
                 new TransactionalAccountFetcher(apiClient, sebSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(
-                                new TransactionFetcher(apiClient))));
+                        new TransactionKeyPaginationController<>(new TransactionFetcher(apiClient)),
+                        new UpcomingTransactionFetcher(apiClient)));
     }
 
     @Override

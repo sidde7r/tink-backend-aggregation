@@ -158,4 +158,13 @@ public class SEBApiClient {
         final Request request = new Request.Builder().addComponent(query).build();
         return post(Urls.LIST_PENDING_TRANSACTIONS, request);
     }
+
+    public Response fetchUpcomingTransactions(String customerId) {
+        final Request request =
+                new Request.Builder()
+                        .addServiceInput(ServiceInputKeys.CUSTOMER_NUMBER, customerId)
+                        .addServiceInput(ServiceInputKeys.MAX_ROWS, 110)
+                        .build();
+        return post(Urls.LIST_UPCOMING_TRANSACTIONS, request);
+    }
 }

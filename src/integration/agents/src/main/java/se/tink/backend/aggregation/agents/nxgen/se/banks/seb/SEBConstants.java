@@ -22,6 +22,8 @@ public class SEBConstants {
         public static final URL LIST_TRANSACTIONS = new URL(BASE + Endpoints.LIST_TRANSACTIONS);
         public static final URL LIST_PENDING_TRANSACTIONS =
                 new URL(BASE + Endpoints.LIST_PENDING_TRANSACTIONS);
+        public static final URL LIST_UPCOMING_TRANSACTIONS =
+                new URL(BASE + Endpoints.LIST_UPCOMING_TRANSACTIONS);
     }
 
     public static class Endpoints {
@@ -35,6 +37,8 @@ public class SEBConstants {
                 API_BASE + "Lista01Rorelse_ftg03.asmx/Execute";
         public static final String LIST_PENDING_TRANSACTIONS =
                 API_BASE + "Lista01Skydd01.asmx/Execute";
+        private static final String LIST_UPCOMING_TRANSACTIONS =
+                API_BASE + "Lista11Komm_uppdrag02.asmx/Execute";
     }
 
     public static class HeaderKeys {
@@ -66,6 +70,9 @@ public class SEBConstants {
         public static final String CUSTOMER_TYPE = "CUSTOMERTYPE";
         public static final String CUSTOMER_ID = "KUND_ID";
         public static final String ACCOUNT_TYPE = "KONTO_TYP";
+        public static final String CUSTOMER_NUMBER = "SEB_KUND_ID";
+        public static final String MAX_ROWS = "MAX_ROWS";
+        public static final String ACCOUNT_NUMBER = "KONTO_NR";
     }
 
     public static class ServiceInputValues {

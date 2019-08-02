@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -120,5 +121,11 @@ public class Payload {
     public List<PendingTransactionEntity> getPendingTransactions() {
         Preconditions.checkNotNull(vodb);
         return vodb.pendingTransactions;
+    }
+
+    @JsonIgnore
+    public List<UpcomingTransactionEntity> getUpcomingTransactions() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.upcomingTransactions;
     }
 }

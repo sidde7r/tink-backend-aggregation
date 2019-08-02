@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.UpcomingTransactionEntity;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -44,4 +45,7 @@ class VODB {
     // Reserved transactions
     @JsonProperty("PCBW4311")
     public List<PendingTransactionEntity> pendingTransactions;
+
+    @JsonProperty("PCBW1361")
+    public List<UpcomingTransactionEntity> upcomingTransactions;
 }
