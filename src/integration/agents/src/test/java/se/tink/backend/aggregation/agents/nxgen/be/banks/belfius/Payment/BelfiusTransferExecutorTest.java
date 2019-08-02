@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.BelgianDateUtils;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -36,6 +36,8 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
             mock(SupplementalInformationController.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
+    private final CountryDateHelper belgianDateHelper =
+            new CountryDateHelper(new Locale("nl", "BE"));
 
     // TODO Move this out to test helper.
     private ProviderConfig readProvidersConfiguration(String market) {
@@ -62,7 +64,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         Amount amount = new Amount();
         amount.setCurrency("EUR");
         amount.setValue(0.02);
-        Date d = BelgianDateUtils.getToday();
+        Date d = belgianDateHelper.getToday();
         d.setDate(d.getDate() + 9);
         t.setDestination(destinationAcc);
         t.setSource(sourceAcc);
@@ -98,7 +100,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         Amount amount = new Amount();
         amount.setCurrency("");
         amount.setValue(1000.0);
-        Date d = BelgianDateUtils.getToday();
+        Date d = belgianDateHelper.getToday();
         d.setDate(d.getDate() + 9);
         t.setDestination(destinationAcc);
         t.setSource(sourceAcc);
@@ -134,7 +136,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         Amount amount = new Amount();
         amount.setCurrency("EUR");
         amount.setValue(0.02);
-        Date d = BelgianDateUtils.getToday();
+        Date d = belgianDateHelper.getToday();
         d.setDate(d.getDate() + 9);
         t.setDestination(destinationAcc);
         t.setSource(sourceAcc);

@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -24,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.BelgianDateUtils;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -285,8 +286,9 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                                     .toInstant()));
         }
 
-        if (!BelgianDateUtils.isBusinessDay(transfer.getDueDate())) {
-            transfer.setDueDate(BelgianDateUtils.getNextBusinessDay(transfer.getDueDate()));
+        CountryDateHelper countryDateHelper = new CountryDateHelper(new Locale("nl", "BE"));
+        if (!countryDateHelper.isBusinessDay(transfer.getDueDate())) {
+            transfer.setDueDate(countryDateHelper.getNextBusinessDay(transfer.getDueDate()));
         }
     }
 

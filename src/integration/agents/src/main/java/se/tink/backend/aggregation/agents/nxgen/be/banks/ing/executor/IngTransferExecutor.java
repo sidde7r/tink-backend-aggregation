@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -15,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.BelgianDateUtils;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -109,7 +110,8 @@ public class IngTransferExecutor implements BankTransferExecutor {
             return;
         }
 
-        if (!BelgianDateUtils.isBusinessDay(dueDate)) {
+        CountryDateHelper countryDateHelper = new CountryDateHelper(new Locale("nl", "BE"));
+        if (!countryDateHelper.isBusinessDay(dueDate)) {
             ingTransferHelper.cancelTransfer(
                     IngConstants.EndUserMessage.DATE_MUST_BE_BUSINESS_DAY.getKey().get());
         }
