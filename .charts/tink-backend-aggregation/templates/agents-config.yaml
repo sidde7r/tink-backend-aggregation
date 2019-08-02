@@ -547,26 +547,31 @@ data:
             baseUrl: "https://api.bankaustria.at"
             eidasQwac: "{{ $agentsConfig.unicredit.tink.eidasQwac }}"
             redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
+            psuIdType: "BUSINESSNET"
         unicredit-de:
           tink:
             baseUrl: "https://api.unicredit.de"
             eidasQwac: "{{ $agentsConfig.unicredit.tink.eidasQwac }}"
             redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
+            psuIdType: "HVB_ONLINEBANKING"
         unicredit-hu:
           tink:
             baseUrl: "https://api.unicreditbank.hu"
             eidasQwac: "{{ $agentsConfig.unicredit.tink.eidasQwac }}"
             redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
+            psuIdType: "ALL"
         unicredit-it:
           tink:
             baseUrl: "https://api.unicredit.it"
             eidasQwac: "{{ $agentsConfig.unicredit.tink.eidasQwac }}"
             redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
+            psuIdType: "ALL"
         buddybank-it:
           tink:
             baseUrl: "https://api.buddybank.it"
             eidasQwac: "{{ $agentsConfig.unicredit.tink.eidasQwac }}"
             redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
+            psuIdType: "ALL"
         {{- end }}
 
         {{- if $agentsConfig.abnamro }}
