@@ -109,27 +109,32 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
     }
 
     public CreatePaymentResponse createSepaPayment(CreatePaymentRequest paymentRequest) {
-        String url = getConfiguration().getBaseUrl() + Urls.CREATE_SEPA_PAYMENT;
-        return createRequest(new URL(url)).body(paymentRequest).post(CreatePaymentResponse.class);
+        return createRequest(
+                        new URL(getConfiguration().getBaseUrl()).concat(Urls.CREATE_SEPA_PAYMENT))
+                .body(paymentRequest)
+                .post(CreatePaymentResponse.class);
     }
 
     public CreatePaymentResponse createForeignPayment(CreatePaymentRequest paymentRequest) {
-        String url = getConfiguration().getBaseUrl() + Urls.CREATE_FOREIGN_PAYMENT;
-        return createRequest(new URL(url)).body(paymentRequest).post(CreatePaymentResponse.class);
+        return createRequest(
+                        new URL(getConfiguration().getBaseUrl())
+                                .concat(Urls.CREATE_FOREIGN_PAYMENT))
+                .body(paymentRequest)
+                .post(CreatePaymentResponse.class);
     }
 
     public FetchPaymentResponse fetchSepaPayment(PaymentRequest paymentRequest) {
-        String url = getConfiguration().getBaseUrl() + Urls.GET_SEPA_PAYMENT;
         URL urlWithPaymentId =
-                new URL(url)
+                new URL(getConfiguration().getBaseUrl())
+                        .concat(Urls.GET_SEPA_PAYMENT)
                         .parameter(IdTags.PAYMENT_ID, paymentRequest.getPayment().getUniqueId());
         return fetchPayment(urlWithPaymentId);
     }
 
     public FetchPaymentResponse fetchForeignPayment(PaymentRequest paymentRequest) {
-        String url = getConfiguration().getBaseUrl() + Urls.GET_FOREIGN_PAYMENT;
         URL urlWithPaymentId =
-                new URL(url)
+                new URL(getConfiguration().getBaseUrl())
+                        .concat(Urls.GET_FOREIGN_PAYMENT)
                         .parameter(IdTags.PAYMENT_ID, paymentRequest.getPayment().getUniqueId());
         return fetchPayment(urlWithPaymentId);
     }
