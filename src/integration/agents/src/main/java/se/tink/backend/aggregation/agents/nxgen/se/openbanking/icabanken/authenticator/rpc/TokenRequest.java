@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.FormKeys;
 import se.tink.backend.aggregation.nxgen.http.Form;
 
@@ -15,6 +16,7 @@ public class TokenRequest {
         this.clientSecret = clientSecret;
     }
 
+    @JsonIgnore
     public String toData() {
         return Form.builder()
                 .put(FormKeys.GRANT_TYPE, grantType)

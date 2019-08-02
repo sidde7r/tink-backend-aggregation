@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment;
 
+import java.util.ArrayList;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.entities.InstructedAmountEntity;
@@ -16,7 +18,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentType;
-import se.tink.libraries.payment.rpc.Payment;
 
 public class IcaPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -74,6 +75,11 @@ public class IcaPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         // Not implemented on banks side done
-        return new PaymentListResponse(new PaymentResponse(new Payment.Builder().build()));
+        List<PaymentResponse> paymentResponses = new ArrayList<>();
+
+        paymentListRequest
+                .getPaymentRequestList()
+                .forEach(paymentRequest -> paymentResponses.add(fetch(paymentRequest)));
+        return new PaymentListResponse(paymentResponses);
     }
 }

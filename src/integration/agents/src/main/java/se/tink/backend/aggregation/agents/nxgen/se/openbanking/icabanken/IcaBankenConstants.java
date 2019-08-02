@@ -16,7 +16,6 @@ public final class IcaBankenConstants {
     }
 
     public static class SandboxUrls {
-
         private static String BASE_URL = "accounts/1.0.0";
         public static final String ACCOUNTS_PATH = BASE_URL + "/Accounts";
         public static final String TRANSACTIONS_PATH =
@@ -95,6 +94,8 @@ public final class IcaBankenConstants {
         public static final String MISSING_CONFIGURATION = "ICA Banken configuration missing.";
         public static final String MAPPING =
                 "Cannot map Ica payment status: %s to Tink payment status.";
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_TOKEN = "Cannot find Token!";
     }
 

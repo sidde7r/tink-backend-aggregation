@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.execut
 
 import java.time.LocalDate;
 import java.util.List;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.entities.InstructedAmountEntity;
@@ -40,6 +41,7 @@ public class GetPaymentResponse {
 
     public GetPaymentResponse() {}
 
+    @JsonIgnore
     public PaymentResponse toTinkPaymentResponse() {
         Amount amount =
                 Amount.valueOf(

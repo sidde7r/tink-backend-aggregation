@@ -16,7 +16,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-//@Ignore
+@Ignore
 public class IcaAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {

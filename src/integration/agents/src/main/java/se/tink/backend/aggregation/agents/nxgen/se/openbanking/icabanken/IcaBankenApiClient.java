@@ -41,6 +41,10 @@ public final class IcaBankenApiClient {
         this.sessionStorage = sessionStorage;
     }
 
+    public IcaBankenConfiguration getConfiguration() {
+        return configuration;
+    }
+
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
