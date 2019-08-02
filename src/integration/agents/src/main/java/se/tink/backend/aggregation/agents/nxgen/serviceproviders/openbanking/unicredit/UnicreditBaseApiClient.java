@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
@@ -90,9 +89,7 @@ public abstract class UnicreditBaseApiClient {
         ConsentResponse consentResponse =
                 createRequest(new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENTS))
                         .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
-                        .header(
-                                HeaderKeys.PSU_ID_TYPE,
-                                getCredentials().getField(Key.ADDITIONAL_INFORMATION))
+                        .header(HeaderKeys.PSU_ID_TYPE, getConfiguration().getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(getConfiguration().getRedirectUrl())
