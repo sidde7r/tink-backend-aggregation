@@ -22,11 +22,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
-import se.tink.backend.aggregation.nxgen.controllers.secrets.SecretsController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -68,7 +68,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     private Authenticator authenticator;
     private SessionController sessionController;
     private PaymentController paymentController;
-    private SecretsController secretsController;
+    private AgentConfigurationController agentConfigurationController;
 
     protected SubsequentGenerationAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -103,9 +103,21 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         this.appId = context.getAppId();
     }
 
+    public AgentConfigurationController getAgentConfigurationController() {
+        return Optional.ofNullable(agentConfigurationController)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "No AgentConfigurationController available, be sure to call setConfiguration before you try to get it."));
+    }
+
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
+        agentConfigurationController =
+                new AgentConfigurationController(
+                        configuration.getTppSecretsServiceConfiguration(),
+                        configuration.getIntegrations());
         client.setDebugOutput(configuration.getTestConfiguration().isDebugOutputEnabled());
         client.setCensorSensitiveHeaders(
                 configuration.getTestConfiguration().isCensorSensitiveHeadersEnabled());

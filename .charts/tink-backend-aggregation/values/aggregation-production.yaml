@@ -210,3 +210,6 @@ clients:
     aggregatorIdentifier: "Zimpler"
   zimpler-test:
     aggregatorIdentifier: "Zimpler"
+
+tppSecretsServiceConfiguration:
+  tppSecretsServiceClusterLocation: "within-cluster"

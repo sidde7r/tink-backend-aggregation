@@ -10,6 +10,8 @@ java_library(
         "//third_party:io_netty_netty_all",
         "//third_party:netty",
         "//third_party:org_slf4j_slf4j_api",
+        "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
+        "@org_bouncycastle_bcprov_jdk15on//jar",
     ],
 )

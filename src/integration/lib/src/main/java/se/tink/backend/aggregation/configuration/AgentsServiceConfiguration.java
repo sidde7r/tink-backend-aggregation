@@ -43,6 +43,10 @@ public class AgentsServiceConfiguration {
 
     @JsonProperty private TestConfiguration testConfiguration = new TestConfiguration();
 
+    public TppSecretsServiceConfiguration getTppSecretsServiceConfiguration() {
+        return tppSecretsServiceConfiguration;
+    }
+
     public AbnAmroConfiguration getAbnAmroStaging() {
         return abnAmroStaging;
     }

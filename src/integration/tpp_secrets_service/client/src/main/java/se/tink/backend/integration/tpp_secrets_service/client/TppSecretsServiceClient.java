@@ -1,7 +1,5 @@
 package se.tink.backend.integration.tpp_secrets_service.client;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Files;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.GrpcSslContexts;
@@ -17,8 +15,10 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,8 +36,11 @@ import se.tink.backend.secretservice.grpc.TppSecret;
 public class TppSecretsServiceClient {
 
     private static final Logger log = LoggerFactory.getLogger(TppSecretsServiceClient.class);
-    private static final ObjectMapper OBJECT_MAPPER =
-            new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    static {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+    }
+
     private final String LOCAL_CLIENT_P12_FILE_PASS = "changeme";
     private final InternalSecretsServiceGrpc.InternalSecretsServiceBlockingStub
             internalSecretsServiceStub;
@@ -60,7 +63,8 @@ public class TppSecretsServiceClient {
         GetAllSecretsResponse allSecretsResponse =
                 internalSecretsServiceStub.getAllSecrets(getSecretsRequest);
 
-        List<TppSecret> allSecretsList = allSecretsResponse.getEncryptedSecretsList();
+        List<TppSecret> allSecretsList = new ArrayList<>();
+        allSecretsList.addAll(allSecretsResponse.getEncryptedSecretsList());
         allSecretsList.addAll(allSecretsResponse.getSecretsList());
 
         return allSecretsList.stream()
@@ -98,43 +102,69 @@ public class TppSecretsServiceClient {
         File caCertPath = getCaCertPath(configuration);
         SslContextBuilder sslContextBuilder = GrpcSslContexts.forClient().trustManager(caCertPath);
 
-        if (configuration.getTlsCrtPath() != null && configuration.getTlsKeyPath() != null) {
-            sslContextBuilder.keyManager(
-                    new File(configuration.getTlsCrtPath()),
-                    new File(configuration.getTlsKeyPath()));
-        } else if (configuration.isLocalTppSecretsDev()) {
-
-            File clientP12File =
-                    new File(System.getProperty("user.home"), "/.eidas/eidas_client.p12");
-
-            try {
-                ByteArrayInputStream clientCertificateStream =
-                        new ByteArrayInputStream(Files.toByteArray(clientP12File));
-
-                KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
-                keyStore.load(clientCertificateStream, LOCAL_CLIENT_P12_FILE_PASS.toCharArray());
-
-                final KeyManagerFactory keyManagerFactory;
-                if (OpenSsl.supportsKeyManagerFactory()) {
-                    keyManagerFactory = new OpenSslX509KeyManagerFactory();
-
+        switch (configuration.getTppSecretsServiceClusterLocation()) {
+            case WITHIN_CLUSTER:
+                if (configuration.getTlsCrtPath() != null
+                        && configuration.getTlsKeyPath() != null) {
+                    sslContextBuilder.keyManager(
+                            new File(configuration.getTlsCrtPath()),
+                            new File(configuration.getTlsKeyPath()));
                 } else {
-                    keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+                    throw new IllegalStateException(
+                            "Missing client authentication key and/or certificate for within "
+                                    + "cluster operation of Secrets Service");
                 }
-                keyManagerFactory.init(keyStore, LOCAL_CLIENT_P12_FILE_PASS.toCharArray());
+                break;
 
-                sslContextBuilder.keyManager(keyManagerFactory);
-            } catch (KeyStoreException
-                    | NoSuchProviderException
-                    | IOException
-                    | NoSuchAlgorithmException
-                    | CertificateException
-                    | UnrecoverableKeyException e) {
-                throw new IllegalStateException(e);
-            }
-        } else {
-            throw new IllegalStateException(
-                    "Client certificate for TPP Secrets Service not configured");
+            case OUTSIDE_CLUSTER_STAGING:
+                File clientP12File =
+                        new File(System.getProperty("user.home"), "/.eidas/eidas_client.p12");
+
+                try {
+                    ByteArrayInputStream clientCertificateStream =
+                            new ByteArrayInputStream(Files.toByteArray(clientP12File));
+
+                    KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
+                    keyStore.load(
+                            clientCertificateStream, LOCAL_CLIENT_P12_FILE_PASS.toCharArray());
+
+                    final KeyManagerFactory keyManagerFactory;
+                    if (OpenSsl.supportsKeyManagerFactory()) {
+                        keyManagerFactory = new OpenSslX509KeyManagerFactory();
+
+                    } else {
+                        keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+                    }
+                    keyManagerFactory.init(keyStore, LOCAL_CLIENT_P12_FILE_PASS.toCharArray());
+
+                    sslContextBuilder.keyManager(keyManagerFactory);
+                } catch (KeyStoreException
+                        | NoSuchProviderException
+                        | IOException
+                        | NoSuchAlgorithmException
+                        | CertificateException
+                        | UnrecoverableKeyException e) {
+                    throw new IllegalStateException(
+                            "Proglem encountered when setting up client "
+                                    + "authetication to Secrets Service running in stating environment",
+                            e);
+                }
+                break;
+
+            case OUTSIDE_CLUSTER_LOCAL:
+                File localClientCertFile =
+                        new File(System.getProperty("user.home"), "/.eidas/local-cluster/tls.crt");
+                File localClientKeyFile =
+                        new File(System.getProperty("user.home"), "/.eidas/local-cluster/tls.key");
+                if (!localClientCertFile.exists() || !localClientKeyFile.exists()) {
+                    throw getLocalClusterTlsMaFilesNotAvailableException();
+                }
+                sslContextBuilder.keyManager(localClientCertFile, localClientKeyFile);
+                break;
+
+            default:
+                throw new IllegalStateException(
+                        "Client certificate for TPP Secrets Service not configured");
         }
 
         try {
@@ -146,13 +176,37 @@ public class TppSecretsServiceClient {
     }
 
     private File getCaCertPath(TppSecretsServiceConfiguration configuration) {
-        if (configuration.getCaPath() != null) {
-            return new File(configuration.getCaPath());
-        } else if (configuration.isLocalTppSecretsDev()) {
-            // Running in local development, we can trust aggregation staging
-            return new File("data/eidas_dev_certificates/aggregation-staging-ca.pem");
-        } else {
-            throw new IllegalStateException("Trusted CA for Tpp Secrets Service not configured");
+        switch (configuration.getTppSecretsServiceClusterLocation()) {
+            case WITHIN_CLUSTER:
+                if (configuration.getCaPath() != null) {
+                    return new File(configuration.getCaPath());
+                } else {
+                    throw new IllegalStateException(
+                            "Missing server certificate for within cluster operation of Secrets "
+                                    + "Service");
+                }
+
+            case OUTSIDE_CLUSTER_STAGING:
+                return new File("data/eidas_dev_certificates/aggregation-staging-ca.pem");
+
+            case OUTSIDE_CLUSTER_LOCAL:
+                File localCaCertFile =
+                        new File(System.getProperty("user.home"), "/.eidas/local-cluster/ca.crt");
+                if (!localCaCertFile.exists()) {
+                    throw getLocalClusterTlsMaFilesNotAvailableException();
+                }
+                return localCaCertFile;
+
+            default:
+                throw new IllegalStateException(
+                        "Trusted CA for Tpp Secrets Service not configured");
         }
+    }
+
+    private IllegalStateException getLocalClusterTlsMaFilesNotAvailableException() {
+        return new IllegalStateException(
+                "When running a local cluster store the server and client certificates under "
+                        + System.getProperty("user.home")
+                        + "/.eidas/local-cluster/ with the following names: ca.crt, tls.key, tls.crt");
     }
 }

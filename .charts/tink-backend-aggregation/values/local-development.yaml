@@ -52,3 +52,6 @@ clients:
     aggregatorIdentifier: "Provision Job Testing"
 
 initialDelaySeconds: 10
+
+tppSecretsServiceConfiguration:
+  tppSecretsServiceClusterLocation: "outside-cluster-staging"
