@@ -36,14 +36,10 @@ public class SupplementalInformationController {
             String key, long waitFor, TimeUnit unit) {
         Optional<String> supplementalInformation =
                 supplementalRequester.waitForSupplementalInformation(key, waitFor, unit);
-        if (!supplementalInformation.isPresent()) {
-            return Optional.empty();
-        }
-
-        return Optional.ofNullable(
-                SerializationUtils.deserializeFromString(
-                        supplementalInformation.get(),
-                        new TypeReference<HashMap<String, String>>() {}));
+        return supplementalInformation.map(
+                s ->
+                        SerializationUtils.deserializeFromString(
+                                s, new TypeReference<HashMap<String, String>>() {}));
     }
 
     public Map<String, String> askSupplementalInformation(Field... fields)
