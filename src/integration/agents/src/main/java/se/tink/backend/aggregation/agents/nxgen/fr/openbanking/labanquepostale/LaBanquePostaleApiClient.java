@@ -2,9 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Payload;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.rpc.TransactionResponse;
@@ -64,10 +69,6 @@ public final class LaBanquePostaleApiClient
     @Override
     public TransactionsKeyPaginatorBaseResponse fetchTransactions(String url) {
         return null;
-    }
-
-    public String getXRequestID() {
-        return UUID.randomUUID().toString();
     }
 
     private RequestBuilder buildRequestWithSignature(final String url, final String payload) {
@@ -133,16 +134,31 @@ public final class LaBanquePostaleApiClient
 
     private AccountEntityBaseEntityWithHref populateBalanceForAccount(
             AccountEntity accountBaseEntityWithHref) {
-        final String clientId = getConfiguration().getClientId();
-        final String clientSecret = getConfiguration().getClientSecret();
         BalanceResponse balanceResponse =
                 buildRequestWithSignature(
                                 String.format(
                                         Urls.FETCH_BALANCES,
                                         accountBaseEntityWithHref.getResourceId()),
-                                "")
+                                Payload.EMPTY)
                         .get(BalanceResponse.class);
         accountBaseEntityWithHref.setBalances(balanceResponse.getBalances());
         return accountBaseEntityWithHref;
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+        return buildRequestWithSignature(Urls.PAYMENT_INITIATION, Payload.EMPTY)
+                .header(HeaderKeys.CONTENT_TYPE, HeaderValues.CONTENT_TYPE)
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public GetPaymentResponse getPayment(int paymentId) {
+        return buildRequestWithSignature(String.format(Urls.GET_PAYMENT, paymentId), Payload.EMPTY)
+                .get(GetPaymentResponse.class);
+    }
+
+    public GetPaymentResponse confirmPayment(String paymentId) {
+        return buildRequestWithSignature(
+                        String.format(Urls.CONFIRM_PAYMENT, paymentId), Payload.EMPTY)
+                .post(GetPaymentResponse.class);
     }
 }
