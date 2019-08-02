@@ -10,6 +10,7 @@ import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -111,7 +112,7 @@ public class AccountEntity {
 
     @JsonIgnore
     private String getCurrency() {
-        return "SEK";
+        return SEBConstants.DEFAULT_CURRENCY;
     }
 
     @JsonIgnore

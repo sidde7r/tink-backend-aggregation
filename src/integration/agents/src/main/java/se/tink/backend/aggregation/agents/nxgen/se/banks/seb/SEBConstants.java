@@ -8,6 +8,8 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class SEBConstants {
 
+    public static final String DEFAULT_CURRENCY = "SEK";
+
     public static class Urls {
         public static final String BASE = "https://mp.seb.se";
 

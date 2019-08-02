@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.TransactionType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -134,8 +135,13 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
+    private String getCurrency() {
+        return SEBConstants.DEFAULT_CURRENCY;
+    }
+
+    @JsonIgnore
     private ExactCurrencyAmount getAmount() {
-        return ExactCurrencyAmount.of(amount, "SEK");
+        return ExactCurrencyAmount.of(amount, getCurrency());
     }
 
     @JsonIgnore

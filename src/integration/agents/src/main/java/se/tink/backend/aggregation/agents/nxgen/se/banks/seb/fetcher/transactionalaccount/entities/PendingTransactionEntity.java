@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -31,10 +32,15 @@ public class PendingTransactionEntity {
     private String externalId;
 
     @JsonIgnore
+    private String getCurrency() {
+        return SEBConstants.DEFAULT_CURRENCY;
+    }
+
+    @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDate(LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(date)))
-                .setAmount(ExactCurrencyAmount.of(amount.negate(), "SEK"))
+                .setAmount(ExactCurrencyAmount.of(amount.negate(), getCurrency()))
                 .setDescription(description)
                 .setPending(true)
                 .build();
