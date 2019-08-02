@@ -10,6 +10,4 @@ public class CreditorAddress {
     private String city;
     private String postalCode;
     private String country;
-
-    public CreditorAddress() {}
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -15,6 +16,7 @@ public class DebtorAccountRequest {
     private String msisdn;
     private String currency;
 
+    @JsonIgnore
     private DebtorAccountRequest(
             String iban,
             String bban,
@@ -34,6 +36,7 @@ public class DebtorAccountRequest {
         return new DebtorAccountBuilder();
     }
 
+    @JsonIgnore
     public Debtor toTinkDebtor() {
         return new Debtor(AccountIdentifier.create(Type.IBAN, iban));
     }

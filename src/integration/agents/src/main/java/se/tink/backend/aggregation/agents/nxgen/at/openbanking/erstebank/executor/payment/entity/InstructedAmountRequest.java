@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -8,6 +9,7 @@ public class InstructedAmountRequest {
     private String currency;
     private Double amount;
 
+    @JsonIgnore
     private InstructedAmountRequest(String currency, Double amount) {
         this.currency = currency;
         this.amount = amount;

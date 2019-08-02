@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -16,8 +17,7 @@ public class FetchPaymentResponse {
     private double transactionFees;
     private boolean transactionFeeIndicator;
 
-    public FetchPaymentResponse() {}
-
+    @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(PaymentRequest paymentRequest) {
         Payment paymentFromRequest = paymentRequest.getPayment();
         Payment payment =

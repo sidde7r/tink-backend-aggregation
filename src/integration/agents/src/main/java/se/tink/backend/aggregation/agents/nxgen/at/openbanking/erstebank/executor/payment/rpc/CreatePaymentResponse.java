@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.entity.CreditorAccountRequest;
@@ -19,8 +20,7 @@ public class CreatePaymentResponse {
     private double transactionFees;
     private boolean transactionFeeIndicator;
 
-    public CreatePaymentResponse() {}
-
+    @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(
             CreditorAccountRequest creditor,
             DebtorAccountRequest debtor,
