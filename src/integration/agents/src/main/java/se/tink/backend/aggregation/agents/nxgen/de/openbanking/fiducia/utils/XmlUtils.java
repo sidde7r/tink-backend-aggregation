@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils;
 import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.PaymentDocument;
 
 public final class XmlUtils {
@@ -11,7 +12,6 @@ public final class XmlUtils {
     }
 
     public static String convertToXml(PaymentDocument document) {
-        String result = "";
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(PaymentDocument.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
@@ -20,11 +20,9 @@ public final class XmlUtils {
             StringWriter sw = new StringWriter();
             marshaller.marshal(document, sw);
 
-            result = sw.toString();
+            return sw.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalStateException(ErrorMessages.XML_MARSHAL_EXCEPTION);
         }
-
-        return result;
     }
 }

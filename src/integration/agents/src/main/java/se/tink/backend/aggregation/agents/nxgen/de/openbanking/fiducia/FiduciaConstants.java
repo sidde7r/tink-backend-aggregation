@@ -25,6 +25,7 @@ public final class FiduciaConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String XML_MARSHAL_EXCEPTION = "Object can't be serialized to XML";
     }
 
     public static class Urls {
