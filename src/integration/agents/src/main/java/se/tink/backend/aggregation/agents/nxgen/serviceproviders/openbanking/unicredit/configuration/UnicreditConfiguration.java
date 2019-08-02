@@ -10,11 +10,16 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class UnicreditConfiguration implements ClientConfiguration {
 
     private String baseUrl;
+
     private String redirectUrl;
+
     private String clientKeyStorePath;
+
     private String clientKeyStorePassword;
 
     private String eidasQwac;
+
+    private String psuIdType;
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(
@@ -54,5 +59,13 @@ public class UnicreditConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "eIDAS QWAC"));
 
         return eidasQwac;
+    }
+
+    public String getPsuIdType() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(psuIdType),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU Id Type"));
+
+        return psuIdType;
     }
 }
