@@ -166,7 +166,8 @@ public class StarlingAgent extends NextGenerationAgent
                                 pisConfiguration,
                                 signingKeyUid,
                                 signingKey,
-                                credentials,
+                                configuration.getCallbackJwtSignatureKeyPair(),
+                                request,
                                 supplementalInformationHelper),
                         null,
                         null));
