@@ -84,49 +84,41 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
         Debtor debtor = payment.getDebtor();
         Amount amount = payment.getAmount();
 
+        Othr other = new Othr(FormValues.OTHER_ID, new SchmeNm(FormValues.SCHEME_NAME));
+
+        GrpHdr groupHeader =
+                new GrpHdr(
+                        payment.getExecutionDate()
+                                .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)),
+                        amount.getValue().toString(),
+                        new InitgPty(new Id(new OrgId(other)), FormValues.PAYMENT_INITIATOR),
+                        FormValues.NUMBER_OF_TRANSACTIONS,
+                        FormValues.MESSAGE_ID);
+
+        CdtTrfTxInf trfInf =
+                new CdtTrfTxInf(
+                        new Cdtr(creditor.getName()),
+                        new CdtrAcct(new IbanId(creditor.getAccountNumber())),
+                        new PmtId(FormValues.PAYMENT_ID),
+                        new Amt(new InstdAmt(amount.getCurrency(), amount.getValue().toString())),
+                        new RmtInf(FormValues.RMT_INF));
+
+        PmtInf paymentInfo =
+                new PmtInf(
+                        trfInf,
+                        new PmtTpInf(new SvcLvl(FormValues.PAYMENT_TYPE)),
+                        new DbtrAcct(new IbanId(debtor.getAccountNumber())),
+                        payment.getExecutionDate()
+                                .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)),
+                        FormValues.CHRG_BR,
+                        FormValues.PAYMENT_INFORMATION_ID,
+                        amount.getValue().toString(),
+                        new Dbtr(psuId),
+                        FormValues.NUMBER_OF_TRANSACTIONS,
+                        FormValues.PAYMENT_METHOD);
+
         PaymentDocument document =
-                new PaymentDocument(
-                        new CstmrCdtTrfInitn(
-                                new GrpHdr(
-                                        payment.getExecutionDate()
-                                                .format(
-                                                        DateTimeFormatter.ofPattern(
-                                                                FormValues.DATE_FORMAT)),
-                                        amount.getValue().toString(),
-                                        new InitgPty(
-                                                new Id(
-                                                        new OrgId(
-                                                                new Othr(
-                                                                        FormValues.OTHER_ID,
-                                                                        new SchmeNm(
-                                                                                FormValues
-                                                                                        .SCHEME_NAME)))),
-                                                FormValues.PAYMENT_INITIATOR),
-                                        FormValues.NUMBER_OF_TRANSACTIONS,
-                                        FormValues.MESSAGE_ID),
-                                new PmtInf(
-                                        new CdtTrfTxInf(
-                                                new Cdtr(creditor.getName()),
-                                                new CdtrAcct(
-                                                        new IbanId(creditor.getAccountNumber())),
-                                                new PmtId(FormValues.PAYMENT_ID),
-                                                new Amt(
-                                                        new InstdAmt(
-                                                                amount.getCurrency(),
-                                                                amount.getValue().toString())),
-                                                new RmtInf(FormValues.RMT_INF)),
-                                        new PmtTpInf(new SvcLvl(FormValues.PAYMENT_TYPE)),
-                                        new DbtrAcct(new IbanId(debtor.getAccountNumber())),
-                                        payment.getExecutionDate()
-                                                .format(
-                                                        DateTimeFormatter.ofPattern(
-                                                                FormValues.DATE_FORMAT)),
-                                        FormValues.CHRG_BR,
-                                        FormValues.PAYMENT_INFORMATION_ID,
-                                        amount.getValue().toString(),
-                                        new Dbtr(psuId),
-                                        FormValues.NUMBER_OF_TRANSACTIONS,
-                                        FormValues.PAYMENT_METHOD)));
+                new PaymentDocument(new CstmrCdtTrfInitn(groupHeader, paymentInfo));
         String body = XmlUtils.convertToXml(document);
 
         String digest = SignatureUtils.createDigest(body);
