@@ -79,6 +79,10 @@ agents:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       certificateId: Tink
+  sbab:
+    tink:
+      eidasCertId: Tink
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
 
 
 

@@ -47,8 +47,14 @@ data:
       {{- end }}
 
       integrations:
+        {{- if $agentsConfig.sbab }}
         sbab:
           signBaseUrl: https://secure.sbab.se
+          tink:
+            eidasCertId: "{{ $agentsConfig.sbab.tink.eidasCertId }}"
+            redirectUrl: "{{ $agentsConfig.sbab.tink.redirectUrl }}"
+        {{- end }}
+
         ukOpenBankingJson: |
           UKOPENBANKINGJSON
 
