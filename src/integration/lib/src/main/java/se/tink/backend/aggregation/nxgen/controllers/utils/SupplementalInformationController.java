@@ -50,14 +50,14 @@ public class SupplementalInformationController {
             throws SupplementalInfoException {
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        logger.info("Requesting supplemental information"); // MIYAG-445
+        logger.info("Requesting supplemental information");
         String supplementalInformation =
                 Optional.ofNullable(
                                 Strings.emptyToNull(
                                         supplementalRequester.requestSupplementalInformation(
                                                 credentials)))
                         .orElseThrow(SupplementalInfoError.NO_VALID_CODE::exception);
-        logger.info("Finished requesting supplemental information"); // MIYAG-445
+        logger.info("Finished requesting supplemental information");
 
         return Optional.ofNullable(
                         SerializationUtils.deserializeFromString(
