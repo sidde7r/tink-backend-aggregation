@@ -67,6 +67,7 @@ public final class ErstebankAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new ErstebankPaymentExecutor(apiClient)));
+        ErstebankPaymentExecutor executor = new ErstebankPaymentExecutor(apiClient);
+        return Optional.of(new PaymentController(executor, executor));
     }
 }
