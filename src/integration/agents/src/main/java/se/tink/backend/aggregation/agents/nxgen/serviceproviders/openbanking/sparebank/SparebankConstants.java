@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public final class SparebankConstants {
 
+    public static final String REGEX = "\\s*,\\s*";
+
     public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<TransactionalAccountType>builder()
                     .put(

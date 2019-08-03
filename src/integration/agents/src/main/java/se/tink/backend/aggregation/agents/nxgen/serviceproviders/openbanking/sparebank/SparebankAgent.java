@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -27,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class SparebankAgent extends NextGenerationAgent
+public class SparebankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final String clientName;
@@ -37,8 +40,9 @@ public abstract class SparebankAgent extends NextGenerationAgent
     public SparebankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new SparebankApiClient(client, sessionStorage, getBaseUrl());
-        clientName = request.getProvider().getPayload();
+        List<String> payLoadValues = splitPayload(request.getProvider().getPayload());
+        apiClient = new SparebankApiClient(client, sessionStorage, payLoadValues.get(1));
+        clientName = payLoadValues.get(0);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -49,8 +53,6 @@ public abstract class SparebankAgent extends NextGenerationAgent
 
         apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
     }
-
-    protected abstract String getBaseUrl();
 
     public SparebankConfiguration getClientConfiguration() {
         return configuration
@@ -127,5 +129,11 @@ public abstract class SparebankAgent extends NextGenerationAgent
                         sparebankPaymentExecutor,
                         supplementalInformationHelper,
                         sessionStorage));
+    }
+
+    private List<String> splitPayload(String payload) {
+        List<String> payLoadValues =
+                Stream.of(payload.split(SparebankConstants.REGEX)).collect(Collectors.toList());
+        return payLoadValues;
     }
 }
