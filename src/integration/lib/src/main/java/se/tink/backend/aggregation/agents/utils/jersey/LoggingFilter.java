@@ -18,7 +18,6 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
@@ -33,8 +32,6 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
  * <p>The whole response is always logged.
  */
 public class LoggingFilter extends ClientFilter {
-
-    private static final Logger LOGGER = Logger.getLogger(LoggingFilter.class.getName());
 
     private static final String NOTIFICATION_PREFIX = "* ";
 
