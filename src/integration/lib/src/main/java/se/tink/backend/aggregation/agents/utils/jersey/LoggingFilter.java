@@ -96,7 +96,6 @@ public class LoggingFilter extends ClientFilter {
     }
 
     private final PrintStream loggingStream;
-    private final Logger logger;
 
     private long _id = 0;
 
@@ -110,15 +109,10 @@ public class LoggingFilter extends ClientFilter {
      */
     public LoggingFilter(PrintStream loggingStream) {
         this.loggingStream = loggingStream;
-        this.logger = null;
     }
 
     private void log(StringBuilder b) {
-        if (logger != null) {
-            logger.info(b.toString());
-        } else {
-            loggingStream.print(b);
-        }
+        loggingStream.print(b);
     }
 
     private static String censorHeaderValue(String key, String value) {
