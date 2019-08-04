@@ -109,12 +109,8 @@ public class LoggingFilter extends ClientFilter {
      * @param loggingStream the print stream to log requests and responses.
      */
     public LoggingFilter(PrintStream loggingStream) {
-        this(null, loggingStream);
-    }
-
-    private LoggingFilter(Logger logger, PrintStream loggingStream) {
         this.loggingStream = loggingStream;
-        this.logger = logger;
+        this.logger = null;
     }
 
     private void log(StringBuilder b) {
