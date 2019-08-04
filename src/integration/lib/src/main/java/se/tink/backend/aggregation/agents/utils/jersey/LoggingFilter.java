@@ -125,7 +125,7 @@ public class LoggingFilter extends ClientFilter {
     }
 
     private static StringBuilder prefixId(StringBuilder b, long id) {
-        b.append(Long.toString(id)).append(" ");
+        b.append(id).append(" ");
         return b;
     }
 
@@ -242,10 +242,7 @@ public class LoggingFilter extends ClientFilter {
                 .append(NOTIFICATION_PREFIX)
                 .append(ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()))
                 .append("\n");
-        prefixId(b, id)
-                .append(RESPONSE_PREFIX)
-                .append(Integer.toString(response.getStatus()))
-                .append("\n");
+        prefixId(b, id).append(RESPONSE_PREFIX).append(response.getStatus()).append("\n");
     }
 
     private void printResponseHeaders(
