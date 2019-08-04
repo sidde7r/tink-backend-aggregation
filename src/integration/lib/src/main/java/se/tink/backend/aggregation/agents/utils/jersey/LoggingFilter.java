@@ -98,7 +98,7 @@ public class LoggingFilter extends ClientFilter {
     private long _id = 0;
 
     // Max size that we log is 0,5MB
-    private final int maxSize = 500 * 1024;
+    private static final int MAX_SIZE = 500 * 1024;
 
     /**
      * Create a logging filter logging the request and response to print stream.
@@ -218,8 +218,8 @@ public class LoggingFilter extends ClientFilter {
 
             StringBuilderWriter sw = new StringBuilderWriter();
             InputStreamReader in = new InputStreamReader(stream, Charsets.UTF_8);
-            long charsCopied = IOUtils.copyLarge(in, sw, 0, maxSize);
-            if (charsCopied == maxSize) {
+            long charsCopied = IOUtils.copyLarge(in, sw, 0, MAX_SIZE);
+            if (charsCopied == MAX_SIZE) {
                 sw.write(" ... more ...");
             }
             String content = sw.toString();
