@@ -132,8 +132,6 @@ public class SparebankAgent extends NextGenerationAgent
     }
 
     private List<String> splitPayload(String payload) {
-        List<String> payLoadValues =
-                Stream.of(payload.split(SparebankConstants.REGEX)).collect(Collectors.toList());
-        return payLoadValues;
+        return Stream.of(payload.split(SparebankConstants.REGEX)).collect(Collectors.toList());
     }
 }
