@@ -104,23 +104,6 @@ public class LoggingFilter extends ClientFilter {
     private final int maxSize = 500 * 1024;
 
     /**
-     * Create a logging filter logging the request and response to a default JDK logger, named as
-     * the fully qualified class name of this class.
-     */
-    public LoggingFilter() {
-        this(LOGGER);
-    }
-
-    /**
-     * Create a logging filter logging the request and response to a JDK logger.
-     *
-     * @param logger the logger to log requests and responses.
-     */
-    public LoggingFilter(Logger logger) {
-        this(logger, null);
-    }
-
-    /**
      * Create a logging filter logging the request and response to print stream.
      *
      * @param loggingStream the print stream to log requests and responses.
