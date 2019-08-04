@@ -25,9 +25,10 @@ import org.apache.commons.io.output.StringBuilderWriter;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
- * This is a copy of the logging filter that exist in com.sun.jersey.api.client.filter except that
- * it fixes a bug with that the whole response isn't logged. Problem is that stream.read() in
- * logResponse() isn't guaranteed to return all bytes. A problem that this class fixes.
+ * This was originally a copy of the logging filter that exist in com.sun.jersey.api.client.filter
+ * except that it fixes a bug with that the whole response isn't logged. The problem is that
+ * stream.read() in logResponse() isn't guaranteed to return all bytes. A problem that this class
+ * fixes.
  *
  * <p>The whole response is always logged.
  */
