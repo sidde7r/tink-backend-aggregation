@@ -175,7 +175,7 @@ public class LoggingFilter extends ClientFilter {
             List<Object> val = e.getValue();
             String header = e.getKey();
 
-            String value = null;
+            String value;
             if (val.size() == 1) {
                 value = ClientRequest.getHeaderValue(val.get(0));
             } else {
