@@ -99,6 +99,7 @@ public class LoggingFilter extends ClientFilter {
 
     // Max size that we log is 0,5MB
     private static final int MAX_SIZE = 500 * 1024;
+    private boolean censorSensitiveHeaders = true; // Default
 
     /**
      * Create a logging filter logging the request and response to print stream.
@@ -107,6 +108,11 @@ public class LoggingFilter extends ClientFilter {
      */
     public LoggingFilter(PrintStream loggingStream) {
         this.loggingStream = loggingStream;
+    }
+
+    public LoggingFilter(PrintStream loggingStream, boolean censorSensitiveHeaders) {
+        this.loggingStream = loggingStream;
+        this.censorSensitiveHeaders = censorSensitiveHeaders;
     }
 
     private void log(StringBuilder b) {
@@ -195,7 +201,7 @@ public class LoggingFilter extends ClientFilter {
                     .append(REQUEST_PREFIX)
                     .append(header)
                     .append(": ")
-                    .append(censorHeaderValue(header, value))
+                    .append(censorSensitiveHeaders ? censorHeaderValue(header, value) : value)
                     .append("\n");
         }
     }
@@ -254,7 +260,7 @@ public class LoggingFilter extends ClientFilter {
                         .append(RESPONSE_PREFIX)
                         .append(header)
                         .append(": ")
-                        .append(censorHeaderValue(header, value))
+                        .append(censorSensitiveHeaders ? censorHeaderValue(header, value) : value)
                         .append("\n");
             }
         }

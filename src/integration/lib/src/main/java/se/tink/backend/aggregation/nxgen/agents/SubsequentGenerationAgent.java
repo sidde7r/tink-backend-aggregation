@@ -103,6 +103,8 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         client.setDebugOutput(configuration.getTestConfiguration().isDebugOutputEnabled());
+        client.setCensorSensitiveHeaders(
+                configuration.getTestConfiguration().isCensorSensitiveHeadersEnabled());
     }
 
     // TODO auth: remove the legacy login.
