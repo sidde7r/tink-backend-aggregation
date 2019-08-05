@@ -145,8 +145,8 @@ public class TppSecretsServiceClient {
                         | CertificateException
                         | UnrecoverableKeyException e) {
                     throw new IllegalStateException(
-                            "Proglem encountered when setting up client "
-                                    + "authetication to Secrets Service running in stating environment",
+                            "Problem encountered when setting up client "
+                                    + "authentication to Secrets Service running in stating environment",
                             e);
                 }
                 break;
@@ -205,7 +205,7 @@ public class TppSecretsServiceClient {
 
     private IllegalStateException getLocalClusterTlsMaFilesNotAvailableException() {
         return new IllegalStateException(
-                "When running a local cluster store the server and client certificates under "
+                "When running a local cluster, store the server and client certificates under "
                         + System.getProperty("user.home")
                         + "/.eidas/local-cluster/ with the following names: ca.crt, tls.key, tls.crt");
     }
