@@ -46,15 +46,23 @@ public class TppSecretsServiceClient {
             internalSecretsServiceStub;
 
     public TppSecretsServiceClient(TppSecretsServiceConfiguration configuration) {
-        SslContext sslContext = buildSslContext(configuration);
+        if (configuration.getTppSecretsServiceLocation()
+                != TppSecretsServiceLocation.NOT_AVAILABLE) {
+            SslContext sslContext = buildSslContext(configuration);
 
-        ManagedChannel channel =
-                NettyChannelBuilder.forAddress(configuration.getHost(), configuration.getPort())
-                        .useTransportSecurity()
-                        .sslContext(sslContext)
-                        .build();
+            ManagedChannel channel =
+                    NettyChannelBuilder.forAddress(configuration.getHost(), configuration.getPort())
+                            .useTransportSecurity()
+                            .sslContext(sslContext)
+                            .build();
 
-        internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
+            internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
+        } else {
+            log.warn(
+                    "TPP Secrets Service location configured to {}. No client instance will be created."
+                            + configuration.getTppSecretsServiceLocation());
+            internalSecretsServiceStub = null;
+        }
     }
 
     public Map<String, String> getAllSecrets(String financialInstitutionId, String appId) {

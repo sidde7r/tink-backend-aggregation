@@ -58,7 +58,7 @@ public final class AgentConfigurationController {
     }
 
     // Used to read agent configuration from development.yml instead of Secrets Service
-    public <T extends ClientConfiguration> T getAgentConfigurationDev(
+    private <T extends ClientConfiguration> T getAgentConfigurationDev(
             final String financialInstitutionId,
             final String appId,
             final Class<T> clientConfigClass) {
