@@ -3,14 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.vestjyskbank;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.vestjyskbank.VestJyskBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecAgent;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class VestJyskBankAgent extends BecAgent {
 
     public VestJyskBankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request, AgentContext context, AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration);
     }
 
     @Override

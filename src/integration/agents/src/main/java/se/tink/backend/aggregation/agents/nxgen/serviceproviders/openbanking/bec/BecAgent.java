@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.BecPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.BecTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -33,24 +33,24 @@ public abstract class BecAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BecAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request, AgentContext context, AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         apiClient = new BecApiClient(client, persistentStorage, getBaseUrl());
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
 
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
+        super.setConfiguration(agentsServiceConfiguration);
 
         BecConfiguration becConfiguration = getClientConfiguration();
-        apiClient.setConfiguration(becConfiguration, configuration);
+        apiClient.setConfiguration(becConfiguration, agentsServiceConfiguration);
 
-        this.client.setEidasProxy(configuration.getEidasProxy(), becConfiguration.getEidasQwac());
-        client.setEidasSign(configuration.getEidasProxy());
+        final String certificateId = becConfiguration.getEidasQwac();
+        final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
+
+        client.setEidasProxy(eidasProxyConfiguration, certificateId);
+        client.setEidasSign(eidasProxyConfiguration);
     }
 
     private BecConfiguration getClientConfiguration() {
