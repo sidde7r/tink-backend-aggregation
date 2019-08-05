@@ -73,7 +73,7 @@ public final class BecApiClient {
         Map<String, Object> headers =
                 new HashMap<String, Object>() {
                     {
-                        put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON_TYPE);
+                        put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
                         put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
                         put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
                         put(HeaderKeys.PSU_IP, HeaderValues.PSU_IP);
@@ -98,7 +98,7 @@ public final class BecApiClient {
         Map<String, Object> headers = getHeaders(requestId, digest);
         headers.put(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
 
-        return client.request(url).type(MediaType.APPLICATION_JSON_TYPE).headers(headers);
+        return client.request(url).type(MediaType.APPLICATION_JSON).headers(headers);
     }
 
     public ConsentResponse getConsent(String state) throws HttpResponseException {
