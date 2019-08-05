@@ -103,7 +103,7 @@ public class TppSecretsServiceClient {
         SslContextBuilder sslContextBuilder = GrpcSslContexts.forClient().trustManager(caCertPath);
 
         switch (configuration.getTppSecretsServiceLocation()) {
-            case WITHIN_CLUSTER:
+            case INSIDE_CLUSTER:
                 if (configuration.getTlsCrtPath() != null
                         && configuration.getTlsKeyPath() != null) {
                     sslContextBuilder.keyManager(
@@ -111,7 +111,7 @@ public class TppSecretsServiceClient {
                             new File(configuration.getTlsKeyPath()));
                 } else {
                     throw new IllegalStateException(
-                            "Missing client authentication key and/or certificate for within "
+                            "Missing client authentication key and/or certificate for inside "
                                     + "cluster operation of Secrets Service");
                 }
                 break;
@@ -177,12 +177,12 @@ public class TppSecretsServiceClient {
 
     private File getCaCertPath(TppSecretsServiceConfiguration configuration) {
         switch (configuration.getTppSecretsServiceLocation()) {
-            case WITHIN_CLUSTER:
+            case INSIDE_CLUSTER:
                 if (configuration.getCaPath() != null) {
                     return new File(configuration.getCaPath());
                 } else {
                     throw new IllegalStateException(
-                            "Missing server certificate for within cluster operation of Secrets "
+                            "Missing server certificate for inside cluster operation of Secrets "
                                     + "Service");
                 }
 

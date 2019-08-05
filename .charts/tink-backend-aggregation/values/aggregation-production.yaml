@@ -212,4 +212,4 @@ clients:
     aggregatorIdentifier: "Zimpler"
 
 tppSecretsServiceConfiguration:
-  tppSecretsServiceLocation: "within-cluster"
+  tppSecretsServiceLocation: "inside-cluster"

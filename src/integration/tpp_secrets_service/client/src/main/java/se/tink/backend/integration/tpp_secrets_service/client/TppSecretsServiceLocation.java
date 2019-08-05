@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum TppSecretsServiceLocation {
-    @JsonAlias({"within-cluster"})
-    WITHIN_CLUSTER("within-cluster"),
+    @JsonAlias({"inside-cluster"})
+    INSIDE_CLUSTER("inside-cluster"),
     @JsonAlias({"outside-cluster-local"})
     OUTSIDE_CLUSTER_LOCAL("outside-cluster-local"),
     @JsonAlias({"outside-cluster-staging"})
