@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec;
 
+
 import static se.tink.libraries.serialization.utils.SerializationUtils.serializeToString;
 
 import java.util.Arrays;
@@ -11,7 +12,7 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.ApiService;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HEADERS_TO_SIGN;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeadersToSign;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.IdTags;
@@ -182,8 +183,8 @@ public final class BecApiClient {
         StringBuilder signedWithHeaderKeys = new StringBuilder();
         StringBuilder signedWithHeaderKeyValues = new StringBuilder();
 
-        Arrays.stream(HEADERS_TO_SIGN.values())
-                .map(HEADERS_TO_SIGN::getHeader)
+        Arrays.stream(HeadersToSign.values())
+                .map(HeadersToSign::getHeader)
                 .filter(headers::containsKey)
                 .forEach(
                         header -> {

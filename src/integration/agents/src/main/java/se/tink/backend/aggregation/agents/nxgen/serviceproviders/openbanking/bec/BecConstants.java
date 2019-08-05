@@ -194,13 +194,13 @@ public abstract class BecConstants {
                 "danish-domestic-credit-transfers";
     }
 
-    enum HEADERS_TO_SIGN {
+    enum HeadersToSign {
         X_REQUEST_ID("x-request-id"),
         TPP_REDIRECT_URI("tpp-redirect-uri"),
         DIGEST("digest");
         private String header;
 
-        HEADERS_TO_SIGN(String header) {
+        HeadersToSign(String header) {
             this.header = header;
         }
 
@@ -209,12 +209,7 @@ public abstract class BecConstants {
         }
     }
 
-    public class BalanceKeys {
-
-        public static final String FORWARD_AVAILALBLE = "forwardAvailable";
-    }
-
-    public enum BALANCE_TYPE {
+    public enum BalanceType {
         FORWARD_AVAILABLE("forwardAvailable"),
         CLOSING_BOOKED("closingBooked"),
         EXPECTED("expected"),
@@ -224,12 +219,12 @@ public abstract class BecConstants {
 
         private String type;
 
-        BALANCE_TYPE(String type) {
+        BalanceType(String type) {
             this.type = type;
         }
 
-        public static BALANCE_TYPE fromString(String text) {
-            for (BALANCE_TYPE b : BALANCE_TYPE.values()) {
+        public static BalanceType fromString(String text) {
+            for (BalanceType b : BalanceType.values()) {
                 if (b.type.equalsIgnoreCase(text)) {
                     return b;
                 }

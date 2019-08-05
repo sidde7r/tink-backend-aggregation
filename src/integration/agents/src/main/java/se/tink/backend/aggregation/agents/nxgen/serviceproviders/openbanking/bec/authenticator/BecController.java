@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Base64.Encoder;
@@ -63,11 +64,7 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
                                                 "No supplemental info found in api response"));
 
         while (!authenticator.getApprovedConsent()) {
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                Uninterruptibles.sleepUninterruptibly(1000, TimeUnit.MILLISECONDS);
         }
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.BALANCE_TYPE;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -10,7 +10,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class BalancesItemEntity implements Comparable<BalancesItemEntity> {
 
     @JsonProperty("balanceType")
-    private String balanceType;
+    private String BalanceType;
 
     @JsonProperty("lastChangeDateTime")
     private String lastChangeDateTime;
@@ -26,8 +26,8 @@ public class BalancesItemEntity implements Comparable<BalancesItemEntity> {
         balanceAmount.setCurrecyIfNull(currency);
     }
 
-    protected BALANCE_TYPE getBalanceType() {
-        return Optional.ofNullable(BALANCE_TYPE.fromString(balanceType))
+    protected BecConstants.BalanceType getBalanceType() {
+        return Optional.ofNullable(BecConstants.BalanceType.fromString(BalanceType))
                 .orElseThrow(() -> new IllegalStateException("No balance type found"));
     }
 
