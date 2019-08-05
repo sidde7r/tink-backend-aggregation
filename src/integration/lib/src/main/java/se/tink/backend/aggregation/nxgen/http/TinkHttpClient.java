@@ -107,8 +107,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
 
-    private final LoggingFilter debugOutputLoggingFilter =
-            new LoggingFilter(new PrintStream(System.out));
+    private LoggingFilter debugOutputLoggingFilter = new LoggingFilter(new PrintStream(System.out));
     private boolean debugOutput = false;
 
     private final ByteArrayOutputStream logOutputStream;
@@ -634,6 +633,12 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             this.internalClient.removeFilter(debugOutputLoggingFilter);
         }
     }
+
+    public void setCensorSensitiveHeaders(final boolean censorSensitiveHeadersEnabled) {
+        debugOutputLoggingFilter =
+                new LoggingFilter(new PrintStream(System.out), censorSensitiveHeadersEnabled);
+    }
+
     // --- Configuration ---
 
     // +++ Cookies +++

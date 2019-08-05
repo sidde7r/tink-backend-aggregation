@@ -517,6 +517,7 @@ agentsServiceConfiguration:
     localEidasDev: true
   testConfiguration:
     debugOutput: false
+    censorSensitiveHeaders: true
 
 transfers:
   enabled: true

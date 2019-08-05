@@ -18,22 +18,20 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
- * This is a copy of the logging filter that exist in com.sun.jersey.api.client.filter except that
- * it fixes a bug with that the whole response isn't logged. Problem is that stream.read() in
- * logResponse() isn't guaranteed to return all bytes. A problem that this class fixes.
+ * This was originally a copy of the logging filter that exist in com.sun.jersey.api.client.filter
+ * except that it fixes a bug with that the whole response isn't logged. The problem is that
+ * stream.read() in logResponse() isn't guaranteed to return all bytes. A problem that this class
+ * fixes.
  *
  * <p>The whole response is always logged.
  */
 public class LoggingFilter extends ClientFilter {
-
-    private static final Logger LOGGER = Logger.getLogger(LoggingFilter.class.getName());
 
     private static final String NOTIFICATION_PREFIX = "* ";
 
@@ -96,29 +94,12 @@ public class LoggingFilter extends ClientFilter {
     }
 
     private final PrintStream loggingStream;
-    private final Logger logger;
 
     private long _id = 0;
 
     // Max size that we log is 0,5MB
-    private final int maxSize = 500 * 1024;
-
-    /**
-     * Create a logging filter logging the request and response to a default JDK logger, named as
-     * the fully qualified class name of this class.
-     */
-    public LoggingFilter() {
-        this(LOGGER);
-    }
-
-    /**
-     * Create a logging filter logging the request and response to a JDK logger.
-     *
-     * @param logger the logger to log requests and responses.
-     */
-    public LoggingFilter(Logger logger) {
-        this(logger, null);
-    }
+    private static final int MAX_SIZE = 500 * 1024;
+    private boolean censorSensitiveHeaders = true; // Default
 
     /**
      * Create a logging filter logging the request and response to print stream.
@@ -126,20 +107,16 @@ public class LoggingFilter extends ClientFilter {
      * @param loggingStream the print stream to log requests and responses.
      */
     public LoggingFilter(PrintStream loggingStream) {
-        this(null, loggingStream);
+        this.loggingStream = loggingStream;
     }
 
-    private LoggingFilter(Logger logger, PrintStream loggingStream) {
+    public LoggingFilter(PrintStream loggingStream, boolean censorSensitiveHeaders) {
         this.loggingStream = loggingStream;
-        this.logger = logger;
+        this.censorSensitiveHeaders = censorSensitiveHeaders;
     }
 
     private void log(StringBuilder b) {
-        if (logger != null) {
-            logger.info(b.toString());
-        } else {
-            loggingStream.print(b);
-        }
+        loggingStream.print(b);
     }
 
     private static String censorHeaderValue(String key, String value) {
@@ -154,7 +131,7 @@ public class LoggingFilter extends ClientFilter {
     }
 
     private static StringBuilder prefixId(StringBuilder b, long id) {
-        b.append(Long.toString(id)).append(" ");
+        b.append(id).append(" ");
         return b;
     }
 
@@ -204,7 +181,7 @@ public class LoggingFilter extends ClientFilter {
             List<Object> val = e.getValue();
             String header = e.getKey();
 
-            String value = null;
+            String value;
             if (val.size() == 1) {
                 value = ClientRequest.getHeaderValue(val.get(0));
             } else {
@@ -224,7 +201,7 @@ public class LoggingFilter extends ClientFilter {
                     .append(REQUEST_PREFIX)
                     .append(header)
                     .append(": ")
-                    .append(censorHeaderValue(header, value))
+                    .append(censorSensitiveHeaders ? censorHeaderValue(header, value) : value)
                     .append("\n");
         }
     }
@@ -247,8 +224,8 @@ public class LoggingFilter extends ClientFilter {
 
             StringBuilderWriter sw = new StringBuilderWriter();
             InputStreamReader in = new InputStreamReader(stream, Charsets.UTF_8);
-            long charsCopied = IOUtils.copyLarge(in, sw, 0, maxSize);
-            if (charsCopied == maxSize) {
+            long charsCopied = IOUtils.copyLarge(in, sw, 0, MAX_SIZE);
+            if (charsCopied == MAX_SIZE) {
                 sw.write(" ... more ...");
             }
             String content = sw.toString();
@@ -271,10 +248,7 @@ public class LoggingFilter extends ClientFilter {
                 .append(NOTIFICATION_PREFIX)
                 .append(ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()))
                 .append("\n");
-        prefixId(b, id)
-                .append(RESPONSE_PREFIX)
-                .append(Integer.toString(response.getStatus()))
-                .append("\n");
+        prefixId(b, id).append(RESPONSE_PREFIX).append(response.getStatus()).append("\n");
     }
 
     private void printResponseHeaders(
@@ -286,7 +260,7 @@ public class LoggingFilter extends ClientFilter {
                         .append(RESPONSE_PREFIX)
                         .append(header)
                         .append(": ")
-                        .append(censorHeaderValue(header, value))
+                        .append(censorSensitiveHeaders ? censorHeaderValue(header, value) : value)
                         .append("\n");
             }
         }
