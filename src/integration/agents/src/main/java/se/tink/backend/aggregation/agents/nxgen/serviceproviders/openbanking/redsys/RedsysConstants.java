@@ -45,6 +45,7 @@ public final class RedsysConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "consentId";
+        public static final String CONSENT_VALID_FROM = "consentValidFrom";
         public static final String SCA_REDIRECT = "scaRedirect";
         public static final String SCA_STATE = "scaState";
         public static final String TRANSACTIONS_URL = "transactionsUrl";

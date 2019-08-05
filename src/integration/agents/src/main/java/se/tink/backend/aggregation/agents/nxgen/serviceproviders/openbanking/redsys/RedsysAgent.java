@@ -1,13 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
+import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
@@ -29,6 +33,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public abstract class RedsysAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -139,8 +145,23 @@ public abstract class RedsysAgent extends NextGenerationAgent
         return Optional.of(new PaymentController(redsysPaymentExecutor, redsysPaymentExecutor));
     }
 
+    protected Date getConsentValidFrom() {
+        try {
+            return ThreadSafeDateFormat.FORMATTER_SECONDS_WITH_TIMEZONE.parse(
+                    persistentStorage.get(StorageKeys.CONSENT_VALID_FROM));
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
     @Override
     public LocalDate transactionsFromDate() {
-        return LocalDate.now().minusDays(90);
+        final Date maxConsentAge = DateUtils.addDays(new Date(), -1);
+        final Date consentDate = Preconditions.checkNotNull(getConsentValidFrom());
+        if (consentDate.after(maxConsentAge)) {
+            return LocalDate.now().minusYears(5);
+        } else {
+            return LocalDate.now().minusDays(90);
+        }
     }
 }

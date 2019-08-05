@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent;
 
 import com.google.common.base.Strings;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.controllers.utils.sca.ScaRedirectCallbackHandler;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.pair.Pair;
 
 public class RedsysConsentController implements ConsentController {
@@ -56,6 +58,9 @@ public class RedsysConsentController implements ConsentController {
 
     @Override
     public void useConsentId(String consentId) {
+        storage.put(
+                RedsysConstants.StorageKeys.CONSENT_VALID_FROM,
+                ThreadSafeDateFormat.FORMATTER_SECONDS_WITH_TIMEZONE.format(new Date()));
         storage.put(RedsysConstants.StorageKeys.CONSENT_ID, consentId);
     }
 
@@ -70,7 +75,7 @@ public class RedsysConsentController implements ConsentController {
         final String consentId = consentRequest.first;
         final URL consentUrl = consentRequest.second;
 
-        new ScaRedirectCallbackHandler(supplementalInformationHelper, 30, TimeUnit.SECONDS)
+        new ScaRedirectCallbackHandler(supplementalInformationHelper, 10, TimeUnit.MINUTES)
                 .handleRedirect(consentUrl, scaToken);
 
         if (getConsentStatus(consentId).equals(ConsentStatus.VALID)) {
