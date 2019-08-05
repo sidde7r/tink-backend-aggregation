@@ -1,17 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.executor.payment.KbcPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.fetcher.KbcTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -21,9 +24,7 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
     public KbcAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
-        Credentials credentials = request.getCredentials();
-        apiClient = new KbcApiClient(client, sessionStorage, credentials);
+        apiClient = getApiClient();
     }
 
     @Override
@@ -39,13 +40,14 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
 
     @Override
     protected void setupClient(TinkHttpClient client) {
-        client.setSslClientCertificate(
-                BerlinGroupUtils.readFile(getConfiguration().getClientKeyStorePath()),
-                getConfiguration().getClientKeyStorePassword());
+        client.setEidasProxy(configuration.getEidasProxy(), getConfiguration().getEidasQwac());
     }
 
     @Override
     protected KbcApiClient getApiClient() {
+        if (apiClient == null) {
+            apiClient = new KbcApiClient(client, sessionStorage, credentials, persistentStorage);
+        }
         return apiClient;
     }
 
@@ -68,5 +70,20 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
                 new KbcPaymentExecutor(apiClient, paymentAuthenticator, getConfiguration());
 
         return Optional.of(new PaymentController(kbcPaymentExecutor, kbcPaymentExecutor));
+    }
+
+    @Override
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        final BerlinGroupAccountFetcher accountFetcher =
+                new BerlinGroupAccountFetcher(getApiClient());
+        final KbcTransactionFetcher transactionFetcher = new KbcTransactionFetcher(getApiClient());
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(transactionFetcher)));
     }
 }

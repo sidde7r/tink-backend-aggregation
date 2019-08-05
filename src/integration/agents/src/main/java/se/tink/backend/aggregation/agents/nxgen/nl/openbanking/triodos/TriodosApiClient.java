@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntityBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
@@ -145,8 +144,8 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     @Override
     public String getConsentId() {
-        final AccessEntity accessEntity = new AccessEntityBerlinGroup();
-        accessEntity.addIban(credentials.getField("IBAN"));
+        final AccessEntity accessEntity =
+                new AccessEntity.Builder().addIban(credentials.getField("IBAN")).build();
         final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
         consentsRequest.setAccess(accessEntity);
 

@@ -35,7 +35,6 @@ public abstract class BerlinGroupAgent<
         super(request, context, signatureKeyPair);
         clientId = request.getProvider().getPayload();
         clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -101,7 +100,7 @@ public abstract class BerlinGroupAgent<
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final BerlinGroupAccountFetcher accountFetcher = getAccountFetcher();
         final BerlinGroupTransactionFetcher transactionFetcher = getTransactionFetcher();
 

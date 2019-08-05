@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntityBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
@@ -181,8 +180,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
         calendar.add(Calendar.YEAR, 2);
         final String date = BerlinGroupUtils.formatDate(calendar.getTime(), "yyyy-MM-dd", null);
 
-        final AccessEntity access = new AccessEntityBerlinGroup();
-        access.addIbans(ibans);
+        final AccessEntity access = new AccessEntity.Builder().addIbans(ibans).build();
 
         final ConsentBaseRequest consentRequest = new ConsentBaseRequest();
         consentRequest.setAccess(access);

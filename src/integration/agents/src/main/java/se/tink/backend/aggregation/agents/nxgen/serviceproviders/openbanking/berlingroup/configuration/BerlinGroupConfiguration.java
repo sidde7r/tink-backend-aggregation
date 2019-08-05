@@ -17,6 +17,7 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
     private String clientKeyStorePassword;
     private String redirectUrl;
     private String psuIpAddress;
+    private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -89,5 +90,9 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
 
         return psuIpAddress;
+    }
+
+    public String getEidasQwac() {
+        return eidasQwac;
     }
 }
