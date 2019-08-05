@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.collect.ImmutableMap;
 import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -22,6 +23,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
 
     private final ControllerWrapper controllerWrapper;
     private final CredentialsRequest request;
+    private final ClientInfo clientInfo;
     protected ImmutableMap<String, AgentVersionMigration> migrations =
             new ImmutableMap.Builder<String, AgentVersionMigration>()
                     // Add your migrations here
@@ -60,9 +62,12 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
                     .build();
 
     public MigrateCredentialsAndAccountsWorkerCommand(
-            CredentialsRequest request, ControllerWrapper controllerWrapper) {
+            CredentialsRequest request,
+            ControllerWrapper controllerWrapper,
+            ClientInfo clientInfo) {
         this.request = request;
         this.controllerWrapper = controllerWrapper;
+        this.clientInfo = clientInfo;
     }
 
     @VisibleForTesting
@@ -101,6 +106,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
         migration.changeRequest(request);
 
         migration.setWrapper(controllerWrapper);
+        migration.setClientIfo(clientInfo);
 
         if (migration.shouldMigrateData(request)) {
             // Change any data in the database

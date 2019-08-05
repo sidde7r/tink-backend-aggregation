@@ -283,7 +283,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper));
+                        context.getRequest(), controllerWrapper, clientInfo));
 
         // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
         // connector and if
@@ -367,7 +367,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper));
+                        context.getRequest(), controllerWrapper, clientInfo));
 
         commands.add(
                 new UpdateCredentialsStatusAgentWorkerCommand(
@@ -490,7 +490,7 @@ public class AgentWorkerOperationFactory {
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
                 new LockAgentWorkerCommand(context),
                 new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper),
+                        context.getRequest(), controllerWrapper, clientInfo),
                 // Update the status to `UPDATED` if the credential isn't waiting on transactions
                 // from the
                 // connector and if
@@ -617,7 +617,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper));
+                        context.getRequest(), controllerWrapper, clientInfo));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, "keep-alive", reportMetricsAgentWorkerCommandState));
@@ -740,7 +740,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper));
+                        context.getRequest(), controllerWrapper, clientInfo));
         // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
         // connector and if
         // transactions aren't processed in system. The transaction processing in system will set
@@ -826,7 +826,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper));
+                        context.getRequest(), controllerWrapper, clientInfo));
         // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
         // connector and if
         // transactions aren't processed in system. The transaction processing in system will set

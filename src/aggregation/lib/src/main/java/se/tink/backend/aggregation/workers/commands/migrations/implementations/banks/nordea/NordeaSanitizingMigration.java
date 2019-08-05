@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordea;
 
+import com.google.common.base.Strings;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.workers.commands.migrations.ClusterSafeAgentVersionMigration;
@@ -9,6 +10,11 @@ public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration 
 
     private static final String OLD_AGENT = "banks.nordea.NordeaAgent";
     private static final String NEW_AGENT = "nxgen.se.banks.nordea.v30.NordeaSEAgent";
+    private static final String PASSWORD_KEY = "password";
+    private static final String BANKID_PROVIDER = "nordea-bankid";
+    private static final String PASSWORD_PROVIDER = "nordea-password";
+    public static final String OXFORD_PRODUCTION = "oxford-production";
+    public static final String OXFORD_STAGING = "oxford-staging";
 
     @Override
     public boolean isOldAgent(Provider provider) {
@@ -27,7 +33,10 @@ public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration 
 
     @Override
     public boolean isDataMigrated(CredentialsRequest request) {
-        return request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID
+        CredentialsTypes type = request.getCredentials().getType();
+        return (type == CredentialsTypes.MOBILE_BANKID && !hasPin(request)
+                        || type == CredentialsTypes.MOBILE_BANKID && hasPin(request) && !isOxford()
+                        || type == CredentialsTypes.PASSWORD && hasPin(request) && isOxford())
                 && request.getAccounts().stream()
                         .noneMatch(
                                 acc ->
@@ -37,11 +46,28 @@ public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration 
 
     @Override
     public void migrateData(CredentialsRequest request) {
-        request.getCredentials().setType(CredentialsTypes.MOBILE_BANKID);
+        CredentialsTypes credentialType =
+                hasPin(request) && isOxford()
+                        ? CredentialsTypes.PASSWORD
+                        : CredentialsTypes.MOBILE_BANKID;
+
+        String providerName = hasPin(request) && isOxford() ? PASSWORD_PROVIDER : BANKID_PROVIDER;
+
+        request.getCredentials().setProviderName(providerName);
+        request.getCredentials().setType(credentialType);
         request.getAccounts().forEach(a -> a.setBankId(sanitize(a.getBankId())));
     }
 
     private String sanitize(String string) {
         return string.replaceAll("[^A-Za-z0-9]", "");
+    }
+
+    private static boolean hasPin(CredentialsRequest request) {
+        return !Strings.isNullOrEmpty(request.getCredentials().getSensitivePayload(PASSWORD_KEY));
+    }
+
+    private boolean isOxford() {
+        return OXFORD_PRODUCTION.equals(getClientIfo().getClusterId())
+                || OXFORD_STAGING.equals(getClientIfo().getClusterId());
     }
 }
