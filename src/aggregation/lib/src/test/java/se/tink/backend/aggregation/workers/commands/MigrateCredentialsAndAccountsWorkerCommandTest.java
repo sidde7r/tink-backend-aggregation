@@ -629,6 +629,6 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     }
 
     private ClientInfo createClientInfo() {
-        return ClientInfo.of("client", "oxford-staging", "aggregator");
+        return ClientInfo.of("client", "oxford-staging", "aggregator", null);
     }
 }
