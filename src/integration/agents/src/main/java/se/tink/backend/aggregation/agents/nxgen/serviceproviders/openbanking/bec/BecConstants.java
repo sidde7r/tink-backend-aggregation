@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -30,86 +26,54 @@ public abstract class BecConstants {
                     .put(PaymentStatus.SIGNED, "ACCP")
                     .build();
 
-    public static Map<String, TransactionalAccountType> accountTypes =
-            new HashMap<String, TransactionalAccountType>() {
-                {
-                    put("aldersopsparing", TransactionalAccountType.SAVINGS);
-                    put("basal indlånskonto", TransactionalAccountType.CHECKING);
-                    put("børneopsparing", TransactionalAccountType.SAVINGS);
-                    put("konto personale", TransactionalAccountType.CHECKING);
-                    put("personalekonto", TransactionalAccountType.CHECKING);
-                    put("young money", TransactionalAccountType.CHECKING);
-                    put("spar nord stjernekonto", TransactionalAccountType.SAVINGS);
-                    put("stjernekonto", TransactionalAccountType.CHECKING);
-                    put("ung konto", TransactionalAccountType.CHECKING);
-                    put("konto", TransactionalAccountType.CHECKING);
-                    put("18-27 konto", TransactionalAccountType.CHECKING);
-                    put("lønkonto", TransactionalAccountType.CHECKING);
-                    put("al-flex-start", TransactionalAccountType.SAVINGS);
-                    put("opsparingskonto", TransactionalAccountType.SAVINGS);
-                    put("uddannelseskonto", TransactionalAccountType.SAVINGS);
-                    put("jackpot", TransactionalAccountType.SAVINGS);
-                    put("boligopsparing", TransactionalAccountType.SAVINGS);
-                    put("superløn", TransactionalAccountType.CHECKING);
-                    put("superløn basis", TransactionalAccountType.CHECKING);
-                    put("al-børne plus", TransactionalAccountType.SAVINGS);
-                    put("lommepengekonto", TransactionalAccountType.CHECKING);
-                    put("al-formueflex", TransactionalAccountType.SAVINGS);
-                    put("indlån", TransactionalAccountType.SAVINGS);
-                    put("spar nord studiekonto", TransactionalAccountType.SAVINGS);
-                    put("ungdomsopsparing", TransactionalAccountType.SAVINGS);
-                    put("vestjyskungosparing", TransactionalAccountType.SAVINGS);
-                    put("konfirmandkonto", TransactionalAccountType.SAVINGS);
-                    put("opsparing", TransactionalAccountType.SAVINGS);
-                    put("fynske teen", TransactionalAccountType.CHECKING);
-                    put("børnebørnskonto", TransactionalAccountType.SAVINGS);
-                    put("opsparingsinvest personale", TransactionalAccountType.SAVINGS);
-                    put("Spar'Op", TransactionalAccountType.SAVINGS);
-                    put("Coop Budget", TransactionalAccountType.SAVINGS);
-                    put("Anfordring med AL-MC Cash", TransactionalAccountType.CHECKING);
-                    put("Basal Betaling", TransactionalAccountType.CHECKING);
-                    put("PrivatLøn", TransactionalAccountType.CHECKING);
-                    put("Appaløn", TransactionalAccountType.CHECKING);
-                    put("Totalløn", TransactionalAccountType.CHECKING);
-                }
-            };
-
-    private static Map<TransactionalAccountType, List<String>> accountTypeMap =
-            new HashMap<TransactionalAccountType, List<String>>() {
-                {
-                    put(
-                            TransactionalAccountType.CHECKING,
-                            accountTypes.entrySet().stream()
-                                    .filter(
-                                            entry ->
-                                                    entry.getValue()
-                                                                    .compareTo(
-                                                                            TransactionalAccountType
-                                                                                    .CHECKING)
-                                                            == 0)
-                                    .map(Map.Entry::getKey)
-                                    .collect(Collectors.toList()));
-                    put(
-                            TransactionalAccountType.SAVINGS,
-                            accountTypes.entrySet().stream()
-                                    .filter(
-                                            entry ->
-                                                    entry.getValue()
-                                                                    .compareTo(
-                                                                            TransactionalAccountType
-                                                                                    .SAVINGS)
-                                                            == 0)
-                                    .map(Map.Entry::getKey)
-                                    .collect(Collectors.toList()));
-                }
-            };
-
     public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<TransactionalAccountType>builder()
-                    .putAll(accountTypeMap)
-                    .put(TransactionalAccountType.SAVINGS, "SVGS", "LLSV")
-                    .setDefaultTranslationValue(TransactionalAccountType.CHECKING)
-                    .build();
+        TypeMapper.<TransactionalAccountType>builder()
+            .put(
+                TransactionalAccountType.CHECKING,
+                "basal indlånskonto",
+                "konto personale",
+                "personalekonto",
+                "personalekonto",
+                "young money",
+                "stjernekonto",
+                "ung konto",
+                "konto",
+                "18-27 konto",
+                "lønkonto",
+                "superløn",
+                "superløn basis",
+                "lommepengekonto",
+                "fynske teen",
+                "Anfordring med AL-MC Cash",
+                "Basal Betaling",
+                "PrivatLøn",
+                "Appaløn",
+                "Totalløn"
+                )
+            .put(TransactionalAccountType.SAVINGS,
+                "aldersopsparing",
+                "børneopsparing",
+                "spar nord stjernekonto",
+                "al-flex-start",
+                "opsparingskonto",
+                "uddannelseskonto",
+                "jackpot",
+                "boligopsparing",
+                "al-børne plus",
+                "al-formueflex",
+                "indlån",
+                "spar nord studiekonto",
+                "ungdomsopsparing",
+                "vestjyskungosparing",
+                "opsparing",
+                "konfirmandkonto",
+                "børnebørnskonto",
+                "opsparingsinvest personale",
+                "Spar'Op",
+                "Coop Budget")
+            .put(TransactionalAccountType.SAVINGS, "SVGS", "LLSV")
+            .setDefaultTranslationValue(TransactionalAccountType.CHECKING)
+            .build();
 
     public static class ApiService {
         public static final String GET_CONSENT = "/consents";
