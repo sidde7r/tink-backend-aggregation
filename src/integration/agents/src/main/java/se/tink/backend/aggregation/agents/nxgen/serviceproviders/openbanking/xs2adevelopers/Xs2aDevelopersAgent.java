@@ -130,7 +130,7 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
                 new Xs2aDevelopersTransactionalAccountFetcher(apiClient);
 

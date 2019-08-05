@@ -62,7 +62,8 @@ public final class CommerzBankAgent extends Xs2aDevelopersAgent {
                 controller);
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    @Override
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CommerzbankTransactionalAccountFetcher accountFetcher =
                 new CommerzbankTransactionalAccountFetcher(apiClient);
 
