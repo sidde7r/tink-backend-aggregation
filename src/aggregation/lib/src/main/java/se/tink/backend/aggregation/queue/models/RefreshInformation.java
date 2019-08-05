@@ -12,6 +12,7 @@ public class RefreshInformation {
     private String clientName;
     private String aggregatorId;
     private String clusterId;
+    private String appId;
 
     private String name;
     private String environment;
@@ -26,6 +27,7 @@ public class RefreshInformation {
         this.clientName = clientInfo.getClientName();
         this.aggregatorId = clientInfo.getAggregatorId();
         this.clusterId = clientInfo.getClusterId();
+        this.appId = clientInfo.getAppId();
     }
 
     public String getName() {
@@ -82,5 +84,13 @@ public class RefreshInformation {
 
     public Map<String, String> getMDCContext() {
         return context;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 }
