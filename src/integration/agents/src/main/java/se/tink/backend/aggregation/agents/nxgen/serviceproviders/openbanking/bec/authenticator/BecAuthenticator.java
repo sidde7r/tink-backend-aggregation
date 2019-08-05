@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-// TODO: Authentication must be implemented for the production
 public class BecAuthenticator {
     private final BecApiClient apiClient;
     private final SessionStorage sessionStorage;
