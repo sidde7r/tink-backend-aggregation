@@ -108,13 +108,13 @@
                     "name": "logindescription"
                 },
                 {
-                    "description": "Response, 8 digits.",
+                    "description": "Response, 6 to 8 digits.",
                     "immutable": false,
                     "masked": false,
                     "name": "logininput",
                     "numeric": true,
-                    "pattern": "^[0-9]{8}$",
-                    "patternError": "Enter your 8 digit response code from your card reader."
+                    "pattern": "^[0-9]{6,8}$",
+                    "patternError": "Enter your 6 to 8 digit response code from your card reader."
                 }
             ],
             "transactional": true,
