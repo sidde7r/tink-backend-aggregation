@@ -164,6 +164,8 @@ public abstract class BecConstants {
         public static final String VALID_UNTIL = "2019-09-10";
         public static final String FALSE = "false";
         public static final String EMPTY_STRING = "";
+        public static final String VALID = "valid";
+
     }
 
     public static class HeaderValues {
