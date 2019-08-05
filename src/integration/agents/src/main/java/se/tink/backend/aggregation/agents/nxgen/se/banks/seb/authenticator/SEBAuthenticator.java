@@ -129,6 +129,11 @@ public class SEBAuthenticator implements BankIdAuthenticator<String> {
         }
 
         final UserInformation userInformation = apiClient.activateSession();
+        // Check that the SSN from the credentials matches the logged in user
+        if (!userInformation.getSSN().equals(this.ssn)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
         sessionStorage.putUserInformation(userInformation);
     }
 }
