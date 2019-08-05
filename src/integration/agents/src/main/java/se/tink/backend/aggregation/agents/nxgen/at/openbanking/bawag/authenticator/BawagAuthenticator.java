@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authentica
 import java.util.Calendar;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntityBerlinGroup;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -23,9 +23,9 @@ public class BawagAuthenticator {
     }
 
     public URL buildAuthorizeUrl(String state) {
-        ConsentBaseRequest consentRequest = new ConsentBaseRequest(new AccessEntityBerlinGroup());
+        ConsentBaseRequest consentRequest =
+                new ConsentBaseRequest(new AccessEntity.Builder().addIban(iban).build());
         consentRequest.setFrequencyPerDay(100);
-        consentRequest.getAccess().addIban(iban);
         Calendar date = Calendar.getInstance();
         date.add(Calendar.MONTH, 1);
         consentRequest.setValidUntil(date.getTime());

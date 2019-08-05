@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.entities.AccesEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.entities.TransactionResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
@@ -159,8 +159,15 @@ public final class KbcApiClient extends BerlinGroupApiClient {
 
     @Override
     public String getConsentId() {
-        final AccessEntity accessEntity = new AccesEntity();
-        accessEntity.addIban(credentials.getField(KbcConstants.CredentialKeys.IBAN));
+        final AccessEntity accessEntity =
+                new AccessEntity.Builder()
+                        .withBalances(
+                                Arrays.asList(
+                                        credentials.getField(KbcConstants.CredentialKeys.IBAN)))
+                        .withTransactions(
+                                Arrays.asList(
+                                        credentials.getField(KbcConstants.CredentialKeys.IBAN)))
+                        .build();
 
         final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
         consentsRequest.setAccess(accessEntity);

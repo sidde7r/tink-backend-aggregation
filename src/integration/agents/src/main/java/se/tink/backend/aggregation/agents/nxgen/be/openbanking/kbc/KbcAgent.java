@@ -40,7 +40,7 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
 
     @Override
     protected void setupClient(TinkHttpClient client) {
-        client.setEidasProxy(configuration.getEidasProxy(), getConfiguration().getCertificateId());
+        client.setEidasProxy(configuration.getEidasProxy(), getConfiguration().getEidasQwac());
     }
 
     @Override

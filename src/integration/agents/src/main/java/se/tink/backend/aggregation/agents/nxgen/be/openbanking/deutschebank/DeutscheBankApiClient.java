@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetc
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntityBerlinGroup;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
@@ -66,8 +66,7 @@ public final class DeutscheBankApiClient {
 
     public ConsentBaseResponse getConsent(String state, String iban) {
         ConsentBaseRequest consentBaseRequest = new ConsentBaseRequest();
-        consentBaseRequest.setAccess(new AccessEntityBerlinGroup());
-        consentBaseRequest.getAccess().addIban(iban);
+        consentBaseRequest.setAccess(new AccessEntity.Builder().addIban(iban).build());
 
         return client.request(getConfiguration().getBaseUrl() + Urls.CONSENT)
                 .body(consentBaseRequest.toData())

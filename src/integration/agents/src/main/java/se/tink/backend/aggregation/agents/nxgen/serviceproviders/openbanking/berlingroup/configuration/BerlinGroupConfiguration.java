@@ -17,7 +17,7 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
     private String clientKeyStorePassword;
     private String redirectUrl;
     private String psuIpAddress;
-    private String certificateId;
+    private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -92,7 +92,7 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
         return psuIpAddress;
     }
 
-    public String getCertificateId() {
-        return certificateId;
+    public String getEidasQwac() {
+        return eidasQwac;
     }
 }
