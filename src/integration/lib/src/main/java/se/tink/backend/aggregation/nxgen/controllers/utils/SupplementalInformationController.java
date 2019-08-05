@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SupplementalInformationController {
@@ -33,30 +34,28 @@ public class SupplementalInformationController {
 
     public Optional<Map<String, String>> waitForSupplementalInformation(
             String key, long waitFor, TimeUnit unit) {
-        Optional<String> supplementalInformation =
-                supplementalRequester.waitForSupplementalInformation(key, waitFor, unit);
-        if (!supplementalInformation.isPresent()) {
-            return Optional.empty();
-        }
+        return supplementalRequester
+                .waitForSupplementalInformation(key, waitFor, unit)
+                .map(SupplementalInformationController::stringToMap);
+    }
 
-        return Optional.ofNullable(
-                SerializationUtils.deserializeFromString(
-                        supplementalInformation.get(),
-                        new TypeReference<HashMap<String, String>>() {}));
+    private static Map<String, String> stringToMap(final String string) {
+        return SerializationUtils.deserializeFromString(
+                string, new TypeReference<HashMap<String, String>>() {});
     }
 
     public Map<String, String> askSupplementalInformation(Field... fields)
             throws SupplementalInfoException {
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        logger.info("Requesting supplemental information"); // MIYAG-445
+        logger.info("Requesting supplemental information");
         String supplementalInformation =
                 Optional.ofNullable(
                                 Strings.emptyToNull(
                                         supplementalRequester.requestSupplementalInformation(
                                                 credentials)))
                         .orElseThrow(SupplementalInfoError.NO_VALID_CODE::exception);
-        logger.info("Finished requesting supplemental information"); // MIYAG-445
+        logger.info("Finished requesting supplemental information");
 
         return Optional.ofNullable(
                         SerializationUtils.deserializeFromString(
@@ -73,6 +72,12 @@ public class SupplementalInformationController {
 
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(payload));
         credentials.setStatus(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
+
+        final String deepLinkUrl =
+                Optional.ofNullable(payload.getIos()).map(Ios::getDeepLinkUrl).orElse("<none>");
+
+        logger.info("Opening third party app with deep link URL {}", deepLinkUrl);
+
         supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 }
