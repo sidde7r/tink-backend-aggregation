@@ -516,7 +516,7 @@ agentsServiceConfiguration:
     host: "https://eidas-proxy.staging.aggregation.tink.network"
     localEidasDev: true
   tppSecretsServiceConfiguration:
-    host: host: "tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local" # add to your /etc/hosts with the (minikube ip)
+    host: "tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local" # add to your /etc/hosts with the (minikube ip)
     port: 30787
     tppSecretsServiceLocation: "outside-cluster-staging"
   testConfiguration:
