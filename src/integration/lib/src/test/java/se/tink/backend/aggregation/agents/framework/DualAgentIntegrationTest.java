@@ -74,8 +74,19 @@ public class DualAgentIntegrationTest {
             log.info("[SUCCESS] All accounts in both agents are identical!");
         }
 
+        transactions.forEach(
+                (accountId, transactionMap) -> {
+                    log.info("[[[ Transactions for account ID {} ]]]", accountId);
+                    if (transactionMap.size() > 0) {
+                        logTransactions(firstName, secondName, accountId, transactionMap);
+                    } else {
+                        log.info("[SUCCESS] All transactions in both agents are identical!");
+                    }
+                    log.info("");
+                });
+
         assertEquals(0, accounts.keySet().size());
-        assertEquals(0, transactions.keySet().size());
+        assertEquals(0, transactions.values().stream().mapToInt(Map::size).sum());
     }
 
     private void logAccounts(
@@ -124,17 +135,6 @@ public class DualAgentIntegrationTest {
                                     SerializationUtils.serializeToString(value.first),
                                     SerializationUtils.serializeToString(value.second));
                         });
-
-        transactions.forEach(
-                (accountId, transactionMap) -> {
-                    log.info("[[[ Transactions for account ID {} ]]]", accountId);
-                    if (transactionMap.size() > 0) {
-                        logTransactions(firstName, secondName, accountId, transactionMap);
-                    } else {
-                        log.info("[SUCCESS] All transactions in both agents are identical!");
-                    }
-                    log.info("");
-                });
     }
 
     private void logTransactions(
