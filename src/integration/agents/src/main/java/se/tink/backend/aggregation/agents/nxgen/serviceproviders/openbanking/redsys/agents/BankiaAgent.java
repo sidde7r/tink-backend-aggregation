@@ -23,11 +23,6 @@ public class BankiaAgent extends RedsysAgent {
     }
 
     @Override
-    public boolean supportsTransactionKeyPagination() {
-        return true;
-    }
-
-    @Override
     public boolean supportsPendingTransactions() {
         return false;
     }

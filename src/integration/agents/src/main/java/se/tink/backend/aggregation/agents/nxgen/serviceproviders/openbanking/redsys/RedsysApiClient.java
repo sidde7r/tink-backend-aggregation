@@ -3,15 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import java.security.cert.X509Certificate;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TimeZone;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
@@ -45,8 +42,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
@@ -76,7 +71,6 @@ public final class RedsysApiClient {
             SupplementalInformationHelper supplementalInformationHelper,
             AspspConfiguration aspspConfiguration) {
         this.client = client;
-        client.setDebugOutput(true);
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.aspspConfiguration = aspspConfiguration;
@@ -314,25 +308,27 @@ public final class RedsysApiClient {
                 .get(AccountBalancesResponse.class);
     }
 
-    public PaginatorResponse fetchTransactions(String accountId, Date fromDate, Date toDate) {
-        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+    public TransactionsResponse fetchTransactions(
+            String accountId, LocalDate fromDate, LocalDate toDate) {
+        final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
         final String consentId = getConsentId();
         RequestBuilder request =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId))
                         .header(HeaderKeys.CONSENT_ID, consentId)
-                        .queryParam(QueryKeys.DATE_FROM, df.format(fromDate))
-                        .queryParam(QueryKeys.DATE_TO, df.format(toDate))
+                        .queryParam(QueryKeys.DATE_FROM, formatter.format(fromDate))
+                        .queryParam(QueryKeys.DATE_TO, formatter.format(toDate))
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
 
-        final TransactionsResponse response = request.get(TransactionsResponse.class);
-        return PaginatorResponseImpl.create(response.getTinkTransactions());
+        return request.get(TransactionsResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(String accountId, @Nullable String path) {
         if (path == null) {
-            path = makeApiUrl(Urls.TRANSACTIONS, accountId);
+            // Initial transactions request
+            final LocalDate toDate = LocalDate.now();
+            final LocalDate fromDate = aspspConfiguration.transactionsFromDate();
+            return fetchTransactions(accountId, fromDate, toDate);
         }
 
         RequestBuilder request =

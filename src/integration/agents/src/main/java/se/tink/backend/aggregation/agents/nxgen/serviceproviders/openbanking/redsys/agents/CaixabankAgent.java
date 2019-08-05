@@ -23,11 +23,6 @@ public class CaixabankAgent extends RedsysAgent {
     }
 
     @Override
-    public boolean supportsTransactionKeyPagination() {
-        return false;
-    }
-
-    @Override
     public boolean supportsPendingTransactions() {
         return false;
     }

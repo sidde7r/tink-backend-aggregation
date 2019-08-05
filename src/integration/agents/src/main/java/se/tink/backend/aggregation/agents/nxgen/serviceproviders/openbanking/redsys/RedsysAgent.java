@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -117,14 +116,8 @@ public abstract class RedsysAgent extends NextGenerationAgent
         final RedsysTransactionalAccountFetcher accountFetcher =
                 new RedsysTransactionalAccountFetcher(apiClient);
 
-        final TransactionPaginator<TransactionalAccount> paginator;
-        if (supportsTransactionKeyPagination()) {
-            paginator = new TransactionKeyPaginationController<>(accountFetcher);
-        } else {
-            paginator =
-                    new TransactionDatePaginationController<>(
-                            accountFetcher, 4, 90, ChronoUnit.DAYS);
-        }
+        final TransactionPaginator<TransactionalAccount> paginator =
+                new TransactionKeyPaginationController<>(accountFetcher);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -144,5 +137,10 @@ public abstract class RedsysAgent extends NextGenerationAgent
                 new RedsysPaymentExecutor(apiClient, supplementalInformationHelper);
 
         return Optional.of(new PaymentController(redsysPaymentExecutor, redsysPaymentExecutor));
+    }
+
+    @Override
+    public LocalDate transactionsFromDate() {
+        return LocalDate.now().minusDays(90);
     }
 }
