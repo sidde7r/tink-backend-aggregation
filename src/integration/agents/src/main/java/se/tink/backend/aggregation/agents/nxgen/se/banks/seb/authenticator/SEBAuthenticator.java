@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.LoginCodes;
@@ -17,7 +21,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInform
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class SEBAuthenticator implements BankIdAuthenticator<String> {
     private static final AggregationLogger LOG = new AggregationLogger(SEBAuthenticator.class);
@@ -25,6 +31,7 @@ public class SEBAuthenticator implements BankIdAuthenticator<String> {
     private final SEBSessionStorage sessionStorage;
     private String autoStartToken;
     private String nextReference;
+    private String ssn = null;
 
     public SEBAuthenticator(SEBApiClient apiClient, SEBSessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -35,6 +42,7 @@ public class SEBAuthenticator implements BankIdAuthenticator<String> {
     public String init(String ssn)
             throws BankIdException, BankServiceException, AuthorizationException {
         final BankIdResponse bankIdResponse = apiClient.fetchAutostartToken();
+        this.ssn = ssn;
 
         switch (bankIdResponse.getRfa().toUpperCase()) {
             case LoginCodes.COLLECT_BANKID:
@@ -102,7 +110,24 @@ public class SEBAuthenticator implements BankIdAuthenticator<String> {
     }
 
     private void activateSession() throws AuthenticationException, AuthorizationException {
-        apiClient.initiateSession();
+        try {
+            apiClient.initiateSession();
+        } catch (HttpResponseException e) {
+            // Check if the user is younger than 18 and then throw unauthorized exception.
+            SocialSecurityNumber.Sweden ssn = new SocialSecurityNumber.Sweden(this.ssn);
+            if (!ssn.isValid()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            if (e.getResponse().getStatus() == 403
+                    && ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < 18) {
+                throw AuthorizationError.UNAUTHORIZED.exception(
+                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey());
+            }
+
+            throw e;
+        }
+
         final UserInformation userInformation = apiClient.activateSession();
         sessionStorage.putUserInformation(userInformation);
     }

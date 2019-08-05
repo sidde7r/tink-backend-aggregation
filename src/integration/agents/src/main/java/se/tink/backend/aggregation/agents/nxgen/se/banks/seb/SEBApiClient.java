@@ -2,14 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.InitResult;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.ServiceInputKeys;
@@ -30,16 +27,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Response;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class SEBApiClient {
     private final TinkHttpClient httpClient;
     private final String sebUUID;
-    private final String credentialsUserName;
 
-    public SEBApiClient(TinkHttpClient httpClient, String credentialsUserName) {
+    public SEBApiClient(TinkHttpClient httpClient) {
         this.httpClient = httpClient;
-        this.credentialsUserName = credentialsUserName;
         sebUUID = UUID.randomUUID().toString().toUpperCase();
     }
 
@@ -66,27 +60,9 @@ public class SEBApiClient {
                 .post(Response.class, request);
     }
 
-    public void initiateSession() throws AuthorizationException, AuthenticationException {
+    public void initiateSession() throws HttpResponseException {
         final Request request = new Request.Builder().withUserCredentials("").build();
-        final Response response;
-
-        try {
-            response = post(Urls.INITIATE_SESSION, request);
-        } catch (HttpResponseException e) {
-            // Check if the user is younger than 18 and then throw unauthorized exception.
-            SocialSecurityNumber.Sweden ssn = new SocialSecurityNumber.Sweden(credentialsUserName);
-            if (!ssn.isValid()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-
-            if (e.getResponse().getStatus() == 403
-                    && ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < 18) {
-                throw AuthorizationError.UNAUTHORIZED.exception(
-                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey());
-            }
-
-            throw e;
-        }
+        final Response response = post(Urls.INITIATE_SESSION, request);
 
         Preconditions.checkState(response.isValid());
         final String initResult = response.getInitResult();

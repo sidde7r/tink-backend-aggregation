@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -34,8 +33,7 @@ public class SEBAgent extends NextGenerationAgent
     public SEBAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        final String userName = credentials.getField(Field.Key.USERNAME);
-        apiClient = new SEBApiClient(client, userName);
+        apiClient = new SEBApiClient(client);
         sebSessionStorage = new SEBSessionStorage(sessionStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
