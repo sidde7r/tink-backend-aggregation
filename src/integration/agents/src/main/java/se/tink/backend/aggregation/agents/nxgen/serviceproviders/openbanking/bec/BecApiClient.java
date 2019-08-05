@@ -123,9 +123,9 @@ public final class BecApiClient {
     }
 
     public ConsentRequest createConsentRequestBody() {
-        AccessEntity access = new AccessEntity("allAccounts");
+        AccessEntity access = new AccessEntity(FormValues.ACCESS_TYPE);
         ConsentRequest consentRequest =
-                new ConsentRequest(access, "false", "2019-09-01", "true", 4);
+                new ConsentRequest(access, FormValues.FALSE, FormValues.VALID_UNTIL, FormValues.TRUE, FormValues.FREQUENCY_PER_DAY);
         return consentRequest;
     }
 

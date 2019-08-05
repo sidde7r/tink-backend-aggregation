@@ -158,15 +158,17 @@ public abstract class BecConstants {
     }
 
     public static class FormValues {
-        public static final String FREQUENCY_PER_DAY = "4";
+        public static final String ACCESS_TYPE = "allAccounts";
+        public static final Integer FREQUENCY_PER_DAY = 4;
         public static final String TRUE = "true";
-        public static final String VALID_UNTIL = "2019-11-11";
+        public static final String VALID_UNTIL = "2019-09-10";
         public static final String FALSE = "false";
         public static final String EMPTY_STRING = "";
     }
 
     public static class HeaderValues {
         public static final String PSU_IP = "34.240.159.190";
+        public static final String SHA_256 = "SHA-256=";
     }
 
     public static class IdTags {
