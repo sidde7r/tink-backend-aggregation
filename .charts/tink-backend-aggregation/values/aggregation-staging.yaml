@@ -77,6 +77,10 @@ agents:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
+  sbab:
+    tink:
+      eidasCertId: Tink
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: true
