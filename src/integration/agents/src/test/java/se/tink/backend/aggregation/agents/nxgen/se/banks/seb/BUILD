@@ -13,8 +13,8 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/seb",
         "//src/integration/agents",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/seb",
         "//src/integration/api",
         "//src/integration/lib:lib_test",
         "//src/libraries/credentials:service",
