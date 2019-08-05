@@ -12,10 +12,8 @@ public class BalancesItemEntity implements Comparable<BalancesItemEntity> {
     @JsonProperty("balanceType")
     private String BalanceType;
 
-    @JsonProperty("lastChangeDateTime")
     private String lastChangeDateTime;
 
-    @JsonProperty("balanceAmount")
     private BalanceAmountEntity balanceAmount;
 
     public ExactCurrencyAmount getBalanceAmount() {
