@@ -4,19 +4,20 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
+public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
 
     private final UkOpenBankingApiClient apiClient;
     private final SoftwareStatement softwareStatement;
     private final ProviderConfiguration providerConfiguration;
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
 
-    public UkOpenBankingAuthenticator(
+    public UkOpenBankingAisAuthenticator(
             UkOpenBankingApiClient apiClient, UkOpenBankingAisConfig ukOpenBankingAisConfig) {
         this.apiClient = apiClient;
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
@@ -32,7 +33,7 @@ public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 
         return authorizeUrl.queryParam(
-                UkOpenBankingAuthenticatorConstants.Params.REQUEST,
+                UkOpenBankingAisAuthenticatorConstants.Params.REQUEST,
                 AuthorizeRequest.create()
                         .withAccountsScope()
                         .withClientInfo(providerConfiguration.getClientInfo())
@@ -43,5 +44,10 @@ public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
                         .withWellknownConfiguration(wellKnownConfiguration)
                         .withIntentId(intentId)
                         .build());
+    }
+
+    @Override
+    public ClientMode getClientCredentialScope() {
+        return ClientMode.ACCOUNTS;
     }
 }

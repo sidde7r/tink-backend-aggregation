@@ -23,12 +23,15 @@ public class DomesticPaymentResponseInitiation {
     private InstructedAmount instructedAmount;
     private CreditorPostalAddress creditorPostalAddress;
 
-    public PaymentResponse toTinkPaymentResponse(String consentId, String domesticPaymentId) {
+    public PaymentResponse toTinkPaymentResponse(
+            String consentId, String domesticPaymentId, String status) {
         Payment payment =
                 new Builder()
                         .withReference(remittanceInformation.createTinkReference())
                         .withCreditor(creditorAccount.toCreditor())
                         .withAmount(instructedAmount.toTinkAmount())
+                        .withDebtor(debtorAccount.toDebtor())
+                        .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))
                         .build();
 
         Storage storage = new Storage();

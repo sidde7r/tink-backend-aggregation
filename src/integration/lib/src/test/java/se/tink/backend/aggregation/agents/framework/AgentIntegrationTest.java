@@ -271,6 +271,65 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Done with refresh.");
     }
 
+    protected void doGenericPaymentBankTransferUKOB(Agent agent, List<Payment> paymentList)
+            throws Exception {
+        if (agent instanceof SubsequentGenerationAgent) {
+            log.info("Executing transfer for UkOpenbanking Agent");
+            PaymentController paymentController =
+                    ((SubsequentGenerationAgent) agent)
+                            .constructPaymentController()
+                            .orElseThrow(Exception::new);
+
+            for (Payment payment : paymentList) {
+                log.info("Executing bank transfer.");
+
+                PaymentResponse createPaymentResponse =
+                        paymentController.create(new PaymentRequest(payment));
+
+                Storage storage = Storage.copyOf(createPaymentResponse.getStorage());
+
+                PaymentMultiStepResponse signPaymentMultiStepResponse =
+                        paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
+
+                Map<String, String> map;
+                List<Field> fields;
+                String nextStep = signPaymentMultiStepResponse.getStep();
+                Payment paymentSign = signPaymentMultiStepResponse.getPayment();
+                Storage storageSign = signPaymentMultiStepResponse.getStorage();
+
+                while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+                    fields = signPaymentMultiStepResponse.getFields();
+                    map = Collections.emptyMap();
+
+                    signPaymentMultiStepResponse =
+                            paymentController.sign(
+                                    new PaymentMultiStepRequest(
+                                            payment,
+                                            storage,
+                                            nextStep,
+                                            fields,
+                                            new ArrayList<>(map.values())));
+                    nextStep = signPaymentMultiStepResponse.getStep();
+                    paymentSign = signPaymentMultiStepResponse.getPayment();
+                    storageSign = signPaymentMultiStepResponse.getStorage();
+                }
+
+                PaymentStatus statusResult = signPaymentMultiStepResponse.getPayment().getStatus();
+
+                Assert.assertTrue(
+                        statusResult.equals(PaymentStatus.SIGNED)
+                                || statusResult.equals(PaymentStatus.PAID));
+
+                log.info("Done with bank transfer.");
+            }
+        } else {
+            throw new AssertionError(
+                    String.format(
+                            "%s does not implement a transfer executor interface.",
+                            agent.getClass().getSimpleName()));
+        }
+    }
+
     protected void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
             throws Exception {
 
@@ -487,6 +546,29 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             login(agent);
             if (agent instanceof SubsequentGenerationAgent) {
                 doGenericPaymentBankTransfer(agent, paymentList);
+            } else {
+                throw new NotImplementedException(
+                        String.format("%s", agent.getAgentClass().getSimpleName()));
+            }
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
+    public void testGenericPaymentUKOB(List<Payment> paymentList) throws Exception {
+        initiateCredentials();
+        Agent agent = createAgent(createRefreshInformationRequest());
+        try {
+            // login(agent);
+            if (agent instanceof SubsequentGenerationAgent) {
+                doGenericPaymentBankTransferUKOB(agent, paymentList);
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));

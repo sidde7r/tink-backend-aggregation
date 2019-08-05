@@ -19,7 +19,7 @@ import org.apache.commons.codec.binary.Base64;
 // This is a copy of auth0.JWTCreator with the addition of `Builder.withClaim(String name, Object
 // value)`.
 // It depends on auth0.jwt for, among other things, the Algorithm class.
-final class TinkJwtCreator {
+public final class TinkJwtCreator {
 
     private final Algorithm algorithm;
     private final String headerJson;

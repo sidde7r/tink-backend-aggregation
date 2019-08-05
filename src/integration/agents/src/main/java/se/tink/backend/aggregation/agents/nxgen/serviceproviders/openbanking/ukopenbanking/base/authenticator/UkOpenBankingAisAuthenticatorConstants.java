@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.google.common.collect.ImmutableList;
 import java.util.concurrent.TimeUnit;
 
-public abstract class UkOpenBankingAuthenticatorConstants {
+public abstract class UkOpenBankingAisAuthenticatorConstants {
 
     /** According to examples the max age is 24h */
     public static final long MAX_AGE = TimeUnit.DAYS.toSeconds(90);

@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAuthenticatorConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.entities.AuthorizeRequestClaims;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
@@ -115,7 +115,7 @@ public class AuthorizeRequest {
             AuthorizeRequestClaims authorizeRequestClaims =
                     new AuthorizeRequestClaims(
                             intentId,
-                            UkOpenBankingAuthenticatorConstants.ACR_SECURE_AUTHENTICATION_RTS);
+                            UkOpenBankingAisAuthenticatorConstants.ACR_SECURE_AUTHENTICATION_RTS);
 
             return TinkJwtCreator.create()
                     .withKeyId(keyId)
@@ -128,10 +128,10 @@ public class AuthorizeRequest {
                     .withClaim(OpenIdConstants.Params.STATE, state)
                     .withClaim(OpenIdConstants.Params.NONCE, nonce)
                     .withClaim(
-                            UkOpenBankingAuthenticatorConstants.Params.MAX_AGE,
-                            UkOpenBankingAuthenticatorConstants.MAX_AGE)
+                            UkOpenBankingAisAuthenticatorConstants.Params.MAX_AGE,
+                            UkOpenBankingAisAuthenticatorConstants.MAX_AGE)
                     .withClaim(
-                            UkOpenBankingAuthenticatorConstants.Params.CLAIMS,
+                            UkOpenBankingAisAuthenticatorConstants.Params.CLAIMS,
                             authorizeRequestClaims)
                     .sign(algorithm);
         }

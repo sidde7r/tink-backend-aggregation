@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 
@@ -11,14 +13,11 @@ public interface UkOpenBankingPis {
     // I.e. the user MUST pick the source account him/her self in the bank's consent flow.
     boolean mustNotHaveSourceAccountSpecified();
 
-    String getBankTransferIntentId(
-            UkOpenBankingApiClient apiClient,
-            @Nullable AccountIdentifier sourceIdentifier,
-            AccountIdentifier destinationIdentifier,
-            Amount amount,
-            String referenceText)
+    PaymentResponse getBankTransferIntentId(
+            UkOpenBankingApiClient apiClient, PaymentRequest paymentRequest)
             throws TransferExecutionException;
 
+    // TODO: Remove functionality if not being used.
     void executeBankTransfer(
             UkOpenBankingApiClient apiClient,
             String intentId,

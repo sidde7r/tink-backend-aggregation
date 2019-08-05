@@ -9,6 +9,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
@@ -47,7 +48,6 @@ public class OpenIdApiClientTest {
                         httpClient,
                         softwareStatement,
                         providerConfiguration,
-                        OpenIdConstants.ClientMode.ACCOUNTS,
                         new URL(
                                 "https://sandbox-obp-api.danskebank.com/sandbox-open-banking/private/.well-known/openid-configuration"));
     }
@@ -67,14 +67,16 @@ public class OpenIdApiClientTest {
 
     @Test
     public void testCredentialRequest() {
-        OAuth2Token clientCredentials = apiClient.requestClientCredentials();
+        OAuth2Token clientCredentials = apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
         Assert.assertTrue(clientCredentials.isValid());
         Assert.fail(SerializationUtils.serializeToString(clientCredentials));
     }
 
     @Test
     public void testAuthorizeConsent() {
-        URL authUrl = apiClient.buildAuthorizeUrl("state-test", "nonce-test", "callbackUri-test");
+        URL authUrl =
+                apiClient.buildAuthorizeUrl(
+                        "state-test", "nonce-test", ClientMode.ACCOUNTS, "callbackUri-test");
         System.out.println(authUrl.toString());
         Assert.assertTrue(!Strings.isNullOrEmpty(authUrl.toString()));
     }

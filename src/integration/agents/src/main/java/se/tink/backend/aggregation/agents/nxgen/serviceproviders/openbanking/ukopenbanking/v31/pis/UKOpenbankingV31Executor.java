@@ -2,18 +2,30 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import java.util.ArrayList;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UkOpenBankingPisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.Step;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Pis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.DomesticPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.InternationalPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.UKPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.FundsConfirmationResponse;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -25,23 +37,49 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private final UkOpenBankingApiClient client;
     private final UkOpenBankingPisConfig pisConfig;
+    private final SoftwareStatement softwareStatement;
+    private final ProviderConfiguration providerConfiguration;
+    private final UkOpenBankingApiClient apiClient;
+    private final UkOpenBankingPis ukOpenBankingPis;
+    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final Credentials credentials;
+    private final CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair;
 
     public UKOpenbankingV31Executor(
-            UkOpenBankingApiClient client, UkOpenBankingPisConfig pisConfig) {
-        this.client = client;
+            UkOpenBankingPisConfig pisConfig,
+            SoftwareStatement softwareStatement,
+            ProviderConfiguration providerConfiguration,
+            TinkHttpClient httpClient,
+            URL wellKnownURL,
+            SupplementalInformationHelper supplementalInformationHelper,
+            Credentials credentials,
+            CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair) {
         this.pisConfig = pisConfig;
+        this.softwareStatement = softwareStatement;
+        this.providerConfiguration = providerConfiguration;
+        this.apiClient =
+                new UkOpenBankingApiClient(
+                        httpClient, softwareStatement, providerConfiguration, wellKnownURL);
+        this.ukOpenBankingPis = new UkOpenBankingV31Pis(pisConfig);
+        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.credentials = credentials;
+        this.callbackJwtSignatureKeyPair = callbackJwtSignatureKeyPair;
     }
 
     private UKPisConfig getConfig(Payment payment) {
@@ -83,10 +121,10 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
         switch (type) {
             case DOMESTIC:
-                return new DomesticPisConfig(client, pisConfig);
+                return new DomesticPisConfig(apiClient, pisConfig);
             case SEPA:
             case INTERNATIONAL:
-                return new InternationalPisConfig(client, pisConfig);
+                return new InternationalPisConfig(apiClient, pisConfig);
             default:
                 throw new IllegalStateException(String.format("Unknown type: %s", type));
         }
@@ -94,7 +132,47 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        return getConfig(paymentRequest.getPayment()).createPaymentConsent(paymentRequest);
+        return authenticateAndCreatePisConsent(paymentRequest);
+    }
+
+    private PaymentResponse authenticateAndCreatePisConsent(PaymentRequest paymentRequest) {
+        UkOpenBankingPisAuthenticator paymentAuthenticator =
+                new UkOpenBankingPisAuthenticator(
+                        apiClient,
+                        softwareStatement,
+                        providerConfiguration,
+                        ukOpenBankingPis,
+                        paymentRequest);
+
+        // Do not use the real PersistentStorage because we don't want to overwrite the AIS auth
+        // token.
+        PersistentStorage dummyStorage = new PersistentStorage();
+
+        OpenIdAuthenticationController openIdAuthenticationController =
+                new OpenIdAuthenticationController(
+                        dummyStorage,
+                        supplementalInformationHelper,
+                        apiClient,
+                        paymentAuthenticator,
+                        callbackJwtSignatureKeyPair,
+                        null,
+                        null,
+                        credentials);
+
+        ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
+                new ThirdPartyAppAuthenticationController<>(
+                        openIdAuthenticationController, supplementalInformationHelper);
+
+        try {
+            thirdPartyAppAuthenticationController.authenticate(credentials);
+
+        } catch (AuthenticationException | AuthorizationException e) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setMessage("Authentication error.")
+                    .build();
+        }
+
+        return paymentAuthenticator.getPaymentResponse();
     }
 
     @Override
@@ -134,10 +212,11 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
         switch (paymentMultiStepRequest.getPayment().getStatus()) {
             case CREATED:
+                // Directly executing the payment after authorizing the payment consent
+                // successfully. Steps for funds check needs to be done before authorizing the
+                // consent.  Step.AUTHORIZE
                 return new PaymentMultiStepResponse(
-                        paymentMultiStepRequest,
-                        UkOpenBankingV31Constants.Step.AUTHORIZE,
-                        new ArrayList<>());
+                        paymentMultiStepRequest, Step.EXECUTE_PAYMENT, new ArrayList<>());
             case REJECTED:
                 throw new PaymentAuthorizationException(
                         "Payment is rejected", new IllegalStateException("Payment is rejected"));
@@ -191,8 +270,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     private PaymentMultiStepResponse executePayment(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
         String endToEndIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
-        String instructionIdentification =
-                RandomUtils.generateRandomHexEncoded(UkOpenBankingV31Constants.HEX_SIZE);
+        String instructionIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
 
         PaymentResponse paymentResponse =
                 getConfig(paymentMultiStepRequest.getPayment())

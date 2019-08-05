@@ -65,4 +65,8 @@ public class Initiation {
     public Reference getReference() {
         return remittanceInformation.createTinkReference();
     }
+
+    public String getInstructionIdentification() {
+        return instructionIdentification;
+    }
 }

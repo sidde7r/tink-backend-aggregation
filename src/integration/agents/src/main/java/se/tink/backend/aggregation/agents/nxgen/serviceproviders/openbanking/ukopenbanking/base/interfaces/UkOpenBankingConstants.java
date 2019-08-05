@@ -7,6 +7,7 @@ public abstract class UkOpenBankingConstants extends OpenbankConstants {
 
     public static class HttpHeaders {
         public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
+        public static final String X_JWS_SIGNATURE = "x-jws-signature";
     }
 
     public static class ApiServices {
@@ -42,6 +43,21 @@ public abstract class UkOpenBankingConstants extends OpenbankConstants {
         public static class UrlParameterKeys {
             public static final String consentId = "consentId";
             public static final String paymentId = "paymentId";
+        }
+    }
+
+    public static class JWTSignatureHeaders {
+        public static class HEADERS {
+            public static final String KID = "kid";
+            public static final String IAT = "http://openbanking.org.uk/iat";
+            public static final String ISS = "http://openbanking.org.uk/iss";
+            public static final String B64 = "b64";
+            public static final String CRIT = "crit";
+        }
+
+        public static class PAYLOAD {
+            public static final String DATA = "Data";
+            public static final String RISK = "Risk";
         }
     }
 }
