@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -20,6 +21,7 @@ public abstract class AgentVersionMigration {
 
     public static final String DUPLICATE = "-duplicate-";
     private ControllerWrapper wrapper;
+    private ClientInfo clientIfo;
 
     /**
      * Depending on result of this method the migrations will be performed or completely omitted. In
@@ -114,6 +116,14 @@ public abstract class AgentVersionMigration {
      */
     protected Account migrateAccount(Account account) {
         return getControlWrapper().updateAccountMetaData(account.getId(), account.getBankId());
+    }
+
+    public void setClientIfo(ClientInfo clientInfo) {
+        this.clientIfo = clientInfo;
+    }
+
+    protected ClientInfo getClientIfo() {
+        return clientIfo;
     }
 
     public final void setWrapper(ControllerWrapper wrapper) {

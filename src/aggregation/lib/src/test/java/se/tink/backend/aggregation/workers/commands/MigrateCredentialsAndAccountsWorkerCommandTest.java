@@ -18,6 +18,7 @@ import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -612,7 +613,8 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
 
     private MigrateCredentialsAndAccountsWorkerCommand createCommand(CredentialsRequest request) {
         MigrateCredentialsAndAccountsWorkerCommand migrateCredentialsAndAccountsWorkerCommand =
-                new MigrateCredentialsAndAccountsWorkerCommand(request, wrapper);
+                new MigrateCredentialsAndAccountsWorkerCommand(
+                        request, wrapper, createClientInfo());
         migrateCredentialsAndAccountsWorkerCommand.setMigrations(ImmutableMap.copyOf(migrations));
         return migrateCredentialsAndAccountsWorkerCommand;
     }
@@ -620,8 +622,13 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     private MigrateCredentialsAndAccountsWorkerCommand createCommand(
             CredentialsRequest request, Map<String, AgentVersionMigration> migrations) {
         MigrateCredentialsAndAccountsWorkerCommand migrateCredentialsAndAccountsWorkerCommand =
-                new MigrateCredentialsAndAccountsWorkerCommand(request, wrapper);
+                new MigrateCredentialsAndAccountsWorkerCommand(
+                        request, wrapper, createClientInfo());
         migrateCredentialsAndAccountsWorkerCommand.setMigrations(ImmutableMap.copyOf(migrations));
         return migrateCredentialsAndAccountsWorkerCommand;
+    }
+
+    private ClientInfo createClientInfo() {
+        return ClientInfo.of("client", "oxford-staging", "aggregator");
     }
 }
