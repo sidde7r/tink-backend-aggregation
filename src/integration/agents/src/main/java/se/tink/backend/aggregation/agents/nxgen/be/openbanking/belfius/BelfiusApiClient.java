@@ -1,57 +1,116 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.utils.CryptoUtils;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.utils.TimeUtils;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class BelfiusApiClient {
 
     private final TinkHttpClient client;
-    private BelfiusConfiguration configuration;
+    private final BelfiusConfiguration configuration;
 
-    public BelfiusApiClient(TinkHttpClient client) {
-        this.client = client;
+    private static final ObjectMapper OBJECT_MAPPER;
+
+    static {
+        OBJECT_MAPPER = new ObjectMapper();
+        OBJECT_MAPPER.configure(Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
     }
 
-    protected void setConfiguration(BelfiusConfiguration configuration) {
+    public BelfiusApiClient(TinkHttpClient client, BelfiusConfiguration configuration) {
+        this.client = client;
         this.configuration = configuration;
     }
 
     private RequestBuilder createRequest(URL url) {
-        return client.request(url);
+
+        return client.request(url)
+                .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
+                .header(HeaderKeys.ACCEPT, HeaderValues.ACCEPT)
+                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.FORCE);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
 
         return createRequest(url)
                 .header(HeaderKeys.CLIENT_ID, configuration.getClientId())
-                .header(HeaderKeys.ACCEPT, HeaderValues.ACCEPT)
                 .header(HeaderKeys.REDIRECT_URI, configuration.getRedirectUrl())
-                .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
-                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.AUTHORIZATION, HeaderValues.AUTHORIZATION);
+                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID());
     }
 
-    public FetchAccountResponse fetchAccountById(String id) {
+    public List<ConsentResponse> getConsent(URL url, String iban, String code) {
+
+        ConsentResponse[] consentResponses =
+                createRequestInSession(url)
+                        .queryParam(QueryKeys.IBAN, iban)
+                        .header(HeaderKeys.CODE_CHALLENGE, CryptoUtils.getCodeChallenge(code))
+                        .header(HeaderKeys.CODE_CHALLENGE_METHOD, HeaderValues.CODE_CHALLENGE_TYPE)
+                        .get(ConsentResponse[].class);
+
+        return Arrays.asList(consentResponses);
+    }
+
+    public TokenResponse postToken(URL url, String tokenEntity) {
+        return createRequest(url)
+                .addBasicAuth(configuration.getClientId(), configuration.getClientSecret())
+                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID())
+                .body(tokenEntity, MediaType.APPLICATION_FORM_URLENCODED)
+                .post(TokenResponse.class);
+    }
+
+    public FetchAccountResponse fetchAccountById(OAuth2Token oAuth2Token, String logicalId) {
+
         return createRequestInSession(
-                        new URL(configuration.getBaseUrl() + Urls.FETCH_ACCOUNT_PATH + id))
+                        new URL(configuration.getBaseUrl() + Urls.FETCH_ACCOUNT_PATH + logicalId))
+                .addBearerToken(oAuth2Token)
                 .get(FetchAccountResponse.class);
     }
 
-    public TransactionKeyPaginatorResponse<URL> fetchTransactionsForAccount(String id) {
-        URL url =
-                new URL(
-                        configuration.getBaseUrl()
-                                + String.format(Urls.FETCH_TRANSACTIONS_PATH, id));
+    public FetchTransactionsResponse fetchTransactionsForAccount(
+            Date fromDate, Date toDate, OAuth2Token oAuth2Token, String logicalId) {
+        final URL url =
+                new URL(configuration.getBaseUrl() + Urls.FETCH_TRANSACTIONS_PATH)
+                        .parameter(StorageKeys.LOGICAL_ID, logicalId);
 
-        return createRequestInSession(url).get(FetchTransactionsResponse.class);
+        HttpResponse httpResponse =
+                createRequestInSession(url)
+                        .addBearerToken(oAuth2Token)
+                        .queryParam(
+                                QueryKeys.FROM_DATE,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                                        TimeUtils.get90DaysDate(toDate)))
+                        .queryParam(
+                                QueryKeys.TO_DATE,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                        .get(HttpResponse.class);
+
+        try {
+            return OBJECT_MAPPER.readValue(
+                    httpResponse.getBodyInputStream(), FetchTransactionsResponse.class);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

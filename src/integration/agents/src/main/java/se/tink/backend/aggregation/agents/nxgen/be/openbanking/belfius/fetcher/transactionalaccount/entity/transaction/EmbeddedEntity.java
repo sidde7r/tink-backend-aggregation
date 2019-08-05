@@ -5,12 +5,12 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Embedded {
+public class EmbeddedEntity {
 
     @JsonProperty("next_page_key")
     private String nextPageKey;
 
-    private List<Transaction> transactions;
+    private List<TransactionEntity> transactions;
 
     public String getNextPageKey() {
         return nextPageKey;
@@ -20,11 +20,11 @@ public class Embedded {
         this.nextPageKey = nextPageKey;
     }
 
-    public List<Transaction> getTransactions() {
+    public List<TransactionEntity> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<Transaction> transactions) {
+    public void setTransactions(List<TransactionEntity> transactions) {
         this.transactions = transactions;
     }
 }
