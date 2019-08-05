@@ -37,7 +37,8 @@ data:
         caPath: "/etc/client-certificate/ca.crt"
         tlsCrtPath: "/etc/client-certificate/tls.crt"
         tlsKeyPath: "/etc/client-certificate/tls.key"
-        tppSecretsServiceLocation: {{ $tppSecretsServiceConfig.tppSecretsServiceClusterLocation }}
+        certificatesLocation: {{ $tppSecretsServiceConfig.tppSecretsServiceClusterLocation }}
+        enabled: true
       {{- end }}
 
       {{- if $agentsConfig.mountCallbackJwtSignaturePair }}

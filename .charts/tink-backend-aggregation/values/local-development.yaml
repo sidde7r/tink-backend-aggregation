@@ -54,4 +54,4 @@ clients:
 initialDelaySeconds: 10
 
 tppSecretsServiceConfiguration:
-  tppSecretsServiceLocation: "outside-cluster-staging"
+  tppSecretsServiceLocation: "home-p12"

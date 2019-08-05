@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceConfiguration;
-import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceLocation;
 
 public final class AgentConfigurationController {
 
@@ -19,14 +18,18 @@ public final class AgentConfigurationController {
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private final TppSecretsServiceClient tppSecretsServiceClient;
     private final IntegrationsConfiguration integrationsConfiguration;
-    private final TppSecretsServiceLocation tppSecretsServiceLocation;
+    private final boolean tppSecretsServiceEnabled;
 
     public AgentConfigurationController(
             TppSecretsServiceConfiguration tppSecretsServiceConfiguration,
             IntegrationsConfiguration integrationsConfiguration) {
-        this.tppSecretsServiceClient = new TppSecretsServiceClient(tppSecretsServiceConfiguration);
-        this.tppSecretsServiceLocation =
-                tppSecretsServiceConfiguration.getTppSecretsServiceLocation();
+        this.tppSecretsServiceEnabled = tppSecretsServiceConfiguration.isEnabled();
+        if (tppSecretsServiceEnabled) {
+            this.tppSecretsServiceClient =
+                    new TppSecretsServiceClient(tppSecretsServiceConfiguration);
+        } else {
+            this.tppSecretsServiceClient = null;
+        }
         this.integrationsConfiguration = integrationsConfiguration;
     }
 
@@ -36,7 +39,7 @@ public final class AgentConfigurationController {
             final Class<T> clientConfigClass) {
 
         // For local development we can use the development.yml file.
-        if (tppSecretsServiceLocation == TppSecretsServiceLocation.NOT_AVAILABLE) {
+        if (!tppSecretsServiceEnabled) {
             return getAgentConfigurationDev(financialInstitutionId, appId, clientConfigClass);
         }
 
@@ -77,6 +80,7 @@ public final class AgentConfigurationController {
                                                 + " is missing for financialInstitutionId: "
                                                 + financialInstitutionId
                                                 + " and appId: "
-                                                + appId));
+                                                + appId
+                                                + ". In the development.yml file."));
     }
 }

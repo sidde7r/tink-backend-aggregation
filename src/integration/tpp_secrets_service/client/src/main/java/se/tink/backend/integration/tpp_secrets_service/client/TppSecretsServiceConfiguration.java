@@ -17,14 +17,19 @@ public class TppSecretsServiceConfiguration {
     private String caPath;
     private String tlsCrtPath;
     private String tlsKeyPath;
-    private TppSecretsServiceLocation tppSecretsServiceLocation;
+    private CertificatesLocation certificatesLocation;
+    private boolean enabled;
 
-    public TppSecretsServiceLocation getTppSecretsServiceLocation() {
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public CertificatesLocation getCertificatesLocation() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(tppSecretsServiceLocation.toString()),
-                String.format(INVALID_CONFIGURATION, "tppSecretsServiceLocation"));
+                Strings.emptyToNull(certificatesLocation.toString()),
+                String.format(INVALID_CONFIGURATION, "certificatesLocation"));
 
-        return tppSecretsServiceLocation;
+        return certificatesLocation;
     }
 
     public String getCaPath() {
@@ -40,7 +45,7 @@ public class TppSecretsServiceConfiguration {
     }
 
     public String getHost() {
-        if (tppSecretsServiceLocation != TppSecretsServiceLocation.NOT_AVAILABLE) {
+        if (enabled) {
             Preconditions.checkNotNull(
                     Strings.emptyToNull(host), String.format(INVALID_CONFIGURATION, "host"));
         }
@@ -48,7 +53,7 @@ public class TppSecretsServiceConfiguration {
     }
 
     public int getPort() {
-        if (tppSecretsServiceLocation != TppSecretsServiceLocation.NOT_AVAILABLE) {
+        if (enabled) {
             Preconditions.checkArgument(port != 0, String.format(INVALID_CONFIGURATION, "port"));
         }
         return port;

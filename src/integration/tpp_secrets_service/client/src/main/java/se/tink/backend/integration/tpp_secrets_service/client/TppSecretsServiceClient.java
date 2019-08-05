@@ -46,8 +46,7 @@ public class TppSecretsServiceClient {
             internalSecretsServiceStub;
 
     public TppSecretsServiceClient(TppSecretsServiceConfiguration configuration) {
-        if (configuration.getTppSecretsServiceLocation()
-                != TppSecretsServiceLocation.NOT_AVAILABLE) {
+        if (configuration.isEnabled()) {
             SslContext sslContext = buildSslContext(configuration);
 
             ManagedChannel channel =
@@ -58,9 +57,7 @@ public class TppSecretsServiceClient {
 
             internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
         } else {
-            log.warn(
-                    "TPP Secrets Service location configured to {}. No client instance will be created."
-                            + configuration.getTppSecretsServiceLocation());
+            log.warn("TPP Secrets Service is not enabled, no client instance will be created.");
             internalSecretsServiceStub = null;
         }
     }
@@ -110,8 +107,8 @@ public class TppSecretsServiceClient {
         File caCertPath = getCaCertPath(configuration);
         SslContextBuilder sslContextBuilder = GrpcSslContexts.forClient().trustManager(caCertPath);
 
-        switch (configuration.getTppSecretsServiceLocation()) {
-            case INSIDE_CLUSTER:
+        switch (configuration.getCertificatesLocation()) {
+            case CLUSTER:
                 if (configuration.getTlsCrtPath() != null
                         && configuration.getTlsKeyPath() != null) {
                     sslContextBuilder.keyManager(
@@ -124,7 +121,7 @@ public class TppSecretsServiceClient {
                 }
                 break;
 
-            case OUTSIDE_CLUSTER_STAGING:
+            case HOME_P12:
                 File clientP12File =
                         new File(System.getProperty("user.home"), "/.eidas/eidas_client.p12");
 
@@ -159,7 +156,7 @@ public class TppSecretsServiceClient {
                 }
                 break;
 
-            case OUTSIDE_CLUSTER_LOCAL:
+            case HOME_PEM:
                 File localClientCertFile =
                         new File(System.getProperty("user.home"), "/.eidas/local-cluster/tls.crt");
                 File localClientKeyFile =
@@ -184,8 +181,8 @@ public class TppSecretsServiceClient {
     }
 
     private File getCaCertPath(TppSecretsServiceConfiguration configuration) {
-        switch (configuration.getTppSecretsServiceLocation()) {
-            case INSIDE_CLUSTER:
+        switch (configuration.getCertificatesLocation()) {
+            case CLUSTER:
                 if (configuration.getCaPath() != null) {
                     return new File(configuration.getCaPath());
                 } else {
@@ -194,10 +191,10 @@ public class TppSecretsServiceClient {
                                     + "Service");
                 }
 
-            case OUTSIDE_CLUSTER_STAGING:
+            case HOME_P12:
                 return new File("data/eidas_dev_certificates/aggregation-staging-ca.pem");
 
-            case OUTSIDE_CLUSTER_LOCAL:
+            case HOME_PEM:
                 File localCaCertFile =
                         new File(System.getProperty("user.home"), "/.eidas/local-cluster/ca.crt");
                 if (!localCaCertFile.exists()) {
