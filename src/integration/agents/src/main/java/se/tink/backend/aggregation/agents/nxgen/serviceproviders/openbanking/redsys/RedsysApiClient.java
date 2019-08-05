@@ -243,10 +243,6 @@ public final class RedsysApiClient {
         return createSignedRequest(url, payload, getTokenFromStorage(), headers);
     }
 
-    private RequestBuilder createSignedRequest(String url, @Nullable Object payload) {
-        return createSignedRequest(url, payload, getTokenFromStorage(), Maps.newHashMap());
-    }
-
     private RequestBuilder createSignedRequest(String url) {
         return createSignedRequest(url, null, getTokenFromStorage(), Maps.newHashMap());
     }
@@ -265,8 +261,10 @@ public final class RedsysApiClient {
                 Signature.DIGEST_PREFIX
                         + Base64.getEncoder().encodeToString(Hash.sha256(serializedPayload));
         allHeaders.put(HeaderKeys.DIGEST, digest);
-        final String requestID = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
-        allHeaders.put(HeaderKeys.REQUEST_ID, requestID);
+        if (!allHeaders.containsKey(HeaderKeys.REQUEST_ID)) {
+            final String requestID = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
+            allHeaders.put(HeaderKeys.REQUEST_ID, requestID);
+        }
         final String signature =
                 RedsysUtils.generateRequestSignature(
                         configuration,
@@ -312,10 +310,15 @@ public final class RedsysApiClient {
             String accountId, LocalDate fromDate, LocalDate toDate) {
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
-        final String consentId = getConsentId();
+        // Persist request ID in session
+        final Map<String, Object> headers = Maps.newHashMap();
+        final String requestId = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
+        sessionStorage.put(StorageKeys.TRANSACTIONS_REQUEST_ID + accountId, requestId);
+        headers.put(HeaderKeys.REQUEST_ID, requestId);
+        headers.put(HeaderKeys.CONSENT_ID, getConsentId());
+
         RequestBuilder request =
-                createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId))
-                        .header(HeaderKeys.CONSENT_ID, consentId)
+                createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
                         .queryParam(QueryKeys.DATE_FROM, formatter.format(fromDate))
                         .queryParam(QueryKeys.DATE_TO, formatter.format(toDate))
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
@@ -331,8 +334,14 @@ public final class RedsysApiClient {
             return fetchTransactions(accountId, fromDate, toDate);
         }
 
-        RequestBuilder request =
-                createSignedRequest(makeApiUrl(path)).header(HeaderKeys.CONSENT_ID, getConsentId());
+        final Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.CONSENT_ID, getConsentId());
+
+        final String requestId =
+                sessionStorage.get(StorageKeys.TRANSACTIONS_REQUEST_ID + accountId);
+        headers.put(HeaderKeys.REQUEST_ID, requestId);
+
+        RequestBuilder request = createSignedRequest(makeApiUrl(path), null, headers);
         return request.get(TransactionsResponse.class);
     }
 

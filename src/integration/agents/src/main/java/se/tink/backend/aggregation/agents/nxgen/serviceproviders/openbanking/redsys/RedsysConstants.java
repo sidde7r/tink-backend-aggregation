@@ -50,6 +50,7 @@ public final class RedsysConstants {
         public static final String SCA_STATE = "scaState";
         public static final String TRANSACTIONS_URL = "transactionsUrl";
         public static final String BALANCES_URL = "balancesUrl";
+        public static final String TRANSACTIONS_REQUEST_ID = "requestId:";
     }
 
     public static class QueryKeys {
