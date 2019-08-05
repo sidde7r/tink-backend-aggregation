@@ -202,6 +202,6 @@ public final class BecApiClient {
     }
 
     private String createDigest(String body) {
-        return "SHA-256=" + Base64.getEncoder().encodeToString(Hash.sha256(body));
+        return String.format(HeaderValues.SHA_256+"%s",Base64.getEncoder().encodeToString(Hash.sha256(body)));
     }
 }
