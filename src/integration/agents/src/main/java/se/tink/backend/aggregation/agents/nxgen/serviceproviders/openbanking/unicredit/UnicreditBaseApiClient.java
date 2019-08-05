@@ -131,10 +131,11 @@ public abstract class UnicreditBaseApiClient {
                         new URL(getConfiguration().getBaseUrl() + Endpoints.TRANSACTIONS)
                                 .parameter(PathParameters.ACCOUNT_ID, account.getApiIdentifier()))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                .queryParam(
-                        QueryKeys.DATE_FROM, UnicreditConstants.QueryValues.TRANSACTION_FROM_DATE)
+                .queryParam(QueryKeys.DATE_FROM, getTransactionsDateFrom())
                 .queryParam(
                         QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
                 .get(TransactionsResponse.class);
     }
+
+    protected abstract String getTransactionsDateFrom();
 }
