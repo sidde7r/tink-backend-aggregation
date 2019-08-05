@@ -40,13 +40,17 @@ public class TppSecretsServiceConfiguration {
     }
 
     public String getHost() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(host), String.format(INVALID_CONFIGURATION, "host"));
+        if (tppSecretsServiceLocation != TppSecretsServiceLocation.NOT_AVAILABLE) {
+            Preconditions.checkNotNull(
+                    Strings.emptyToNull(host), String.format(INVALID_CONFIGURATION, "host"));
+        }
         return host;
     }
 
     public int getPort() {
-        Preconditions.checkArgument(port != 0, String.format(INVALID_CONFIGURATION, "port"));
+        if (tppSecretsServiceLocation != TppSecretsServiceLocation.NOT_AVAILABLE) {
+            Preconditions.checkArgument(port != 0, String.format(INVALID_CONFIGURATION, "port"));
+        }
         return port;
     }
 }
