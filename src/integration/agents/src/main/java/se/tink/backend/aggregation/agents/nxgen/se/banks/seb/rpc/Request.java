@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -8,8 +7,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.Payload;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.RequestComponent;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.ServiceInput;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserCredentials;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class Request {
 
     @JsonProperty("request")

@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.RequestComponent;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 @JsonInclude(Include.NON_NULL)
 public class TransactionQuery implements RequestComponent {
     @JsonProperty("ROW_ID")

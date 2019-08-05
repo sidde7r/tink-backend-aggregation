@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.enti
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.RequestComponent;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 public class DeviceIdentification implements RequestComponent {
 
     @JsonProperty("APPLICATION_VERSION")

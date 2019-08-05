@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,9 +16,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.UpcomingTransactionEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 @JsonInclude(Include.NON_NULL)
 public class Payload {
 

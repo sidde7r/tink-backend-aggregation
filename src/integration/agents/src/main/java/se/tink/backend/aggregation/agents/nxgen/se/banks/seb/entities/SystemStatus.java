@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class SystemStatus {
     @JsonProperty private int systemcode;
     @JsonProperty private int errorcode;

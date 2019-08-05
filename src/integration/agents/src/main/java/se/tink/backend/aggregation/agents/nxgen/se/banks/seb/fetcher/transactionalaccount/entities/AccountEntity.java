@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactio
 import static se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.ACCOUNT_TYPE_MAPPER;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -12,6 +11,7 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.StorageKeys;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -21,7 +21,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class AccountEntity {
     private static final String ACCOUNT_NUMBER_PATTERN = "^[0-9]{11}|[0-9a-f]{32}$";
 

@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.strings.StringUtils;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class ResultInfoMessage {
     private static final ImmutableMap<String, String> CANCELLED_DESCRIPTIONS_BY_CODE =
             ImmutableMap.<String, String>builder()
