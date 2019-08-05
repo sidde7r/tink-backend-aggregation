@@ -50,7 +50,8 @@ public final class UnicreditConstants {
 
     public static class QueryValues {
         public static final String BOTH = "both";
-        public static final String TRANSACTION_FROM_DATE = "2019-05-01";
+        public static final String TRANSACTION_FROM_DATE = "1970-01-01";
+        public static final int MAX_PERIOD_IN_DAYS = 89;
     }
 
     public static class HeaderKeys {

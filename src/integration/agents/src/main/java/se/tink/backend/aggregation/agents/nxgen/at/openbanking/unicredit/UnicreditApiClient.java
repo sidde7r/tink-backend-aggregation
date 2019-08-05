@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.unicredit;
 
 import java.util.Calendar;
 import java.util.Date;
+import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.unicredit.authenticator.entity.UnicreditConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.unicredit.authenticator.rpc.UnicreditConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.unicredit.authenticator.rpc.UnicreditConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -44,5 +46,11 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
     @Override
     protected URL getScaRedirectUrlFromConsentResponse(ConsentResponse consentResponse) {
         return new URL(consentResponse.getScaRedirect());
+    }
+
+    @Override
+    protected String getTransactionsDateFrom() {
+        return ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                DateUtils.addDays(new Date(), -QueryValues.MAX_PERIOD_IN_DAYS));
     }
 }
