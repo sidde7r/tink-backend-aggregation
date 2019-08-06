@@ -100,6 +100,7 @@ public abstract class BecConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String SCOPE = "scope";
         public static final String STATE = "state";
+        public static final String SUPPLEMENTAL_INFORMATION = "tpcb_%s";
     }
 
     public static class QueryValues {
@@ -125,12 +126,12 @@ public abstract class BecConstants {
         public static final String ACCESS_TYPE = "allAccounts";
         public static final Integer FREQUENCY_PER_DAY = 4;
         public static final boolean TRUE = true;
-        public static final String VALID_UNTIL = "2019-09-10";
         public static final boolean FALSE = false;
         public static final String EMPTY_STRING = "";
         public static final String VALID = "valid";
 
     }
+
 
     public static class HeaderValues {
         public static final String PSU_IP = "34.240.159.190";
@@ -189,9 +190,9 @@ public abstract class BecConstants {
         }
 
         public static BalanceType fromString(String text) {
-            for (BalanceType b : BalanceType.values()) {
-                if (b.type.equalsIgnoreCase(text)) {
-                    return b;
+            for (BalanceType bType : BalanceType.values()) {
+                if (bType.type.equalsIgnoreCase(text)) {
+                    return bType;
                 }
             }
             return null;

@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.QueryKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -73,17 +74,17 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         final ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-        final Android androidPayload = new Android();
-        payload.setAndroid(androidPayload);
+        final URL authorizeUrl = authenticator.buildAuthorizeUrl(state);
 
-        final URL authorizeUrl = this.authenticator.buildAuthorizeUrl(state);
+        final Android androidPayload = new Android();
         androidPayload.setIntent(authorizeUrl.get());
 
         final Ios iOsPayload = new Ios();
         iOsPayload.setAppScheme(authorizeUrl.getScheme());
         iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        payload.setIos(iOsPayload);
 
+        payload.setAndroid(androidPayload);
+        payload.setIos(iOsPayload);
         return payload;
     }
 
@@ -93,7 +94,7 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
     }
 
     private String formatSupplementalKey(final String key) {
-        return String.format("tpcb_%s", key);
+        return String.format(QueryKeys.SUPPLEMENTAL_INFORMATION, key);
     }
 
     private static String generateRandomState() {

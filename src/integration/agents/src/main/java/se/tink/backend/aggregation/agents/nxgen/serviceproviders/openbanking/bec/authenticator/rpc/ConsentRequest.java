@@ -8,11 +8,11 @@ public class ConsentRequest {
 
     private AccessEntity access;
 
-    private String combinedServiceIndicator;
+    private boolean combinedServiceIndicator;
 
     private String validUntil;
 
-    private String recurringIndicator;
+    private boolean recurringIndicator;
 
     private int frequencyPerDay;
 
@@ -20,7 +20,7 @@ public class ConsentRequest {
         return access;
     }
 
-    public String getCombinedServiceIndicator() {
+    public boolean getCombinedServiceIndicator() {
         return combinedServiceIndicator;
     }
 
@@ -28,7 +28,7 @@ public class ConsentRequest {
         return validUntil;
     }
 
-    public String getRecurringIndicator() {
+    public boolean getRecurringIndicator() {
         return recurringIndicator;
     }
 
@@ -38,9 +38,9 @@ public class ConsentRequest {
 
     public ConsentRequest(
             AccessEntity access,
-            String combinedServiceIndicator,
+            boolean combinedServiceIndicator,
             String validUntil,
-            String recurringIndicator,
+            boolean recurringIndicator,
             int frequencyPerDay) {
         this.access = access;
         this.combinedServiceIndicator = combinedServiceIndicator;

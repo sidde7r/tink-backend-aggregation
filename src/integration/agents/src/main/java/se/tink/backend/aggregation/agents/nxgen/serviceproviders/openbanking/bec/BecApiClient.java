@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec;
 
 
-import static se.tink.libraries.serialization.utils.SerializationUtils.serializeToString;
-
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
@@ -43,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class BecApiClient {
     private final TinkHttpClient client;
@@ -107,8 +107,9 @@ public final class BecApiClient {
     public ConsentResponse getConsent(String state) throws HttpResponseException {
         this.state = state;
         ConsentRequest body = createConsentRequestBody();
+
         ConsentResponse response =
-                createRequest(new URL(baseUrl.concat(ApiService.GET_CONSENT)), serializeToString(body))
+                createRequest(new URL(baseUrl.concat(ApiService.GET_CONSENT)), SerializationUtils.serializeToString(body))
                         .body(body)
                         .post(ConsentResponse.class);
         persistentStorage.put(StorageKeys.CONSENT_ID, response.getConsentId());
@@ -130,7 +131,7 @@ public final class BecApiClient {
             new AccessEntity(
                 FormValues.ACCESS_TYPE),
                 FormValues.FALSE,
-                FormValues.VALID_UNTIL,
+                LocalDate.now().plusDays(90).toString(),
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY);
     }
