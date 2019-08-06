@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.configuration;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Preconditions;
 import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -23,6 +24,9 @@ public final class AgentConfigurationController {
     public AgentConfigurationController(
             TppSecretsServiceConfiguration tppSecretsServiceConfiguration,
             IntegrationsConfiguration integrationsConfiguration) {
+        Preconditions.checkNotNull(
+                tppSecretsServiceConfiguration, "tppSecretsServiceConfiguration not found.");
+
         this.tppSecretsServiceEnabled = tppSecretsServiceConfiguration.isEnabled();
         if (tppSecretsServiceEnabled) {
             this.tppSecretsServiceClient =
@@ -69,6 +73,9 @@ public final class AgentConfigurationController {
                 "Not reading agent configuration from Secrets Service, make sure that you have "
                         + "uploaded the configuration to Secrets Service in staging and/or "
                         + "production.");
+        Preconditions.checkNotNull(
+                integrationsConfiguration,
+                "integrations configurations cannot be null if getAgentConfigurationDev is to be used.");
 
         return integrationsConfiguration
                 .getClientConfiguration(financialInstitutionId, appId, clientConfigClass)

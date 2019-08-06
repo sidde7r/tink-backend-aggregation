@@ -1,5 +1,6 @@
 package se.tink.backend.integration.tpp_secrets_service.client;
 
+import com.google.common.base.Preconditions;
 import com.google.common.io.Files;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.GrpcSslContexts;
@@ -46,20 +47,20 @@ public class TppSecretsServiceClient {
             internalSecretsServiceStub;
 
     public TppSecretsServiceClient(TppSecretsServiceConfiguration configuration) {
-        if (configuration.isEnabled()) {
-            SslContext sslContext = buildSslContext(configuration);
+        Preconditions.checkNotNull(configuration, "tppSecretsServiceConfiguration not found.");
+        Preconditions.checkArgument(
+                configuration.isEnabled(),
+                "Trying to create a TppSecretsServiceClient when the configuration says it is not enabled.");
 
-            ManagedChannel channel =
-                    NettyChannelBuilder.forAddress(configuration.getHost(), configuration.getPort())
-                            .useTransportSecurity()
-                            .sslContext(sslContext)
-                            .build();
+        SslContext sslContext = buildSslContext(configuration);
 
-            internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
-        } else {
-            log.warn("TPP Secrets Service is not enabled, no client instance will be created.");
-            internalSecretsServiceStub = null;
-        }
+        ManagedChannel channel =
+                NettyChannelBuilder.forAddress(configuration.getHost(), configuration.getPort())
+                        .useTransportSecurity()
+                        .sslContext(sslContext)
+                        .build();
+
+        internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
     }
 
     public Map<String, String> getAllSecrets(String financialInstitutionId, String appId) {
