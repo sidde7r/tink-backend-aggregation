@@ -122,7 +122,7 @@ public class OAuth2AuthenticationController
     }
 
     private String getJwtState(String pseudoId, String appUriId) {
-        if (callbackJWTSignatureKeyPair != null && !callbackJWTSignatureKeyPair.isEnabled()) {
+        if (callbackJWTSignatureKeyPair == null || !callbackJWTSignatureKeyPair.isEnabled()) {
             logger.info("Callback JWT not enabled, using pseudoId as state. State: {}", pseudoId);
             return pseudoId;
         }
