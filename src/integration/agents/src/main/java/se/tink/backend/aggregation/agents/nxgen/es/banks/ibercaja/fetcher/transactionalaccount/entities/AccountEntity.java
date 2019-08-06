@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.entities;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants.ACCOUNT_TYPE_MAPPER;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants.CARD_TYPE_MAPPER;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -41,10 +46,22 @@ public class AccountEntity {
     @JsonProperty("IBAN")
     private String iban;
 
-    public TransactionalAccount toTinkAccount() {
+    public boolean isTransactionalAccount() {
+        return ACCOUNT_TYPE_MAPPER.isOneOf(getType(), TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
+    }
 
+    public boolean isInvestmentAccount() {
+        return ACCOUNT_TYPE_MAPPER.isOneOf(getType(), InvestmentAccount.ALLOWED_ACCOUNT_TYPES);
+    }
+
+    public boolean isCreditCardAccount() {
+        return ACCOUNT_TYPE_MAPPER.isOf(getType(), AccountTypes.CREDIT_CARD)
+                && CARD_TYPE_MAPPER.isOf(getTypeCard(), AccountTypes.CREDIT_CARD);
+    }
+
+    public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(
-                        IberCajaConstants.ACCOUNT_TYPE_MAPPER.translate(type).get(),
+                        ACCOUNT_TYPE_MAPPER.translate(getType()).get(),
                         iban,
                         new Amount(IberCajaConstants.currency, balance))
                 .setAccountNumber(iban)
@@ -56,8 +73,7 @@ public class AccountEntity {
     }
 
     public InvestmentAccount toTinkInvestmentAccount() {
-
-        Portfolio portfolio = toTinkPortfolio();
+        final Portfolio portfolio = toTinkPortfolio();
 
         return InvestmentAccount.builder(iban)
                 .setAccountNumber(number)
@@ -90,7 +106,6 @@ public class AccountEntity {
     }
 
     public CreditCardAccount toTinkCreditCardAccount() {
-
         return CreditCardAccount.builder(
                         number,
                         new Amount(IberCajaConstants.currency, disposed),
@@ -101,11 +116,13 @@ public class AccountEntity {
                 .build();
     }
 
-    public int getType() {
-        return type;
+    @JsonIgnore
+    private String getType() {
+        return String.valueOf(type);
     }
 
-    public int getTypeCard() {
-        return typeCard;
+    @JsonIgnore
+    private String getTypeCard() {
+        return String.valueOf(typeCard);
     }
 }

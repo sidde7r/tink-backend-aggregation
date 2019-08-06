@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.trans
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -18,34 +17,21 @@ public class FetchAccountResponse {
 
     public List<TransactionalAccount> getAccounts() {
         return accounts.stream()
-                .filter(
-                        entity ->
-                                IberCajaConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(
-                                        entity.getType()))
+                .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
 
     public List<InvestmentAccount> getInvestmentAccounts() {
         return accounts.stream()
-                .filter(
-                        entity ->
-                                IberCajaConstants.ACCOUNT_TYPE_MAPPER.isInvestmentAccount(
-                                        entity.getType()))
+                .filter(AccountEntity::isInvestmentAccount)
                 .map(AccountEntity::toTinkInvestmentAccount)
                 .collect(Collectors.toList());
     }
 
     public List<CreditCardAccount> getCreditCardAccounts() {
         return accounts.stream()
-                .filter(
-                        entity ->
-                                IberCajaConstants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(
-                                        entity.getType()))
-                .filter(
-                        entity ->
-                                IberCajaConstants.CARD_TYPE_MAPPER.isCreditCardAccount(
-                                        entity.getTypeCard()))
+                .filter(AccountEntity::isCreditCardAccount)
                 .map(AccountEntity::toTinkCreditCardAccount)
                 .collect(Collectors.toList());
     }

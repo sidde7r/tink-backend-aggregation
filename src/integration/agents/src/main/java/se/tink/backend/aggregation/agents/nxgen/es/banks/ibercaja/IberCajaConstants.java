@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class IberCajaConstants {
@@ -85,16 +85,16 @@ public class IberCajaConstants {
         public static final LogTag NIF_NOT_PRESENT = LogTag.from("Ibercaja_NIF_not_present");
     }
 
-    public static AccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            AccountTypeMapper.builder()
-                    .put(AccountTypes.CHECKING, 0)
-                    .put(AccountTypes.CREDIT_CARD, 1)
-                    .put(AccountTypes.INVESTMENT, 6)
+    public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "0")
+                    .put(AccountTypes.CREDIT_CARD, "1")
+                    .put(AccountTypes.INVESTMENT, "6")
                     .build();
 
-    public static AccountTypeMapper CARD_TYPE_MAPPER =
-            AccountTypeMapper.builder()
-                    .put(AccountTypes.CREDIT_CARD, 2)
-                    .ignoreKeys(1) // 1 is debit card
+    public static TypeMapper<AccountTypes> CARD_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CREDIT_CARD, "2")
+                    .ignoreKeys("1") // 1 is debit card
                     .build();
 }
