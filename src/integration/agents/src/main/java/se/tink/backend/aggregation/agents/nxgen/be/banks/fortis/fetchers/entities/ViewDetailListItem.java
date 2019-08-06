@@ -12,12 +12,14 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class ViewDetailListItem {
+
+    private static final AggregationLogger LOGGER = new AggregationLogger(ViewDetailListItem.class);
+
     private String accountType;
     private Object viewDetailId;
     private String accountSequenceNumber;
     private String accountNumber;
     private Account account;
-    private static final AggregationLogger LOGGER = new AggregationLogger(ViewDetailListItem.class);
 
     public String getAccountType() {
         return accountType;
