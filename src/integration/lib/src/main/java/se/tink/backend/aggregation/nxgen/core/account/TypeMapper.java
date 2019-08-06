@@ -40,7 +40,7 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
     public abstract static class TypeMapperBuilder<V, B extends TypeMapperBuilder<V, B>>
             extends GenericTypeMapper.Builder<V, String, B> {
 
-        protected TypeMapperBuilder() {
+        TypeMapperBuilder() {
             super();
         }
 
