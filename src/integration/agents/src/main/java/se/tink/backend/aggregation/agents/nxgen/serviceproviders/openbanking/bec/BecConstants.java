@@ -27,53 +27,53 @@ public abstract class BecConstants {
                     .build();
 
     public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
-        TypeMapper.<TransactionalAccountType>builder()
-            .put(
-                TransactionalAccountType.CHECKING,
-                "basal indlånskonto",
-                "konto personale",
-                "personalekonto",
-                "personalekonto",
-                "young money",
-                "stjernekonto",
-                "ung konto",
-                "konto",
-                "18-27 konto",
-                "lønkonto",
-                "superløn",
-                "superløn basis",
-                "lommepengekonto",
-                "fynske teen",
-                "Anfordring med AL-MC Cash",
-                "Basal Betaling",
-                "PrivatLøn",
-                "Appaløn",
-                "Totalløn"
-                )
-            .put(TransactionalAccountType.SAVINGS,
-                "aldersopsparing",
-                "børneopsparing",
-                "spar nord stjernekonto",
-                "al-flex-start",
-                "opsparingskonto",
-                "uddannelseskonto",
-                "jackpot",
-                "boligopsparing",
-                "al-børne plus",
-                "al-formueflex",
-                "indlån",
-                "spar nord studiekonto",
-                "ungdomsopsparing",
-                "vestjyskungosparing",
-                "opsparing",
-                "konfirmandkonto",
-                "børnebørnskonto",
-                "opsparingsinvest personale",
-                "Spar'Op",
-                "Coop Budget")
-            .put(TransactionalAccountType.SAVINGS, "SVGS", "LLSV")
-            .setDefaultTranslationValue(TransactionalAccountType.CHECKING)
-            .build();
+            TypeMapper.<TransactionalAccountType>builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            "basal indlånskonto",
+                            "konto personale",
+                            "personalekonto",
+                            "personalekonto",
+                            "young money",
+                            "stjernekonto",
+                            "ung konto",
+                            "konto",
+                            "18-27 konto",
+                            "lønkonto",
+                            "superløn",
+                            "superløn basis",
+                            "lommepengekonto",
+                            "fynske teen",
+                            "Anfordring med AL-MC Cash",
+                            "Basal Betaling",
+                            "PrivatLøn",
+                            "Appaløn",
+                            "Totalløn")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            "aldersopsparing",
+                            "børneopsparing",
+                            "spar nord stjernekonto",
+                            "al-flex-start",
+                            "opsparingskonto",
+                            "uddannelseskonto",
+                            "jackpot",
+                            "boligopsparing",
+                            "al-børne plus",
+                            "al-formueflex",
+                            "indlån",
+                            "spar nord studiekonto",
+                            "ungdomsopsparing",
+                            "vestjyskungosparing",
+                            "opsparing",
+                            "konfirmandkonto",
+                            "børnebørnskonto",
+                            "opsparingsinvest personale",
+                            "Spar'Op",
+                            "Coop Budget")
+                    .put(TransactionalAccountType.SAVINGS, "SVGS", "LLSV")
+                    .setDefaultTranslationValue(TransactionalAccountType.CHECKING)
+                    .build();
 
     public static class ApiService {
         public static final String GET_CONSENT = "/consents";
@@ -129,14 +129,13 @@ public abstract class BecConstants {
         public static final boolean FALSE = false;
         public static final String EMPTY_STRING = "";
         public static final String VALID = "valid";
-
     }
-
 
     public static class HeaderValues {
         public static final String PSU_IP = "34.240.159.190";
         public static final String SHA_256 = "SHA-256=";
-        public static final String SIGNATURE_HEADER = "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
+        public static final String SIGNATURE_HEADER =
+                "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
     }
 
     public static class IdTags {

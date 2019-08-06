@@ -65,7 +65,7 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
                                                 "No supplemental info found in api response"));
 
         while (!authenticator.getApprovedConsent()) {
-                Uninterruptibles.sleepUninterruptibly(1000, TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(1000, TimeUnit.MILLISECONDS);
         }
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);

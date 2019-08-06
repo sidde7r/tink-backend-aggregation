@@ -9,7 +9,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class NykreditBankAgent extends BecAgent {
 
     public NykreditBankAgent(
-            CredentialsRequest request, AgentContext context, AgentsServiceConfiguration agentsServiceConfiguration) {
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration);
     }
 

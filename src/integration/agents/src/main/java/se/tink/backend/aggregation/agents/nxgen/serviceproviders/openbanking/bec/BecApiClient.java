@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec;
 
-
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
@@ -96,10 +95,11 @@ public final class BecApiClient {
         Map<String, Object> headers = getHeaders(requestId, digest);
 
         return client.request(url)
-            .type(MediaType.APPLICATION_JSON)
-            .headers(headers)
-            .header(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
+                .type(MediaType.APPLICATION_JSON)
+                .headers(headers)
+                .header(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
     }
+
     public RequestBuilder createRequest(URL url) {
         return createRequest(url, FormValues.EMPTY_STRING);
     }
@@ -109,7 +109,9 @@ public final class BecApiClient {
         ConsentRequest body = createConsentRequestBody();
 
         ConsentResponse response =
-                createRequest(new URL(baseUrl.concat(ApiService.GET_CONSENT)), SerializationUtils.serializeToString(body))
+                createRequest(
+                                new URL(baseUrl.concat(ApiService.GET_CONSENT)),
+                                SerializationUtils.serializeToString(body))
                         .body(body)
                         .post(ConsentResponse.class);
         persistentStorage.put(StorageKeys.CONSENT_ID, response.getConsentId());
@@ -128,8 +130,7 @@ public final class BecApiClient {
 
     public ConsentRequest createConsentRequestBody() {
         return new ConsentRequest(
-            new AccessEntity(
-                FormValues.ACCESS_TYPE),
+                new AccessEntity(FormValues.ACCESS_TYPE),
                 FormValues.FALSE,
                 LocalDate.now().plusDays(90).toString(),
                 FormValues.TRUE,
@@ -180,33 +181,33 @@ public final class BecApiClient {
 
     private String generateSignatureHeader(Map<String, Object> headers) {
         QsealcEidasProxySigner signer =
-            new QsealcEidasProxySigner(config.getEidasProxy(), becConfiguration.getEidasQwac());
+                new QsealcEidasProxySigner(config.getEidasProxy(), becConfiguration.getEidasQwac());
 
         String signedHeaders =
-            Arrays.stream(HeadersToSign.values())
-                .map(HeadersToSign::getHeader)
-                .filter(headers::containsKey)
-                .collect(Collectors.joining(" "));
+                Arrays.stream(HeadersToSign.values())
+                        .map(HeadersToSign::getHeader)
+                        .filter(headers::containsKey)
+                        .collect(Collectors.joining(" "));
 
         String signedHeadersWithValues =
-            Arrays.stream(HeadersToSign.values())
-                .map(HeadersToSign::getHeader)
-                .filter(headers::containsKey)
-                .map(header -> String.format("%s: %s", header, headers.get(header)))
-                .collect(Collectors.joining("\n"));
+                Arrays.stream(HeadersToSign.values())
+                        .map(HeadersToSign::getHeader)
+                        .filter(headers::containsKey)
+                        .map(header -> String.format("%s: %s", header, headers.get(header)))
+                        .collect(Collectors.joining("\n"));
 
         String signature = signer.getSignatureBase64(signedHeadersWithValues.getBytes());
 
         return String.format(
-            BecConstants.HeaderValues.SIGNATURE_HEADER,
-            becConfiguration.getKeyId(),
-            signedHeaders,
-            signature);
+                BecConstants.HeaderValues.SIGNATURE_HEADER,
+                becConfiguration.getKeyId(),
+                signedHeaders,
+                signature);
     }
 
-
-
     private String createDigest(String body) {
-        return String.format(HeaderValues.SHA_256.concat("%s"),Base64.getEncoder().encodeToString(Hash.sha256(body)));
+        return String.format(
+                HeaderValues.SHA_256.concat("%s"),
+                Base64.getEncoder().encodeToString(Hash.sha256(body)));
     }
 }
