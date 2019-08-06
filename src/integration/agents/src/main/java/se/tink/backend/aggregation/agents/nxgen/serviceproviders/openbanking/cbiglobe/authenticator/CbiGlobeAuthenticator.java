@@ -155,7 +155,7 @@ public class CbiGlobeAuthenticator {
         String consentStatusString = LogTags.UNKNOWN_STATE;
         try {
             consentStatusString = apiClient.getConsentStatus(consentType).getConsentStatus();
-            return ConsentStatus.valueOf(consentStatusString);
+            return ConsentStatus.valueOf(consentStatusString.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalStateException(LogTags.UNKNOWN_STATE + "=" + consentStatusString, e);
         }
