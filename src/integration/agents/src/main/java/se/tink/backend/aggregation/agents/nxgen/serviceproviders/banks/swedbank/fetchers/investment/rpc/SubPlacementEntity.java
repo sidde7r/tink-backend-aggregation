@@ -76,6 +76,7 @@ public class SubPlacementEntity {
                 case "interestequity":
                     holding.toTinkInstrument(this.type).ifPresent(instruments::add);
                     break;
+                case "funds":
                 case "equityfund":
                 case "mixedfund":
                 case "interestfund":
