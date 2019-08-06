@@ -93,13 +93,11 @@ public class GenericTypeMapper<V, T> {
 
     public abstract static class Builder<V, T, B extends Builder<V, T, B>> {
 
-        private B thisObj;
         final Map<V, Collection<T>> reversed = new HashMap<>();
         final Set<T> ignoredKeys = new HashSet<>();
         Optional<V> defaultValue;
 
         protected Builder() {
-            this.thisObj = self();
             this.defaultValue = Optional.empty();
         }
 
