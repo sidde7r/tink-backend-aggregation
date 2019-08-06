@@ -34,7 +34,8 @@ public class IngAtTransactionalAccountFetcher implements AccountFetcher<Transact
     }
 
     private static boolean isTransactionalAccountType(AccountReferenceEntity r) {
-        return IngAtConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(r.getType());
+        return IngAtConstants.ACCOUNT_TYPE_MAPPER.isOneOf(
+                r.getType(), TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
     @Override
