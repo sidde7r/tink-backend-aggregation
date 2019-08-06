@@ -1561,6 +1561,24 @@ java_library(
 )
 
 java_library(
+    name = "com_nimbusds_nimbus_jose_jwt",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_nimbusds_nimbus_jose_jwt//jar",
+    ],
+    runtime_deps = [
+        "@com_github_stephenc_jcip_annotations//jar",
+        "@com_google_crypto_tink//jar",
+        "@junit_junit//jar",
+        "@net_jadler_jadler_all//jar",
+        "@net_minidev_json_smart//jar",
+        "@org_bitbucket_b_c_jose4j//jar",
+        "@org_bouncycastle_bcpkix_jdk15on//jar",
+        "@org_bouncycastle_bcprov_jdk15on//jar",
+    ],
+)
+
+java_library(
     name = "com_auth0_java_jwt",
     visibility = ["//visibility:public"],
     exports = [

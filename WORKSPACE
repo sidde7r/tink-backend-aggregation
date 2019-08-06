@@ -2331,6 +2331,36 @@ maven_jar(
     sha1 = "3cd63d075497751784b2fa84be59432f4905bf7c",
 )
 
+maven_jar(
+    name = "com_nimbusds_nimbus_jose_jwt",
+    artifact = "com.nimbusds:nimbus-jose-jwt:7.7",
+    sha1 = "6dfe714cd0f920946ec3892836dc9ed02e58f29f",
+)
+
+maven_jar(
+    name = "com_github_stephenc_jcip_annotations",
+    artifact = "com.github.stephenc.jcip:jcip-annotations:1.0-1",
+    sha1 = "ef31541dd28ae2cefdd17c7ebf352d93e9058c63",
+)
+
+maven_jar(
+    name = "org_bitbucket_b_c_jose4j",
+    artifact = "org.bitbucket.b_c:jose4j:0.6.5",
+    sha1 = "524470e6ad000e3938f4c0f5e08bd423e95bd43a",
+)
+
+maven_jar(
+    name = "net_jadler_jadler_all",
+    artifact = "net.jadler:jadler-all:1.3.0",
+    sha1 = "99b6b1ec94fc9671bfe97c1d47a740600f095d33",
+)
+
+maven_jar(
+    name = "com_google_crypto_tink",
+    artifact = "com.google.crypto.tink:tink:1.2.2",
+    sha1 = "db27fd32f842b436ad07aecbe2934524473dc0ac",
+)
+
 ### === END === Java Spark dependencies
 
 # GRPC/Protobuf rules
