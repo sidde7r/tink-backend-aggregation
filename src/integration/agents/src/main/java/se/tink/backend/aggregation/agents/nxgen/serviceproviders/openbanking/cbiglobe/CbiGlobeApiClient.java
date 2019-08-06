@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.IdTags;
@@ -120,5 +122,26 @@ public class CbiGlobeApiClient {
 
     public boolean isTokenValid() {
         return getTokenFromStorage().isValid();
+    }
+
+    public ConsentResponse getConsentStatus(String consentType) throws SessionException {
+        return createRequestInSession(
+                        Urls.CONSENTS_STATUS.parameter(
+                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)))
+                .get(ConsentResponse.class);
+    }
+
+    public String getConsentIdFromStorage(String consentType) throws SessionException {
+        return persistentStorage
+                .get(consentType, String.class)
+                .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
+    }
+
+    public void removeAccountsFromStorage() {
+        persistentStorage.remove(StorageKeys.ACCOUNTS);
+    }
+
+    public void removeConsentFromPersistentStorage() {
+        persistentStorage.remove(StorageKeys.CONSENT_ID);
     }
 }

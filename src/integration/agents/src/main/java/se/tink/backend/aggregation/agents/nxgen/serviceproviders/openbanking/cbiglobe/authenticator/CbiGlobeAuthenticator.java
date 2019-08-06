@@ -7,9 +7,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
@@ -18,10 +20,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -114,6 +118,25 @@ public class CbiGlobeAuthenticator {
     }
 
     public void autoAutenthicate() throws SessionException {
+        tokenAutoAuthentication();
+        consentAutoAuthentication();
+    }
+
+    private void consentAutoAuthentication() throws SessionException {
+        ConsentStatus consentStatus;
+        try {
+            consentStatus = getConsentStatus(StorageKeys.CONSENT_ID);
+        } catch (HttpResponseException e) {
+            handleInvalidConsents(e);
+            return;
+        }
+        if (!consentStatus.isAcceptedStatus()) {
+            apiClient.removeAccountsFromStorage();
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    private void tokenAutoAuthentication() {
         try {
             if (!apiClient.isTokenValid()) {
                 getToken();
@@ -126,5 +149,31 @@ public class CbiGlobeAuthenticator {
                 throw e;
             }
         }
+    }
+
+    public ConsentStatus getConsentStatus(String consentType) throws SessionException {
+        String consentStatusString = LogTags.UNKNOWN_STATE;
+        try {
+            consentStatusString = apiClient.getConsentStatus(consentType).getConsentStatus();
+            return ConsentStatus.valueOf(consentStatusString);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(LogTags.UNKNOWN_STATE + "=" + consentStatusString, e);
+        }
+    }
+
+    private void handleInvalidConsents(HttpResponseException rethrowIfNotConsentProblems)
+            throws SessionException {
+        final String message = rethrowIfNotConsentProblems.getResponse().getBody(String.class);
+        if (isConsentsProblem(message)) {
+            apiClient.removeConsentFromPersistentStorage();
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+        throw rethrowIfNotConsentProblems;
+    }
+
+    private boolean isConsentsProblem(String message) {
+        return message.contains(MessageCodes.CONSENT_INVALID.name())
+                || message.contains(MessageCodes.CONSENT_EXPIRED.name())
+                || message.contains(MessageCodes.RESOURCE_UNKNOWN.name());
     }
 }
