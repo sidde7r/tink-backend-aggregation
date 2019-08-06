@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads;
 
+import com.google.common.base.Preconditions;
+import se.tink.backend.aggregation.nxgen.http.URL;
+
 public class ThirdPartyAppAuthenticationPayload {
     private Android android;
     private Ios ios;
@@ -7,6 +10,22 @@ public class ThirdPartyAppAuthenticationPayload {
     private String downloadMessage;
     private String upgradeTitle;
     private String upgradeMessage;
+
+    public static ThirdPartyAppAuthenticationPayload of(URL url) {
+        Preconditions.checkNotNull(url, "URL must not be null.");
+        final ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
+
+        final Android androidPayload = new Android();
+        androidPayload.setIntent(url.get());
+
+        final Ios iOsPayload = new Ios();
+        iOsPayload.setAppScheme(url.getScheme());
+        iOsPayload.setDeepLinkUrl(url.get());
+
+        payload.setAndroid(androidPayload);
+        payload.setIos(iOsPayload);
+        return payload;
+    }
 
     public String getDownloadTitle() {
         return downloadTitle;
