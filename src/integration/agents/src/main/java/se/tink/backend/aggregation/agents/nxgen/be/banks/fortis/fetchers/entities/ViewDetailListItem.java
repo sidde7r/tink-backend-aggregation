@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -38,26 +39,31 @@ public class ViewDetailListItem {
         return account;
     }
 
+    @JsonIgnore
     private AccountTypes getTinkAccountType() {
         final String type = getAccount().getAccountType(); // TODO: verify
 
         return FortisConstants.ACCOUNT_TYPE_MAPPER.translate(type).orElse(AccountTypes.OTHER);
     }
 
+    @JsonIgnore
     private String getIban() {
         return getAccount().getIban();
     }
 
+    @JsonIgnore
     private Amount getTinkAmount() {
         return new Amount(
                 getAccount().getBalance().getCurrency(),
                 Double.parseDouble(getAccount().getBalance().getAmount()));
     }
 
+    @JsonIgnore
     private String getAccountName() {
         return getAccount().getAccountName();
     }
 
+    @JsonIgnore
     public boolean isValid() {
         try {
             toTinkAccount();
@@ -71,15 +77,18 @@ public class ViewDetailListItem {
         }
     }
 
+    @JsonIgnore
     private AccountIdentifier getIbanIdentifier() {
         return AccountIdentifier.create(
                 AccountIdentifier.Type.IBAN, getIban(), AccountIdentifier.Type.IBAN.toString());
     }
 
+    @JsonIgnore
     private HolderName getHoldername() {
         return new HolderName(getAccount().getAlias());
     }
 
+    @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(getTinkAccountType(), getIban(), getTinkAmount())
                 .setAccountNumber(getIban())
