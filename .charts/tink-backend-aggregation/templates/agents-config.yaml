@@ -75,6 +75,7 @@ data:
             clientId: "NORDEA_CLIENT_ID"
             clientSecret: "NORDEA_CLIENT_SECRET"
             redirectUrl: "{{ $agentsConfig.nordea.tink.redirectUrl }}"
+            eidasQwac: "{{ $agentsConfig.nordea.tink.eidasQwac }}"
         {{- end }}
 
         {{- if $agentsConfig.bankdata }}
