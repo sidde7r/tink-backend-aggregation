@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import java.time.ZoneId;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -106,31 +103,23 @@ public abstract class BankiaConstants {
                     .put(LoanDetails.Type.BLANCO, "10060") // CREDITO INMEDIATO
                     .build();
 
-    public static class AccountType {
-        private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP =
-                ImmutableMap.<String, AccountTypes>builder()
-                        .put("11594", AccountTypes.CHECKING)
-                        .put("10300", AccountTypes.CHECKING)
-                        .put("11186", AccountTypes.CHECKING)
-                        .put("11239", AccountTypes.CHECKING)
-                        .put("11660", AccountTypes.CHECKING)
-                        .put("10450", AccountTypes.SAVINGS)
-                        .put("11590", AccountTypes.CHECKING)
-                        .put("10600", AccountTypes.CHECKING)
-                        .put("11403", AccountTypes.OTHER)
-                        .put("11658", AccountTypes.OTHER)
-                        .put("11359", AccountTypes.CHECKING) // Under aged account
-                        .put("31000", AccountTypes.INVESTMENT)
-                        .build();
-
-        public static Optional<AccountTypes> translateType(String bankiaProductCode) {
-            if (Strings.isNullOrEmpty(bankiaProductCode)) {
-                return Optional.empty();
-            }
-            return Optional.ofNullable(
-                    ACCOUNT_TYPES_MAP.getOrDefault(bankiaProductCode.toLowerCase(), null));
-        }
-    }
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(
+                            AccountTypes.CHECKING,
+                            "11594",
+                            "10300",
+                            "11186",
+                            "11239",
+                            "11660",
+                            "11590",
+                            "10600",
+                            "11359" // Non-adult account
+                            )
+                    .put(AccountTypes.SAVINGS, "10450")
+                    .put(AccountTypes.INVESTMENT, "31000")
+                    .put(AccountTypes.OTHER, "11403", "11658")
+                    .build();
 
     public static class CardTypes {
         public static final String CREDIT_CARD = "C";
