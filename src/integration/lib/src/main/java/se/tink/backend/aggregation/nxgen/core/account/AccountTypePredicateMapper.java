@@ -64,30 +64,35 @@ public final class AccountTypePredicateMapper<KeyType> {
     }
 
     public Optional<AccountTypes> translate(KeyType accountTypeKey) {
-
-        List<Pair<Predicate<KeyType>, AccountTypes>> matchingRestriction =
+        final List<Pair<Predicate<KeyType>, AccountTypes>> matchingRestriction =
                 predicates.stream()
                         .filter(pair -> pair.first.test(accountTypeKey))
                         .collect(Collectors.toList());
 
         // Eliminate duplicates
-        Set<AccountTypes> accountTypeSet =
+        final Set<AccountTypes> accountTypeSet =
                 matchingRestriction.stream().map(p -> p.second).collect(Collectors.toSet());
 
         if (accountTypeSet.size() >= 2) {
-            AccountTypes anyAccountType = accountTypeSet.iterator().next(); // Pop any element
+            final AccountTypes anyAccountType = accountTypeSet.iterator().next(); // Pop any element
+
             executor.onAmbiguousPredicateMatch(accountTypeKey, matchingRestriction);
+
             return Optional.of(anyAccountType);
         } else if (accountTypeSet.size() == 1) {
-            Pair<Predicate<KeyType>, AccountTypes> pair = matchingRestriction.iterator().next();
-            Predicate<KeyType> matchingPredicate = pair.first;
-            AccountTypes associatedAccountType = pair.second;
+            final Pair<Predicate<KeyType>, AccountTypes> pair =
+                    matchingRestriction.iterator().next();
+            final Predicate<KeyType> matchingPredicate = pair.first;
+            final AccountTypes associatedAccountType = pair.second;
+
             executor.onUnambiguousPredicateMatch(
                     accountTypeKey, matchingPredicate, associatedAccountType);
+
             return Optional.of(associatedAccountType);
         }
 
         executor.onUnknownAccountType(accountTypeKey);
+
         return Optional.empty();
     }
 }
