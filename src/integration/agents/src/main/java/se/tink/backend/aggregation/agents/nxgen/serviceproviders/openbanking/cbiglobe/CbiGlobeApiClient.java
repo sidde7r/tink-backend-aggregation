@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
@@ -34,10 +35,13 @@ public class CbiGlobeApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private CbiGlobeConfiguration configuration;
+    private boolean requestManual;
 
-    public CbiGlobeApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public CbiGlobeApiClient(
+            TinkHttpClient client, PersistentStorage persistentStorage, boolean requestManual) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.requestManual = requestManual;
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -64,8 +68,17 @@ public class CbiGlobeApiClient {
     }
 
     private RequestBuilder createRequestWithConsent(URL url) {
-        return createRequestInSession(url)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
+        RequestBuilder rb =
+                createRequestInSession(url)
+                        .header(
+                                HeaderKeys.CONSENT_ID,
+                                persistentStorage.get(StorageKeys.CONSENT_ID));
+
+        if (requestManual) {
+            rb.header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS);
+        }
+
+        return rb;
     }
 
     protected RequestBuilder createAccountsRequestWithConsent() {

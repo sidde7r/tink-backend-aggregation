@@ -11,8 +11,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class UbiApiClient extends CbiGlobeApiClient {
 
-    public UbiApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
-        super(client, persistentStorage);
+    public UbiApiClient(
+            TinkHttpClient client, PersistentStorage persistentStorage, boolean requestManual) {
+        super(client, persistentStorage, requestManual);
     }
 
     public ConsentResponse updateConsent(String consentId, UpdateConsentRequest body) {
