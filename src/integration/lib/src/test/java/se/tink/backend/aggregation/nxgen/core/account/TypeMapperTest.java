@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.Optional;
-import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 
@@ -11,7 +14,7 @@ public final class TypeMapperTest {
     public void ensureTranslate_withNothingKnown_returnsEmpty() {
         final TypeMapper<AccountTypes> mapper = TypeMapper.<AccountTypes>builder().build();
 
-        Assert.assertFalse(mapper.translate("CHECKING_ACCOUNT").isPresent());
+        assertFalse(mapper.translate("CHECKING_ACCOUNT").isPresent());
     }
 
     @Test
@@ -19,7 +22,7 @@ public final class TypeMapperTest {
         final TypeMapper<AccountTypes> mapper =
                 TypeMapper.<AccountTypes>builder().ignoreKeys("CHECKING_ACCOUNT").build();
 
-        Assert.assertFalse(mapper.translate("CHECKING_ACCOUNT").isPresent());
+        assertFalse(mapper.translate("CHECKING_ACCOUNT").isPresent());
     }
 
     @Test
@@ -29,8 +32,7 @@ public final class TypeMapperTest {
                         .put(AccountTypes.CHECKING, "CHECKING_ACCOUNT")
                         .build();
 
-        Assert.assertEquals(
-                mapper.translate("CHECKING_ACCOUNT"), Optional.of(AccountTypes.CHECKING));
+        assertEquals(mapper.translate("CHECKING_ACCOUNT"), Optional.of(AccountTypes.CHECKING));
     }
 
     @Test
@@ -40,7 +42,7 @@ public final class TypeMapperTest {
                         .put(AccountTypes.CHECKING, "SAVINGS_ACCOUNT")
                         .build();
 
-        Assert.assertFalse(mapper.translate("CHECKING_ACCOUNT").isPresent());
+        assertFalse(mapper.translate("CHECKING_ACCOUNT").isPresent());
     }
 
     @Test
@@ -50,8 +52,7 @@ public final class TypeMapperTest {
                         .put(AccountTypes.CHECKING, "checking_account")
                         .build();
 
-        Assert.assertEquals(
-                mapper.translate("CHECKING_ACCOUNT"), Optional.of(AccountTypes.CHECKING));
+        assertEquals(mapper.translate("CHECKING_ACCOUNT"), Optional.of(AccountTypes.CHECKING));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -88,7 +89,7 @@ public final class TypeMapperTest {
                         .put(AccountTypes.CHECKING, "checking_account")
                         .build();
 
-        Assert.assertEquals(mapper.translate(null), Optional.empty());
+        assertEquals(mapper.translate(null), Optional.empty());
     }
 
     @Test
@@ -98,7 +99,7 @@ public final class TypeMapperTest {
                         .put(AccountTypes.CHECKING, "checking_account")
                         .build();
 
-        Assert.assertEquals(mapper.translate(""), Optional.empty());
+        assertEquals(mapper.translate(""), Optional.empty());
     }
 
     @Test
@@ -108,7 +109,7 @@ public final class TypeMapperTest {
                 TypeMapper.<AccountTypes>builder()
                         .put(AccountTypes.CHECKING, checking_account, "other_checking_account")
                         .build();
-        Assert.assertTrue(mapper.isOneOf(checking_account, Arrays.asList(AccountTypes.CHECKING)));
+        assertTrue(mapper.isOneOf(checking_account, Arrays.asList(AccountTypes.CHECKING)));
     }
 
     @Test
@@ -119,7 +120,7 @@ public final class TypeMapperTest {
                         .put(AccountTypes.CHECKING, "checking_account")
                         .put(AccountTypes.MORTGAGE, checking_account)
                         .build();
-        Assert.assertFalse(mapper.isOneOf(checking_account, Arrays.asList(AccountTypes.CHECKING)));
+        assertFalse(mapper.isOneOf(checking_account, Arrays.asList(AccountTypes.CHECKING)));
     }
 
     @Test
@@ -128,7 +129,7 @@ public final class TypeMapperTest {
                 TypeMapper.<AccountTypes>builder()
                         .put(AccountTypes.CHECKING, "checking_account")
                         .build();
-        Assert.assertFalse(mapper.isOneOf("other_type", Arrays.asList(AccountTypes.CHECKING)));
+        assertFalse(mapper.isOneOf("other_type", Arrays.asList(AccountTypes.CHECKING)));
     }
 
     @Test
@@ -138,7 +139,7 @@ public final class TypeMapperTest {
                 TypeMapper.<AccountTypes>builder()
                         .put(AccountTypes.CHECKING, checking_account, "other_checking_account")
                         .build();
-        Assert.assertTrue(mapper.isOf(checking_account, AccountTypes.CHECKING));
+        assertTrue(mapper.isOf(checking_account, AccountTypes.CHECKING));
     }
 
     @Test
@@ -149,7 +150,7 @@ public final class TypeMapperTest {
                         .put(AccountTypes.CHECKING, "checking_account")
                         .put(AccountTypes.MORTGAGE, checking_account)
                         .build();
-        Assert.assertFalse(mapper.isOf(checking_account, AccountTypes.CHECKING));
+        assertFalse(mapper.isOf(checking_account, AccountTypes.CHECKING));
     }
 
     @Test
@@ -158,7 +159,7 @@ public final class TypeMapperTest {
                 TypeMapper.<AccountTypes>builder()
                         .put(AccountTypes.CHECKING, "checking_account")
                         .build();
-        Assert.assertFalse(mapper.isOf("other_type", AccountTypes.CHECKING));
+        assertFalse(mapper.isOf("other_type", AccountTypes.CHECKING));
     }
 
     @Test
@@ -170,7 +171,7 @@ public final class TypeMapperTest {
                         .setDefaultTranslationValue(AccountTypes.DUMMY)
                         .build();
 
-        Assert.assertEquals(AccountTypes.DUMMY, mapper.translate("z").get());
+        assertEquals(AccountTypes.DUMMY, mapper.translate("z").get());
     }
 
     @Test
@@ -181,6 +182,6 @@ public final class TypeMapperTest {
                         .put(AccountTypes.CREDIT_CARD, "b", "c")
                         .build();
 
-        Assert.assertEquals(Optional.empty(), mapper.translate("z"));
+        assertEquals(Optional.empty(), mapper.translate("z"));
     }
 }

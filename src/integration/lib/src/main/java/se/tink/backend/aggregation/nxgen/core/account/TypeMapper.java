@@ -52,9 +52,7 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
         /** Known keys, and the account type they should be mapped to. */
         public TypeMapperBuilder<V, B> put(V value, String... keys) {
             Set<String> collect =
-                    Arrays.asList(keys).stream()
-                            .map(k -> k.toLowerCase())
-                            .collect(Collectors.toSet());
+                    Arrays.stream(keys).map(String::toLowerCase).collect(Collectors.toSet());
             self().reversed.put(value, collect);
             return self();
         }
@@ -74,8 +72,8 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
         public TypeMapperBuilder<V, B> ignoreKeys(String... keys) {
             self().ignoredKeys
                     .addAll(
-                            Arrays.asList(keys).stream()
-                                    .map(k -> k.toLowerCase())
+                            Arrays.stream(keys)
+                                    .map(String::toLowerCase)
                                     .collect(Collectors.toList()));
             return self();
         }
