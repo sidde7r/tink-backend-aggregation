@@ -4,15 +4,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class FortisConstants {
 
     public static final String APP_VERSION = "18.0.15";
     public static final String NEGATIVE_TRANSACTION_TYPE = "F";
 
-    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            AccountTypeMapper.builder()
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "HELLO4YOU", "COMFORT PACK")
                     .put(AccountTypes.SAVINGS, "CPTE EPARGNE", "SPAARREKENING")
                     .build();

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
-import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -40,9 +39,9 @@ public class ViewDetailListItem {
     }
 
     private AccountTypes getTinkAccountType() {
-        String type = getAccount().getAccountType(); // TODO: verify
-        Optional<AccountTypes> accountType = FortisConstants.ACCOUNT_TYPE_MAPPER.translate(type);
-        return accountType.orElse(AccountTypes.OTHER);
+        final String type = getAccount().getAccountType(); // TODO: verify
+
+        return FortisConstants.ACCOUNT_TYPE_MAPPER.translate(type).orElse(AccountTypes.OTHER);
     }
 
     private String getIban() {
