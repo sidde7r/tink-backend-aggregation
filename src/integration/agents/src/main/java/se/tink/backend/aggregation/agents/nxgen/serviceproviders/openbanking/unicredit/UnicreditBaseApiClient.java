@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
@@ -74,7 +75,8 @@ public abstract class UnicreditBaseApiClient {
 
         return createRequest(url)
                 .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
-                .header(HeaderKeys.CONSENT_ID, consentId);
+                .header(HeaderKeys.CONSENT_ID, consentId)
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
     }
 
     private String getConsentFromStorage() {
@@ -104,14 +106,18 @@ public abstract class UnicreditBaseApiClient {
         return getScaRedirectUrlFromConsentResponse(consentResponse);
     }
 
-    public ConsentStatusResponse getConsentStatus() {
+    public ConsentStatusResponse getConsentStatus() throws SessionException {
         return createRequest(
                         new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENT_STATUS)
-                                .parameter(
-                                        PathParameters.CONSENT_ID,
-                                        persistentStorage.get(StorageKeys.CONSENT_ID)))
+                                .parameter(PathParameters.CONSENT_ID, getConsentIdFromStorage()))
                 .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
                 .get(ConsentStatusResponse.class);
+    }
+
+    public String getConsentIdFromStorage() throws SessionException {
+        return persistentStorage
+                .get(StorageKeys.CONSENT_ID, String.class)
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
     public AccountsResponse fetchAccounts() {
@@ -138,4 +144,8 @@ public abstract class UnicreditBaseApiClient {
     }
 
     protected abstract String getTransactionsDateFrom();
+
+    public void removeConsentFromPersistentStorage() {
+        persistentStorage.remove(StorageKeys.CONSENT_ID);
+    }
 }

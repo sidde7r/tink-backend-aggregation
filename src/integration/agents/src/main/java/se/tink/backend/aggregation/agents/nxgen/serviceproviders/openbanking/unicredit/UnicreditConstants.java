@@ -64,11 +64,13 @@ public final class UnicreditConstants {
         public static final String PSU_ID = "PSU-ID";
         public static final String STATE = "state";
         public static final String CODE = "code";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class HeaderValues {
 
         public static final String CODE = "code";
+        public static final String PSU_IP_ADDRESS = "127.0.0.1";
     }
 
     public static class FormValues {
