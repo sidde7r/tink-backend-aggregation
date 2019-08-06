@@ -4,14 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
-import java.security.SecureRandom;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +42,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class OAuth2AuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
-    private static final Random random = new SecureRandom();
-    private static final Base64.Encoder encoder = Base64.getUrlEncoder();
     private static final Logger logger =
             LoggerFactory.getLogger(OAuth2AuthenticationController.class);
     private static final int DEFAULT_TOKEN_LIFETIME = 90;
@@ -72,14 +67,15 @@ public class OAuth2AuthenticationController
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            CredentialsRequest credentialsRequest) {
+            Credentials credentials) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
-                callbackJWTSignatureKeyPair,
-                credentialsRequest,
+                null,
+                credentials,
+                null,
+                null,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
     }
@@ -89,24 +85,44 @@ public class OAuth2AuthenticationController
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            CredentialsRequest credentialsRequest,
+            CredentialsRequest credentialsRequest) {
+        this(
+                persistentStorage,
+                supplementalInformationHelper,
+                authenticator,
+                callbackJWTSignatureKeyPair,
+                credentialsRequest.getCredentials(),
+                credentialsRequest.getCallbackUri(),
+                credentialsRequest.getAppUriId(),
+                DEFAULT_TOKEN_LIFETIME,
+                DEFAULT_TOKEN_LIFETIME_UNIT);
+    }
+
+    public OAuth2AuthenticationController(
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            OAuth2Authenticator authenticator,
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            Credentials credentials,
+            String callbackUri,
+            String appUriId,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
-        this.credentials = credentialsRequest.getCredentials();
+        this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
-        this.callbackUri = credentialsRequest.getCallbackUri();
+        this.callbackUri = callbackUri;
 
         this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
-        this.state = getJwtState(pseudoId, credentialsRequest.getAppUriId());
+        this.state = getJwtState(pseudoId, appUriId);
     }
 
     private String getJwtState(String pseudoId, String appUriId) {
-        if (!callbackJWTSignatureKeyPair.isEnabled()) {
+        if (callbackJWTSignatureKeyPair != null && !callbackJWTSignatureKeyPair.isEnabled()) {
             logger.info("Callback JWT not enabled, using pseudoId as state. State: {}", pseudoId);
             return pseudoId;
         }
