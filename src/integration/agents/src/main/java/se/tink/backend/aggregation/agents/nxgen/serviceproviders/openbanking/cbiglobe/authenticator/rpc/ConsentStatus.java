@@ -12,6 +12,6 @@ public enum ConsentStatus {
     PENDINGEXPIRED;
 
     public boolean isAcceptedStatus() {
-        return this == RECEIVED || this == VALID || this == REVOKEDBYPSU || this == REPLACED;
+        return this == VALID;
     }
 }
