@@ -45,7 +45,7 @@ public class BpostTransactionalAccountFetcher
                 return PaginatorResponseImpl.createEmpty(false);
             } else if (e.getResponse().getStatus() == Transactions.ERROR_CODE_INTERNAL_SERVER) {
                 ++counter;
-                if (counter < BpostConstants.TRANSACTION_FETCHING_TIME_LIMIT) {
+                if (counter < BpostConstants.TRANSACTION_FETCHING_RETRY_LIMIT) {
                     return PaginatorResponseImpl.createEmpty(true);
                 } else {
                     return PaginatorResponseImpl.createEmpty(false);
