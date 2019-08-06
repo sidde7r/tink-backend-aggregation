@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -14,24 +15,17 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class AccountsItemEntity {
 
     private String accountId;
-
     private String bban;
-
     private String ownerName;
 
     @JsonProperty("_links")
     private LinksEntity linksEntity;
 
     private String iban;
-
     private String accountType;
-
     private String name;
-
     private String currency;
-
     private String bic;
-
     private String clearingNumber;
 
     public String getAccountId() {
@@ -58,24 +52,16 @@ public class AccountsItemEntity {
         return accountType;
     }
 
-    public TransactionalAccount createCheckingAccount(BalancesItemEntity balance) {
-        return createTransactionalAccount(TransactionalAccountType.CHECKING, balance);
-    }
-
-    public TransactionalAccount createSavingsAccount(BalancesItemEntity balance) {
-        return createTransactionalAccount(TransactionalAccountType.SAVINGS, balance);
-    }
-
-    private TransactionalAccount createTransactionalAccount(
+    public TransactionalAccount toTinkAccount(
             TransactionalAccountType type, BalancesItemEntity balance) {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.SAVINGS)
+                .withType(type)
                 .withBalance(BalanceModule.of(getAmount(balance)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getAccountNumber())
                                 .withAccountNumber(getAccountNumber())
-                                .withAccountName(name)
+                                .withAccountName(Optional.ofNullable(name).orElse(accountType))
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                                 .build())
