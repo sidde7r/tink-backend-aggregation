@@ -175,6 +175,7 @@ junit_test(
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:pl_pragmatists_junitparams",
         "//third_party:zxing-qrcode",
+        "//third_party:com_nimbus_jose",
     ],
 )
 

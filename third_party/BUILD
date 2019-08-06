@@ -1561,6 +1561,14 @@ java_library(
 )
 
 java_library(
+    name = "com_nimbus_jose",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_nimbusds_nimbus_jose_jwt//jar",
+    ],
+)
+
+java_library(
     name = "com_auth0_java_jwt",
     visibility = ["//visibility:public"],
     exports = [

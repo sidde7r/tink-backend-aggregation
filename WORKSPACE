@@ -2331,6 +2331,12 @@ maven_jar(
     sha1 = "3cd63d075497751784b2fa84be59432f4905bf7c",
 )
 
+maven_jar(
+    name = "com_nimbusds_nimbus_jose_jwt",
+    artifact = "com.nimbusds:nimbus-jose-jwt:7.6",
+    sha1 = "6dfe714cd0f920946ec3892836dc9ed02e58f29f",
+)
+
 ### === END === Java Spark dependencies
 
 # GRPC/Protobuf rules
