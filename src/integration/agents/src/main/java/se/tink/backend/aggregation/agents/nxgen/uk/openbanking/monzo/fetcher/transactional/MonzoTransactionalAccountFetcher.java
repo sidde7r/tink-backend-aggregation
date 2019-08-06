@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoApiClient;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.entity.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -39,11 +38,8 @@ public class MonzoTransactionalAccountFetcher
     @Override
     public List<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().getAccounts().stream()
-                .filter(
-                        entity ->
-                                MonzoConstants.ACCOUNT_TYPE.isTransactionalAccount(
-                                        entity.getType()))
-                .peek(entity -> entity.setBalance(apiClient.fetchBalance(entity.getId())))
+                .filter(AccountEntity::isTransactionalAccount)
+                .peek(account -> account.setBalance(apiClient.fetchBalance(account.getId())))
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
@@ -72,7 +68,7 @@ public class MonzoTransactionalAccountFetcher
 
             fetchTransactions =
                     apiClient
-                            .fetchTransactions(account.getBankIdentifier(), since, to, FETCH_LIMIT)
+                            .fetchTransactions(account.getApiIdentifier(), since, to, FETCH_LIMIT)
                             .getTransactions();
 
             lastKnownTransactionInPage =

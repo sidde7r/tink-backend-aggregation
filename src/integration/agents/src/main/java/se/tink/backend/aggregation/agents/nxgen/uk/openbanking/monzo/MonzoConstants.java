@@ -3,16 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 import java.time.ZoneId;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class MonzoConstants {
+
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/London");
     public static final String INTEGRATION_NAME = "monzo";
     public static final String UK_RETAIL = "uk_retail";
     public static final String UK_RETAIL_JOINT = "uk_retail_joint";
 
-    public static final AccountTypeMapper ACCOUNT_TYPE =
-            AccountTypeMapper.builder()
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, UK_RETAIL, UK_RETAIL_JOINT)
                     .build();
 

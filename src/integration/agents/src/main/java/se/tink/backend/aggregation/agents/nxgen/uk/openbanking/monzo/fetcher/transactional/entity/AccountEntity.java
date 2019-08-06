@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.entity;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants.ACCOUNT_TYPE_MAPPER;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.rpc.BalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -38,10 +39,14 @@ public class AccountEntity {
         return type;
     }
 
+    public boolean isTransactionalAccount() {
+        return ACCOUNT_TYPE_MAPPER.isOneOf(getType(), TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
+    }
+
     public TransactionalAccount toTinkAccount() {
-        TransactionalAccount.Builder<?, ?> result =
+        final TransactionalAccount.Builder<?, ?> result =
                 TransactionalAccount.builder(
-                                MonzoConstants.ACCOUNT_TYPE.translate(type).get(),
+                                ACCOUNT_TYPE_MAPPER.translate(getType()).get(),
                                 accountNumber,
                                 balance.getTotalBalance())
                         .setAccountNumber(accountNumber)
@@ -53,6 +58,7 @@ public class AccountEntity {
                     AccountIdentifier.create(
                             AccountIdentifier.Type.SORT_CODE, sortCode + accountNumber));
         }
+
         return result.build();
     }
 }
