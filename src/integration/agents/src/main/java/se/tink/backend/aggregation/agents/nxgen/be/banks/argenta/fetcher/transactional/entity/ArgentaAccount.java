@@ -8,12 +8,13 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class ArgentaAccount {
-    String id;
-    String iban;
-    String alias;
-    String type;
-    double balance;
-    String currency;
+
+    private String id;
+    private String iban;
+    private String alias;
+    private String type;
+    private double balance;
+    private String currency;
 
     public TransactionalAccount toTransactionalAccount() {
         return TransactionalAccount.builder(getAccountType(), iban, getBalance())
@@ -24,8 +25,7 @@ public class ArgentaAccount {
     }
 
     private Amount getBalance() {
-        if (currency != null) return new Amount(currency, balance);
-        return Amount.inEUR(balance);
+        return currency != null ? new Amount(currency, balance) : Amount.inEUR(balance);
     }
 
     private AccountTypes getAccountType() {
