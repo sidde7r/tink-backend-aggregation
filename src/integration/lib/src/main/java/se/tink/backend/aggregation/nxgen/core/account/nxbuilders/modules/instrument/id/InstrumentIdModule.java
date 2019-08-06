@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instru
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class InstrumentIdModule {
@@ -26,8 +27,8 @@ public final class InstrumentIdModule {
      * Use {@link InstrumentIdModule#of(String, String, String)} to set the uniqueIdentifier to
      * (isin + market)
      *
-     * @param isin An International Securities Identification Number (ISIN) uniquely identifies a
-     *     security.
+     * @param isin (nullable) An International Securities Identification Number (ISIN) uniquely
+     *     identifies a security.
      *     <p>ISINs consist of two alphabetic characters, country code, nine alpha-numeric
      *     characters (National Securities Identifying Number, NSIN, which identifies the security,
      *     padded as necessary with leading zeros), and one numerical check digit
@@ -39,14 +40,14 @@ public final class InstrumentIdModule {
      *     instrument we can use that.
      */
     public static InstrumentIdModule of(
-            @Nonnull String isin,
+            String isin,
             String marketPlace,
             @Nonnull String name,
             @Nonnull String uniqueIdentifier) {
         return builder()
                 .withUniqueIdentifier(uniqueIdentifier)
-                .withIsin(isin)
                 .withName(name)
+                .setIsin(isin)
                 .setMarketPlace(marketPlace)
                 .build();
     }
@@ -87,8 +88,7 @@ public final class InstrumentIdModule {
     }
 
     private static class Builder
-            implements InstrumentIsinStep<InstrumentIdBuildStep>,
-                    InstrumentNameStep<InstrumentIdBuildStep>,
+            implements InstrumentNameStep<InstrumentIdBuildStep>,
                     InstrumentUniqueIdStep<InstrumentIdBuildStep>,
                     InstrumentIdBuildStep {
         private String uniqueIdentifier;
@@ -97,10 +97,13 @@ public final class InstrumentIdModule {
         private String name;
 
         @Override
-        public InstrumentNameStep<InstrumentIdBuildStep> withIsin(@Nonnull String isin) {
-            Preconditions.checkNotNull(isin, "isin must not be null.");
-            Preconditions.checkArgument(isin.matches("[A-Z]{2}[a-zA-Z0-9]{9}\\d"));
-            this.isin = isin;
+        public InstrumentNameStep<InstrumentIdBuildStep> withUniqueIdentifier(
+                @Nonnull String uniqueIdentifier) {
+            Preconditions.checkNotNull(uniqueIdentifier, "Instrument identifier must not be null.");
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(uniqueIdentifier),
+                    "Instrument identifier must not be empty.");
+            this.uniqueIdentifier = uniqueIdentifier;
             return this;
         }
 
@@ -112,13 +115,11 @@ public final class InstrumentIdModule {
         }
 
         @Override
-        public InstrumentIsinStep<InstrumentIdBuildStep> withUniqueIdentifier(
-                @Nonnull String uniqueIdentifier) {
-            Preconditions.checkNotNull(uniqueIdentifier, "Instrument identifier must not be null.");
+        public InstrumentIdBuildStep setIsin(String isin) {
             Preconditions.checkArgument(
-                    !Strings.isNullOrEmpty(uniqueIdentifier),
-                    "Instrument identifier must not be empty.");
-            this.uniqueIdentifier = uniqueIdentifier;
+                    Objects.isNull(isin) || isin.matches("[A-Z]{2}[a-zA-Z0-9]{9}\\d"),
+                    "Invalid ISIN");
+            this.isin = isin;
             return this;
         }
 

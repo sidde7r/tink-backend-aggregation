@@ -6,5 +6,5 @@ public interface InstrumentUniqueIdStep<T> {
      *     market is hard to get hold of and the bank / broker have some other way to identify the
      *     instrument we can use that.
      */
-    InstrumentIsinStep<T> withUniqueIdentifier(String uniqueIdentifier);
+    InstrumentNameStep<T> withUniqueIdentifier(String uniqueIdentifier);
 }
