@@ -39,4 +39,12 @@ public class CreatePaymentResponse {
 
         return new PaymentResponse(tinkPayment);
     }
+
+    public String getReferenceId() {
+        return referenceId;
+    }
+
+    public SignOptionsResponse getSignOptions() {
+        return signOptions;
+    }
 }

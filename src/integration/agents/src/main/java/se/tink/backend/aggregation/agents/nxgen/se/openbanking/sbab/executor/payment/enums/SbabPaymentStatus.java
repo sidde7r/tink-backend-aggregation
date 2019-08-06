@@ -5,13 +5,14 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum SbabPaymentStatus {
     PROCESSING("processing", PaymentStatus.PENDING),
-    NEED_SIGNATURE("need_sign", PaymentStatus.PENDING),
+    NEED_SIGNATURE("need_signature", PaymentStatus.PENDING),
     SIGNATURE_FAILED("signature_failed", PaymentStatus.REJECTED),
     TRANSFER_REQUEST_FAILED("transfer_request_failed", PaymentStatus.REJECTED),
     TRANSFER_REQUEST_ERROR("transfer_request_error", PaymentStatus.REJECTED),
     CREATED("created", PaymentStatus.PAID),
     DELETE_REQUEST_FAILED("delete_request_failed", PaymentStatus.CANCELLED),
     DELETED("deleted", PaymentStatus.CANCELLED),
+    PENDING("pending", PaymentStatus.SIGNED),
     UNKNOWN("unknown", PaymentStatus.UNDEFINED);
 
     private String statusText;
