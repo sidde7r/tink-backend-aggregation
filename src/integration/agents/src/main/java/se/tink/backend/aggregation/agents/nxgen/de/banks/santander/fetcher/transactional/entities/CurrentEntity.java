@@ -29,8 +29,8 @@ public class CurrentEntity {
     }
 
     public boolean isTransactionalAccount() {
-        return SantanderConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(
-                accountEntity.getAccountType());
+        return SantanderConstants.ACCOUNT_TYPE_MAPPER.isOneOf(
+                accountEntity.getAccountType(), TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
     public TransactionalAccount toTransactionalAccount() {

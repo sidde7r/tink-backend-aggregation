@@ -4,15 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class SantanderConstants {
 
     public static final String WHITESPACE = " ";
     public static final String INDMPX_L = "L";
 
-    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            AccountTypeMapper.builder()
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "GIROKONTO")
                     .put(AccountTypes.CREDIT_CARD, "1PLUS CARD")
                     .build();
