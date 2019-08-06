@@ -9,8 +9,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BpmApiClient extends CbiGlobeApiClient {
 
-    public BpmApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
-        super(client, persistentStorage);
+    public BpmApiClient(
+            TinkHttpClient client, PersistentStorage persistentStorage, boolean requestManual) {
+        super(client, persistentStorage, requestManual);
     }
 
     @Override

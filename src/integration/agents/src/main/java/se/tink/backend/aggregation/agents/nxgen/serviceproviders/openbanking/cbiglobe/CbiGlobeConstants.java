@@ -35,6 +35,7 @@ public final class CbiGlobeConstants {
         public static final URL ACCOUNTS = new URL(BASE_URL + ApiServices.ACCOUNTS);
         public static final URL BALANCES = new URL(BASE_URL + ApiServices.BALANCES);
         public static final URL TRANSACTIONS = new URL(BASE_URL + ApiServices.TRANSACTIONS);
+        public static final URL CONSENTS_STATUS = new URL(BASE_URL + ApiServices.CONSENTS_STATUS);
     }
 
     public static class ApiServices {
@@ -47,11 +48,14 @@ public final class CbiGlobeConstants {
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/balances";
         public static final String TRANSACTIONS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/transactions";
+        public static final String CONSENTS_STATUS =
+                "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
     }
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "consent-id";
+        public static final String ACCOUNTS = "accounts";
     }
 
     public static class QueryKeys {
@@ -103,9 +107,12 @@ public final class CbiGlobeConstants {
         public static final String FREQUENCY_PER_DAY = "100";
     }
 
-    public static class LogTags {}
+    public static class LogTags {
+        public static final String UNKNOWN_STATE = "unknown state";
+    }
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
+        public static final String CONSENT_ID = "consentId";
     }
 }

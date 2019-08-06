@@ -4,14 +4,17 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
@@ -32,10 +35,13 @@ public class CbiGlobeApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private CbiGlobeConfiguration configuration;
+    private boolean requestManual;
 
-    public CbiGlobeApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public CbiGlobeApiClient(
+            TinkHttpClient client, PersistentStorage persistentStorage, boolean requestManual) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.requestManual = requestManual;
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -62,8 +68,17 @@ public class CbiGlobeApiClient {
     }
 
     private RequestBuilder createRequestWithConsent(URL url) {
-        return createRequestInSession(url)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
+        RequestBuilder rb =
+                createRequestInSession(url)
+                        .header(
+                                HeaderKeys.CONSENT_ID,
+                                persistentStorage.get(StorageKeys.CONSENT_ID));
+
+        if (requestManual) {
+            rb.header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS);
+        }
+
+        return rb;
     }
 
     protected RequestBuilder createAccountsRequestWithConsent() {
@@ -75,7 +90,9 @@ public class CbiGlobeApiClient {
         return persistentStorage
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+                        () ->
+                                new IllegalStateException(
+                                        MessageCodes.NO_ACCESS_TOKEN_IN_STORAGE.name()));
     }
 
     public GetTokenResponse getToken(String authorizationHeader) {
@@ -114,5 +131,30 @@ public class CbiGlobeApiClient {
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(GetTransactionsResponse.class);
+    }
+
+    public boolean isTokenValid() {
+        return getTokenFromStorage().isValid();
+    }
+
+    public ConsentResponse getConsentStatus(String consentType) throws SessionException {
+        return createRequestInSession(
+                        Urls.CONSENTS_STATUS.parameter(
+                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)))
+                .get(ConsentResponse.class);
+    }
+
+    public String getConsentIdFromStorage(String consentType) throws SessionException {
+        return persistentStorage
+                .get(consentType, String.class)
+                .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
+    }
+
+    public void removeAccountsFromStorage() {
+        persistentStorage.remove(StorageKeys.ACCOUNTS);
+    }
+
+    public void removeConsentFromPersistentStorage() {
+        persistentStorage.remove(StorageKeys.CONSENT_ID);
     }
 }

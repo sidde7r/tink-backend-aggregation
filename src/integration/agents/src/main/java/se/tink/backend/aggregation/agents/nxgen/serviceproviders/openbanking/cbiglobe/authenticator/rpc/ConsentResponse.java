@@ -19,4 +19,8 @@ public class ConsentResponse {
     public String getConsentId() {
         return consentId;
     }
+
+    public String getConsentStatus() {
+        return consentStatus;
+    }
 }

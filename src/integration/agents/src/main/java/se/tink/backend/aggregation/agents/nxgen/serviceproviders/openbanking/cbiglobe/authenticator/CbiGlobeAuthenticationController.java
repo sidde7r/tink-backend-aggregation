@@ -9,7 +9,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -51,7 +50,7 @@ public class CbiGlobeAuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        throw SessionError.SESSION_EXPIRED.exception();
+        authenticator.autoAutenthicate();
     }
 
     @Override

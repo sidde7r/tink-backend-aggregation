@@ -16,7 +16,7 @@ public class UbiAgent extends CbiGlobeAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new UbiApiClient(client, persistentStorage);
+        apiClient = new UbiApiClient(client, persistentStorage, request.isManual());
     }
 
     @Override
