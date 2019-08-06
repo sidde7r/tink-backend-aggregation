@@ -19,14 +19,15 @@ import org.slf4j.LoggerFactory;
 
 public class GenericTypeMapper<V, T> {
     private static final Logger logger = LoggerFactory.getLogger(GenericTypeMapper.class);
-    protected final Map<T, V> translator;
-    protected final Set<T> ignoredKeys;
-    protected final Optional<V> defaultValue;
+
+    private final Map<T, V> translator;
+    private final Set<T> ignoredKeys;
+    final Optional<V> defaultValue;
 
     private BiPredicate<T, Collection<V>> isOneOfType =
             (input, types) -> translate(input).map(types::contains).orElse(false);
 
-    protected GenericTypeMapper(GenericTypeMapper.Builder<V, T, ?> builder) {
+    GenericTypeMapper(GenericTypeMapper.Builder<V, T, ?> builder) {
         ignoredKeys = builder.getIgnoredKeys();
 
         defaultValue = builder.getDefaultValue();
@@ -92,10 +93,10 @@ public class GenericTypeMapper<V, T> {
 
     public abstract static class Builder<V, T, B extends Builder<V, T, B>> {
 
-        protected final Map<V, Collection<T>> reversed = new HashMap<>();
-        protected final Set<T> ignoredKeys = new HashSet<>();
-        protected Optional<V> defaultValue;
         private B thisObj;
+        final Map<V, Collection<T>> reversed = new HashMap<>();
+        final Set<T> ignoredKeys = new HashSet<>();
+        Optional<V> defaultValue;
 
         protected Builder() {
             this.thisObj = self();
@@ -136,17 +137,17 @@ public class GenericTypeMapper<V, T> {
             return this;
         }
 
-        protected Map<V, Collection<T>> getReversed() {
+        Map<V, Collection<T>> getReversed() {
             return this.reversed;
         }
 
-        protected Set<T> getIgnoredKeys() {
+        Set<T> getIgnoredKeys() {
             return this.ignoredKeys;
         }
     }
 
     public static class GenericBuilder<V, T> extends Builder<V, T, GenericBuilder<V, T>> {
-        public GenericBuilder() {
+        GenericBuilder() {
             super();
         }
 
