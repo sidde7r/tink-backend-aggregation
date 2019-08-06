@@ -8,11 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TypeMapper<V> extends GenericTypeMapper<V, String> {
-    private static final Logger logger = LoggerFactory.getLogger(TypeMapper.class);
 
     private TypeMapper(GenericTypeMapper.Builder<V, String, ?> builder) {
         super(builder);
@@ -45,7 +42,6 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
 
         protected TypeMapperBuilder() {
             super();
-            //            self().defaultValue = Optional.empty();
         }
 
         @Override
@@ -63,7 +59,6 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
             return self();
         }
 
-        /** Known keys that should not be mapped to any specific account type. */
         /**
          * Known keys that should not be mapped to any specific account type. The effect is that a
          * warning will not be printed when attempting to map these keys.
