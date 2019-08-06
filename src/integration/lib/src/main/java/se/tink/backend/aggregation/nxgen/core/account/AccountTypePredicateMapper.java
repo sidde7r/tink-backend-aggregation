@@ -56,13 +56,11 @@ public final class AccountTypePredicateMapper<KeyType> {
     }
 
     private boolean verify(KeyType key, AccountTypes value) {
-        Optional<AccountTypes> translated = translate(key);
-        return translated.isPresent() && translated.get() == value;
+        return translate(key).filter(value::equals).isPresent();
     }
 
     private boolean verify(KeyType key, Collection<AccountTypes> values) {
-        Optional<AccountTypes> translated = translate(key);
-        return translated.isPresent() && values.contains(translated.get());
+        return translate(key).filter(values::contains).isPresent();
     }
 
     public Optional<AccountTypes> translate(KeyType accountTypeKey) {
