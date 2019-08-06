@@ -9,12 +9,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.ApiService;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeadersToSign;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeadersToSign;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.PaymentTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.QueryKeys;
@@ -74,7 +75,6 @@ public final class BecApiClient {
                 new HashMap<String, Object>() {
                     {
                         put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
-                        put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
                         put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
                         put(HeaderKeys.PSU_IP, HeaderValues.PSU_IP);
                         put(HeaderKeys.X_REQUEST_ID, requestId);
@@ -91,21 +91,24 @@ public final class BecApiClient {
     }
 
     public RequestBuilder createRequest(URL url, String requestBody) {
-
         String requestId = UUID.randomUUID().toString();
         String digest = createDigest(requestBody);
-
         Map<String, Object> headers = getHeaders(requestId, digest);
-        headers.put(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
 
-        return client.request(url).type(MediaType.APPLICATION_JSON).headers(headers);
+        return client.request(url)
+            .type(MediaType.APPLICATION_JSON)
+            .headers(headers)
+            .header(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
+    }
+    public RequestBuilder createRequest(URL url) {
+        return createRequest(url, FormValues.EMPTY_STRING);
     }
 
     public ConsentResponse getConsent(String state) throws HttpResponseException {
         this.state = state;
         ConsentRequest body = createConsentRequestBody();
         ConsentResponse response =
-                createRequest(new URL(baseUrl + ApiService.GET_CONSENT), serializeToString(body))
+                createRequest(new URL(baseUrl.concat(ApiService.GET_CONSENT)), serializeToString(body))
                         .body(body)
                         .post(ConsentResponse.class);
         persistentStorage.put(StorageKeys.CONSENT_ID, response.getConsentId());
@@ -114,43 +117,43 @@ public final class BecApiClient {
 
     public ConsentResponse getConsentStatus() {
         return createRequest(
-                        new URL(baseUrl + ApiService.GET_CONSENT_STATUS)
+                        new URL(baseUrl.concat(ApiService.GET_CONSENT_STATUS))
                                 .parameter(
                                         StorageKeys.CONSENT_ID,
-                                        persistentStorage.get(StorageKeys.CONSENT_ID)),
-                        FormValues.EMPTY_STRING)
+                                        persistentStorage.get(StorageKeys.CONSENT_ID)))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .get(ConsentResponse.class);
     }
 
     public ConsentRequest createConsentRequestBody() {
-        AccessEntity access = new AccessEntity(FormValues.ACCESS_TYPE);
-        ConsentRequest consentRequest =
-                new ConsentRequest(access, FormValues.FALSE, FormValues.VALID_UNTIL, FormValues.TRUE, FormValues.FREQUENCY_PER_DAY);
-        return consentRequest;
+        return new ConsentRequest(
+            new AccessEntity(
+                FormValues.ACCESS_TYPE),
+                FormValues.FALSE,
+                FormValues.VALID_UNTIL,
+                FormValues.TRUE,
+                FormValues.FREQUENCY_PER_DAY);
     }
 
     public GetAccountsResponse getAccounts() {
-        return createRequest(new URL(baseUrl + ApiService.GET_ACCOUNTS), FormValues.EMPTY_STRING)
-                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
+        return createRequest(new URL(baseUrl.concat(ApiService.GET_ACCOUNTS)))
                 .get(GetAccountsResponse.class);
     }
 
     public BalancesResponse getBalances(AccountEntity account) {
         return createRequest(
-                        new URL(baseUrl + ApiService.GET_BALANCES)
-                                .parameter(IdTags.ACCOUNT_ID, account.getResourceId()),
-                        FormValues.EMPTY_STRING)
+                        new URL(baseUrl.concat(ApiService.GET_BALANCES))
+                                .parameter(IdTags.ACCOUNT_ID, account.getResourceId()))
                 .get(BalancesResponse.class);
     }
 
     public PaginatorResponse getTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
         final URL url =
-                new URL(baseUrl + ApiService.GET_TRANSACTIONS)
+                new URL(baseUrl.concat(ApiService.GET_TRANSACTIONS))
                         .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());
 
-        return createRequest(url, FormValues.EMPTY_STRING)
+        return createRequest(url)
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .queryParam(
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
@@ -160,49 +163,49 @@ public final class BecApiClient {
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
         return createRequest(
-                        new URL(baseUrl + ApiService.CREATE_PAYMENT)
+                        new URL(baseUrl.concat(ApiService.CREATE_PAYMENT))
                                 .parameter(
                                         IdTags.PAYMENT_TYPE,
-                                        PaymentTypes.INSTANT_DANISH_DOMESTIC_CREDIT_TRANSFER),
-                        FormValues.EMPTY_STRING)
+                                        PaymentTypes.INSTANT_DANISH_DOMESTIC_CREDIT_TRANSFER))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public GetPaymentResponse getPayment(String paymentId) {
         return createRequest(
-                        new URL(baseUrl + ApiService.GET_PAYMENT)
-                                .parameter(IdTags.PAYMENT_ID, paymentId),
-                        FormValues.EMPTY_STRING)
+                        new URL(baseUrl.concat(ApiService.GET_PAYMENT))
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
                 .get(GetPaymentResponse.class);
     }
 
     private String generateSignatureHeader(Map<String, Object> headers) {
         QsealcEidasProxySigner signer =
-                new QsealcEidasProxySigner(config.getEidasProxy(), becConfiguration.getEidasQwac());
+            new QsealcEidasProxySigner(config.getEidasProxy(), becConfiguration.getEidasQwac());
 
-        StringBuilder signedWithHeaderKeys = new StringBuilder();
-        StringBuilder signedWithHeaderKeyValues = new StringBuilder();
-
-        Arrays.stream(HeadersToSign.values())
+        String signedHeaders =
+            Arrays.stream(HeadersToSign.values())
                 .map(HeadersToSign::getHeader)
                 .filter(headers::containsKey)
-                .forEach(
-                        header -> {
-                            signedWithHeaderKeyValues.append(
-                                    String.format("%s: %s\n", header, headers.get(header)));
-                            signedWithHeaderKeys.append(
-                                    (signedWithHeaderKeys.length() == 0) ? header : " " + header);
-                        });
+                .collect(Collectors.joining(" "));
 
-        String signature =
-                signer.getSignatureBase64(signedWithHeaderKeyValues.toString().trim().getBytes());
+        String signedHeadersWithValues =
+            Arrays.stream(HeadersToSign.values())
+                .map(HeadersToSign::getHeader)
+                .filter(headers::containsKey)
+                .map(header -> String.format("%s: %s", header, headers.get(header)))
+                .collect(Collectors.joining("\n"));
+
+        String signature = signer.getSignatureBase64(signedHeadersWithValues.getBytes());
 
         return String.format(
-                "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"",
-                becConfiguration.getKeyId(), signedWithHeaderKeys.toString(), signature);
+            BecConstants.HeaderValues.SIGNATURE_HEADER,
+            becConfiguration.getKeyId(),
+            signedHeaders,
+            signature);
     }
 
+
+
     private String createDigest(String body) {
-        return String.format(HeaderValues.SHA_256+"%s",Base64.getEncoder().encodeToString(Hash.sha256(body)));
+        return String.format(HeaderValues.SHA_256.concat("%s"),Base64.getEncoder().encodeToString(Hash.sha256(body)));
     }
 }
