@@ -52,6 +52,7 @@ public final class CbiGlobeConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "consent-id";
+        public static final String ACCOUNTS = "accounts";
     }
 
     public static class QueryKeys {
