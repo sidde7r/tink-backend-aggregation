@@ -17,11 +17,6 @@ public class InstrumentIdModuleTest {
         InstrumentIdModule.of("SE0378331005", "SE", "name", "");
     }
 
-    @Test(expected = NullPointerException.class)
-    public void missingIsin() {
-        InstrumentIdModule.of(null, "SE", "name", "12345");
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void invalidIsin() {
         InstrumentIdModule.of("34566", "SE", "name", "12345");
@@ -56,12 +51,21 @@ public class InstrumentIdModuleTest {
     }
 
     @Test
+    public void buildWithNameAndUniqueId() {
+        InstrumentIdModule idModule = InstrumentIdModule.of(null, null, "name", "12345");
+        assertNull(idModule.getIsin());
+        assertNull(idModule.getMarketPlace());
+        assertEquals("name", idModule.getName());
+        assertEquals("12345", idModule.getUniqueIdentifier());
+    }
+
+    @Test
     public void builderTest() {
         InstrumentIdModule idModule =
                 InstrumentIdModule.builder()
                         .withUniqueIdentifier("12345")
-                        .withIsin("SE0378331005")
                         .withName("name")
+                        .setIsin("SE0378331005")
                         .build();
 
         assertEquals("SE0378331005", idModule.getIsin());
@@ -75,8 +79,8 @@ public class InstrumentIdModuleTest {
         InstrumentIdModule idModule =
                 InstrumentIdModule.builder()
                         .withUniqueIdentifier("12345")
-                        .withIsin("SE0378331005")
                         .withName("name")
+                        .setIsin("SE0378331005")
                         .setMarketPlace("SE")
                         .build();
 
