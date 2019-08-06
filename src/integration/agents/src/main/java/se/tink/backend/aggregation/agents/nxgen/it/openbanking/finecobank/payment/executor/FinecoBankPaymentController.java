@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor;
 
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import com.google.common.base.Preconditions;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FinecoBankSignSteps;
@@ -32,8 +33,6 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor, FetchablePaym
 
     private FinecoBankApiClient apiClient;
     private SessionStorage sessionStorage;
-    private ArrayList<PaymentResponse> createdPayments =
-            new ArrayList<>(); // used for mocking fetch multiple
 
     public FinecoBankPaymentExecutor(FinecoBankApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -60,10 +59,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor, FetchablePaym
                 apiClient.createPayment(getPaymentProduct(paymentRequest), requestBody);
         sessionStorage.put(
                 createPaymentResponse.getPaymentId(), createPaymentResponse.getScaRedirectLink());
-        PaymentResponse tinkPaymentResponse =
-                createPaymentResponse.toTinkPaymentResponse(paymentRequest);
-        createdPayments.add(tinkPaymentResponse);
-        return tinkPaymentResponse;
+        return createPaymentResponse.toTinkPaymentResponse(paymentRequest);
     }
 
     @Override
@@ -94,7 +90,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor, FetchablePaym
             default:
                 throw new IllegalStateException(
                         String.format(
-                                ErrorMessages.UKNOWN_SIGNING_STEP,
+                                ErrorMessages.UNKNOWN_SIGNING_STEP,
                                 paymentMultiStepRequest.getStep()));
         }
         payment.setStatus(paymentStatus);
@@ -116,7 +112,10 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor, FetchablePaym
 
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        return new PaymentListResponse(createdPayments); // mocking fetch multiple
+        return new PaymentListResponse(
+                paymentListRequest.getPaymentRequestList().stream()
+                        .map(paymentRequest -> new PaymentResponse(paymentRequest.getPayment()))
+                        .collect(Collectors.toList())); // mocking fetch multiple
     }
 
     private String getPaymentProduct(PaymentRequest paymentRequest) {

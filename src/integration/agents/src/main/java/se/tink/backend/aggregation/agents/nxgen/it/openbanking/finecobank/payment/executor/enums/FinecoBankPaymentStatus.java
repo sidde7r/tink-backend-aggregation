@@ -65,7 +65,7 @@ public enum FinecoBankPaymentStatus {
                         () ->
                                 new IllegalStateException(
                                         String.format(
-                                                ErrorMessages.MAPPINT_STATUS_TO_TINK_STATUS_ERROR,
+                                                ErrorMessages.MAPPING_STATUS_TO_TINK_STATUS_ERROR,
                                                 finecoBankPaymentStatus.getValue())));
     }
 

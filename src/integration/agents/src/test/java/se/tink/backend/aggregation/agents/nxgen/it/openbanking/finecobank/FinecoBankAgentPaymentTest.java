@@ -4,10 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.iban4j.Iban;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
@@ -16,16 +17,24 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
-@Ignore
 public class FinecoBankAgentPaymentTest {
-    @Test
-    public void testPayments() throws Exception {
-        AgentIntegrationTest.Builder builder =
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+
+    private AgentIntegrationTest.Builder builder;
+
+    @Before
+    public void setup() {
+        manager.before();
+        builder =
                 new AgentIntegrationTest.Builder("it", "it-finecobank-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
+    }
 
+    @Test
+    public void testPayments() throws Exception {
         builder.build().testGenericPayment(createListMockedDomesticPayment(1));
     }
 
@@ -62,4 +71,6 @@ public class FinecoBankAgentPaymentTest {
 
         return listOfMockedPayments;
     }
+
+    private enum Arg {}
 }

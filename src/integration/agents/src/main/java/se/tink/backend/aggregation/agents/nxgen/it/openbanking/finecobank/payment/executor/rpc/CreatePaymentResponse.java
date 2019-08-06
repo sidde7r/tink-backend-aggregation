@@ -22,7 +22,7 @@ public class CreatePaymentResponse {
     @JsonIgnore
     public String getScaRedirectLink() {
         return Optional.ofNullable(links)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_SIGINING_LINK))
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_SIGNING_LINK))
                 .getScaRedirectLink();
     }
 
