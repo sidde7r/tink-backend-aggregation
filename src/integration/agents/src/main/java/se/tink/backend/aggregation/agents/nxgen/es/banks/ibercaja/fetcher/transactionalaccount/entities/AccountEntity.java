@@ -86,14 +86,13 @@ public class AccountEntity {
     }
 
     private Portfolio toTinkPortfolio() {
-
         // Ibercaja seem to use the same model for all types of accounts, can not find more
         // portfolio data
         // for our ambassador credentials. Hopefully logging for accounts with active investments
         // will yield
         // more info.
 
-        Portfolio portfolio = new Portfolio();
+        final Portfolio portfolio = new Portfolio();
 
         portfolio.setUniqueIdentifier(iban);
         portfolio.setType(Portfolio.Type.DEPOT);
