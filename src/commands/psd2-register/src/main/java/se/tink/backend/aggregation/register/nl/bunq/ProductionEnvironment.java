@@ -43,7 +43,7 @@ public final class ProductionEnvironment implements Environment {
                 clientPublicKeySignatureString.getBytes(StandardCharsets.UTF_8);
 
         final EidasProxyConfiguration proxyConfig =
-                new EidasProxyConfiguration(BunqRegisterConstants.Urls.EIDAS_PROXY_URL, true);
+                EidasProxyConfiguration.createLocal(BunqRegisterConstants.Urls.EIDAS_PROXY_URL);
         final Signer signer =
                 new QsealcEidasProxySigner(proxyConfig, certificateId, Algorithm.EIDAS_RSA_SHA256);
 

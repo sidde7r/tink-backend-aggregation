@@ -12,9 +12,11 @@ public class EidasProxyConfiguration {
 
     public EidasProxyConfiguration() {}
 
-    public EidasProxyConfiguration(String host, boolean localEidasDev) {
-        this.host = host;
-        this.localEidasDev = localEidasDev;
+    public static EidasProxyConfiguration createLocal(final String host) {
+        final EidasProxyConfiguration configuration = new EidasProxyConfiguration();
+        configuration.host = host;
+        configuration.localEidasDev = true;
+        return configuration;
     }
 
     public String getHost() {

@@ -12,7 +12,7 @@ public final class RabobankRegisterConstants {
     }
 
     public static EidasProxyConfiguration eidasProxyConf =
-            new EidasProxyConfiguration(Url.EIDAS_PROXY_BASE_URL.get(), true);
+            EidasProxyConfiguration.createLocal(Url.EIDAS_PROXY_BASE_URL.get());
 
     public static class Cli {
         public static final String CERTIFICATE_PATH = "c";
