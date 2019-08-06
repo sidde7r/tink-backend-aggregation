@@ -24,10 +24,7 @@ public class GenericTypeMapper<V, T> {
     protected final Optional<V> defaultValue;
 
     private BiPredicate<T, Collection<V>> isOneOfType =
-            (input, types) -> {
-                Optional<V> type = translate(input);
-                return type.map(types::contains).orElseGet(() -> false);
-            };
+            (input, types) -> translate(input).map(types::contains).orElse(false);
 
     protected GenericTypeMapper(GenericTypeMapper.Builder<V, T, ?> builder) {
         ignoredKeys = builder.getIgnoredKeys();
@@ -54,13 +51,11 @@ public class GenericTypeMapper<V, T> {
     }
 
     protected boolean verify(T key, V value) {
-        Optional<V> translated = translate(key);
-        return translated.isPresent() && translated.get() == value;
+        return translate(key).filter(value::equals).isPresent();
     }
 
     protected boolean verify(T key, Collection<V> values) {
-        Optional<V> translated = translate(key);
-        return translated.isPresent() && values.contains(translated.get());
+        return translate(key).filter(values::contains).isPresent();
     }
 
     /**

@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import java.util.Arrays;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Collections;
 import java.util.Optional;
-import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 
@@ -12,17 +15,15 @@ public class GenericTypeMapperTest {
         final GenericTypeMapper<String, Integer> mapper =
                 GenericTypeMapper.<String, Integer>genericBuilder().build();
 
-        Assert.assertFalse(mapper.translate(Integer.valueOf(1)).isPresent());
+        assertFalse(mapper.translate(1).isPresent());
     }
 
     @Test
     public void ensureTranslate_withIgnored_returnsEmpty() {
         final GenericTypeMapper<String, Integer> mapper =
-                GenericTypeMapper.<String, Integer>genericBuilder()
-                        .ignoreKeys(Integer.valueOf(7), null)
-                        .build();
+                GenericTypeMapper.<String, Integer>genericBuilder().ignoreKeys(7, null).build();
 
-        Assert.assertFalse(mapper.translate(Integer.valueOf(7)).isPresent());
+        assertFalse(mapper.translate(7).isPresent());
     }
 
     @Test
@@ -32,8 +33,7 @@ public class GenericTypeMapperTest {
                         .put("CHECKING_ACCOUNT", AccountTypes.CHECKING)
                         .build();
 
-        Assert.assertEquals(
-                mapper.translate(AccountTypes.CHECKING), Optional.of("CHECKING_ACCOUNT"));
+        assertEquals(mapper.translate(AccountTypes.CHECKING), Optional.of("CHECKING_ACCOUNT"));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class GenericTypeMapperTest {
                         .put(AccountTypes.CHECKING, "SAVINGS_ACCOUNT")
                         .build();
 
-        Assert.assertFalse(mapper.translate("CHECKING_ACCOUNT").isPresent());
+        assertFalse(mapper.translate("CHECKING_ACCOUNT").isPresent());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -71,7 +71,7 @@ public class GenericTypeMapperTest {
                         .put(AccountTypes.CHECKING, "checking_account")
                         .build();
 
-        Assert.assertEquals(mapper.translate(null), Optional.empty());
+        assertEquals(mapper.translate(null), Optional.empty());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class GenericTypeMapperTest {
                         .put(AccountTypes.CHECKING, "checking_account")
                         .build();
 
-        Assert.assertEquals(mapper.translate(""), Optional.empty());
+        assertEquals(mapper.translate(""), Optional.empty());
     }
 
     @Test
@@ -91,7 +91,8 @@ public class GenericTypeMapperTest {
                 GenericTypeMapper.<AccountTypes, String>genericBuilder()
                         .put(AccountTypes.CHECKING, checking_account, "other_checking_account")
                         .build();
-        Assert.assertTrue(mapper.isOneOf(checking_account, Arrays.asList(AccountTypes.CHECKING)));
+        assertTrue(
+                mapper.isOneOf(checking_account, Collections.singletonList(AccountTypes.CHECKING)));
     }
 
     @Test
@@ -102,7 +103,8 @@ public class GenericTypeMapperTest {
                         .put(AccountTypes.CHECKING, "checking_account")
                         .put(AccountTypes.MORTGAGE, checking_account)
                         .build();
-        Assert.assertFalse(mapper.isOneOf(checking_account, Arrays.asList(AccountTypes.CHECKING)));
+        assertFalse(
+                mapper.isOneOf(checking_account, Collections.singletonList(AccountTypes.CHECKING)));
     }
 
     @Test
@@ -111,7 +113,7 @@ public class GenericTypeMapperTest {
                 GenericTypeMapper.<AccountTypes, String>genericBuilder()
                         .put(AccountTypes.CHECKING, "checking_account")
                         .build();
-        Assert.assertFalse(mapper.isOneOf("other_type", Arrays.asList(AccountTypes.CHECKING)));
+        assertFalse(mapper.isOneOf("other_type", Collections.singletonList(AccountTypes.CHECKING)));
     }
 
     @Test
@@ -121,7 +123,7 @@ public class GenericTypeMapperTest {
                 GenericTypeMapper.<AccountTypes, String>genericBuilder()
                         .put(AccountTypes.CHECKING, checking_account, "other_checking_account")
                         .build();
-        Assert.assertTrue(mapper.isOf(checking_account, AccountTypes.CHECKING));
+        assertTrue(mapper.isOf(checking_account, AccountTypes.CHECKING));
     }
 
     @Test
@@ -132,7 +134,7 @@ public class GenericTypeMapperTest {
                         .put(AccountTypes.CHECKING, "checking_account")
                         .put(AccountTypes.MORTGAGE, checking_account)
                         .build();
-        Assert.assertFalse(mapper.isOf(checking_account, AccountTypes.CHECKING));
+        assertFalse(mapper.isOf(checking_account, AccountTypes.CHECKING));
     }
 
     @Test
@@ -141,14 +143,14 @@ public class GenericTypeMapperTest {
                 GenericTypeMapper.<AccountTypes, String>genericBuilder()
                         .put(AccountTypes.CHECKING, "checking_account")
                         .build();
-        Assert.assertFalse(mapper.isOf("other_type", AccountTypes.CHECKING));
+        assertFalse(mapper.isOf("other_type", AccountTypes.CHECKING));
     }
 
     @Test
     public void getMappedTypes_noTypes() {
         final GenericTypeMapper<AccountTypes, String> mapper =
                 GenericTypeMapper.<AccountTypes, String>genericBuilder().build();
-        Assert.assertTrue(mapper.getMappedTypes().isEmpty());
+        assertTrue(mapper.getMappedTypes().isEmpty());
     }
 
     @Test
@@ -159,9 +161,9 @@ public class GenericTypeMapperTest {
                         .put(AccountTypes.CREDIT_CARD, "b", "c")
                         .build();
 
-        Assert.assertEquals(2, mapper.getMappedTypes().size());
-        Assert.assertTrue(mapper.getMappedTypes().contains(AccountTypes.CHECKING));
-        Assert.assertTrue(mapper.getMappedTypes().contains(AccountTypes.CREDIT_CARD));
+        assertEquals(2, mapper.getMappedTypes().size());
+        assertTrue(mapper.getMappedTypes().contains(AccountTypes.CHECKING));
+        assertTrue(mapper.getMappedTypes().contains(AccountTypes.CREDIT_CARD));
     }
 
     @Test
@@ -173,7 +175,7 @@ public class GenericTypeMapperTest {
                         .setDefaultTranslationValue(AccountTypes.DUMMY)
                         .build();
 
-        Assert.assertEquals(AccountTypes.DUMMY, mapper.translate("z").get());
+        assertEquals(AccountTypes.DUMMY, mapper.translate("z").get());
     }
 
     @Test
@@ -184,6 +186,6 @@ public class GenericTypeMapperTest {
                         .put(AccountTypes.CREDIT_CARD, "b", "c")
                         .build();
 
-        Assert.assertEquals(Optional.empty(), mapper.translate("z"));
+        assertEquals(Optional.empty(), mapper.translate("z"));
     }
 }
