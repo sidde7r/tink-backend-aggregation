@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GenericTypeMapper<V, T> {
+
     private static final Logger logger = LoggerFactory.getLogger(GenericTypeMapper.class);
 
     private final Map<T, V> translator;
@@ -34,7 +35,6 @@ public class GenericTypeMapper<V, T> {
 
         ImmutableMap.Builder<T, V> tmpTranslator = ImmutableMap.builder();
         for (Map.Entry<V, Collection<T>> entry : builder.getReversed().entrySet()) {
-
             entry.getValue().stream()
                     .peek(
                             key ->
