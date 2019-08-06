@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccountDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
@@ -109,5 +111,20 @@ public class CbiGlobeAuthenticator {
 
         GetTokenResponse getTokenResponse = apiClient.getToken(authorizationHeader);
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, getTokenResponse.toTinkToken());
+    }
+
+    public void autoAutenthicate() throws SessionException {
+        try {
+            if (!apiClient.isTokenValid()) {
+                getToken();
+            }
+        } catch (IllegalStateException e) {
+            String message = e.getMessage();
+            if (message.contains(MessageCodes.NO_ACCESS_TOKEN_IN_STORAGE.name())) {
+                getToken();
+            } else {
+                throw e;
+            }
+        }
     }
 }

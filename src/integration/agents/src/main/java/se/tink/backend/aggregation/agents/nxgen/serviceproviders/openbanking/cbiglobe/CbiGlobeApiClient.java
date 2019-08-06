@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.IdTags;
@@ -12,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
@@ -75,7 +75,9 @@ public class CbiGlobeApiClient {
         return persistentStorage
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+                        () ->
+                                new IllegalStateException(
+                                        MessageCodes.NO_ACCESS_TOKEN_IN_STORAGE.name()));
     }
 
     public GetTokenResponse getToken(String authorizationHeader) {
@@ -114,5 +116,9 @@ public class CbiGlobeApiClient {
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(GetTransactionsResponse.class);
+    }
+
+    public boolean isTokenValid() {
+        return getTokenFromStorage().isValid();
     }
 }
