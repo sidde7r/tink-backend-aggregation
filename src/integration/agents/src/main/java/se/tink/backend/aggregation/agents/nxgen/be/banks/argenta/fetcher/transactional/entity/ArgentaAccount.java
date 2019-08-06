@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.entity;
 
-import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -30,7 +29,6 @@ public class ArgentaAccount {
     }
 
     private AccountTypes getAccountType() {
-        Optional<AccountTypes> accountType = ArgentaConstants.ACCOUNT_TYPE_MAPPER.translate(type);
-        return accountType.orElse(AccountTypes.OTHER);
+        return ArgentaConstants.ACCOUNT_TYPE_MAPPER.translate(type).orElse(AccountTypes.OTHER);
     }
 }
