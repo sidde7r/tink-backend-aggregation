@@ -215,7 +215,7 @@ public class OAuth2AuthenticationController
         Map<String, String> callbackData =
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
-                                OAuthUtils.formatSupplementalKey(state),
+                                OAuthUtils.formatSupplementalKey(pseudoId),
                                 WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
                         .orElseThrow(
