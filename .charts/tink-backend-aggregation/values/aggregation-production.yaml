@@ -37,6 +37,7 @@ agents:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   nordea:
     tink:
+      eidasQwac: Tink
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   bankdata:
     tink:
