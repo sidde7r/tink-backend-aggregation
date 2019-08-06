@@ -7,16 +7,16 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.pair.Pair;
 
 public final class BawagPskAccountTypeMappers {
     private static final Logger logger = LoggerFactory.getLogger(BawagPskAccountTypeMappers.class);
 
-    private AccountTypeMapper productCodeMapper;
-    private AccountTypeMapper productTypeMapper;
+    private TypeMapper<AccountTypes> productCodeMapper;
+    private TypeMapper<AccountTypes> productTypeMapper;
     private AccountTypePredicateMapper<Product> productFallbackMapper;
 
     /**
@@ -149,10 +149,10 @@ public final class BawagPskAccountTypeMappers {
         return productFallbackMapper;
     }
 
-    public AccountTypeMapper getProductCodeMapper() {
+    public TypeMapper<AccountTypes> getProductCodeMapper() {
         if (productCodeMapper == null) {
             productCodeMapper =
-                    AccountTypeMapper.builder()
+                    TypeMapper.<AccountTypes>builder()
                             .put(
                                     AccountTypes.CHECKING,
                                     "B100",
@@ -213,10 +213,10 @@ public final class BawagPskAccountTypeMappers {
 
     // Another fallback mapper; more error-prone because the bank assigns a savings account to
     // "CHECKING" for some reason
-    public AccountTypeMapper getProductTypeMapper() {
+    public TypeMapper<AccountTypes> getProductTypeMapper() {
         if (productTypeMapper == null) {
             productTypeMapper =
-                    AccountTypeMapper.builder()
+                    TypeMapper.<AccountTypes>builder()
                             .put(AccountTypes.CHECKING, "CHECKING")
                             .put(AccountTypes.SAVINGS, "SAVINGS")
                             .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")
