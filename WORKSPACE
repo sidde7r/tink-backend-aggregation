@@ -2333,7 +2333,7 @@ maven_jar(
 
 maven_jar(
     name = "com_nimbusds_nimbus_jose_jwt",
-    artifact = "com.nimbusds:nimbus-jose-jwt:7.6",
+    artifact = "com.nimbusds:nimbus-jose-jwt:7.7",
     sha1 = "6dfe714cd0f920946ec3892836dc9ed02e58f29f",
 )
 
