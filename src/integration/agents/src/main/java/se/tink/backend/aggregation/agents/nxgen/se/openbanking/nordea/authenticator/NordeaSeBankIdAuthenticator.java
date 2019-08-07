@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -20,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -30,16 +28,11 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     private final NordeaSeApiClient apiClient;
     private static final Logger log = LoggerFactory.getLogger(NordeaSeBankIdAuthenticator.class);
     private final String language;
-    private final Credentials credentials;
 
     public NordeaSeBankIdAuthenticator(
-            NordeaSeApiClient apiClient,
-            SessionStorage sessionStorage,
-            String language,
-            Credentials credentials) {
+            NordeaSeApiClient apiClient, SessionStorage sessionStorage, String language) {
         this.apiClient = apiClient;
         this.language = language;
-        this.credentials = credentials;
     }
 
     @Override
@@ -112,8 +105,6 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
 
         OAuth2Token token = apiClient.refreshToken(form);
         apiClient.storeToken(token);
-        credentials.setSessionExpiryDate(
-                OpenBankingTokenExpirationDateHelper.getExpirationDateFromTokenOrDefault(token));
         return Optional.ofNullable(token);
     }
 
