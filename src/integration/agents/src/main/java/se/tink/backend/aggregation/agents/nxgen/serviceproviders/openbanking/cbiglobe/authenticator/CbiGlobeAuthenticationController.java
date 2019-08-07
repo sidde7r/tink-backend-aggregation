@@ -104,8 +104,4 @@ public class CbiGlobeAuthenticationController
         ThirdPartyAppResponse<String> response = this.init();
         this.collect(response.getReference());
     }
-
-    public String getState() {
-        return state;
-    }
 }
