@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -40,7 +41,8 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException {
+    public void autoAuthenticate(Credentials credentials)
+            throws SessionException, BankServiceException {
         throw SessionError.SESSION_EXPIRED.exception();
     }
 
