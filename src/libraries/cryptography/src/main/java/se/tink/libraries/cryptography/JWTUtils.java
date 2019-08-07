@@ -1,17 +1,31 @@
 package se.tink.libraries.cryptography;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.google.common.base.Strings;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.util.Date;
 
 public class JWTUtils {
     private static final int JWT_SECONDS_VALID = 120;
+
+    public static String createJWTState(
+            ECPublicKey publicKey, ECPrivateKey privateKey, String pseudoId, String appUriId) {
+        JWTCreator.Builder jwtBuilder = JWT.create().withIssuedAt(new Date());
+        jwtBuilder.withClaim("id", pseudoId);
+
+        if (!Strings.isNullOrEmpty(appUriId)) {
+            jwtBuilder.withClaim("appUriId", appUriId);
+        }
+
+        return jwtBuilder.sign(Algorithm.ECDSA256(publicKey, privateKey));
+    }
 
     public static String create(String challenge, ECPrivateKey privateKey) {
         Algorithm algorithm = Algorithm.ECDSA512(null, privateKey);
