@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator;
 
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.BuddybankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -16,7 +17,7 @@ public class BuddybankAuthenticator {
         return apiClient.buildAuthorizeUrl(state);
     }
 
-    public ConsentStatusResponse getConsentStatus() {
+    public ConsentStatusResponse getConsentStatus() throws SessionException {
         return apiClient.getConsentStatus();
     }
 }

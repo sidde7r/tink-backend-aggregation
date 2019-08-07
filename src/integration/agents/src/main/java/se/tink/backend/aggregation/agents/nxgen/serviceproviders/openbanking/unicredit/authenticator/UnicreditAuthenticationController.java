@@ -8,7 +8,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -44,11 +43,11 @@ public class UnicreditAuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        throw SessionError.SESSION_EXPIRED.exception();
+        authenticator.autoAuthenticate();
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(String reference) {
+    public ThirdPartyAppResponse<String> collect(String reference) throws SessionException {
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
