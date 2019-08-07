@@ -104,7 +104,7 @@ public final class CbiGlobeConstants {
         public static final String TRUE = "true";
         public static final String FREQUENCY_PER_DAY_ONE = "1";
         public static final String FALSE = "false";
-        public static final String FREQUENCY_PER_DAY = "100";
+        public static final String FREQUENCY_PER_DAY = "4";
     }
 
     public static class LogTags {
