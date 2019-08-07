@@ -5,7 +5,6 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Base64.Encoder;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -47,11 +46,8 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
 
-        if (Strings.isNullOrEmpty(persistentStorage.get(StorageKeys.CONSENT_ID))) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-
-        if (!authenticator.getApprovedConsent()) {
+        if (Strings.isNullOrEmpty(persistentStorage.get(StorageKeys.CONSENT_ID))
+                || !authenticator.getApprovedConsent()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
@@ -64,16 +60,13 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
     @Override
     public ThirdPartyAppResponse<String> collect(String reference) {
 
-        Map<String, String> supplementalInformation =
-                this.supplementalInformationHelper
-                        .waitForSupplementalInformation(
-                                this.formatSupplementalKey(state),
-                                WAIT_FOR_MINUTES,
-                                TimeUnit.MINUTES)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "No supplemental info found in api response"));
+        this.supplementalInformationHelper
+                .waitForSupplementalInformation(
+                        this.formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "No supplemental info found in api response"));
 
         while (!authenticator.getApprovedConsent()) {
             Uninterruptibles.sleepUninterruptibly(1000, TimeUnit.MILLISECONDS);
