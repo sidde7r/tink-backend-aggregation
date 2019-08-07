@@ -482,6 +482,8 @@ spec:
               name: aggregation-secrets
               key: sibs-certificate-serial-number-cgd
               optional: true
+        {{- end }}
+        {{- if $agentsConfig.cmcic }}
         - name: CIC_CLIENT_ID
           valueFrom:
             secretKeyRef:
