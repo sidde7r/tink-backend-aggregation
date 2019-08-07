@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -21,6 +20,7 @@ public class AccountEntity {
     private String resourceId;
     private String iban;
     private String currency;
+    private String status;
     private String name;
     private String cashAccountType;
     private List<BalanceBaseEntity> balances;
@@ -28,34 +28,11 @@ public class AccountEntity {
     @JsonProperty("_links")
     private AccountLinksWithHrefEntity links;
 
-    public boolean isCheckingType() {
-        return DeutscheBankConstants.ACCOUNT_TYPE_MAPPER.translate(cashAccountType).isPresent();
-    }
-
     public TransactionalAccount toTinkAccount() {
         return DeutscheBankConstants.ACCOUNT_TYPE_MAPPER
                 .translate(cashAccountType)
-                .filter(this::isCheckingType)
-                .map(accountType -> toCheckingAccount())
-                .orElse(toSavingsAccount());
-    }
-
-    public boolean isCheckingType(final AccountTypes accountType) {
-        return accountType == AccountTypes.CHECKING;
-    }
-
-    public TransactionalAccount toCheckingAccount() {
-        return toTinkAccountWithType(TransactionalAccountType.CHECKING);
-    }
-
-    public TransactionalAccount toSavingsAccount() {
-        return toTinkAccountWithType(TransactionalAccountType.SAVINGS);
-    }
-
-    private TransactionalAccountType getAccountType() {
-        return isCheckingType()
-                ? TransactionalAccountType.CHECKING
-                : TransactionalAccountType.SAVINGS;
+                .map(this::toTinkAccountWithType)
+                .orElse(null);
     }
 
     private TransactionalAccount toTinkAccountWithType(TransactionalAccountType type) {
@@ -66,7 +43,7 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier())
                                 .withAccountNumber(getAccountNumber())
-                                .withAccountName(getAccountType().toString())
+                                .withAccountName(Optional.ofNullable(name).orElse(cashAccountType))
                                 .addIdentifier(getIdentifier())
                                 .build())
                 .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
@@ -75,7 +52,7 @@ public class AccountEntity {
                 .build();
     }
 
-    public ExactCurrencyAmount getBalance() {
+    private ExactCurrencyAmount getBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
@@ -83,67 +60,25 @@ public class AccountEntity {
                 .orElseThrow(() -> new IllegalStateException("Unable to fetch balance"));
     }
 
-    public boolean doesMatchWithAccountCurrency(final BalanceBaseEntity balance) {
+    private boolean doesMatchWithAccountCurrency(final BalanceBaseEntity balance) {
         return balance.isClosingBooked() && balance.isInCurrency(currency);
     }
 
-    public String getIban() {
-        return iban;
-    }
-
-    public String getTransactionLink() {
+    private String getTransactionLink() {
         return Optional.ofNullable(links)
                 .map(AccountLinksWithHrefEntity::getTransactionLink)
                 .orElse("");
     }
 
-    public String getUniqueIdentifier() {
+    private String getUniqueIdentifier() {
         return resourceId;
     }
 
-    public AccountIdentifier getIdentifier() {
+    private AccountIdentifier getIdentifier() {
         return new IbanIdentifier(iban);
     }
 
-    public String getAccountNumber() {
+    private String getAccountNumber() {
         return iban;
-    }
-
-    public AccountIdentifier getAccountIdentifier() {
-        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
-    }
-
-    public String getBalancesLink() {
-        return Optional.ofNullable(links)
-                .map(AccountLinksWithHrefEntity::getBalanceLink)
-                .orElse("");
-    }
-
-    public List<BalanceBaseEntity> getBalances() {
-        return balances;
-    }
-
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCashAccountType() {
-        return cashAccountType;
-    }
-
-    public AccountLinksWithHrefEntity getLinks() {
-        return links;
-    }
-
-    public void setBalances(final List<BalanceBaseEntity> balances) {
-        this.balances = balances;
     }
 }

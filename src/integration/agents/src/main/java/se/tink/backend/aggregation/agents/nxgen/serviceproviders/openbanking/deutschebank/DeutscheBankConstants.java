@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public class DeutscheBankConstants {
 
     public static final String INTEGRATION_NAME = "deutschebank";
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
+    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
                     .put(
-                            AccountTypes.CHECKING,
+                            TransactionalAccountType.CHECKING,
                             "CACC",
                             "CASH",
                             "CHAR",
@@ -20,7 +20,7 @@ public class DeutscheBankConstants {
                             "TRAS",
                             "CurrentAccount",
                             "Current")
-                    .put(AccountTypes.SAVINGS, "LLSV", "ONDP", "SVGS")
+                    .put(TransactionalAccountType.SAVINGS, "LLSV", "ONDP", "SVGS")
                     .build();
 
     private DeutscheBankConstants() {

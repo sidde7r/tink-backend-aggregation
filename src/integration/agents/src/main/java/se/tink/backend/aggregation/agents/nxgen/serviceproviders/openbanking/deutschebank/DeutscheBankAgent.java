@@ -64,10 +64,6 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
                 configuration.getEidasProxy(), deutscheBankConfiguration.getCertificateId());
     }
 
-    protected DeutscheBankConfiguration getClientConfiguration() {
-        return deutscheBankConfiguration;
-    }
-
     protected abstract String getBaseURL();
 
     protected abstract String getPSUIdType();

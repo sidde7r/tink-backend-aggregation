@@ -69,12 +69,10 @@ public class DeutscheBankApiClient {
     }
 
     public FetchAccountsResponse fetchAccounts() {
-        FetchAccountsResponse fetchAccountsResponse =
-                createRequestInSession(new URL(configuration.getBaseUrl().concat(Urls.ACCOUNTS)))
-                        .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
-                        .get(FetchAccountsResponse.class);
 
-        return fetchAccountsResponse;
+        return createRequestInSession(new URL(configuration.getBaseUrl().concat(Urls.ACCOUNTS)))
+                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
+                .get(FetchAccountsResponse.class);
     }
 
     public TransactionKeyPaginatorResponse<String> fetchTransactionsForAccount(

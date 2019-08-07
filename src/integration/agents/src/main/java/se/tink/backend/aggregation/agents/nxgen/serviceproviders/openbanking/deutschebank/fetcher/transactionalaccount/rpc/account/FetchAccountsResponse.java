@@ -13,17 +13,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class FetchAccountsResponse {
     private List<AccountEntity> accounts;
 
-    public void setAccounts(List<AccountEntity> accounts) {
-        this.accounts = accounts;
-    }
-
     public List<AccountEntity> getAccounts() {
         return accounts;
     }
 
     public Collection<TransactionalAccount> toTinkAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
-                .filter(AccountEntity::isCheckingType)
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
