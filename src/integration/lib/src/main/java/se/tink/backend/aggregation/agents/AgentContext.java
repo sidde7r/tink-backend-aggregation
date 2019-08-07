@@ -3,18 +3,21 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public abstract class AgentContext implements CompositeAgentContext {
-    private Map<String, Integer> transactionCountByEnabledAccount = Maps.newHashMap();
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
     protected boolean isTestContext = false;
+    private Map<String, Integer> transactionCountByEnabledAccount = Maps.newHashMap();
     private boolean isWaitingOnConnectorTransactions = false;
     private AggregatorInfo aggregatorInfo;
     private String clusterId;
     private MetricRegistry metricRegistry;
     private String appId;
+    private AgentConfigurationController agentConfigurationController;
 
     public String getAppId() {
         return appId;
@@ -79,5 +82,18 @@ public abstract class AgentContext implements CompositeAgentContext {
 
     public void setMetricRegistry(MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
+    }
+
+    public AgentConfigurationController getAgentConfigurationController() {
+        return Optional.ofNullable(agentConfigurationController)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "No AgentConfigurationController available, be sure to call setConfiguration before you try to get it."));
+    }
+
+    public void setAgentConfigurationController(
+            AgentConfigurationController agentConfigurationController) {
+        this.agentConfigurationController = agentConfigurationController;
     }
 }

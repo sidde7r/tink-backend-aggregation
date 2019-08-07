@@ -104,20 +104,12 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     }
 
     public AgentConfigurationController getAgentConfigurationController() {
-        return Optional.ofNullable(agentConfigurationController)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "No AgentConfigurationController available, be sure to call setConfiguration before you try to get it."));
+        return context.getAgentConfigurationController();
     }
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        agentConfigurationController =
-                new AgentConfigurationController(
-                        configuration.getTppSecretsServiceConfiguration(),
-                        configuration.getIntegrations());
         client.setDebugOutput(configuration.getTestConfiguration().isDebugOutputEnabled());
         client.setCensorSensitiveHeaders(
                 configuration.getTestConfiguration().isCensorSensitiveHeadersEnabled());

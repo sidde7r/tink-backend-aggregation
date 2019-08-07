@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -144,6 +145,18 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
                     CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
             configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
+            AgentConfigurationController agentConfigurationController =
+                    new AgentConfigurationController(
+                            configuration.getTppSecretsServiceConfiguration(),
+                            configuration.getIntegrations(),
+                            provider.getFinancialInstitutionId(),
+                            context.getAppId());
+            if (!agentConfigurationController.init()) {
+                throw new IllegalStateException(
+                        "Error when initializing AgentConfigurationController.");
+            }
+            context.setAgentConfigurationController(agentConfigurationController);
+
             AgentFactory factory = new AgentFactory(configuration);
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);

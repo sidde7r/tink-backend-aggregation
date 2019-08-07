@@ -69,6 +69,7 @@ java_library(
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_grpc_grpc_core",
         "//third_party:io_vavr",
         "//third_party:joda_time_joda_time",
         "//third_party:net_sourceforge_cssparser_cssparser",
