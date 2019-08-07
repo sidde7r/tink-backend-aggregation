@@ -59,7 +59,8 @@ public class SibsBaseApiClient {
      * - single - use code above to create date with correct pattern and add header (it won't be override)
     */
 
-    public SibsBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage, boolean isRequestManual) {
+    public SibsBaseApiClient(
+            TinkHttpClient client, PersistentStorage persistentStorage, boolean isRequestManual) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.isPsuInvolved = String.valueOf(isRequestManual);
