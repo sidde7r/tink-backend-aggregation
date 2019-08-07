@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils;
 
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.ECPublicKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.libraries.cryptography.ECDSAUtils;
 import se.tink.libraries.cryptography.JWTUtils;
-
-import java.security.interfaces.ECPrivateKey;
-import java.security.interfaces.ECPublicKey;
 
 public class JwtStateUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtStateUtils.class);
@@ -18,7 +17,7 @@ public class JwtStateUtils {
      * the user/client. We used the Elliptic Curve algorithm in order to reduce the size of the
      * actual JWToken signature.
      *
-     * @return signed jwt state of pseudoId
+     * @return signed jwt state or pseudoId
      */
     public static String tryCreateJwtState(
             final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,

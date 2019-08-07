@@ -1,12 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +32,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.cryptography.ECDSAUtils;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -58,7 +53,6 @@ public class OAuth2AuthenticationController
 
     private final String state;
     private final String pseudoId;
-    private final String callbackUri;
 
     // This wait time is for the whole user authentication. Different banks have different
     // cumbersome authentication flows.
@@ -76,7 +70,6 @@ public class OAuth2AuthenticationController
                 null,
                 credentials,
                 null,
-                null,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
     }
@@ -93,7 +86,6 @@ public class OAuth2AuthenticationController
                 authenticator,
                 callbackJWTSignatureKeyPair,
                 credentialsRequest.getCredentials(),
-                credentialsRequest.getCallbackUri(),
                 credentialsRequest.getAppUriId(),
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
@@ -105,7 +97,6 @@ public class OAuth2AuthenticationController
             OAuth2Authenticator authenticator,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
             Credentials credentials,
-            String callbackUri,
             String appUriId,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
@@ -116,7 +107,6 @@ public class OAuth2AuthenticationController
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
-        this.callbackUri = callbackUri;
 
         this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
         this.state =
