@@ -84,7 +84,9 @@ agents:
     tink:
       eidasCertId: Tink
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-
+  swedbank:
+    tink:
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
 
 
   proxyUri: http://10.88.12.185:8080

@@ -548,6 +548,14 @@ data:
             aspspCode: "BST"
         {{- end }}
 
+        {{- if $agentsConfig.swedbank }}
+        swedbank:
+          tink:
+            clientId: "SWEDBANK_CLIENT_ID"
+            clientSecret: "SWEDBANK_CLIENT_SECRET"
+            redirectUrl: "{{ $agentsConfig.swedbank.tink.redirectUrl }}"
+        {{- end }}
+
         {{- if $agentsConfig.unicredit }}
         unicredit-at:
           tink:
