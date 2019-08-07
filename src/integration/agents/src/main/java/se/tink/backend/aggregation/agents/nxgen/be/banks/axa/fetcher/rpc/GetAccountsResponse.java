@@ -42,7 +42,7 @@ public final class GetAccountsResponse {
         final Supplier<TransactionalAccount> checkingAccount =
                 () ->
                         CheckingAccount.builder()
-                                .setUniqueIdentifier(accountNumber)
+                                .setUniqueIdentifier(iban)
                                 .setAccountNumber(accountNumber)
                                 .setBalance(new Amount(accountEntity.getCurrency(), balance))
                                 .setAlias(accountEntity.getTypeDescription())
@@ -53,7 +53,7 @@ public final class GetAccountsResponse {
         final Supplier<TransactionalAccount> savingsAccount =
                 () ->
                         SavingsAccount.builder()
-                                .setUniqueIdentifier(accountNumber)
+                                .setUniqueIdentifier(iban)
                                 .setAccountNumber(accountNumber)
                                 .setBalance(new Amount(accountEntity.getCurrency(), balance))
                                 .setAlias(accountEntity.getTypeDescription())
