@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator;
 
+import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class BecController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
@@ -27,20 +30,30 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
     private static final Encoder encoder = Base64.getUrlEncoder();
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final PersistentStorage persistentStorage;
     private final BecAuthenticator authenticator;
     private final String state;
 
     public BecController(
             final SupplementalInformationHelper supplementalInformationHelper,
+            PersistentStorage persistentStorage,
             final BecAuthenticator authenticator) {
         this.supplementalInformationHelper = supplementalInformationHelper;
+        this.persistentStorage = persistentStorage;
         this.authenticator = authenticator;
         this.state = generateRandomState();
     }
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        throw SessionError.SESSION_EXPIRED.exception();
+
+        if (Strings.isNullOrEmpty(persistentStorage.get(StorageKeys.CONSENT_ID))) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        if (!authenticator.getApprovedConsent()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     @Override

@@ -68,6 +68,7 @@ public abstract class BecAgent extends NextGenerationAgent
         final BecController becController =
                 new BecController(
                         supplementalInformationHelper,
+                        persistentStorage,
                         new BecAuthenticator(apiClient, sessionStorage));
 
         return new AutoAuthenticationController(

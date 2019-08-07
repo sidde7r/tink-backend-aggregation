@@ -14,8 +14,8 @@ public class ArbejdernesAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("dk", "dk-arbejdernes-oauth2")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true);
     }
 
     @Test
