@@ -55,3 +55,4 @@ initialDelaySeconds: 10
 
 tppSecretsServiceConfiguration:
   tppSecretsServiceLocation: "development-staging"
+  enabled: true

@@ -213,3 +213,4 @@ clients:
 
 tppSecretsServiceConfiguration:
   tppSecretsServiceLocation: "cluster"
+  enabled: false

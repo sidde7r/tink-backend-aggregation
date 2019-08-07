@@ -98,3 +98,4 @@ clients:
 
 tppSecretsServiceConfiguration:
   tppSecretsServiceLocation: "cluster"
+  enabled: true
