@@ -51,6 +51,7 @@ public final class RedsysConstants {
         public static final String TRANSACTIONS_URL = "transactionsUrl";
         public static final String BALANCES_URL = "balancesUrl";
         public static final String TRANSACTIONS_REQUEST_ID = "requestId:";
+        public static final String FETCHED_INITIAL_TRANSACTIONS = "fetchedInitialTransactions:";
     }
 
     public static class QueryKeys {

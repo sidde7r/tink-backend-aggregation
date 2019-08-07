@@ -313,13 +313,16 @@ public final class RedsysApiClient {
         headers.put(HeaderKeys.REQUEST_ID, requestId);
         headers.put(HeaderKeys.CONSENT_ID, consentId);
 
-        RequestBuilder request =
+        final RequestBuilder request =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
                         .queryParam(QueryKeys.DATE_FROM, formatter.format(fromDate))
                         .queryParam(QueryKeys.DATE_TO, formatter.format(toDate))
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
 
-        return request.get(TransactionsResponse.class);
+        final TransactionsResponse response = request.get(TransactionsResponse.class);
+        // mark consent as used for this account
+        persistentStorage.put(StorageKeys.FETCHED_INITIAL_TRANSACTIONS + accountId, consentId);
+        return response;
     }
 
     public TransactionsResponse fetchTransactions(
