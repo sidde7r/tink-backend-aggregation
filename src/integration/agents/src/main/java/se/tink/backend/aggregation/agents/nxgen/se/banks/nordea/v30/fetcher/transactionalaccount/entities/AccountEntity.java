@@ -11,10 +11,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSECons
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -76,21 +78,26 @@ public class AccountEntity implements GeneralAccountEntity {
     public TransactionalAccount toTinkAccount() {
         AccountIdentifier identifier = generalGetAccountIdentifier();
 
-        return TransactionalAccount.nxBuilder()
-                .withType(getTinkAccountType())
-                .withBalance(BalanceModule.of(new Amount(currency, availableBalance)))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(maskAccountNumber())
-                                .withAccountNumber(identifier.getIdentifier())
-                                .withAccountName(nickname)
-                                .addIdentifier(identifier)
-                                .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                                .build())
-                .addHolderName(generalGetName())
-                .setApiIdentifier(accountNumber)
-                .build();
+        TransactionalAccountType accountType = getTinkAccountType();
+        TransactionalBuildStep builder =
+                TransactionalAccount.nxBuilder()
+                        .withType(accountType)
+                        .withBalance(BalanceModule.of(new Amount(currency, availableBalance)))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(maskAccountNumber())
+                                        .withAccountNumber(identifier.getIdentifier())
+                                        .withAccountName(nickname)
+                                        .addIdentifier(identifier)
+                                        .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                        .build())
+                        .addHolderName(generalGetName())
+                        .setApiIdentifier(accountNumber);
+
+        if (accountType == TransactionalAccountType.CHECKING) {
+            builder.addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        }
+        return builder.build();
     }
 
     private TransactionalAccountType getTinkAccountType() {
