@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.controllers;
 
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.ClientHandlerException;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,7 @@ public class ClusterConnectivityController {
         try {
             controllerWrapper.checkConnectivity();
             log.info("Successfully sent request to: {}", clusterId);
-        } catch (ClientHandlerException e) {
+        } catch (Exception e) {
             log.error("Connection to {} cluster failed : {}", clusterId, e.getMessage());
             throw new AggregationControllerNotReachable();
         }
