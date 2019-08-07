@@ -13,5 +13,5 @@ public interface AspspConfiguration {
     boolean supportsPendingTransactions();
 
     /** Date to request transactions from */
-    LocalDate transactionsFromDate();
+    LocalDate transactionsFromDate(String accountId, String consentId);
 }

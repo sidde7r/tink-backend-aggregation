@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.agents;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgent;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -25,5 +27,15 @@ public class EvobancoAgent extends RedsysAgent {
     @Override
     public boolean supportsPendingTransactions() {
         return false;
+    }
+
+    @Override
+    public LocalDate transactionsFromDate(String accountId, String consentId) {
+        if (consentStorage.consentIsNewerThan(1, ChronoUnit.DAYS)) {
+            // FIXME: not sure of this logic
+            return LocalDate.now().minusYears(5);
+        } else {
+            return LocalDate.now().minusDays(90);
+        }
     }
 }

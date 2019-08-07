@@ -148,15 +148,6 @@ public final class RedsysConstants {
         public static final String DOWNLOAD = "download";
     }
 
-    public static class ConsentStatus {
-        public static final String RECEIVED = "received";
-        public static final String REJECTED = "rejected";
-        public static final String VALID = "valid";
-        public static final String EXPIRED = "expired";
-        public static final String REVOKED_BY_PSU = "revokedByPsu";
-        public static final String TERMINATED_BY_TPP = "terminatedByTpp";
-    }
-
     public static class AccountType {
         public static final String PERSONAL = "PRIV";
         public static final String BUSINESS = "ORGA";

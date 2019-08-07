@@ -26,8 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentResponse;
@@ -42,7 +42,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -60,22 +59,19 @@ public final class RedsysApiClient {
     private final PersistentStorage persistentStorage;
     private RedsysConfiguration configuration;
     private EidasProxyConfiguration eidasProxyConfiguration;
-    private RedsysConsentController consentController;
     private X509Certificate clientSigningCertificate;
     private AspspConfiguration aspspConfiguration;
+    private ConsentStatus cachedConsentStatus = ConsentStatus.UNKNOWN;
 
     public RedsysApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
             AspspConfiguration aspspConfiguration) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.aspspConfiguration = aspspConfiguration;
-        this.consentController =
-                new RedsysConsentController(this, persistentStorage, supplementalInformationHelper);
     }
 
     private RedsysConfiguration getConfiguration() {
@@ -189,15 +185,16 @@ public final class RedsysApiClient {
         return new Pair<>(consentId, new URL(consentRedirectUrl));
     }
 
-    private String getConsentId() {
-        return persistentStorage.get(StorageKeys.CONSENT_ID);
-    }
-
-    public String fetchConsentStatus(String consentId) {
+    public ConsentStatus fetchConsentStatus(String consentId) {
+        // If valid, cache it for the session
+        if (cachedConsentStatus == ConsentStatus.VALID) {
+            return cachedConsentStatus;
+        }
         final String url = makeApiUrl(Urls.CONSENT_STATUS, consentId);
         final ConsentStatusResponse consentStatusResponse =
                 createSignedRequest(url).get(ConsentStatusResponse.class);
-        return consentStatusResponse.getConsentStatus();
+        cachedConsentStatus = consentStatusResponse.getConsentStatus();
+        return cachedConsentStatus;
     }
 
     public OAuth2Token refreshToken(final String refreshToken) {
@@ -289,25 +286,24 @@ public final class RedsysApiClient {
         return request;
     }
 
-    public ListAccountsResponse fetchAccounts() {
-        consentController.askForConsentIfNeeded();
+    public ListAccountsResponse fetchAccounts(String consentId) {
         RequestBuilder builder =
                 createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
-                        .header(HeaderKeys.CONSENT_ID, getConsentId());
+                        .header(HeaderKeys.CONSENT_ID, consentId);
         if (aspspConfiguration.shouldRequestAccountsWithBalance()) {
             builder = builder.queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE);
         }
         return builder.get(ListAccountsResponse.class);
     }
 
-    public AccountBalancesResponse fetchAccountBalances(String accountId) {
+    public AccountBalancesResponse fetchAccountBalances(String accountId, String consentId) {
         return createSignedRequest(makeApiUrl(Urls.BALANCES, accountId))
-                .header(HeaderKeys.CONSENT_ID, getConsentId())
+                .header(HeaderKeys.CONSENT_ID, consentId)
                 .get(AccountBalancesResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(
-            String accountId, LocalDate fromDate, LocalDate toDate) {
+            String accountId, String consentId, LocalDate fromDate, LocalDate toDate) {
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
         // Persist request ID in session
@@ -315,7 +311,7 @@ public final class RedsysApiClient {
         final String requestId = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
         sessionStorage.put(StorageKeys.TRANSACTIONS_REQUEST_ID + accountId, requestId);
         headers.put(HeaderKeys.REQUEST_ID, requestId);
-        headers.put(HeaderKeys.CONSENT_ID, getConsentId());
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
 
         RequestBuilder request =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
@@ -326,16 +322,18 @@ public final class RedsysApiClient {
         return request.get(TransactionsResponse.class);
     }
 
-    public TransactionsResponse fetchTransactions(String accountId, @Nullable String path) {
+    public TransactionsResponse fetchTransactions(
+            String accountId, String consentId, @Nullable String path) {
         if (path == null) {
             // Initial transactions request
             final LocalDate toDate = LocalDate.now();
-            final LocalDate fromDate = aspspConfiguration.transactionsFromDate();
-            return fetchTransactions(accountId, fromDate, toDate);
+            final LocalDate fromDate =
+                    aspspConfiguration.transactionsFromDate(accountId, consentId);
+            return fetchTransactions(accountId, consentId, fromDate, toDate);
         }
 
         final Map<String, Object> headers = Maps.newHashMap();
-        headers.put(HeaderKeys.CONSENT_ID, getConsentId());
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
 
         final String requestId =
                 sessionStorage.get(StorageKeys.TRANSACTIONS_REQUEST_ID + accountId);

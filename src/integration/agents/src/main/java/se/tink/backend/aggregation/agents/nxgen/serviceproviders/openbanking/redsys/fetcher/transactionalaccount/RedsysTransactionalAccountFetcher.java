@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
@@ -17,14 +18,19 @@ public class RedsysTransactionalAccountFetcher
                 TransactionKeyPaginator<TransactionalAccount, String> {
 
     private final RedsysApiClient apiClient;
+    private final RedsysConsentController consentController;
 
-    public RedsysTransactionalAccountFetcher(RedsysApiClient apiClient) {
+    public RedsysTransactionalAccountFetcher(
+            RedsysApiClient apiClient, RedsysConsentController consentController) {
         this.apiClient = apiClient;
+        this.consentController = consentController;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        ListAccountsResponse accountsResponse = apiClient.fetchAccounts();
+        consentController.requestConsentIfNeeded();
+        final String consentId = consentController.getConsentId();
+        ListAccountsResponse accountsResponse = apiClient.fetchAccounts(consentId);
         return accountsResponse.getAccounts().stream()
                 .map(this::toTinkAccount)
                 .collect(Collectors.toList());
@@ -35,7 +41,9 @@ public class RedsysTransactionalAccountFetcher
         if (account.hasBalances()) {
             accountBalances = account.getBalances();
         } else {
-            accountBalances = apiClient.fetchAccountBalances(account.getResourceId()).getBalances();
+            final String accountId = account.getResourceId();
+            final String consentId = consentController.getConsentId();
+            accountBalances = apiClient.fetchAccountBalances(accountId, consentId).getBalances();
         }
         return account.toTinkAccount(accountBalances);
     }
@@ -43,6 +51,8 @@ public class RedsysTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        return apiClient.fetchTransactions(account.getApiIdentifier(), key);
+        consentController.requestConsentIfNeeded();
+        final String consentId = consentController.getConsentId();
+        return apiClient.fetchTransactions(account.getApiIdentifier(), consentId, key);
     }
 }
