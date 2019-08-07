@@ -504,13 +504,13 @@ spec:
               optional: true
         {{- end }}
         {{- if $agentsConfig.cbi }}
-        - name: CBI_CLIENT_ID_TINK
+        - name: CBI_CLIENT_ID
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
               key: cbi-client-id-tink
               optional: true
-        - name: CBI_CLIENT_SECRET_TINK
+        - name: CBI_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
