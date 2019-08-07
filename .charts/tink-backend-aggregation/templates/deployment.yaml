@@ -503,6 +503,20 @@ spec:
               key: cmcic-key-id
               optional: true
         {{- end }}
+        {{- if $agentsConfig.cbi }}
+        - name: CBI_CLIENT_ID_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: cbi-client-id-tink
+              optional: true
+        - name: CBI_CLIENT_SECRET_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: cbi-client-secret-tink
+              optional: true
+        {{- end }}
         {{- if $agentsConfig.abnamro }}
         - name: ABN_AMRO_CLIENT_ID_TINK
           valueFrom:
