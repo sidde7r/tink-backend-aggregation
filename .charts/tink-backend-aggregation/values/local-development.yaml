@@ -54,4 +54,4 @@ clients:
 initialDelaySeconds: 10
 
 tppSecretsServiceConfiguration:
-  tppSecretsServiceLocation: "home-p12"
+  tppSecretsServiceLocation: "development-staging"

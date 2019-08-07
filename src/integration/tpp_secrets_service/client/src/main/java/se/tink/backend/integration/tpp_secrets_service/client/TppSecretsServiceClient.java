@@ -118,11 +118,11 @@ public class TppSecretsServiceClient {
                 addClusterKeyManager(sslContextBuilder);
                 break;
 
-            case HOME_P12:
+            case DEVELOPMENT_STAGING:
                 addHomeP12KeyManager(sslContextBuilder);
                 break;
 
-            case HOME_PEM:
+            case DEVELOPMENT_LOCAL:
                 addHomePemKeyManager(sslContextBuilder);
                 break;
 
@@ -207,10 +207,10 @@ public class TppSecretsServiceClient {
                                     + "Service");
                 }
 
-            case HOME_P12:
+            case DEVELOPMENT_STAGING:
                 return new File("data/eidas_dev_certificates/aggregation-staging-ca.pem");
 
-            case HOME_PEM:
+            case DEVELOPMENT_LOCAL:
                 File localCaCertFile =
                         new File(System.getProperty("user.home"), "/.eidas/local-cluster/ca.crt");
                 if (!localCaCertFile.exists()) {

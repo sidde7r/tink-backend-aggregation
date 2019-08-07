@@ -6,10 +6,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum CertificatesLocation {
     @JsonAlias({"cluster"})
     CLUSTER("cluster"),
-    @JsonAlias({"home-pem"})
-    HOME_PEM("home-pem"),
-    @JsonAlias({"home-p12"})
-    HOME_P12("home-p12");
+    @JsonAlias({"development-local"})
+    DEVELOPMENT_LOCAL("development-local"),
+    @JsonAlias({"development-staging"})
+    DEVELOPMENT_STAGING("development-staging");
+
 
     private final String location;
 
