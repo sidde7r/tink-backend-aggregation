@@ -62,7 +62,7 @@ public class CbiGlobeAuthenticationController
     }
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        this.authenticator.getToken();
+        this.authenticator.tokenAutoAuthentication();
         this.state = generateRandomState();
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(

@@ -136,7 +136,7 @@ public class CbiGlobeAuthenticator {
         }
     }
 
-    private void tokenAutoAuthentication() {
+    public void tokenAutoAuthentication() {
         try {
             if (!apiClient.isTokenValid()) {
                 getToken();
