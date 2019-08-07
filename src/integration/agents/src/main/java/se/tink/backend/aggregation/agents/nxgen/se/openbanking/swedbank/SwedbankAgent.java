@@ -123,8 +123,9 @@ public final class SwedbankAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         SwedbankPaymentAuthenticator paymentAuthenticator =
                 new SwedbankPaymentAuthenticator(supplementalInformationHelper);
-        return Optional.of(
-                new PaymentController(
-                        new SwedbankPaymentExecutor(apiClient, paymentAuthenticator)));
+        SwedbankPaymentExecutor swedbankPaymentExecutor =
+                new SwedbankPaymentExecutor(apiClient, paymentAuthenticator);
+
+        return Optional.of(new PaymentController(swedbankPaymentExecutor, swedbankPaymentExecutor));
     }
 }
