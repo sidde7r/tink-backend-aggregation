@@ -29,6 +29,19 @@ public class MonzoConstants {
         public static final String AIS_ACCOUNTS = API_MONZO_COM + "ais/accounts";
         public static final String AIS_BALANCE = API_MONZO_COM + "ais/balance";
         public static final String AIS_TRANSACTIONS = API_MONZO_COM + "ais/transactions";
+
+        class V31 {
+            public static final String AIS_AUTH_URL =
+                    "https://openbanking.monzo.com/open-banking/v3.1/aisp";
+            public static final String AIS_API_URL =
+                    "https://openbanking.monzo.com/open-banking/v3.1/aisp";
+            public static final String PIS_AUTH_URL =
+                    "https://openbanking.monzo.com/open-banking/v3.1/pisp";
+            public static final String PIS_API_URL =
+                    "https://openbanking.monzo.com/open-banking/v3.1/pisp";
+            public static final String WELL_KNOWN_URL =
+                    "https://api.monzo.com/open-banking/.well-known/openid-configuration";
+        }
     }
 
     public class RequestKey {

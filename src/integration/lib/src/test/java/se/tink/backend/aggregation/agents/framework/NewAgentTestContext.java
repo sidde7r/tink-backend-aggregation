@@ -65,10 +65,12 @@ public final class NewAgentTestContext extends AgentContext {
     // configuration
     private final int transactionsToPrint;
 
-    public NewAgentTestContext(User user, Credentials credential, int transactionsToPrint) {
+    public NewAgentTestContext(
+            User user, Credentials credential, int transactionsToPrint, String appId) {
         this.user = user;
         this.credential = credential;
         this.transactionsToPrint = transactionsToPrint;
+        this.setAppId(appId);
 
         setTestContext(true);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());

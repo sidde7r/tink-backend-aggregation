@@ -40,7 +40,7 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
     public SibsBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new SibsBaseApiClient(client, persistentStorage);
+        apiClient = new SibsBaseApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();

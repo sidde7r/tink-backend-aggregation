@@ -95,7 +95,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
 
-        this.context = new NewAgentTestContext(user, credential, builder.getTransactionsToPrint());
+        this.context =
+                new NewAgentTestContext(
+                        user, credential, builder.getTransactionsToPrint(), builder.getAppId());
 
         this.supplementalInformationController =
                 new SupplementalInformationController(context, credential);
@@ -314,7 +316,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     storageSign = signPaymentMultiStepResponse.getStorage();
                 }
 
-                PaymentStatus statusResult = signPaymentMultiStepResponse.getPayment().getStatus();
+                PaymentResponse paymentResponse =
+                        paymentController.fetch(
+                                PaymentMultiStepRequest.of(signPaymentMultiStepResponse));
+                PaymentStatus statusResult = paymentResponse.getPayment().getStatus();
 
                 Assert.assertTrue(
                         statusResult.equals(PaymentStatus.SIGNED)
@@ -615,6 +620,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         private AisValidator validator;
 
+        private String appId = "tink";
+
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
@@ -729,6 +736,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Builder setRefreshableItems(Set<RefreshableItem> refreshableItems) {
             this.refreshableItems = refreshableItems;
+            return this;
+        }
+
+        public String getAppId() {
+            return appId;
+        }
+
+        public Builder setAppId(final String appId) {
+            this.appId = appId;
             return this;
         }
 
