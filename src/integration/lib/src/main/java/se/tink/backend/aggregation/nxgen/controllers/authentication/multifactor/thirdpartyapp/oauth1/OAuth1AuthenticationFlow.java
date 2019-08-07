@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1;
 
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -14,11 +15,17 @@ public class OAuth1AuthenticationFlow {
             SystemUpdater systemUpdater,
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
-            OAuth1Authenticator authenticator) {
+            OAuth1Authenticator authenticator,
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            CredentialsRequest credentialsRequest) {
 
         OAuth1AuthenticationController oAuth1AuthenticationController =
                 new OAuth1AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        authenticator,
+                        callbackJWTSignatureKeyPair,
+                        credentialsRequest);
 
         return new AutoAuthenticationController(
                 request,
