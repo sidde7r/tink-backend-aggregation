@@ -70,7 +70,7 @@ public final class UnicreditConstants {
     public static class HeaderValues {
 
         public static final String CODE = "code";
-        public static final String PSU_IP_ADDRESS = "127.0.0.1";
+        public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class FormValues {

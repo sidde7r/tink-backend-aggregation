@@ -19,8 +19,11 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class BuddybankApiClient extends UnicreditBaseApiClient {
 
     public BuddybankApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
-        super(client, persistentStorage, credentials);
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            Credentials credentials,
+            boolean requestIsManual) {
+        super(client, persistentStorage, credentials, requestIsManual);
     }
 
     @Override

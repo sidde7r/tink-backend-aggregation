@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -32,16 +34,23 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public abstract class UnicreditBaseApiClient {
 
+    private static Logger logger = LoggerFactory.getLogger(UnicreditBaseApiClient.class);
+
     private final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     private UnicreditConfiguration configuration;
     private final Credentials credentials;
+    private final boolean requestIsManual;
 
     public UnicreditBaseApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            Credentials credentials,
+            boolean requestIsManual) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
+        this.requestIsManual = requestIsManual;
     }
 
     protected abstract ConsentRequest getConsentRequest();
@@ -73,10 +82,20 @@ public abstract class UnicreditBaseApiClient {
     private RequestBuilder createRequestInSession(URL url) {
         final String consentId = getConsentFromStorage();
 
-        return createRequest(url)
-                .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
+        RequestBuilder requestBuilder =
+                createRequest(url)
+                        .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                        .header(HeaderKeys.CONSENT_ID, consentId);
+
+        // This header must be present if the request was initiated by the PSU
+        if (requestIsManual) {
+            logger.info("Request is attended -- adding PSU header for {}", url);
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
+        } else {
+            logger.info("Request is unattended -- omitting PSU header for {}", url);
+        }
+
+        return requestBuilder;
     }
 
     private String getConsentFromStorage() {

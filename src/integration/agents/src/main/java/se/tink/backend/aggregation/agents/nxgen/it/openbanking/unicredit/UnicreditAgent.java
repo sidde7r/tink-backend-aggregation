@@ -20,7 +20,7 @@ public class UnicreditAgent extends UnicreditBaseAgent {
     }
 
     @Override
-    protected UnicreditBaseApiClient getApiClient() {
-        return new UnicreditApiClient(client, persistentStorage, credentials);
+    protected UnicreditBaseApiClient getApiClient(boolean requestIsManual) {
+        return new UnicreditApiClient(client, persistentStorage, credentials, requestIsManual);
     }
 }
