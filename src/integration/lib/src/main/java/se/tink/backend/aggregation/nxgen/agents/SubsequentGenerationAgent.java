@@ -68,7 +68,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     private Authenticator authenticator;
     private SessionController sessionController;
     private PaymentController paymentController;
-    private AgentConfigurationController agentConfigurationController;
 
     protected SubsequentGenerationAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
