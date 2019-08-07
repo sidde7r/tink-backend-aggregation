@@ -27,7 +27,7 @@ public class BelfiusAuthenticatorTest extends BelfiusTest {
                 .thenReturn(ImmutableMap.of(CODE, userCode));
         PersistentStorage persistentStorage = new PersistentStorage();
 
-        BelfiusAuthenticator authenticator = setupAuthentication(persistentStorage, null);
+        BelfiusAuthenticator authenticator = setupAuthentication(persistentStorage);
 
         authenticator.authenticate(TestConfig.USERNAME, TestConfig.PASSWORD);
 
@@ -49,8 +49,7 @@ public class BelfiusAuthenticatorTest extends BelfiusTest {
 
     @Test
     public void canLoginAuthenticate() throws Exception {
-        BelfiusAuthenticator authenticator =
-                setupAuthentication(TestConfig.PERSISTENT_STORAGE, TestConfig.CREDENTIALS);
+        BelfiusAuthenticator authenticator = setupAuthentication(TestConfig.PERSISTENT_STORAGE);
 
         authenticator.authenticate(TestConfig.USERNAME, TestConfig.PASSWORD);
 

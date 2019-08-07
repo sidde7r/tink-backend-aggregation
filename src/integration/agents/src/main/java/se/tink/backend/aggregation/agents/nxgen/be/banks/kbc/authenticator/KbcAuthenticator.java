@@ -202,7 +202,7 @@ public class KbcAuthenticator
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException {
+    public void autoAuthenticate(Credentials credentials) throws SessionException {
         KbcDevice device =
                 persistentStorage
                         .get(KbcConstants.Storage.DEVICE_KEY, KbcDevice.class)

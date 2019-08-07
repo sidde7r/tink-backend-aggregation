@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -18,7 +19,7 @@ public class AktiaAutoAuthenticator implements AutoAuthenticator {
     }
 
     @Override
-    public void autoAuthenticate()
+    public void autoAuthenticate(Credentials credentials)
             throws SessionException, BankServiceException, AuthorizationException {
         aktiaAuthenticationFlow.authenticate();
     }

@@ -77,7 +77,6 @@ public class DanskeBankDKAgent extends DanskeBankAgent
                         supplementalInformationHelper,
                         apiClient,
                         persistentStorage,
-                        credentials,
                         deviceId,
                         configuration);
 

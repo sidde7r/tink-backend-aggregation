@@ -37,7 +37,7 @@ public class SibsDecoupledAuthenticationController
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException {
+    public void autoAuthenticate(Credentials credentials) throws SessionException {
         authenticator.autoAuthenticate();
     }
 

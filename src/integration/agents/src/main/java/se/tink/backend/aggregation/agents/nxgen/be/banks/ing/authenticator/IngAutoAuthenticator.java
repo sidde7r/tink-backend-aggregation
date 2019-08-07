@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator;
 
 import com.google.common.base.Strings;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -34,7 +35,8 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException {
+    public void autoAuthenticate(Credentials credentials)
+            throws SessionException, BankServiceException {
 
         MobileHelloResponseEntity mobileHelloResponseEntity = this.apiClient.mobileHello();
         this.ingHelper.addRequestUrls(mobileHelloResponseEntity.getRequests());

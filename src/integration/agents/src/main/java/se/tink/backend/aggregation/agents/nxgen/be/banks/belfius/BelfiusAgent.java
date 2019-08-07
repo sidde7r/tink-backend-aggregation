@@ -64,7 +64,6 @@ public class BelfiusAgent extends NextGenerationAgent
         BelfiusAuthenticator authenticator =
                 new BelfiusAuthenticator(
                         apiClient,
-                        credentials,
                         persistentStorage,
                         belfiusSessionStorage,
                         supplementalInformationHelper);

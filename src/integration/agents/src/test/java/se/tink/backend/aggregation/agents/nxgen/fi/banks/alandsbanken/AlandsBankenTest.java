@@ -33,7 +33,7 @@ public abstract class AlandsBankenTest {
                 spy(new CrossKeyApiClient(new TinkHttpClient(), new AlandsBankenFIConfiguration()));
         CrossKeyAutoAuthenticator authenticator =
                 new CrossKeyAutoAuthenticator(
-                        client, new CrossKeyPersistentStorage(persistentStorage), credentials);
-        authenticator.autoAuthenticate();
+                        client, new CrossKeyPersistentStorage(persistentStorage));
+        authenticator.autoAuthenticate(credentials);
     }
 }

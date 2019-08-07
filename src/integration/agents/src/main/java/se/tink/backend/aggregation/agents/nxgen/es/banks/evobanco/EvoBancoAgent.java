@@ -77,8 +77,7 @@ public class EvoBancoAgent extends NextGenerationAgent
                 request,
                 systemUpdater,
                 smsOtpAuthenticationController,
-                new EvoBancoAutoAuthenticator(
-                        bankClient, credentials, persistentStorage, sessionStorage));
+                new EvoBancoAutoAuthenticator(bankClient, persistentStorage, sessionStorage));
     }
 
     @Override

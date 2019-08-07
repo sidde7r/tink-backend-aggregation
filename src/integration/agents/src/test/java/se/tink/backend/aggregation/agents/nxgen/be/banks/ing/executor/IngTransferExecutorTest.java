@@ -63,7 +63,7 @@ public class IngTransferExecutorTest {
         this.persistentStorage.put(IngConstants.Storage.VIRTUAL_CARDNUMBER, VIRTUAL_CARD_NUMBER);
         this.ingTransferHelper = new IngTransferHelper(new Catalog(new Locale("fr", "BE")));
         this.autoAuthenticator = new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper);
-        autoAuthenticator.autoAuthenticate();
+        autoAuthenticator.autoAuthenticate(credentials);
         this.ingTransferExecutor =
                 new IngTransferExecutor(apiClient, persistentStorage, ingHelper, ingTransferHelper);
         this.transferController = new TransferController(null, ingTransferExecutor, null, null);

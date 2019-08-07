@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
@@ -52,7 +53,7 @@ public class SibsRedirectAuthenticationController
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException {
+    public void autoAuthenticate(Credentials credentials) throws SessionException {
         authenticator.autoAuthenticate();
     }
 

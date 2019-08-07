@@ -6,7 +6,6 @@ import static org.mockito.Mockito.spy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
@@ -26,8 +25,7 @@ public class BelfiusTest {
     protected BelfiusApiClient apiClient;
     protected BelfiusSessionStorage sessionStorage;
 
-    protected BelfiusAuthenticator setupAuthentication(
-            PersistentStorage persistentStorage, Credentials credentials) {
+    protected BelfiusAuthenticator setupAuthentication(PersistentStorage persistentStorage) {
         this.apiClient =
                 spy(
                         new BelfiusApiClient(
@@ -40,7 +38,6 @@ public class BelfiusTest {
         provider.setCurrency(marketProviders.getCurrency());
         return new BelfiusAuthenticator(
                 this.apiClient,
-                credentials,
                 persistentStorage,
                 sessionStorage,
                 new SupplementalInformationHelper(provider, supplementalInformation));
@@ -63,9 +60,8 @@ public class BelfiusTest {
     }
 
     protected void autoAuthenticate() throws SessionException {
-        BelfiusAuthenticator authenticator =
-                setupAuthentication(TestConfig.PERSISTENT_STORAGE, TestConfig.CREDENTIALS);
+        BelfiusAuthenticator authenticator = setupAuthentication(TestConfig.PERSISTENT_STORAGE);
 
-        authenticator.autoAuthenticate();
+        authenticator.autoAuthenticate(TestConfig.CREDENTIALS);
     }
 }

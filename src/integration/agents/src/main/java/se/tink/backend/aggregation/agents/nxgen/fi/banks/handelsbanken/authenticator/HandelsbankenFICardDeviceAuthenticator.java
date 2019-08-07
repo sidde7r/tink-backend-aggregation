@@ -115,7 +115,7 @@ public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthen
 
         // For handelsbanken FI, the carddeviceAuthenticator only unlock the device, we have to do
         // the auto auth here
-        autoAuthenticator.autoAuthenticate();
+        autoAuthenticator.autoAuthenticate(credentials);
     }
 
     private Field challengeField(SecurityCardResponse authenticate) {

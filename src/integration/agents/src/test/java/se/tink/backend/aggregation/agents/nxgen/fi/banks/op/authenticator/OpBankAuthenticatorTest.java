@@ -83,12 +83,9 @@ public class OpBankAuthenticatorTest {
                 OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, applicationInstanceId);
         OpAutoAuthenticator oaa =
                 new OpAutoAuthenticator(
-                        new OpBankApiClient(tinkHttpClient),
-                        persistentStorage,
-                        credentials,
-                        sessionStorage);
+                        new OpBankApiClient(tinkHttpClient), persistentStorage, sessionStorage);
         try {
-            oaa.autoAuthenticate();
+            oaa.autoAuthenticate(credentials);
             oaa.authenticate(username, password);
         } catch (SessionException e) {
             e.printStackTrace();
@@ -222,9 +219,7 @@ public class OpBankAuthenticatorTest {
                         new OpAuthenticator(
                                 bankClient, persistentStorage, credentials, sessionStorage));
         opBankAuthenticator =
-                spy(
-                        new OpAutoAuthenticator(
-                                bankClient, persistentStorage, credentials, sessionStorage));
+                spy(new OpAutoAuthenticator(bankClient, persistentStorage, sessionStorage));
     }
 
     private void authenticate() throws AuthenticationException, AuthorizationException {

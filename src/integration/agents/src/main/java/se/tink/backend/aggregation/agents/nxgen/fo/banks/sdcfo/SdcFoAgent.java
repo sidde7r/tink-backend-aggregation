@@ -85,11 +85,7 @@ public class SdcFoAgent extends SdcAgent
     private Authenticator constructSmsAuthenticator() {
         SdcAutoAuthenticator autoAuthenticator =
                 new SdcAutoAuthenticator(
-                        bankClient,
-                        sdcSessionStorage,
-                        agentConfiguration,
-                        credentials,
-                        sdcPersistentStorage);
+                        bankClient, sdcSessionStorage, agentConfiguration, sdcPersistentStorage);
         SdcSmsOtpAuthenticator smsOtpAuthenticator =
                 new SdcSmsOtpAuthenticator(
                         bankClient,

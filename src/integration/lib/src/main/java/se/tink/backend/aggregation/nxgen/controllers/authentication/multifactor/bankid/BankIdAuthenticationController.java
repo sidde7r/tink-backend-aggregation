@@ -127,7 +127,7 @@ public class BankIdAuthenticationController<T>
     }
 
     @Override
-    public void autoAuthenticate()
+    public void autoAuthenticate(Credentials credentials)
             throws SessionException, BankServiceException, AuthorizationException {
         OAuth2Token accessToken =
                 persistentStorage

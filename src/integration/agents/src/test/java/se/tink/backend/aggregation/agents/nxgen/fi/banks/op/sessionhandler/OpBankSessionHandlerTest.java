@@ -55,7 +55,7 @@ public class OpBankSessionHandlerTest {
                 OpBankConstants.Authentication.APPLICATION_INSTANCE_ID,
                 OpBankTestConfig.APPLICATION_INSTANCE_ID);
         OpAutoAuthenticator opBankAuthenticator =
-                new OpAutoAuthenticator(bankClient, persistentStorage, credentials, sessionStorage);
+                new OpAutoAuthenticator(bankClient, persistentStorage, sessionStorage);
         opBankAuthenticator.authenticate(USERNAME, PASSWORD);
     }
 

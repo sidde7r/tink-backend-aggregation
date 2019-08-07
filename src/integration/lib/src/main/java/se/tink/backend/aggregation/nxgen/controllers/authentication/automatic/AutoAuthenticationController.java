@@ -131,7 +131,7 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
     private void auto(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         try {
-            autoAuthenticator.autoAuthenticate();
+            autoAuthenticator.autoAuthenticate(credentials);
         } catch (SessionException autoException) {
             if (!request.isManual()) {
                 credentials.setType(manualAuthenticator.getType());
