@@ -41,6 +41,8 @@ public class SibsBaseApiClient {
 
     private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
             DateTimeFormatter.ofPattern(Formats.CONSENT_BODY_DATE_FORMAT);
+    private static final String TRUE = "true";
+    private final String isPsuInvolved;
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected SibsConfiguration configuration;
@@ -57,9 +59,10 @@ public class SibsBaseApiClient {
      * - single - use code above to create date with correct pattern and add header (it won't be override)
     */
 
-    public SibsBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public SibsBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage, boolean isRequestManual) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.isPsuInvolved = String.valueOf(isRequestManual);
     }
 
     protected void setConfiguration(
@@ -83,7 +86,7 @@ public class SibsBaseApiClient {
     public AccountsResponse fetchAccounts() {
         URL accounts = createUrl(SibsConstants.Urls.ACCOUNTS);
         return client.request(accounts)
-                .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
+                .queryParam(QueryKeys.WITH_BALANCE, TRUE)
                 .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .get(AccountsResponse.class);
     }
@@ -94,7 +97,7 @@ public class SibsBaseApiClient {
                         .parameter(PathParameterKeys.ACCOUNT_ID, accountId);
 
         return client.request(accountBalances)
-                .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
+                .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
                 .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .get(BalancesResponse.class);
     }
@@ -106,8 +109,8 @@ public class SibsBaseApiClient {
                         .parameter(PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier());
 
         return client.request(accountTransactions)
-                .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
-                .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
+                .queryParam(QueryKeys.WITH_BALANCE, TRUE)
+                .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
                 .queryParam(
                         QueryKeys.DATE_FROM, SibsUtils.getPaginationDate(getConsentFromStorage()))
@@ -119,7 +122,7 @@ public class SibsBaseApiClient {
         String baseUrl = configuration.getBaseUrl();
 
         return client.request(new URL(baseUrl + key))
-                .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
+                .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
                 .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .get(TransactionsResponse.class);
     }
@@ -221,7 +224,7 @@ public class SibsBaseApiClient {
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(configuration.getRedirectUrl()).queryParam(QueryKeys.STATE, state))
-                .queryParam(SibsConstants.QueryKeys.TPP_REDIRECT_PREFFERED, "true")
+                .queryParam(SibsConstants.QueryKeys.TPP_REDIRECT_PREFFERED, TRUE)
                 .post(SibsPaymentInitiationResponse.class, sibsPaymentRequest);
     }
 
