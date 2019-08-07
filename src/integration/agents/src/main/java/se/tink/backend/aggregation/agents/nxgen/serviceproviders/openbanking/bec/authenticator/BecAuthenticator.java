@@ -15,7 +15,7 @@ public class BecAuthenticator {
         this.sessionStorage = sessionStorage;
     }
 
-    public URL buildAuthorizeUrl(String state) {
+    public URL authenticate(String state) {
         ConsentResponse response = apiClient.getConsent(state);
         return new URL(response.getScaRedirect());
     }

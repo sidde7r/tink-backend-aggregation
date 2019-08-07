@@ -77,7 +77,7 @@ public class BecController implements AutoAuthenticator, ThirdPartyAppAuthentica
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        final URL authorizeUrl = authenticator.buildAuthorizeUrl(state);
+        final URL authorizeUrl = authenticator.authenticate(state);
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
