@@ -62,12 +62,13 @@ public final class AgentConfigurationController {
                 if (e instanceof StatusRuntimeException) {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) e;
                     if (statusRuntimeException.getStatus() == Status.NOT_FOUND) {
-                        log.error(
+                        log.warn(
                                 "Could not find secrets for financialInsitutionId: "
                                         + financialInstitutionId
                                         + " and appId: "
                                         + appId,
                                 statusRuntimeException);
+                        return true;
                     } else {
                         log.error(
                                 "StatusRuntimeException when trying to retrieve secrets for financialInstitutionId: "

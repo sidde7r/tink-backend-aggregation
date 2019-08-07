@@ -11,7 +11,6 @@ public enum CertificatesLocation {
     @JsonAlias({"development-staging"})
     DEVELOPMENT_STAGING("development-staging");
 
-
     private final String location;
 
     CertificatesLocation(String location) {
