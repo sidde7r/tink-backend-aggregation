@@ -314,7 +314,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     storageSign = signPaymentMultiStepResponse.getStorage();
                 }
 
-                PaymentStatus statusResult = signPaymentMultiStepResponse.getPayment().getStatus();
+                PaymentResponse paymentResponse =
+                        paymentController.fetch(
+                                PaymentMultiStepRequest.of(signPaymentMultiStepResponse));
+                PaymentStatus statusResult = paymentResponse.getPayment().getStatus();
 
                 Assert.assertTrue(
                         statusResult.equals(PaymentStatus.SIGNED)
