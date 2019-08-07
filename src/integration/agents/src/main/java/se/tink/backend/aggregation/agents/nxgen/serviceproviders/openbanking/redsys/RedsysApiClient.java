@@ -286,6 +286,15 @@ public final class RedsysApiClient {
         return request;
     }
 
+    private String requestIdForAccount(String accountId) {
+        String requestId = sessionStorage.get(StorageKeys.ACCOUNT_REQUEST_ID + accountId);
+        if (Strings.isNullOrEmpty(requestId)) {
+            requestId = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
+            sessionStorage.put(StorageKeys.ACCOUNT_REQUEST_ID + accountId, requestId);
+        }
+        return requestId;
+    }
+
     public ListAccountsResponse fetchAccounts(String consentId) {
         RequestBuilder builder =
                 createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
@@ -297,8 +306,11 @@ public final class RedsysApiClient {
     }
 
     public AccountBalancesResponse fetchAccountBalances(String accountId, String consentId) {
-        return createSignedRequest(makeApiUrl(Urls.BALANCES, accountId))
-                .header(HeaderKeys.CONSENT_ID, consentId)
+        final Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
+
+        return createSignedRequest(makeApiUrl(Urls.BALANCES, accountId), null, headers)
                 .get(AccountBalancesResponse.class);
     }
 
@@ -306,11 +318,8 @@ public final class RedsysApiClient {
             String accountId, String consentId, LocalDate fromDate, LocalDate toDate) {
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
-        // Persist request ID in session
         final Map<String, Object> headers = Maps.newHashMap();
-        final String requestId = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
-        sessionStorage.put(StorageKeys.TRANSACTIONS_REQUEST_ID + accountId, requestId);
-        headers.put(HeaderKeys.REQUEST_ID, requestId);
+        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
         headers.put(HeaderKeys.CONSENT_ID, consentId);
 
         final RequestBuilder request =
@@ -337,10 +346,7 @@ public final class RedsysApiClient {
 
         final Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.CONSENT_ID, consentId);
-
-        final String requestId =
-                sessionStorage.get(StorageKeys.TRANSACTIONS_REQUEST_ID + accountId);
-        headers.put(HeaderKeys.REQUEST_ID, requestId);
+        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
 
         RequestBuilder request = createSignedRequest(makeApiUrl(path), null, headers);
         return request.get(TransactionsResponse.class);
