@@ -19,7 +19,13 @@ public class ClusterConnectivityController {
     }
 
     public void checkConnectivity() throws AggregationControllerNotReachable {
+        log.info("Starting check of connectivity to customer facing environments");
+
         Set<String> clusterIds = controllerWrapperProvider.getClusterIds();
+        log.info(
+                "Checking connectivity to the following environments: {}",
+                String.join(",", clusterIds));
+
         boolean anyClusterFailed = false;
 
         for (String clusterId : clusterIds) {
@@ -33,14 +39,19 @@ public class ClusterConnectivityController {
         if (anyClusterFailed) {
             throw new AggregationControllerNotReachable();
         }
+
+        log.info("Finished checking connectivity to environments");
     }
 
     public void checkConnectivity(String clusterId) throws AggregationControllerNotReachable {
+        log.info("Checking connectivity to: {}", clusterId);
+
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clusterId);
 
         try {
             controllerWrapper.checkConnectivity();
+            log.info("Successfully sent request to: {}", clusterId);
         } catch (ClientHandlerException e) {
             log.error("Connection to {} cluster failed : {}", clusterId, e.getMessage());
             throw new AggregationControllerNotReachable();
