@@ -112,7 +112,7 @@ public class FetchInvestmentAccountDetailsResponse {
             SecuritiesAccountsEntity accountsEntity,
             FetchInvestmentHoldingsResponse holdingsResponse) {
         return InvestmentAccount.builder(accountsEntity.getNumber())
-                .setCashBalance(new Amount(currency, accountsEntity.getTotalValue()))
+                .setCashBalance(new Amount(currency, 0))
                 .setBankIdentifier(accountsEntity.getEncryptedNumber())
                 .setAccountNumber(accountsEntity.getNumber())
                 .setName(accountsEntity.getDisplayName())
