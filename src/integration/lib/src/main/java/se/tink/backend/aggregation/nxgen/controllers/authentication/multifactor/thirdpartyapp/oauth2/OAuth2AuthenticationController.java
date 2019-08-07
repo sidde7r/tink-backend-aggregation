@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.ErrorType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtStateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
@@ -118,33 +119,8 @@ public class OAuth2AuthenticationController
         this.callbackUri = callbackUri;
 
         this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
-        this.state = getJwtState(pseudoId, appUriId);
-    }
-
-    private String getJwtState(String pseudoId, String appUriId) {
-        if (callbackJWTSignatureKeyPair == null || !callbackJWTSignatureKeyPair.isEnabled()) {
-            logger.info("Callback JWT not enabled, using pseudoId as state. State: {}", pseudoId);
-            return pseudoId;
-        }
-        JWTCreator.Builder jwtBuilder =
-                JWT.create().withIssuedAt(new Date()).withClaim("id", pseudoId);
-
-        if (!Strings.isNullOrEmpty(appUriId)) {
-            // smaller claim to be safe on the length of the state
-            jwtBuilder.withClaim("appUriId", appUriId);
-        }
-
-        String signedState =
-                jwtBuilder.sign(
-                        Algorithm.ECDSA256(
-                                ECDSAUtils.getPublicKeyByPath(
-                                        callbackJWTSignatureKeyPair.getPublicKeyPath()),
-                                ECDSAUtils.getPrivateKeyByPath(
-                                        callbackJWTSignatureKeyPair.getPrivateKeyPath())));
-
-        logger.info("JWT state: {}", signedState);
-
-        return signedState;
+        this.state =
+                JwtStateUtils.tryCreateJwtState(callbackJWTSignatureKeyPair, pseudoId, appUriId);
     }
 
     @Override
