@@ -19,6 +19,7 @@ public class TransactionEntity {
     private String debtorName;
     private AccountEntity debtorAccount;
     private String endToEndId;
+    private String purposeCode;
 
     @JsonIgnore
     public Transaction toBookedTinkTransaction() {
@@ -44,10 +45,12 @@ public class TransactionEntity {
 
         if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
             return remittanceInformationUnstructured;
-        } else if (!Strings.isNullOrEmpty(debtorName)) {
-            return debtorName;
         } else if (!Strings.isNullOrEmpty(creditorName)) {
             return creditorName;
+        } else if (!Strings.isNullOrEmpty(debtorName)) {
+            return debtorName;
+        } else if (!Strings.isNullOrEmpty(purposeCode)) {
+            return purposeCode;
         }
         return transactionId;
     }
