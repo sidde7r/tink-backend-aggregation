@@ -26,6 +26,11 @@ public final class SwedbankConstants {
         public static final URL ACCOUNT_TRANSACTIONS =
                 new URL(BASE + Endpoints.ACCOUNT_TRANSACTIONS);
         public static final URL CONSENTS = new URL(BASE + Endpoints.CONSENTS);
+        public static final URL INITIATE_PAYMENT = new URL(BASE + Endpoints.INITIATE_PAYMENT);
+        public static final URL GET_PAYMENT = new URL(BASE + Endpoints.GET_PAYMENT);
+        public static final URL GET_PAYMENT_STATUS = new URL(BASE + Endpoints.GET_PAYMENT_STATUS);
+        public static final URL INITIATE_PAYMENT_AUTH =
+                new URL(BASE + Endpoints.INITIATE_PAYMENT_AUTH);
     }
 
     public static class Endpoints {
@@ -36,10 +41,17 @@ public final class SwedbankConstants {
         public static final String ACCOUNT_TRANSACTIONS =
                 "/sandbox/v1/accounts/{account-id}/transactions";
         public static final String CONSENTS = "/sandbox/v1/consents";
+        public static final String INITIATE_PAYMENT = "/sandbox/v2/payments/{paymentType}";
+        public static final String GET_PAYMENT = "/sandbox/v2/payments/{paymentId}";
+        public static final String GET_PAYMENT_STATUS = "/sandbox/v2/payments/{paymentId}/status";
+        public static final String INITIATE_PAYMENT_AUTH =
+                "/sandbox/v2/payments/{paymentId}/authorisations";
     }
 
     public static class UrlParameters {
         public static final String ACCOUNT_ID = "account-id";
+        public static final String PAYMENT_TYPE = "paymentType";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class StorageKeys {
@@ -75,6 +87,14 @@ public final class SwedbankConstants {
         public static final String TO_DATE = "dateTo";
         public static final String TPP_TRANSACTION_ID = "TPP-Transaction-ID";
         public static final String TPP_REQUEST_ID = "TPP-Request-ID";
+        public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
+        public static final String TPP_NOK_REDIRECT_URI = "tpp-nok-redirect-uri";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+        public static final String PSU_USER_AGENT = "PSU-User-Agent";
+    }
+
+    public static class HeaderValues {
+        public static final String PSU_USER_AGENT = "Browser";
     }
 
     public static class BICSandbox {
@@ -98,5 +118,8 @@ public final class SwedbankConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String INVALID_ACCOUNT_TYPE = "Invalid account type: %s";
+        public static final String INVALID_PAYMENT_TYPE =
+                "No SwedbankPaymentType found for AccountIdentifiers pair %s";
     }
 }

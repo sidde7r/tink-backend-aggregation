@@ -12,6 +12,7 @@ public class SwedbankConfiguration implements ClientConfiguration {
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
+    private String psuIpAddress;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -35,5 +36,13 @@ public class SwedbankConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
+    }
+
+    public String getPsuIpAddress() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(psuIpAddress),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
+
+        return psuIpAddress;
     }
 }

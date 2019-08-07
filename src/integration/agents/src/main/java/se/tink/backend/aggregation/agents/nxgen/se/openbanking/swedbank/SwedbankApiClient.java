@@ -7,8 +7,12 @@ import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.BICSandbox;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.Format;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.Urls;
@@ -19,6 +23,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenti
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.configuration.SwedbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.GetPaymentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
@@ -179,6 +189,44 @@ public final class SwedbankApiClient {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, refreshRequest.toData())
                 .toTinkToken();
+    }
+
+    private RequestBuilder getPaymentRequestBuilder(URL url) {
+        return createRequest(url)
+                .addBearerToken(getTokenFromSession())
+                .queryParam(QueryKeys.BIC, BICSandbox.SWEDEN)
+                .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, configuration.getRedirectUrl())
+                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT);
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, SwedbankPaymentType swedbankPaymentType) {
+        return getPaymentRequestBuilder(
+                        Urls.INITIATE_PAYMENT.parameter(
+                                UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString()))
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public GetPaymentResponse getPayment(String paymentId) {
+        return getPaymentRequestBuilder(
+                        Urls.GET_PAYMENT.parameter(UrlParameters.PAYMENT_ID, paymentId))
+                .get(GetPaymentResponse.class);
+    }
+
+    public GetPaymentStatusResponse getPaymentStatus(String paymentId) {
+        return getPaymentRequestBuilder(
+                        Urls.GET_PAYMENT_STATUS.parameter(UrlParameters.PAYMENT_ID, paymentId))
+                .get(GetPaymentStatusResponse.class);
+    }
+
+    public PaymentAuthorisationResponse startPaymentAuthorisation(String paymentId) {
+        return getPaymentRequestBuilder(
+                        Urls.INITIATE_PAYMENT_AUTH.parameter(UrlParameters.PAYMENT_ID, paymentId))
+                .post(PaymentAuthorisationResponse.class);
     }
 
     private String getRequestId() {
