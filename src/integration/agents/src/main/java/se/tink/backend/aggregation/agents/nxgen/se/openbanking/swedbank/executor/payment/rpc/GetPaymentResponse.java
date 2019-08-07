@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.RemittanceInfoEntity;
@@ -15,6 +16,7 @@ public class GetPaymentResponse {
     private AmountEntity instructedAmount;
     private RemittanceInfoEntity remittanceInformationUnstructured;
 
+    @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(Payment payment, String transactionStatus) {
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()

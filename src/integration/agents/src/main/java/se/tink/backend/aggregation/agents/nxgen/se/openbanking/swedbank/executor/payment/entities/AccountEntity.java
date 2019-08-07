@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
@@ -36,24 +37,28 @@ public class AccountEntity {
 
     public AccountEntity() {}
 
+    @JsonIgnore
     public static AccountEntity creditorOf(PaymentRequest paymentRequest) {
         return new AccountEntity(
                 paymentRequest.getPayment().getCreditor().getAccountNumber(),
                 paymentRequest.getPayment().getCreditor().getAccountIdentifierType());
     }
 
+    @JsonIgnore
     public static AccountEntity debtorOf(PaymentRequest paymentRequest) {
         return new AccountEntity(
                 paymentRequest.getPayment().getDebtor().getAccountNumber(),
                 paymentRequest.getPayment().getDebtor().getAccountIdentifierType());
     }
 
+    @JsonIgnore
     public Creditor toTinkCreditor(Type accountIdentifierType) {
         return new Creditor(
                 AccountIdentifier.create(
                         accountIdentifierType, getAccountNumber(accountIdentifierType)));
     }
 
+    @JsonIgnore
     public Debtor toTinkDebtor(Type accountIdentifierType) {
         return new Debtor(
                 AccountIdentifier.create(

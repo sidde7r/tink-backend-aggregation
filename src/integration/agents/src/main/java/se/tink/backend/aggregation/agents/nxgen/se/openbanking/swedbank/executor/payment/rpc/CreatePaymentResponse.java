@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.AmountEntity;
@@ -20,6 +21,7 @@ public class CreatePaymentResponse {
     @JsonProperty("_links")
     private LinksEntity links;
 
+    @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(
             AccountEntity creditor,
             AccountEntity debtor,
