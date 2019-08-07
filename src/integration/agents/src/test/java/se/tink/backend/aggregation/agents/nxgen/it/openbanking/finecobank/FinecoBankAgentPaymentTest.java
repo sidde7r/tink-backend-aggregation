@@ -29,8 +29,8 @@ public class FinecoBankAgentPaymentTest {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-finecobank-oauth2")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
     }
 
     @Test
@@ -72,5 +72,8 @@ public class FinecoBankAgentPaymentTest {
         return listOfMockedPayments;
     }
 
-    private enum Arg {}
+    private enum Arg {
+        SAVE_AFTER,
+        LOAD_BEFORE
+    }
 }

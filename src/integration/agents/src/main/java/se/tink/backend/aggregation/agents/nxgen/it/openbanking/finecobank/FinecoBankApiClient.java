@@ -214,7 +214,7 @@ public final class FinecoBankApiClient {
                                 ParameterKeys.PAYMENT_PRODUCT, paymentProduct))
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID_PAYMENT_INITIATION)
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl.toString())
                 .post(CreatePaymentResponse.class, requestBody);
     }
@@ -241,9 +241,5 @@ public final class FinecoBankApiClient {
         return sessionStorage
                 .get(StorageKeys.STATE, String.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.STATE_MISSING_ERROR));
-    }
-
-    private String getPsuIpAddress() {
-        return "82.117.210.2"; // dummy value
     }
 }

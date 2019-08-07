@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor;
 
-import com.google.common.base.Preconditions;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -14,8 +13,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
@@ -64,24 +61,6 @@ public class FinecoBankPaymentController extends PaymentController {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
-    private void openThirdPartyApp(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = getAppPayload(authorizeUrl);
-        Preconditions.checkNotNull(payload);
-        this.supplementalInformationHelper.openThirdPartyApp(payload);
-    }
-
-    private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-        Android androidPayload = new Android();
-        androidPayload.setIntent(authorizeUrl.get());
-        payload.setAndroid(androidPayload);
-        Ios iOsPayload = new Ios();
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        payload.setIos(iOsPayload);
-        return payload;
-    }
-
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         sessionStorage.put(FinecoBankConstants.StorageKeys.STATE, state);
@@ -97,7 +76,7 @@ public class FinecoBankPaymentController extends PaymentController {
             init();
             URL authorizeUrl =
                     new URL(sessionStorage.get(paymentMultiStepRequest.getPayment().getUniqueId()));
-            openThirdPartyApp(authorizeUrl);
+            ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
             collect();
             return new PaymentMultiStepResponse(
                     paymentMultiStepRequest.getPayment(),

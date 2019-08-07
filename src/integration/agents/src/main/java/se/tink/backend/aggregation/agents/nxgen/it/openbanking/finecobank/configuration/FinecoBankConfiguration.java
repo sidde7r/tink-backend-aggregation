@@ -11,7 +11,10 @@ public class FinecoBankConfiguration implements ClientConfiguration {
 
     private String clientId;
     private String redirectUrl;
+<<<<<<< HEAD
     private String certificateId;
+=======
+>>>>>>> refactor(FinecoBank): Refctoring test, fetch multiple and payment controller
     private String psuIpAddress;
 
     public String getClientId() {
@@ -29,6 +32,7 @@ public class FinecoBankConfiguration implements ClientConfiguration {
         return redirectUrl;
     }
 
+<<<<<<< HEAD
     public String getCertificateId() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(certificateId),
@@ -40,6 +44,13 @@ public class FinecoBankConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(psuIpAddress),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
+=======
+    public String getPsuIpAddress() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(psuIpAddress),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Psu ip adress"));
+
+>>>>>>> refactor(FinecoBank): Refctoring test, fetch multiple and payment controller
         return psuIpAddress;
     }
 }

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FinecoBankSignSteps;
@@ -112,10 +112,11 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor, FetchablePaym
 
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        return new PaymentListResponse(
-                paymentListRequest.getPaymentRequestList().stream()
-                        .map(paymentRequest -> new PaymentResponse(paymentRequest.getPayment()))
-                        .collect(Collectors.toList())); // mocking fetch multiple
+        List<PaymentResponse> paymentResponseList = new ArrayList<>();
+        paymentListRequest
+                .getPaymentRequestList()
+                .forEach(paymentRequest -> paymentResponseList.add(fetch(paymentRequest)));
+        return new PaymentListResponse(paymentResponseList);
     }
 
     private String getPaymentProduct(PaymentRequest paymentRequest) {
