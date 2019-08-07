@@ -273,6 +273,18 @@ spec:
               name: aggregation-secrets
               key: ics-root-ca-password
               optional: true
+        - name: SWEDBANK_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: swedbank-client-id
+              optional: true
+        - name: SWEDBANK_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: swedbank-client-secret
+              optional: true
         {{- if $agentsConfig.bunq }}
         - name: BUNQ_CLIENT_ID_TINK
           valueFrom:
