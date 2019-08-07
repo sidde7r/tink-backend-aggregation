@@ -69,7 +69,10 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
 
         final SibsRedirectAuthenticationController controller =
                 new SibsRedirectAuthenticationController(
-                        supplementalInformationHelper, new SibsAuthenticator(apiClient));
+                        supplementalInformationHelper,
+                        new SibsAuthenticator(apiClient),
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
