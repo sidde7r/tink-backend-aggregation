@@ -24,18 +24,21 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final URL redirectUri;
     private final VolksbankUrlFactory urlFactory;
     private final ConsentFetcher consentFetcher;
+    private final String clientSecret;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
             PersistentStorage persistentStorage,
             URL redirectUri,
             VolksbankUrlFactory urlFactory,
-            ConsentFetcher consentFetcher) {
+            ConsentFetcher consentFetcher,
+            String clientSecret) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
         this.urlFactory = urlFactory;
         this.consentFetcher = consentFetcher;
+        this.clientSecret = clientSecret;
     }
 
     @Override
@@ -50,9 +53,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 .queryParam(QueryParams.STATE, state)
                 .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString())
                 .queryParam(QueryParams.CONSENT_ID, consentId)
-                .queryParam(
-                        QueryParams.CLIENT_ID,
-                        client.getConfiguration().getAisConfiguration().getClientId());
+                .queryParam(QueryParams.CLIENT_ID, consentFetcher.getClientId());
     }
 
     @Override
@@ -62,12 +63,8 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 urlFactory
                         .buildURL(Paths.TOKEN)
                         .queryParam(QueryParams.CODE, code)
-                        .queryParam(
-                                QueryParams.CLIENT_ID,
-                                client.getConfiguration().getAisConfiguration().getClientId())
-                        .queryParam(
-                                QueryParams.CLIENT_SECRET,
-                                client.getConfiguration().getAisConfiguration().getClientSecret())
+                        .queryParam(QueryParams.CLIENT_ID, consentFetcher.getClientId())
+                        .queryParam(QueryParams.CLIENT_SECRET, clientSecret)
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
                         .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString());
 
@@ -96,12 +93,8 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
         URL url =
                 urlFactory
                         .buildURL(Paths.TOKEN)
-                        .queryParam(
-                                QueryParams.CLIENT_ID,
-                                client.getConfiguration().getAisConfiguration().getClientId())
-                        .queryParam(
-                                QueryParams.CLIENT_SECRET,
-                                client.getConfiguration().getAisConfiguration().getClientSecret())
+                        .queryParam(QueryParams.CLIENT_ID, consentFetcher.getClientId())
+                        .queryParam(QueryParams.CLIENT_SECRET, clientSecret)
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.REFRESH_TOKEN)
                         .queryParam(QueryParams.REFRESH_TOKEN, refreshToken);
 

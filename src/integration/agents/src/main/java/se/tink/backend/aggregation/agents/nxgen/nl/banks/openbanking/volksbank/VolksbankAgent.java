@@ -29,8 +29,7 @@ public class VolksbankAgent extends NextGenerationAgent
 
     private final VolksbankApiClient volksbankApiClient;
     private final VolksbankUrlFactory urlFactory;
-    private VolksbankConfiguration volksbankConfiguration;
-    private final String clientName;
+    private final VolksbankConfiguration volksbankConfiguration;
     private final ConsentFetcher consentFetcher;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -43,16 +42,41 @@ public class VolksbankAgent extends NextGenerationAgent
 
         final String[] payload = request.getProvider().getPayload().split(" ");
 
-        clientName = payload[0];
+        final String clientName = payload[0];
         final String bankPath = payload[1];
 
         final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
         this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
+        volksbankConfiguration =
+                agentsServiceConfiguration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                VolksbankConstants.Market.INTEGRATION_NAME,
+                                clientName,
+                                VolksbankConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Volksbank configuration missing."));
+
         volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
-        consentFetcher = new ConsentFetcher(volksbankApiClient, persistentStorage, isSandbox);
+        final URL redirectUrl = volksbankConfiguration.getAisConfiguration().getRedirectUrl();
+        final String clientId = volksbankConfiguration.getAisConfiguration().getClientId();
+
+        consentFetcher =
+                new ConsentFetcher(
+                        volksbankApiClient, persistentStorage, isSandbox, redirectUrl, clientId);
+
+        final String certificateId =
+                volksbankConfiguration.getAisConfiguration().getCertificateId();
+
+        final EidasProxyConfiguration eidasProxyConfiguration =
+                agentsServiceConfiguration.getEidasProxy();
+
+        client.setEidasProxy(eidasProxyConfiguration, certificateId);
 
         transactionalAccountRefreshController =
                 new TransactionalAccountRefreshController(
@@ -67,40 +91,21 @@ public class VolksbankAgent extends NextGenerationAgent
                                                 volksbankApiClient,
                                                 consentFetcher,
                                                 persistentStorage))));
-
-        volksbankConfiguration =
-                agentsServiceConfiguration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                VolksbankConstants.Market.INTEGRATION_NAME,
-                                clientName,
-                                VolksbankConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Volksbank configuration missing."));
-
-        volksbankApiClient.setConfiguration(volksbankConfiguration);
-
-        final String certificateId =
-                volksbankConfiguration.getAisConfiguration().getCertificateId();
-
-        final EidasProxyConfiguration eidasProxyConfiguration =
-                agentsServiceConfiguration.getEidasProxy();
-
-        client.setEidasProxy(eidasProxyConfiguration, certificateId);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         final URL redirectUrl = volksbankConfiguration.getAisConfiguration().getRedirectUrl();
+        final String clientSecret = volksbankConfiguration.getAisConfiguration().getClientSecret();
+
         VolksbankAuthenticator authenticator =
                 new VolksbankAuthenticator(
                         volksbankApiClient,
                         persistentStorage,
                         redirectUrl,
                         urlFactory,
-                        consentFetcher);
+                        consentFetcher,
+                        clientSecret);
 
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(

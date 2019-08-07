@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.entities.accounts.AccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc.BalancesResponse;
@@ -26,19 +25,10 @@ public class VolksbankApiClient {
 
     private final TinkHttpClient client;
     private final VolksbankUrlFactory urlFactory;
-    private VolksbankConfiguration configuration;
 
     public VolksbankApiClient(final TinkHttpClient client, final VolksbankUrlFactory urlFactory) {
         this.client = client;
         this.urlFactory = urlFactory;
-    }
-
-    public void setConfiguration(VolksbankConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
-    public VolksbankConfiguration getConfiguration() {
-        return configuration;
     }
 
     public TransactionResponse readTransactions(
@@ -113,14 +103,12 @@ public class VolksbankApiClient {
         return getResponse(response, AccountsResponse.class);
     }
 
-    public ConsentResponse consentRequest() {
-        return getResponse(consentRequestString(), ConsentResponse.class);
+    public ConsentResponse consentRequest(final URL redirectUrl, final String clientId) {
+        return getResponse(consentRequestString(redirectUrl, clientId), ConsentResponse.class);
     }
 
-    public String consentRequestString() {
+    public String consentRequestString(final URL redirectUrl, final String clientId) {
         final URL url = urlFactory.buildURL(VolksbankConstants.Paths.CONSENT);
-        final URL redirectUrl = configuration.getAisConfiguration().getRedirectUrl();
-        final String clientId = configuration.getAisConfiguration().getClientId();
         final ConsentRequestBody body =
                 new ConsentRequestBody(
                         VolksbankUtils.getFutureDateAsString(ConsentParams.VALID_YEAR),
