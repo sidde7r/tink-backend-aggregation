@@ -45,17 +45,22 @@ public class TppSecretsServiceClient {
     private final String LOCAL_CLIENT_P12_FILE_PASS = "changeme";
     private final InternalSecretsServiceGrpc.InternalSecretsServiceBlockingStub
             internalSecretsServiceStub;
+    private final TppSecretsServiceConfiguration tppSecretsServiceConfiguration;
 
-    public TppSecretsServiceClient(TppSecretsServiceConfiguration configuration) {
-        Preconditions.checkNotNull(configuration, "tppSecretsServiceConfiguration not found.");
+    public TppSecretsServiceClient(TppSecretsServiceConfiguration tppSecretsServiceConfiguration) {
+        Preconditions.checkNotNull(
+                tppSecretsServiceConfiguration, "tppSecretsServiceConfiguration not found.");
         Preconditions.checkArgument(
-                configuration.isEnabled(),
+                tppSecretsServiceConfiguration.isEnabled(),
                 "Trying to create a TppSecretsServiceClient when the configuration says it is not enabled.");
 
-        SslContext sslContext = buildSslContext(configuration);
+        this.tppSecretsServiceConfiguration = tppSecretsServiceConfiguration;
+        SslContext sslContext = buildSslContext();
 
         ManagedChannel channel =
-                NettyChannelBuilder.forAddress(configuration.getHost(), configuration.getPort())
+                NettyChannelBuilder.forAddress(
+                                tppSecretsServiceConfiguration.getHost(),
+                                tppSecretsServiceConfiguration.getPort())
                         .useTransportSecurity()
                         .sslContext(sslContext)
                         .build();
@@ -104,68 +109,21 @@ public class TppSecretsServiceClient {
                 .build();
     }
 
-    private SslContext buildSslContext(TppSecretsServiceConfiguration configuration) {
-        File caCertPath = getCaCertPath(configuration);
+    private SslContext buildSslContext() {
+        File caCertPath = getCaCertPath(tppSecretsServiceConfiguration);
         SslContextBuilder sslContextBuilder = GrpcSslContexts.forClient().trustManager(caCertPath);
 
-        switch (configuration.getCertificatesLocation()) {
+        switch (tppSecretsServiceConfiguration.getCertificatesLocation()) {
             case CLUSTER:
-                if (configuration.getTlsCrtPath() != null
-                        && configuration.getTlsKeyPath() != null) {
-                    sslContextBuilder.keyManager(
-                            new File(configuration.getTlsCrtPath()),
-                            new File(configuration.getTlsKeyPath()));
-                } else {
-                    throw new IllegalStateException(
-                            "Missing client authentication key and/or certificate for inside "
-                                    + "cluster operation of Secrets Service");
-                }
+                addClusterKeyManager(sslContextBuilder);
                 break;
 
             case HOME_P12:
-                File clientP12File =
-                        new File(System.getProperty("user.home"), "/.eidas/eidas_client.p12");
-
-                try {
-                    ByteArrayInputStream clientCertificateStream =
-                            new ByteArrayInputStream(Files.toByteArray(clientP12File));
-
-                    KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
-                    keyStore.load(
-                            clientCertificateStream, LOCAL_CLIENT_P12_FILE_PASS.toCharArray());
-
-                    final KeyManagerFactory keyManagerFactory;
-                    if (OpenSsl.supportsKeyManagerFactory()) {
-                        keyManagerFactory = new OpenSslX509KeyManagerFactory();
-
-                    } else {
-                        keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-                    }
-                    keyManagerFactory.init(keyStore, LOCAL_CLIENT_P12_FILE_PASS.toCharArray());
-
-                    sslContextBuilder.keyManager(keyManagerFactory);
-                } catch (KeyStoreException
-                        | NoSuchProviderException
-                        | IOException
-                        | NoSuchAlgorithmException
-                        | CertificateException
-                        | UnrecoverableKeyException e) {
-                    throw new IllegalStateException(
-                            "Problem encountered when setting up client "
-                                    + "authentication to Secrets Service running in stating environment",
-                            e);
-                }
+                addHomeP12KeyManager(sslContextBuilder);
                 break;
 
             case HOME_PEM:
-                File localClientCertFile =
-                        new File(System.getProperty("user.home"), "/.eidas/local-cluster/tls.crt");
-                File localClientKeyFile =
-                        new File(System.getProperty("user.home"), "/.eidas/local-cluster/tls.key");
-                if (!localClientCertFile.exists() || !localClientKeyFile.exists()) {
-                    throw getLocalClusterTlsMaFilesNotAvailableException();
-                }
-                sslContextBuilder.keyManager(localClientCertFile, localClientKeyFile);
+                addHomePemKeyManager(sslContextBuilder);
                 break;
 
             default:
@@ -178,6 +136,63 @@ public class TppSecretsServiceClient {
         } catch (SSLException e) {
             throw new IllegalStateException(
                     "Unexpected error when building SSLContext for TPP Secrets Service client", e);
+        }
+    }
+
+    private void addHomePemKeyManager(SslContextBuilder sslContextBuilder) {
+        File localClientCertFile =
+                new File(System.getProperty("user.home"), "/.eidas/local-cluster/tls.crt");
+        File localClientKeyFile =
+                new File(System.getProperty("user.home"), "/.eidas/local-cluster/tls.key");
+        if (!localClientCertFile.exists() || !localClientKeyFile.exists()) {
+            throw getLocalClusterTlsMaFilesNotAvailableException();
+        }
+        sslContextBuilder.keyManager(localClientCertFile, localClientKeyFile);
+    }
+
+    private void addHomeP12KeyManager(SslContextBuilder sslContextBuilder) {
+        File clientP12File = new File(System.getProperty("user.home"), "/.eidas/eidas_client.p12");
+
+        try {
+            ByteArrayInputStream clientCertificateStream =
+                    new ByteArrayInputStream(Files.toByteArray(clientP12File));
+
+            KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
+            keyStore.load(clientCertificateStream, LOCAL_CLIENT_P12_FILE_PASS.toCharArray());
+
+            final KeyManagerFactory keyManagerFactory;
+            if (OpenSsl.supportsKeyManagerFactory()) {
+                keyManagerFactory = new OpenSslX509KeyManagerFactory();
+
+            } else {
+                keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+            }
+            keyManagerFactory.init(keyStore, LOCAL_CLIENT_P12_FILE_PASS.toCharArray());
+
+            sslContextBuilder.keyManager(keyManagerFactory);
+        } catch (KeyStoreException
+                | NoSuchProviderException
+                | IOException
+                | NoSuchAlgorithmException
+                | CertificateException
+                | UnrecoverableKeyException e) {
+            throw new IllegalStateException(
+                    "Problem encountered when setting up client "
+                            + "authentication to Secrets Service running in stating environment",
+                    e);
+        }
+    }
+
+    private void addClusterKeyManager(SslContextBuilder sslContextBuilder) {
+        if (tppSecretsServiceConfiguration.getTlsCrtPath() != null
+                && tppSecretsServiceConfiguration.getTlsKeyPath() != null) {
+            sslContextBuilder.keyManager(
+                    new File(tppSecretsServiceConfiguration.getTlsCrtPath()),
+                    new File(tppSecretsServiceConfiguration.getTlsKeyPath()));
+        } else {
+            throw new IllegalStateException(
+                    "Missing client authentication key and/or certificate for inside "
+                            + "cluster operation of Secrets Service");
         }
     }
 
