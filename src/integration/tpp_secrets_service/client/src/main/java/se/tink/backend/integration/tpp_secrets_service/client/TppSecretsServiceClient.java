@@ -119,11 +119,11 @@ public class TppSecretsServiceClient {
                 break;
 
             case DEVELOPMENT_STAGING:
-                addHomeP12KeyManager(sslContextBuilder);
+                addHomeDevelopmentStagingKeyManager(sslContextBuilder);
                 break;
 
             case DEVELOPMENT_LOCAL:
-                addHomePemKeyManager(sslContextBuilder);
+                addHomeDevelopmentLocalKeyManager(sslContextBuilder);
                 break;
 
             default:
@@ -139,7 +139,7 @@ public class TppSecretsServiceClient {
         }
     }
 
-    private void addHomePemKeyManager(SslContextBuilder sslContextBuilder) {
+    private void addHomeDevelopmentLocalKeyManager(SslContextBuilder sslContextBuilder) {
         File localClientCertFile =
                 new File(System.getProperty("user.home"), "/.eidas/local-cluster/tls.crt");
         File localClientKeyFile =
@@ -150,7 +150,7 @@ public class TppSecretsServiceClient {
         sslContextBuilder.keyManager(localClientCertFile, localClientKeyFile);
     }
 
-    private void addHomeP12KeyManager(SslContextBuilder sslContextBuilder) {
+    private void addHomeDevelopmentStagingKeyManager(SslContextBuilder sslContextBuilder) {
         File clientP12File = new File(System.getProperty("user.home"), "/.eidas/eidas_client.p12");
 
         try {
