@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec;
 
+import java.util.Arrays;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -189,12 +190,10 @@ public abstract class BecConstants {
         }
 
         public static BalanceType fromString(String text) {
-            for (BalanceType bType : BalanceType.values()) {
-                if (bType.type.equalsIgnoreCase(text)) {
-                    return bType;
-                }
-            }
-            return null;
+            return Arrays.stream(values())
+                    .filter(balanceType -> balanceType.type.equalsIgnoreCase(text))
+                    .findFirst()
+                    .orElse(null);
         }
     }
 }
