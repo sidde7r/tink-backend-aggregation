@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
@@ -22,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -29,13 +32,16 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class BankIdAuthenticationController<T>
         implements AutoAuthenticator, MultiFactorAuthenticator {
     private static final int MAX_ATTEMPTS = 90;
-
+    private static final int DEFAULT_TOKEN_LIFETIME = 90;
+    private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
     private static final AggregationLogger log =
             new AggregationLogger(BankIdAuthenticationController.class);
+
     private final BankIdAuthenticator<T> authenticator;
     private final SupplementalRequester supplementalRequester;
     private final boolean waitOnBankId;
-
+    private final int tokenLifetime;
+    private final TemporalUnit tokenLifetimeUnit;
     private final PersistentStorage persistentStorage;
 
     public BankIdAuthenticationController(
@@ -48,12 +54,45 @@ public class BankIdAuthenticationController<T>
     public BankIdAuthenticationController(
             SupplementalRequester supplementalRequester,
             BankIdAuthenticator<T> authenticator,
+            PersistentStorage persistentStorage,
+            int tokenLifetime,
+            TemporalUnit tokenLifetimeUnit) {
+        this(
+                supplementalRequester,
+                authenticator,
+                false,
+                persistentStorage,
+                tokenLifetime,
+                tokenLifetimeUnit);
+    }
+
+    public BankIdAuthenticationController(
+            SupplementalRequester supplementalRequester,
+            BankIdAuthenticator<T> authenticator,
             boolean waitOnBankId,
             PersistentStorage persistentStorage) {
+        this(
+                supplementalRequester,
+                authenticator,
+                waitOnBankId,
+                persistentStorage,
+                DEFAULT_TOKEN_LIFETIME,
+                DEFAULT_TOKEN_LIFETIME_UNIT);
+    }
+
+    public BankIdAuthenticationController(
+            SupplementalRequester supplementalRequester,
+            BankIdAuthenticator<T> authenticator,
+            boolean waitOnBankId,
+            PersistentStorage persistentStorage,
+            int tokenLifetime,
+            TemporalUnit tokenLifetimeUnit) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.supplementalRequester = Preconditions.checkNotNull(supplementalRequester);
         this.waitOnBankId = waitOnBankId;
         this.persistentStorage = persistentStorage;
+        this.tokenLifetime = tokenLifetime;
+        this.tokenLifetimeUnit = tokenLifetimeUnit;
     }
 
     @Override
@@ -86,8 +125,10 @@ public class BankIdAuthenticationController<T>
                 authenticator.getAutostartToken().orElse(null), waitOnBankId);
 
         poll(reference);
+        authenticator.getAccessToken().ifPresent(token -> storeAccessToken(token, credentials));
     }
 
+    // throws exception unless the BankIdStatus was DONE
     private void poll(T reference) throws AuthenticationException, AuthorizationException {
         BankIdStatus status = null;
 
@@ -96,12 +137,7 @@ public class BankIdAuthenticationController<T>
 
             switch (status) {
                 case DONE:
-                    authenticator
-                            .getAccessToken()
-                            .ifPresent(
-                                    token ->
-                                            persistentStorage.put(
-                                                    PersistentStorageKeys.ACCESS_TOKEN, token));
+                    // BankID successful, proceed authentication
                     return;
                 case WAITING:
                     log.info("Waiting for BankID");
@@ -158,5 +194,12 @@ public class BankIdAuthenticationController<T>
             // Store the new access token on the persistent storage again.
             persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
         }
+    }
+
+    private void storeAccessToken(OAuth2Token token, Credentials credentials) {
+        persistentStorage.put(PersistentStorageKeys.ACCESS_TOKEN, token);
+        credentials.setSessionExpiryDate(
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                        token, tokenLifetime, tokenLifetimeUnit));
     }
 }
