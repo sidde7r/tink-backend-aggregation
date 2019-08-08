@@ -34,10 +34,6 @@ public final class AgentConfigurationController {
             String appId) {
         Preconditions.checkNotNull(
                 tppSecretsServiceConfiguration, "tppSecretsServiceConfiguration not found.");
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(financialInstitutionId),
-                "financialInstitutionId cannot be empty/null.");
-        Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
 
         this.tppSecretsServiceEnabled = tppSecretsServiceConfiguration.isEnabled();
         if (tppSecretsServiceEnabled) {
@@ -95,6 +91,11 @@ public final class AgentConfigurationController {
 
     public <T extends ClientConfiguration> T getAgentConfiguration(
             final Class<T> clientConfigClass) {
+
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(financialInstitutionId),
+                "financialInstitutionId cannot be empty/null.");
+        Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
 
         // For local development we can use the development.yml file.
         if (!tppSecretsServiceEnabled) {
