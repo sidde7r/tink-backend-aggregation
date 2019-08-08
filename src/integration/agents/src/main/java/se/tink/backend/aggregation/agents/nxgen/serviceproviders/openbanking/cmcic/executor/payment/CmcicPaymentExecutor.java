@@ -73,9 +73,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         String id = UUIDUtils.generateUUID();
 
         PartyIdentificationEntity initiatingParty =
-                PartyIdentificationEntity.builder()
-                        .name(payment.getDebtor().getAccountNumber())
-                        .build();
+                new PartyIdentificationEntity(
+                        payment.getDebtor().getAccountNumber(), null, null, null);
 
         PaymentTypeInformationEntity paymentTypeInformation =
                 PaymentTypeInformationEntity.builder()
@@ -87,7 +86,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                         paymentRequest.getPayment().getDebtor().getAccountNumber(), null);
 
         PartyIdentificationEntity creditor =
-                PartyIdentificationEntity.builder().name(FormValues.BENEFICIARY_NAME).build();
+                new PartyIdentificationEntity(FormValues.BENEFICIARY_NAME, null, null, null);
 
         AccountIdentificationEntity creditorAccount =
                 new AccountIdentificationEntity(
