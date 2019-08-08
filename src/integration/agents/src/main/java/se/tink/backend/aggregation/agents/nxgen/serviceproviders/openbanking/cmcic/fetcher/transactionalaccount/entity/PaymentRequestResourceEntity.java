@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -116,6 +117,7 @@ public class PaymentRequestResourceEntity {
         this.supplementaryData = supplementaryData;
     }
 
+    @JsonIgnore
     public static PaymentRequestResourceEntityBuilder builder() {
         return new PaymentRequestResourceEntityBuilder();
     }
