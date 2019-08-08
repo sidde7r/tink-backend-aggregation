@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.entities.SupplementaryDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.enums.BnpParibasFortisPaymentType;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 @JsonObject
 public class CreatePaymentRequest {
@@ -96,8 +97,8 @@ public class CreatePaymentRequest {
             return this;
         }
 
-        public Builder withRedirectUrl(String redirectUrl) {
-            this.redirectUrl = redirectUrl;
+        public Builder withRedirectUrl(URL redirectUrl) {
+            this.redirectUrl = redirectUrl.toString();
             return this;
         }
 

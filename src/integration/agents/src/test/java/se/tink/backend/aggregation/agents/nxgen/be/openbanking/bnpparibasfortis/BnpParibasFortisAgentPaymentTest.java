@@ -26,7 +26,8 @@ public class BnpParibasFortisAgentPaymentTest {
                 new AgentIntegrationTest.Builder("be", "be-bnpparibasfortis-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("1234");
 
         builder.build().testGenericPayment(createListMockedDomesticPayment(4));
     }

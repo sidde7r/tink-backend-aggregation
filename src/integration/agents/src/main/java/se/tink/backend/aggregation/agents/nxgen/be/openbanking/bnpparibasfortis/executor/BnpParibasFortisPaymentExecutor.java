@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.enums.BnpParibasFortisPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -33,15 +34,18 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
     private final BnpParibasFortisApiClient apiClient;
     private final BnpParibasFortisPaymentAuthenticator paymentAuthenticator;
     private final BnpParibasFortisConfiguration configuration;
+    private final StrongAuthenticationState strongAuthenticationState;
     private final List<PaymentResponse> createdPaymentsList;
 
     public BnpParibasFortisPaymentExecutor(
             BnpParibasFortisApiClient apiClient,
             BnpParibasFortisPaymentAuthenticator paymentAuthenticator,
-            BnpParibasFortisConfiguration configuration) {
+            BnpParibasFortisConfiguration configuration,
+            StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.paymentAuthenticator = paymentAuthenticator;
         this.configuration = configuration;
+        this.strongAuthenticationState = strongAuthenticationState;
         createdPaymentsList = new ArrayList<>();
     }
 
@@ -62,7 +66,11 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
                         .withDebtorAccount(debtor)
                         .withExecutionDate(paymentRequest.getPayment().getExecutionDate())
                         .withCreationDateTime(LocalDateTime.now())
-                        .withRedirectUrl(configuration.getRedirectUri())
+                        .withRedirectUrl(
+                                new URL(configuration.getRedirectUri())
+                                        .queryParam(
+                                                QueryKeys.STATE,
+                                                strongAuthenticationState.getState()))
                         .withRemittanceInformation(
                                 paymentRequest.getPayment().getReference().getValue())
                         .build();
