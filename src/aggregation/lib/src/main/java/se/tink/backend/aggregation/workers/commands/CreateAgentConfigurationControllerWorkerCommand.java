@@ -16,12 +16,18 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final CredentialsRequest credentialsRequest;
     private final AgentWorkerCommandContext agentWorkerCommandContext;
+    private final boolean tppSecretsServiceEnabled;
 
     public CreateAgentConfigurationControllerWorkerCommand(
             AgentWorkerCommandContext agentWorkerCommandContext) {
         this.agentsServiceConfiguration = agentWorkerCommandContext.getAgentsServiceConfiguration();
         this.credentialsRequest = agentWorkerCommandContext.getRequest();
         this.agentWorkerCommandContext = agentWorkerCommandContext;
+        this.tppSecretsServiceEnabled =
+                agentWorkerCommandContext
+                        .getAgentsServiceConfiguration()
+                        .getTppSecretsServiceConfiguration()
+                        .isEnabled();
     }
 
     @Override
@@ -44,7 +50,7 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
 
     @Override
     public void postProcess() throws Exception {
-        if (agentsServiceConfiguration.getTppSecretsServiceConfiguration().isEnabled()) {
+        if (tppSecretsServiceEnabled) {
             agentWorkerCommandContext
                     .getAgentConfigurationController()
                     .shutdownTppSecretsServiceClient();
