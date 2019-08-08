@@ -153,7 +153,7 @@ public final class CmcicApiClient {
 
         String baseUrl = getConfiguration().getBaseUrl();
         String basePath = getConfiguration().getBasePath();
-        final URL baseApiUrl = new URL(baseUrl + basePath);
+        final URL baseApiUrl = new URL(baseUrl).concat(basePath);
 
         final URL tokenUrl = baseApiUrl.concat(Urls.TOKEN_PATH);
 
