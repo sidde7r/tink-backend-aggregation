@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcPinAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.filter.SdcExceptionFilter;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -33,7 +34,9 @@ public class SdcDkPinAuthenticatorTest {
         SdcSessionStorage sessionStorage = new SdcSessionStorage(new SessionStorage());
         SdcPersistentStorage persistentStorage = new SdcPersistentStorage(new PersistentStorage());
 
-        SdcApiClient apiClient = new SdcApiClient(new TinkHttpClient(), configuration);
+        TinkHttpClient tinkHttpClient = new TinkHttpClient();
+        tinkHttpClient.addFilter(new SdcExceptionFilter());
+        SdcApiClient apiClient = new SdcApiClient(tinkHttpClient, configuration);
 
         new SdcPinAuthenticator(apiClient, sessionStorage, configuration)
                 .authenticate(username, password);

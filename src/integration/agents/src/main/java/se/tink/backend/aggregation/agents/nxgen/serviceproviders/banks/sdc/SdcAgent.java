@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.filter.SdcExceptionFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.parser.SdcTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.sessionhandler.SdcSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -84,6 +85,7 @@ public abstract class SdcAgent extends NextGenerationAgent
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.setTimeout(SdcConstants.HTTP_TIMEOUT);
+        client.addFilter(new SdcExceptionFilter());
         client.addFilter(
                 new TimeoutRetryFilter(
                         TimeoutFilter.NUM_TIMEOUT_RETRIES,
