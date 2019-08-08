@@ -3,7 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.encryption.LibTFA;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.ActivateProfileResponse;
@@ -12,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class HandelsbankenPersistentStorage {
 
+    private static final Logger log = LoggerFactory.getLogger(HandelsbankenPersistentStorage.class);
     private final PersistentStorage persistentStorage;
 
     // Legacy storage
@@ -99,13 +104,15 @@ public class HandelsbankenPersistentStorage {
         return Optional.empty();
     }
 
-    public LibTFA getTfa(Credentials credentials) {
+    public LibTFA getTfa(Credentials credentials) throws SessionException {
         String serializedRsaPrivateKey =
                 getSerializedRsaPrivateKey()
                         .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "User has no persisted TFA state, therefore cannot load."));
+                                () -> {
+                                    log.error(
+                                            "User has no persisted TFA state, therefore cannot load.");
+                                    return SessionError.SESSION_EXPIRED.exception();
+                                });
 
         String storageSecurityContextId =
                 getStorageSecurityContextId()
