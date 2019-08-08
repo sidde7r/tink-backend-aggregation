@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -44,8 +45,7 @@ public class CreditTransferTransactionEntity {
     @JsonProperty("statusReasonInformation")
     private StatusReasonInformationEntity statusReasonInformation = null;
 
-    public CreditTransferTransactionEntity() {}
-
+    @JsonCreator
     private CreditTransferTransactionEntity(
             PaymentIdentificationEntity paymentId,
             String requestedExecutionDate,
