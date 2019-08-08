@@ -5,10 +5,15 @@ import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankConstants.EndPoints;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.authenticator.rpc.ConsentSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.configuration.ErstebankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
@@ -26,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -39,9 +45,8 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     }
 
     public URL getAuthorizeUrl(final String state) {
-        final String authUrl = getConfiguration().getBaseUrl() + Urls.AUTH;
         return getAuthorizeUrl(
-                        authUrl,
+                        EndPoints.AUTH,
                         state,
                         getConfiguration().getClientId(),
                         getConfiguration().getRedirectUrl())
@@ -58,8 +63,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
                         code,
                         QueryValues.GRANT_TYPE);
 
-        return client.request(
-                        new URL(getConfiguration().getBaseUrl() + ErstebankConstants.Urls.TOKEN))
+        return client.request(Urls.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParams(request.toData())
@@ -80,8 +84,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
                         QueryValues.GRANT_TYPE_REFRESH,
                         refreshToken);
 
-        return client.request(
-                        new URL(getConfiguration().getBaseUrl() + ErstebankConstants.Urls.TOKEN))
+        return client.request(Urls.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParams(request.toData())
@@ -91,14 +94,14 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
 
     @Override
     public AccountsBaseResponseBerlinGroup fetchAccounts() {
-        return getAccountsRequestBuilder(getConfiguration().getBaseUrl() + Urls.ACCOUNTS)
+        return getAccountsRequestBuilder(EndPoints.ACCOUNTS)
                 .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
                 .get(AccountsBaseResponseBerlinGroup.class);
     }
 
     @Override
     public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
-        return getTransactionsRequestBuilder(getConfiguration().getBaseUrl() + url)
+        return getTransactionsRequestBuilder(url)
                 .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
                 .get(TransactionsKeyPaginatorBaseResponse.class);
     }
@@ -108,17 +111,16 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
 
         //         TODO: Wait for erste's api to be fixed
         //
-        //                return buildRequestForIbans(Urls.CONSENT, ibans)
-        //                        .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
-        //                        .header(HeaderKeys.WEB_API_KEY,
-        // "a5ace35b-46aa-4d9f-ad9b-5b158a35a559")
-        //                        .type(MediaType.APPLICATION_JSON)
-        //                        .post(ConsentBaseResponse.class);
+        //        return buildRequestForIbans(Urls.CONSENT, ibans)
+        //                .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
+        //                .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
+        //                .type(MediaType.APPLICATION_JSON)
+        //                .post(ConsentBaseResponse.class);
     }
 
     public ConsentSignResponse signConsent(final String consentId) {
         return buildRequestWithSignature(
-                        String.format(Urls.SIGN_CONSENT, consentId), FormValues.EMPTY)
+                        String.format(EndPoints.SIGN_CONSENT, consentId), FormValues.EMPTY)
                 .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
                 .type(MediaType.APPLICATION_JSON)
                 .post(ConsentSignResponse.class);
@@ -149,9 +151,8 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
 
     private RequestBuilder buildRequest(
             final String date, final String digest, final String reqPath) {
-        final String baseUrl = getConfiguration().getBaseUrl();
 
-        return client.request(baseUrl + reqPath)
+        return client.request(reqPath)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.DIGEST, digest)
                 .header(HeaderKeys.DATE, date);
@@ -188,5 +189,31 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
         final String payload = consentRequest.toData();
         final String digest = generateDigest(payload);
         return buildRequest(date, digest, reqPath);
+    }
+
+    public CreatePaymentResponse createPayment(final CreatePaymentRequest paymentRequest) {
+        final URL url = paymentRequest.isSepa() ? Urls.CREATE_SEPA : Urls.CREATE_CROSS_BORDER;
+
+        return buildRequestWithTokenAndConsent(url)
+                .body(paymentRequest)
+                .post(CreatePaymentResponse.class);
+    }
+
+    public FetchPaymentResponse fetchPayment(final PaymentRequest paymentRequest) {
+        final URL url =
+                paymentRequest.getPayment().isSepa() ? Urls.FETCH_SEPA : Urls.FETCH_CROSS_BORDER;
+        final URL urlWithPaymentId =
+                url.parameter(IdTags.PAYMENT_ID, paymentRequest.getPayment().getUniqueId());
+
+        return buildRequestWithTokenAndConsent(urlWithPaymentId).get(FetchPaymentResponse.class);
+    }
+
+    private RequestBuilder buildRequestWithTokenAndConsent(final URL url) {
+        return client.request(url)
+                .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
+                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN));
     }
 }
