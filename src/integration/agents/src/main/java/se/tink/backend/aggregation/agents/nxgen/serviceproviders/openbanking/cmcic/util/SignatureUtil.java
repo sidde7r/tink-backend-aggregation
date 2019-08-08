@@ -59,16 +59,16 @@ public final class SignatureUtil {
                         + httpMethod.toLowerCase()
                         + " "
                         + reqPath
-                        + System.lineSeparator()
+                        + "\n"
                         + CmcicConstants.Signature.DATE
                         + date
-                        + System.lineSeparator()
+                        + "\n"
                         + CmcicConstants.Signature.DIGEST
                         + digest
-                        + System.lineSeparator()
+                        + "\n"
                         + CmcicConstants.Signature.X_REQUEST_ID
                         + requestId
-                        + System.lineSeparator()
+                        + "\n"
                         + CmcicConstants.Signature.CONTENT_TYPE
                         + MediaType.APPLICATION_JSON;
 
