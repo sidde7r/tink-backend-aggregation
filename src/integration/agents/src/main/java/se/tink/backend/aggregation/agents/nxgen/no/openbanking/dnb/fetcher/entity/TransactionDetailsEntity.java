@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.enti
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
+import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -29,7 +30,7 @@ public abstract class TransactionDetailsEntity {
     protected CreditorAccountEntity creditorAccount;
     protected String creditorId;
     protected BalanceAmountBaseEntity transactionAmount;
-    protected CurrencyExchange currencyExchange;
+    protected List<CurrencyExchange> currencyExchange;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     protected Date valueDate;
