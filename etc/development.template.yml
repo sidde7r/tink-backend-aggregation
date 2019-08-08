@@ -519,7 +519,7 @@ agentsServiceConfiguration:
     host: "tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local" # add to your /etc/hosts with the (minikube ip)
     port: 30787
     certificatesLocation: "development-staging"
-    enabled: true
+    enabled: false
   testConfiguration:
     debugOutput: false
     censorSensitiveHeaders: true
