@@ -71,8 +71,9 @@ public abstract class BecConstants {
                             "børnebørnskonto",
                             "opsparingsinvest personale",
                             "Spar'Op",
-                            "Coop Budget")
-                    .put(TransactionalAccountType.SAVINGS, "SVGS", "LLSV")
+                            "Coop Budget",
+                            "SVGS",
+                            "LLSV")
                     .setDefaultTranslationValue(TransactionalAccountType.CHECKING)
                     .build();
 

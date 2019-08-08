@@ -33,16 +33,8 @@ public class AccountEntity {
     public Optional<TransactionalAccount> toTinkAccount(BalancesItemEntity balancesItemEntity) {
         TransactionalAccountType type = getAccountType();
         balancesItemEntity.setCurrencyIfNull(currency);
-
         ExactCurrencyAmount balance = balancesItemEntity.getBalanceAmount();
-        switch (type) {
-            case SAVINGS:
-                return toAccount(TransactionalAccountType.SAVINGS, balance);
-            case CHECKING:
-                return toAccount(TransactionalAccountType.CHECKING, balance);
-            default:
-                return Optional.empty();
-        }
+        return toAccount(type, balance);
     }
 
     private Optional<TransactionalAccount> toAccount(
@@ -79,6 +71,7 @@ public class AccountEntity {
     }
 
     private TransactionalAccountType getAccountType() {
+
         return BecConstants.ACCOUNT_TYPE_MAPPER
                 .translate(Optional.ofNullable(cashAccountType).orElse(product))
                 .orElse(TransactionalAccountType.OTHER);
