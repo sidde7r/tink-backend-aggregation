@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class RabobankAgent extends NextGenerationAgent
+public final class RabobankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final RabobankApiClient apiClient;

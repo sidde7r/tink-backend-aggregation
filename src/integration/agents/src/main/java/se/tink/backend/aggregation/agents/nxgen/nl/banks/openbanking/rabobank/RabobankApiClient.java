@@ -37,7 +37,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class RabobankApiClient {
+public final class RabobankApiClient {
 
     private static final Logger logger = LoggerFactory.getLogger(RabobankApiClient.class);
 
