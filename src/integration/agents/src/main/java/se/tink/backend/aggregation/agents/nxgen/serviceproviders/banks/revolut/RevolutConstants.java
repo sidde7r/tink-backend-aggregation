@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class RevolutConstants {
@@ -82,8 +82,8 @@ public class RevolutConstants {
         public static final String ACCOUNT_ID = "id";
     }
 
-    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            AccountTypeMapper.builder()
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.OTHER, "SAVINGS") // Revolut's Vault is not a bank account
                     .put(AccountTypes.CHECKING, "CURRENT")
                     .build();

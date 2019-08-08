@@ -56,40 +56,43 @@ public final class AccountTypePredicateMapper<KeyType> {
     }
 
     private boolean verify(KeyType key, AccountTypes value) {
-        Optional<AccountTypes> translated = translate(key);
-        return translated.isPresent() && translated.get() == value;
+        return translate(key).filter(value::equals).isPresent();
     }
 
     private boolean verify(KeyType key, Collection<AccountTypes> values) {
-        Optional<AccountTypes> translated = translate(key);
-        return translated.isPresent() && values.contains(translated.get());
+        return translate(key).filter(values::contains).isPresent();
     }
 
     public Optional<AccountTypes> translate(KeyType accountTypeKey) {
-
-        List<Pair<Predicate<KeyType>, AccountTypes>> matchingRestriction =
+        final List<Pair<Predicate<KeyType>, AccountTypes>> matchingRestriction =
                 predicates.stream()
                         .filter(pair -> pair.first.test(accountTypeKey))
                         .collect(Collectors.toList());
 
         // Eliminate duplicates
-        Set<AccountTypes> accountTypeSet =
+        final Set<AccountTypes> accountTypeSet =
                 matchingRestriction.stream().map(p -> p.second).collect(Collectors.toSet());
 
         if (accountTypeSet.size() >= 2) {
-            AccountTypes anyAccountType = accountTypeSet.iterator().next(); // Pop any element
+            final AccountTypes anyAccountType = accountTypeSet.iterator().next(); // Pop any element
+
             executor.onAmbiguousPredicateMatch(accountTypeKey, matchingRestriction);
+
             return Optional.of(anyAccountType);
         } else if (accountTypeSet.size() == 1) {
-            Pair<Predicate<KeyType>, AccountTypes> pair = matchingRestriction.iterator().next();
-            Predicate<KeyType> matchingPredicate = pair.first;
-            AccountTypes associatedAccountType = pair.second;
+            final Pair<Predicate<KeyType>, AccountTypes> pair =
+                    matchingRestriction.iterator().next();
+            final Predicate<KeyType> matchingPredicate = pair.first;
+            final AccountTypes associatedAccountType = pair.second;
+
             executor.onUnambiguousPredicateMatch(
                     accountTypeKey, matchingPredicate, associatedAccountType);
+
             return Optional.of(associatedAccountType);
         }
 
         executor.onUnknownAccountType(accountTypeKey);
+
         return Optional.empty();
     }
 }

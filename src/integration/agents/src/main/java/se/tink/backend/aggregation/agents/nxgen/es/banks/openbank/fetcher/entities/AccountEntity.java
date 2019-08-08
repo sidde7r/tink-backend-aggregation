@@ -77,8 +77,9 @@ public class AccountEntity {
     private boolean isRoboAccount;
 
     public boolean isTransactionalAccount() {
-        return ACCOUNT_TYPE_MAPPER.isTransactionalAccount(
-                getAccountInfoNewFormat().getProductCode());
+        return ACCOUNT_TYPE_MAPPER.isOneOf(
+                getAccountInfoNewFormat().getProductCode(),
+                TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
     private AccountTypes getTinkAccountType() {

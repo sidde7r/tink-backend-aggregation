@@ -6,6 +6,7 @@ import java.util.Arrays;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class AvanzaConstants {
+
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Stockholm");
 
     public static final AvanzaAccountTypeMappers MAPPERS = new AvanzaAccountTypeMappers();

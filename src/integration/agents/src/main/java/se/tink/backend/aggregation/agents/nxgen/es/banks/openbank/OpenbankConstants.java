@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank;
 import java.time.ZoneId;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public abstract class OpenbankConstants {
@@ -11,8 +11,8 @@ public abstract class OpenbankConstants {
     public static final String PROVIDER_NAME = "es-openbank-password";
 
     public static final String USERNAME_TYPE = "username-type";
-    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            AccountTypeMapper.builder()
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "300")
                     .put(AccountTypes.SAVINGS, "301")
                     .put(AccountTypes.CREDIT_CARD, "500")

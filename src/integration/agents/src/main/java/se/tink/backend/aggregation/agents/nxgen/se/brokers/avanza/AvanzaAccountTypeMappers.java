@@ -11,17 +11,18 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.AvanzaAccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.AvanzaFallbackAccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.LogTags;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.pair.Pair;
 
 public final class AvanzaAccountTypeMappers {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaAccountTypeMappers.class);
 
-    private AccountTypeMapper accountTypeMapper;
+    private TypeMapper<AccountTypes> accountTypeMapper;
     private AccountTypePredicateMapper<String> accountTypeFallbackMapper;
 
     private static Predicate<String> codeMatches(final String regex) {
@@ -53,11 +54,11 @@ public final class AvanzaAccountTypeMappers {
         return accountType;
     }
 
-    private AccountTypeMapper getAccountTypeMapper() {
+    private TypeMapper<AccountTypes> getAccountTypeMapper() {
         accountTypeMapper =
                 Optional.ofNullable(accountTypeMapper)
                         .orElse(
-                                AccountTypeMapper.builder()
+                                TypeMapper.<AccountTypes>builder()
                                         .put(
                                                 AccountTypes.INVESTMENT,
                                                 AvanzaAccountTypes.AKTIE_FONDKONTO,

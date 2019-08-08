@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
-import java.util.Optional;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -12,12 +12,14 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class ViewDetailListItem {
+
+    private static final AggregationLogger LOGGER = new AggregationLogger(ViewDetailListItem.class);
+
     private String accountType;
     private Object viewDetailId;
     private String accountSequenceNumber;
     private String accountNumber;
     private Account account;
-    private static final AggregationLogger LOGGER = new AggregationLogger(ViewDetailListItem.class);
 
     public String getAccountType() {
         return accountType;
@@ -39,26 +41,31 @@ public class ViewDetailListItem {
         return account;
     }
 
+    @JsonIgnore
     private AccountTypes getTinkAccountType() {
-        String type = getAccount().getAccountType(); // TODO: verify
-        Optional<AccountTypes> accountType = FortisConstants.ACCOUNT_TYPE_MAPPER.translate(type);
-        return accountType.orElse(AccountTypes.OTHER);
+        final String type = getAccount().getAccountType(); // TODO: verify
+
+        return FortisConstants.ACCOUNT_TYPE_MAPPER.translate(type).orElse(AccountTypes.OTHER);
     }
 
+    @JsonIgnore
     private String getIban() {
         return getAccount().getIban();
     }
 
+    @JsonIgnore
     private Amount getTinkAmount() {
         return new Amount(
                 getAccount().getBalance().getCurrency(),
                 Double.parseDouble(getAccount().getBalance().getAmount()));
     }
 
+    @JsonIgnore
     private String getAccountName() {
         return getAccount().getAccountName();
     }
 
+    @JsonIgnore
     public boolean isValid() {
         try {
             toTinkAccount();
@@ -72,15 +79,18 @@ public class ViewDetailListItem {
         }
     }
 
+    @JsonIgnore
     private AccountIdentifier getIbanIdentifier() {
         return AccountIdentifier.create(
                 AccountIdentifier.Type.IBAN, getIban(), AccountIdentifier.Type.IBAN.toString());
     }
 
+    @JsonIgnore
     private HolderName getHoldername() {
         return new HolderName(getAccount().getAlias());
     }
 
+    @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(getTinkAccountType(), getIban(), getTinkAmount())
                 .setAccountNumber(getIban())

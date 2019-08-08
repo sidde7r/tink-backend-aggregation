@@ -8,11 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TypeMapper<V> extends GenericTypeMapper<V, String> {
-    private static final Logger logger = LoggerFactory.getLogger(TypeMapper.class);
 
     private TypeMapper(GenericTypeMapper.Builder<V, String, ?> builder) {
         super(builder);
@@ -43,18 +40,15 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
     public abstract static class TypeMapperBuilder<V, B extends TypeMapperBuilder<V, B>>
             extends GenericTypeMapper.Builder<V, String, B> {
 
-        protected TypeMapperBuilder() {
+        TypeMapperBuilder() {
             super();
-            //            self().defaultValue = Optional.empty();
         }
 
         @Override
         /** Known keys, and the account type they should be mapped to. */
         public TypeMapperBuilder<V, B> put(V value, String... keys) {
             Set<String> collect =
-                    Arrays.asList(keys).stream()
-                            .map(k -> k.toLowerCase())
-                            .collect(Collectors.toSet());
+                    Arrays.stream(keys).map(String::toLowerCase).collect(Collectors.toSet());
             self().reversed.put(value, collect);
             return self();
         }
@@ -65,7 +59,6 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
             return self();
         }
 
-        /** Known keys that should not be mapped to any specific account type. */
         /**
          * Known keys that should not be mapped to any specific account type. The effect is that a
          * warning will not be printed when attempting to map these keys.
@@ -74,8 +67,8 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
         public TypeMapperBuilder<V, B> ignoreKeys(String... keys) {
             self().ignoredKeys
                     .addAll(
-                            Arrays.asList(keys).stream()
-                                    .map(k -> k.toLowerCase())
+                            Arrays.stream(keys)
+                                    .map(String::toLowerCase)
                                     .collect(Collectors.toList()));
             return self();
         }

@@ -5,8 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtSessionStorage;
@@ -21,8 +20,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.amount.Amount;
 
 public class IngAtCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
-    private static final Logger logger =
-            LoggerFactory.getLogger(IngAtCreditCardAccountFetcher.class);
+
     private IngAtApiClient apiClient;
     private IngAtSessionStorage sessionStorage;
 
@@ -33,7 +31,7 @@ public class IngAtCreditCardAccountFetcher implements AccountFetcher<CreditCardA
     }
 
     private static boolean isCreditCardAccount(AccountReferenceEntity r) {
-        return IngAtConstants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(r.getType());
+        return IngAtConstants.ACCOUNT_TYPE_MAPPER.isOf(r.getType(), AccountTypes.CREDIT_CARD);
     }
 
     @Override

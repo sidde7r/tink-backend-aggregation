@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.AmountEntity;
@@ -28,15 +27,14 @@ public class AccountEntity {
     }
 
     public boolean isAccountTypeTransactional() {
-        Optional<AccountTypes> accountType =
-                BankiaConstants.AccountType.translateType(getBankiaAccountType());
-        return accountType.map(TransactionalAccount.ALLOWED_ACCOUNT_TYPES::contains).orElse(false);
+        return BankiaConstants.ACCOUNT_TYPE_MAPPER.isOneOf(
+                getBankiaAccountType(), TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
     private AccountTypes getTinkAccountType() {
-        Optional<AccountTypes> accountType =
-                BankiaConstants.AccountType.translateType(getBankiaAccountType());
-        return accountType.orElse(AccountTypes.OTHER);
+        return BankiaConstants.ACCOUNT_TYPE_MAPPER
+                .translate(getBankiaAccountType())
+                .orElse(AccountTypes.OTHER);
     }
 
     private String getAccountName(String iban) {
@@ -46,12 +44,12 @@ public class AccountEntity {
     }
 
     public TransactionalAccount toTinkAccount() {
-        String iban = contract.getIdentifierProductContract();
+        final String iban = contract.getIdentifierProductContract();
 
         // These are used to fetch transactions for the account.
-        String country = iban.substring(0, 2);
-        String controlDigits = iban.substring(2, 4);
-        String bankIdentifier = iban.substring(4);
+        final String country = iban.substring(0, 2);
+        final String controlDigits = iban.substring(2, 4);
+        final String bankIdentifier = iban.substring(4);
 
         return TransactionalAccount.builder(getTinkAccountType(), iban.toLowerCase())
                 .setAccountNumber(iban)

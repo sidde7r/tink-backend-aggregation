@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.trans
 
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -16,7 +15,6 @@ public class IberCajaAccountFetcher implements AccountFetcher<TransactionalAccou
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        FetchAccountResponse fetchAccount = bankClient.fetchAccountList();
-        return fetchAccount.getAccounts();
+        return bankClient.fetchAccountList().getAccounts();
     }
 }

@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class IngAtConstants {
-    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            AccountTypeMapper.builder()
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CHECKING")
                     .put(AccountTypes.SAVINGS, "SAVINGS")
                     .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")

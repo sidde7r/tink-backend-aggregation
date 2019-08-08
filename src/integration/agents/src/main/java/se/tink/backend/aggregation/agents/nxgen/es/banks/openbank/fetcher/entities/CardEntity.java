@@ -140,7 +140,7 @@ public class CardEntity {
     }
 
     public boolean isCreditCardAccount() {
-        return ACCOUNT_TYPE_MAPPER.isCreditCardAccount(contract.getProductCode());
+        return ACCOUNT_TYPE_MAPPER.isOf(contract.getProductCode(), AccountTypes.CREDIT_CARD);
     }
 
     private AccountTypes getTinkAccountType() {
