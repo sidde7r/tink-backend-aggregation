@@ -27,9 +27,13 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -67,7 +71,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         persistentStorage.put(
                 StorageKeys.LINK,
                 payment.getLinks().getUpdatePsuAuthenticationRedirect().getHref());
-        return payment.toTinkPaymentResponse(PaymentType.SEPA);
+        return payment.toTinkPaymentResponse(getPaymentType(paymentRequest));
     }
 
     @Override
@@ -75,7 +79,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         PaymentResponse paymentResponse =
                 apiClient
                         .getPayment(paymentRequest.getPayment().getUniqueId())
-                        .toTinkPaymentResponse(PaymentType.SEPA);
+                        .toTinkPaymentResponse(paymentRequest.getPayment().getType());
         paymentResponses.add(paymentResponse);
         return paymentResponse;
     }
@@ -136,7 +140,28 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 this.formatSupplementalKey(QueryKeys.STATE), 9L, TimeUnit.MINUTES);
     }
 
+    protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
+        Pair<AccountIdentifier.Type, AccountIdentifier.Type> accountIdentifiersKey =
+                paymentRequest.getPayment().getCreditorAndDebtorAccountType();
+
+        return accountIdentifiersToPaymentTypeMapper
+                .translate(accountIdentifiersKey)
+                .orElseThrow(
+                        () ->
+                                new NotImplementedException(
+                                        "No PaymentType found for your AccountIdentifiers pair "
+                                                + accountIdentifiersKey));
+    }
+
     private String formatSupplementalKey(String key) {
         return String.format("tpcb_%s", key);
     }
+
+    private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
+            accountIdentifiersToPaymentTypeMapper =
+                    GenericTypeMapper
+                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                                    genericBuilder()
+                            .put(PaymentType.SEPA, new Pair<>(Type.IBAN, Type.IBAN))
+                            .build();
 }

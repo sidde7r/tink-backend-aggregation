@@ -23,6 +23,7 @@ public class InstructedAmountEntity {
         this.currency = currency;
         this.amount = amount;
     }
+
     public String getCurrency() {
         return currency;
     }

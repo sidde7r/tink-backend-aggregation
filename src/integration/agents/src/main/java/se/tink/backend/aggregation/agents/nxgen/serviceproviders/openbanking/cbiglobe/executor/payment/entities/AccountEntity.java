@@ -38,7 +38,6 @@ public class AccountEntity {
         return new Debtor(new IbanIdentifier(iban));
     }
 
-    @JsonIgnore
     public AccountEntity(String iban) {
         this.iban = iban;
     }
