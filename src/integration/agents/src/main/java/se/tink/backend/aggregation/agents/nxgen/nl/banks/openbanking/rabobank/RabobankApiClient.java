@@ -50,17 +50,14 @@ public class RabobankApiClient {
     RabobankApiClient(
             final TinkHttpClient client,
             final PersistentStorage persistentStorage,
+            final RabobankConfiguration rabobankConfiguration,
+            final EidasProxyConfiguration eidasProxyConf,
             final boolean requestIsManual) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.requestIsManual = requestIsManual;
-    }
-
-    public void setConfiguration(
-            final RabobankConfiguration configuration,
-            final EidasProxyConfiguration eidasProxyConf) {
-        this.rabobankConfiguration = configuration;
+        this.rabobankConfiguration = rabobankConfiguration;
         this.eidasProxyConf = eidasProxyConf;
+        this.requestIsManual = requestIsManual;
     }
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {

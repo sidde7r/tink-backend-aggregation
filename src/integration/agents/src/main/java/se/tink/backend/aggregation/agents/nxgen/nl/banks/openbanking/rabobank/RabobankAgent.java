@@ -57,8 +57,13 @@ public class RabobankAgent extends NextGenerationAgent
         client.disableSignatureRequestHeader();
         client.setSslClientCertificate(p12, password);
 
-        apiClient = new RabobankApiClient(client, persistentStorage, request.isManual());
-        apiClient.setConfiguration(rabobankConfiguration, agentsConfiguration.getEidasProxy());
+        apiClient =
+                new RabobankApiClient(
+                        client,
+                        persistentStorage,
+                        rabobankConfiguration,
+                        agentsConfiguration.getEidasProxy(),
+                        request.isManual());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
