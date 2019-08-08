@@ -90,6 +90,15 @@ data:
             eidasQwac: "{{ $agentsConfig.nordea.tink.eidasQwac }}"
         {{- end }}
 
+        {{- if $agentsConfig.axa }}
+        axa:
+          tink:
+            clientId: "AXA_PSD2_CLIENT_ID"
+            redirectUrl: "{{ $agentsConfig.axa.tink.redirectUrl }}"
+            certificateId: "{{ $agentsConfig.axa.tink.certificateId }}"
+            baseUrl: "https://api-dailybanking.axabank.be"
+        {{- end }}
+
         {{- if $agentsConfig.bankdata }}
         bankdata:
           tink:
