@@ -99,7 +99,7 @@
             "displayName": "Bankinter (Test)",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
-
+            "financialInstitutionName": "Bankinter",
             "multiFactor": true,
             "name": "pt-bankinter-oauth2",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
