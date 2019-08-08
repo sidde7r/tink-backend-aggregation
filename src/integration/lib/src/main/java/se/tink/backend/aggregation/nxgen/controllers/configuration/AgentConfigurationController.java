@@ -87,6 +87,12 @@ public final class AgentConfigurationController {
         return true;
     }
 
+    public void shutdownTppSecretsServiceClient() throws InterruptedException {
+        if (tppSecretsServiceEnabled) {
+            tppSecretsServiceClient.shutdown();
+        }
+    }
+
     public <T extends ClientConfiguration> T getAgentConfiguration(
             final Class<T> clientConfigClass) {
 

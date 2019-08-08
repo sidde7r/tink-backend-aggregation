@@ -22,6 +22,7 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLException;
@@ -46,6 +47,7 @@ public class TppSecretsServiceClient {
     private final InternalSecretsServiceGrpc.InternalSecretsServiceBlockingStub
             internalSecretsServiceStub;
     private final TppSecretsServiceConfiguration tppSecretsServiceConfiguration;
+    private final ManagedChannel channel;
 
     public TppSecretsServiceClient(TppSecretsServiceConfiguration tppSecretsServiceConfiguration) {
         Preconditions.checkNotNull(
@@ -57,7 +59,7 @@ public class TppSecretsServiceClient {
         this.tppSecretsServiceConfiguration = tppSecretsServiceConfiguration;
         SslContext sslContext = buildSslContext();
 
-        ManagedChannel channel =
+        this.channel =
                 NettyChannelBuilder.forAddress(
                                 tppSecretsServiceConfiguration.getHost(),
                                 tppSecretsServiceConfiguration.getPort())
@@ -229,5 +231,9 @@ public class TppSecretsServiceClient {
                 "When running a local cluster, store the server and client certificates under "
                         + System.getProperty("user.home")
                         + "/.eidas/local-cluster/ with the following names: ca.crt, tls.key, tls.crt");
+    }
+
+    public void shutdown() throws InterruptedException {
+        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 }
