@@ -36,7 +36,7 @@ public class BnpParibasAuthenticator implements OAuth2Authenticator {
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
         TokenRequest request =
                 TokenRequest.builder()
-                        // .setClientId(bnpParibasConfiguration.getClientId())
+                        .setClientId(bnpParibasConfiguration.getClientId())
                         .setCode(code)
                         .setGrantType(BnpParibasBaseConstants.QueryValues.AUTHORIZATION_CODE)
                         .setRedirectUri(bnpParibasConfiguration.getRedirectUrl())

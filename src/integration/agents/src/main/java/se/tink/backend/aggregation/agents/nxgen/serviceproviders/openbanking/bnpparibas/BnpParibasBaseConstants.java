@@ -10,13 +10,19 @@ public final class BnpParibasBaseConstants {
 
     public static class Urls {
         private static final String BASE_URL =
-                "https://api-psd2.bddf.bnpparibas/psd2/{bank}/V1.4"; // "https://api-nav-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/V1.4";
+                "https://api-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/V1.4";
+        // "https://api-psd2.bddf.bnpparibas/psd2/{bank}/V1.4"; //
+        // "https://api-nav-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/V1.4";
         // "https://api-psd2.bddf.bnpparibas/psd2/retail/V1.4";
         public static final String AUTHENTICATION_URL =
-                "https://api-nav-psd2.bddf.bnpparibas/as/psd2/{bank}/authorize"; // "https://api-nav-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/authorize";
+                "https://api-nav-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/authorize";
+        //  "https://api-nav-psd2.bddf.bnpparibas/as/psd2/{bank}/authorize"; //
+        // "https://api-nav-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/authorize";
         // "https://api-nav-psd2.bddf.bnpparibas/as/psd2/retail/authorize";
         public static final String TOKEN_URL =
-                "https://api-psd2.bddf.bnpparibas/as/psd2/{bank}/token"; // "https://api-nav-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/token";
+                "https://api-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/token";
+        //  "https://api-psd2.bddf.bnpparibas/as/psd2/{bank}/token"; //
+        // "https://api-nav-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/token";
         //  "https://api-psd2.bddf.bnpparibas/as/psd2/retail/token";
 
         public static final String ACCOUNTS_PATH = BASE_URL + "/accounts";

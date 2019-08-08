@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas;
 
+import java.text.SimpleDateFormat;
+import java.util.Base64;
+import java.util.Date;
+import java.util.TimeZone;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.TokenResponse;
@@ -12,12 +17,6 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-
-import javax.ws.rs.core.MediaType;
-import java.text.SimpleDateFormat;
-import java.util.Base64;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class BnpParibasApiBaseClient {
 
@@ -35,25 +34,23 @@ public class BnpParibasApiBaseClient {
 
     public URL getAuthorizeUrl(String state) {
 
-        URL url =
-                client.request(
-                                new URL(BnpParibasBaseConstants.Urls.AUTHENTICATION_URL)
-                                        .parameter(BnpParibasBaseConstants.IdTags.BANK, bank))
-                        .queryParam(
-                                BnpParibasBaseConstants.QueryKeys.CLIENT_ID,
-                                bnpParibasConfiguration.getClientId())
-                        .queryParam(
-                                BnpParibasBaseConstants.QueryKeys.RESPONSE_TYPE,
-                                BnpParibasBaseConstants.QueryValues.CODE)
-                        .queryParam(
-                                BnpParibasBaseConstants.QueryKeys.SCOPE,
-                                BnpParibasBaseConstants.QueryValues.FULL_SCOPES)
-                        .queryParam(
-                                BnpParibasBaseConstants.QueryKeys.REDIRECT_URI,
-                                bnpParibasConfiguration.getRedirectUrl())
-                        .queryParam(BnpParibasBaseConstants.QueryKeys.STATE, state)
-                        .getUrl();
-        return url;
+        return client.request(
+                        new URL(BnpParibasBaseConstants.Urls.AUTHENTICATION_URL)
+                                .parameter(BnpParibasBaseConstants.IdTags.BANK, bank))
+                .queryParam(
+                        BnpParibasBaseConstants.QueryKeys.CLIENT_ID,
+                        bnpParibasConfiguration.getClientId())
+                .queryParam(
+                        BnpParibasBaseConstants.QueryKeys.RESPONSE_TYPE,
+                        BnpParibasBaseConstants.QueryValues.CODE)
+                .queryParam(
+                        BnpParibasBaseConstants.QueryKeys.SCOPE,
+                        BnpParibasBaseConstants.QueryValues.FULL_SCOPES)
+                .queryParam(
+                        BnpParibasBaseConstants.QueryKeys.REDIRECT_URI,
+                        bnpParibasConfiguration.getRedirectUrl())
+                .queryParam(BnpParibasBaseConstants.QueryKeys.STATE, state)
+                .getUrl();
     }
 
     public String getAuthorizationString() {

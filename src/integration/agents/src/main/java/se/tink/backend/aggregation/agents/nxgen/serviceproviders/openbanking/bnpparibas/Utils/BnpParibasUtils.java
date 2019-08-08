@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.Utils;
 
+import java.util.Arrays;
+import java.util.List;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class BnpParibasUtils {
 
