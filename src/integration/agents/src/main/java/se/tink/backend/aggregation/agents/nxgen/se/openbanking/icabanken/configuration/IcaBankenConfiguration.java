@@ -9,7 +9,6 @@ public class IcaBankenConfiguration implements ClientConfiguration {
 
     @JsonProperty private String clientId;
     @JsonProperty private String redirectUri;
-    @JsonProperty private String eidasUrl;
     @JsonProperty private String certificateId;
 
     public String getClientId() {
@@ -18,10 +17,6 @@ public class IcaBankenConfiguration implements ClientConfiguration {
 
     public String getRedirectUri() {
         return redirectUri;
-    }
-
-    public String getEidasUrl() {
-        return eidasUrl;
     }
 
     public String getCertificateId() {
