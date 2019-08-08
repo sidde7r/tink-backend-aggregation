@@ -131,6 +131,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private SSLContext sslContext;
     private MessageSignInterceptor messageSignInterceptor;
 
+    private HttpResponseStatusHandler responseStatusHandler;
+
     public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {
         this.messageSignInterceptor = messageSignInterceptor;
     }
@@ -239,10 +241,17 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
 
         registerJacksonModule(new VavrModule());
+        responseStatusHandler = new DefaultResponseStatusHandler();
     }
 
     public TinkHttpClient() {
         this(null, null, null, null, null);
+    }
+
+    public void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler) {
+        if (responseStatusHandler != null) {
+            this.responseStatusHandler = responseStatusHandler;
+        }
     }
 
     private void constructInternalClient() {
@@ -701,17 +710,31 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
 
     public RequestBuilder request(URL url) {
-        return new RequestBuilder(this, this.finalFilter, url, getHeaderAggregatorIdentifier());
+        return new RequestBuilder(
+                this,
+                this.finalFilter,
+                url,
+                getHeaderAggregatorIdentifier(),
+                responseStatusHandler);
     }
 
     public <T> T request(Class<T> c, HttpRequest request)
             throws HttpClientException, HttpResponseException {
-        return new RequestBuilder(this, this.finalFilter, getHeaderAggregatorIdentifier())
+        return new RequestBuilder(
+                        this,
+                        this.finalFilter,
+                        getHeaderAggregatorIdentifier(),
+                        responseStatusHandler)
                 .raw(c, request);
     }
 
     public void request(HttpRequest request) throws HttpClientException, HttpResponseException {
-        new RequestBuilder(this, this.finalFilter, getHeaderAggregatorIdentifier()).raw(request);
+        new RequestBuilder(
+                        this,
+                        this.finalFilter,
+                        getHeaderAggregatorIdentifier(),
+                        responseStatusHandler)
+                .raw(request);
     }
     // --- Requests ---
 }
