@@ -1,29 +1,40 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen;
 
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-@Ignore
 public class RaiffeisenAgentTest {
 
-    private final String TEST_IBAN = "AT099900000000001511";
-
     private AgentIntegrationTest.Builder builder;
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Before
     public void setup() {
+        manager.before();
+
         builder =
                 new AgentIntegrationTest.Builder("at", "at-raiffeisen-oauth2")
-                        .addCredentialField(RaiffeisenConstants.CredentialKeys.IBAN, TEST_IBAN)
+                        .addCredentialField(
+                                RaiffeisenConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true);
     }
 
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
+    }
+
+    private enum Arg {
+        IBAN
     }
 }

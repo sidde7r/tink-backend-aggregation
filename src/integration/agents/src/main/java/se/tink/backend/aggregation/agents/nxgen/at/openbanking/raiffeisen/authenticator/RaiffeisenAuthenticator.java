@@ -1,46 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator;
 
-import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.configuration.RaiffeisenConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class RaiffeisenAuthenticator implements Authenticator {
+public class RaiffeisenAuthenticator {
 
     private final RaiffeisenApiClient apiClient;
-    private final PersistentStorage persistentStorage;
-    private final RaiffeisenConfiguration configuration;
 
-    public RaiffeisenAuthenticator(
-            RaiffeisenApiClient apiClient,
-            PersistentStorage persistentStorage,
-            RaiffeisenConfiguration configuration) {
+    public RaiffeisenAuthenticator(RaiffeisenApiClient apiClient) {
         this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
     }
 
-    private RaiffeisenConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    public OAuth2Token fetchToken() {
+        return apiClient.getToken();
     }
 
-    @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
+    public URL buildAuthorizeUrl(String state) {
+        return apiClient.getAuthorizeUrl(state);
+    }
 
-        TokenResponse token = apiClient.authenticate();
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, token.getAccessToken());
-
-        ConsentResponse consentResponse = apiClient.getConsent();
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+    public String checkConsentStatus() {
+        return apiClient.getConsentStatus();
     }
 }

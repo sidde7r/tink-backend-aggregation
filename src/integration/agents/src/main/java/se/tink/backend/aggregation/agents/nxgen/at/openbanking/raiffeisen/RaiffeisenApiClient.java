@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.HeaderValues;
@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authen
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.entity.ConsentPayloadEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.configuration.RaiffeisenConfiguration;
@@ -31,11 +32,14 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetche
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class RaiffeisenApiClient {
 
@@ -43,17 +47,17 @@ public final class RaiffeisenApiClient {
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
     private RaiffeisenConfiguration configuration;
+    private final SessionStorage sessionStorage;
 
     public RaiffeisenApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            Credentials credentials,
+            SessionStorage sessionStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
-    }
-
-    private RaiffeisenConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        this.sessionStorage = sessionStorage;
     }
 
     protected void setConfiguration(RaiffeisenConfiguration configuration) {
@@ -70,61 +74,87 @@ public final class RaiffeisenApiClient {
 
         return createRequest(url)
                 .header(
-                        HeaderKeys.AUTHORIZATION,
-                        HeaderValues.TOKEN_PREFIX + getTokenFromStorage());
+                        RaiffeisenConstants.HeaderKeys.AUTHORIZATION,
+                        RaiffeisenConstants.HeaderValues.TOKEN_PREFIX.concat(
+                                getTokenFromStorage().getAccessToken()))
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId());
     }
 
-    private String getTokenFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.OAUTH_TOKEN, String.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+    private OAuth2Token getTokenFromStorage() {
+        return sessionStorage
+                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
-    public TokenResponse authenticate() {
+    public OAuth2Token getToken() {
 
         TokenRequest client_credentials =
                 TokenRequest.builder()
                         .setGrantType(RaiffeisenConstants.FormValues.GRANT_TYPE)
                         .setScope(RaiffeisenConstants.FormValues.SCOPE)
+                        .setClientId(configuration.getClientId())
                         .build();
 
         return client.request(Urls.AUTHENTICATE)
                 .addBasicAuth(configuration.getClientId(), configuration.getClientSecret())
+                .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
+                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class, client_credentials);
+                .post(TokenResponse.class, client_credentials)
+                .toTinkToken();
     }
 
-    public ConsentResponse getConsent() {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date()); // Now use today date.
-        c.add(Calendar.DATE, 1); // Adds 1 day
+    public URL getAuthorizeUrl(String state) {
 
-        SimpleDateFormat formatter =
-                new SimpleDateFormat(RaiffeisenConstants.Formats.CONSENT_DATE_FORMAT);
+        // IBAN flow. Needs list of ibans.
+        List ibans =
+                Collections.singletonList(
+                        new ConsentPayloadEntity(credentials.getField(CredentialKeys.IBAN)));
 
         ConsentRequest consentRequest =
                 new ConsentRequest(
-                        new ConsentAccessEntity(
-                                Collections.singletonList(
-                                        new ConsentPayloadEntity(
-                                                credentials.getField(
-                                                        RaiffeisenConstants.CredentialKeys.IBAN))),
-                                Collections.emptyList()),
-                        false,
-                        formatter.format(c.getTime()),
-                        4);
+                        new ConsentAccessEntity(ibans, ibans, ibans),
+                        true,
+                        LocalDate.now()
+                                .plusDays(RaiffeisenConstants.BodyValues.CONSENT_DAYS_VALID)
+                                .toString(),
+                        RaiffeisenConstants.BodyValues.FREQUENCY_PER_DAY,
+                        false);
 
-        return createRequestInSession(Urls.CONSENTS)
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
-                .post(ConsentResponse.class, consentRequest);
+        try {
+            ConsentResponse consentResponse =
+                    createRequestInSession(Urls.CONSENTS)
+                            .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
+                            .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
+                            .header(HeaderKeys.TPP_REDIRECT_URI, createRedirectUrlWithState(state))
+                            .post(ConsentResponse.class, consentRequest);
+
+            persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+            return new URL(consentResponse.getRedirectUrl());
+
+        } catch (HttpResponseException e) {
+            String errorMessage = e.getResponse().getBody(ErrorResponse.class).getTppMessages();
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
+                    && errorMessage
+                            .toLowerCase()
+                            .contains(RaiffeisenConstants.ErrorTexts.INVALID_IBAN)) {
+                throw new IllegalArgumentException(ErrorMessages.INVALID_IBAN);
+            }
+            throw e;
+        }
+    }
+
+    private String createRedirectUrlWithState(String state) {
+        return new URL(configuration.getRedirectUrl())
+                .queryParam(QueryKeys.STATE, state)
+                .toString();
     }
 
     public AccountsResponse fetchAccounts() {
-
         return createRequestInSession(Urls.ACCOUNTS)
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
-                .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID)
+                .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
+                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(AccountsResponse.class);
     }
@@ -133,15 +163,19 @@ public final class RaiffeisenApiClient {
         return java.util.UUID.randomUUID().toString();
     }
 
-    public PaginatorResponse getTransactions(
+    public PaginatorResponse fetchTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
         return createRequestInSession(
                         Urls.TRANSACTIONS.parameter(
                                 ParameterKeys.ACCOUNT_ID, account.getApiIdentifier()))
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
-                .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID)
+                .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
+                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
+                .queryParam(
+                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(TransactionsResponse.class);
     }
 
@@ -161,5 +195,15 @@ public final class RaiffeisenApiClient {
                         .get(GetPaymentResponse.class);
         getPaymentResponse.setUniqueID(paymentId);
         return getPaymentResponse;
+    }
+
+    public String getConsentStatus() {
+        return createRequestInSession(
+                        Urls.CONSENT_STATUS.parameter(
+                                ParameterKeys.CONSENT_ID,
+                                persistentStorage.get(StorageKeys.CONSENT_ID)))
+                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
+                .get(ConsentResponse.class)
+                .getConsentStatus();
     }
 }
