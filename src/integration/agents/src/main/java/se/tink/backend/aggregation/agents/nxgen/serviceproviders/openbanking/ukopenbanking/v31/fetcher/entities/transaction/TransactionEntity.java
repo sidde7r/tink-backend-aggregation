@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.transaction;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
@@ -57,8 +58,26 @@ public class TransactionEntity {
     @JsonProperty("Balance")
     private BalanceEntity balance;
 
-    @JsonProperty("AddressLine")
-    private String addressLine;
+    /*
+    TODO: Most banks supply AddressLine as string but Barclays is putting it as String
+    array and this needs to be fixed at Barclays end. Until then we are ignoring this property as
+    we dont use this. It could also be fixed by custom parser parsing string as well as string array
+    to list.
+
+
+    private List<String> addressLine;
+
+    @JsonCreator
+    public TransactionEntity(@JsonProperty("AddressLine") Object addressLine) {
+        if (addressLine instanceof ArrayList) {
+            this.addressLine = (List<String>) addressLine;
+        } else {
+            this.addressLine = new ArrayList();
+            this.addressLine.add((String) addressLine);
+        }
+    }*/
+
+    @JsonIgnore private String addressLine;
 
     @JsonProperty("MerchantDetails")
     private Object merchantDetails;
