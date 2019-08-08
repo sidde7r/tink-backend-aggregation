@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,6 +15,7 @@ public class AccountIdentificationEntity {
     @JsonProperty("currency")
     private String currency = null;
 
+    @JsonCreator
     public AccountIdentificationEntity(String iban, String currency) {
         this.iban = iban;
         this.currency = currency;
