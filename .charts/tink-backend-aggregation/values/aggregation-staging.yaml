@@ -105,5 +105,5 @@ clients:
     aggregatorIdentifier: "Provision Job Testing"
 
 tppSecretsServiceConfiguration:
-  tppSecretsServiceLocation: "cluster"
+  certificatesLocation: "cluster"
   enabled: true
