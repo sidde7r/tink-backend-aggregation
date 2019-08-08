@@ -36,6 +36,13 @@ public class OAuth2AuthenticationFlow {
                 oAuth2AuthenticationController);
     }
 
+    /**
+     * this exists for now only to keep compatibility with agents living in
+     * https://github.com/tink-ab/tink-backend-integration-thirdparties
+     *
+     * <p>please use the one with CallbackJwtSignatureKeyPair and CredentialsRequest
+     */
+    @Deprecated
     public static Authenticator create(
             CredentialsRequest request,
             SystemUpdater systemUpdater,

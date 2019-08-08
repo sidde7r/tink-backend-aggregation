@@ -51,7 +51,6 @@ public class OpenIdAuthenticationController
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
-    private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private final Credentials credentials;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
@@ -100,7 +99,6 @@ public class OpenIdAuthenticationController
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
         this.authenticator = authenticator;
-        this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;

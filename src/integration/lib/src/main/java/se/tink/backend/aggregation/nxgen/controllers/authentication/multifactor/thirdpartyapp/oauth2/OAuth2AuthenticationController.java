@@ -46,7 +46,6 @@ public class OAuth2AuthenticationController
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OAuth2Authenticator authenticator;
-    private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private final Credentials credentials;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
@@ -58,6 +57,13 @@ public class OAuth2AuthenticationController
     // cumbersome authentication flows.
     private static final long WAIT_FOR_MINUTES = 9;
 
+    /**
+     * this exists for now only to keep compatibility with agents living in
+     * https://github.com/tink-ab/tink-backend-integration-thirdparties
+     *
+     * <p>please use the one with CallbackJwtSignatureKeyPair and CredentialsRequest
+     */
+    @Deprecated
     public OAuth2AuthenticationController(
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
@@ -103,7 +109,6 @@ public class OAuth2AuthenticationController
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
