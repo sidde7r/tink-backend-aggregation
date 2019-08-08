@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,8 +24,7 @@ public class BeneficiaryEntity {
     @JsonProperty("creditorAccount")
     private AccountIdentificationEntity creditorAccount = null;
 
-    public BeneficiaryEntity() {}
-
+    @JsonCreator
     private BeneficiaryEntity(
             String id,
             Boolean isTrusted,
