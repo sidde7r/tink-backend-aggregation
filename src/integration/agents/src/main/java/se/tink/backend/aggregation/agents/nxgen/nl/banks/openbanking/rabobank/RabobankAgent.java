@@ -38,13 +38,7 @@ public class RabobankAgent extends NextGenerationAgent
             final AgentsServiceConfiguration agentsConfiguration) {
         super(request, context, agentsConfiguration.getSignatureKeyPair());
 
-        apiClient = new RabobankApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
-
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-
-        // Necessary to circumvent HTTP 413: Payload too large
-        client.disableSignatureRequestHeader();
 
         rabobankConfiguration =
                 agentsConfiguration
@@ -55,12 +49,18 @@ public class RabobankAgent extends NextGenerationAgent
                                 RabobankConfiguration.class)
                         .orElseThrow(
                                 () -> new IllegalStateException("Rabobank configuration missing."));
-        apiClient.setConfiguration(rabobankConfiguration, agentsConfiguration.getEidasProxy());
 
         final String password = rabobankConfiguration.getClientSSLKeyPassword();
         final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
 
+        // Necessary to circumvent HTTP 413: Payload too large
+        client.disableSignatureRequestHeader();
         client.setSslClientCertificate(p12, password);
+
+        apiClient = new RabobankApiClient(client, persistentStorage, request.isManual());
+        apiClient.setConfiguration(rabobankConfiguration, agentsConfiguration.getEidasProxy());
+
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
