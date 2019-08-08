@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
@@ -26,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtStateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
@@ -34,7 +32,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.cryptography.ECDSAUtils;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -54,7 +51,6 @@ public class OpenIdAuthenticationController
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
-    private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private final Credentials credentials;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
@@ -103,14 +99,14 @@ public class OpenIdAuthenticationController
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
         this.authenticator = authenticator;
-        this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
         this.callbackUri = callbackUri;
 
         this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
-        this.state = getJwtState(pseudoId, appUriId);
+        this.state =
+                JwtStateUtils.tryCreateJwtState(callbackJWTSignatureKeyPair, pseudoId, appUriId);
 
         this.nonce = RandomUtils.generateRandomHexEncoded(8);
     }
@@ -278,43 +274,6 @@ public class OpenIdAuthenticationController
         apiClient.attachAuthFilter(accessToken);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
-    }
-
-    /**
-     * Introduce complex/structured data on the state The state is then passed along by the bank
-     * through the callback uri. We use this complex dataset to be able to introduce more details on
-     * the user/client. We used the Elliptic Curve algorithm in order to reduce the size of the
-     * actual JWToken signature.
-     *
-     * @param pseudoId
-     * @param appUriId
-     * @return
-     */
-    private String getJwtState(String pseudoId, String appUriId) {
-
-        if (!callbackJWTSignatureKeyPair.isEnabled()) {
-            logger.info("Callback JWT not enabled, using pseudoId as state. State: {}", pseudoId);
-            return pseudoId;
-        }
-        JWTCreator.Builder jwtBuilder =
-                JWT.create().withIssuedAt(new Date()).withClaim("id", pseudoId);
-
-        if (!Strings.isNullOrEmpty(appUriId)) {
-            // smaller claim to be safe on the length of the state
-            jwtBuilder.withClaim("appUriId", appUriId);
-        }
-
-        String signedState =
-                jwtBuilder.sign(
-                        Algorithm.ECDSA256(
-                                ECDSAUtils.getPublicKeyByPath(
-                                        callbackJWTSignatureKeyPair.getPublicKeyPath()),
-                                ECDSAUtils.getPrivateKeyByPath(
-                                        callbackJWTSignatureKeyPair.getPrivateKeyPath())));
-
-        logger.info("JWT state: {}", signedState);
-
-        return signedState;
     }
 
     @Override

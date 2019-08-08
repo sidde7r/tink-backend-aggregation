@@ -67,7 +67,8 @@ public class BunqAgent extends BunqBaseAgent {
                                 temporaryStorage,
                                 getAggregatorInfo().getAggregatorIdentifier(),
                                 bunqConfiguration),
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new AutoAuthenticationController(
                 request,

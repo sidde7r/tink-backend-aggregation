@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.entity.PayeeEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -42,7 +44,9 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
     private final ClientConfigurationEntity pisConfiguration;
     private final String keyUid;
     private final PrivateKey privateKey;
+    private final CredentialsRequest credentialsRequest;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private final Credentials credentials;
 
     public StarlingTransferExecutor(
@@ -50,13 +54,16 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
             ClientConfigurationEntity pisConfiguration,
             String keyUid,
             PrivateKey privateKey,
-            Credentials credentials,
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            CredentialsRequest credentialsRequest,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.pisConfiguration = pisConfiguration;
         this.keyUid = keyUid;
         this.privateKey = privateKey;
-        this.credentials = credentials;
+        this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
+        this.credentials = credentialsRequest.getCredentials();
+        this.credentialsRequest = credentialsRequest;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
@@ -125,7 +132,8 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                                 dummyStorage,
                                 supplementalInformationHelper,
                                 new StarlingAuthenticator(apiClient, pisConfiguration),
-                                credentials),
+                                callbackJWTSignatureKeyPair,
+                                credentialsRequest),
                         supplementalInformationHelper);
 
         try {

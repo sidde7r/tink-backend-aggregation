@@ -76,7 +76,8 @@ public class RabobankAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new RabobankAuthenticator(
                                 apiClient, persistentStorage, rabobankConfiguration),
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new AutoAuthenticationController(
                 request,

@@ -13,16 +13,21 @@ import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtStateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class SibsRedirectAuthenticationController
@@ -36,15 +41,21 @@ public class SibsRedirectAuthenticationController
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SibsAuthenticator authenticator;
     private final String state;
+    private final String pseudoId;
     private final Retryer<ConsentStatus> consentStatusRetryer =
             SibsUtils.getConsentStatusRetryer(SLEEP_TIME, RETRY_ATTEMPTS);
 
     public SibsRedirectAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
-            SibsAuthenticator authenticator) {
+            SibsAuthenticator authenticator,
+            CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair,
+            CredentialsRequest request) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.state = SibsUtils.getRequestId();
+        this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
+        this.state =
+                JwtStateUtils.tryCreateJwtState(
+                        callbackJwtSignatureKeyPair, pseudoId, request.getAppUriId());
     }
 
     public ThirdPartyAppResponse<String> init() {
@@ -95,11 +106,9 @@ public class SibsRedirectAuthenticationController
     private void initializeRedirectConsent() throws ThirdPartyAppException {
         supplementalInformationHelper
                 .waitForSupplementalInformation(
-                        formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES)
+                        OAuthUtils.formatSupplementalKey(pseudoId),
+                        WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES)
                 .orElseThrow(() -> new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT));
-    }
-
-    private String formatSupplementalKey(String key) {
-        return String.format("tpcb_%s", key);
     }
 }

@@ -9,17 +9,21 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtStateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth1Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class OAuth1AuthenticationController
@@ -29,17 +33,23 @@ public class OAuth1AuthenticationController
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OAuth1Authenticator authenticator;
     private final String state;
+    private final String pseudoId;
 
     private static final long WAIT_FOR_MINUTES = 9;
 
     public OAuth1AuthenticationController(
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
-            OAuth1Authenticator authenticator) {
+            OAuth1Authenticator authenticator,
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            CredentialsRequest credentialsRequest) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.state = OAuthUtils.generateNonce();
+        this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
+        this.state =
+                JwtStateUtils.tryCreateJwtState(
+                        callbackJWTSignatureKeyPair, pseudoId, credentialsRequest.getAppUriId());
     }
 
     @Override
@@ -81,7 +91,7 @@ public class OAuth1AuthenticationController
         Map<String, String> callbackData =
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
-                                OAuthUtils.formatSupplementalKey(state),
+                                OAuthUtils.formatSupplementalKey(pseudoId),
                                 WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
                         .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
