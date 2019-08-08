@@ -4,22 +4,31 @@ import java.util.Date;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.Account;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.ProductionUrls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.SandboxUrls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.RefreshTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.payment.enums.PaymentType;
 
 public final class IcaBankenApiClient {
 
@@ -32,15 +41,25 @@ public final class IcaBankenApiClient {
         this.sessionStorage = sessionStorage;
     }
 
+    public IcaBankenConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    private RequestBuilder createRequest(URL url) {
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON);
+    }
+
     public TokenResponse exchangeAuthorizationCode(AuthorizationRequest request) {
-        return client.request(new URL(Urls.TOKEN_PATH))
+        return client.request(new URL(ProductionUrls.TOKEN_PATH))
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(HeaderKeys.TINK_DEBUG, HeaderKeys.TRUST_ALL)
                 .post(TokenResponse.class);
     }
 
     public TokenResponse exchangeRefreshToken(RefreshTokenRequest request) {
-        return client.request(new URL(Urls.TOKEN_PATH))
+        return client.request(new URL(ProductionUrls.TOKEN_PATH))
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(HeaderKeys.TINK_DEBUG, HeaderKeys.TRUST_ALL)
                 .post(TokenResponse.class);
@@ -48,7 +67,7 @@ public final class IcaBankenApiClient {
 
     public FetchAccountsResponse fetchAccounts() {
 
-        return client.request(new URL(Urls.ACCOUNTS_PATH))
+        return client.request(new URL(ProductionUrls.ACCOUNTS_PATH))
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
                 .header(
                         HeaderKeys.AUTHORIZATION,
@@ -61,7 +80,7 @@ public final class IcaBankenApiClient {
 
     public FetchTransactionsResponse fetchTransactionsForAccount(
             String apiIdentifier, Date fromDate, Date toDate) {
-        final URL baseUrl = new URL(Urls.TRANSACTIONS_PATH);
+        final URL baseUrl = new URL(ProductionUrls.TRANSACTIONS_PATH);
         final URL requestUrl = baseUrl.parameter(Account.ACCOUNT_ID, apiIdentifier);
 
         return client.request(requestUrl)
@@ -80,5 +99,52 @@ public final class IcaBankenApiClient {
 
     public void setConfiguration(IcaBankenConfiguration icaBankenConfiguration) {
         this.configuration = icaBankenConfiguration;
+    }
+
+    public GetPaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, PaymentType paymentType) {
+        URL uri = new URL(SandboxUrls.INITIATE_PAYMENT);
+        return createRequest(
+                        uri.parameter(QueryKeys.PAYMENT_PRODUCT, paymentTypeToString(paymentType)))
+                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
+                .addBearerToken(getApplicationTokenFromSession())
+                .post(GetPaymentResponse.class, createPaymentRequest);
+    }
+
+    public GetPaymentResponse getPayment(String uniqueId, PaymentType paymentType) {
+
+        URL uri = new URL(SandboxUrls.GET_PAYMENT);
+        return createRequest(
+                        uri.parameter(
+                                        IcaBankenConstants.QueryKeys.PAYMENT_PRODUCT,
+                                        paymentTypeToString(paymentType))
+                                .parameter(IcaBankenConstants.QueryKeys.PAYMENT_ID, uniqueId))
+                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
+                .addBearerToken(getApplicationTokenFromSession())
+                .get(GetPaymentResponse.class);
+    }
+
+    private String paymentTypeToString(PaymentType paymentType) {
+        return paymentType.equals(PaymentType.INTERNATIONAL)
+                ? QueryValues.PaymentProduct.INTERNATIONAL
+                : QueryValues.PaymentProduct.SEPA;
+    }
+
+    public OAuth2Token authenticate() {
+        TokenRequest tokenRequest =
+                new TokenRequest(
+                        FormValues.GRANT_TYPE,
+                        configuration.getClientId(),
+                        configuration.getClientSecret());
+        return createRequest(new URL(SandboxUrls.FETCH_TOKEN))
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .post(TokenResponse.class, tokenRequest.toData())
+                .toTinkToken();
+    }
+
+    private OAuth2Token getApplicationTokenFromSession() {
+        return sessionStorage
+                .get(StorageKeys.TOKEN, OAuth2Token.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 }
