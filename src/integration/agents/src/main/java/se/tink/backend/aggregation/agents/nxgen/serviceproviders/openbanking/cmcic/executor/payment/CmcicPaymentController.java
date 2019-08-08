@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -45,9 +46,7 @@ public class CmcicPaymentController extends PaymentController {
     }
 
     private static String generateRandomState() {
-        byte[] randomData = new byte[32];
-        random.nextBytes(randomData);
-        return encoder.encodeToString(randomData);
+        return new String(RandomUtils.secureRandom(32));
     }
 
     private ThirdPartyAppResponse<String> init() {
