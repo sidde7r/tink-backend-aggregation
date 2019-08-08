@@ -213,10 +213,13 @@ public class FinTsApiClient {
 
     public void init() {
         FinTsResponse initResponse = sendMessage(getMessageInit());
+        String bankInfo = initResponse.findSegment(FinTsConstants.Segments.HIBPA.name());
+        String bankName = FinTsParser.getBankName(bankInfo);
         List<String> accounts = initResponse.findSegments(FinTsConstants.Segments.HIUPD.name());
 
         for (String account : accounts) {
             List<String> elements = FinTsParser.getSegmentDataGroups(account);
+            List<String> supportedSegments = FinTsParser.getSupportedSegments(elements);
             if (!Strings.isNullOrEmpty(elements.get(1))) {
                 List<String> element1Elements = FinTsParser.getDataGroupElements(elements.get(1));
                 SEPAAccount sepaAccount = new SEPAAccount();
@@ -232,13 +235,8 @@ public class FinTsApiClient {
                 sepaAccount.setProductName(elements.get(8));
                 sepaAccount.setAccountLimit(elements.get(9));
                 sepaAccount.setPermittedBusinessTransactions(elements.get(10));
-
-                StringBuilder extension = new StringBuilder();
-                extension.append(elements.get(10));
-                for (int i = 11; i < elements.size(); i++) {
-                    extension.append(elements.get(i));
-                }
-                sepaAccount.setExtensions(extension.toString());
+                sepaAccount.setBankName(bankName);
+                sepaAccount.setSupportedSegments(supportedSegments);
                 this.sepaAccounts.add(sepaAccount);
             }
         }
@@ -334,7 +332,7 @@ public class FinTsApiClient {
 
     public void getBalance(SEPAAccount account) {
         // Defensive check
-        if (!account.getExtensions().contains(FinTsConstants.Segments.HKSAL.name())) {
+        if (!account.getSupportedSegments().contains(FinTsConstants.Segments.HKSAL.name())) {
             throw new IllegalStateException("Target account does not support HKSAL");
         }
         FinTsResponse getBalanceResponse = sendMessage(this.getMessageGetBalance(account));
@@ -373,7 +371,7 @@ public class FinTsApiClient {
 
     public Optional<InvestmentAccount> getInvestment(SEPAAccount account) {
         // Defensive check
-        if (!account.getExtensions().contains(FinTsConstants.Segments.HKWPD.name())) {
+        if (!account.getSupportedSegments().contains(FinTsConstants.Segments.HKWPD.name())) {
             throw new IllegalStateException("Target account does not support HKWPD");
         }
 
@@ -442,7 +440,7 @@ public class FinTsApiClient {
                 InvestmentAccount.builder(account.getAccountNo() + account.getAccountType())
                         .setAccountNumber(account.getAccountNo())
                         .setHolderName(new HolderName(account.getAccountOwner1()))
-                        .setName(account.getAccountNo())
+                        .setName(account.getProductName())
                         .setPortfolios(portfolios)
                         .setCashBalance(balance)
                         .build();

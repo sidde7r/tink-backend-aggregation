@@ -31,6 +31,8 @@ public final class FinTsParser {
     private static final Pattern RE_GLOBALFEEDBACK = Pattern.compile("(HIRMG.+?')");
     private static final Pattern RE_TANMECH = Pattern.compile("\\d{3}");
 
+    private static final Pattern RE_SUPPORTED_SEGMENT = Pattern.compile("^([A-Z]{5}):1$");
+
     // MT 940 related
     private static final Pattern RE_MT940_DATA = Pattern.compile("@\\d*@\\s*([\\s\\S]*)");
     private static final Pattern RE_MT940_AMOUNT =
@@ -92,6 +94,26 @@ public final class FinTsParser {
         return matches;
     }
 
+    public static List<String> getSupportedSegments(List<String> hiupd) {
+        List<String> supportedSegments = new ArrayList<>();
+        for (String message : hiupd) {
+            Matcher m = RE_SUPPORTED_SEGMENT.matcher(message);
+            if (m.find()) {
+                supportedSegments.add(m.group(1));
+            }
+        }
+        return supportedSegments;
+    }
+
+    public static String getBankName(String hibpa) {
+        List<String> segments = getSegmentDataGroups(hibpa);
+        if (segments.size() > 3) {
+            return segments.get(3);
+        } else {
+            return "";
+        }
+    }
+
     private static String extractEncryptedSegments(String message) {
         Matcher m = RE_ENCRYPTED_SEGMENTS.matcher(message);
         if (m.find()) {
@@ -117,12 +139,16 @@ public final class FinTsParser {
         return m.group(1);
     }
 
-    public static String getTanMech(String message) {
+    public static List<String> getTanMech(String message) {
+        List<String> allMatches = new ArrayList<String>();
         Matcher m = RE_TANMECH.matcher(message);
-        if (!m.find()) {
-            return "";
+        if (m.find()) {
+            String group = m.group();
+            if (!"999".equals(group)) {
+                allMatches.add(group);
+            }
         }
-        return m.group(0);
+        return allMatches;
     }
 
     private static int getSegmentNumber(String segment) {

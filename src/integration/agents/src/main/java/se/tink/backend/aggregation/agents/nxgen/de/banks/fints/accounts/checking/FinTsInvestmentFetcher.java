@@ -23,11 +23,11 @@ public class FinTsInvestmentFetcher implements AccountFetcher<InvestmentAccount>
         List<SEPAAccount> accounts = apiClient.getSepaAccounts();
 
         return accounts.stream()
-                .filter(sepaAccount -> sepaAccount.getExtensions() != null)
+                .filter(sepaAccount -> !sepaAccount.getSupportedSegments().isEmpty())
                 .filter(
                         sepaAccount ->
                                 sepaAccount
-                                        .getExtensions()
+                                        .getSupportedSegments()
                                         .contains(FinTsConstants.Segments.HKWPD.name()))
                 .map(apiClient::getInvestment)
                 .filter(Optional::isPresent)

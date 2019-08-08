@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.util.Collections;
+import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -10,7 +13,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
 
-public class SEPAAccount {
+public class SEPAAccount implements GeneralAccountEntity {
 
     private String iban;
     private String bic;
@@ -25,8 +28,9 @@ public class SEPAAccount {
     private String productName;
     private String accountLimit;
     private String permittedBusinessTransactions;
-    private String extensions;
     private String balance;
+    private String bankName;
+    private List<String> supportedSegments = Collections.emptyList();
 
     public String getBalance() {
         return balance;
@@ -104,14 +108,6 @@ public class SEPAAccount {
         this.accountLimit = accountLimit;
     }
 
-    public String getExtensions() {
-        return extensions;
-    }
-
-    public void setExtensions(String extensions) {
-        this.extensions = extensions;
-    }
-
     public String getIban() {
         return iban;
     }
@@ -152,6 +148,22 @@ public class SEPAAccount {
         this.blz = blz;
     }
 
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public List<String> getSupportedSegments() {
+        return supportedSegments;
+    }
+
+    public void setSupportedSegments(List<String> supportedSegments) {
+        this.supportedSegments = supportedSegments;
+    }
+
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(
                         getType(),
@@ -161,7 +173,7 @@ public class SEPAAccount {
                 .setName(getProductName())
                 .setAccountNumber(getAccountNo())
                 .setBankIdentifier(getBlz() + getAccountNo())
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
+                .addIdentifier(generalGetAccountIdentifier())
                 .build();
     }
 
@@ -182,5 +194,28 @@ public class SEPAAccount {
         } else {
             throw new IllegalStateException("Invalid accountType for transactional account");
         }
+    }
+
+    @Override
+    public AccountIdentifier generalGetAccountIdentifier() {
+        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban());
+    }
+
+    @Override
+    public String generalGetBank() {
+        return bankName;
+    }
+
+    @Override
+    public String generalGetName() {
+        return productName;
+    }
+
+    public boolean canMakeTransfer() {
+        return supportedSegments.contains(FinTsConstants.Segments.HKCCS.name());
+    }
+
+    public boolean canMakePayment() {
+        return supportedSegments.contains(FinTsConstants.Segments.HKCDE.name());
     }
 }

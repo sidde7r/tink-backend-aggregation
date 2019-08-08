@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsEscape;
 
 public class DataGroup {
     private final List<DataElement> elements = new ArrayList<>();
@@ -25,7 +24,6 @@ public class DataGroup {
     public String asEscapedString() {
         return elements.stream()
                 .map(DataElement::asEscapedString)
-                .map(FinTsEscape::escapeDataElement)
                 .collect(Collectors.joining(FinTsConstants.SegData.ELEMENT_DELIMITER));
     }
 
