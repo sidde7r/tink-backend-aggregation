@@ -23,21 +23,18 @@ public class EvoBancoAutoAuthenticator implements AutoAuthenticator {
     private final EvoBancoApiClient bankClient;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
-    private final Credentials credentials;
 
     public EvoBancoAutoAuthenticator(
             EvoBancoApiClient bankClient,
-            Credentials credentials,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage) {
         this.bankClient = bankClient;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
     }
 
     @Override
-    public void autoAuthenticate()
+    public void autoAuthenticate(Credentials credentials)
             throws SessionException, BankServiceException, AuthorizationException {
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);

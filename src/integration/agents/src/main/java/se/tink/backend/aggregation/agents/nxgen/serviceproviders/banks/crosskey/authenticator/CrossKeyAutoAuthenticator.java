@@ -24,21 +24,18 @@ public class CrossKeyAutoAuthenticator implements PasswordAuthenticator, AutoAut
 
     private final CrossKeyApiClient client;
     private final CrossKeyPersistentStorage persistentStorage;
-    private final Credentials credentials;
     private final PasswordAuthenticationController authenticationController;
 
     public CrossKeyAutoAuthenticator(
-            CrossKeyApiClient client,
-            CrossKeyPersistentStorage persistentStorage,
-            Credentials credentials) {
+            CrossKeyApiClient client, CrossKeyPersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
         authenticationController = new PasswordAuthenticationController(this);
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, AuthorizationException {
+    public void autoAuthenticate(Credentials credentials)
+            throws SessionException, AuthorizationException {
         if (!persistentStorage.readyForSingleFactor()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }

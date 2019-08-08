@@ -27,22 +27,19 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 public class ArgentaAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
     private ArgentaPersistentStorage persistentStorage;
     private ArgentaApiClient apiClient;
-    private final Credentials credentials;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
     public ArgentaAuthenticator(
             ArgentaPersistentStorage persistentStorage,
             ArgentaApiClient apiClient,
-            Credentials credentials,
             final SupplementalInformationHelper supplementalInformationHelper) {
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
-        this.credentials = credentials;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException {
+    public void autoAuthenticate(Credentials credentials) throws SessionException {
         String deviceId = persistentStorage.getDeviceId();
         if (Strings.isNullOrEmpty(deviceId)) throw SessionError.SESSION_EXPIRED.exception();
         String cardNumber =

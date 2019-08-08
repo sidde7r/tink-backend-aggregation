@@ -166,7 +166,7 @@ public class AutoAuthenticationControllerTest {
         Assert.assertNotEquals(multiFactorAuthenticator.getType(), credentials.getType());
         Mockito.doThrow(SessionError.SESSION_EXPIRED.exception())
                 .when(autoAuthenticator)
-                .autoAuthenticate();
+                .autoAuthenticate(credentials);
 
         Mockito.when(request.isManual()).thenReturn(false);
 
@@ -177,7 +177,7 @@ public class AutoAuthenticationControllerTest {
             Assert.assertEquals(multiFactorAuthenticator.getType(), credentials.getType());
 
             InOrder order = Mockito.inOrder(autoAuthenticator, context, credentials);
-            order.verify(autoAuthenticator).autoAuthenticate();
+            order.verify(autoAuthenticator).autoAuthenticate(credentials);
             order.verify(credentials).setType(multiFactorAuthenticator.getType());
             order.verify(context)
                     .updateCredentialsExcludingSensitiveInformation(credentials, false);
@@ -193,7 +193,7 @@ public class AutoAuthenticationControllerTest {
         Assert.assertNotEquals(multiFactorAuthenticator.getType(), credentials.getType());
         Mockito.doThrow(SessionError.SESSION_EXPIRED.exception())
                 .when(autoAuthenticator)
-                .autoAuthenticate();
+                .autoAuthenticate(credentials);
         Mockito.when(request.isManual()).thenReturn(true);
         Mockito.doThrow(LoginError.INCORRECT_CREDENTIALS.exception())
                 .when(multiFactorAuthenticator)
@@ -208,7 +208,7 @@ public class AutoAuthenticationControllerTest {
             InOrder order =
                     Mockito.inOrder(
                             autoAuthenticator, multiFactorAuthenticator, context, credentials);
-            order.verify(autoAuthenticator).autoAuthenticate();
+            order.verify(autoAuthenticator).autoAuthenticate(credentials);
             order.verify(multiFactorAuthenticator).authenticate(credentials);
             order.verify(credentials).setType(multiFactorAuthenticator.getType());
             order.verify(context)

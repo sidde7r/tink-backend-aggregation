@@ -70,7 +70,6 @@ public class HandelsbankenFIAgent
                             new HandelsbankenAutoAuthenticator(
                                     bankClient,
                                     handelsbankenPersistentStorage,
-                                    this.credentials,
                                     handelsbankenSessionStorage,
                                     handelsbankenConfiguration)))
         };

@@ -43,7 +43,7 @@ public final class VolksbankAgent extends NextGenerationAgent
                 request,
                 systemUpdater,
                 new VolksbankPasswordAuthenticator(apiClient),
-                new VolksbankAutoAuthenticator(apiClient, persistentStorage, credentials));
+                new VolksbankAutoAuthenticator(apiClient, persistentStorage));
     }
 
     @Override

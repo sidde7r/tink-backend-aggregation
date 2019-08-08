@@ -89,7 +89,6 @@ public abstract class HandelsbankenAgent<
         return new HandelsbankenAutoAuthenticator(
                 this.bankClient,
                 this.handelsbankenPersistentStorage,
-                this.credentials,
                 this.handelsbankenSessionStorage,
                 this.handelsbankenConfiguration);
     }

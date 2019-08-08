@@ -63,7 +63,7 @@ public class AlandsBankenAutoAuthenticatorTest {
         ResultCaptor<LoginWithTokenResponse> captor = new ResultCaptor();
         doAnswer(captor).when(client).loginWithToken(any());
 
-        authenticator.autoAuthenticate();
+        authenticator.autoAuthenticate(createCredentials());
 
         LoginWithTokenResponse actual = captor.getActual();
 
@@ -84,7 +84,7 @@ public class AlandsBankenAutoAuthenticatorTest {
         deviceToken = null;
         setupAuthenticator();
 
-        authenticator.autoAuthenticate();
+        authenticator.autoAuthenticate(createCredentials());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class AlandsBankenAutoAuthenticatorTest {
         deviceId = null;
         setupAuthenticator();
 
-        authenticator.autoAuthenticate();
+        authenticator.autoAuthenticate(createCredentials());
     }
 
     @Test
@@ -144,17 +144,21 @@ public class AlandsBankenAutoAuthenticatorTest {
     }
 
     private void setupAuthenticator() {
-        Credentials credentials = new Credentials();
-        credentials.setField(Field.Key.USERNAME, username);
-        credentials.setField(Field.Key.PASSWORD, password);
-        credentials.setType(CredentialsTypes.PASSWORD);
         client =
                 spy(new CrossKeyApiClient(new TinkHttpClient(), new AlandsBankenFIConfiguration()));
         persistentStorage.put(CrossKeyConstants.Storage.DEVICE_ID, deviceId);
         persistentStorage.put(CrossKeyConstants.Storage.DEVICE_TOKEN, deviceToken);
         authenticator =
                 new CrossKeyAutoAuthenticator(
-                        client, new CrossKeyPersistentStorage(this.persistentStorage), credentials);
+                        client, new CrossKeyPersistentStorage(this.persistentStorage));
+    }
+
+    private Credentials createCredentials() {
+        Credentials credentials = new Credentials();
+        credentials.setField(Field.Key.USERNAME, username);
+        credentials.setField(Field.Key.PASSWORD, password);
+        credentials.setType(CredentialsTypes.PASSWORD);
+        return credentials;
     }
 
     private void expectIncorrectCredentials() {

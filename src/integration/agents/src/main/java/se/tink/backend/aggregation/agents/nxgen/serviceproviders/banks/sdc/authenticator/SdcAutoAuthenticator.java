@@ -31,28 +31,26 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
     private final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;
     private final SdcConfiguration agentConfiguration;
-    private final Credentials credentials;
     private final SdcPersistentStorage persistentStorage;
 
     public SdcAutoAuthenticator(
             SdcApiClient bankClient,
             SdcSessionStorage sessionStorage,
             SdcConfiguration agentConfiguration,
-            Credentials credentials,
             SdcPersistentStorage persistentStorage) {
 
         this.bankClient = bankClient;
         this.sessionStorage = sessionStorage;
         this.agentConfiguration = agentConfiguration;
-        this.credentials = credentials;
         this.persistentStorage = persistentStorage;
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException {
+    public void autoAuthenticate(Credentials credentials)
+            throws SessionException, BankServiceException {
         try {
-            String username = this.credentials.getField(Field.Key.USERNAME);
-            String password = this.credentials.getField(Field.Key.PASSWORD);
+            String username = credentials.getField(Field.Key.USERNAME);
+            String password = credentials.getField(Field.Key.PASSWORD);
 
             // setup device to handle the device token
             ChallengeResponse challenge = this.bankClient.getChallenge();

@@ -63,7 +63,7 @@ public class SpAutoAuthenticatorTest extends NextGenerationAgentTest {
         SamlinkAutoAuthenticator autoAuthenticator =
                 new SamlinkAutoAuthenticator(bankClient, persistentStorage, credentials);
 
-        autoAuthenticator.autoAuthenticate();
+        autoAuthenticator.autoAuthenticate(credentials);
 
         LOGGER.info(
                 String.format(
