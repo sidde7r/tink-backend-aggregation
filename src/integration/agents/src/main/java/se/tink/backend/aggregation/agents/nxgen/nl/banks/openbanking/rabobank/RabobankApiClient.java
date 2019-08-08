@@ -39,13 +39,13 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RabobankApiClient {
 
-    private static Logger logger = LoggerFactory.getLogger(RabobankApiClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(RabobankApiClient.class);
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final boolean requestIsManual;
-    private RabobankConfiguration rabobankConfiguration;
-    private EidasProxyConfiguration eidasProxyConf;
+    private final RabobankConfiguration rabobankConfiguration;
+    private final EidasProxyConfiguration eidasProxyConf;
 
     RabobankApiClient(
             final TinkHttpClient client,
