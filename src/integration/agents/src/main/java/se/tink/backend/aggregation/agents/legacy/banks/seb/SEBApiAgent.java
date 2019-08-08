@@ -44,6 +44,7 @@ import java.util.stream.Collectors;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
@@ -1058,7 +1059,7 @@ public class SEBApiAgent extends AbstractAgent
 
             SebTransaction last = Iterables.getLast(batch);
             query.MAX_ROWS = 50;
-            query.PCB_BOKFDAT_BLADDR = last.PCB_BOKF_DATUM;
+            query.PCB_BOKFDAT_BLADDR = DateFormatUtils.format(last.PCB_BOKF_DATUM, "yyyy-MM-dd");
             query.TRANSLOPNR = last.TRANSLOPNR;
         }
         return transactions;
@@ -1317,29 +1318,13 @@ public class SEBApiAgent extends AbstractAgent
                     amount = StringUtils.parseAmount(transactionEntity.BELOPP) * -1;
                 }
 
-                String dateString = transactionEntity.PCB_VALUTA_DATUM;
-                if (dateString == null) {
-                    dateString = transactionEntity.DATUM;
-                }
-                if (dateString == null) {
-                    dateString = transactionEntity.PCB_BOKF_DATUM;
-                }
-                if (dateString == null || dateString.length() == 0) {
-                    continue;
+                Date date = transactionEntity.PCB_BOKF_DATUM;
+                if (date == null) {
+                    // date = DateUtils.flattenTime(DateUtils.parseDate(transactionEntity.DATUM));
+                    date = transactionEntity.DATUM;
                 }
 
-                SEBAgentUtils.DateAndDescriptionParser parser =
-                        new SEBAgentUtils.DateAndDescriptionParser(
-                                dateString, transactionEntity.KK_TXT, transactionEntity.ROR_X_INFO);
-
-                try {
-                    parser.parse();
-                } catch (Exception e) {
-                    log.error("Could not parse date");
-                }
-
-                String description = parser.getDescription();
-                Date date = parser.getDate();
+                String description = SEBAgentUtils.getParsedDescription(transactionEntity.KK_TXT);
 
                 // Handle transactions made abroad differently.
                 if (transactionEntity.ROR_TYP != null && transactionEntity.ROR_X_INFO != null) {
@@ -1348,9 +1333,10 @@ public class SEBApiAgent extends AbstractAgent
                             && !transactionEntity.ROR_X_INFO.isEmpty()) {
                         SEBAgentUtils.AbroadTransactionParser foreignParser =
                                 new SEBAgentUtils.AbroadTransactionParser(
-                                        dateString,
+                                        date,
                                         transactionEntity.ROR_X_INFO,
                                         transactionEntity.KK_TXT);
+
                         try {
                             foreignParser.parse();
                             description = foreignParser.getDescription();
@@ -1366,6 +1352,7 @@ public class SEBApiAgent extends AbstractAgent
                             t.setPayload(
                                     TransactionPayloadTypes.EXCHANGE_RATE,
                                     String.valueOf(foreignParser.getExchangeRate()));
+                            date = foreignParser.getDate();
                         } catch (Exception e) {
                             log.error("Could not parse foreign transaction");
                         }

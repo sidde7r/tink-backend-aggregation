@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.libraries.date.DateUtils;
 
 public class SEBAgentUtilsTest {
 
@@ -21,30 +23,22 @@ public class SEBAgentUtilsTest {
 
     @Test
     public void testDescriptionParsing() throws Exception {
-        SEBAgentUtils.DateAndDescriptionParser parser;
 
-        parser =
-                new SEBAgentUtils.DateAndDescriptionParser(
-                        "2013-10-16", "MANDIRA INDI/13-10-14", null);
-        parser.parse();
-        assertEquals("MANDIRA INDI", parser.getDescription());
-        assertEquals("2013-10-14", DateFormatUtils.format(parser.getDate(), "yyyy-MM-dd"));
+        String description = SEBAgentUtils.getParsedDescription("MANDIRA INDI/13-10-14");
+        assertEquals("MANDIRA INDI", description);
 
-        parser = new SEBAgentUtils.DateAndDescriptionParser("2013-10-16", "MANDIRA INDI", null);
-        parser.parse();
-        assertEquals("MANDIRA INDI", parser.getDescription());
-        assertEquals("2013-10-16", DateFormatUtils.format(parser.getDate(), "yyyy-MM-dd"));
+        String description1 = SEBAgentUtils.getParsedDescription("MANDIRA INDI");
+        assertEquals("MANDIRA INDI", description1);
 
-        parser =
-                new SEBAgentUtils.DateAndDescriptionParser(
-                        "2013-09-09",
-                        "646-470-8422/13-09-06",
-                        "IAC VIMEO PLUS           USD            248,75-   KURS 6,7919");
-        parser.parse();
-        // assertEquals("IAC VIMEO PLUS", parser.getDescription());
-        assertEquals("646-470-8422", parser.getDescription());
-        assertEquals("646-470-8422/13-09-06", parser.getOriginalDescription());
-        assertEquals("2013-09-06", DateFormatUtils.format(parser.getDate(), "yyyy-MM-dd"));
+        String description2 = SEBAgentUtils.getParsedDescription("646-470-8422/13-09-06");
+        assertEquals("646-470-8422", description2);
+
+        String description3 = SEBAgentUtils.getParsedDescription("646-470-8422   /13-09-06");
+        assertEquals("646-470-8422", description2);
+
+        Date flattenDate =
+                DateUtils.flattenTime(DateUtils.parseDate("Thu Aug 08 00:00:00 UTC 2019"));
+        assertEquals("Thu Aug 08 00:00:00 UTC 2019", flattenDate);
     }
 
     @Test
@@ -60,9 +54,10 @@ public class SEBAgentUtilsTest {
         // SAN FRANCISC/17-07-04
 
         // Test regular description and region.
+        Date currentDate = new Date(2017, 07, 05);
         parser =
                 new SEBAgentUtils.AbroadTransactionParser(
-                        "2017-03-22",
+                        currentDate,
                         "CAFE KAFKA              2EUR6             3,20-41 KURS 9,6625",
                         "BRUXELLES   /17-03-20");
         parser.parse();
@@ -76,7 +71,7 @@ public class SEBAgentUtilsTest {
         // Test region with full length (12 characters).
         parser =
                 new SEBAgentUtils.AbroadTransactionParser(
-                        "2017-07-05",
+                        currentDate,
                         "KOZY KAR                 USD              9,00-   KURS 8,6911",
                         "SAN FRANCISC/17-07-04");
         parser.parse();
@@ -90,7 +85,7 @@ public class SEBAgentUtilsTest {
         // Test description with full length description (24 characters).
         parser =
                 new SEBAgentUtils.AbroadTransactionParser(
-                        "2017-06-28",
+                        currentDate,
                         "CITIZEN&IMM-EAPPS ENLIGN3CAD4             7,00 22 KURS 6,8657",
                         "VANCOUVER   /17-06-27");
         parser.parse();

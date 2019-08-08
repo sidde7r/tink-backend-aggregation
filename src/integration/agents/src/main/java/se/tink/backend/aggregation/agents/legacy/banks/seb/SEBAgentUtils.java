@@ -147,86 +147,17 @@ public class SEBAgentUtils {
         return accountEntity.PRODUKT_NAMN;
     }
 
-    public static class DateAndDescriptionParser {
-        private boolean cardPayment = false;
-        protected Date date;
-        protected String description;
-        private String metaData;
-        protected String originalDate;
-        protected String originalDescription;
-
-        public DateAndDescriptionParser(String origDate, String origDesc, String meta) {
-            originalDescription = origDesc;
-            description = originalDescription;
-            originalDate = origDate;
-            metaData = meta;
+    public static String getParsedDescription(String description) {
+        int separatorIndex = description.length() - 9;
+        if (separatorIndex > 0 && description.charAt(separatorIndex) == '/') {
+            description = description.substring(0, separatorIndex).trim();
         }
-
-        public Date getDate() {
-            return date;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public String getMetaData() {
-            return metaData;
-        }
-
-        public String getOriginalDate() {
-            return originalDate;
-        }
-
-        public String getOriginalDescription() {
-            return originalDescription;
-        }
-
-        public boolean isCardPayment() {
-            return cardPayment;
-        }
-
-        public void parse() throws Exception {
-            date = DateUtils.flattenTime(DateUtils.parseDate(originalDate));
-
-            int separatorIndex = description.length() - 9;
-
-            if (separatorIndex > 0 && description.charAt(separatorIndex) == '/') {
-                try {
-                    if (Character.isDigit(description.charAt(separatorIndex + 1))) {
-                        date = parseDate(description.substring(separatorIndex + 1));
-                        cardPayment = true;
-                    } else {
-                        separatorIndex = description.length();
-                    }
-                } finally {
-                    description = description.substring(0, separatorIndex).trim();
-                }
-            }
-
-            // don't do this now, half are cities and half are nonsense
-
-            // if (metaData != null && metaData.length() > 0) {
-            // String extra = metaData.substring(0, 24);
-            // extra = extra.trim();
-            // if (extra.length() > 0) {
-            // location = new Location();
-            // location.setCity(StringUtils.formatCity(description));
-            // description = extra;
-            // }
-            // }
-        }
-
-        public void setMetaData(String metaData) {
-            this.metaData = metaData;
-        }
+        return description;
     }
 
     public static class AbroadTransactionParser {
         private static final AggregationLogger log =
                 new AggregationLogger(AbroadTransactionParser.class);
-        private boolean cardPayment = false;
-
         private Date date;
 
         // Description of the transaction.
@@ -248,22 +179,17 @@ public class SEBAgentUtils {
         // 1 (e.g 9.8101 for EUR).
         private double exchangeRate;
 
-        private String originalDate;
         private String originalRegion;
         private String originalDescription;
 
         public AbroadTransactionParser(
-                String originalDate, String originalDescription, String originalRegion) {
-            this.originalDate = originalDate;
+                Date originalDate, String originalDescription, String originalRegion) {
+            this.date = originalDate;
             this.originalDescription = originalDescription;
             this.originalRegion = originalRegion;
 
             this.description = originalDescription;
             this.region = originalRegion;
-        }
-
-        public Date getDate() {
-            return date;
         }
 
         public String getDescription() {
@@ -274,12 +200,8 @@ public class SEBAgentUtils {
             return region;
         }
 
-        public String getOriginalDate() {
-            return originalDate;
-        }
-
-        public String getOriginalDescription() {
-            return originalDescription;
+        public Date getDate() {
+            return date;
         }
 
         public String getLocalCurrency() {
@@ -294,20 +216,13 @@ public class SEBAgentUtils {
             return localAmount;
         }
 
-        public boolean isCardPayment() {
-            return cardPayment;
-        }
-
         public void parse() throws Exception {
-            date = DateUtils.flattenTime(DateUtils.parseDate(originalDate));
-
             // Example of a region string:
             // San Francisc/17-07-01
             Pattern regionAndDatePattern =
                     Pattern.compile("(?<region>.+?) */(?<date>\\d{2}-\\d{2}-\\d{2})");
             Matcher matcher = regionAndDatePattern.matcher(originalRegion);
             if (matcher.find()) {
-                cardPayment = true;
                 region = matcher.group("region");
                 date = parseDate(matcher.group("date"));
             } else {
