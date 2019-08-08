@@ -83,97 +83,48 @@ public class CreditTransferTransactionEntity {
         return paymentId;
     }
 
-    public void setPaymentId(PaymentIdentificationEntity paymentId) {
-        this.paymentId = paymentId;
-    }
-
     public String getRequestedExecutionDate() {
         return requestedExecutionDate;
-    }
-
-    public void setRequestedExecutionDate(String requestedExecutionDate) {
-        this.requestedExecutionDate = requestedExecutionDate;
     }
 
     public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
     public ExecutionRuleEntity getExecutionRule() {
         return executionRule;
-    }
-
-    public void setExecutionRule(ExecutionRuleEntity executionRule) {
-        this.executionRule = executionRule;
     }
 
     public FrequencyCodeEntity getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(FrequencyCodeEntity frequency) {
-        this.frequency = frequency;
-    }
-
     public AmountTypeEntity getInstructedAmount() {
         return instructedAmount;
-    }
-
-    public void setInstructedAmount(AmountTypeEntity instructedAmount) {
-        this.instructedAmount = instructedAmount;
     }
 
     public BeneficiaryEntity getBeneficiary() {
         return beneficiary;
     }
 
-    public void setBeneficiary(BeneficiaryEntity beneficiary) {
-        this.beneficiary = beneficiary;
-    }
-
     public PartyIdentificationEntity getUltimateCreditor() {
         return ultimateCreditor;
-    }
-
-    public void setUltimateCreditor(PartyIdentificationEntity ultimateCreditor) {
-        this.ultimateCreditor = ultimateCreditor;
     }
 
     public RegulatoryReportingCodesEntity getRegulatoryReportingCodes() {
         return regulatoryReportingCodes;
     }
 
-    public void setRegulatoryReportingCodes(
-            RegulatoryReportingCodesEntity regulatoryReportingCodes) {
-        this.regulatoryReportingCodes = regulatoryReportingCodes;
-    }
-
     public RemittanceInformationEntity getRemittanceInformation() {
         return remittanceInformation;
-    }
-
-    public void setRemittanceInformation(RemittanceInformationEntity remittanceInformation) {
-        this.remittanceInformation = remittanceInformation;
     }
 
     public TransactionIndividualStatusCodeEntity getTransactionStatus() {
         return transactionStatus;
     }
 
-    public void setTransactionStatus(TransactionIndividualStatusCodeEntity transactionStatus) {
-        this.transactionStatus = transactionStatus;
-    }
-
     public StatusReasonInformationEntity getStatusReasonInformation() {
         return statusReasonInformation;
-    }
-
-    public void setStatusReasonInformation(StatusReasonInformationEntity statusReasonInformation) {
-        this.statusReasonInformation = statusReasonInformation;
     }
 
     public static class CreditTransferTransactionEntityBuilder {
