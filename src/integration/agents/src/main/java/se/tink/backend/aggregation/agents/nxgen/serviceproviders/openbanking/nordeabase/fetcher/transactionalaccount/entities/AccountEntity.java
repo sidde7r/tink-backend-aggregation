@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -80,24 +82,46 @@ public class AccountEntity {
     }
 
     private TransactionalAccount parseAccount(TransactionalAccountType accountType) {
+        AccountIdentifier identifier = generalGetAccountIdentifier();
+
         return TransactionalAccount.nxBuilder()
                 .withType(accountType)
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getLast4Bban())
-                                .withAccountNumber(getBban())
+                                .withAccountNumber(identifier.getIdentifier())
                                 .withAccountName(product)
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 AccountIdentifier.Type.IBAN, getIban()))
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.SE, getBban()))
+                                .addIdentifier(identifier)
                                 .build())
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
                 .setApiIdentifier(id)
                 .build();
+    }
+
+    @JsonIgnore
+    public AccountIdentifier generalGetAccountIdentifier() {
+        AccountIdentifier identifier = getAccountIdentifier();
+        if (identifier.is(AccountIdentifier.Type.SE_NDA_SSN)) {
+            return identifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
+        } else {
+            return identifier;
+        }
+    }
+
+    @JsonIgnore
+    public AccountIdentifier getAccountIdentifier() {
+        if (NordeaBaseConstants.TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(product)) {
+            AccountIdentifier ssnIdentifier =
+                    AccountIdentifier.create(AccountIdentifier.Type.SE_NDA_SSN, getBban());
+            if (ssnIdentifier.isValid()) {
+                return ssnIdentifier;
+            }
+        }
+        return AccountIdentifier.create(AccountIdentifier.Type.SE, getBban());
     }
 
     private ExactCurrencyAmount getAvailableBalance() {

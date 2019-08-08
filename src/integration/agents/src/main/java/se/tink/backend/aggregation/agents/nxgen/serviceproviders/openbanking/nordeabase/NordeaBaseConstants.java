@@ -31,6 +31,11 @@ public final class NordeaBaseConstants {
         public static final URL GET_PAYMENTS = new URL(BASE_URL + ApiService.GET_PAYMENTS);
     }
 
+    public static class TransactionalAccounts {
+        public static final String PERSONAL_ACCOUNT = "PERSONKONTO";
+        public static final String NORDEA_CLEARING_NUMBER = "3300";
+    }
+
     public static class ApiService {
         public static final String VERSION = "/v3";
         public static final String AUTHORIZE = VERSION + "/authorize";
