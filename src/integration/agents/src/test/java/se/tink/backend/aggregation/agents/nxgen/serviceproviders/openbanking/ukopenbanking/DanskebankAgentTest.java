@@ -55,11 +55,12 @@ public class DanskebankAgentTest {
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.SORT_CODE,
-                                                DESTINATION_IDENTIFIER),
+                                                Type.SORT_CODE, DESTINATION_IDENTIFIER),
                                         "Unknown Person"))
                         .withDebtor(
-                                new Debtor(AccountIdentifier.create(Type.IBAN, SOURCE_IDENTIFIER)))
+                                new Debtor(
+                                        AccountIdentifier.create(
+                                                Type.SORT_CODE, SOURCE_IDENTIFIER)))
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
