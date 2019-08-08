@@ -77,9 +77,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                         payment.getDebtor().getAccountNumber(), null, null, null);
 
         PaymentTypeInformationEntity paymentTypeInformation =
-                PaymentTypeInformationEntity.builder()
-                        .serviceLevel(ServiceLevelCodeEntity.SEPA)
-                        .build();
+            new PaymentTypeInformationEntity(null, ServiceLevelCodeEntity.SEPA, null, null);
 
         AccountIdentificationEntity debtorAccount =
                 new AccountIdentificationEntity(

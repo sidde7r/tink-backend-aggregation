@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,7 +22,7 @@ public class PaymentTypeInformationEntity {
     private CategoryPurposeCodeEntity categoryPurpose = null;
 
     @JsonCreator
-    private PaymentTypeInformationEntity(
+    public PaymentTypeInformationEntity(
             PriorityCodeEntity instructionPriority,
             ServiceLevelCodeEntity serviceLevel,
             String localInstrument,
@@ -32,11 +31,6 @@ public class PaymentTypeInformationEntity {
         this.serviceLevel = serviceLevel;
         this.localInstrument = localInstrument;
         this.categoryPurpose = categoryPurpose;
-    }
-
-    @JsonIgnore
-    public static PaymentTypeInformationEntityBuilder builder() {
-        return new PaymentTypeInformationEntityBuilder();
     }
 
     public PriorityCodeEntity getInstructionPriority() {
@@ -69,55 +63,5 @@ public class PaymentTypeInformationEntity {
 
     public void setCategoryPurpose(CategoryPurposeCodeEntity categoryPurpose) {
         this.categoryPurpose = categoryPurpose;
-    }
-
-    public static class PaymentTypeInformationEntityBuilder {
-
-        private PriorityCodeEntity instructionPriority;
-        private ServiceLevelCodeEntity serviceLevel;
-        private String localInstrument;
-        private CategoryPurposeCodeEntity categoryPurpose;
-
-        PaymentTypeInformationEntityBuilder() {}
-
-        public PaymentTypeInformationEntityBuilder instructionPriority(
-                PriorityCodeEntity instructionPriority) {
-            this.instructionPriority = instructionPriority;
-            return this;
-        }
-
-        public PaymentTypeInformationEntityBuilder serviceLevel(
-                ServiceLevelCodeEntity serviceLevel) {
-            this.serviceLevel = serviceLevel;
-            return this;
-        }
-
-        public PaymentTypeInformationEntityBuilder localInstrument(String localInstrument) {
-            this.localInstrument = localInstrument;
-            return this;
-        }
-
-        public PaymentTypeInformationEntityBuilder categoryPurpose(
-                CategoryPurposeCodeEntity categoryPurpose) {
-            this.categoryPurpose = categoryPurpose;
-            return this;
-        }
-
-        public PaymentTypeInformationEntity build() {
-            return new PaymentTypeInformationEntity(
-                    instructionPriority, serviceLevel, localInstrument, categoryPurpose);
-        }
-
-        public String toString() {
-            return "PaymentTypeInformationEntity.PaymentTypeInformationEntityBuilder(instructionPriority="
-                    + this.instructionPriority
-                    + ", serviceLevel="
-                    + this.serviceLevel
-                    + ", localInstrument="
-                    + this.localInstrument
-                    + ", categoryPurpose="
-                    + this.categoryPurpose
-                    + ")";
-        }
     }
 }
