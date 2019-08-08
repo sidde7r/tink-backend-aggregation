@@ -123,9 +123,11 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         BnpParibasFortisPaymentAuthenticator paymentAuthenticator =
                 new BnpParibasFortisPaymentAuthenticator(supplementalInformationHelper);
-        return Optional.of(
-                new PaymentController(
-                        new BnpParibasFortisPaymentExecutor(
-                                apiClient, paymentAuthenticator, getClientConfiguration())));
+
+        BnpParibasFortisPaymentExecutor paymentExecutor =
+                new BnpParibasFortisPaymentExecutor(
+                        apiClient, paymentAuthenticator, getClientConfiguration());
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }
