@@ -23,6 +23,6 @@ public class LaBanquePostaleTransactionFetcher extends BerlinGroupTransactionFet
                 Strings.isNullOrEmpty(nextUrl)
                         ? account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL)
                         : nextUrl;
-        return laBanquePostaleApiClient.fetchTransactionsLaBanquePortal(url);
+        return laBanquePostaleApiClient.fetchTransactionsLaBanquePostal(url);
     }
 }
