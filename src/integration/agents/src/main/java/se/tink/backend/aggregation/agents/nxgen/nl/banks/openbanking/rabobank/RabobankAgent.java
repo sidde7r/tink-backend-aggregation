@@ -29,7 +29,7 @@ public class RabobankAgent extends NextGenerationAgent
 
     private final RabobankApiClient apiClient;
     private final String clientName;
-    private RabobankConfiguration rabobankConfiguration;
+    private final RabobankConfiguration rabobankConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public RabobankAgent(
