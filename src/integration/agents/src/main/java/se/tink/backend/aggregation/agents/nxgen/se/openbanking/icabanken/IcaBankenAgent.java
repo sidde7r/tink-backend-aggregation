@@ -68,7 +68,9 @@ public final class IcaBankenAgent extends NextGenerationAgent
                     new ThirdPartyAppAuthenticationController<>(
                             controller, supplementalInformationHelper),
                     controller);
-        } else return new IcaBankenSandboxAuthenticator(apiClient, sessionStorage);
+        } else {
+            return new IcaBankenSandboxAuthenticator(apiClient, sessionStorage);
+        }
     }
 
     @Override

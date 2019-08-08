@@ -55,7 +55,9 @@ public class GetPaymentResponse {
 
         // TODO remove in production
         // Fetching freshly created payment is returning cancelled status every time
-        if (paymentStatus.equals(PaymentStatus.CANCELLED)) paymentStatus = PaymentStatus.PENDING;
+        if (paymentStatus == PaymentStatus.CANCELLED) {
+            paymentStatus = PaymentStatus.PENDING;
+        }
 
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
