@@ -16,26 +16,6 @@ public class ConsentRequest {
 
     private int frequencyPerDay;
 
-    public AccessEntity getAccess() {
-        return access;
-    }
-
-    public boolean getCombinedServiceIndicator() {
-        return combinedServiceIndicator;
-    }
-
-    public String getValidUntil() {
-        return validUntil;
-    }
-
-    public boolean getRecurringIndicator() {
-        return recurringIndicator;
-    }
-
-    public int getFrequencyPerDay() {
-        return frequencyPerDay;
-    }
-
     public ConsentRequest(
             AccessEntity access,
             boolean combinedServiceIndicator,
