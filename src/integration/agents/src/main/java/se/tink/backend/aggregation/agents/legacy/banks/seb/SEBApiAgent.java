@@ -1522,47 +1522,6 @@ public class SEBApiAgent extends AbstractAgent
         return null;
     }
 
-    private List<Account> updateCreditCardAccounts() {
-        List<SebCreditCardAccount> creditCardAccounts = listCreditCardAccounts(customerId);
-        List<Account> creditCards = Lists.newArrayList();
-        for (SebCreditCardAccount creditCardAccount : creditCardAccounts) {
-            Optional<Account> creditCard = updateCreditCardAccount(creditCardAccount);
-            creditCard.ifPresent(creditCards::add);
-        }
-        return creditCards;
-    }
-
-    private Optional<Account> updateCreditCardAccount(SebCreditCardAccount creditCardAccount) {
-        Account account = new Account();
-        account.setType(AccountTypes.CREDIT_CARD);
-        account.setName(SEBAgentUtils.getCreditCardAccountName(creditCardAccount));
-        account.setBalance(
-                creditCardAccount.SALDO_BELOPP != 0 ? -creditCardAccount.SALDO_BELOPP : 0);
-        account.setAvailableCredit(creditCardAccount.LIMIT_BELOPP - creditCardAccount.SALDO_BELOPP);
-
-        String handle = creditCardAccount.BILL_UNIT_HDL;
-
-        Optional<String> bankId = fetchBankIdForCreditCardAccount(account, handle);
-
-        if (bankId.isPresent()) {
-            account.setBankId(bankId.get());
-            return Optional.of(account);
-        }
-        return Optional.empty();
-    }
-
-    private Optional<String> fetchBankIdForCreditCardAccount(Account account, String handle) {
-        /**
-         * The card number for the credit card account is specified on the transactions for the
-         * credit card account and not on the credit card account itself. The credit card number is
-         * used to identify which of our accounts the fetched account belongs to. There for we need
-         * to fetch the credit card transactions before saving the account.
-         */
-        listCreditCardAccountTransactions(account, handle);
-
-        return getBankIdForCreditCardAccount(request, account);
-    }
-
     private Map<Account, List<Transaction>> updateCreditCardAccountsAndTransactions(
             CredentialsRequest request, String customerId) {
 
