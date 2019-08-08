@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccoun
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -165,16 +166,22 @@ public class SEPAAccount implements GeneralAccountEntity {
     }
 
     public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(
-                        getType(),
-                        getAccountNo(),
-                        new Amount(getCurrency(), StringUtils.parseAmount(getBalance())))
-                .setHolderName(new HolderName(getHolderName()))
-                .setName(getProductName())
-                .setAccountNumber(getAccountNo())
-                .setBankIdentifier(getBlz() + getAccountNo())
-                .addIdentifier(generalGetAccountIdentifier())
-                .build();
+
+        TransactionalAccount.Builder builder =
+                TransactionalAccount.builder(
+                                getType(),
+                                getAccountNo(),
+                                new Amount(getCurrency(), StringUtils.parseAmount(getBalance())))
+                        .setHolderName(new HolderName(getHolderName()))
+                        .setName(getProductName())
+                        .setAccountNumber(getAccountNo())
+                        .setBankIdentifier(getBlz() + getAccountNo())
+                        .addIdentifier(generalGetAccountIdentifier());
+
+        if (canMakePayment()) {
+            builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        }
+        return builder.build();
     }
 
     private String getHolderName() {
