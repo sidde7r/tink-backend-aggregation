@@ -16,13 +16,9 @@ public class AmountTypeEntity {
     private String amount = null;
 
     @JsonCreator
-    private AmountTypeEntity(String currency, String amount) {
+    public AmountTypeEntity(String currency, String amount) {
         this.currency = currency;
         this.amount = amount;
-    }
-
-    public static AmountTypeEntityBuilder builder() {
-        return new AmountTypeEntityBuilder();
     }
 
     public String getCurrency() {
@@ -31,35 +27,5 @@ public class AmountTypeEntity {
 
     public String getAmount() {
         return amount;
-    }
-
-    public static class AmountTypeEntityBuilder {
-
-        private String currency;
-        private String amount;
-
-        AmountTypeEntityBuilder() {}
-
-        public AmountTypeEntityBuilder currency(String currency) {
-            this.currency = currency;
-            return this;
-        }
-
-        public AmountTypeEntityBuilder amount(String amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        public AmountTypeEntity build() {
-            return new AmountTypeEntity(currency, amount);
-        }
-
-        public String toString() {
-            return "AmountTypeEntity.AmountTypeEntityBuilder(currency="
-                    + this.currency
-                    + ", amount="
-                    + this.amount
-                    + ")";
-        }
     }
 }

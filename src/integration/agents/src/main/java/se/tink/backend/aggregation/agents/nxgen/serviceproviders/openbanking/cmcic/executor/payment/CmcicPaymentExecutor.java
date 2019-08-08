@@ -105,10 +105,9 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                         .build();
 
         AmountTypeEntity instructedAmount =
-                AmountTypeEntity.builder()
-                        .amount(payment.getAmount().getValue().toString())
-                        .currency(payment.getAmount().getCurrency())
-                        .build();
+                new AmountTypeEntity(
+                        payment.getAmount().getCurrency(),
+                        payment.getAmount().getValue().toString());
 
         List<CreditTransferTransactionEntity> creditTransferTransaction =
                 Collections.singletonList(
