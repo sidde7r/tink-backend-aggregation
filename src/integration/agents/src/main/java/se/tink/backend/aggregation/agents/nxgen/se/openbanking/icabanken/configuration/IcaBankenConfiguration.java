@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
@@ -35,6 +36,7 @@ public class IcaBankenConfiguration implements ClientConfiguration {
         return certificateId;
     }
 
+    @JsonIgnore
     public Environment getEnvironment() {
         return Environment.fromString(environment);
     }

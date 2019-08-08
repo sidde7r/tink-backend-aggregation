@@ -7,25 +7,33 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
 public class IcaAgentPaymentTest {
-    @Test
-    public void testPayments() throws Exception {
-        AgentIntegrationTest.Builder builder =
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+
+    private AgentIntegrationTest.Builder builder;
+
+    @Before
+    public void setup() {
+        manager.before();
+        builder =
                 new AgentIntegrationTest.Builder("se", "se-icabanken-oauth2")
                         .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false);
+    }
 
+    @Test
+    public void testPayments() throws Exception {
         builder.build().testGenericPayment(createListMockedDomesticPayment(4));
     }
 
@@ -58,4 +66,6 @@ public class IcaAgentPaymentTest {
 
         return listOfMockedPayments;
     }
+
+    private enum Arg {}
 }

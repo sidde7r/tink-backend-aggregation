@@ -97,6 +97,7 @@ public final class IcaBankenConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_TOKEN = "Cannot find Token!";
+        public static final String UNSUPPORTED_TYPE = "Unsupported payment type";
     }
 
     public static class FormKeys {

@@ -16,7 +16,11 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public class IcaPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -42,14 +46,28 @@ public class IcaPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .build();
 
         return apiClient
-                .createPayment(createPaymentRequest, PaymentType.SEPA)
+                .createPayment(createPaymentRequest, getPaymentType(paymentRequest))
                 .toTinkPaymentResponse();
+    }
+
+    protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
+        Pair<AccountIdentifier.Type, AccountIdentifier.Type> accountIdentifiersKey =
+                paymentRequest.getPayment().getCreditorAndDebtorAccountType();
+
+        return accountIdentifiersToPaymentTypeMapper
+                .translate(accountIdentifiersKey)
+                .orElseThrow(
+                        () ->
+                                new NotImplementedException(
+                                        "No PaymentType found for your AccountIdentifiers pair "
+                                                + accountIdentifiersKey));
     }
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
-                .getPayment(paymentRequest.getPayment().getUniqueId(), PaymentType.SEPA)
+                .getPayment(
+                        paymentRequest.getPayment().getUniqueId(), getPaymentType(paymentRequest))
                 .toTinkPaymentResponse();
     }
 
@@ -82,4 +100,12 @@ public class IcaPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                 .forEach(paymentRequest -> paymentResponses.add(fetch(paymentRequest)));
         return new PaymentListResponse(paymentResponses);
     }
+
+    private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
+            accountIdentifiersToPaymentTypeMapper =
+                    GenericTypeMapper
+                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                                    genericBuilder()
+                            .put(PaymentType.SEPA, new Pair<>(Type.IBAN, Type.IBAN))
+                            .build();
 }
