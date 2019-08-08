@@ -62,14 +62,14 @@ public class OAuth2AuthenticationController
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            CredentialsRequest credentialsRequest) {
+            Credentials credentials) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
-                callbackJWTSignatureKeyPair,
-                credentialsRequest,
+                null,
+                credentials,
+                null,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
     }
@@ -79,21 +79,38 @@ public class OAuth2AuthenticationController
             SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            CredentialsRequest credentialsRequest,
+            CredentialsRequest credentialsRequest) {
+        this(
+                persistentStorage,
+                supplementalInformationHelper,
+                authenticator,
+                callbackJWTSignatureKeyPair,
+                credentialsRequest.getCredentials(),
+                credentialsRequest.getAppUriId(),
+                DEFAULT_TOKEN_LIFETIME,
+                DEFAULT_TOKEN_LIFETIME_UNIT);
+    }
+
+    public OAuth2AuthenticationController(
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            OAuth2Authenticator authenticator,
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            Credentials credentials,
+            String appUriId,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
-        this.credentials = credentialsRequest.getCredentials();
+        this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
 
         this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
         this.state =
-                JwtStateUtils.tryCreateJwtState(
-                        callbackJWTSignatureKeyPair, pseudoId, credentialsRequest.getAppUriId());
+                JwtStateUtils.tryCreateJwtState(callbackJWTSignatureKeyPair, pseudoId, appUriId);
     }
 
     @Override
