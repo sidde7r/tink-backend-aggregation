@@ -250,7 +250,7 @@ public final class BankdataApiClient {
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
-                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(TransactionResponse.class);
     }
 
