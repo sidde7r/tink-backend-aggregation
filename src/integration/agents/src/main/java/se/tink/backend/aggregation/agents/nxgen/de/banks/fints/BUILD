@@ -8,6 +8,7 @@ java_library(
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
+        "//src/libraries/account:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/amount",
         "//src/libraries/credentials:service",
