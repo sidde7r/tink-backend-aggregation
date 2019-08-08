@@ -216,5 +216,5 @@ clients:
     aggregatorIdentifier: "Zimpler"
 
 tppSecretsServiceConfiguration:
-  tppSecretsServiceLocation: "cluster"
+  certificatesLocation: "cluster"
   enabled: false
