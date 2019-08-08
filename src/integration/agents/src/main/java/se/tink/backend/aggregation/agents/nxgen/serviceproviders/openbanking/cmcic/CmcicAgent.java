@@ -60,8 +60,6 @@ public abstract class CmcicAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
-        this.client.setEidasProxy(
-                configuration.getEidasProxy(), getClientConfiguration().getCertificateId());
     }
 
     protected CmcicConfiguration getClientConfiguration() {

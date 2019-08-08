@@ -229,11 +229,10 @@ public final class CmcicApiClient {
         final URL tokenUrl = baseApiUrl.concat(Urls.TOKEN_PATH);
 
         final ClientCredentialsTokenRequest request =
-                ClientCredentialsTokenRequest.builder()
-                        .clientId(getConfiguration().getClientId())
-                        .scope(FormValues.PISP)
-                        .grantType(FormValues.CLIENT_CREDENTIALS)
-                        .build();
+                new ClientCredentialsTokenRequest(
+                        getConfiguration().getClientId(),
+                        FormValues.CLIENT_CREDENTIALS,
+                        FormValues.PISP);
 
         final TokenResponse tokenResponse =
                 createRequest(tokenUrl)

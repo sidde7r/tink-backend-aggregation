@@ -9,7 +9,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
@@ -47,6 +46,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.uuid.UUIDUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -70,7 +70,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     public PaymentResponse create(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
 
-        String id = UUID.randomUUID().toString().replace("-", "");
+        String id = UUIDUtils.generateUUID();
 
         PartyIdentificationEntity initiatingParty =
                 PartyIdentificationEntity.builder()
