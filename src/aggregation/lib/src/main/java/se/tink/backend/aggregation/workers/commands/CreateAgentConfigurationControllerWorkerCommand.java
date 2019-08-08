@@ -44,8 +44,10 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
 
     @Override
     public void postProcess() throws Exception {
-        agentWorkerCommandContext
-                .getAgentConfigurationController()
-                .shutdownTppSecretsServiceClient();
+        if (agentsServiceConfiguration.getTppSecretsServiceConfiguration().isEnabled()) {
+            agentWorkerCommandContext
+                    .getAgentConfigurationController()
+                    .shutdownTppSecretsServiceClient();
+        }
     }
 }
