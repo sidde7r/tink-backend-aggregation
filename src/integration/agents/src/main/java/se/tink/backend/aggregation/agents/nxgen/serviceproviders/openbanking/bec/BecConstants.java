@@ -127,6 +127,7 @@ public abstract class BecConstants {
     public static class FormValues {
         public static final String ACCESS_TYPE = "allAccounts";
         public static final Integer FREQUENCY_PER_DAY = 4;
+        public static final Integer NUMBER_OF_VALID_DAYS = 90;
         public static final boolean TRUE = true;
         public static final boolean FALSE = false;
         public static final String EMPTY_STRING = "";

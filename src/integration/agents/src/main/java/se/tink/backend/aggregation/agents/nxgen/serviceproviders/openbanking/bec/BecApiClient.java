@@ -132,7 +132,7 @@ public final class BecApiClient {
         return new ConsentRequest(
                 new AccessEntity(FormValues.ACCESS_TYPE),
                 FormValues.FALSE,
-                LocalDate.now().plusDays(90).toString(),
+                LocalDate.now().plusDays(FormValues.NUMBER_OF_VALID_DAYS).toString(),
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY);
     }

@@ -5,27 +5,27 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LinksEntity {
 
-    private ScaStatusEntity scaStatus;
+    private HrefEntity scaStatus;
 
-    private ScaRedirectEntity scaRedirect;
+    private HrefEntity scaRedirect;
 
-    private SelfEntity self;
+    private HrefEntity self;
 
-    private StatusEntity status;
+    private HrefEntity status;
 
-    public ScaStatusEntity getScaStatus() {
+    public HrefEntity getScaStatus() {
         return scaStatus;
     }
 
-    public ScaRedirectEntity getScaRedirect() {
+    public HrefEntity getScaRedirect() {
         return scaRedirect;
     }
 
-    public SelfEntity getSelf() {
+    public HrefEntity getSelf() {
         return self;
     }
 
-    public StatusEntity getStatus() {
+    public HrefEntity getStatus() {
         return status;
     }
 }

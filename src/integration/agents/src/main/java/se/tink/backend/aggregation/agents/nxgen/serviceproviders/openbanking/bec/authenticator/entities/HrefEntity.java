@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ScaStatusEntity {
+public class HrefEntity {
 
     private String href;
 
