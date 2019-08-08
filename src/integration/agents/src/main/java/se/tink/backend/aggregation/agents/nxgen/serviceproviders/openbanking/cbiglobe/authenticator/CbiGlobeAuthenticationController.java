@@ -62,7 +62,7 @@ public class CbiGlobeAuthenticationController
     }
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        this.authenticator.getToken();
+        this.authenticator.tokenAutoAuthentication();
         this.state = generateRandomState();
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
@@ -103,9 +103,5 @@ public class CbiGlobeAuthenticationController
         this.supplementalInformationHelper.openThirdPartyApp(payload);
         ThirdPartyAppResponse<String> response = this.init();
         this.collect(response.getReference());
-    }
-
-    public String getState() {
-        return state;
     }
 }
