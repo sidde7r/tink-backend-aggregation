@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
@@ -32,6 +33,7 @@ public class AccountEntity {
         return DeutscheBankConstants.ACCOUNT_TYPE_MAPPER
                 .translate(cashAccountType)
                 .map(this::toTinkAccountWithType)
+                .filter(Objects::nonNull)
                 .orElse(null);
     }
 

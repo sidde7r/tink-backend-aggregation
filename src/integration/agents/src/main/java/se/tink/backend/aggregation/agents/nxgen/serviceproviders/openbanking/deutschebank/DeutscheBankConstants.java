@@ -21,6 +21,7 @@ public class DeutscheBankConstants {
                             "CurrentAccount",
                             "Current")
                     .put(TransactionalAccountType.SAVINGS, "LLSV", "ONDP", "SVGS")
+                    .setDefaultTranslationValue(TransactionalAccountType.OTHER)
                     .build();
 
     private DeutscheBankConstants() {
