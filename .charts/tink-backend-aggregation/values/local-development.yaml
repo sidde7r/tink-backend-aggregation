@@ -52,3 +52,7 @@ clients:
     aggregatorIdentifier: "Provision Job Testing"
 
 initialDelaySeconds: 10
+
+tppSecretsServiceConfiguration:
+  tppSecretsServiceLocation: "development-staging"
+  enabled: true

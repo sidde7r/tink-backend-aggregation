@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
+import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CredentialsRefreshStartEventCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
@@ -316,6 +317,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -391,6 +393,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -523,6 +526,7 @@ public class AgentWorkerOperationFactory {
                 new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler),
+                new CreateAgentConfigurationControllerWorkerCommand(context),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
                 new LoginAgentWorkerCommand(
                         context, loginAgentWorkerCommandState, createCommandMetricState(request)),
@@ -632,6 +636,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new KeepAliveAgentWorkerCommand(context));
@@ -777,6 +782,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -867,6 +873,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(

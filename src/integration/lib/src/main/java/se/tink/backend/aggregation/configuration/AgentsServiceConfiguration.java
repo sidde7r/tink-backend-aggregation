@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerConfiguration;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AgentsServiceConfiguration {
@@ -36,7 +37,15 @@ public class AgentsServiceConfiguration {
     private AgentDataAvailabilityTrackerConfiguration agentDataAvailabilityTrackerConfiguration =
             new AgentDataAvailabilityTrackerConfiguration();
 
+    @JsonProperty
+    private TppSecretsServiceConfiguration tppSecretsServiceConfiguration =
+            new TppSecretsServiceConfiguration();
+
     @JsonProperty private TestConfiguration testConfiguration = new TestConfiguration();
+
+    public TppSecretsServiceConfiguration getTppSecretsServiceConfiguration() {
+        return tppSecretsServiceConfiguration;
+    }
 
     public AbnAmroConfiguration getAbnAmroStaging() {
         return abnAmroStaging;

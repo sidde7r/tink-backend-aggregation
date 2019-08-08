@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
@@ -99,6 +100,10 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         this.supplementalInformationFormer =
                 new SupplementalInformationFormer(request.getProvider());
         this.appId = context.getAppId();
+    }
+
+    public AgentConfigurationController getAgentConfigurationController() {
+        return context.getAgentConfigurationController();
     }
 
     @Override

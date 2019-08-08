@@ -214,3 +214,7 @@ clients:
     aggregatorIdentifier: "Zimpler"
   zimpler-test:
     aggregatorIdentifier: "Zimpler"
+
+tppSecretsServiceConfiguration:
+  tppSecretsServiceLocation: "cluster"
+  enabled: false

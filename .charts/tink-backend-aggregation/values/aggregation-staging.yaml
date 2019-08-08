@@ -99,3 +99,7 @@ agentDataAvailabilityTrackerAvailable: true
 clients:
   provision-job-testing:
     aggregatorIdentifier: "Provision Job Testing"
+
+tppSecretsServiceConfiguration:
+  tppSecretsServiceLocation: "cluster"
+  enabled: true
