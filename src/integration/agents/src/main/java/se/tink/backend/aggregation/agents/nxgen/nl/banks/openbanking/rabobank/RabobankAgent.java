@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -36,8 +35,8 @@ public class RabobankAgent extends NextGenerationAgent
     public RabobankAgent(
             final CredentialsRequest request,
             final AgentContext context,
-            final SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            final AgentsServiceConfiguration agentsConfiguration) {
+        super(request, context, agentsConfiguration.getSignatureKeyPair());
 
         apiClient = new RabobankApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
@@ -46,13 +45,9 @@ public class RabobankAgent extends NextGenerationAgent
 
         // Necessary to circumvent HTTP 413: Payload too large
         client.disableSignatureRequestHeader();
-    }
 
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
         rabobankConfiguration =
-                configuration
+                agentsConfiguration
                         .getIntegrations()
                         .getClientConfiguration(
                                 RabobankConstants.Market.INTEGRATION_NAME,
@@ -60,7 +55,7 @@ public class RabobankAgent extends NextGenerationAgent
                                 RabobankConfiguration.class)
                         .orElseThrow(
                                 () -> new IllegalStateException("Rabobank configuration missing."));
-        apiClient.setConfiguration(rabobankConfiguration, configuration.getEidasProxy());
+        apiClient.setConfiguration(rabobankConfiguration, agentsConfiguration.getEidasProxy());
 
         final String password = rabobankConfiguration.getClientSSLKeyPassword();
         final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
