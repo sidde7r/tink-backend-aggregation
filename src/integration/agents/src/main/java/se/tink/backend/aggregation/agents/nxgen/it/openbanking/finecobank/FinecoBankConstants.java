@@ -33,9 +33,9 @@ public final class FinecoBankConstants {
                 "Could not fetch transactions, because the consent is invalid. Please try again with a full consent.";
         public static final int ACCESS_EXCEEDED_ERROR_CODE = 429;
         public static final int PERIOD_INVALID_ERROR = 400;
-        public static final String UKNOWN_SIGNING_STEP = "Uknown step %s";
-        public static final String MISSING_SIGINING_LINK = "Signing link is missing";
-        public static final String MAPPINT_STATUS_TO_TINK_STATUS_ERROR =
+        public static final String UNKNOWN_SIGNING_STEP = "Uknown step %s";
+        public static final String MISSING_SIGNING_LINK = "Signing link is missing";
+        public static final String MAPPING_STATUS_TO_TINK_STATUS_ERROR =
                 "Cannot map: %s to Fineco payment status";
         public static final String FINECO_STATUS_MAPPING_ERROR =
                 "Cannot map: %s to Fineco payment status";

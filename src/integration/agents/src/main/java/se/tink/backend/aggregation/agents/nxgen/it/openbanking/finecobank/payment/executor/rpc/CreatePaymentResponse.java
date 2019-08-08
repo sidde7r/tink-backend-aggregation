@@ -43,6 +43,7 @@ public class CreatePaymentResponse {
         return new PaymentResponse(payment);
     }
 
+    @JsonIgnore
     public String getPaymentId() {
         return paymentId;
     }
