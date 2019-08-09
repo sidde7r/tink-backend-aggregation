@@ -34,6 +34,8 @@ public final class SibsConstants {
                 "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}";
         public static final String GET_PAYMENT_STATUS_REQUEST =
                 "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}/status";
+        public static final String ANDROID_DEEPLINK_REDIRECT = "cgd.pt.caixadirectaparticulares";
+        public static final String IOS_DEEPLINK_REDIRECT = "caixadirectaparticulares://app";
     }
 
     public static class StorageKeys {
@@ -47,7 +49,7 @@ public final class SibsConstants {
         public static final String PSU_INVOLVED = "psuInvolved";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";
-        public static final String TPP_REDIRECT_PREFFERED = "tppRedirectPreferred";
+        public static final String TIP_REDIRECT_PREFERRED = "tppRedirectPreferred";
     }
 
     public static class QueryValues {
