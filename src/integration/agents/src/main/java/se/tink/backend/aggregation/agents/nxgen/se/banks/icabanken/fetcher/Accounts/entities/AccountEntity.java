@@ -13,7 +13,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount.Builder;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -73,15 +75,20 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkTransactionalAccount() {
-        return TransactionalAccount.builder(
-                        getTinkAccountType(), accountNumber, Amount.inSEK(availableAmount))
-                .setAccountNumber(accountNumber)
-                .setName(name)
-                .setHolderName(new HolderName(holder))
-                .setBankIdentifier(accountId)
-                .addIdentifier(new SwedishIdentifier(accountNumber))
-                .addIdentifier(new IbanIdentifier(iban))
-                .build();
+        AccountTypes accountType = getTinkAccountType();
+        Builder builder =
+                TransactionalAccount.builder(
+                                accountType, accountNumber, Amount.inSEK(availableAmount))
+                        .setAccountNumber(accountNumber)
+                        .setName(name)
+                        .setHolderName(new HolderName(holder))
+                        .setBankIdentifier(accountId)
+                        .addIdentifier(new SwedishIdentifier(accountNumber))
+                        .addIdentifier(new IbanIdentifier(iban));
+        if (accountType == AccountTypes.CHECKING) {
+            builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        }
+        return builder.build();
     }
 
     @JsonIgnore
