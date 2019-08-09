@@ -37,30 +37,27 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class RabobankApiClient {
+public final class RabobankApiClient {
 
-    private static Logger logger = LoggerFactory.getLogger(RabobankApiClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(RabobankApiClient.class);
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final boolean requestIsManual;
-    private RabobankConfiguration rabobankConfiguration;
-    private EidasProxyConfiguration eidasProxyConf;
+    private final RabobankConfiguration rabobankConfiguration;
+    private final EidasProxyConfiguration eidasProxyConf;
 
     RabobankApiClient(
             final TinkHttpClient client,
             final PersistentStorage persistentStorage,
+            final RabobankConfiguration rabobankConfiguration,
+            final EidasProxyConfiguration eidasProxyConf,
             final boolean requestIsManual) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.requestIsManual = requestIsManual;
-    }
-
-    public void setConfiguration(
-            final RabobankConfiguration configuration,
-            final EidasProxyConfiguration eidasProxyConf) {
-        this.rabobankConfiguration = configuration;
+        this.rabobankConfiguration = rabobankConfiguration;
         this.eidasProxyConf = eidasProxyConf;
+        this.requestIsManual = requestIsManual;
     }
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {

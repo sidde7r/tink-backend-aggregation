@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -25,34 +24,24 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class RabobankAgent extends NextGenerationAgent
+public final class RabobankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final RabobankApiClient apiClient;
     private final String clientName;
-    private RabobankConfiguration rabobankConfiguration;
+    private final RabobankConfiguration rabobankConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public RabobankAgent(
             final CredentialsRequest request,
             final AgentContext context,
-            final SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            final AgentsServiceConfiguration agentsConfiguration) {
+        super(request, context, agentsConfiguration.getSignatureKeyPair());
 
-        apiClient = new RabobankApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
 
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-
-        // Necessary to circumvent HTTP 413: Payload too large
-        client.disableSignatureRequestHeader();
-    }
-
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
         rabobankConfiguration =
-                configuration
+                agentsConfiguration
                         .getIntegrations()
                         .getClientConfiguration(
                                 RabobankConstants.Market.INTEGRATION_NAME,
@@ -60,12 +49,23 @@ public class RabobankAgent extends NextGenerationAgent
                                 RabobankConfiguration.class)
                         .orElseThrow(
                                 () -> new IllegalStateException("Rabobank configuration missing."));
-        apiClient.setConfiguration(rabobankConfiguration, configuration.getEidasProxy());
 
         final String password = rabobankConfiguration.getClientSSLKeyPassword();
         final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
 
+        // Necessary to circumvent HTTP 413: Payload too large
+        client.disableSignatureRequestHeader();
         client.setSslClientCertificate(p12, password);
+
+        apiClient =
+                new RabobankApiClient(
+                        client,
+                        persistentStorage,
+                        rabobankConfiguration,
+                        agentsConfiguration.getEidasProxy(),
+                        request.isManual());
+
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
