@@ -36,7 +36,7 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
     protected Authenticator constructAuthenticator() {
         return new TypedAuthenticationController(
                 new BankIdAuthenticationController<>(
-                        supplementalRequester, authenticator, persistentStorage),
+                        supplementalRequester, authenticator, persistentStorage, credentials),
                 new PasswordAuthenticationController(authenticator));
     }
 

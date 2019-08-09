@@ -39,7 +39,8 @@ public class DanskeBankSEAgent extends DanskeBankAgent {
                         supplementalRequester,
                         new DanskeBankBankIdAuthenticator(
                                 (DanskeBankSEApiClient) apiClient, deviceId, configuration),
-                        persistentStorage),
+                        persistentStorage,
+                        credentials),
                 new PasswordAuthenticationController(
                         new DanskeBankPasswordAuthenticator(apiClient, deviceId, configuration)));
     }

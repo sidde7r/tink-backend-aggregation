@@ -108,7 +108,8 @@ public class NordeaSEAgent extends NextGenerationAgent
                 new BankIdAuthenticationController<>(
                         context,
                         new NordeaBankIdAuthenticator(apiClient, sessionStorage),
-                        persistentStorage);
+                        persistentStorage,
+                        credentials);
 
         NordeaPasswordAuthenticator passwordAuthenticator =
                 new NordeaPasswordAuthenticator(

@@ -43,18 +43,21 @@ public class BankIdAuthenticationController<T>
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
     private final PersistentStorage persistentStorage;
+    private final Credentials credentials;
 
     public BankIdAuthenticationController(
             SupplementalRequester supplementalRequester,
             BankIdAuthenticator<T> authenticator,
-            PersistentStorage persistentStorage) {
-        this(supplementalRequester, authenticator, false, persistentStorage);
+            PersistentStorage persistentStorage,
+            Credentials credentials) {
+        this(supplementalRequester, authenticator, false, persistentStorage, credentials);
     }
 
     public BankIdAuthenticationController(
             SupplementalRequester supplementalRequester,
             BankIdAuthenticator<T> authenticator,
             PersistentStorage persistentStorage,
+            Credentials credentials,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
         this(
@@ -62,6 +65,7 @@ public class BankIdAuthenticationController<T>
                 authenticator,
                 false,
                 persistentStorage,
+                credentials,
                 tokenLifetime,
                 tokenLifetimeUnit);
     }
@@ -70,12 +74,14 @@ public class BankIdAuthenticationController<T>
             SupplementalRequester supplementalRequester,
             BankIdAuthenticator<T> authenticator,
             boolean waitOnBankId,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage,
+            Credentials credentials) {
         this(
                 supplementalRequester,
                 authenticator,
                 waitOnBankId,
                 persistentStorage,
+                credentials,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT);
     }
@@ -85,12 +91,14 @@ public class BankIdAuthenticationController<T>
             BankIdAuthenticator<T> authenticator,
             boolean waitOnBankId,
             PersistentStorage persistentStorage,
+            Credentials credentials,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.supplementalRequester = Preconditions.checkNotNull(supplementalRequester);
         this.waitOnBankId = waitOnBankId;
         this.persistentStorage = persistentStorage;
+        this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
     }

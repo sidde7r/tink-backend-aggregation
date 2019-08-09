@@ -65,7 +65,8 @@ public class SkandiaBankenAgent extends NextGenerationAgent
         return new BankIdAuthenticationController<>(
                 context,
                 new SkandiaBankenAuthenticator(apiClient, sessionStorage),
-                persistentStorage);
+                persistentStorage,
+                credentials);
     }
 
     @Override

@@ -71,7 +71,8 @@ public class HandelsbankenSEBankPaymentExecutorTest {
                         new AgentTestContext(credentials),
                         new HandelsbankenBankIdAuthenticator(
                                 client, credentials, persistentStorage, sessionStorage),
-                        new PersistentStorage())
+                        new PersistentStorage(),
+                        credentials)
                 .authenticate(credentials);
 
         Catalog catalog = mock(Catalog.class);

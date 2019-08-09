@@ -123,7 +123,8 @@ public class HandelsbankenSEAgent
                             credentials,
                             handelsbankenPersistentStorage,
                             handelsbankenSessionStorage),
-                    persistentStorage)
+                    persistentStorage,
+                    credentials)
         };
     }
 

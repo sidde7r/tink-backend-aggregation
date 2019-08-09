@@ -85,7 +85,8 @@ public class HandelsbankenSEBankTransferExecutorTest {
                         new AgentTestContext(credentials),
                         new HandelsbankenBankIdAuthenticator(
                                 client, credentials, persistentStorage, sessionStorage),
-                        new PersistentStorage())
+                        new PersistentStorage(),
+                        credentials)
                 .authenticate(credentials);
         Catalog catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn(ERROR_MESSAGE);
