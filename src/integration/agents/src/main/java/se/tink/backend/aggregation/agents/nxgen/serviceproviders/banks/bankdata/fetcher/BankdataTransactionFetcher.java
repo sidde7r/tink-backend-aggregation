@@ -24,10 +24,13 @@ public class BankdataTransactionFetcher
     @Override
     public GetTransactionsResponse getTransactionsFor(TransactionalAccount account, int page) {
         GetTransactionsRequest getTransactionsRequest =
-                new GetTransactionsRequest().addAccount(account.getFromTemporaryStorage(
-                    BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY),
-                    account.getFromTemporaryStorage(
-                        BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY)).setPage(page);
+                new GetTransactionsRequest()
+                        .addAccount(
+                                account.getFromTemporaryStorage(
+                                        BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY),
+                                account.getFromTemporaryStorage(
+                                        BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY))
+                        .setPage(page);
 
         return this.bankClient.getTransactions(getTransactionsRequest);
     }
@@ -36,10 +39,11 @@ public class BankdataTransactionFetcher
     public List<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
         GetTransactionsRequest getTransactionsRequest =
                 new GetTransactionsRequest()
-                        .addAccount(account.getFromTemporaryStorage(
-                            BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY),
-                            account.getFromTemporaryStorage(
-                                BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY))
+                        .addAccount(
+                                account.getFromTemporaryStorage(
+                                        BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY),
+                                account.getFromTemporaryStorage(
+                                        BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY))
                         .setPage(BankdataConstants.Fetcher.START_PAGE);
 
         return this.bankClient

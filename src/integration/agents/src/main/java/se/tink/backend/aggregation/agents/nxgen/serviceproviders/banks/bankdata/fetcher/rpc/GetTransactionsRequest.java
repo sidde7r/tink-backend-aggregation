@@ -32,9 +32,7 @@ public class GetTransactionsRequest {
     @JsonIgnore
     public GetTransactionsRequest addAccount(String regNo, String accountNo) {
         BankdataAccountIdEntity accountIdEntity =
-                new BankdataAccountIdEntity()
-                        .setRegNo(regNo)
-                        .setAccountNo(accountNo);
+                new BankdataAccountIdEntity().setRegNo(regNo).setAccountNo(accountNo);
 
         accounts.add(accountIdEntity);
         return this;

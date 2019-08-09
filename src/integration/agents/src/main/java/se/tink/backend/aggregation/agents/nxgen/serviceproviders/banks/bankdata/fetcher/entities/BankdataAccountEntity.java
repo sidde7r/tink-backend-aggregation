@@ -47,7 +47,7 @@ public class BankdataAccountEntity {
                 .setName(name)
                 .setBankIdentifier(constructUniqueIdentifier())
                 .putInTemporaryStorage(REGISTRATION_NUMBER_TEMP_STORAGE_KEY, regNo)
-                .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY,accountNo)
+                .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY, accountNo)
                 .build();
     }
 

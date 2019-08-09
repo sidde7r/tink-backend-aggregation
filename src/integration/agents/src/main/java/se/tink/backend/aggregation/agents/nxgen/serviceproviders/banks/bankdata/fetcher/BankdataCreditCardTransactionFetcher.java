@@ -18,10 +18,13 @@ public class BankdataCreditCardTransactionFetcher
     @Override
     public GetTransactionsResponse getTransactionsFor(CreditCardAccount account, int page) {
         GetTransactionsRequest getTransactionsRequest =
-                new GetTransactionsRequest().addAccount(account.getFromTemporaryStorage(
-                    BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY),
-                    account.getFromTemporaryStorage(
-                        BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY)).setPage(page);
+                new GetTransactionsRequest()
+                        .addAccount(
+                                account.getFromTemporaryStorage(
+                                        BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY),
+                                account.getFromTemporaryStorage(
+                                        BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY))
+                        .setPage(page);
 
         return bankClient.getTransactions(getTransactionsRequest);
     }
