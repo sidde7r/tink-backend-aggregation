@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.ComponentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.ReceiptIndicatorEntity;
@@ -14,18 +15,20 @@ public class TransferApprovalResponse extends BaseResponse
 
     private List<ComponentEntity> components;
     private ReceiptIndicatorEntity receiptIndicator;
-    private String receiptMessage = null;
+    private String receiptMessage;
     private String receiptStep;
 
     @JsonIgnore
     @Override
     public String getStatus() {
-        return String.valueOf(receiptIndicator.getIndicatorType());
+        return receiptIndicator != null
+                ? String.valueOf(receiptIndicator.getIndicatorType())
+                : receiptMessage;
     }
 
     @JsonIgnore
     public void validateResult(ExecutorExceptionResolver exceptionResolver) {
-        if (!"OK".equalsIgnoreCase(this.getStatus())) {
+        if (!Stream.of("OK", "E-fakturan är ändrad").anyMatch(this.getStatus()::equalsIgnoreCase)) {
             exceptionResolver.asException(this);
         }
     }
