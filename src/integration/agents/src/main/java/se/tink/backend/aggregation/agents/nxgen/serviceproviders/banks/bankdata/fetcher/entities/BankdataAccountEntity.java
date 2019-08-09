@@ -4,6 +4,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -48,6 +49,7 @@ public class BankdataAccountEntity {
                 .setBankIdentifier(constructUniqueIdentifier())
                 .putInTemporaryStorage(REGISTRATION_NUMBER_TEMP_STORAGE_KEY, regNo)
                 .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY, accountNo)
+                .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .build();
     }
 
