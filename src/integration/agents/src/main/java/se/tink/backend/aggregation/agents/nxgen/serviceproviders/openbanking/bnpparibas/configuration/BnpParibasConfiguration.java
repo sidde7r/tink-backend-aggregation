@@ -10,6 +10,7 @@ public class BnpParibasConfiguration implements ClientConfiguration {
     private String clientSecret;
     private String redirectUrl;
     private String eidasQwac;
+    private String keyId;
 
     public String getClientId() {
         return clientId;
@@ -25,5 +26,9 @@ public class BnpParibasConfiguration implements ClientConfiguration {
 
     public String getEidasQwac() {
         return eidasQwac;
+    }
+
+    public String getKeyId() {
+        return keyId;
     }
 }

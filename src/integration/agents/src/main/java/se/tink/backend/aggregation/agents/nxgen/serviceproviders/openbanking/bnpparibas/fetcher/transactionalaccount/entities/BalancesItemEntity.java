@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalancesItemEntity {
@@ -14,7 +14,7 @@ public class BalancesItemEntity {
     private String lastCommittedTransaction;
 
     @JsonProperty("balanceAmount")
-    private BalanceAmountEntity balanceAmountEntity;
+    private AmountEntity amountEntity;
 
     public String getBalanceType() {
         return balanceType;
@@ -28,16 +28,11 @@ public class BalancesItemEntity {
         return lastCommittedTransaction;
     }
 
-    public BalanceAmountEntity getBalanceAmountEntity() {
-        return balanceAmountEntity;
+    public AmountEntity getAmountEntity() {
+        return amountEntity;
     }
 
     public boolean isAvailableBalance() {
-        return balanceType.equalsIgnoreCase("OTHR");
-    }
-
-    public ExactCurrencyAmount toAmount() {
-        return new ExactCurrencyAmount(
-                balanceAmountEntity.getAmount(), balanceAmountEntity.getCurrency());
+        return BnpParibasBaseConstants.ResponseValues.BALANCE_TYPE.equalsIgnoreCase(balanceType);
     }
 }

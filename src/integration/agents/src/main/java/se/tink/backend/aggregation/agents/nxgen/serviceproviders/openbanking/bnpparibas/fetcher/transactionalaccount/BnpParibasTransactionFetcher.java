@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasApiBaseClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.Utils.BnpParibasUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasUtils;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -30,10 +30,12 @@ public class BnpParibasTransactionFetcher implements TransactionDatePaginator {
     @Override
     public PaginatorResponse getTransactionsFor(Account account, Date fromDate, Date toDate) {
         String reqId = UUID.randomUUID().toString();
-        String authCode = sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN);
         String signature =
-                new BnpParibasUtils(eidasProxyConfiguration)
-                        .buildSignatureHeader(eidasProxyConfiguration, authCode, reqId);
+                BnpParibasUtils.buildSignatureHeader(
+                        eidasProxyConfiguration,
+                        sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN),
+                        reqId,
+                        apiClient.getBnpParibasConfiguration());
 
         return apiClient.getTransactions(
                 account.getAccountNumber(), signature, reqId, fromDate, toDate);

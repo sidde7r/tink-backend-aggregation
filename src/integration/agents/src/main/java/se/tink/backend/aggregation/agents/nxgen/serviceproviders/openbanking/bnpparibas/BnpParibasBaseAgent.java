@@ -52,7 +52,8 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new BnpParibasAuthenticator(
                                 apiClient, sessionStorage, bnpParibasConfiguration),
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new AutoAuthenticationController(
                 request,
@@ -62,23 +63,26 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 controller);
     }
 
+    private BnpParibasConfiguration getBnpParibasConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        BnpParibasBaseConstants.INTEGRATION_NAME,
+                        clientName,
+                        BnpParibasConfiguration.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        BnpParibasBaseConstants.ErrorMessages
+                                                .MISSING_CONFIGURATION));
+    }
+
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         this.agentsServiceConfiguration = configuration;
-        bnpParibasConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                BnpParibasBaseConstants.INTEGRATION_NAME,
-                                clientName,
-                                BnpParibasConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                BnpParibasBaseConstants.ErrorMessages
-                                                        .MISSING_CONFIGURATION));
 
+        bnpParibasConfiguration = getBnpParibasConfiguration();
         apiClient.setConfiguration(bnpParibasConfiguration);
         client.setEidasProxy(configuration.getEidasProxy(), bnpParibasConfiguration.getEidasQwac());
 

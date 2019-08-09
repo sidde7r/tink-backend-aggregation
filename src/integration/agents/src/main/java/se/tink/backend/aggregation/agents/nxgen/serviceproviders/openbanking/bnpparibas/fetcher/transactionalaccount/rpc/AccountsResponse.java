@@ -3,14 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bn
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities.AccountsItemEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities.LinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities.Transactions.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountsResponse {
 
     @JsonProperty("_links")
-    private LinksEntity linksEntity;
+    public LinksEntity linksEntity;
 
     private List<AccountsItemEntity> accounts;
 

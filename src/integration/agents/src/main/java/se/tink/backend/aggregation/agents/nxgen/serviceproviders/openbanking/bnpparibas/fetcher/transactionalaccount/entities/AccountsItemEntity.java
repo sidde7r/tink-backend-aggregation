@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bn
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -21,7 +21,7 @@ public class AccountsItemEntity {
     private String resourceId;
 
     @JsonProperty("_links")
-    private LinksEntity linksEntity;
+    private HrefEntity linksEntity;
 
     private String usage;
 
@@ -41,7 +41,7 @@ public class AccountsItemEntity {
         return resourceId;
     }
 
-    public LinksEntity getLinksEntity() {
+    public HrefEntity getLinksEntity() {
         return linksEntity;
     }
 
@@ -65,16 +65,13 @@ public class AccountsItemEntity {
         return currency;
     }
 
-    // TODO check if checking is correct
     private TransactionalAccountType getAccountType() {
-        if (cashAccountType.equalsIgnoreCase("cacc")) {
-            return TransactionalAccountType.from(AccountTypes.CHECKING);
-        } else {
-            return TransactionalAccountType.from(AccountTypes.CHECKING);
-        }
+        return BnpParibasBaseConstants.ACCOUNT_TYPE_MAPPER
+                .translate(cashAccountType)
+                .orElse(TransactionalAccountType.OTHER);
     }
 
-    public TransactionalAccount toTinkModel(BalanceResponse balanceResponse) {
+    public TransactionalAccount toTinkAccount(BalanceResponse balanceResponse) {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType())
                 .withBalance(BalanceModule.of(getAvailableBalance(balanceResponse)))
@@ -87,7 +84,7 @@ public class AccountsItemEntity {
                                 .build())
                 .addHolderName(name)
                 .setApiIdentifier(resourceId)
-                .putInTemporaryStorage("ACCOUNT_ID", resourceId)
+                .putInTemporaryStorage(BnpParibasBaseConstants.StorageKeys.ACCOUNT_ID, resourceId)
                 .build();
     }
 
@@ -97,7 +94,8 @@ public class AccountsItemEntity {
                 .stream()
                 .filter(BalancesItemEntity::isAvailableBalance)
                 .findFirst()
-                .map(BalancesItemEntity::toAmount)
+                .map(BalancesItemEntity::getAmountEntity)
+                .map(AmountEntity::toAmount)
                 .orElseThrow(IllegalStateException::new);
     }
 }

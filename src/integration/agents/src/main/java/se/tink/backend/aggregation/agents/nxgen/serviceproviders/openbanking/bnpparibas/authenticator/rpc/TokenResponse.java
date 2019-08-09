@@ -16,7 +16,6 @@ public class TokenResponse {
     @JsonProperty("expires_in")
     private String expiresIn;
 
-    @JsonProperty("scope")
     private String scope;
 
     public String getAccessToken() {

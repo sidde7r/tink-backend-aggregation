@@ -7,8 +7,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasApiBaseClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.Utils.BnpParibasUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasUtils;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -33,17 +33,18 @@ public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<Tra
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         String reqId = UUID.randomUUID().toString();
-        String authCode = sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN);
         String signature =
-                new BnpParibasUtils(eidasProxyConfiguration)
-                        .buildSignatureHeader(
-                                eidasProxyConfiguration, apiClient.getAuthorizationString(), reqId);
+                BnpParibasUtils.buildSignatureHeader(
+                        eidasProxyConfiguration,
+                        sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN),
+                        reqId,
+                        apiClient.getBnpParibasConfiguration());
 
         return Optional.ofNullable(apiClient.fetchAccounts(signature, reqId))
                 .map(AccountsResponse::getAccounts).orElseGet(Collections::emptyList).stream()
                 .map(
                         acc ->
-                                acc.toTinkModel(
+                                acc.toTinkAccount(
                                         apiClient.getBalance(
                                                 acc.getResourceId(), signature, reqId)))
                 .collect(Collectors.toList());

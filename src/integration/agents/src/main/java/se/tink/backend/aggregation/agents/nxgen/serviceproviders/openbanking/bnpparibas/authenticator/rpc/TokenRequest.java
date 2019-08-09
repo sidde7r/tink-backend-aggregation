@@ -17,18 +17,18 @@ public class TokenRequest extends AbstractForm {
     }
 
     public static class Builder {
-        private String grant_type;
-        private String redirect_uri;
-        private String client_id;
+        private String grantType;
+        private String redirectUri;
+        private String clientId;
         private String code;
 
         public Builder setClientId(String clientId) {
-            this.client_id = clientId;
+            this.clientId = clientId;
             return this;
         }
 
         public Builder setGrantType(String grantType) {
-            this.grant_type = grantType;
+            this.grantType = grantType;
             return this;
         }
 
@@ -38,12 +38,12 @@ public class TokenRequest extends AbstractForm {
         }
 
         public Builder setRedirectUri(String redirectUri) {
-            this.redirect_uri = redirectUri;
+            this.redirectUri = redirectUri;
             return this;
         }
 
         public TokenRequest build() {
-            return new TokenRequest(this.redirect_uri, this.grant_type, this.code, this.client_id);
+            return new TokenRequest(this.redirectUri, this.grantType, this.code, this.clientId);
         }
     }
 }

@@ -54,9 +54,13 @@ public class BnpParibasApiBaseClient {
     }
 
     public String getAuthorizationString() {
-        return bnpParibasConfiguration.getClientId()
-                + ":"
-                + bnpParibasConfiguration.getClientSecret();
+        return String.format(
+                "%s:%s",
+                bnpParibasConfiguration.getClientId(), bnpParibasConfiguration.getClientSecret());
+    }
+
+    public BnpParibasConfiguration getBnpParibasConfiguration() {
+        return bnpParibasConfiguration;
     }
 
     private RequestBuilder createRequestInSession(URL url, String signature, String reqId) {

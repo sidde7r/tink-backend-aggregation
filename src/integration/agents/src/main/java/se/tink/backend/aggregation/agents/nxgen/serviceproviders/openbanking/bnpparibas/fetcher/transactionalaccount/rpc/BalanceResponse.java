@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class BalanceResponse {
 
-    @JsonProperty("balances")
     private List<BalancesItemEntity> balances;
 
     @JsonProperty("_links")

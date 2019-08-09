@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bn
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -10,7 +13,7 @@ public class TransactionsItemEntity {
 
     private List<String> remittanceInformation;
 
-    private TransactionAmountEntity transactionAmount;
+    private AmountEntity transactionAmount;
 
     private Date bookingDate;
 
@@ -26,7 +29,7 @@ public class TransactionsItemEntity {
         return remittanceInformation;
     }
 
-    public TransactionAmountEntity getTransactionAmount() {
+    public AmountEntity getTransactionAmount() {
         return transactionAmount;
     }
 
@@ -51,14 +54,18 @@ public class TransactionsItemEntity {
     }
 
     private boolean getPending() {
-        return status.equalsIgnoreCase("pdng");
+        return status.equalsIgnoreCase(BnpParibasBaseConstants.ResponseValues.PENDING_TRANSACTION);
     }
 
     public Transaction toTinkTransactions() {
         return Transaction.builder()
-                .setAmount(transactionAmount.getAmount())
+                .setAmount(transactionAmount.toAmount(creditDebitIndicator))
                 .setDate(bookingDate)
-                .setDescription(remittanceInformation.get(0))
+                .setDescription(
+                        remittanceInformation.stream()
+                                .filter(Objects::nonNull)
+                                .findFirst()
+                                .orElse(creditDebitIndicator))
                 .setPending(getPending())
                 .build();
     }

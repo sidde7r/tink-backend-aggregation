@@ -1,27 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities.Transactions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.BalancesEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities.HrefEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
 
     @JsonProperty("next")
-    private NextEntity nextEntity;
+    private HrefEntity nextEntity;
 
     @JsonProperty("balances")
     private BalancesEntity balancesEntity;
 
     @JsonProperty("last")
-    private LastEntity lastEntity;
+    private HrefEntity lastEntity;
 
     @JsonProperty("self")
-    private SelfEntity selfEntity;
+    private HrefEntity selfEntity;
 
     @JsonProperty("parent-list")
-    private ParentListEntity parentListEntity;
+    private HrefEntity parentListEntity;
 
-    public NextEntity getNextEntity() {
+    public HrefEntity getNextEntity() {
         return nextEntity;
     }
 
@@ -29,15 +31,15 @@ public class LinksEntity {
         return balancesEntity;
     }
 
-    public LastEntity getLastEntity() {
+    public HrefEntity getLastEntity() {
         return lastEntity;
     }
 
-    public SelfEntity getSelfEntity() {
+    public HrefEntity getSelfEntity() {
         return selfEntity;
     }
 
-    public ParentListEntity getParentListEntity() {
+    public HrefEntity getParentListEntity() {
         return parentListEntity;
     }
 }
