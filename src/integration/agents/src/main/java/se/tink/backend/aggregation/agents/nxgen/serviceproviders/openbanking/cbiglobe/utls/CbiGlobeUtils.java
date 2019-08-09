@@ -7,8 +7,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import org.joda.time.DateTime;
 
 public class CbiGlobeUtils {
     private CbiGlobeUtils() {
@@ -41,6 +41,9 @@ public class CbiGlobeUtils {
     }
 
     public static Date calculateFromDate(Date toDate) {
-        return new DateTime(toDate).minusDays(90).toDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(toDate);
+        calendar.add(Calendar.DATE, -90);
+        return calendar.getTime();
     }
 }
