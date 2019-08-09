@@ -29,9 +29,9 @@ public class SamlinkAutoAuthenticator extends SamlinkAuthenticatorBase
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials) throws SessionException {
-        String username = this.credentials.getField(Field.Key.USERNAME);
-        String password = this.credentials.getField(Field.Key.PASSWORD);
+    public void autoAuthenticate() throws SessionException {
+        String username = credentials.getField(Field.Key.USERNAME);
+        String password = credentials.getField(Field.Key.PASSWORD);
         String deviceId = persistentStorage.getDeviceId();
         String deviceToken = persistentStorage.getDeviceToken();
 

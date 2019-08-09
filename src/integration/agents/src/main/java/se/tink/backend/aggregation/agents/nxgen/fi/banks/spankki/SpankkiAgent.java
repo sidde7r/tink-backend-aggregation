@@ -92,7 +92,10 @@ public class SpankkiAgent extends NextGenerationAgent
                 this.context,
                 keyCardCtrl,
                 new SpankkiAutoAuthenticator(
-                        this.apiClient, this.spankkiPersistentStorage, this.spankkiSessionStorage));
+                        this.apiClient,
+                        this.spankkiPersistentStorage,
+                        this.spankkiSessionStorage,
+                        this.credentials));
     }
 
     @Override

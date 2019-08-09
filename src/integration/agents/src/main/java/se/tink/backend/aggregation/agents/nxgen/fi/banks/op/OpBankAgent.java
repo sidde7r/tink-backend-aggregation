@@ -86,7 +86,8 @@ public class OpBankAgent extends NextGenerationAgent
                         new OpAuthenticator(
                                 bankClient, opBankPersistentStorage, credentials, sessionStorage),
                         OpBankConstants.KEYCARD_PIN_LENGTH),
-                new OpAutoAuthenticator(bankClient, opBankPersistentStorage, sessionStorage));
+                new OpAutoAuthenticator(
+                        bankClient, opBankPersistentStorage, credentials, sessionStorage));
     }
 
     @Override

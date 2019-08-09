@@ -52,7 +52,10 @@ public class ArgentaAgent extends NextGenerationAgent
                 new ArgentaPersistentStorage(this.persistentStorage);
         ArgentaAuthenticator argentaAuthenticator =
                 new ArgentaAuthenticator(
-                        argentaPersistentStorage, apiClient, supplementalInformationHelper);
+                        argentaPersistentStorage,
+                        apiClient,
+                        credentials,
+                        supplementalInformationHelper);
 
         return new AutoAuthenticationController(
                 request, systemUpdater, argentaAuthenticator, argentaAuthenticator);

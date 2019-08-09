@@ -71,7 +71,7 @@ public class JyskeAgent extends NextGenerationAgent
                         catalog,
                         supplementalInformationHelper,
                         new JyskeKeyCardAuthenticator(apiClient, persistentStorage)),
-                new JyskeAutoAuthenticator(apiClient, persistentStorage));
+                new JyskeAutoAuthenticator(apiClient, persistentStorage, credentials));
     }
 
     @Override

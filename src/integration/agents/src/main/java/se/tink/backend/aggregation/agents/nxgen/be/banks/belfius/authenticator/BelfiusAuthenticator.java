@@ -21,16 +21,19 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenticator {
 
     private final BelfiusApiClient apiClient;
+    private final Credentials credentials;
     private final PersistentStorage persistentStorage;
     private final BelfiusSessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
     public BelfiusAuthenticator(
             BelfiusApiClient apiClient,
+            Credentials credentials,
             PersistentStorage persistentStorage,
             BelfiusSessionStorage sessionStorage,
             final SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
+        this.credentials = credentials;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -53,7 +56,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials) throws SessionException {
+    public void autoAuthenticate() throws SessionException {
         String panNumber = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
         String deviceToken = persistentStorage.get(BelfiusConstants.Storage.DEVICE_TOKEN);

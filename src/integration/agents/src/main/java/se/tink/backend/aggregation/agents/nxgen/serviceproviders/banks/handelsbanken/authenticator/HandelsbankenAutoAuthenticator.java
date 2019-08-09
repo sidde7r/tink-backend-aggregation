@@ -28,22 +28,25 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 public class HandelsbankenAutoAuthenticator implements AutoAuthenticator {
     private final HandelsbankenApiClient client;
     private final HandelsbankenPersistentStorage persistentStorage;
+    private final Credentials credentials;
     private final HandelsbankenSessionStorage sessionStorage;
     private final HandelsbankenConfiguration configuration;
 
     public HandelsbankenAutoAuthenticator(
             HandelsbankenApiClient client,
             HandelsbankenPersistentStorage persistentStorage,
+            Credentials credentials,
             HandelsbankenSessionStorage sessionStorage,
             HandelsbankenConfiguration configuration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.credentials = credentials;
         this.sessionStorage = sessionStorage;
         this.configuration = configuration;
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials) throws SessionException {
+    public void autoAuthenticate() throws SessionException {
         LibTFA tfa = persistentStorage.getTfa(credentials);
 
         EntryPointResponse entrypoint = client.fetchEntryPoint();

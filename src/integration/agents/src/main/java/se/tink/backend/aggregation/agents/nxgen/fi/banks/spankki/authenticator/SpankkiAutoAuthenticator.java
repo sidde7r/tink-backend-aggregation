@@ -22,21 +22,23 @@ public class SpankkiAutoAuthenticator implements AutoAuthenticator {
     private final SpankkiApiClient apiClient;
     private final SpankkiPersistentStorage persistentStorage;
     private final SpankkiSessionStorage sessionStorage;
+    private final Credentials credentials;
 
     public SpankkiAutoAuthenticator(
             SpankkiApiClient apiClient,
             SpankkiPersistentStorage persistentStorage,
-            SpankkiSessionStorage sessionStorage) {
+            SpankkiSessionStorage sessionStorage,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
+        this.credentials = credentials;
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials)
-            throws SessionException, BankServiceException {
-        String username = credentials.getField(Field.Key.USERNAME);
-        String password = credentials.getField(Field.Key.PASSWORD);
+    public void autoAuthenticate() throws SessionException, BankServiceException {
+        String username = this.credentials.getField(Field.Key.USERNAME);
+        String password = this.credentials.getField(Field.Key.PASSWORD);
         String deviceId = this.persistentStorage.getDeviceId();
         String deviceToken = this.persistentStorage.getDeviceToken();
 

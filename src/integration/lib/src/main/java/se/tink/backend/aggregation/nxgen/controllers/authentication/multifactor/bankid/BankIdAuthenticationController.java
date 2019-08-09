@@ -163,7 +163,7 @@ public class BankIdAuthenticationController<T>
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials)
+    public void autoAuthenticate()
             throws SessionException, BankServiceException, AuthorizationException {
         OAuth2Token accessToken =
                 persistentStorage

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqApiClient;
@@ -35,7 +34,7 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials) throws SessionException {
+    public void autoAuthenticate() throws SessionException {
         validateRsaKeyPairUsedLaterInFilter();
         try {
             // Here we need to use the token got from installation

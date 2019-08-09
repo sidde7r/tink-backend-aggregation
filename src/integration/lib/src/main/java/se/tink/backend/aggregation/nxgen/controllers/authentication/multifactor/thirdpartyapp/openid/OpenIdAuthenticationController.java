@@ -112,8 +112,7 @@ public class OpenIdAuthenticationController
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials)
-            throws SessionException, BankServiceException {
+    public void autoAuthenticate() throws SessionException, BankServiceException {
         OAuth2Token accessToken =
                 persistentStorage
                         .get(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)

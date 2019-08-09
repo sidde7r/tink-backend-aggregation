@@ -334,8 +334,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials)
-            throws SessionException, AuthorizationException {
+    public void autoAuthenticate() throws SessionException, AuthorizationException {
         if (!isCredentialsCorrect()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }

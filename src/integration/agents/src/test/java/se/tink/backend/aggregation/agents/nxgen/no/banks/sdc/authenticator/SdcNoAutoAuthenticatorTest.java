@@ -35,8 +35,9 @@ public class SdcNoAutoAuthenticatorTest {
 
         SdcApiClient apiClient = new SdcApiClient(new TinkHttpClient(), configuration);
 
-        new SdcAutoAuthenticator(apiClient, sessionStorage, configuration, persistentStorage)
-                .autoAuthenticate(credentials);
+        new SdcAutoAuthenticator(
+                        apiClient, sessionStorage, configuration, credentials, persistentStorage)
+                .autoAuthenticate();
 
         assertNotNull(sessionStorage.getAgreements());
     }

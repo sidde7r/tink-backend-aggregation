@@ -97,7 +97,7 @@ public class HandelsbankenSECardDeviceAuthenticator implements MultiFactorAuthen
         persistentStorage.persist(activateProfile);
         persistentStorage.persist(tfa);
 
-        autoAuthenticator.autoAuthenticate(credentials);
+        autoAuthenticator.autoAuthenticate();
     }
 
     private Field challengeField(InitNewProfileResponse initNewProfile) {

@@ -30,6 +30,7 @@ public class AlandsBankenAgent extends CrossKeyAgent {
                         new CrossKeyKeyCardAuthenticator(
                                 apiClient, agentConfiguration, agentPersistentStorage, credentials),
                         CrossKeyConstants.MultiFactorAuthentication.KEYCARD_PIN_LENGTH),
-                new CrossKeyAutoAuthenticator(this.apiClient, agentPersistentStorage));
+                new CrossKeyAutoAuthenticator(
+                        this.apiClient, agentPersistentStorage, this.credentials));
     }
 }

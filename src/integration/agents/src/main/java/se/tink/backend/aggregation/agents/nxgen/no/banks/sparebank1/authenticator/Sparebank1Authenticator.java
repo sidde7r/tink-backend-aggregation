@@ -190,8 +190,7 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials)
-            throws SessionException, BankServiceException {
+    public void autoAuthenticate() throws SessionException, BankServiceException {
         authenticateWithSRP(Sparebank1Identity.load(persistentStorage));
     }
 

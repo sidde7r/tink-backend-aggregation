@@ -75,7 +75,8 @@ public class OmaspAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new OmaspKeyCardAuthenticator(
                                 apiClient, persistentStorage, sessionStorage)),
-                new OmaspAutoAuthenticator(apiClient, persistentStorage, sessionStorage));
+                new OmaspAutoAuthenticator(
+                        apiClient, persistentStorage, credentials, sessionStorage));
     }
 
     @Override
