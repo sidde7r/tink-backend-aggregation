@@ -90,6 +90,14 @@ data:
             eidasQwac: "{{ $agentsConfig.nordea.tink.eidasQwac }}"
         {{- end }}
 
+        {{- if $agentsConfig.icabanken }}
+        icabanken:
+          tink:
+            clientId: "{{ $agentsConfig.icabanken.tink.clientId }}"
+            redirectUri: "{{ $agentsConfig.icabanken.tink.redirectUri }}"
+            certificateId: "{{ $agentsConfig.icabanken.tink.certificateId }}"
+        {{- end }}
+
         {{- if $agentsConfig.axa }}
         axa:
           tink:

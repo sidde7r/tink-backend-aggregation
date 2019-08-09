@@ -39,6 +39,11 @@ agents:
     tink:
       eidasQwac: Tink
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+  icabanken:
+    tink:
+      clientId: PSDSE-FINA-44059
+      certificateId: Tink
+      redirectUri: https://api.tink.se/api/v1/credentials/third-party/callback
   axa:
     tink:
       certificateId: Tink
