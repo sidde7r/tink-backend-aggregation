@@ -59,7 +59,7 @@ public final class AgentConfigurationController {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) e;
                     if (statusRuntimeException.getStatus() == Status.NOT_FOUND) {
                         log.info(
-                                "Could not find secrets for financialInsitutionId: "
+                                "Could not find secrets for financialInstitutionId: "
                                         + financialInstitutionId
                                         + " and appId: "
                                         + appId);
@@ -83,9 +83,9 @@ public final class AgentConfigurationController {
         return true;
     }
 
-    public void shutdownTppSecretsServiceClient() throws InterruptedException {
+    public void shutdownTppSecretsServiceClient() {
         if (tppSecretsServiceEnabled) {
-            tppSecretsServiceClient.shutdown();
+            Optional.ofNullable(tppSecretsServiceClient).ifPresent(client -> client.shutdown());
         }
     }
 

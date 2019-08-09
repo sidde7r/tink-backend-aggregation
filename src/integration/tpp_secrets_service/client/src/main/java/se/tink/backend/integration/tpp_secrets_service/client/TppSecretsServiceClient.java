@@ -180,7 +180,7 @@ public class TppSecretsServiceClient {
                 | UnrecoverableKeyException e) {
             throw new IllegalStateException(
                     "Problem encountered when setting up client "
-                            + "authentication to Secrets Service running in stating environment",
+                            + "authentication to Secrets Service running in staging environment",
                     e);
         }
     }
@@ -233,7 +233,11 @@ public class TppSecretsServiceClient {
                         + "/.eidas/local-cluster/ with the following names: ca.crt, tls.key, tls.crt");
     }
 
-    public void shutdown() throws InterruptedException {
-        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+    public void shutdown() {
+        try {
+            channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            log.warn("TppSecretsServiceClient channel was not able to shutdown gracefully.");
+        }
     }
 }
