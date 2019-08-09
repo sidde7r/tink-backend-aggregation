@@ -225,7 +225,7 @@ public class SibsBaseApiClient {
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(configuration.getRedirectUrl()).queryParam(QueryKeys.STATE, state))
-                .queryParam(SibsConstants.QueryKeys.TPP_REDIRECT_PREFFERED, TRUE)
+                .queryParam(SibsConstants.QueryKeys.TIP_REDIRECT_PREFERRED, TRUE)
                 .post(SibsPaymentInitiationResponse.class, sibsPaymentRequest);
     }
 
