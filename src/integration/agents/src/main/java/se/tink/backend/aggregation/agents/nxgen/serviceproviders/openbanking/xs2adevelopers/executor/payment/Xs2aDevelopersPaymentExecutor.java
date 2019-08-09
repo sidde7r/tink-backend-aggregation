@@ -43,7 +43,8 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
                         debtor,
                         new AmountEntity(
                                 ExactCurrencyAmount.of(
-                                        payment.getAmount().getValue(), payment.getCurrency())));
+                                        payment.getAmount().toBigDecimal(),
+                                        payment.getCurrency())));
 
         return apiClient
                 .createPayment(createPaymentRequest)
