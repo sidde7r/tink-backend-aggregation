@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
-import java.util.Optional;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -85,11 +84,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     }
 
     public AgentConfigurationController getAgentConfigurationController() {
-        return Optional.ofNullable(agentConfigurationController)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "No AgentConfigurationController available, be sure to call setConfiguration before you try to get it."));
+        return agentConfigurationController;
     }
 
     public void setAgentConfigurationController(
