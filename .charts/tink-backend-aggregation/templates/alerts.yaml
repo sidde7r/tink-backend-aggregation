@@ -7,6 +7,16 @@ metadata:
 spec:
   rules:
 
+  - alert: ClientCertExpiresSoonAggregation
+    expr: tink_client_cert_expiry_days{host="aggregation.{{.Values.Environment}}.{{.Values.Cluster}}.tink.se"} < 30
+    for: 10m
+    labels:
+      severity: ping
+      who: aggregation
+    annotations:
+      description: <{ $labels.client }> is using a certificate that expires in <{ $value }> days.
+      summary: A used certificate is expiring in <{ $value }> days.
+
 ### Response time alerts ###
   - alert: HighResponseTimeAggregationService
     expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-aggregation-controller", team_owner="INTEGRATION", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
