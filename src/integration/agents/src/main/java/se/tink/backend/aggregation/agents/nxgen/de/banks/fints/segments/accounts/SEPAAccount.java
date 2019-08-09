@@ -167,10 +167,12 @@ public class SEPAAccount implements GeneralAccountEntity {
 
     public TransactionalAccount toTinkAccount() {
 
+        String accountId = Strings.isNullOrEmpty(getIban()) ? getAccountNo() : getIban();
+
         TransactionalAccount.Builder builder =
                 TransactionalAccount.builder(
                                 getType(),
-                                getAccountNo(),
+                                accountId,
                                 new Amount(getCurrency(), StringUtils.parseAmount(getBalance())))
                         .setHolderName(new HolderName(getHolderName()))
                         .setName(getProductName())
