@@ -30,12 +30,11 @@ public class GetTransactionsRequest {
     }
 
     @JsonIgnore
-    public GetTransactionsRequest addAccount(String bankIdentifier) {
-        String[] identifierSplit = bankIdentifier.split(":");
+    public GetTransactionsRequest addAccount(String regNo, String accountNo) {
         BankdataAccountIdEntity accountIdEntity =
                 new BankdataAccountIdEntity()
-                        .setRegNo(identifierSplit[0])
-                        .setAccountNo(identifierSplit[1]);
+                        .setRegNo(regNo)
+                        .setAccountNo(accountNo);
 
         accounts.add(accountIdEntity);
         return this;

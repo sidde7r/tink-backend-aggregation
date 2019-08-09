@@ -1,15 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities;
 
-import com.google.common.base.Preconditions;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class BankdataAccountEntity {
+
+    public static final String REGISTRATION_NUMBER_TEMP_STORAGE_KEY = "regNo";
+    public static final String ACCOUNT_NUMBER_TEMP_STORAGE_KEY = "accountNo";
+
     private String regNo;
     private String accountNo;
     private int accountType;
@@ -44,6 +46,8 @@ public class BankdataAccountEntity {
                 .setAccountNumber(iban)
                 .setName(name)
                 .setBankIdentifier(constructUniqueIdentifier())
+                .putInTemporaryStorage(REGISTRATION_NUMBER_TEMP_STORAGE_KEY, regNo)
+                .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY,accountNo)
                 .build();
     }
 
@@ -54,11 +58,7 @@ public class BankdataAccountEntity {
     }
 
     private String constructUniqueIdentifier() {
-        String accountId = regNo + ":" + accountNo;
-        Preconditions.checkState(
-                StringUtils.trimToNull(accountId) != null, "No account number present");
-
-        return accountId;
+        return iban;
     }
 
     public String getRegNo() {
