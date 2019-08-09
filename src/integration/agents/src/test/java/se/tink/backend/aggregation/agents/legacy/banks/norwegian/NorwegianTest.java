@@ -6,38 +6,8 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils;
-import se.tink.backend.aggregation.agents.banks.norwegian.utils.SavingsAccountParsingUtils;
 
 public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
-    private static final String savingsAccountPage =
-            "<div class=\"grid\">"
-                    + "<div class=\"card\">"
-                    + "<div class=\"card__body\" data-target=\"/MinSida/SavingsAccount/Details?AccountNumber=10317169001\">"
-                    + "<div class=\"grid-u-1-2 card__data\" style=\"text-align: left\">"
-                    + "Sparkonto                    <div class=\"card__data--label\">11111111111</div>"
-                    + "</div>"
-                    + "<div class=\"grid-u-1-2 card__data\">"
-                    + "100,11"
-                    + "<div class=\"card__data--label\">tillgängligt</div>"
-                    + "</div>"
-                    + "</div>"
-                    + "<a class=\"card__expander collapse\" href=\"#\">"
-                    + "<img src=\"/Images/chevron_down.svg\" alt=\"Visa genvägar\" />"
-                    + "</a>"
-                    + "<div class=\"card__collapsable__content collapse in\">"
-                    + "<div class=\"card__actions\">"
-                    + "<a href=\"/MinSida/SavingsAccount/Transactions?selectedAccount=10317169001\" class=\"uit-cardaction uit-mypage2savingsaccounttransactions\">"
-                    + "<span class=\"icon icon--transactions\"></span>"
-                    + "Transaktioner"
-                    + "</a>"
-                    + "<a href=\"/MinSida/SavingsAccount/Payment?accountNumber=10317169001\" class=\"uit-cardaction uit-mypage2savingsaccountpayment\">"
-                    + "<span class=\"icon icon--payment\"></span>"
-                    + "Överföra"
-                    + "</a>"
-                    + "</div>"
-                    + "</div>"
-                    + "</div>"
-                    + "</div>";
 
     public NorwegianTest() {
         super(NorwegianAgent.class);
@@ -159,19 +129,5 @@ public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
         Optional<String> stringOptional =
                 CreditCardParsingUtils.parseTransactionalAccountNumber(htmlContent);
         Assert.assertEquals("11111111111", stringOptional.get());
-    }
-
-    @Test
-    public void testParsingOfSavingsAccountNumber() {
-        Optional<String> accountNumber =
-                SavingsAccountParsingUtils.parseSavingsAccountNumber(savingsAccountPage);
-        Assert.assertTrue(accountNumber.isPresent());
-        Assert.assertEquals("11111111111", accountNumber.get());
-    }
-
-    @Test
-    public void testParsingOfSavingsBalance() {
-        Double balance = SavingsAccountParsingUtils.parseSavingsAccountBalance(savingsAccountPage);
-        Assert.assertEquals(100.11, balance, 0.5);
     }
 }

@@ -24,7 +24,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
@@ -47,11 +46,12 @@ import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardRespon
 import se.tink.backend.aggregation.agents.banks.norwegian.model.ErrorEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.LoginRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.OrderBankIdResponse;
+import se.tink.backend.aggregation.agents.banks.norwegian.model.SavingsAccountEntity;
+import se.tink.backend.aggregation.agents.banks.norwegian.model.SavingsAccountResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.TransactionEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.TransactionListResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils.AccountNotFoundException;
-import se.tink.backend.aggregation.agents.banks.norwegian.utils.SavingsAccountParsingUtils;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -271,7 +271,11 @@ public class NorwegianAgent extends AbstractAgent
         AccountEntity account = new AccountEntity();
 
         CreditCardResponse creditCardResponse =
-                createClientRequest(CREDIT_CARD_URL).get(CreditCardResponse.class);
+                fetchAccountsRequest(CREDIT_CARD_URL, CreditCardResponse.class);
+
+        if (creditCardResponse == null) {
+            throw new AccountNotFoundException("No active cards found.");
+        }
 
         // Get balance and credit
         account.setBalance(creditCardResponse.getBalance());
@@ -349,31 +353,28 @@ public class NorwegianAgent extends AbstractAgent
     }
 
     private Optional<Account> getSavingsAccount() {
-        ClientResponse clientResponse =
-                createClientRequest(SAVINGS_ACCOUNTS_URL).get(ClientResponse.class);
 
-        if (clientResponse.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
+        SavingsAccountResponse savingsAccountResponse =
+                fetchAccountsRequest(SAVINGS_ACCOUNTS_URL, SavingsAccountResponse.class);
+
+        if (savingsAccountResponse == null) {
             return Optional.empty();
         }
 
-        String savingsAccountPage = clientResponse.getEntity(String.class);
+        List<SavingsAccountEntity> savingsAccountList = savingsAccountResponse.getAccounts();
 
-        Optional<String> accountNumber =
-                SavingsAccountParsingUtils.parseSavingsAccountNumber(savingsAccountPage);
-        if (!accountNumber.isPresent()) {
+        // If the user doesn't have an account the savingsAccountResponse should be null, this
+        // check is a fail safe in case they change logic on their end.
+        if (savingsAccountList == null || savingsAccountList.isEmpty()) {
             return Optional.empty();
         }
 
-        Account account = new Account();
-        account.setBalance(
-                SavingsAccountParsingUtils.parseSavingsAccountBalance(savingsAccountPage));
-        account.setAccountNumber(accountNumber.get());
-        // Only one savings account per user is allowed
-        account.setBankId("NORWEGIAN_SAVINGS_ACCOUNT");
-        account.setName("Norwegian Sparkonto");
-        account.setType(AccountTypes.SAVINGS);
+        if (savingsAccountList.size() > 1) {
+            throw new IllegalStateException(
+                    "Found more than one savings account, Norwegian only allow one savings account as far as we know.");
+        }
 
-        return Optional.of(account);
+        return Optional.of(savingsAccountList.get(0).toTinkAccount());
     }
 
     private Entry<Account, List<Transaction>> updateTransactions(Account account) {
@@ -504,6 +505,28 @@ public class NorwegianAgent extends AbstractAgent
         return client.resource(url)
                 .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
                 .accept(MediaType.APPLICATION_JSON);
+    }
+
+    /**
+     * Used for fetching savings account and credit cards. If the user doesn't have the product
+     * we're asking for we have to handle HTML in the response.
+     */
+    private <T> T fetchAccountsRequest(String url, Class<T> responseType) {
+
+        ClientResponse response =
+                client.resource(url)
+                        .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
+                        .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML)
+                        .get(ClientResponse.class);
+
+        if (response.getType().getType().equals(MediaType.APPLICATION_JSON_TYPE.getType())
+                && response.getType()
+                        .getSubtype()
+                        .equals(MediaType.APPLICATION_JSON_TYPE.getSubtype())) {
+            return response.getEntity(responseType);
+        }
+
+        return null;
     }
 
     @Override
