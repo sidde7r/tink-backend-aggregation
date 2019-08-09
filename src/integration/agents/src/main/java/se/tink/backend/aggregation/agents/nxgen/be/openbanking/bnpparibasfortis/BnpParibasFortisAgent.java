@@ -66,7 +66,8 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new AutoAuthenticationController(
                 request,

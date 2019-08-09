@@ -70,7 +70,8 @@ public final class BelfiusAgent extends NextGenerationAgent
                                 persistentStorage,
                                 this.belfiusConfiguration,
                                 credentials.getField(CredentialKeys.IBAN)),
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new AutoAuthenticationController(
                 request,

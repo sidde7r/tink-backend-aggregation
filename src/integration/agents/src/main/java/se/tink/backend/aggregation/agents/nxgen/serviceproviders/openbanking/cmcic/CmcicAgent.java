@@ -76,7 +76,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new CmcicAuthenticator(apiClient, persistentStorage),
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new AutoAuthenticationController(
                 request,
