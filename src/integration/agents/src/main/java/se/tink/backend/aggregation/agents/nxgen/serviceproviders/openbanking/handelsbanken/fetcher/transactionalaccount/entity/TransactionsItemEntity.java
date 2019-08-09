@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.DateTimeException;
 import java.util.Date;
@@ -115,14 +116,19 @@ public class TransactionsItemEntity {
         }
     }
 
+    private BigDecimal creditOrDebit() {
+        return HandelsbankenBaseConstants.Transactions.CREDITED.equalsIgnoreCase(creditDebit)
+                ? transactionAmountEntity.getContent()
+                : transactionAmountEntity.getContent().negate();
+    }
+
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
                 .setDate(getDate())
                 .setAmount(
                         new ExactCurrencyAmount(
-                                transactionAmountEntity.getContent(),
-                                transactionAmountEntity.getCurrency()))
+                                creditOrDebit(), transactionAmountEntity.getCurrency()))
                 .setDescription(remittanceInformation)
                 .setPending(
                         HandelsbankenBaseConstants.Transactions.IS_PENDING.equalsIgnoreCase(status))
