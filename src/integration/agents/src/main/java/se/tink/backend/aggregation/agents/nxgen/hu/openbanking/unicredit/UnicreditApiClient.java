@@ -7,7 +7,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.entity.ConsentPayloadEntity;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.entity.UnicreditConsentAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.rpc.UnicreditConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.rpc.UnicreditConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
@@ -35,7 +34,7 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
         c.setTime(new Date()); // Today's date
         c.add(Calendar.DATE, 1); // Adds 1 day
 
-        return new UnicreditConsentRequest(
+        return new ConsentRequest(
                 new UnicreditConsentAccessEntity(
                         Collections.singletonList(
                                 new ConsentPayloadEntity(
