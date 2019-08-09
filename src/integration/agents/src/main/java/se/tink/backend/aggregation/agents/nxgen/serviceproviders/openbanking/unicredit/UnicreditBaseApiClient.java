@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -8,9 +10,12 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.unicredit.authenticator.entity.UnicreditConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.PathParameters;
@@ -34,6 +39,9 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public abstract class UnicreditBaseApiClient {
 
+    private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
+            DateTimeFormatter.ofPattern(Formats.DEFAULT_DATE_FORMAT);
+
     private static Logger logger = LoggerFactory.getLogger(UnicreditBaseApiClient.class);
 
     private final TinkHttpClient client;
@@ -53,7 +61,17 @@ public abstract class UnicreditBaseApiClient {
         this.requestIsManual = requestIsManual;
     }
 
-    protected abstract ConsentRequest getConsentRequest();
+    protected ConsentRequest getConsentRequest() {
+        LocalDateTime validUntil =
+                LocalDateTime.now().plusDays(FormValues.CONSENT_VALIDATION_PERIOD_IN_DAYS);
+
+        return new ConsentRequest(
+                new UnicreditConsentAccessEntity(FormValues.ALL_ACCOUNTS),
+                true,
+                CONSENT_BODY_DATE_FORMATTER.format(validUntil),
+                FormValues.FREQUENCY_PER_DAY,
+                false);
+    }
 
     protected abstract Class<? extends ConsentResponse> getConsentResponseType();
 

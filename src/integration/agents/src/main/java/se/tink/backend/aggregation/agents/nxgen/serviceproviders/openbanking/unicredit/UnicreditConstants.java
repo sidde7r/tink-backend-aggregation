@@ -77,6 +77,7 @@ public final class UnicreditConstants {
 
         public static final String ALL_ACCOUNTS = "allAccounts";
         public static final int FREQUENCY_PER_DAY = 4;
+        public static final int CONSENT_VALIDATION_PERIOD_IN_DAYS = 90;
     }
 
     public class Formats {
