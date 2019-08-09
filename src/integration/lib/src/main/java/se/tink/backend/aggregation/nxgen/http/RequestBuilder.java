@@ -28,6 +28,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     private Object body;
     private MultivaluedMap<String, Object> headers;
     private List<String> cookies = new ArrayList<>();
+    private HttpResponseStatusHandler responseStatusHandler;
 
     // TODO: REMOVE THIS ONCE AGGREGATOR IDENTIFIER IS VERIFIED
     public static Logger logger = LoggerFactory.getLogger(RequestBuilder.class);
@@ -36,19 +37,24 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
             Filterable filterChain,
             Filter finalFilter,
             URL url,
-            String headerAggregatorIdentifier) {
-        this(filterChain, finalFilter, headerAggregatorIdentifier);
+            String headerAggregatorIdentifier,
+            HttpResponseStatusHandler responseStatusHandler) {
+        this(filterChain, finalFilter, headerAggregatorIdentifier, responseStatusHandler);
         this.url = url;
     }
 
     public RequestBuilder(
-            Filterable filterChain, Filter finalFilter, String headerAggregatorIdentifier) {
+            Filterable filterChain,
+            Filter finalFilter,
+            String headerAggregatorIdentifier,
+            HttpResponseStatusHandler responseStatusHandler) {
         super(filterChain);
         this.finalFilter = finalFilter;
 
         // OutBoundHeaders is a case-insensitive MultivaluedMap
         headers = new OutBoundHeaders();
         this.headerAggregatorIdentifier = headerAggregatorIdentifier;
+        this.responseStatusHandler = responseStatusHandler;
     }
 
     public URL getUrl() {
@@ -743,28 +749,12 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         addAggregatorToHeader();
         HttpResponse httpResponse = getFilterHead().handle(httpRequest);
 
-        // Throw an exception for all statuses >= 400, i.e. the request was not accepted. This is to
-        // force us
-        // to handle invalid responses in a unified way (try/catch).
-        if (httpResponse.getStatus() >= 400) {
-            throw new HttpResponseException(
-                    detailedExceptionMessage(httpResponse), httpRequest, httpResponse);
-        }
+        responseStatusHandler.handleResponse(httpRequest, httpResponse);
 
         if (c == HttpResponse.class) {
             return c.cast(httpResponse);
         } else {
             return httpResponse.getBody(c);
-        }
-    }
-
-    private String detailedExceptionMessage(HttpResponse httpResponse) {
-        String message = "Response statusCode: " + httpResponse.getStatus();
-        try {
-            return message + " with body: " + httpResponse.getBody(String.class);
-        } catch (Exception e) {
-            // just in case, but should never be reached.
-            return message;
         }
     }
 
@@ -775,13 +765,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         addCookiesToHeader();
         addAggregatorToHeader();
         HttpResponse httpResponse = handle(HttpResponse.class, httpRequest);
-        if (httpResponse.getStatus() >= 300) {
-            // Since we internally request the response type `ClientResponse` (jersey type) we must
-            // do this check
-            // here (Jersey does it internally if the response type is != `ClientResponse`).
-            // Jersey has this exact same check in their `voidHandle` (which we bypass, but want to
-            // mimic)
-            throw new HttpResponseException(httpRequest, httpResponse);
-        }
+
+        responseStatusHandler.handleResponseWithoutExpectedReturnBody(httpRequest, httpResponse);
     }
 }
