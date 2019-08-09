@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
@@ -39,21 +40,21 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
                         credentialsRequest.getProvider().getFinancialInstitutionId(),
                         agentWorkerCommandContext.getAppId());
 
+        agentWorkerCommandContext.setAgentConfigurationController(agentConfigurationController);
+
         if (!agentConfigurationController.init()) {
             log.warn("AgentConfigurationController could not be initialized.");
             return AgentWorkerCommandResult.ABORT;
         }
 
-        agentWorkerCommandContext.setAgentConfigurationController(agentConfigurationController);
         return AgentWorkerCommandResult.CONTINUE;
     }
 
     @Override
     public void postProcess() throws Exception {
-        if (tppSecretsServiceEnabled) {
-            agentWorkerCommandContext
-                    .getAgentConfigurationController()
-                    .shutdownTppSecretsServiceClient();
-        }
+        Optional.ofNullable(agentWorkerCommandContext.getAgentConfigurationController())
+                .ifPresent(
+                        agentConfigurationController ->
+                                agentConfigurationController.shutdownTppSecretsServiceClient());
     }
 }
