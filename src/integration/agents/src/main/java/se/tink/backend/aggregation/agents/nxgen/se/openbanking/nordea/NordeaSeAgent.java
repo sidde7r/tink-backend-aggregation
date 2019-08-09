@@ -55,7 +55,8 @@ public final class NordeaSeAgent extends NordeaBaseAgent
                         supplementalRequester,
                         new NordeaSeBankIdAuthenticator(
                                 (NordeaSeApiClient) apiClient, sessionStorage, language),
-                        persistentStorage);
+                        persistentStorage,
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,
