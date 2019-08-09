@@ -21,6 +21,7 @@ public class OpAutoAuthenticator implements PasswordAuthenticator, AutoAuthentic
 
     private final OpBankApiClient apiClient;
     private final OpBankPersistentStorage persistentStorage;
+    private final Credentials credentials;
     private String authToken;
     private final PasswordAuthenticationController authenticationController;
     private SessionStorage sessionStorage;
@@ -28,15 +29,17 @@ public class OpAutoAuthenticator implements PasswordAuthenticator, AutoAuthentic
     public OpAutoAuthenticator(
             OpBankApiClient client,
             OpBankPersistentStorage persistentStorage,
+            Credentials credentials,
             SessionStorage sessionStorage) {
         this.apiClient = client;
         this.persistentStorage = persistentStorage;
+        this.credentials = credentials;
         this.sessionStorage = sessionStorage;
         this.authenticationController = new PasswordAuthenticationController(this);
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials) throws SessionException {
+    public void autoAuthenticate() throws SessionException {
         if (!persistentStorage.containsAppId()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }

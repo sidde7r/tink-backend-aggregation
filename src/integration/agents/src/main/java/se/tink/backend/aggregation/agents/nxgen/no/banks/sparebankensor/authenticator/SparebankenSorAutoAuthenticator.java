@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator;
 
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
@@ -25,7 +24,7 @@ public class SparebankenSorAutoAuthenticator implements AutoAuthenticator {
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials) throws SessionException {
+    public void autoAuthenticate() throws SessionException {
         apiClient.fetchAppInformation(); // only for getting a cookie, possible we must save this
         // cookie for later use in the first login request
 

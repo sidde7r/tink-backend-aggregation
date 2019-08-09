@@ -55,6 +55,7 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
 
     private static final Logger log = LoggerFactory.getLogger(NordeaPasswordAuthenticator.class);
     private final NordeaSEApiClient apiClient;
+    private final Credentials credentials;
     private final CredentialsRequest request;
     private final BankIdAuthenticationController bankIdAuthenticationController;
     private final PersistentStorage persistentStorage;
@@ -72,6 +73,7 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
 
         this.apiClient = apiClient;
         this.request = request;
+        this.credentials = request.getCredentials();
         this.bankIdAuthenticationController = bankIdAuthenticationController;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
@@ -94,7 +96,7 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
 
         String password = credentials.getField(Key.PASSWORD);
         if (Strings.isNullOrEmpty(password)) {
-            password = credentials.getSensitivePayload(StorageKeys.SENSITIVE_PAYLOAD_PASSWORD);
+            password = this.credentials.getSensitivePayload(StorageKeys.SENSITIVE_PAYLOAD_PASSWORD);
             if (Strings.isNullOrEmpty(password)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
@@ -104,15 +106,15 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
             activatePersonalCodeLogin(credentials);
         }
         login(password);
-        credentials.setSensitivePayload(StorageKeys.SENSITIVE_PAYLOAD_PASSWORD, password);
+        this.credentials.setSensitivePayload(StorageKeys.SENSITIVE_PAYLOAD_PASSWORD, password);
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials)
+    public void autoAuthenticate()
             throws SessionException, BankServiceException, AuthorizationException {
         // TODO use persistent storage
         String storedPassword =
-                credentials.getSensitivePayload(StorageKeys.SENSITIVE_PAYLOAD_PASSWORD);
+                this.credentials.getSensitivePayload(StorageKeys.SENSITIVE_PAYLOAD_PASSWORD);
         if (!isPersonalCodeLoginActivated() || Strings.isNullOrEmpty(storedPassword)) {
             log.warn("Automatic refresh, but has no password.");
             throw SessionError.SESSION_EXPIRED.exception();
@@ -243,9 +245,9 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
 
     private void loginWithBankId(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        credentials.setType(CredentialsTypes.MOBILE_BANKID);
+        this.credentials.setType(CredentialsTypes.MOBILE_BANKID);
         bankIdAuthenticationController.authenticate(credentials);
-        credentials.setType(CredentialsTypes.PASSWORD);
+        this.credentials.setType(CredentialsTypes.PASSWORD);
     }
 
     private void revokeBankIdToken() {

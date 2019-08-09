@@ -86,7 +86,8 @@ public class HandelsbankenSEBankEInvoiceExecutorTest {
                         new AgentTestContext(credentials),
                         new HandelsbankenBankIdAuthenticator(
                                 client, credentials, persistentStorage, sessionStorage),
-                        new PersistentStorage())
+                        new PersistentStorage(),
+                        credentials)
                 .authenticate(credentials);
 
         HandelsbankenSEEInvoiceExecutor seeInvoiceExecutor =

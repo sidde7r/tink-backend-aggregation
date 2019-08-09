@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.
 import com.google.api.client.http.HttpStatusCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -22,8 +21,7 @@ public class RevolutAutoAuthenticator implements AutoAuthenticator {
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials)
-            throws SessionException, BankServiceException {
+    public void autoAuthenticate() throws SessionException, BankServiceException {
         try {
             apiClient.fetchUser();
         } catch (HttpResponseException e) {

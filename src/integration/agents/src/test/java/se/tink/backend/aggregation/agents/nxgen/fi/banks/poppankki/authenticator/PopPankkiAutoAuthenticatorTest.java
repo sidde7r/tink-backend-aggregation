@@ -65,7 +65,7 @@ public class PopPankkiAutoAuthenticatorTest extends NextGenerationAgentTest {
         SamlinkAutoAuthenticator autoAuthenticator =
                 new SamlinkAutoAuthenticator(bankClient, persistentStorage, credentials);
 
-        autoAuthenticator.autoAuthenticate(credentials);
+        autoAuthenticator.autoAuthenticate();
 
         LOGGER.info(
                 String.format(

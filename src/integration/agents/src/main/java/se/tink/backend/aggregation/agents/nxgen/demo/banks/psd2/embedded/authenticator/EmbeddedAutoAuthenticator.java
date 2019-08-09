@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.embedded.authenticator;
 
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
@@ -8,8 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 public class EmbeddedAutoAuthenticator implements AutoAuthenticator {
 
     @Override
-    public void autoAuthenticate(Credentials credentials)
-            throws SessionException, BankServiceException {
+    public void autoAuthenticate() throws SessionException, BankServiceException {
         // nop
     }
 }

@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
@@ -59,8 +58,7 @@ public class OAuth1AuthenticationController
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials)
-            throws SessionException, BankServiceException {}
+    public void autoAuthenticate() throws SessionException, BankServiceException {}
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {

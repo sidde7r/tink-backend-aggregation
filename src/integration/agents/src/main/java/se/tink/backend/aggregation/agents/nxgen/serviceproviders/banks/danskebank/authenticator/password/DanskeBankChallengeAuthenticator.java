@@ -64,6 +64,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final DanskeBankApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final Credentials credentials;
     private final String deviceId;
     private final DanskeBankConfiguration configuration;
     private String bindChallengeResponseBody;
@@ -77,12 +78,14 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             SupplementalInformationHelper supplementalInformationHelper,
             DanskeBankApiClient apiClient,
             PersistentStorage persistentStorage,
+            Credentials credentials,
             String deviceId,
             DanskeBankConfiguration configuration) {
         this.catalog = catalog;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
+        this.credentials = credentials;
         this.deviceId = deviceId;
         this.configuration = configuration;
     }
@@ -268,13 +271,13 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials)
+    public void autoAuthenticate()
             throws SessionException, BankServiceException, AuthorizationException {
         // Login
         try {
             logonStepOne(
-                    credentials.getField(Field.Key.USERNAME),
-                    credentials.getField(Field.Key.PASSWORD));
+                    this.credentials.getField(Field.Key.USERNAME),
+                    this.credentials.getField(Field.Key.PASSWORD));
         } catch (AuthenticationException | AuthorizationException e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
@@ -335,7 +338,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createInitStepUpTrustedDeviceJavascript(
                             checkChallengeWithDeviceInfo,
-                            credentials.getField(Field.Key.USERNAME),
+                            this.credentials.getField(Field.Key.USERNAME),
                             moreInformationEntity.getOtpChallenge()));
 
             // Extract key card entity to get challenge for next Js execution
@@ -359,7 +362,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createGenerateResponseJavascript(
                             checkChallengeWithDeviceInfo,
-                            credentials.getField(Field.Key.USERNAME),
+                            this.credentials.getField(Field.Key.USERNAME),
                             moreInformationEntity.getOtpChallenge(),
                             generateResponseInput));
             String responseData =
@@ -375,7 +378,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createValidateStepUpTrustedDeviceJavascript(
                             checkChallengeWithDeviceInfo,
-                            credentials.getField(Field.Key.USERNAME),
+                            this.credentials.getField(Field.Key.USERNAME),
                             moreInformationEntity.getOtpChallenge(),
                             generateResponseInput,
                             validateStepUpTrustedDeviceInput));

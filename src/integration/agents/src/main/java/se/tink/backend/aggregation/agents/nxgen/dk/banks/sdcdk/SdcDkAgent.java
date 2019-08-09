@@ -132,7 +132,11 @@ public class SdcDkAgent extends SdcAgent
         LOG.info("SDC bank using SMS authentication");
         SdcAutoAuthenticator dkAutoAuthenticator =
                 new SdcAutoAuthenticator(
-                        bankClient, sdcSessionStorage, agentConfiguration, sdcPersistentStorage);
+                        bankClient,
+                        sdcSessionStorage,
+                        agentConfiguration,
+                        credentials,
+                        sdcPersistentStorage);
         SdcSmsOtpAuthenticator dkSmsOtpAuthenticator =
                 new SdcSmsOtpAuthenticator(
                         bankClient,

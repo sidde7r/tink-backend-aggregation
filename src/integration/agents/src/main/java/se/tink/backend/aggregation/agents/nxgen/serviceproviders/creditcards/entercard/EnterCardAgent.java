@@ -46,7 +46,8 @@ public class EnterCardAgent extends NextGenerationAgent
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
                 new EnterCardAuthenticator(apiClient, config),
-                persistentStorage);
+                persistentStorage,
+                credentials);
     }
 
     @Override

@@ -19,18 +19,23 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 public class JyskeAutoAuthenticator implements PasswordAuthenticator, AutoAuthenticator {
     private final JyskeApiClient apiClient;
     private final JyskePersistentStorage persistentStorage;
+    private final Credentials credentials;
     private final PasswordAuthenticationController authenticationController;
     private final JyskeServiceAuthenticator serviceAuthenticator;
 
-    public JyskeAutoAuthenticator(JyskeApiClient client, JyskePersistentStorage persistentStorage) {
+    public JyskeAutoAuthenticator(
+            JyskeApiClient client,
+            JyskePersistentStorage persistentStorage,
+            Credentials credentials) {
         this.apiClient = client;
         this.persistentStorage = persistentStorage;
+        this.credentials = credentials;
         this.authenticationController = new PasswordAuthenticationController(this);
         this.serviceAuthenticator = new JyskeServiceAuthenticator(apiClient);
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials) throws SessionException {
+    public void autoAuthenticate() throws SessionException {
         if (!persistentStorage.readyForSingleFactor()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }

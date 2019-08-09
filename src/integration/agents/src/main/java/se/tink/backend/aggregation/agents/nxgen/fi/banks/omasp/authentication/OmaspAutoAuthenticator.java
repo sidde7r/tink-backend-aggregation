@@ -24,19 +24,22 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
 
     private final OmaspApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final Credentials credentials;
     private SessionStorage sessionStorage;
 
     public OmaspAutoAuthenticator(
             OmaspApiClient apiClient,
             PersistentStorage persistentStorage,
+            Credentials credentials,
             SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
+        this.credentials = credentials;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials) throws SessionException {
+    public void autoAuthenticate() throws SessionException {
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
         String deviceId = persistentStorage.get(Storage.DEVICE_ID);

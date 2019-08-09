@@ -38,24 +38,25 @@ public class BankIdAuthenticationControllerTest {
 
         persistentStorage = new PersistentStorage();
         authenticationController =
-                new BankIdAuthenticationController(context, authenticator, persistentStorage);
+                new BankIdAuthenticationController(
+                        context, authenticator, persistentStorage, credentials);
 
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationController(context, null, persistentStorage);
+        new BankIdAuthenticationController(context, null, persistentStorage, credentials);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenContext_isNull() {
-        new BankIdAuthenticationController(null, authenticator, persistentStorage);
+        new BankIdAuthenticationController(null, authenticator, persistentStorage, credentials);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenBothContextAndBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationController(null, null, persistentStorage);
+        new BankIdAuthenticationController(null, null, persistentStorage, credentials);
     }
 
     @Test

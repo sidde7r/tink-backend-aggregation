@@ -46,7 +46,8 @@ public class SdcSeAgent extends SdcAgent
                 supplementalRequester,
                 new SdcBankIdAuthenticator(bankClient, sdcSessionStorage, credentials),
                 true,
-                persistentStorage);
+                persistentStorage,
+                credentials);
     }
 
     @Override

@@ -68,7 +68,7 @@ public class BunqAuthenticator implements Authenticator {
     private void authentication(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         try {
-            autoAuthenticator.autoAuthenticate(credentials);
+            autoAuthenticator.autoAuthenticate();
         } catch (SessionException autoException) {
             if (!request.isManual()) {
                 throw autoException;

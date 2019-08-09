@@ -58,7 +58,8 @@ public final class AvanzaAgent extends NextGenerationAgent
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
                 new AvanzaBankIdAuthenticator(apiClient, authSessionStorage, temporaryStorage),
-                persistentStorage);
+                persistentStorage,
+                credentials);
     }
 
     @Override

@@ -13,15 +13,19 @@ public class VolksbankAutoAuthenticator implements AutoAuthenticator {
 
     private final VolksbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final Credentials credentials;
 
     public VolksbankAutoAuthenticator(
-            VolksbankApiClient apiClient, PersistentStorage persistentStorage) {
+            VolksbankApiClient apiClient,
+            PersistentStorage persistentStorage,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
+        this.credentials = credentials;
     }
 
     @Override
-    public void autoAuthenticate(Credentials credentials) throws SessionException {
+    public void autoAuthenticate() throws SessionException {
 
         String userId = credentials.getField(VolksbankConstants.CREDENTIAL_USERNUMBER);
         String userName = credentials.getField(Field.Key.USERNAME);
