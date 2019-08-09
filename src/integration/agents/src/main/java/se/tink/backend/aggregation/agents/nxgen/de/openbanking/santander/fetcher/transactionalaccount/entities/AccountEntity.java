@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +57,7 @@ public class AccountEntity {
     }
 
     private ExactCurrencyAmount getDefaultAmount() {
-        return ExactCurrencyAmount.of(0, currency);
+        return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
     }
 
     private String getTransactionLink() {

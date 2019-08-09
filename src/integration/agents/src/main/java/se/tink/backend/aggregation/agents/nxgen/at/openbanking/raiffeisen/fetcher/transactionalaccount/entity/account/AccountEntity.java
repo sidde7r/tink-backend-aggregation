@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.entity.account;
 
+import java.math.BigDecimal;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.Currency;
@@ -62,6 +63,6 @@ public class AccountEntity {
                 .filter(BalanceEntity::isInterimBalanceAvailable)
                 .findAny()
                 .map(balanceEntity -> balanceEntity.getBalanceAmount().toTinkAmount())
-                .orElse(ExactCurrencyAmount.of(0, Currency.EUR));
+                .orElse(ExactCurrencyAmount.of(BigDecimal.ZERO, Currency.EUR));
     }
 }
