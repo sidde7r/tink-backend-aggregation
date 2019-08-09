@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
@@ -23,7 +24,13 @@ public class BankdataTransactionFetcher
     @Override
     public GetTransactionsResponse getTransactionsFor(TransactionalAccount account, int page) {
         GetTransactionsRequest getTransactionsRequest =
-                new GetTransactionsRequest().addAccount(account.getBankIdentifier()).setPage(page);
+                new GetTransactionsRequest()
+                        .addAccount(
+                                account.getFromTemporaryStorage(
+                                        BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY),
+                                account.getFromTemporaryStorage(
+                                        BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY))
+                        .setPage(page);
 
         return this.bankClient.getTransactions(getTransactionsRequest);
     }
@@ -32,7 +39,11 @@ public class BankdataTransactionFetcher
     public List<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
         GetTransactionsRequest getTransactionsRequest =
                 new GetTransactionsRequest()
-                        .addAccount(account.getBankIdentifier())
+                        .addAccount(
+                                account.getFromTemporaryStorage(
+                                        BankdataAccountEntity.REGISTRATION_NUMBER_TEMP_STORAGE_KEY),
+                                account.getFromTemporaryStorage(
+                                        BankdataAccountEntity.ACCOUNT_NUMBER_TEMP_STORAGE_KEY))
                         .setPage(BankdataConstants.Fetcher.START_PAGE);
 
         return this.bankClient

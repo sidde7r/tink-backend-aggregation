@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.workers.commands.migrations.implementations.b
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordea.NordeaSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.skandiabanken.SkandiaBankenSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.brokers.avanza.AvanzaStripClearingMigration;
+import se.tink.backend.aggregation.workers.commands.migrations.implementations.serviceproviders.bankdata.BankdataAccountIdMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.serviceproviders.sebkort.SebKortSanitizeUniqueIdentifierMgration;
 import se.tink.backend.aggregation.workers.commands.migrations.implemntations.other.handelsbanken.HandelsbankenBankIdMigrationNoClearingNumber;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -28,6 +29,16 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
             new ImmutableMap.Builder<String, AgentVersionMigration>()
                     // Add your migrations here
                     .put("handelsbanken-bankid", new HandelsbankenBankIdMigrationNoClearingNumber())
+                    .put("dk-almbrandbank-password", new BankdataAccountIdMigration())
+                    .put("dk-djurslandsbank-password", new BankdataAccountIdMigration())
+                    .put("dk-kreditbanken-password", new BankdataAccountIdMigration())
+                    .put("dk-nordfynsbank-password", new BankdataAccountIdMigration())
+                    .put("dk-nordjyskebank-password", new BankdataAccountIdMigration())
+                    .put("dk-ostjydskbank-password", new BankdataAccountIdMigration())
+                    .put("dk-ringkjobinglandbobank-password", new BankdataAccountIdMigration())
+                    .put("dk-skjernbank-password", new BankdataAccountIdMigration())
+                    .put("dk-sparekassensjaelland-password", new BankdataAccountIdMigration())
+                    .put("dk-sydbank-password", new BankdataAccountIdMigration())
 
                     // SEB Kort migrations
                     .put(
