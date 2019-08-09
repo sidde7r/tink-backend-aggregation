@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.entity;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants.ACCOUNT_TYPE_MAPPER;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.ACCOUNT_TYPE_MAPPER;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
