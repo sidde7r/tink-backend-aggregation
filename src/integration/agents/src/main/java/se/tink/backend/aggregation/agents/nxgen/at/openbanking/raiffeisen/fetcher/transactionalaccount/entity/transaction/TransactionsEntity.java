@@ -19,4 +19,8 @@ public class TransactionsEntity {
     public List<TransactionEntity> getPending() {
         return Optional.ofNullable(pending).orElse(Lists.emptyList());
     }
+
+    public boolean hasMore() {
+        return Optional.ofNullable(links).map(Links::hasNextLink).orElse(false);
+    }
 }

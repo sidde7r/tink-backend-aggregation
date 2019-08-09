@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.RaiffeisenAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.RaiffeisenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.configuration.RaiffeisenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.executor.payment.RaiffeisenPaymentExecutor;
@@ -16,6 +17,8 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -23,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+/** Raiffeisen uses IBAN flow. */
 public final class RaiffeisenAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
@@ -34,7 +38,7 @@ public final class RaiffeisenAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new RaiffeisenApiClient(client, persistentStorage, credentials);
+        apiClient = new RaiffeisenApiClient(client, persistentStorage, credentials, sessionStorage);
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -44,10 +48,13 @@ public final class RaiffeisenAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        apiClient.setConfiguration(getClientConfiguration());
+        RaiffeisenConfiguration raiffeisenConfiguration = getClientConfiguration();
+        apiClient.setConfiguration(raiffeisenConfiguration);
+        this.client.setEidasProxy(
+                configuration.getEidasProxy(), raiffeisenConfiguration.getEidasQwac());
     }
 
-    protected RaiffeisenConfiguration getClientConfiguration() {
+    private RaiffeisenConfiguration getClientConfiguration() {
         return configuration
                 .getIntegrations()
                 .getClientConfiguration(
@@ -60,7 +67,19 @@ public final class RaiffeisenAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
 
-        return new RaiffeisenAuthenticator(apiClient, persistentStorage, getClientConfiguration());
+        RaiffeisenAuthenticator authenticator = new RaiffeisenAuthenticator(apiClient);
+        RaiffeisenAuthenticationController controller =
+                new RaiffeisenAuthenticationController(
+                        supplementalInformationHelper,
+                        authenticator,
+                        sessionStorage,
+                        persistentStorage);
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
