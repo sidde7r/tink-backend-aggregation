@@ -271,7 +271,11 @@ public class NorwegianAgent extends AbstractAgent
         AccountEntity account = new AccountEntity();
 
         CreditCardResponse creditCardResponse =
-                createClientRequest(CREDIT_CARD_URL).get(CreditCardResponse.class);
+                fetchAccountsRequest(CREDIT_CARD_URL, CreditCardResponse.class);
+
+        if (creditCardResponse == null) {
+            throw new AccountNotFoundException("No active cards found.");
+        }
 
         // Get balance and credit
         account.setBalance(creditCardResponse.getBalance());
