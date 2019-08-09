@@ -98,6 +98,7 @@ public final class HandelsbankenBaseConstants {
 
     public static class Transactions {
         public static final String IS_PENDING = "PENDING";
+        public static final String CREDITED = "CREDITED";
     }
 
     public static class ExceptionMessages {
