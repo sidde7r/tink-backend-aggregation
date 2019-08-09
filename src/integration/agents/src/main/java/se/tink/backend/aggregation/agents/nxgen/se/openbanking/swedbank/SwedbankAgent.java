@@ -70,7 +70,8 @@ public final class SwedbankAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
         return new AutoAuthenticationController(
                 request,
                 context,

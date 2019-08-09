@@ -67,7 +67,8 @@ public final class RedsysAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new RedsysAuthenticator(
                                 apiClient, sessionStorage, getClientConfiguration()),
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new AutoAuthenticationController(
                 request,

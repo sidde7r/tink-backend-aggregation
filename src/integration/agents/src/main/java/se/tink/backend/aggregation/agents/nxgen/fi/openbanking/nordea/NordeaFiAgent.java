@@ -43,7 +43,8 @@ public final class NordeaFiAgent extends NordeaBaseAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
         return new AutoAuthenticationController(
                 request,
                 context,

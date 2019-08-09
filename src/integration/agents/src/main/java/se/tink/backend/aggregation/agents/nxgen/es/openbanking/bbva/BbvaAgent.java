@@ -65,7 +65,8 @@ public final class BbvaAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,
-                        credentials);
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request);
 
         return new AutoAuthenticationController(
                 request,
