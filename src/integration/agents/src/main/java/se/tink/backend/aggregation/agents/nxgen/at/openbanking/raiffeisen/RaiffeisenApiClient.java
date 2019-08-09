@@ -7,8 +7,10 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.ErrorTexts;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.IdTags;
@@ -133,7 +135,7 @@ public final class RaiffeisenApiClient {
             return new URL(consentResponse.getRedirectUrl());
 
         } catch (HttpResponseException e) {
-            String errorMessage = e.getResponse().getBody(ErrorResponse.class).getTppMessages();
+            String errorMessage = e.getResponse().getBody(ErrorResponse.class).getErrorText();
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
                     && errorMessage
                             .toLowerCase()
@@ -151,12 +153,25 @@ public final class RaiffeisenApiClient {
     }
 
     public AccountsResponse fetchAccounts() {
-        return createRequestInSession(Urls.ACCOUNTS)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
-                .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
-                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
-                .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
-                .get(AccountsResponse.class);
+        try {
+            return createRequestInSession(Urls.ACCOUNTS)
+                    .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                    .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
+                    .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
+                    .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
+                    .get(AccountsResponse.class);
+        } catch (HttpResponseException e) {
+            ErrorResponse errorMessage = e.getResponse().getBody(ErrorResponse.class);
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
+                    && errorMessage.getErrorCode().equalsIgnoreCase(ErrorMessages.CONSENT_UNKNOWN)
+                    && errorMessage
+                            .getErrorText()
+                            .toUpperCase()
+                            .contains(ErrorTexts.ACCESS_EXCEEDED_TEXT)) {
+                throw BankServiceError.ACCESS_EXCEEDED.exception();
+            }
+            throw e;
+        }
     }
 
     private String getRequestId() {

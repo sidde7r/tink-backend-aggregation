@@ -10,9 +10,16 @@ public class ErrorResponse {
 
     private List<TppMessagesEntity> tppMessages;
 
-    public String getTppMessages() {
+    public String getErrorCode() {
         return tppMessages.stream()
-                .map(TppMessagesEntity::getErrorText)
+                .map(TppMessagesEntity::getCode)
+                .findFirst()
+                .orElse(RaiffeisenConstants.ErrorMessages.UNKNOWN_ERROR);
+    }
+
+    public String getErrorText() {
+        return tppMessages.stream()
+                .map(TppMessagesEntity::getText)
                 .findFirst()
                 .orElse(RaiffeisenConstants.ErrorMessages.UNKNOWN_ERROR);
     }

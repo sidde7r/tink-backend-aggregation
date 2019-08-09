@@ -38,6 +38,7 @@ public final class RaiffeisenConstants {
                 "Cannot map Ica payment status: %s to Tink payment status.";
         public static final String INVALID_IBAN = "IBAN invalid";
         public static final String UNKNOWN_ERROR = "Error unknown";
+        public static final String CONSENT_UNKNOWN = "CONSENT_UNKNOWN";
     }
 
     public static class Urls {
@@ -159,6 +160,7 @@ public final class RaiffeisenConstants {
     public static class ErrorTexts {
 
         public static final String INVALID_IBAN = "invalid iban";
+        public static final String ACCESS_EXCEEDED_TEXT = "XS2A006E";
     }
 
     public static class BodyValues {
