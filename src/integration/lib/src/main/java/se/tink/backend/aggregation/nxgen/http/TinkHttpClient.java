@@ -249,9 +249,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
 
     public void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler) {
-        if (responseStatusHandler != null) {
-            this.responseStatusHandler = responseStatusHandler;
-        }
+        Preconditions.checkNotNull(responseStatusHandler);
+        this.responseStatusHandler = responseStatusHandler;
     }
 
     private void constructInternalClient() {
