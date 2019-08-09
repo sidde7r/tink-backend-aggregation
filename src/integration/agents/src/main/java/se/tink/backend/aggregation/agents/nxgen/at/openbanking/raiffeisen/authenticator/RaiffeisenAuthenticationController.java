@@ -89,7 +89,7 @@ public class RaiffeisenAuthenticationController
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
 
-        URL authorizeUrl = authenticator.buildAuthorizeUrl(state);
+        URL authorizeUrl = authenticator.fetchAuthorizeUrl(state);
 
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }

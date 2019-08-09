@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
@@ -20,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.Raiffe
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.entity.ConsentAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.entity.ConsentPayloadEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authenticator.rpc.ErrorResponse;
@@ -90,7 +87,7 @@ public final class RaiffeisenApiClient {
 
     public OAuth2Token getToken() {
 
-        TokenRequest client_credentials =
+        TokenRequest clientCredentials =
                 TokenRequest.builder()
                         .setGrantType(RaiffeisenConstants.FormValues.GRANT_TYPE)
                         .setScope(RaiffeisenConstants.FormValues.SCOPE)
@@ -102,20 +99,16 @@ public final class RaiffeisenApiClient {
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
                 .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class, client_credentials)
+                .post(TokenResponse.class, clientCredentials)
                 .toTinkToken();
     }
 
     public URL getAuthorizeUrl(String state) {
 
-        // IBAN flow. Needs list of ibans.
-        List ibans =
-                Collections.singletonList(
-                        new ConsentPayloadEntity(credentials.getField(CredentialKeys.IBAN)));
-
+        // IBAN flow.
         ConsentRequest consentRequest =
                 new ConsentRequest(
-                        new ConsentAccessEntity(ibans, ibans, ibans),
+                        new ConsentAccessEntity(credentials.getField(CredentialKeys.IBAN)),
                         true,
                         LocalDate.now()
                                 .plusDays(RaiffeisenConstants.BodyValues.CONSENT_DAYS_VALID)

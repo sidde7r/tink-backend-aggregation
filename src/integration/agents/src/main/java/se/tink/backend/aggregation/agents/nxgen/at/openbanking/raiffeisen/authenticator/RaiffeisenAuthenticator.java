@@ -16,7 +16,7 @@ public class RaiffeisenAuthenticator {
         return apiClient.getToken();
     }
 
-    public URL buildAuthorizeUrl(String state) {
+    public URL fetchAuthorizeUrl(String state) {
         return apiClient.getAuthorizeUrl(state);
     }
 
