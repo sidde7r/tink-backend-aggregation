@@ -24,23 +24,31 @@ public final class VolksbankAgentTest {
         ArgumentManager.afterClass();
     }
 
-    @Test
-    public void testSandbox() throws Exception {
-        new AgentIntegrationTest.Builder("nl", "nl-snsbank-sandbox-oauth2")
+    private AgentIntegrationTest createAgentTest(final String providerName) {
+        return new AgentIntegrationTest.Builder("nl", providerName)
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                 .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
                 .expectLoggedIn(false)
-                .build()
-                .testRefresh();
+                .build();
     }
 
     @Test
-    public void testProduction() throws Exception {
-        new AgentIntegrationTest.Builder("nl", "nl-snsbank-oauth2")
-                .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
-                .expectLoggedIn(false)
-                .build()
-                .testRefresh();
+    public void testSnsBank() throws Exception {
+        createAgentTest("nl-snsbank-oauth2").testRefresh();
+    }
+
+    @Test
+    public void testAsnBank() throws Exception {
+        createAgentTest("nl-asnbank-oauth2").testRefresh();
+    }
+
+    @Test
+    public void testRegioBank() throws Exception {
+        createAgentTest("nl-regiobank-oauth2").testRefresh();
+    }
+
+    @Test
+    public void testSnsBankSandbox() throws Exception {
+        createAgentTest("nl-snsbank-sandbox-oauth2").testRefresh();
     }
 }
