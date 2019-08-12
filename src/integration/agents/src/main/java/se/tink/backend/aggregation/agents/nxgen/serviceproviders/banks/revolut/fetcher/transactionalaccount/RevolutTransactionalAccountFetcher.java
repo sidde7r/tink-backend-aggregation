@@ -38,7 +38,8 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
                         .collect(
                                 Collectors.toMap(
                                         AccountEntity::getCurrency,
-                                        account -> account.getIban().get()));
+                                        account -> account.getIban().get(),
+                                        (account1, account2) -> account1));
 
         return wallet.getPockets().stream()
                 .filter(PocketEntity::isActive)
