@@ -206,7 +206,8 @@ public class SwedbankDefaultApiClient {
     // this is where we handle the profiles, fetch all and store store in session storage
     // never assume anything in session storage is usable when authenticating, it is setup
     // after login
-    public ProfileResponse completeBankId(LinkEntity linkEntity) throws AuthenticationException {
+    public ProfileResponse completeAuthentication(LinkEntity linkEntity)
+            throws AuthenticationException {
         ProfileResponse profileResponse;
         try {
             profileResponse = makeRequest(linkEntity, ProfileResponse.class);

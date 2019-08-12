@@ -130,7 +130,7 @@ public class SwedbankDefaultBankIdAuthenticator
 
     private void completeBankIdLogin(CollectBankIdResponse collectBankIdResponse)
             throws AuthenticationException {
-        apiClient.completeBankId(collectBankIdResponse.getLinks().getNextOrThrow());
+        apiClient.completeAuthentication(collectBankIdResponse.getLinks().getNextOrThrow());
     }
 
     private InitBankIdResponse initBankId(String ssn) throws BankIdException {
