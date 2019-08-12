@@ -109,4 +109,9 @@ public final class IcaBankenConstants {
     public static class FormValues {
         public static final String GRANT_TYPE = "client_credentials";
     }
+
+    public static class TransactionResponse {
+        public static final String UNVALID_TIME_ERROR =
+                "Minimum Value Date or Value Date can not be older than 18 months";
+    }
 }

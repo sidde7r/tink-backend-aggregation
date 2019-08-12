@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetche
 
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class IcaBankenTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
 
@@ -17,6 +20,17 @@ public class IcaBankenTransactionFetcher implements TransactionDatePaginator<Tra
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        return apiClient.fetchTransactionsForAccount(account.getApiIdentifier(), fromDate, toDate);
+
+        try {
+            return apiClient.fetchTransactionsForAccount(
+                    account.getApiIdentifier(), fromDate, toDate);
+        } catch (HttpResponseException e) {
+            String exceptionMessage = e.getResponse().getBody(String.class);
+            if (exceptionMessage.contains(
+                    IcaBankenConstants.TransactionResponse.UNVALID_TIME_ERROR)) {
+                return PaginatorResponseImpl.createEmpty(false);
+            }
+            throw e;
+        }
     }
 }
