@@ -57,29 +57,6 @@ public class OAuth2AuthenticationController
     // cumbersome authentication flows.
     private static final long WAIT_FOR_MINUTES = 9;
 
-    /**
-     * this exists for now only to keep compatibility with agents living in
-     * https://github.com/tink-ab/tink-backend-integration-thirdparties
-     *
-     * <p>please use the one with CallbackJwtSignatureKeyPair and CredentialsRequest
-     */
-    @Deprecated
-    public OAuth2AuthenticationController(
-            PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
-            OAuth2Authenticator authenticator,
-            Credentials credentials) {
-        this(
-                persistentStorage,
-                supplementalInformationHelper,
-                authenticator,
-                null,
-                credentials,
-                null,
-                DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT);
-    }
-
     public OAuth2AuthenticationController(
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
