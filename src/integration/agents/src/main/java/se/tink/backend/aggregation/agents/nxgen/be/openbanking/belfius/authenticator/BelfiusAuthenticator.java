@@ -49,8 +49,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
         return new URL(
                 consentResponseList.get(0).getConsentUri()
                         + "&"
-                        + Form.builder().put(QueryKeys.STATE, state).build()
-                        + state);
+                        + Form.builder().put(QueryKeys.STATE, state).build());
     }
 
     @Override
