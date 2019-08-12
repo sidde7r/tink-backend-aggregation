@@ -5,6 +5,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
@@ -24,6 +26,8 @@ public class CbiGlobeTransactionalAccountFetcher
     private final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final CbiGlobeAuthenticationController controller;
+    private static final Logger logger =
+            LoggerFactory.getLogger(CbiGlobeTransactionalAccountFetcher.class);
 
     public CbiGlobeTransactionalAccountFetcher(
             CbiGlobeApiClient apiClient,
@@ -44,10 +48,13 @@ public class CbiGlobeTransactionalAccountFetcher
             getAccountsResponse = getAccounts();
             persistentStorage.put(StorageKeys.ACCOUNTS, getAccountsResponse);
         }
-
-        return getAccountsResponse.getAccounts().stream()
-                .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
-                .collect(Collectors.toList());
+        // only for testing, thiss will commit will be reverted after tests
+        Collection<TransactionalAccount> accounts =
+                getAccountsResponse.getAccounts().stream()
+                        .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
+                        .collect(Collectors.toList());
+        logger.info("FETCHED ACCOUNTS: " + accounts.toString());
+        return accounts;
     }
 
     private GetAccountsResponse getAccounts() {
@@ -61,7 +68,12 @@ public class CbiGlobeTransactionalAccountFetcher
             TransactionalAccount account, Date fromDate, Date toDate) {
         // Bank allows to fetch transactions for last 90 days
         fromDate = calculateFromDate(toDate);
-        return apiClient.getTransactions(
-                account.getApiIdentifier(), fromDate, toDate, QueryValues.BOTH);
+
+        // only for testing, this commit will be reverted after tests
+        PaginatorResponse transactions =
+                apiClient.getTransactions(
+                        account.getApiIdentifier(), fromDate, toDate, QueryValues.BOTH);
+        logger.info("FETCHED TRANSACTIONS: " + transactions.toString());
+        return transactions;
     }
 }
