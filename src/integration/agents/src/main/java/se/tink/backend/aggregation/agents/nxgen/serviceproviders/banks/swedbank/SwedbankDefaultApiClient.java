@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.CollectBankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPayeeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPaymentRequest;
@@ -183,7 +183,7 @@ public class SwedbankDefaultApiClient {
         try {
             return makePostRequest(
                     SwedbankBaseConstants.Url.INIT_BANKID.get(),
-                    InitBankIdRequest.createFromUserId(ssn),
+                    InitAuthenticationRequest.createFromUserId(ssn),
                     InitBankIdResponse.class);
         } catch (HttpClientException hce) {
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
