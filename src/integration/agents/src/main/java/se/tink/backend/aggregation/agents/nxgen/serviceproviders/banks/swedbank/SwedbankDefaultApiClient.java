@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.CollectBankIdSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSecurityTokenSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisterTransferResponse;
@@ -450,11 +451,16 @@ public class SwedbankDefaultApiClient {
                 RegisterTransferResponse.class);
     }
 
-    public InitiateSignTransferResponse signExternalTransfer(LinkEntity linkEntity) {
+    public InitiateSignTransferResponse signExternalTransferBankId(LinkEntity linkEntity) {
         return makeRequest(
                 linkEntity,
                 InitiateSignTransferRequest.create(),
                 InitiateSignTransferResponse.class);
+    }
+
+    public InitiateSecurityTokenSignTransferResponse signExternalTransferSecurityToken(
+            LinkEntity linkEntity) {
+        return makeRequest(linkEntity, InitiateSecurityTokenSignTransferResponse.class);
     }
 
     public String getQrCodeImageAsBase64EncodedString(final LinkEntity linkEntity) {
@@ -752,6 +758,20 @@ public class SwedbankDefaultApiClient {
         return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.LOGIN_FAILED);
     }
 
+    private boolean isAuthorizationSecurityTokenInvalid(HttpResponseException hre) {
+        // This method expects an response with the following charectaristics:
+        // - Http status: 401
+        // - Http body: `ErrorResponse` with error field of "AUTHORIZATION_FAILED"
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_UNAUTHORIZED) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.AUTHORIZATION_FAILED);
+    }
+
     public SecurityTokenChallengeResponse sendLoginChallenge(String challenge)
             throws SupplementalInfoException {
         try {
@@ -776,6 +796,64 @@ public class SwedbankDefaultApiClient {
             if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
+            throw hce;
+        }
+    }
+
+    public RegisterTransferResponse sendTransferChallenge(LinkEntity linkEntity, String challenge)
+            throws SupplementalInfoException {
+        try {
+            return makeRequest(
+                    linkEntity,
+                    SecurityTokenChallengeRequest.createFromChallenge(challenge),
+                    RegisterTransferResponse.class);
+        } catch (HttpResponseException hre) {
+            if (isSecurityTokenInvalidFormat(hre)) {
+                throw SupplementalInfoError.NO_VALID_CODE.exception();
+            }
+            if (isSecurityTokenTooOld(hre)) {
+                throw SupplementalInfoError.NO_VALID_CODE.exception();
+            }
+            if (isAuthorizationSecurityTokenInvalid(hre)) {
+                throw SupplementalInfoError.NO_VALID_CODE.exception();
+            }
+            // unknown error: rethrow
+            throw hre;
+        } catch (HttpClientException hce) {
+            String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
+            if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+
+            throw hce;
+        }
+    }
+
+    public RegisterTransferResponse sendNewRecipientChallenge(
+            LinkEntity linkEntity, String challenge) throws SupplementalInfoException {
+        try {
+            return makeRequest(
+                    linkEntity,
+                    SecurityTokenChallengeRequest.createFromChallenge(challenge),
+                    RegisterTransferResponse.class);
+        } catch (HttpResponseException hre) {
+            if (isSecurityTokenInvalidFormat(hre)) {
+                throw SupplementalInfoError.NO_VALID_CODE.exception();
+            }
+            if (isSecurityTokenTooOld(hre)) {
+                throw SupplementalInfoError.NO_VALID_CODE.exception();
+            }
+            if (isAuthorizationSecurityTokenInvalid(hre)) {
+                throw SupplementalInfoError.NO_VALID_CODE.exception();
+            }
+            // unknown error: rethrow
+            throw hre;
+        } catch (HttpClientException hce) {
+            String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
+            if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+
             throw hce;
         }
     }
