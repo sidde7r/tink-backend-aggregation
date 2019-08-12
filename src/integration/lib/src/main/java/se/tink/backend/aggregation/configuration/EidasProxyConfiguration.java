@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.configuration;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 
 @JsonObject
 public class EidasProxyConfiguration {
@@ -37,5 +38,10 @@ public class EidasProxyConfiguration {
 
     public boolean isLocalEidasDev() {
         return localEidasDev;
+    }
+
+    public InternalEidasProxyConfiguration toInternalConfig() {
+        return new InternalEidasProxyConfiguration(
+                host, caPath, tlsCrtPath, tlsKeyPath, localEidasDev);
     }
 }
