@@ -122,9 +122,8 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
-                new SwedbankDefaultBankIdAuthenticator(apiClient),
-                persistentStorage,
-                credentials);
+                new SwedbankDefaultBankIdAuthenticator(apiClient, sessionStorage),
+                persistentStorage);
     }
 
     @Override
@@ -230,7 +229,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     protected Optional<TransferController> constructTransferController() {
         SwedbankTransferHelper transferHelper =
                 new SwedbankTransferHelper(
-                        context, catalog, supplementalInformationHelper, apiClient);
+                        context, catalog, sessionStorage, supplementalInformationHelper, apiClient);
         SwedbankDefaultBankTransferExecutorNxgen transferExecutor =
                 new SwedbankDefaultBankTransferExecutorNxgen(catalog, apiClient, transferHelper);
         SwedbankDefaultPaymentExecutor paymentExecutor =
