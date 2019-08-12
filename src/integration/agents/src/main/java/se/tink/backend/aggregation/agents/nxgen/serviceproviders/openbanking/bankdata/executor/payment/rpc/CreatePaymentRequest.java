@@ -38,6 +38,8 @@ public class CreatePaymentRequest {
         this.endToEndIdentification = builder.endToEndIdentification;
     }
 
+    public CreatePaymentRequest() {}
+
     public String toData() {
         return SerializationUtils.serializeToString(this);
     }

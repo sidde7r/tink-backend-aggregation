@@ -1,20 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.PaymentRequests;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.SIGNING_STEPS;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.configuration.BankdataConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorAddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.DebtorEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.enums.BankdataPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.TypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -29,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -71,16 +71,8 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
                         paymentRequest.getPayment().getAmount().getCurrency(),
                         paymentRequest.getPayment().getAmount().getValue().toString());
 
-        CreditorAddressEntity creditorAddress =
-                new CreditorAddressEntity(
-                        PaymentRequests.STREET,
-                        PaymentRequests.BUILDING,
-                        PaymentRequests.CITY,
-                        PaymentRequests.POSTAL_CODE,
-                        PaymentRequests.COUNTRY);
-
-        DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest);
-        CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest);
+        DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest, type);
+        CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest, type);
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
@@ -90,11 +82,7 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
                         .withRequestedExecutionDate(
                                 DateUtils.convertToDateViaInstant(
                                         paymentRequest.getPayment().getExecutionDate()))
-                        .withChargeBearer(PaymentRequests.CHARGE_BEARER)
-                        .withCreditorAgent(PaymentRequests.AGENT)
-                        .withCreditorAddress(creditorAddress)
-                        .withCreditorName(PaymentRequests.CREDITOR_NAME)
-                        .withRemittanceInformationUnstructured(PaymentRequests.REMITTANCE)
+                        .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
                         .withEndToEndIdentification(PaymentRequests.IDENTIFICATION)
                         .build();
 
@@ -117,13 +105,31 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
-
-        // On their sandbox data is static and can't be changed
-        // so the status will always be recieved
-        payment.setStatus(PaymentStatus.PAID);
-
-        return new PaymentMultiStepResponse(
-                payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+        PaymentStatus paymentStatus;
+        String nextStep;
+        switch (paymentMultiStepRequest.getStep()) {
+            case AuthenticationStepConstants.STEP_INIT:
+                URL signingUrl = apiClient.getSigningPaymentUrl(payment.getUniqueId());
+                sessionStorage.put(payment.getUniqueId(), signingUrl.toString());
+                nextStep = SIGNING_STEPS.CHECK_STATUS_STEP;
+                break;
+            case SIGNING_STEPS.CHECK_STATUS_STEP:
+                String paymentProduct =
+                        BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(payment.getType());
+                PaymentStatusResponse paymentStatusResponse =
+                        apiClient.getPaymentStatus(paymentProduct, payment.getUniqueId());
+                paymentStatus =
+                        BankdataPaymentStatus.fromString(
+                                        paymentStatusResponse.getTransactionStatus())
+                                .getPaymentStatus();
+                nextStep = AuthenticationStepConstants.STEP_FINALIZE;
+                payment.setStatus(paymentStatus);
+                break;
+            default:
+                throw new IllegalStateException(
+                        String.format("Uknown step %s", paymentMultiStepRequest.getStep()));
+        }
+        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
     }
 
     @Override
@@ -141,12 +147,10 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
 
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        return new PaymentListResponse(
-                Optional.ofNullable(paymentListRequest)
-                        .map(PaymentListRequest::getPaymentRequestList)
-                        .map(Collection::stream)
-                        .orElseGet(Stream::empty)
-                        .map(this::fetch)
-                        .collect(Collectors.toList()));
+        return paymentListRequest.getPaymentRequestList().stream()
+                .map(this::fetch)
+                .collect(
+                        Collectors.collectingAndThen(
+                                Collectors.toList(), PaymentListResponse::new));
     }
 }
