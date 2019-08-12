@@ -51,6 +51,6 @@ public class AccountEntity {
                 .filter(BalanceEntity::isInterimAvailable)
                 .findFirst()
                 .map(BalanceEntity::getAmount)
-                .orElseGet(() -> new ExactCurrencyAmount(BigDecimal.valueOf(0), currency));
+                .orElseGet(() -> new ExactCurrencyAmount(BigDecimal.ZERO, currency));
     }
 }

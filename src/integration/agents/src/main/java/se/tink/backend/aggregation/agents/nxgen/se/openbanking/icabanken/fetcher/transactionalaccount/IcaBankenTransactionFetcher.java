@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetche
 
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -26,7 +27,7 @@ public class IcaBankenTransactionFetcher implements TransactionDatePaginator<Tra
         } catch (HttpResponseException e) {
             String exceptionMessage = e.getResponse().getBody(String.class);
             if (exceptionMessage.contains(
-                    "Minimum Value Date or Value Date can not be older than 18 months")) {
+                    IcaBankenConstants.TransactionResponse.UNVALID_TIME_ERROR)) {
                 return PaginatorResponseImpl.createEmpty(false);
             }
             throw e;
