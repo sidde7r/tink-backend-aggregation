@@ -41,7 +41,10 @@ public class SebAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                context, new SebAuthenticator(apiClient, sebSessionStorage), persistentStorage);
+                supplementalRequester,
+                new SebAuthenticator(apiClient, sebSessionStorage),
+                persistentStorage,
+                credentials);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
