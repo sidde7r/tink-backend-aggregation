@@ -36,6 +36,7 @@ public final class ConsentFetcher {
         } else {
             if (isSandbox) {
                 // Sandbox behaves a bit differently
+                // TODO SNS-specific behavior; won't work with ASN, RegioBank sandboxes
                 final String consentResponseString =
                         client.consentRequestString(redirectUrl, clientId);
                 consentId =

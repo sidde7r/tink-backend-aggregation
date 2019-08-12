@@ -73,7 +73,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
-        logger.info("SNS - Refreshing access token");
+        logger.info("Volksbank - Refreshing access token");
 
         OAuth2Token oldToken =
                 persistentStorage
