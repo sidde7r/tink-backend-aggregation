@@ -90,8 +90,8 @@ public class SwedbankTokenGeneratorAuthenticationController implements MultiFact
                 .pattern("([0-9]{8})")
                 .helpText(
                         catalog.getString(
-                                "Start your code generator and write your PIN code. "
-                                        + " When APPLI is shown on the display press the key labeled 1 on your generator. "
+                                "Start your code generator and write your PIN code."
+                                        + " When APPLI is shown on the display press the key labeled 1 on your generator."
                                         + " Write the response code shown on the display in the field below."))
                 .build();
     }
