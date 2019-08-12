@@ -6,9 +6,9 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.backend.aggregation.agents.framework.DualAgentIntegrationTest;
 
-public class SEBAgentTest {
+public class SebDualAgentTest {
 
     private enum Arg {
         SSN,
@@ -16,17 +16,23 @@ public class SEBAgentTest {
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
-    private AgentIntegrationTest.Builder testBuilder;
+    private AgentIntegrationTest.Builder legacyTestBuilder;
+    private AgentIntegrationTest.Builder nxgenTestBuilder;
 
     @Before
     public void before() {
         manager.before();
 
-        testBuilder =
+        legacyTestBuilder =
+                new AgentIntegrationTest.Builder("se", "seb-bankid")
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
+
+        nxgenTestBuilder =
                 new AgentIntegrationTest.Builder("se", "se-seb-bankid")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
-                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
@@ -38,6 +44,8 @@ public class SEBAgentTest {
 
     @Test
     public void testLoginAndRefresh() throws Exception {
-        testBuilder.build().testRefresh();
+        final DualAgentIntegrationTest test =
+                DualAgentIntegrationTest.of(legacyTestBuilder.build(), nxgenTestBuilder.build());
+        test.testAndCompare();
     }
 }

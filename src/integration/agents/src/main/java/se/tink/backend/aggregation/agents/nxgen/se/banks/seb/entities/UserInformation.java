@@ -9,8 +9,9 @@ public class UserInformation {
     @JsonProperty("USER_NAME")
     private String userName;
 
+    // 10-digit personnummer + 4 digits
     @JsonProperty("SEB_KUND_NR")
-    private String sebCustomerNumber; // 10-digit personnummer + 4 digits
+    private String sebCustomerNumber;
 
     @JsonProperty("BUNT_ANTAL_OSIGNERAD")
     private String numberOfUnsignedPayments;
@@ -39,8 +40,9 @@ public class UserInformation {
     @JsonProperty("AGE")
     private String age;
 
+    // 12-digit personnummer
     @JsonProperty("SEB_BID_USERID12")
-    private String bankIdUserId; // 12-digit personnummer
+    private String bankIdUserId;
 
     @JsonIgnore
     public String getUserName() {

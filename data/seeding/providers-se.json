@@ -1957,7 +1957,7 @@
         },
         {
             "name": "se-seb-bankid",
-            "className": "nxgen.se.banks.seb.SEBAgent",
+            "className": "nxgen.se.banks.seb.SebAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "SEB",

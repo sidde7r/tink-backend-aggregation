@@ -12,8 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.TransactionType;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.TransactionType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -136,7 +136,7 @@ public class TransactionEntity {
 
     @JsonIgnore
     private String getCurrency() {
-        return SEBConstants.DEFAULT_CURRENCY;
+        return SebConstants.DEFAULT_CURRENCY;
     }
 
     @JsonIgnore
@@ -164,15 +164,14 @@ public class TransactionEntity {
                                 matcher.group("localAmountSign") + matcher.group("localAmount"));
                 final double exchangeRate =
                         StringUtils.parseAmountEU(matcher.group("exchangeRate"));
-                builder =
-                        builder.setPayload(TransactionPayloadTypes.LOCAL_REGION, region)
-                                .setPayload(TransactionPayloadTypes.LOCAL_CURRENCY, localCurrency)
-                                .setPayload(
-                                        TransactionPayloadTypes.AMOUNT_IN_LOCAL_CURRENCY,
-                                        String.valueOf(localAmount))
-                                .setPayload(
-                                        TransactionPayloadTypes.EXCHANGE_RATE,
-                                        String.valueOf(exchangeRate));
+                builder.setPayload(TransactionPayloadTypes.LOCAL_REGION, region)
+                        .setPayload(TransactionPayloadTypes.LOCAL_CURRENCY, localCurrency)
+                        .setPayload(
+                                TransactionPayloadTypes.AMOUNT_IN_LOCAL_CURRENCY,
+                                String.valueOf(localAmount))
+                        .setPayload(
+                                TransactionPayloadTypes.EXCHANGE_RATE,
+                                String.valueOf(exchangeRate));
             } else {
                 LOGGER.error("Could not parse foreign transaction: " + additionalInformation);
             }
@@ -211,7 +210,7 @@ public class TransactionEntity {
     }
 
     public static TransactionTypes getTransactionType(String transactionTypeCode) {
-        if (transactionTypeCode == null) {
+        if (Strings.isNullOrEmpty(transactionTypeCode)) {
             return TransactionTypes.DEFAULT;
         }
 

@@ -6,24 +6,26 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class SEBConstants {
+public class SebConstants {
 
     public static final String DEFAULT_CURRENCY = "SEK";
+    public static final int AGE_LIMIT = 18;
 
     public static class Urls {
         public static final String BASE = "https://mp.seb.se";
 
         public static final URL FETCH_AUTOSTART_TOKEN =
-                new URL(BASE + Endpoints.FETCH_AUTOSTART_TOKEN);
-        public static final URL COLLECT_BANKID = new URL(BASE + Endpoints.COLLECT_BANKID);
-        public static final URL INITIATE_SESSION = new URL(BASE + Endpoints.INITIATE_SESSION);
-        public static final URL ACTIVATE_SESSION = new URL(BASE + Endpoints.ACTIVATE_SESSION);
-        public static final URL LIST_ACCOUNTS = new URL(BASE + Endpoints.LIST_ACCOUNTS);
-        public static final URL LIST_TRANSACTIONS = new URL(BASE + Endpoints.LIST_TRANSACTIONS);
-        public static final URL LIST_PENDING_TRANSACTIONS =
-                new URL(BASE + Endpoints.LIST_PENDING_TRANSACTIONS);
+                new URL(BASE.concat(Endpoints.FETCH_AUTOSTART_TOKEN));
+        public static final URL COLLECT_BANKID = new URL(BASE.concat(Endpoints.COLLECT_BANKID));
+        public static final URL INITIATE_SESSION = new URL(BASE.concat(Endpoints.INITIATE_SESSION));
+        public static final URL ACTIVATE_SESSION = new URL(BASE.concat(Endpoints.ACTIVATE_SESSION));
+        public static final URL LIST_ACCOUNTS = new URL(BASE.concat(Endpoints.LIST_ACCOUNTS));
+        public static final URL LIST_TRANSACTIONS =
+                new URL(BASE.concat(Endpoints.LIST_TRANSACTIONS));
+        public static final URL LIST_RESERVED_TRANSACTIONS =
+                new URL(BASE.concat(Endpoints.LIST_RESERVED_TRANSACTIONS));
         public static final URL LIST_UPCOMING_TRANSACTIONS =
-                new URL(BASE + Endpoints.LIST_UPCOMING_TRANSACTIONS);
+                new URL(BASE.concat(Endpoints.LIST_UPCOMING_TRANSACTIONS));
     }
 
     public static class Endpoints {
@@ -35,7 +37,7 @@ public class SEBConstants {
         public static final String LIST_ACCOUNTS = API_BASE + "Lista01Konton_privat01.asmx/Execute";
         public static final String LIST_TRANSACTIONS =
                 API_BASE + "Lista01Rorelse_ftg03.asmx/Execute";
-        public static final String LIST_PENDING_TRANSACTIONS =
+        public static final String LIST_RESERVED_TRANSACTIONS =
                 API_BASE + "Lista01Skydd01.asmx/Execute";
         private static final String LIST_UPCOMING_TRANSACTIONS =
                 API_BASE + "Lista11Komm_uppdrag02.asmx/Execute";
@@ -80,12 +82,14 @@ public class SEBConstants {
         public static final String DEFAULT_ACCOUNT_TYPE = "ICKEFOND";
     }
 
-    public static class TransactionType { // ROR_TYP
+    // ROR_TYP field in TransactionEntity
+    public static class TransactionType {
         public static final String OTHER = "1";
         public static final String CARD_TRANSACTION = "2";
         public static final String FOREIGN_CARD_TRANSACTION = "5";
         public static final String FOREIGN_WITHDRAWAL = "7";
-        public static final String INVOICE_PAYMENT = "8"; // has BG, OCR
+        // INVOICE_PAYMENT has BG, OCR
+        public static final String INVOICE_PAYMENT = "8";
     }
 
     public static class StorageKeys {
@@ -133,21 +137,17 @@ public class SEBConstants {
 
     public static final GenericTypeMapper<AccountTypes, Integer> ACCOUNT_TYPE_MAPPER =
             GenericTypeMapper.<AccountTypes, Integer>genericBuilder()
-                    .put(
-                            AccountTypes.CHECKING,
-                            1, // PRIVATKONTO
-                            3, // PERSONALLONEKONTO
-                            17) // SPECIALINLONEKONTO
-                    .put(
-                            AccountTypes.SAVINGS,
-                            16, // ENKLA_SPARKONTOT
-                            12) // ENKLA_SPARKONTOT_FORETAG
-                    .put(
-                            AccountTypes.INVESTMENT,
-                            54, // ISK_KAPITALKONTO
-                            22, // FUND
-                            27, // IPS
-                            35) // PLACERINGSKONTO
-                    .put(AccountTypes.OTHER, 2) // can be NOTARIATKONTO, SKOGSKONTO, FRETAGSKONTO
+                    // 1: PRIVATKONTO
+                    // 3: PERSONALLONEKONTO
+                    // 17: SPECIALINLONEKONTO
+                    .put(AccountTypes.CHECKING, 1, 3, 17)
+                    // 16: ENKLA_SPARKONTOT
+                    // 12: ENKLA_SPARKONTOT_FORETAG
+                    .put(AccountTypes.SAVINGS, 16, 12)
+                    // 54: ISK_KAPITALKONTO
+                    // 22: FUND
+                    // 27: IPS
+                    // 35: PLACERINGSKONTO
+                    .put(AccountTypes.INVESTMENT, 54, 22, 27, 35)
                     .build();
 }

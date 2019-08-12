@@ -2,25 +2,26 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.util.Objects;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.InitResult;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.ServiceInputKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.ServiceInputValues;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.SystemCode;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.UserMessage;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.InitResult;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.ServiceInputKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.ServiceInputValues;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.SystemCode;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.UserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.DeviceIdentification;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc.BankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.SystemStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInformation;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionQuery;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Request;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Response;
@@ -28,11 +29,11 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-public class SEBApiClient {
+public class SebApiClient {
     private final TinkHttpClient httpClient;
     private final String sebUUID;
 
-    public SEBApiClient(TinkHttpClient httpClient) {
+    public SebApiClient(TinkHttpClient httpClient) {
         this.httpClient = httpClient;
         sebUUID = UUID.randomUUID().toString().toUpperCase();
     }
@@ -87,7 +88,7 @@ public class SEBApiClient {
         final Response response = post(Urls.ACTIVATE_SESSION, request);
         if (!response.isValid()) {
             final SystemStatus systemStatus = response.getSystemStatus();
-            if (systemStatus == null) {
+            if (Objects.isNull(systemStatus)) {
                 throw new IllegalStateException(
                         "Response was not valid, but contained no system status");
             }
@@ -130,9 +131,9 @@ public class SEBApiClient {
         return post(Urls.LIST_TRANSACTIONS, request);
     }
 
-    public Response fetchPendingTransactions(PendingTransactionQuery query) {
+    public Response fetchReservedTransactions(ReservedTransactionQuery query) {
         final Request request = new Request.Builder().addComponent(query).build();
-        return post(Urls.LIST_PENDING_TRANSACTIONS, request);
+        return post(Urls.LIST_RESERVED_TRANSACTIONS, request);
     }
 
     public Response fetchUpcomingTransactions(String customerId) {

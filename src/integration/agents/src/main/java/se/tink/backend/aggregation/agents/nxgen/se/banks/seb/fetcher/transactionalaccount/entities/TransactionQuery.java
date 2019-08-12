@@ -38,12 +38,14 @@ public class TransactionQuery implements RequestComponent {
 
     public TransactionQuery() {}
 
+    @JsonIgnore
     public TransactionQuery(String customerNumber, String accountNumber, Integer maxRows) {
         this.customerNumber = customerNumber;
         this.accountNumber = accountNumber;
         this.maxRows = maxRows;
     }
 
+    @JsonIgnore
     public TransactionQuery(
             String customerNumber,
             String accountNumber,

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Request {
 
     public Request() {}
 
+    @JsonIgnore
     private Request(Builder builder) {
         request = new Payload(builder.components);
     }

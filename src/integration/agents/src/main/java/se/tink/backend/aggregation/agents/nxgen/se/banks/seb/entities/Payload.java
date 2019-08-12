@@ -7,12 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.DeviceIdentification;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionQuery;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.UpcomingTransactionEntity;
@@ -40,18 +41,21 @@ public class Payload {
 
     public Payload() {}
 
+    @JsonIgnore
     public Payload(List<RequestComponent> components) {
         serviceInput = Lists.newArrayList();
         components.stream().forEach(this::addComponent);
     }
 
+    @JsonIgnore
     private VODB getVodb() {
-        if (vodb == null) {
+        if (Objects.isNull(vodb)) {
             vodb = new VODB();
         }
         return vodb;
     }
 
+    @JsonIgnore
     private void addComponent(RequestComponent component) {
         if (component instanceof ServiceInput) {
             serviceInput.add((ServiceInput) component);
@@ -63,8 +67,8 @@ public class Payload {
             getVodb().hardwareInformation = (HardwareInformation) component;
         } else if (component instanceof TransactionQuery) {
             getVodb().transactionQuery = (TransactionQuery) component;
-        } else if (component instanceof PendingTransactionQuery) {
-            getVodb().pendingTransactionQuery = (PendingTransactionQuery) component;
+        } else if (component instanceof ReservedTransactionQuery) {
+            getVodb().pendingTransactionQuery = (ReservedTransactionQuery) component;
         } else {
             throw new NotImplementedException(
                     "Request component not implemented: " + component.getClass().toString());
@@ -118,9 +122,9 @@ public class Payload {
     }
 
     @JsonIgnore
-    public List<PendingTransactionEntity> getPendingTransactions() {
+    public List<ReservedTransactionEntity> getReservedTransactions() {
         Preconditions.checkNotNull(vodb);
-        return vodb.pendingTransactions;
+        return vodb.reservedTransactions;
     }
 
     @JsonIgnore

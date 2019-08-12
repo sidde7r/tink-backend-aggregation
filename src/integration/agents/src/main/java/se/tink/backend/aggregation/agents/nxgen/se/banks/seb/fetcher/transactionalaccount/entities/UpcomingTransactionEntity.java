@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -72,9 +72,10 @@ public class UpcomingTransactionEntity {
 
     @JsonIgnore
     private String getCurrency() {
-        return SEBConstants.DEFAULT_CURRENCY;
+        return SebConstants.DEFAULT_CURRENCY;
     }
 
+    @JsonIgnore
     public String getAccountNumber() {
         return accountNumber;
     }

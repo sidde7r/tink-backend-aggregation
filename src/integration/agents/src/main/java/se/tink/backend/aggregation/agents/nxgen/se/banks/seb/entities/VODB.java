@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionQuery;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.UpcomingTransactionEntity;
@@ -38,14 +38,13 @@ class VODB {
     public TransactionQuery transactionQuery;
 
     @JsonProperty("PCBW431Z")
-    public PendingTransactionQuery pendingTransactionQuery;
+    public ReservedTransactionQuery pendingTransactionQuery;
 
     @JsonProperty("PCBW4342")
     public List<TransactionEntity> transactions;
 
-    // Reserved transactions
     @JsonProperty("PCBW4311")
-    public List<PendingTransactionEntity> pendingTransactions;
+    public List<ReservedTransactionEntity> reservedTransactions;
 
     @JsonProperty("PCBW1361")
     public List<UpcomingTransactionEntity> upcomingTransactions;

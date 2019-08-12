@@ -1,14 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount;
 
+import com.google.api.client.util.Lists;
 import com.google.common.collect.Iterables;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionQuery;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionPageKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
@@ -21,9 +23,9 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, TransactionPageKey> {
-    private final SEBApiClient apiClient;
+    private final SebApiClient apiClient;
 
-    public TransactionFetcher(SEBApiClient apiClient) {
+    public TransactionFetcher(SebApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -32,23 +34,25 @@ public class TransactionFetcher
             TransactionalAccount account, TransactionPageKey key) {
         final Response response = apiClient.fetchTransactions(getTransactionQuery(account, key));
         final TransactionPageKey nextKey = getNextKey(response);
+        final List<Transaction> tinkTransactions = Lists.newArrayList();
+
+        // When fetching first page, prepend the reserved transactions
+        if (Objects.isNull(key)) {
+            tinkTransactions.addAll(fetchReservedTransactionsFor(account));
+        }
+
         final List<TransactionEntity> transactions =
                 removeOverlappingTransactions(response.getTransactions(), key);
-
-        final List<Transaction> tinkTransactions =
+        tinkTransactions.addAll(
                 transactions.stream()
                         .map(TransactionEntity::toTinkTransaction)
-                        .collect(Collectors.toList());
-
-        if (key == null) {
-            tinkTransactions.addAll(fetchPendingTransactionsFor(account));
-        }
+                        .collect(Collectors.toList()));
         return new TransactionKeyPaginatorResponseImpl<>(tinkTransactions, nextKey);
     }
 
     private TransactionQuery getTransactionQuery(
             TransactionalAccount account, TransactionPageKey key) {
-        if (key == null) {
+        if (Objects.isNull(key)) {
             // first page
             final String customerId =
                     account.getFromTemporaryStorage(StorageKeys.ACCOUNT_CUSTOMER_ID);
@@ -76,7 +80,7 @@ public class TransactionFetcher
     // The transactions from a page might overlap the ones from the previous page.
     private List<TransactionEntity> removeOverlappingTransactions(
             List<TransactionEntity> transactions, TransactionPageKey key) {
-        if (key == null) {
+        if (Objects.isNull(key)) {
             return transactions;
         }
 
@@ -89,20 +93,21 @@ public class TransactionFetcher
         return transactions.subList(index + 1, transactions.size());
     }
 
-    private Collection<Transaction> fetchPendingTransactionsFor(TransactionalAccount account) {
+    private Collection<Transaction> fetchReservedTransactionsFor(TransactionalAccount account) {
         final String customerId = account.getFromTemporaryStorage(StorageKeys.ACCOUNT_CUSTOMER_ID);
         final String accountId = account.getApiIdentifier();
-        final PendingTransactionQuery query = new PendingTransactionQuery(customerId, accountId, 1);
+        final ReservedTransactionQuery query =
+                new ReservedTransactionQuery(customerId, accountId, 1);
 
-        final Response response = apiClient.fetchPendingTransactions(query);
-        final List<PendingTransactionEntity> pendingTransactions =
-                response.getPendingTransactions();
-        if (pendingTransactions == null) {
+        final Response response = apiClient.fetchReservedTransactions(query);
+        final List<ReservedTransactionEntity> reservedTransactions =
+                response.getReservedTransactions();
+        if (Objects.isNull(reservedTransactions)) {
             return Collections.emptyList();
         }
 
-        return pendingTransactions.stream()
-                .map(PendingTransactionEntity::toTinkTransaction)
+        return reservedTransactions.stream()
+                .map(ReservedTransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 }

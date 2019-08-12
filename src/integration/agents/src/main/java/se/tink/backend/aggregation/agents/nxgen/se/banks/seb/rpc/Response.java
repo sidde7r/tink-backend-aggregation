@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.ResultInfo
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.SystemStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.PendingTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.UpcomingTransactionEntity;
@@ -101,8 +101,8 @@ public class Response {
     }
 
     @JsonIgnore
-    public List<PendingTransactionEntity> getPendingTransactions() {
-        return payload.getPendingTransactions();
+    public List<ReservedTransactionEntity> getReservedTransactions() {
+        return payload.getReservedTransactions();
     }
 
     @JsonIgnore

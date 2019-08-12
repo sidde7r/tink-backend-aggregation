@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Objects;
 import java.util.Optional;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -11,11 +13,12 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.LoginCodes;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.UserMessage;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.LoginCodes;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.UserMessage;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInformation;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -25,15 +28,15 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 
-public class SEBAuthenticator implements BankIdAuthenticator<String> {
-    private static final AggregationLogger LOG = new AggregationLogger(SEBAuthenticator.class);
-    private final SEBApiClient apiClient;
-    private final SEBSessionStorage sessionStorage;
+public class SebAuthenticator implements BankIdAuthenticator<String> {
+    private static final AggregationLogger LOG = new AggregationLogger(SebAuthenticator.class);
+    private final SebApiClient apiClient;
+    private final SebSessionStorage sessionStorage;
     private String autoStartToken;
     private String nextReference;
     private String ssn = null;
 
-    public SEBAuthenticator(SEBApiClient apiClient, SEBSessionStorage sessionStorage) {
+    public SebAuthenticator(SebApiClient apiClient, SebSessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -61,7 +64,7 @@ public class SEBAuthenticator implements BankIdAuthenticator<String> {
     @Override
     public BankIdStatus collect(String reference)
             throws AuthenticationException, AuthorizationException {
-        if (nextReference == null) {
+        if (Objects.isNull(nextReference)) {
             nextReference = reference;
         }
 
@@ -113,14 +116,14 @@ public class SEBAuthenticator implements BankIdAuthenticator<String> {
         try {
             apiClient.initiateSession();
         } catch (HttpResponseException e) {
-            // Check if the user is younger than 18 and then throw unauthorized exception.
             SocialSecurityNumber.Sweden ssn = new SocialSecurityNumber.Sweden(this.ssn);
             if (!ssn.isValid()) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
-            if (e.getResponse().getStatus() == 403
-                    && ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < 18) {
+            // Check if the user is younger than 18 and then throw unauthorized exception.
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
+                    && ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < SebConstants.AGE_LIMIT) {
                 throw AuthorizationError.UNAUTHORIZED.exception(
                         UserMessage.DO_NOT_SUPPORT_YOUTH.getKey());
             }

@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities;
 
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.ACCOUNT_TYPE_MAPPER;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.ACCOUNT_TYPE_MAPPER;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -36,17 +37,21 @@ public class AccountEntity {
     @JsonProperty("KONTO_NR")
     private String accountNumber;
 
+    // type, and name if accountName is empty
     @JsonProperty("KTOSLAG_TXT")
-    private String accountTypeName; // type, and name if accountName is empty
+    private String accountTypeName;
 
+    // Shown in app as balance
     @JsonProperty("BOKF_SALDO")
     private BigDecimal balance;
 
+    // Shown in app as available amount, includes reserved transactions
     @JsonProperty("DISP_BEL")
-    private BigDecimal availableAmount; // including reserved transactions
+    private BigDecimal availableAmount;
 
+    // Account name might be empty
     @JsonProperty("KTOBEN_TXT")
-    private String accountName; // might be empty
+    private String accountName;
 
     @JsonProperty("KREDBEL")
     private BigDecimal creditAmount;
@@ -81,14 +86,8 @@ public class AccountEntity {
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
-        final AccountTypes type = getAccountType().orElse(AccountTypes.OTHER);
-        switch (type) {
-            case CHECKING:
-            case SAVINGS:
-                return true;
-            default:
-                return false;
-        }
+        return ACCOUNT_TYPE_MAPPER.isOf(accountType, AccountTypes.CHECKING)
+                || ACCOUNT_TYPE_MAPPER.isOf(accountType, AccountTypes.SAVINGS);
     }
 
     @JsonIgnore
@@ -112,12 +111,12 @@ public class AccountEntity {
 
     @JsonIgnore
     private String getCurrency() {
-        return SEBConstants.DEFAULT_CURRENCY;
+        return SebConstants.DEFAULT_CURRENCY;
     }
 
     @JsonIgnore
     private ExactCurrencyAmount getBalance() {
-        if (creditAmount == null || BigDecimal.ZERO.equals(creditAmount)) {
+        if (Objects.isNull(creditAmount) || BigDecimal.ZERO.equals(creditAmount)) {
             return ExactCurrencyAmount.of(balance, getCurrency());
         } else {
             // if there is a credit on this account

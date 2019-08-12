@@ -6,13 +6,13 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-public class PendingTransactionEntity {
+public class ReservedTransactionEntity {
     @JsonProperty("ROW_ID")
     private Integer rowId;
 
@@ -33,7 +33,7 @@ public class PendingTransactionEntity {
 
     @JsonIgnore
     private String getCurrency() {
-        return SEBConstants.DEFAULT_CURRENCY;
+        return SebConstants.DEFAULT_CURRENCY;
     }
 
     @JsonIgnore

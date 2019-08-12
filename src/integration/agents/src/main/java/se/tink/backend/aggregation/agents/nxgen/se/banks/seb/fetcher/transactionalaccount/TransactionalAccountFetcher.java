@@ -3,19 +3,19 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactio
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.ServiceInputValues;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.ServiceInputValues;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Response;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class TransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
-    private final SEBApiClient apiClient;
-    private final SEBSessionStorage sessionStorage;
+    private final SebApiClient apiClient;
+    private final SebSessionStorage sessionStorage;
 
-    public TransactionalAccountFetcher(SEBApiClient apiClient, SEBSessionStorage sessionStorage) {
+    public TransactionalAccountFetcher(SebApiClient apiClient, SebSessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }

@@ -7,11 +7,11 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.SEBAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.UpcomingTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.session.SEBSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.session.SebSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -22,26 +22,26 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SEBAgent extends NextGenerationAgent
+public class SebAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
-    private final SEBApiClient apiClient;
+    private final SebApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final SEBSessionStorage sebSessionStorage;
+    private final SebSessionStorage sebSessionStorage;
 
-    public SEBAgent(
+    public SebAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new SEBApiClient(client);
-        sebSessionStorage = new SEBSessionStorage(sessionStorage);
+        apiClient = new SebApiClient(client);
+        sebSessionStorage = new SebSessionStorage(sessionStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                context, new SEBAuthenticator(apiClient, sebSessionStorage), persistentStorage);
+                context, new SebAuthenticator(apiClient, sebSessionStorage), persistentStorage);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
@@ -57,7 +57,7 @@ public class SEBAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SEBSessionHandler(apiClient, sebSessionStorage);
+        return new SebSessionHandler(apiClient, sebSessionStorage);
     }
 
     @Override

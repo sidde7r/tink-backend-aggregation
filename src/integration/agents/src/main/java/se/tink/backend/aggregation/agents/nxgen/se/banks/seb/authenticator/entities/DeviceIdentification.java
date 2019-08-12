@@ -8,20 +8,20 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DeviceIdentification implements RequestComponent {
 
     @JsonProperty("APPLICATION_VERSION")
-    public String APPLICATION_VERSION = "10.0.1";
+    private String APPLICATION_VERSION = "10.0.1";
 
     @JsonProperty("OS_NAME")
-    public String OS_NAME = "iOS";
+    private String OS_NAME = "iOS";
 
     @JsonProperty("MODEL")
-    public String MODEL = "API_VERSION=2";
+    private String MODEL = "API_VERSION=2";
 
     @JsonProperty("MANUFACTURER")
-    public String MANUFACTURER = "Apple";
+    private String MANUFACTURER = "Apple";
 
     @JsonProperty("OS_VERSION")
-    public String OS_VERSION = "12.4";
+    private String OS_VERSION = "12.4";
 
     @JsonProperty("APPLICATION_NAME")
-    public String APPLICATION_NAME = "MASP";
+    private String APPLICATION_NAME = "MASP";
 }

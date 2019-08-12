@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactio
 
 import java.util.Collection;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SEBConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.UpcomingTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Response;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -13,9 +13,9 @@ public class UpcomingTransactionFetcher
         implements se.tink.backend.aggregation.nxgen.controllers.refresh.transaction
                         .UpcomingTransactionFetcher<
                 TransactionalAccount> {
-    private final SEBApiClient apiClient;
+    private final SebApiClient apiClient;
 
-    public UpcomingTransactionFetcher(SEBApiClient apiClient) {
+    public UpcomingTransactionFetcher(SebApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
