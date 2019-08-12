@@ -3,11 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken;
 import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
+import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class HandelsbankenNOConstants {
 
     public static final int AUTHENTICATION_TIMEOUT_COUNT =
             15; // set to 15 currently same as SparebankenSor
+    public static final String APP_VERSION = "1.46.1";
 
     public enum Url implements UrlEnum {
         APP_INFORMATION(getNetbankEndpoint("/smbmobile/9055/appversion_ios.json")),
@@ -146,7 +148,14 @@ public class HandelsbankenNOConstants {
         // at this moment, any random 8 numeric/alphabets works as requestId, but they might change
         // later
         X_EVRY_CLIENT_REQUESTID("X-EVRY-CLIENT-REQUESTID", "11111111"),
-        USER_AGENT("User-Agent", "MB 1.20.1 9055 iPhone 6s iOS 10.2");
+        USER_AGENT(
+                "User-Agent",
+                String.format(
+                        "MB %s 9055 %s %s %s",
+                        APP_VERSION,
+                        DeviceProfileConfiguration.IOS_STABLE.getModelNumber(),
+                        DeviceProfileConfiguration.IOS_STABLE.getOs(),
+                        DeviceProfileConfiguration.IOS_STABLE.getOsVersion()));
 
         private final String key;
         private final String value;
