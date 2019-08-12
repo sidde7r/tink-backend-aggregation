@@ -3,16 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Status {
+public class HrefEntity {
 
     private String href;
 
     public String getHref() {
         return href;
-    }
-
-    @Override
-    public String toString() {
-        return "Status{" + "href = '" + href + '\'' + "}";
     }
 }

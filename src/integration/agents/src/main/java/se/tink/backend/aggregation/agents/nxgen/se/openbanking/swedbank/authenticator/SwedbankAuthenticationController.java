@@ -12,9 +12,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -36,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -52,7 +51,7 @@ public class SwedbankAuthenticationController
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SwedbankAuthenticator authenticator;
-    private final Credentials credentials;
+    private final CredentialsRequest credentials;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
     private final String state;
@@ -65,7 +64,7 @@ public class SwedbankAuthenticationController
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             SwedbankAuthenticator authenticator,
-            Credentials credentials) {
+            CredentialsRequest credentials) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -79,7 +78,7 @@ public class SwedbankAuthenticationController
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             SwedbankAuthenticator authenticator,
-            Credentials credentials,
+            CredentialsRequest credentials,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
@@ -140,27 +139,11 @@ public class SwedbankAuthenticationController
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizeUrl = authenticator.buildAuthorizeUrl(state);
-
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-
-        ThirdPartyAppAuthenticationPayload.Android androidPayload =
-                new ThirdPartyAppAuthenticationPayload.Android();
-        androidPayload.setIntent(authorizeUrl.get());
-        payload.setAndroid(androidPayload);
-
-        ThirdPartyAppAuthenticationPayload.Ios iOsPayload =
-                new ThirdPartyAppAuthenticationPayload.Ios();
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        payload.setIos(iOsPayload);
-
-        return payload;
+        return ThirdPartyAppAuthenticationPayload.of(authenticator.buildAuthorizeUrl(state));
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(String reference)
-            throws AuthenticationException, AuthorizationException {
+    public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException {
 
         Map<String, String> callbackData =
                 supplementalInformationHelper
@@ -190,9 +173,11 @@ public class SwedbankAuthenticationController
                     String.format("Unknown token type '%s'.", accessToken.getTokenType()));
         }
 
-        credentials.setSessionExpiryDate(
-                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                        accessToken, tokenLifetime, tokenLifetimeUnit));
+        credentials
+                .getCredentials()
+                .setSessionExpiryDate(
+                        OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                                accessToken, tokenLifetime, tokenLifetimeUnit));
 
         persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
 
@@ -213,7 +198,7 @@ public class SwedbankAuthenticationController
 
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(
-                        new URL(consentResponseIbanList.getLinks().getScaRedirect().getHref())));
+                        new URL(consentResponseIbanList.getLinks().getHrefEntity().getHref())));
 
         while (!authenticator.getConsentStatus(consentResponseIbanList.getConsentId())) {
             Uninterruptibles.sleepUninterruptibly(

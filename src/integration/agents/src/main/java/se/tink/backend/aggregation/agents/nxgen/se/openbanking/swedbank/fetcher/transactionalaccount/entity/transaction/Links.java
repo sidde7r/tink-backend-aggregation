@@ -5,27 +5,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class Links {
 
-    private StartAuthorisation startAuthorisation;
+    private HrefEntity startAuthorisation;
 
-    private Status status;
+    private HrefEntity status;
 
-    public StartAuthorisation getStartAuthorisation() {
+    public HrefEntity getHrefEntity() {
         return startAuthorisation;
     }
 
-    public Status getStatus() {
+    public HrefEntity getStatus() {
         return status;
-    }
-
-    @Override
-    public String toString() {
-        return "Links{"
-                + "startAuthorisation = '"
-                + startAuthorisation
-                + '\''
-                + ",status = '"
-                + status
-                + '\''
-                + "}";
     }
 }

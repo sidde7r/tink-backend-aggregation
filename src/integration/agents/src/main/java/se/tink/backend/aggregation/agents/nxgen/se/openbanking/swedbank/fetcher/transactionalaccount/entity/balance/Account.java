@@ -10,9 +10,4 @@ public class Account {
     public String getIban() {
         return iban;
     }
-
-    @Override
-    public String toString() {
-        return "Account{" + "iban = '" + iban + '\'' + "}";
-    }
 }

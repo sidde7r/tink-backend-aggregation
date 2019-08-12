@@ -72,10 +72,12 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
                     apiClient.startScaTransactionRequest(
                             account.getApiIdentifier(), fromDate, toDate);
 
-            poll(
-                    response,
-                    apiClient.startAuthorization(
-                            response.getLinks().getStartAuthorisation().getHref()));
+            if (!apiClient.getConfiguration().getBypassConsent()) {
+                poll(
+                        response,
+                        apiClient.startAuthorization(
+                                response.getLinks().getHrefEntity().getHref()));
+            }
         } catch (HttpResponseException e) {
             if (checkIfScaIsAlreadyDone(e)) {
                 throw new HttpResponseException(
@@ -93,7 +95,7 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
 
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(
-                        new URL(consentResponse.getLinks().getScaRedirect().getHref())));
+                        new URL(consentResponse.getLinks().getHrefEntity().getHref())));
 
         for (int i = 0; i < SwedbankConstants.TimeValues.ATTEMPS_BEFORE_TIMEOUT; i++) {
             status = apiClient.checkStatus(response.getLinks().getStatus().getHref());

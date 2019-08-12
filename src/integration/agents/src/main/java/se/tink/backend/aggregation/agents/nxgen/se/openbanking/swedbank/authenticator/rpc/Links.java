@@ -5,21 +5,21 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class Links {
 
-    private ScaStatus scaStatus;
+    private HrefEntity scaStatus;
 
-    private ScaRedirect scaRedirect;
+    private HrefEntity scaRedirect;
 
-    private Status status;
+    private HrefEntity status;
 
-    public ScaStatus getScaStatus() {
+    public HrefEntity getScaStatus() {
         return scaStatus;
     }
 
-    public ScaRedirect getScaRedirect() {
+    public HrefEntity getHrefEntity() {
         return scaRedirect;
     }
 
-    public Status getStatus() {
+    public HrefEntity getStatus() {
         return status;
     }
 }

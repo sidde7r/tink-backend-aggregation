@@ -6,7 +6,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.common.TransactionAmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -16,7 +16,7 @@ public class TransactionEntity {
     private String remittanceInformationUnstructured;
     private TransactionBalanceEntity balance;
 
-    public Amount getTransactionAmount() {
+    public ExactCurrencyAmount getTransactionAmount() {
         return transactionAmount.toTinkAmount();
     }
 

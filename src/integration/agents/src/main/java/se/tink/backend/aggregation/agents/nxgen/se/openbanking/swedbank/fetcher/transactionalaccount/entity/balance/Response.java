@@ -17,16 +17,4 @@ public class Response {
     public Account getAccount() {
         return account;
     }
-
-    @Override
-    public String toString() {
-        return "Response{"
-                + "balances = '"
-                + balances
-                + '\''
-                + ",account = '"
-                + account
-                + '\''
-                + "}";
-    }
 }

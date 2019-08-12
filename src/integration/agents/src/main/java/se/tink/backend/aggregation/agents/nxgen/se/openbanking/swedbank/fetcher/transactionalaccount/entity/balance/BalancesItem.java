@@ -22,19 +22,4 @@ public class BalancesItem {
     public String getReferenceDate() {
         return referenceDate;
     }
-
-    @Override
-    public String toString() {
-        return "BalancesItem{"
-                + "balanceType = '"
-                + balanceType
-                + '\''
-                + ",balanceAmount = '"
-                + balanceAmount
-                + '\''
-                + ",referenceDate = '"
-                + referenceDate
-                + '\''
-                + "}";
-    }
 }

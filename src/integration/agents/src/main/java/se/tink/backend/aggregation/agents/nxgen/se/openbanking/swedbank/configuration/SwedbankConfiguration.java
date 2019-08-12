@@ -14,6 +14,7 @@ public class SwedbankConfiguration implements ClientConfiguration {
     private String redirectUrl;
     private String eidasQwac;
     private String psuIpAddress;
+    private boolean bypassTransactionConsent;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -49,5 +50,9 @@ public class SwedbankConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
 
         return psuIpAddress;
+    }
+
+    public boolean getBypassConsent() {
+        return bypassTransactionConsent;
     }
 }

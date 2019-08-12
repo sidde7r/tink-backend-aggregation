@@ -1,23 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.common;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionAmountEntity {
     private String currency;
-    private String amount;
+    private BigDecimal amount;
 
     public String getCurrency() {
         return currency;
     }
 
-    public String getContent() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public Amount toTinkAmount() {
-        return new Amount(currency, StringUtils.parseAmount(amount));
+    public ExactCurrencyAmount toTinkAmount() {
+        return new ExactCurrencyAmount(amount, currency);
     }
 }

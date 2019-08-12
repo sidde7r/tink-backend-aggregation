@@ -24,19 +24,4 @@ public class Response {
     public String getStatementStatus() {
         return statementStatus;
     }
-
-    @Override
-    public String toString() {
-        return "Response{"
-                + "_links = '"
-                + links
-                + '\''
-                + ",statementId = '"
-                + statementId
-                + '\''
-                + ",statementStatus = '"
-                + statementStatus
-                + '\''
-                + "}";
-    }
 }

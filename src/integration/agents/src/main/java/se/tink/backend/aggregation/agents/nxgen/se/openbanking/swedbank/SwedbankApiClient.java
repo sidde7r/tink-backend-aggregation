@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +10,6 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.BICProduction;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.BICSandbox;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.QueryKeys;
@@ -59,7 +58,7 @@ public final class SwedbankApiClient {
         this.configuration = configuration;
     }
 
-    private SwedbankConfiguration getConfiguration() {
+    public SwedbankConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
@@ -113,11 +112,9 @@ public final class SwedbankApiClient {
     }
 
     public List<String> mapAccountResponseToIbanList(FetchAccountResponse accounts) {
-        List<AccountEntity> accountList = accounts.getAccountList();
-        List<String> ibanList =
-                accountList.stream().map(AccountEntity::getIban).collect(Collectors.toList());
-
-        return ibanList;
+        return accounts.getAccountList().stream()
+                .map(AccountEntity::getIban)
+                .collect(Collectors.toList());
     }
 
     public URL getAuthorizeUrl(String state) {
@@ -152,10 +149,9 @@ public final class SwedbankApiClient {
     public ConsentRequest createConsentRequest() {
         return new ConsentRequest(
                 SwedbankConstants.BodyParameter.RECURRING_INDICATOR,
-                getDateWithOffset(
-                        Calendar.DAY_OF_MONTH,
-                        SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS,
-                        Format.CONSENT_VALIDITY_TIMESTAMP),
+                LocalDateTime.now()
+                        .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
+                        .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
                 SwedbankConstants.BodyParameter.COMBINED_SERVICE_INDICATOR,
                 new ConsentAllAccountsEntity(SwedbankConstants.BodyParameter.ALL_ACCOUNTS));
@@ -164,10 +160,9 @@ public final class SwedbankApiClient {
     public ConsentRequest createConsentRequest(List<String> list) {
         return new ConsentRequest(
                 SwedbankConstants.BodyParameter.RECURRING_INDICATOR,
-                getDateWithOffset(
-                        Calendar.DAY_OF_MONTH,
-                        SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS,
-                        Format.CONSENT_VALIDITY_TIMESTAMP),
+                LocalDateTime.now()
+                        .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
+                        .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
                 SwedbankConstants.BodyParameter.COMBINED_SERVICE_INDICATOR,
                 new AccessEntity.Builder().addIbans(list).build());
@@ -321,11 +316,5 @@ public final class SwedbankApiClient {
 
     private String getHeaderTimeStamp() {
         return new SimpleDateFormat(SwedbankConstants.Format.HEADER_TIMESTAMP).format(new Date());
-    }
-
-    public String getDateWithOffset(int type, int offset, String format) {
-        Calendar cal = Calendar.getInstance();
-        cal.add(type, offset);
-        return new SimpleDateFormat(format).format(cal.getTime());
     }
 }

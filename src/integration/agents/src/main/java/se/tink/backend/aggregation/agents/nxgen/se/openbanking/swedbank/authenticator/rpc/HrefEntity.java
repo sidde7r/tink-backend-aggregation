@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authent
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ScaRedirect {
+public class HrefEntity {
 
     private String href;
 

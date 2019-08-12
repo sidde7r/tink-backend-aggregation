@@ -71,11 +71,7 @@ public final class SwedbankAgent extends NextGenerationAgent
                 new SwedbankAuthenticator(apiClient, persistentStorage);
         SwedbankAuthenticationController swedbankAuthenticationController =
                 new SwedbankAuthenticationController(
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        authenticator,
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        persistentStorage, supplementalInformationHelper, authenticator, request);
         return new AutoAuthenticationController(
                 request,
                 context,
