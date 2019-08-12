@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
@@ -36,6 +38,7 @@ public class CbiGlobeApiClient {
     private final PersistentStorage persistentStorage;
     private CbiGlobeConfiguration configuration;
     private boolean requestManual;
+    private static final Logger logger = LoggerFactory.getLogger(CbiGlobeApiClient.class);
 
     public CbiGlobeApiClient(
             TinkHttpClient client, PersistentStorage persistentStorage, boolean requestManual) {
@@ -73,7 +76,8 @@ public class CbiGlobeApiClient {
                         .header(
                                 HeaderKeys.CONSENT_ID,
                                 persistentStorage.get(StorageKeys.CONSENT_ID));
-
+        // only for testing, this commit will be reverted after tests
+        logger.info("REQUEST MANUAL IS SET TO " + requestManual);
         if (requestManual) {
             rb.header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS);
         }
