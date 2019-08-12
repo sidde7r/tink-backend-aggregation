@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.utils.QrCodeParser;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
@@ -40,16 +41,19 @@ public class SwedbankTransferHelper {
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SwedbankDefaultApiClient apiClient;
+    private final SessionStorage sessionStorage;
     private static final Logger log = LoggerFactory.getLogger(SwedbankTransferHelper.class);
 
     public SwedbankTransferHelper(
             AgentContext context,
             Catalog catalog,
+            SessionStorage sessionStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             SwedbankDefaultApiClient apiClient) {
         this.context = context;
         this.supplementalRequester = context;
         this.catalog = catalog;
+        this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
     }

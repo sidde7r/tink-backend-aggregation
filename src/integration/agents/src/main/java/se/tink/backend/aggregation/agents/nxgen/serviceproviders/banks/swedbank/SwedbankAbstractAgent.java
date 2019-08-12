@@ -258,7 +258,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     protected Optional<TransferController> constructTransferController() {
         SwedbankTransferHelper transferHelper =
                 new SwedbankTransferHelper(
-                        context, catalog, supplementalInformationHelper, apiClient);
+                        context, catalog, sessionStorage, supplementalInformationHelper, apiClient);
         SwedbankDefaultBankTransferExecutor transferExecutor =
                 new SwedbankDefaultBankTransferExecutor(catalog, apiClient, transferHelper);
         SwedbankDefaultPaymentExecutor paymentExecutor =
