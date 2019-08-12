@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
@@ -111,16 +112,15 @@ public class CustomerNotesListEntity {
     }
 
     private Amount getAmount() {
-        String amountSign =
-                sign.equals(EvoBancoConstants.Constants.ACCOUNT_TRANSACTION_PLUS_SIGN) ? "+" : "-";
-
         // It appears in some cases that the actual amount has a negative sign and information about
         // the sign, in those cases (double checked in the app), the amount should appear as
         // positive
-        if (amountAmount.startsWith("-") && "-".equals(amountSign)) {
-            return Amount.inEUR(AgentParsingUtils.parseAmount(amountAmount.substring(1)));
+        final Amount amount = Amount.inEUR(AgentParsingUtils.parseAmount(amountAmount));
+        if (Constants.ACCOUNT_TRANSACTION_PLUS_SIGN.equalsIgnoreCase(sign)) {
+            return amount;
+        } else {
+            return amount.negate();
         }
-        return Amount.inEUR(AgentParsingUtils.parseAmount(amountSign + amountAmount));
     }
 
     private boolean isPending() {
