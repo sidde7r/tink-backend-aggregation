@@ -2,7 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
-import org.assertj.core.util.Strings;
+import java.util.Objects;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -41,55 +42,10 @@ public class TransactionEntity {
                 .build();
     }
 
-    /**
-     * Priority 1 - "purpose: creditorName: remittanceInformationUnstructured" Priority 2 -
-     * "creditorName: remittanceInformationUnstructured" Priority 3 - "purpose: debtorName:
-     * remittanceInformationUnstructured" Priority 4 - "debtorName:
-     * remittanceInformationUnstructured" Priority 5 - "purpose: remittanceInformationUnstructured"
-     * Priority 6 - "remittanceInformationUnstructured" Priority 7 - "purpose" Priority 8 -
-     * "<Missing Description>"
-     */
     private String getDescription() {
-
-        if (!Strings.isNullOrEmpty(creditorName)) {
-            if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
-                if (!Strings.isNullOrEmpty(purposeCode)) {
-                    return purposeCode
-                            + ": "
-                            + creditorName
-                            + ": "
-                            + remittanceInformationUnstructured;
-                }
-                return creditorName + ": " + remittanceInformationUnstructured;
-            }
-            return creditorName;
-        }
-
-        if (!Strings.isNullOrEmpty(debtorName)) {
-            if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
-                if (!Strings.isNullOrEmpty(purposeCode)) {
-                    return purposeCode
-                            + ": "
-                            + debtorName
-                            + ": "
-                            + remittanceInformationUnstructured;
-                }
-                return debtorName + ": " + remittanceInformationUnstructured;
-            }
-            return debtorName;
-        }
-
-        if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
-            if (!Strings.isNullOrEmpty(purposeCode)) {
-                return purposeCode + ": " + remittanceInformationUnstructured;
-            }
-            return remittanceInformationUnstructured;
-        }
-
-        if (!Strings.isNullOrEmpty(purposeCode)) {
-            return purposeCode;
-        }
-
-        return "<Missing Description>";
+        return Stream.of(debtorName, creditorName, remittanceInformationUnstructured, purposeCode)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
     }
 }
