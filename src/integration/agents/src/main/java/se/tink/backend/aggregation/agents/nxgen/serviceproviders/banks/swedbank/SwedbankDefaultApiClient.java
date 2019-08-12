@@ -19,12 +19,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitSecurityTokenChallengeResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.SecurityTokenChallengeRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.SecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPayeeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterRecipientResponse;
@@ -686,6 +691,92 @@ public class SwedbankDefaultApiClient {
         } else {
             return !profileResponse.isHasSavingbankProfile()
                     && profileResponse.isHasSwedbankProfile();
+        }
+    }
+
+    public InitSecurityTokenChallengeResponse initTokenGenerator(String ssn) {
+        try {
+            return makePostRequest(
+                    SwedbankBaseConstants.Url.INIT_TOKEN.get(),
+                    InitAuthenticationRequest.createFromUserId(ssn),
+                    InitSecurityTokenChallengeResponse.class);
+        } catch (HttpClientException hce) {
+            String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
+            if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+
+            throw hce;
+        }
+    }
+
+    private boolean isSecurityTokenInvalidFormat(HttpResponseException hre) {
+        // This method expects an response with the following charectaristics:
+        // - Http status: 400
+        // - Http body: `ErrorResponse` with error field of "RESPONSE"
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_BAD_REQUEST) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.RESPONSE);
+    }
+
+    private boolean isSecurityTokenTooOld(HttpResponseException hre) {
+        // This method expects an response with the following charectaristics:
+        // - Http status: 405
+        // - Http body: `ErrorResponse` with error field of "NOT_ALLOWED"
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_METHOD_NOT_ALLOWED) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.NOT_ALLOWED);
+    }
+
+    private boolean isLoginSecurityTokenInvalid(HttpResponseException hre) {
+        // This method expects an response with the following charectaristics:
+        // - Http status: 401
+        // - Http body: `ErrorResponse` with error field of "LOGIN_FAILED"
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_UNAUTHORIZED) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.LOGIN_FAILED);
+    }
+
+    public SecurityTokenChallengeResponse sendLoginChallenge(String challenge)
+            throws SupplementalInfoException {
+        try {
+            return makePostRequest(
+                    SwedbankBaseConstants.Url.INIT_TOKEN_RESPONSE.get(),
+                    SecurityTokenChallengeRequest.createFromChallenge(challenge),
+                    SecurityTokenChallengeResponse.class);
+        } catch (HttpResponseException hre) {
+            if (isSecurityTokenInvalidFormat(hre)) {
+                throw SupplementalInfoError.NO_VALID_CODE.exception();
+            }
+            if (isSecurityTokenTooOld(hre)) {
+                throw SupplementalInfoError.NO_VALID_CODE.exception();
+            }
+            if (isLoginSecurityTokenInvalid(hre)) {
+                throw SupplementalInfoError.NO_VALID_CODE.exception();
+            }
+            // unknown error: rethrow
+            throw hre;
+        } catch (HttpClientException hce) {
+            String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
+            if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw hce;
         }
     }
 }

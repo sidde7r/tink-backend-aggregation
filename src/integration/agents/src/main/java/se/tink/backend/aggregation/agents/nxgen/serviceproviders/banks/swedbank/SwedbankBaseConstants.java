@@ -51,6 +51,8 @@ public class SwedbankBaseConstants {
 
     public enum Url implements UrlEnum {
         INIT_BANKID(createUrlWithHost("/v5/identification/bankid/mobile")),
+        INIT_TOKEN(createUrlWithHost("/v5/identification/securitytoken/challenge")),
+        INIT_TOKEN_RESPONSE(createUrlWithHost("/v5/identification/securitytoken")),
         TOUCH(createUrlWithHost("/v5/identification/touch")),
         LOGOUT(createUrlWithHost("/v5/identification/logout"));
 
@@ -251,6 +253,10 @@ public class SwedbankBaseConstants {
         }
     }
 
+    public static final class DeviceAuthentication {
+        public static final String CHALLENGE = "challenge";
+    }
+
     public enum MenuItemKey {
         ACCOUNTS("EngagementOverview"),
         UPCOMING_TRANSACTIONS("UpcomingTransactions"),
@@ -340,12 +346,16 @@ public class SwedbankBaseConstants {
 
     public static class ErrorCode {
         public static final String NOT_FOUND = "NOT_FOUND";
+        public static final String LOGIN_FAILED = "LOGIN_FAILED";
+        public static final String NOT_ALLOWED = "NOT_ALLOWED";
+        public static final String AUTHORIZATION_FAILED = "AUTHORIZATION_FAILED";
     }
 
     public static class ErrorField {
         public static final String DATE = "date";
         public static final String USER_ID = "userid";
         public static final String RECIPIENT_NUMBER = "recipientnumber";
+        public static final String RESPONSE = "response";
     }
 
     public static class TransactionType {
