@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -52,7 +51,7 @@ public class SibsRedirectAuthenticationController
             CredentialsRequest request) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
+        this.pseudoId = JwtStateUtils.generatePseudoId(request.getAppUriId());
         this.state =
                 JwtStateUtils.tryCreateJwtState(
                         callbackJwtSignatureKeyPair, pseudoId, request.getAppUriId());

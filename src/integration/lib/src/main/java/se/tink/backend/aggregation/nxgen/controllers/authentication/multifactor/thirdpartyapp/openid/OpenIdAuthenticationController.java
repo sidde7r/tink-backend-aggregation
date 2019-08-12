@@ -104,7 +104,7 @@ public class OpenIdAuthenticationController
         this.tokenLifetimeUnit = tokenLifetimeUnit;
         this.callbackUri = callbackUri;
 
-        this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
+        this.pseudoId = JwtStateUtils.generatePseudoId(appUriId);
         this.state =
                 JwtStateUtils.tryCreateJwtState(callbackJWTSignatureKeyPair, pseudoId, appUriId);
 
