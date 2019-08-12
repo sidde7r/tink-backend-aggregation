@@ -37,18 +37,28 @@ public class InternalEidasProxyConfiguration {
         return host;
     }
 
-    public Certificate getRootCa() throws IOException, CertificateException {
+    public KeyStore getRootCaTrustStore()
+            throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException {
 
+        final Certificate certificate;
         if (caPath != null) {
-            return Pem.parseCertificate(Files.toByteArray(new File(caPath)));
+            certificate = Pem.parseCertificate(Files.toByteArray(new File(caPath)));
+
         } else if (localEidasDev) {
             // Running in local development, we can trust aggregation staging
-            return Pem.parseCertificate(
-                    Files.toByteArray(
-                            new File("data/eidas_dev_certificates/aggregation-staging-ca.pem")));
+            certificate =
+                    Pem.parseCertificate(
+                            Files.toByteArray(
+                                    new File(
+                                            "data/eidas_dev_certificates/aggregation-staging-ca.pem")));
         } else {
             throw new IllegalStateException("Trusted CA for eiDAS proxy not configured");
         }
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        keyStore.load(null, "password".toCharArray());
+
+        keyStore.setCertificateEntry("trustedcert", certificate);
+        return keyStore;
     }
 
     public KeyStore getClientCertKeystore()
