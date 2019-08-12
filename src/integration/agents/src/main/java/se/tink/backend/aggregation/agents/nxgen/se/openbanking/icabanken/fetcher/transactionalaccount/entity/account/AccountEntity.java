@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.account;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -9,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -45,11 +46,11 @@ public class AccountEntity {
         return Optional.ofNullable(owner).flatMap(owners -> owners.stream().findFirst()).orElse("");
     }
 
-    private Amount getBalance() {
+    private ExactCurrencyAmount getBalance() {
         return this.balances.stream()
                 .filter(BalanceEntity::isInterimAvailable)
                 .findFirst()
                 .map(BalanceEntity::getAmount)
-                .orElseGet(() -> new Amount(currency, 0));
+                .orElseGet(() -> new ExactCurrencyAmount(BigDecimal.valueOf(0), currency));
     }
 }

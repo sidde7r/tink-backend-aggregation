@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.account;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BalanceAmountEntity {
 
-    private Double amount;
+    private BigDecimal amount;
     private String currency;
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

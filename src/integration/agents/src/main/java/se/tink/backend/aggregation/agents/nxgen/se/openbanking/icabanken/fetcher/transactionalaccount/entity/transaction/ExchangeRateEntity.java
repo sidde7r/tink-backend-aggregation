@@ -7,6 +7,6 @@ public class ExchangeRateEntity {
 
     private String currencyFrom;
     private String currencyTo;
-    private Double rate;
+    private String rate;
     private String rateDate;
 }
