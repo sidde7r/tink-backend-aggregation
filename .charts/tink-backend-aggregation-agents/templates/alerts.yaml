@@ -378,7 +378,7 @@ spec:
             the last 30 minutes.
         tags: <{ $labels.className }>
 
-      # NL
+    # NL
   - alert: LoginSuccessRateLowWithAttemptLimitNL
     expr: |
         # Successful/Cancelled attempts above 95%
@@ -598,6 +598,43 @@ spec:
         summary: Refresh unavailable rate is above 10% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
+
+    # PT
+  - alert: LoginSuccessRateLowWithAttemptLimitPT
+    expr: |
+      # Successful/Cancelled attempts above 95%
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="PT"}[30m])) by (action,className)
+          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="PT"}[30m])) by (action,className) < 0.95)
+      # At least this many attempts.
+      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="PT"}[30m])) by (action,className) > 2
+    for: 5m
+    labels:
+      severity: ping
+      who: integration
+    annotations:
+      description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        Investigate immediately.
+      summary: Login success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        the last 30 minutes.
+      tags: <{ $labels.className }>
+
+  - alert: RefreshSuccessRateLowWithAttemptLimitPT
+    expr: |
+      # Successful attempts above 95%
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="PT"}[30m])) by (className)
+          / sum(increase(tink_agent_refresh_total{market="PT"}[30m])) by (className) < 0.95)
+      # At least this many attempts.
+      and sum(increase(tink_agent_refresh_total{market="PT"}[30m])) by (className) > 20
+    for: 5m
+    labels:
+      severity: ping
+      who: integration
+    annotations:
+      description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        Investigate immediately.
+      summary: Refresh success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        the last 30 minutes.
+      tags: <{ $labels.className }>
 
 ### Too many errors in general
     # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
