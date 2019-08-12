@@ -6,7 +6,6 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.Files;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
@@ -17,7 +16,6 @@ import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.vavr.jackson.datatype.VavrModule;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -28,7 +26,6 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
@@ -64,12 +61,12 @@ import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.MessageSignInterceptor;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -474,23 +471,11 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         this.internalSslContextBuilder = this.internalSslContextBuilder.useProtocol(sslProtocol);
     }
 
-    public void setSslClientCertificate(PrivateKey privateKey, Certificate certificate) {
+    private void setSslClientCertificate(KeyStore keyStore) {
         Preconditions.checkState(this.internalClient == null);
         try {
-            KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
-            keyStore.load(null, "password".toCharArray());
-            Certificate[] certificateChain = new Certificate[1];
-            certificateChain[0] = certificate;
-
-            keyStore.setKeyEntry("clientcert", privateKey, null, certificateChain);
-
             internalSslContextBuilder.loadKeyMaterial(keyStore, null);
-        } catch (KeyStoreException
-                | NoSuchProviderException
-                | IOException
-                | NoSuchAlgorithmException
-                | CertificateException
-                | UnrecoverableKeyException e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
             throw new IllegalStateException(e);
         }
     }
@@ -574,7 +559,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     public void setEidasProxy(EidasProxyConfiguration conf, String certificateId) {
 
         try {
-            setEidasClient(conf);
+            setEidasClient(conf.toInternalConfig());
 
             setProxy(conf.getHost());
             requestExecutor.setEidasCertificateId(certificateId);
@@ -582,49 +567,27 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             this.internalHttpClientBuilder =
                     this.internalHttpClientBuilder.setHostnameVerifier(
                             new ProxyHostnameVerifier(new URI(conf.getHost()).getHost()));
-        } catch (IOException | CertificateException | URISyntaxException e) {
+        } catch (URISyntaxException e) {
             throw new IllegalStateException(
                     "Could not initialise client certificate for eIDAS proxy", e);
         }
     }
 
     public void setEidasSign(EidasProxyConfiguration conf) {
-        try {
-            setEidasClient(conf);
-        } catch (CertificateException | IOException e) {
-            throw new IllegalStateException(
-                    "Could not initialise client cert for eIDAS signing", e);
-        }
+        setEidasClient(conf.toInternalConfig());
     }
 
-    private void setEidasClient(EidasProxyConfiguration conf)
-            throws CertificateException, IOException {
-        if (conf.getCaPath() != null) {
-            trustRootCaCertificate(
-                    Pem.parseCertificate(Files.toByteArray(new File(conf.getCaPath()))));
-        } else if (conf.isLocalEidasDev()) {
-            // Running in local development, we can trust aggregation staging
-            trustRootCaCertificate(
-                    Pem.parseCertificate(
-                            Files.toByteArray(
-                                    new File(
-                                            "data/eidas_dev_certificates/aggregation-staging-ca.pem"))));
-        } else {
-            throw new IllegalStateException("Trusted CA for eiDAS proxy not configured");
-        }
-
-        if (conf.getTlsCrtPath() != null && conf.getTlsKeyPath() != null) {
-            Certificate certificate =
-                    Pem.parseCertificate(Files.toByteArray(new File(conf.getTlsCrtPath())));
-            PrivateKey privateKey =
-                    Pem.parsePrivateKey(Files.toByteArray(new File(conf.getTlsKeyPath())));
-            setSslClientCertificate(privateKey, certificate);
-        } else if (conf.isLocalEidasDev()) {
-            File clientCertificateFile =
-                    new File(System.getProperty("user.home"), "eidas_client.p12");
-            setSslClientCertificate(Files.toByteArray(clientCertificateFile), "changeme");
-        } else {
-            throw new IllegalStateException("Client certificate for eIDAS proxy not configured");
+    private void setEidasClient(InternalEidasProxyConfiguration conf) {
+        try {
+            trustRootCaCertificate(conf.getRootCa());
+            setSslClientCertificate(conf.getClientCertKeystore());
+        } catch (KeyStoreException
+                | NoSuchProviderException
+                | IOException
+                | CertificateException
+                | NoSuchAlgorithmException e) {
+            throw new IllegalStateException(
+                    "Error configuring client certificate for eIDAS proxy", e);
         }
     }
 
