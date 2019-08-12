@@ -121,7 +121,7 @@ public class EvoBancoConstants {
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "I#Cuenta Inteligente EVO")
+                    .put(AccountTypes.CHECKING, "I#Cuenta Inteligente EVO", "I#Cuenta Inteligente")
                     .put(AccountTypes.SAVINGS, "I#Depósito")
                     .build();
 
