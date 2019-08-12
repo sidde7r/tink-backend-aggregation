@@ -9,7 +9,7 @@ public class AgentDataAvailabilityTrackerClientFactory {
     private static final Logger log =
             LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientFactory.class);
 
-    private static final float TRACKING_FRACTION = 0.10f; // 10% of requests
+    private static final float TRACKING_FRACTION = 0.20f; // 20% of requests
     private static AgentDataAvailabilityTrackerClientFactory instance;
 
     private final Random random;
