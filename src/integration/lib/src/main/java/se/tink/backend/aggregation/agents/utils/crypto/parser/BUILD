@@ -3,5 +3,6 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//third_party:org_bouncycastle_bcpkix_jdk15on",
     ],
 )
