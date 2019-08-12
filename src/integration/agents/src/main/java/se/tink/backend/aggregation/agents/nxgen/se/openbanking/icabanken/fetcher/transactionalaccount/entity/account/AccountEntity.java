@@ -32,7 +32,7 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(bban)
                                 .withAccountNumber(bban)
-                                .withAccountName(getOwner())
+                                .withAccountName(name)
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
                                 .addIdentifier(new IbanIdentifier(iban))
