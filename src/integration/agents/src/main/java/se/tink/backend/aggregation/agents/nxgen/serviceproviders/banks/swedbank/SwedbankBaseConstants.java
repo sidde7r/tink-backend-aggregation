@@ -321,6 +321,7 @@ public class SwedbankBaseConstants {
                 "Timeout when collecting bankID for signing transfer";
         public static final String COLLECT_BANKID_CANCELLED =
                 "Could not confirm transfer with BankID signing.";
+        public static final String TOKEN_SIGN_FAILED = "Could not verify security token.";
         public static final String NOT_EXACTLY_ONE_UNSIGNED_TRANSFER =
                 "Number of unsigned transfers not equal to one - Cancelling to not sign more than one transfer.";
         public static final String UNSIGNED_TRANFERS =
@@ -331,6 +332,8 @@ public class SwedbankBaseConstants {
         public static final String NEEDS_EXTENDED_USE =
                 "Activation of extended use for BankId required";
         public static final String CONNECT_TIMEOUT = "connect timed out";
+        public static final String CHALLENGE_NO_RESPONSE =
+                "Transfer or payment was not signed with security token device";
     }
 
     public static class UserMessage {

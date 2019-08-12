@@ -17,7 +17,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.AbstractBankIdSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSecurityTokenSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisterTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
@@ -284,8 +286,111 @@ public class SwedbankTransferHelper {
     }
 
     private Optional<LinksEntity> signNewRecipient(LinkEntity signLink) {
-        InitiateSignTransferResponse initiateSignTransfer =
-                apiClient.signExternalTransfer(signLink);
-        return Optional.ofNullable(collectBankId(initiateSignTransfer));
+        if (isBankId()) {
+            InitiateSignTransferResponse initiateSignTransfer =
+                    apiClient.signExternalTransferBankId(signLink);
+            return Optional.ofNullable(collectBankId(initiateSignTransfer));
+        } else {
+            InitiateSecurityTokenSignTransferResponse initiateSecurityTokenSignTransferResponse =
+                    apiClient.signExternalTransferSecurityToken(signLink);
+            return collectToken(initiateSecurityTokenSignTransferResponse);
+        }
+    }
+
+    private Optional<LinksEntity> collectToken(
+            InitiateSecurityTokenSignTransferResponse initiateSecurityTokenSignTransferResponse) {
+        Optional<String> supplementalAnswer =
+                requestSecurityTokenSignTransferChallengeSupplemental(
+                        initiateSecurityTokenSignTransferResponse.getChallenge());
+        if (!supplementalAnswer.isPresent()) {
+            return Optional.empty();
+        }
+        try {
+            RegisterTransferResponse registerTransferResponse =
+                    apiClient.sendNewRecipientChallenge(
+                            initiateSecurityTokenSignTransferResponse.getLinks().getNext(),
+                            supplementalAnswer.get());
+            return Optional.ofNullable(registerTransferResponse.getLinks());
+        } catch (SupplementalInfoException sie) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.TOKEN_SIGN_FAILED)
+                    .build();
+        }
+    }
+
+    public boolean isBankId() {
+        Optional<String> authMethod =
+                sessionStorage.get(
+                        SwedbankBaseConstants.StorageKey.AUTHENTICATION_METHOD, String.class);
+        if (!authMethod.isPresent()) {
+            return false;
+        }
+        return authMethod.get().equalsIgnoreCase(SwedbankBaseConstants.AuthorizationMethod.BANK_ID);
+    }
+
+    private Field getChallengeField(String challenge) {
+        return Field.builder()
+                .description(challenge)
+                .name(SwedbankBaseConstants.DeviceAuthentication.CHALLENGE)
+                .pattern(".+")
+                .helpText(
+                        catalog.getString(
+                                "Please enter this code into your token generator "
+                                        + "and write the generated response code here."))
+                .build();
+    }
+
+    public Optional<String> requestSecurityTokenSignTransferChallengeSupplemental(
+            String challenge) {
+        try {
+            Map<String, String> answers =
+                    supplementalInformationHelper.askSupplementalInformation(
+                            getChallengeField(challenge));
+            Optional<String> userChallenge =
+                    Optional.ofNullable(
+                            answers.get(SwedbankBaseConstants.DeviceAuthentication.CHALLENGE));
+            if (!userChallenge.isPresent()) {
+                log.warn("Did not get user challenge");
+                return Optional.empty();
+            }
+            return userChallenge;
+        } catch (SupplementalInfoException e) {
+            log.warn("Could not get user challenge");
+            return Optional.empty();
+        }
+    }
+
+    public LinksEntity tokenSignTransfer(LinksEntity links) {
+        InitiateSecurityTokenSignTransferResponse initiateSecurityTokenSignTransferResponse =
+                apiClient.signExternalTransferSecurityToken(links.getSignOrThrow());
+        String challenge = initiateSecurityTokenSignTransferResponse.getChallenge();
+        Optional<String> userChallenge =
+                requestSecurityTokenSignTransferChallengeSupplemental(challenge);
+        if (!userChallenge.isPresent()) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setMessage("No security token provided. Transfer failed.")
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.CHALLENGE_NO_RESPONSE)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.CHALLENGE_NO_RESPONSE)
+                    .build();
+        }
+
+        RegisterTransferResponse registerTransferResponse;
+        try {
+            registerTransferResponse =
+                    apiClient.sendTransferChallenge(
+                            initiateSecurityTokenSignTransferResponse.getLinks().getNext(),
+                            userChallenge.get());
+        } catch (SupplementalInfoException sie) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setMessage("Invalid security token provided. Transfer failed.")
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.TOKEN_SIGN_FAILED)
+                    .build();
+        }
+        return registerTransferResponse.getLinks();
     }
 }
