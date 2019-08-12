@@ -22,16 +22,20 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SwedbankDefaultBankIdAuthenticator
         implements BankIdAuthenticator<AbstractBankIdAuthResponse> {
     private static final Logger log =
             LoggerFactory.getLogger(SwedbankDefaultBankIdAuthenticator.class);
     private final SwedbankDefaultApiClient apiClient;
+    private final SessionStorage sessionStorage;
     private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
 
-    public SwedbankDefaultBankIdAuthenticator(SwedbankDefaultApiClient apiClient) {
+    public SwedbankDefaultBankIdAuthenticator(
+            SwedbankDefaultApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -131,6 +135,9 @@ public class SwedbankDefaultBankIdAuthenticator
     private void completeBankIdLogin(CollectBankIdResponse collectBankIdResponse)
             throws AuthenticationException {
         apiClient.completeAuthentication(collectBankIdResponse.getLinks().getNextOrThrow());
+        sessionStorage.put(
+                SwedbankBaseConstants.StorageKey.AUTHENTICATION_METHOD,
+                SwedbankBaseConstants.AuthorizationMethod.BANK_ID);
     }
 
     private InitBankIdResponse initBankId(String ssn) throws BankIdException {
