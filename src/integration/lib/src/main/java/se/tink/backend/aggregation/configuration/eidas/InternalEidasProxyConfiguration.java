@@ -14,11 +14,11 @@ import java.security.cert.CertificateException;
 import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
 
 public class InternalEidasProxyConfiguration {
-    private String host;
-    private String caPath;
-    private String tlsCrtPath;
-    private String tlsKeyPath;
-    private boolean localEidasDev;
+    private final String host;
+    private final String caPath;
+    private final String tlsCrtPath;
+    private final String tlsKeyPath;
+    private final boolean localEidasDev;
 
     public InternalEidasProxyConfiguration(
             String host,
@@ -35,18 +35,6 @@ public class InternalEidasProxyConfiguration {
 
     public String getHost() {
         return host;
-    }
-
-    public String getTlsCrtPath() {
-        return tlsCrtPath;
-    }
-
-    public String getTlsKeyPath() {
-        return tlsKeyPath;
-    }
-
-    public boolean isLocalEidasDev() {
-        return localEidasDev;
     }
 
     public Certificate getRootCa() throws IOException, CertificateException {

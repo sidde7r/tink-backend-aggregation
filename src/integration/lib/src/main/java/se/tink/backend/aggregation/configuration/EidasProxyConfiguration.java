@@ -20,24 +20,9 @@ public class EidasProxyConfiguration {
         return configuration;
     }
 
+    @Deprecated
     public String getHost() {
         return host;
-    }
-
-    public String getCaPath() {
-        return caPath;
-    }
-
-    public String getTlsCrtPath() {
-        return tlsCrtPath;
-    }
-
-    public String getTlsKeyPath() {
-        return tlsKeyPath;
-    }
-
-    public boolean isLocalEidasDev() {
-        return localEidasDev;
     }
 
     public InternalEidasProxyConfiguration toInternalConfig() {
