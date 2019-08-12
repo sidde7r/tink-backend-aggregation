@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.SwedbankDefaultBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.SwedbankTokenGeneratorAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.einvoice.SwedbankDefaultApproveEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.SwedbankDefaultPaymentExecutor;
@@ -38,6 +39,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
@@ -130,11 +133,26 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
+<<<<<<< HEAD
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
                 new SwedbankDefaultBankIdAuthenticator(apiClient),
                 persistentStorage,
                 credentials);
+=======
+        return new TypedAuthenticationController(constructAuthenticators());
+    }
+
+    protected TypedAuthenticator[] constructAuthenticators() {
+        return new TypedAuthenticator[] {
+            new SwedbankTokenGeneratorAuthenticationController(
+                    apiClient, sessionStorage, supplementalInformationController, catalog),
+            new BankIdAuthenticationController<>(
+                    supplementalRequester,
+                    new SwedbankDefaultBankIdAuthenticator(apiClient, sessionStorage),
+                    persistentStorage)
+        };
+>>>>>>> feat(Swedbank/Bankid&Token): Allow both token and bankid
     }
 
     @Override
