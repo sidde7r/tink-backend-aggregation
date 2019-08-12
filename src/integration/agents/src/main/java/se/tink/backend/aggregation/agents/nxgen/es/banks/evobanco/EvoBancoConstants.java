@@ -112,6 +112,7 @@ public class EvoBancoConstants {
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
         public static final String USER_INFO = "user-info";
+        public static final String CARD_STATE = "card-state";
     }
 
     public static class FormKey {
@@ -147,6 +148,10 @@ public class EvoBancoConstants {
         public static final int DEVICE_ID_LENGTH = 25;
         public static final String CREDIT_TRANSACTION_TYPE = "1";
         public static final String ACCOUNT_TRANSACTION_PLUS_SIGN = "H";
+    }
+
+    public static class CardState {
+        public static final String NOT_ACTIVATED = "E.EST.RENO";
     }
 
     public static class Tags {

@@ -21,7 +21,7 @@ public class CardDataEntityGlobalPositionResponse {
     private String creditAvailableBalance;
 
     @JsonProperty("descripcionEstado")
-    private String descriptionState;
+    private String stateDescription;
 
     @JsonProperty("importeFijo")
     private String fixedAmount;
@@ -81,5 +81,9 @@ public class CardDataEntityGlobalPositionResponse {
 
     public String getHolder() {
         return holder;
+    }
+
+    public String getStateDescription() {
+        return stateDescription;
     }
 }
