@@ -43,6 +43,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
     private static final String SIGNATURE_HEADER_KEY = "X-Signature";
     private static final String EIDAS_CERTIFICATE_ID_HEADER = "X-Tink-Eidas-Proxy-Certificate-Id";
+    private static final String EIDAS_CLUSTER_ID_HEADER = "X-Tink-QWAC-ClusterId";
 
     private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
@@ -53,6 +54,11 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
     private boolean shouldAddEidasCertificateId = false;
     private String eidasCertificateId;
+    private String clusterId;
+
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
+    }
 
     public TinkApacheHttpRequestExecutor(SignatureKeyPair signatureKeyPair) {
         if (signatureKeyPair == null || signatureKeyPair.getPrivateKey() == null) {
@@ -88,6 +94,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             addProxyAuthorizationHeader(request);
         } else if (shouldAddEidasCertificateId) {
             request.addHeader(EIDAS_CERTIFICATE_ID_HEADER, eidasCertificateId);
+            request.addHeader(EIDAS_CLUSTER_ID_HEADER, clusterId);
         } else if (shouldAddRequestSignature) {
             // Do not add a signature header on the proxy requests.
             // This is because we don't want to leak unnecessary information to proxy providers.

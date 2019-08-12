@@ -567,6 +567,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         requestExecutor.setProxyCredentials(username, password);
     }
 
+    public void setClusterId(String clusterId) {
+        requestExecutor.setClusterId(clusterId);
+    }
+
     public void setEidasProxy(EidasProxyConfiguration conf, String certificateId) {
 
         try {
