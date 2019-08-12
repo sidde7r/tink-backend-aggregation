@@ -10,12 +10,13 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class SbabAgentTest {
 
-    private enum Arg {
-        USERNAME
-    }
-
     private ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Before
     public void setup() {
@@ -34,8 +35,7 @@ public class SbabAgentTest {
         builder.build().testRefresh();
     }
 
-    @AfterClass
-    public static void afterClass() {
-        ArgumentManager.afterClass();
+    private enum Arg {
+        USERNAME
     }
 }

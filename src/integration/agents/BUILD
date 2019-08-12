@@ -37,6 +37,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex/v62",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
     ],
     deps = [
         "//src/integration/account:enums",
@@ -145,6 +146,7 @@ junit_test(
         "//src/integration/account:enums",
         "//src/integration/account:rpc",
         "//src/integration/agents",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
         "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:demo",

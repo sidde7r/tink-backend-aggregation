@@ -1,0 +1,15 @@
+java_library(
+    name = "tools",
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/libraries/strings",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_code_gson_gson",
+        "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_reflections_reflections",
+    ],
+)

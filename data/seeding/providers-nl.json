@@ -79,6 +79,7 @@
             "fields": [],
             "financialInstitutionId": "77afd60c061cd45209774d0e168dbd10",
             "multiFactor": false,
+            "financialInstitutionId": "fc00db4df3144d0a87827ddd6d1bee47",
             "name": "nl-bunq-oauth2",
             "passwordHelpText": null,
             "payload": "tink https://api.bunq.com",
