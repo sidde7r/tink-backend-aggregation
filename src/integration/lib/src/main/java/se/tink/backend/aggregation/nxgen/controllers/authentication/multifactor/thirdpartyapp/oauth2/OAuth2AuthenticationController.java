@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -57,29 +56,6 @@ public class OAuth2AuthenticationController
     // cumbersome authentication flows.
     private static final long WAIT_FOR_MINUTES = 9;
 
-    /**
-     * this exists for now only to keep compatibility with agents living in
-     * https://github.com/tink-ab/tink-backend-integration-thirdparties
-     *
-     * <p>please use the one with CallbackJwtSignatureKeyPair and CredentialsRequest
-     */
-    @Deprecated
-    public OAuth2AuthenticationController(
-            PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
-            OAuth2Authenticator authenticator,
-            Credentials credentials) {
-        this(
-                persistentStorage,
-                supplementalInformationHelper,
-                authenticator,
-                null,
-                credentials,
-                null,
-                DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT);
-    }
-
     public OAuth2AuthenticationController(
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
@@ -113,7 +89,7 @@ public class OAuth2AuthenticationController
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
 
-        this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
+        this.pseudoId = JwtStateUtils.generatePseudoId(appUriId);
         this.state =
                 JwtStateUtils.tryCreateJwtState(callbackJWTSignatureKeyPair, pseudoId, appUriId);
     }

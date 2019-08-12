@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils;
 
+import com.google.common.base.Strings;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.libraries.cryptography.ECDSAUtils;
 import se.tink.libraries.cryptography.JWTUtils;
@@ -36,5 +38,14 @@ public class JwtStateUtils {
 
         logger.info("JWT state: {}", signedState);
         return signedState;
+    }
+
+    public static String generatePseudoId(String appUriId) {
+        if (Strings.isNullOrEmpty(appUriId)) {
+            logger.warn("appUriId is empty!");
+            return RandomUtils.generateRandomHexEncoded(8);
+        }
+
+        return appUriId;
     }
 }

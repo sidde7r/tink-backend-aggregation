@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -46,7 +45,7 @@ public class OAuth1AuthenticationController
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
+        this.pseudoId = JwtStateUtils.generatePseudoId(credentialsRequest.getAppUriId());
         this.state =
                 JwtStateUtils.tryCreateJwtState(
                         callbackJWTSignatureKeyPair, pseudoId, credentialsRequest.getAppUriId());
