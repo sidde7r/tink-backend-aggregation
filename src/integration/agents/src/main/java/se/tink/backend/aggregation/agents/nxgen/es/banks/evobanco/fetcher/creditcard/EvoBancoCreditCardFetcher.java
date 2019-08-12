@@ -3,11 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.credi
 import java.util.Collection;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.CardState;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities.AnswerEntityGlobalPositionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
@@ -42,6 +45,11 @@ public class EvoBancoCreditCardFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
+        final String cardState = account.getFromTemporaryStorage(Storage.CARD_STATE);
+        if (CardState.NOT_ACTIVATED.equalsIgnoreCase(cardState)) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
+
         CardTransactionsResponse cardTransactionsResponse =
                 bankClient.fetchCardTransactions(account.getBankIdentifier(), page);
 
