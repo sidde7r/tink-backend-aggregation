@@ -41,17 +41,55 @@ public class TransactionEntity {
                 .build();
     }
 
+    /**
+     * Priority 1 - "purpose: creditorName: remittanceInformationUnstructured" Priority 2 -
+     * "creditorName: remittanceInformationUnstructured" Priority 3 - "purpose: debtorName:
+     * remittanceInformationUnstructured" Priority 4 - "debtorName:
+     * remittanceInformationUnstructured" Priority 5 - "purpose: remittanceInformationUnstructured"
+     * Priority 6 - "remittanceInformationUnstructured" Priority 7 - "purpose" Priority 8 -
+     * "<Missing Description>"
+     */
     private String getDescription() {
 
-        if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
-            return remittanceInformationUnstructured;
-        } else if (!Strings.isNullOrEmpty(creditorName)) {
+        if (!Strings.isNullOrEmpty(creditorName)) {
+            if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+                if (!Strings.isNullOrEmpty(purposeCode)) {
+                    return purposeCode
+                            + ": "
+                            + creditorName
+                            + ": "
+                            + remittanceInformationUnstructured;
+                }
+                return creditorName + ": " + remittanceInformationUnstructured;
+            }
             return creditorName;
-        } else if (!Strings.isNullOrEmpty(debtorName)) {
+        }
+
+        if (!Strings.isNullOrEmpty(debtorName)) {
+            if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+                if (!Strings.isNullOrEmpty(purposeCode)) {
+                    return purposeCode
+                            + ": "
+                            + debtorName
+                            + ": "
+                            + remittanceInformationUnstructured;
+                }
+                return debtorName + ": " + remittanceInformationUnstructured;
+            }
             return debtorName;
-        } else if (!Strings.isNullOrEmpty(purposeCode)) {
+        }
+
+        if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+            if (!Strings.isNullOrEmpty(purposeCode)) {
+                return purposeCode + ": " + remittanceInformationUnstructured;
+            }
+            return remittanceInformationUnstructured;
+        }
+
+        if (!Strings.isNullOrEmpty(purposeCode)) {
             return purposeCode;
         }
-        return transactionId;
+
+        return "<Missing Description>";
     }
 }
