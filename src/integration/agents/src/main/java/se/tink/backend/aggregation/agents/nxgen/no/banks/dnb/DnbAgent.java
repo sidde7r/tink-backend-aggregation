@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class DnbAgent extends NextGenerationAgent
@@ -56,6 +57,10 @@ public class DnbAgent extends NextGenerationAgent
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.setFollowRedirects(false);
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        DnbConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        DnbConstants.TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override
