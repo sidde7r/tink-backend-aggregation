@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
@@ -91,7 +92,7 @@ public class CardEntity {
         // Some SEBKort providers do not supply card accounts. In that case we can't set
         // available credit. We also don't want to set available credit for sub cards.
         if (Objects.isNull(account) || !cardContract.isOwned()) {
-            return ExactCurrencyAmount.of(0d, cardContract.getCurrencyCode());
+            return ExactCurrencyAmount.of(BigDecimal.ZERO, cardContract.getCurrencyCode());
         }
 
         return ExactCurrencyAmount.of(account.getDisposableAmount(), account.getCurrencyCode());
@@ -111,11 +112,9 @@ public class CardEntity {
         // The card account balance is global for the whole account. Only set it for the account
         // owner, and set 0 for the secondary cards. Then we don't summarize to more debt than the
         // user actually has.
-        if (!cardContract.isOwned()) {
-            return ExactCurrencyAmount.of(0d, cardContract.getCurrencyCode());
-        }
-
-        return ExactCurrencyAmount.of(
-                account.getCurrentBalance().negate(), account.getCurrencyCode());
+        return cardContract.isOwned()
+                ? ExactCurrencyAmount.of(
+                        account.getCurrentBalance().negate(), account.getCurrencyCode())
+                : ExactCurrencyAmount.of(BigDecimal.ZERO, cardContract.getCurrencyCode());
     }
 }
