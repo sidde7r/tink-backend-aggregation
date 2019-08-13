@@ -145,4 +145,9 @@ public final class JyskeConstants {
             public static final String CURRENCY = "DKK";
         }
     }
+
+    public static class TimeoutFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 3;
+        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }
