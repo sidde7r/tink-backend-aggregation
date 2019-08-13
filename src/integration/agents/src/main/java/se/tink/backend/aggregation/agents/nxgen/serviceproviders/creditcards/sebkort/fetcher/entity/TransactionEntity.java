@@ -2,11 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.se
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -19,9 +20,9 @@ public class TransactionEntity {
     private Date date;
 
     private String countryCode;
-    private double amount;
+    private BigDecimal amount;
     private String currencyCode;
-    private double billingAmount;
+    private BigDecimal billingAmount;
     private String billingCurrencyCode;
     private String type;
 
@@ -60,7 +61,7 @@ public class TransactionEntity {
         return countryCode;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
@@ -68,7 +69,7 @@ public class TransactionEntity {
         return currencyCode;
     }
 
-    public double getBillingAmount() {
+    public BigDecimal getBillingAmount() {
         return billingAmount;
     }
 
@@ -160,13 +161,14 @@ public class TransactionEntity {
 
     @JsonIgnore
     private CreditCardTransaction toTinkTransaction(boolean isPending) {
-        Amount negatedAmount =
-                new Amount(this.getBillingCurrencyCode(), this.getBillingAmount()).negate();
+
+        ExactCurrencyAmount negatedBillingAmount =
+                ExactCurrencyAmount.of(billingAmount.negate(), billingCurrencyCode);
 
         return CreditCardTransaction.builder()
                 .setDate(this.getDate())
                 .setDescription(this.getSpecification())
-                .setAmount(negatedAmount)
+                .setAmount(negatedBillingAmount)
                 .setPending(isPending)
                 .build();
     }
