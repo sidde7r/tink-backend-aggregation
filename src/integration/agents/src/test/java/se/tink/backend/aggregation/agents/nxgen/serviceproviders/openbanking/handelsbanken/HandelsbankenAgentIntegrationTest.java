@@ -89,7 +89,10 @@ public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurati
         this.expectLoggedIn = builder.isExpectLoggedIn();
         this.context =
                 new NewAgentTestContext(
-                        this.user, this.credential, builder.getTransactionsToPrint(), builder.getAppId());
+                        this.user,
+                        this.credential,
+                        builder.getTransactionsToPrint(),
+                        builder.getAppId());
         this.supplementalInformationController =
                 new SupplementalInformationController(this.context, this.credential);
     }
