@@ -29,17 +29,23 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final NordeaBaseConfiguration nordeaConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                NordeaBaseConstants.Market.INTEGRATION_NAME,
-                                request.getProvider().getPayload(),
-                                NordeaBaseConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+        NordeaBaseConfiguration nordeaConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(NordeaBaseConfiguration.class);
+
+        if (nordeaConfiguration == null) {
+            nordeaConfiguration =
+                    configuration
+                            .getIntegrations()
+                            .getClientConfiguration(
+                                    NordeaBaseConstants.Market.INTEGRATION_NAME,
+                                    request.getProvider().getPayload(),
+                                    NordeaBaseConfiguration.class)
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    ErrorMessages.MISSING_CONFIGURATION));
+        }
         apiClient.setConfiguration(nordeaConfiguration);
         this.client.setEidasProxy(
                 configuration.getEidasProxy(), nordeaConfiguration.getEidasQwac());
