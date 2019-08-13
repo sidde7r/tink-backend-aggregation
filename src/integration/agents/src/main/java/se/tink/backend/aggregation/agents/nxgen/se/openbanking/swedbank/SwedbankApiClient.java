@@ -69,7 +69,7 @@ public final class SwedbankApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
-    public RequestBuilder createRequest(URL url) {
+    private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .header(SwedbankConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
@@ -147,7 +147,7 @@ public final class SwedbankApiClient {
     }
 
     public ConsentRequest createConsentRequest() {
-        return new ConsentRequest(
+        return new ConsentRequest<>(
                 SwedbankConstants.BodyParameter.RECURRING_INDICATOR,
                 LocalDateTime.now()
                         .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
@@ -158,7 +158,7 @@ public final class SwedbankApiClient {
     }
 
     public ConsentRequest createConsentRequest(List<String> list) {
-        return new ConsentRequest(
+        return new ConsentRequest<>(
                 SwedbankConstants.BodyParameter.RECURRING_INDICATOR,
                 LocalDateTime.now()
                         .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)

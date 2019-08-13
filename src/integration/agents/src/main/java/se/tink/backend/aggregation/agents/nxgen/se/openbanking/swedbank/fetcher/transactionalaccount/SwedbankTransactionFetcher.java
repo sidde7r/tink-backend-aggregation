@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
@@ -17,7 +18,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import tink.org.apache.http.HttpStatus;
 
 public class SwedbankTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
 
@@ -108,7 +108,6 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
             Uninterruptibles.sleepUninterruptibly(
                     SwedbankConstants.TimeValues.SLEEP_TIME_MILLISECONDS, TimeUnit.MILLISECONDS);
         }
-        logger.info(SwedbankConstants.LogMessages.TRANSACTION_SIGNING_TIMED_OUT);
         throw new IllegalStateException(
                 SwedbankConstants.LogMessages.TRANSACTION_SIGNING_TIMED_OUT);
     }

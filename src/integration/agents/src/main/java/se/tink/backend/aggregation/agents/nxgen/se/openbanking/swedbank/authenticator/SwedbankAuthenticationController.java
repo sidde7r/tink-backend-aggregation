@@ -213,11 +213,8 @@ public class SwedbankAuthenticationController
 
     private Optional<String> getCallbackElement(Map<String, String> callbackData, String key) {
         String value = callbackData.getOrDefault(key, null);
-        if (com.google.common.base.Strings.isNullOrEmpty(value)) {
-            return Optional.empty();
-        }
 
-        return Optional.of(value);
+        return Strings.isNullOrEmpty(value) ? Optional.empty() : Optional.of(value);
     }
 
     private void handleErrors(Map<String, String> callbackData) throws AuthenticationException {
