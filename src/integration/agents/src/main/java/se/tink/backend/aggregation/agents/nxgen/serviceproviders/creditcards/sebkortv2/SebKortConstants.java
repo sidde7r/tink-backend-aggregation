@@ -16,7 +16,7 @@ public class SebKortConstants {
         static final URL SEBKORT_LOGIN = new URL(SEBKORT_HOST + "/sea/external/EidLogin");
         static final URL SEBKORT_LOGOUT = new URL(SEBKORT_HOST + "/pkmslogout");
         static final URL SEBKORT_AUTH = new URL(SEBKORT_HOST + "/nauth4/Authentication/Auth");
-        static final URL BILLING_UNITS = new URL(SEBKORT_HOST + "/nis/m/sase/a/billingUnits");
+        static final String BILLING_UNITS = SEBKORT_HOST + "/nis/m/%s/a/billingUnits";
         public static final URL SEBKORT_RESERVATIONS =
                 new URL(SEBKORT_HOST + "/api/common/reservations/v1/");
         public static final URL SEBKORT_TRANSACTIONS =
