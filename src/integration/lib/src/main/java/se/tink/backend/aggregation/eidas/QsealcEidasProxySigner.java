@@ -8,6 +8,9 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 /** Requests the eIDAS proxy to sign a string using its eIDAS private key (RSA with SHA256). */
+
+/** @deprecated use QsealcSigner instead */
+@Deprecated
 public final class QsealcEidasProxySigner implements Signer {
 
     private static final Logger logger = LoggerFactory.getLogger(QsealcEidasProxySigner.class);
