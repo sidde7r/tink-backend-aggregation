@@ -26,6 +26,7 @@ java_library(
         "//src/integration/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/parser",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/truststrategy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
