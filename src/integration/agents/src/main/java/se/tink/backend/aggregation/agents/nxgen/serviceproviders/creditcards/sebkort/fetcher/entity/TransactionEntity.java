@@ -7,7 +7,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -161,13 +161,14 @@ public class TransactionEntity {
 
     @JsonIgnore
     private CreditCardTransaction toTinkTransaction(boolean isPending) {
-        Amount negatedAmount =
-                new Amount(this.getBillingCurrencyCode(), this.getBillingAmount()).negate();
+
+        ExactCurrencyAmount negatedBillingAmount =
+                ExactCurrencyAmount.of(billingAmount.negate(), billingCurrencyCode);
 
         return CreditCardTransaction.builder()
                 .setDate(this.getDate())
                 .setDescription(this.getSpecification())
-                .setAmount(negatedAmount)
+                .setAmount(negatedBillingAmount)
                 .setPending(isPending)
                 .build();
     }
