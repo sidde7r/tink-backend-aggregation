@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.utils;
 
 import com.google.common.base.Strings;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 
 public class StrongAuthenticationState {
     private static final Logger logger = LoggerFactory.getLogger(StrongAuthenticationState.class);
@@ -25,7 +25,12 @@ public class StrongAuthenticationState {
     private String generateState(String appUriId) {
         if (Strings.isNullOrEmpty(appUriId)) {
             logger.warn("appUriId is empty!");
-            return RandomUtils.generateRandomHexEncoded(8);
+
+            // Beware! Some financial institutes have limitations on
+            // the state parameter. Known limitations:
+            // - SDC only allow UUID.
+            // - Barclays only allow ^(?!\s)(a-zA-Z0-9-_){1,255})$
+            return UUID.randomUUID().toString();
         }
 
         return appUriId;
