@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.RedsysUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.session.RedsysSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -41,19 +40,25 @@ public abstract class RedsysAgent extends NextGenerationAgent
     private final String clientName;
     private final RedsysApiClient apiClient;
     protected final RedsysConsentStorage consentStorage;
-    private final RedsysConsentController consentController;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final RedsysConsentController consentController;
 
     public RedsysAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration configuration) {
+        super(request, context, configuration.getSignatureKeyPair());
 
         apiClient = new RedsysApiClient(client, sessionStorage, persistentStorage, this);
         consentStorage = new RedsysConsentStorage(persistentStorage);
         consentController =
                 new RedsysConsentController(
-                        apiClient, consentStorage, supplementalInformationHelper);
+                        apiClient,
+                        consentStorage,
+                        supplementalInformationHelper,
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request.getAppUriId());
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
@@ -62,7 +67,6 @@ public abstract class RedsysAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
         apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
     }
 
@@ -145,7 +149,11 @@ public abstract class RedsysAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         RedsysPaymentExecutor redsysPaymentExecutor =
-                new RedsysPaymentExecutor(apiClient, supplementalInformationHelper);
+                new RedsysPaymentExecutor(
+                        apiClient,
+                        supplementalInformationHelper,
+                        configuration.getCallbackJwtSignatureKeyPair(),
+                        request.getAppUriId());
 
         return Optional.of(new PaymentController(redsysPaymentExecutor, redsysPaymentExecutor));
     }

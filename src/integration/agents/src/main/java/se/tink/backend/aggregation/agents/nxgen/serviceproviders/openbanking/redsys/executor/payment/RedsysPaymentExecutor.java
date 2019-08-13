@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtStateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -47,13 +48,19 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     private static final Logger LOG = LoggerFactory.getLogger(RedsysPaymentExecutor.class);
     private final RedsysApiClient apiClient;
     private final ScaRedirectCallbackHandler scaRedirectHandler;
+    private final String appUriId;
+    private final CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair;
 
     public RedsysPaymentExecutor(
             RedsysApiClient apiClient,
-            SupplementalInformationHelper supplementalInformationHelper) {
+            SupplementalInformationHelper supplementalInformationHelper,
+            CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair,
+            String appUriId) {
         this.apiClient = apiClient;
         this.scaRedirectHandler =
-                new ScaRedirectCallbackHandler(supplementalInformationHelper, 30, TimeUnit.SECONDS);
+                new ScaRedirectCallbackHandler(supplementalInformationHelper, 10, TimeUnit.MINUTES);
+        this.callbackJwtSignatureKeyPair = callbackJwtSignatureKeyPair;
+        this.appUriId = appUriId;
     }
 
     private PaymentProduct paymentProductForPayment(Payment payment) throws PaymentException {
@@ -93,11 +100,13 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         }
 
         final CreatePaymentRequest request = requestBuilder.build();
-        final String scaToken = UUID.randomUUID().toString();
-        final CreatePaymentResponse response = apiClient.createPayment(request, product, scaToken);
+        final String pseudoId = JwtStateUtils.generatePseudoId(appUriId);
+        final String state =
+                JwtStateUtils.tryCreateJwtState(callbackJwtSignatureKeyPair, pseudoId, appUriId);
+        final CreatePaymentResponse response = apiClient.createPayment(request, product, state);
 
         Storage paymentStorage = new Storage();
-        paymentStorage.put(StorageKeys.SCA_STATE, scaToken);
+        paymentStorage.put(StorageKeys.SCA_STATE, pseudoId);
         final Optional<LinkEntity> scaRedirectLink = response.getLink(Links.SCA_REDIRECT);
         if (scaRedirectLink.isPresent()) {
             paymentStorage.put(StorageKeys.SCA_REDIRECT, scaRedirectLink.get().getHref());
@@ -162,9 +171,9 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                 .equalsIgnoreCase(AuthenticationStepConstants.STEP_INIT)) {
             final Storage paymentStorage = paymentMultiStepRequest.getStorage();
             final String scaRedirectUrl = paymentStorage.get(StorageKeys.SCA_REDIRECT);
-            final String scaToken = paymentStorage.get(StorageKeys.SCA_STATE);
+            final String pseudoId = paymentStorage.get(StorageKeys.SCA_STATE);
 
-            if (!scaRedirectHandler.handleRedirect(new URL(scaRedirectUrl), scaToken).isPresent()) {
+            if (!scaRedirectHandler.handleRedirect(new URL(scaRedirectUrl), pseudoId).isPresent()) {
                 throw new PaymentException("SCA timed out.");
             }
 
