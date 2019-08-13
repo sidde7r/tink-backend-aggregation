@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class BecAgent extends NextGenerationAgent
+public class BecAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final String clientName;
@@ -38,8 +38,10 @@ public abstract class BecAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        apiClient = new BecApiClient(client, persistentStorage, getBaseUrl());
-        clientName = request.getProvider().getPayload();
+        clientName = request.getProvider().getPayload().split(",")[0];
+        String url = request.getProvider().getPayload().split(",")[1];
+
+        apiClient = new BecApiClient(client, persistentStorage, url);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
@@ -122,6 +124,4 @@ public abstract class BecAgent extends NextGenerationAgent
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
     }
-
-    protected abstract String getBaseUrl();
 }
