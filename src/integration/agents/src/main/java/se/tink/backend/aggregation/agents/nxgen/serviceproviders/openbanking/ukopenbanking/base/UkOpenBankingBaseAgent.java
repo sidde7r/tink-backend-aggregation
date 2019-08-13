@@ -208,11 +208,19 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         UkOpenBankingAisAuthenticator authenticator =
                 new UkOpenBankingAisAuthenticator(apiClient, aisConfig);
         return createOpenIdFlowWithAuthenticator(
-                authenticator, callbackJWTSignatureKeyPair.isEnabled());
+                authenticator, callbackJWTSignatureKeyPair.isEnabled(), null);
+    }
+
+    protected Authenticator constructAuthenticator(
+            UkOpenBankingAisConfig aisConfig, URL appToAppRedirectURL) {
+        UkOpenBankingAisAuthenticator authenticator =
+                new UkOpenBankingAisAuthenticator(apiClient, aisConfig);
+        return createOpenIdFlowWithAuthenticator(
+                authenticator, callbackJWTSignatureKeyPair.isEnabled(), appToAppRedirectURL);
     }
 
     protected final Authenticator createOpenIdFlowWithAuthenticator(
-            UkOpenBankingAisAuthenticator authenticator, boolean enabled) {
+            UkOpenBankingAisAuthenticator authenticator, boolean enabled, URL appToAppRedirectURL) {
         callbackJWTSignatureKeyPair.setEnabled(enabled);
         return OpenIdAuthenticationFlow.create(
                 request,
@@ -222,7 +230,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 authenticator,
                 apiClient,
                 credentials,
-                strongAuthenticationState);
+                strongAuthenticationState,
+                appToAppRedirectURL);
     }
 
     @Override

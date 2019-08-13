@@ -215,7 +215,8 @@ public class OpenIdApiClient {
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
 
-    public URL buildAuthorizeUrl(String state, String nonce, ClientMode mode, String callbackUri) {
+    public URL buildAuthorizeUrl(
+            String state, String nonce, ClientMode mode, String callbackUri, URL authEndpoint) {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
         ClientInfo clientInfo = providerConfiguration.getClientInfo();
 
@@ -236,11 +237,15 @@ public class OpenIdApiClient {
                         .filter(s -> !s.isEmpty())
                         .orElse(softwareStatement.getRedirectUri());
 
+        URL authorizationEndpoint =
+                Optional.ofNullable(authEndpoint)
+                        .filter(s -> s != null)
+                        .orElse(wellknownConfiguration.getAuthorizationEndpoint());
+
         /*  'response_type=id_token' only supports 'response_mode=fragment',
          *  setting 'response_mode=query' has no effect the the moment.
          */
-        return wellknownConfiguration
-                .getAuthorizationEndpoint()
+        return authorizationEndpoint
                 .queryParam(OpenIdConstants.Params.RESPONSE_TYPE, responseType)
                 .queryParam(OpenIdConstants.Params.CLIENT_ID, clientInfo.getClientId())
                 .queryParam(OpenIdConstants.Params.SCOPE, scope)

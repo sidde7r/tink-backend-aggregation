@@ -17,15 +17,12 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
-import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtStateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -63,56 +60,7 @@ public class OpenIdAuthenticationController
 
     private final String callbackUri;
     private OAuth2Token clientAccessToken;
-
-    public OpenIdAuthenticationController(
-            PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
-            OpenIdApiClient apiClient,
-            OpenIdAuthenticator authenticator,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            String appUriId,
-            String callbackUri,
-            Credentials credentials) {
-        this(
-                persistentStorage,
-                supplementalInformationHelper,
-                apiClient,
-                authenticator,
-                callbackJWTSignatureKeyPair,
-                appUriId,
-                callbackUri,
-                credentials,
-                DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT);
-    }
-
-    public OpenIdAuthenticationController(
-            PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
-            OpenIdApiClient apiClient,
-            OpenIdAuthenticator authenticator,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            String appUriId,
-            String callbackUri,
-            Credentials credentials,
-            int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit) {
-        this.persistentStorage = persistentStorage;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.apiClient = apiClient;
-        this.authenticator = authenticator;
-        this.credentials = credentials;
-        this.tokenLifetime = tokenLifetime;
-        this.tokenLifetimeUnit = tokenLifetimeUnit;
-        this.callbackUri = callbackUri;
-
-        String pseudoId = JwtStateUtils.generatePseudoId(appUriId);
-        this.strongAuthenticationStateSupplementalKey = OAuthUtils.formatSupplementalKey(pseudoId);
-        this.strongAuthenticationState =
-                JwtStateUtils.tryCreateJwtState(callbackJWTSignatureKeyPair, pseudoId, appUriId);
-
-        this.nonce = RandomUtils.generateRandomHexEncoded(8);
-    }
+    private final URL appToAppRedirectURL;
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -121,7 +69,8 @@ public class OpenIdAuthenticationController
             OpenIdAuthenticator authenticator,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
-            String callbackUri) {
+            String callbackUri,
+            URL appToAppRedirectURL) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -131,7 +80,8 @@ public class OpenIdAuthenticationController
                 strongAuthenticationState,
                 callbackUri,
                 DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT);
+                DEFAULT_TOKEN_LIFETIME_UNIT,
+                appToAppRedirectURL);
     }
 
     public OpenIdAuthenticationController(
@@ -143,7 +93,8 @@ public class OpenIdAuthenticationController
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
             int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit) {
+            TemporalUnit tokenLifetimeUnit,
+            URL appToAppRedirectURL) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
@@ -158,6 +109,7 @@ public class OpenIdAuthenticationController
         this.strongAuthenticationState = strongAuthenticationState.getState();
 
         this.nonce = RandomUtils.generateRandomHexEncoded(8);
+        this.appToAppRedirectURL = appToAppRedirectURL;
     }
 
     @Override
@@ -250,7 +202,8 @@ public class OpenIdAuthenticationController
                         strongAuthenticationState,
                         nonce,
                         authenticator.getClientCredentialScope(),
-                        callbackUri);
+                        callbackUri,
+                        appToAppRedirectURL);
 
         apiClient.attachAuthFilter(clientAccessToken);
         try {
