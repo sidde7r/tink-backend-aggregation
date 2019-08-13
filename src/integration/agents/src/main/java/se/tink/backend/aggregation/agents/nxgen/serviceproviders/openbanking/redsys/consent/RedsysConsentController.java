@@ -28,20 +28,18 @@ public class RedsysConsentController {
         return consentStorage.getConsentId();
     }
 
-    private boolean storedConsentIsValid() {
+    private boolean hasStoredConsent() {
         final String consentId = consentStorage.getConsentId();
-        if (Strings.isNullOrEmpty(consentId)) {
-            return false;
-        }
-
-        return apiClient.fetchConsentStatus(consentId).equals(ConsentStatus.VALID);
+        return !Strings.isNullOrEmpty(consentId);
     }
 
     public void requestConsentIfNeeded() {
-        if (storedConsentIsValid()) {
-            return;
+        if (!hasStoredConsent()) {
+            requestConsent();
         }
+    }
 
+    public void requestConsent() {
         final String scaToken = UUID.randomUUID().toString();
         final Pair<String, URL> consentRequest = apiClient.requestConsent(scaToken);
         final String consentId = consentRequest.first;

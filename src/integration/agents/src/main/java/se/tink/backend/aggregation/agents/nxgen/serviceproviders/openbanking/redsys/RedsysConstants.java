@@ -154,6 +154,10 @@ public final class RedsysConstants {
         public static final String BUSINESS = "ORGA";
     }
 
+    public static class ErrorCodes {
+        public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
+    }
+
     public static class BalanceType {
         public static final String CLOSING_BOOKED = "closingBooked";
         public static final String EXPECTED = "expected";
