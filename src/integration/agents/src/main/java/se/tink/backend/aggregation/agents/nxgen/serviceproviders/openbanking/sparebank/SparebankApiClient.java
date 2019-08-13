@@ -132,7 +132,7 @@ public class SparebankApiClient {
                         new URL(baseUrl + Urls.CREATE_PAYMENT)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct),
                         Optional.of(digest))
-                .header(HeaderKeys.DIGEST, digest)
+                .type(MediaType.APPLICATION_JSON)
                 .post(CreatePaymentResponse.class, paymentRequest);
     }
 

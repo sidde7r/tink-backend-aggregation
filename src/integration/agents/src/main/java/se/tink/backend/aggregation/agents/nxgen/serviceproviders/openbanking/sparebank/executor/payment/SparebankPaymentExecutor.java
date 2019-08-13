@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.CountryCodes;
@@ -15,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.AdressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentProduct;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest.Builder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.StartAuthorizationProcessResponse;
@@ -55,8 +55,6 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     private SparebankApiClient apiClient;
     private SessionStorage sessionStorage;
     private SparebankConfiguration sparebankConfiguration;
-    private List<PaymentResponse> paymentList =
-            new ArrayList<>(); // used for mocking fetch multiple
 
     public SparebankPaymentExecutor(
             SparebankApiClient apiClient,
@@ -79,11 +77,22 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
         AccountEntity debtorAccountEntity = AccountEntity.ofDebtor(paymentRequest, paymentProduct);
         AmountEntity amount = AmountEntity.of(paymentRequest);
 
+        if (paymentProduct == SparebankPaymentProduct.CROSS_BORDER_CREDIT_TRANSFER) {
+            throw new IllegalStateException(
+                    "Cross border credit transfers are still not supported");
+        }
+
+        String requestedExecutionDay =
+                paymentRequest
+                        .getPayment()
+                        .getExecutionDate()
+                        .format(DateTimeFormatter.ofPattern(DatePatterns.YYYY_MM_DD_PATTERN));
+
         CreatePaymentRequest createPaymentRequest =
                 new Builder()
                         .withCreditorAccount(creditorAccountEntity)
                         .withDebtorAccount(debtorAccountEntity)
-                        .withRequestedExecutionDate(getCurrentDate())
+                        .withRequestedExecutionDate(requestedExecutionDay)
                         .withInstructedAmount(amount)
                         .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
                         .withCreditorAddress(creditorAddress, paymentProduct)
@@ -100,12 +109,16 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
         SparebankPaymentProduct paymentProduct =
                 SparebankPaymentProduct.mapTinkPaymentTypeToSparebankPaymentProduct(
                         payment.getType());
-        PaymentResponse paymentResponse =
-                apiClient
-                        .getPayment(paymentProduct.getText(), payment.getUniqueId())
-                        .toTinkPaymentResponse(paymentRequest);
-        paymentList.add(paymentResponse); // used for mocking fetch multiple
-        return paymentResponse;
+        if (paymentProduct == SparebankPaymentProduct.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER) {
+            // The bank doesn't support fetching domestic payment. For domestic payment only
+            // creating payment initiation and signing payment aka making a payment is possible
+            throw new IllegalStateException(
+                    "Fetching domestic payments not supported by this bank");
+        }
+
+        return apiClient
+                .getPayment(paymentProduct.getText(), payment.getUniqueId())
+                .toTinkPaymentResponse(paymentRequest);
     }
 
     @Override
@@ -129,14 +142,11 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
             case SparebankSignSteps.SAMPLE_STEP:
                 GetPaymentStatusResponse paymentStatusReponse =
                         apiClient.getPaymentStatus(paymentProduct.getText(), paymentId);
-                // paymentStatus =
-                // SparebankPaymentStatus.mapToTinkPaymentStatus(SparebankPaymentStatus.fromString(paymentStatusReponse.getTransactionStatus()));
                 paymentStatus =
-                        PaymentStatus
-                                .PAID; // we have to hard code it beacuse the above always returns
-                // status RCVD
+                        SparebankPaymentStatus.mapToTinkPaymentStatus(
+                                SparebankPaymentStatus.fromString(
+                                        paymentStatusReponse.getTransactionStatus()));
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
-
                 break;
             default:
                 throw new IllegalStateException(
@@ -162,12 +172,11 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        // mocking of the fetch multiple so we can test sign
-        return new PaymentListResponse(paymentList);
-    }
-
-    private String getCurrentDate() {
-        return LocalDate.now().format(DateTimeFormatter.ofPattern(DatePatterns.YYYY_MM_DD_PATTERN));
+        return paymentListRequest.getPaymentRequestList().stream()
+                .map(this::fetch)
+                .collect(
+                        Collectors.collectingAndThen(
+                                Collectors.toList(), PaymentListResponse::new));
     }
 
     private PaymentType getPaymentType(PaymentRequest paymentRequest) {

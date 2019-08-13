@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -35,14 +34,14 @@ public class Sparebank1PaymentAgentTest {
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
             doReturn(Type.NO).when(creditor).getAccountIdentifierType();
-            doReturn("99960539903").when(creditor).getAccountNumber();
-            doReturn("Creditor Name").when(creditor).getName();
+            doReturn("").when(creditor).getAccountNumber();
+            doReturn("").when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
             doReturn(Type.NO).when(debtor).getAccountIdentifierType();
-            doReturn("99961000617").when(debtor).getAccountNumber();
+            doReturn("").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inNOK(new Random().nextInt(50000));
+            Amount amount = Amount.inNOK(13);
             LocalDate executionDate = LocalDate.now();
             String currency = "NOK";
 
