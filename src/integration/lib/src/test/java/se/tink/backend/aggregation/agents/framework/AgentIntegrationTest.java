@@ -761,6 +761,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return this;
         }
 
+        public Builder setFinancialInstitutionId(final String financialInstitutionId) {
+            this.provider.setFinancialInstitutionId(financialInstitutionId);
+            return this;
+        }
+
         public Builder setUserLocale(String locale) {
             Preconditions.checkNotNull(this.user, "User not set.");
             Preconditions.checkNotNull(this.user.getProfile(), "User has no profile.");
