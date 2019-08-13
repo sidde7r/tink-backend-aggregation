@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -63,6 +64,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     // TODO auth: remove helper and controller when refactor is done
     protected final SupplementalInformationFormer supplementalInformationFormer;
     protected final String appId;
+    protected final StrongAuthenticationState strongAuthenticationState;
 
     private TransferController transferController;
     private Authenticator authenticator;
@@ -100,6 +102,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         this.supplementalInformationFormer =
                 new SupplementalInformationFormer(request.getProvider());
         this.appId = context.getAppId();
+        this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
     }
 
     public AgentConfigurationController getAgentConfigurationController() {
