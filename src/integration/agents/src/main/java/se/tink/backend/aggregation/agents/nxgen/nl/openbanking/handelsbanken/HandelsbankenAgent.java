@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken.exe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Market;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -37,6 +38,11 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
         c.add(Calendar.MONTH, -HandelsbankenNLConstants.MAX_FETCH_PERIOD_MONTHS);
         sessionStorage.put(HandelsbankenBaseConstants.StorageKeys.MAX_FETCH_PERIOD_MONTHS, date);
         return date;
+    }
+
+    @Override
+    protected String getMarket() {
+        return Market.NETHERLANDS;
     }
 
     @Override

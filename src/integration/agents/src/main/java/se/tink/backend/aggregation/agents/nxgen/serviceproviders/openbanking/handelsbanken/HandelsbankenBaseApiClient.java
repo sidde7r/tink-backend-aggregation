@@ -6,16 +6,18 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.OAuth2Type;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Psu;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.DecoupledResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
@@ -47,10 +49,13 @@ public class HandelsbankenBaseApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private HandelsbankenBaseConfiguration configuration;
+    private final String market;
 
-    public HandelsbankenBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public HandelsbankenBaseApiClient(
+            TinkHttpClient client, PersistentStorage persistentStorage, String market) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.market = market;
     }
 
     public void setConfiguration(HandelsbankenBaseConfiguration configuration) {
@@ -72,12 +77,14 @@ public class HandelsbankenBaseApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
+
         return client.request(url)
-                .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getClientId())
                 .addBearerToken(getOauthToken())
+                .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getClientId())
                 .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, Psu.IP_ADDRESS)
+                .header(HeaderKeys.COUNTRY, market)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON);
     }
@@ -121,7 +128,55 @@ public class HandelsbankenBaseApiClient {
         }
     }
 
-    public TokenResponse refreshAccessToken(String refreshToken) {
+    public ConsentResponse initiateConsent(String code) {
+
+        return client.request(Urls.AUTHORIZATION)
+                .body(new AuthorizationRequest(HandelsbankenBaseConstants.BodyValues.ALL_ACCOUNTS))
+                .header(HeaderKeys.X_IBM_CLIENT_ID, getConfiguration().getClientId())
+                .header(HeaderKeys.COUNTRY, market)
+                .header(
+                        HeaderKeys.AUTHORIZATION,
+                        HandelsbankenBaseConstants.HeaderKeys.BEARER + code)
+                .header(HeaderKeys.PSU_IP_ADDRESS, Psu.IP_ADDRESS)
+                .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.APPLICATION_JSON)
+                .post(ConsentResponse.class);
+    }
+
+    public SessionResponse initDecoupledAuthorizationAis(String personalId, String consentId) {
+
+        return client.request(Urls.SESSION)
+                .body(
+                        new SessionRequest(
+                                getConfiguration().getClientId(),
+                                Scope.AIS + ":" + consentId,
+                                Psu.IP_ADDRESS,
+                                personalId,
+                                BodyValues.PERSONAL_ID_TP))
+                .header(HeaderKeys.CONSENT_ID, consentId)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.APPLICATION_JSON)
+                .post(SessionResponse.class);
+    }
+
+    public SessionResponse initDecoupledAuthorizationPis(String personalId, String paymentId) {
+
+        return client.request(Urls.SESSION)
+                .body(
+                        new SessionRequest(
+                                getConfiguration().getClientId(),
+                                Scope.PIS + ":" + paymentId,
+                                Psu.IP_ADDRESS,
+                                personalId,
+                                BodyValues.PERSONAL_ID_TP))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.APPLICATION_JSON)
+                .post(SessionResponse.class);
+    }
+
+    public TokenResponse getRefreshToken(String refreshToken) {
 
         final Form params =
                 Form.builder()
@@ -141,9 +196,26 @@ public class HandelsbankenBaseApiClient {
             CreatePaymentRequest createPaymentRequest, HandelsbankenPaymentType paymentProduct)
             throws PaymentException {
         try {
-            return createRequest(
-                            new URL(Urls.INITIATE_PAYMENT)
-                                    .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct.toString()))
+            TokenResponse response = requestClientCredentialGrantTokenWithScope(Scope.PIS);
+
+            OAuth2Token clientCredentialPaymentToken =
+                    OAuth2Token.create(
+                            OAuth2Type.BEARER,
+                            response.getAccessToken(),
+                            null,
+                            response.getExpiresIn());
+            URL url =
+                    new URL(Urls.INITIATE_PAYMENT)
+                            .parameter(QueryKeys.PAYMENT_PRODUCT, paymentProduct.toString());
+            return client.request(url)
+                    .addBearerToken(clientCredentialPaymentToken)
+                    .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getClientId())
+                    .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
+                    .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(HeaderKeys.PSU_IP_ADDRESS, Psu.IP_ADDRESS)
+                    .header(HeaderKeys.COUNTRY, market)
+                    .accept(MediaType.APPLICATION_JSON_TYPE)
+                    .type(MediaType.APPLICATION_JSON)
                     .post(CreatePaymentResponse.class, createPaymentRequest);
         } catch (HttpResponseException e) {
             handleHttpResponseException(e);
@@ -165,7 +237,7 @@ public class HandelsbankenBaseApiClient {
         }
     }
 
-    public GetPaymentResponse getPayment(String paymentId, String paymentProduct)
+    public GetPaymentResponse fetchPayment(String paymentId, String paymentProduct)
             throws PaymentException {
         try {
             return createRequest(
@@ -193,12 +265,13 @@ public class HandelsbankenBaseApiClient {
         }
     }
 
-    public TokenResponse requestClientCredentialGrantToken() {
+    public TokenResponse requestClientCredentialGrantTokenWithScope(String scope) {
+
         final Form params =
                 Form.builder()
                         .put(BodyKeys.GRANT_TYPE, BodyValues.CLIENT_CREDENTIALS)
-                        .put(BodyKeys.SCOPE, BodyValues.AIS_SCOPE)
-                        .put(BodyKeys.CLIENT_ID, configuration.getClientId())
+                        .put(BodyKeys.SCOPE, scope)
+                        .put(BodyKeys.CLIENT_ID, getConfiguration().getClientId())
                         .put(BodyKeys.PSU_ID_TYPE, "1")
                         .build();
 
@@ -207,37 +280,6 @@ public class HandelsbankenBaseApiClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(TokenResponse.class);
-    }
-
-    public AuthorizationResponse initiateConsent(String accessToken) {
-        return client.request(Urls.AUTHORIZATION)
-                .body(new AuthorizationRequest(HandelsbankenBaseConstants.BodyValues.ALL_ACCOUNTS))
-                .header(HeaderKeys.X_IBM_CLIENT_ID, configuration.getClientId())
-                .header(HeaderKeys.COUNTRY, HandelsbankenBaseConstants.Market.COUNTRY)
-                .header(
-                        HeaderKeys.AUTHORIZATION,
-                        HandelsbankenBaseConstants.HeaderKeys.BEARER + accessToken)
-                .header(HeaderKeys.PSU_IP_ADDRESS, Psu.IP_ADDRESS)
-                .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .type(MediaType.APPLICATION_JSON)
-                .post(AuthorizationResponse.class);
-    }
-
-    public SessionResponse initDecoupledAuthorization(String ssn, String consentId) {
-        return client.request(Urls.SESSION)
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .body(
-                        new SessionRequest(
-                                configuration.getClientId(),
-                                BodyValues.AIS_SCOPE + ":" + consentId,
-                                Psu.IP_ADDRESS,
-                                ssn,
-                                BodyValues.PERSONAL_ID_TP))
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .type(MediaType.APPLICATION_JSON)
-                .post(SessionResponse.class);
     }
 
     /**
@@ -275,7 +317,7 @@ public class HandelsbankenBaseApiClient {
                                         new IllegalStateException(
                                                 "Could not find refresh token to refresh."));
 
-        TokenResponse response = refreshAccessToken(refreshToken);
+        TokenResponse response = getRefreshToken(refreshToken);
 
         OAuth2Token oAuth2Token =
                 OAuth2Token.create(

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.executor.payment;
+package se.tink.backend.aggregation.agents.nxgen.gb.openbanking.handelsbanken.payment;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.HandelsbankenBasePaymentExecutor;

@@ -6,33 +6,38 @@ import static org.mockito.Mockito.mock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
-import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenAgentIntegrationTest;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Reference;
 
-@Ignore
 public class HandelsbankenAgentPaymentTest {
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
     @Test
     public void testPayments() throws Exception {
-        HandelsbankenAgentIntegrationTest.Builder builder =
-                new HandelsbankenAgentIntegrationTest.Builder("se", "se-handelsbanken-oauth2")
-                        .addCredentialField(
-                                "accessToken",
-                                "QVQ6OTMzZWYwNTctZDE5MC00MDhmLThjOTgtYjY3OGFiM2I1ZDZj")
+        manager.before();
+
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("se", "se-handelsbanken-ob")
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(CredentialKeys.SCOPE, Scope.PIS)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("handelsbanken")
+                        .setAppId("tink")
                         .expectLoggedIn(false);
 
-        builder.build().testGenericPayment(createListMockedPayment(2));
+        builder.build().testGenericPayment(createListMockedPayment(1));
     }
 
     private List<Payment> createListMockedPayment(int numberOfMockedPayments) {
@@ -40,16 +45,19 @@ public class HandelsbankenAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.SE).when(debtor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.SE).toString()).when(debtor).getAccountNumber();
+            doReturn(Type.SE).when(debtor).getAccountIdentifierType();
+            doReturn(manager.get(Arg.DEBTOR_ACCOUNT)).when(debtor).getAccountNumber();
 
             Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.SE).when(creditor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.SE).toString()).when(creditor).getAccountNumber();
+            doReturn(Type.SE).when(creditor).getAccountIdentifierType();
+            doReturn(manager.get(Arg.CREDITOR_ACCOUNT)).when(creditor).getAccountNumber();
 
-            Amount amount = Amount.inSEK(new Random().nextInt(50000));
+            Amount amount = Amount.inSEK(5);
             LocalDate executionDate = LocalDate.now();
-            String currency = "EUR";
+            String currency = "SEK";
+
+            Reference reference = mock(Reference.class);
+            doReturn("Testing PIS").when(reference).getValue();
 
             listOfMockedPayments.add(
                     new Payment.Builder()
@@ -58,9 +66,16 @@ public class HandelsbankenAgentPaymentTest {
                             .withAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
+                            .withReference(reference)
                             .build());
         }
 
         return listOfMockedPayments;
+    }
+
+    private enum Arg {
+        USERNAME,
+        CREDITOR_ACCOUNT,
+        DEBTOR_ACCOUNT,
     }
 }

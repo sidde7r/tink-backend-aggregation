@@ -9,7 +9,7 @@ public class AmountEntity {
     private String currency;
     private double amount;
 
-    private AmountEntity(String currency, double amount) {
+    public AmountEntity(String currency, double amount) {
         this.currency = currency;
         this.amount = amount;
     }

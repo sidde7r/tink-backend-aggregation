@@ -5,8 +5,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AuthorizationResponse {
+public class ConsentResponse {
 
+    private String paymentId;
     private String consentId;
 
     private List<ScaMethodsItemEntity> scaMethods;

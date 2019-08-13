@@ -6,6 +6,8 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
 
 public class HandelsbankenAgentTest {
 
@@ -24,6 +26,7 @@ public class HandelsbankenAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-handelsbanken-ob")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(CredentialKeys.SCOPE, Scope.AIS)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setFinancialInstitutionId("handelsbanken")

@@ -22,14 +22,15 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 public abstract class HandelsbankenBasePaymentExecutor
         implements PaymentExecutor, FetchablePaymentExecutor {
-    private final HandelsbankenBaseApiClient apiClient;
-    private final List<PaymentResponse> createdPaymentList;
+    protected final HandelsbankenBaseApiClient apiClient;
+    protected final List<PaymentResponse> createdPaymentList;
 
     public HandelsbankenBasePaymentExecutor(HandelsbankenBaseApiClient apiClient) {
         this.apiClient = apiClient;
@@ -60,7 +61,7 @@ public abstract class HandelsbankenBasePaymentExecutor
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         return apiClient
-                .getPayment(
+                .fetchPayment(
                         paymentRequest.getPayment().getUniqueId(),
                         getPaymentType(paymentRequest).toString())
                 .toTinkPaymentResponse(paymentRequest.getPayment(), getPaymentType(paymentRequest));
@@ -108,9 +109,12 @@ public abstract class HandelsbankenBasePaymentExecutor
 
     protected HandelsbankenPaymentType getSepaOrCrossCurrencyPaymentType(
             PaymentRequest paymentRequest) {
+
         return Currency.EURO.equalsIgnoreCase(paymentRequest.getPayment().getCurrency())
                         && paymentRequest.getPayment().isSepa()
                 ? HandelsbankenPaymentType.SEPA_CREDIT_TRANSFER
                 : HandelsbankenPaymentType.CROSS_CURRENCY_CREDIT_TRANSFER;
     }
+
+    public abstract Signer getSigner();
 }

@@ -29,13 +29,12 @@ public final class HandelsbankenBaseConstants {
                                 + UrlParams.ACCOUNT_ID
                                 + "}/transactions");
 
-        public static final String PIS_BASE_URL =
-                "https://sandbox.handelsbanken.com/openbanking/psd2/v1";
-        public static final String INITIATE_PAYMENT = PIS_BASE_URL + "/payments/{paymentProduct}";
+        public static final String INITIATE_PAYMENT =
+                BASE_URL + SUFFIX_V1 + "/payments/{paymentProduct}";
         public static final String CONFIRM_PAYMENT =
-                PIS_BASE_URL + "/payments/{paymentProduct}/{paymentId}";
+                BASE_URL + SUFFIX_V1 + "/payments/{paymentProduct}/{paymentId}";
         public static final String GET_PAYMENT =
-                PIS_BASE_URL + "/payments/{paymentProduct}/{paymentId}/status";
+                BASE_URL + SUFFIX_V1 + "/payments/{paymentProduct}/{paymentId}/status";
     }
 
     public static class UrlParams {
@@ -44,6 +43,8 @@ public final class HandelsbankenBaseConstants {
 
     public static class StorageKeys {
         public static final String MAX_FETCH_PERIOD_MONTHS = "maxFetchPeriodMonths";
+        public static final String PAYMENT_ID = "paymentId";
+        public static final String TINK_ACCESS_TOKEN = "tinkAccessToken";
     }
 
     public static class QueryKeys {
@@ -51,7 +52,6 @@ public final class HandelsbankenBaseConstants {
         public static final String DATE_TO = "dateTo";
         public static final String WITH_BALANCE = "withBalance";
         public static final String PAYMENT_PRODUCT = "paymentProduct";
-        public static final String PAYMENT_ID = "paymentId";
         public static final String BEARER = "Bearer";
     }
 
@@ -63,8 +63,6 @@ public final class HandelsbankenBaseConstants {
         public static final String AUTHORIZATION = "Authorization";
         public static final String COUNTRY = "country";
         public static final String CONSENT_ID = "consentId";
-        public static final String SCOPE = "scope";
-        public static final String SESSION_ID = "sessionId";
         public static final String BEARER = "Bearer ";
     }
 
@@ -72,10 +70,6 @@ public final class HandelsbankenBaseConstants {
         public static final String GRANT_TYPE = "grant_type";
         public static final String CLIENT_ID = "client_id";
         public static final String SCOPE = "scope";
-        public static final String RESPONSE_TYPE = "response_type";
-        public static final String REDIRECT_URI = "redirect_uri";
-        public static final String STATE = "state";
-        public static final String CODE = "code";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String PSU_ID_TYPE = "psu_id_type";
     }
@@ -91,16 +85,18 @@ public final class HandelsbankenBaseConstants {
     }
 
     public static class Market {
-        public static final String COUNTRY = "SE";
+        public static final String SWEDEN = "SE";
+        public static final String FINLAND = "FI";
+        public static final String NETHERLANDS = "NL";
+        public static final String GREAT_BRITAIN = "GB";
     }
 
     public static class BodyValues {
         public static final String CLIENT_CREDENTIALS = "client_credentials";
-        public static final String AIS_SCOPE = "AIS";
         public static final String ALL_ACCOUNTS = "ALL_ACCOUNTS";
         public static final String PSD2_ADMIN = "PSD2-ADMIN";
         public static final String SUBSCRIPTION_CONSENTS = "consents";
-
+        public static final String AIS_SCOPE = "AIS";
         // "Resource owner Personal Id type, currently only domain value '1' exist. Optional, must
         // exist if personalId is given."
         public static final String PERSONAL_ID_TP = "1";
@@ -125,14 +121,13 @@ public final class HandelsbankenBaseConstants {
 
     public static class ExceptionMessages {
         public static final String BALANCE_NOT_FOUND = "Balance not found.";
-        public static final String ACCOUNT_TYPE_NOT_SUPPORTED = "Not supported account type: ";
         public static final String PAYMENT_EXCEPTION =
                 "Error code: %s; error message: %s; more info: %s";
         public static final String CONFIG_MISSING = "Handelsbanken configuration missing.";
-        public static final String VALUE_DATE_MISSING =
-                "Valuedate not found, defaulting to transactiondate.";
         public static final String NOT_PARSE_DATE = "Could not parse date.";
         public static final String TOKEN_NOT_FOUND = "Could not find token";
+        public static final String AUTHENTICATION_ERROR = "Authentication error.";
+        public static final String AUTHORIZATION_ERROR = "Authorization error.";
     }
 
     public static class Errors {
@@ -144,6 +139,8 @@ public final class HandelsbankenBaseConstants {
         public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
         public static final String MBID_MAX_POLLING = "mbid_max_polling";
         public static final String TOKEN_NOT_ACTIVE = "Token is not active";
+        public static final String MISSING_PAYMENT_ID =
+                "Can't get session token for null paymentId";
     }
 
     public static class Status {
@@ -154,5 +151,11 @@ public final class HandelsbankenBaseConstants {
 
     public static class Currency {
         public static final String EURO = "EUR";
+    }
+
+    public static class Scope {
+        public static final String PIS = "PIS";
+        public static final String AIS = "AIS";
+        public static final String BOTH = AIS + " " + PIS;
     }
 }

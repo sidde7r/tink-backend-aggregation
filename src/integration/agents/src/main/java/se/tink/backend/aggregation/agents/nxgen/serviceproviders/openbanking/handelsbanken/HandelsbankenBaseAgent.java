@@ -21,14 +21,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    protected HandelsbankenBaseApiClient apiClient;
+    protected final HandelsbankenBaseApiClient apiClient;
     private HandelsbankenBaseConfiguration handelsbankenBaseConfiguration;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public HandelsbankenBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new HandelsbankenBaseApiClient(client, persistentStorage);
+        apiClient = new HandelsbankenBaseApiClient(client, persistentStorage, getMarket());
 
         setMaxPeriodTransactions();
     }
@@ -36,6 +36,8 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     protected abstract HandelsbankenBaseAccountConverter getAccountConverter();
 
     protected abstract Date setMaxPeriodTransactions();
+
+    protected abstract String getMarket();
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
