@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nullable;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryValues.BookingStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Urls;
@@ -47,6 +49,7 @@ import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
@@ -295,6 +298,10 @@ public final class RedsysApiClient {
         return requestId;
     }
 
+    private void clearRequestIdForAccount(String accountId) {
+        sessionStorage.remove(StorageKeys.ACCOUNT_REQUEST_ID + accountId);
+    }
+
     public ListAccountsResponse fetchAccounts(String consentId) {
         RequestBuilder builder =
                 createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
@@ -314,6 +321,49 @@ public final class RedsysApiClient {
                 .get(AccountBalancesResponse.class);
     }
 
+    private LocalDate transactionsFromDate(String accountId) {
+        final Optional<LocalDate> fetchedDate = fetchedTransactionsUntil(accountId);
+        if (fetchedDate.isPresent()) {
+            return fetchedDate.get().minusDays(7);
+        } else {
+            return aspspConfiguration.oldestTransactionDate();
+        }
+    }
+
+    private Optional<LocalDate> fetchedTransactionsUntil(String accountId) {
+        final String dateString =
+                persistentStorage.get(StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId);
+        if (Objects.isNull(dateString)) {
+            return Optional.empty();
+        }
+        return Optional.of(LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE));
+    }
+
+    private void setFetchingTransactionsUntil(String accountId, LocalDate date) {
+        final String fetchedUntilDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        sessionStorage.put(StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
+    }
+
+    private void persistFetchedTransactionsUntil(String accountId) {
+        final String key = StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId;
+        final String value = sessionStorage.remove(key);
+        persistentStorage.put(key, value);
+    }
+
+    private TransactionsResponse fetchTransactions(String accountId, RequestBuilder request) {
+        try {
+            final TransactionsResponse response = request.get(TransactionsResponse.class);
+            if (response.isLastPage()) {
+                persistFetchedTransactionsUntil(accountId);
+                clearRequestIdForAccount(accountId);
+            }
+            return response;
+        } catch (HttpResponseException hre) {
+            clearRequestIdForAccount(accountId);
+            throw hre;
+        }
+    }
+
     public TransactionsResponse fetchTransactions(
             String accountId, String consentId, LocalDate fromDate, LocalDate toDate) {
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -321,17 +371,15 @@ public final class RedsysApiClient {
         final Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
         headers.put(HeaderKeys.CONSENT_ID, consentId);
+        setFetchingTransactionsUntil(accountId, toDate);
 
         final RequestBuilder request =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
                         .queryParam(QueryKeys.DATE_FROM, formatter.format(fromDate))
                         .queryParam(QueryKeys.DATE_TO, formatter.format(toDate))
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
+        return fetchTransactions(accountId, request);
 
-        final TransactionsResponse response = request.get(TransactionsResponse.class);
-        // mark consent as used for this account
-        persistentStorage.put(StorageKeys.FETCHED_INITIAL_TRANSACTIONS + accountId, consentId);
-        return response;
     }
 
     public TransactionsResponse fetchTransactions(
@@ -339,8 +387,7 @@ public final class RedsysApiClient {
         if (path == null) {
             // Initial transactions request
             final LocalDate toDate = LocalDate.now();
-            final LocalDate fromDate =
-                    aspspConfiguration.transactionsFromDate(accountId, consentId);
+            final LocalDate fromDate = transactionsFromDate(accountId);
             return fetchTransactions(accountId, consentId, fromDate, toDate);
         }
 
@@ -348,8 +395,8 @@ public final class RedsysApiClient {
         headers.put(HeaderKeys.CONSENT_ID, consentId);
         headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
 
-        RequestBuilder request = createSignedRequest(makeApiUrl(path), null, headers);
-        return request.get(TransactionsResponse.class);
+        final RequestBuilder request = createSignedRequest(makeApiUrl(path), null, headers);
+        return fetchTransactions(accountId, request);
     }
 
     public CreatePaymentResponse createPayment(

@@ -12,6 +12,9 @@ public interface AspspConfiguration {
     /** True if the ASPSP supports requesting transactions with bookingStatus=both */
     boolean supportsPendingTransactions();
 
-    /** Date to request transactions from */
-    LocalDate transactionsFromDate(String accountId, String consentId);
+    /**
+     * Oldest allowed transaction date to fetch. Used on first transactions request. Might trigger
+     * SCA flow for creating a new consent.
+     */
+    LocalDate oldestTransactionDate();
 }

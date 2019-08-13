@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -143,11 +142,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
     }
 
     @Override
-    public LocalDate transactionsFromDate(String accountId, String consentId) {
-        if (consentStorage.consentIsNewerThan(1, ChronoUnit.DAYS)) {
-            return LocalDate.now().minusYears(5);
-        } else {
-            return LocalDate.now().minusDays(90);
-        }
+    public LocalDate oldestTransactionDate() {
+        return LocalDate.now().minusYears(2);
     }
 }

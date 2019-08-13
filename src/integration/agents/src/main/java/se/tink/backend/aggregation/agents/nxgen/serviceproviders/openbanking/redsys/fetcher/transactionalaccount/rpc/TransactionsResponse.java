@@ -58,4 +58,9 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Str
         }
         return null;
     }
+
+    @JsonIgnore
+    public boolean isLastPage() {
+        return !getNextLink().isPresent();
+    }
 }
