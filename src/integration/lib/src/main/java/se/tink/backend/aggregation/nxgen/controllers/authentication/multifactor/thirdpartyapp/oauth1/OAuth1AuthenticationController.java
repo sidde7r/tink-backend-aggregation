@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtStateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth1Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -31,8 +32,8 @@ public class OAuth1AuthenticationController
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OAuth1Authenticator authenticator;
-    private final String state;
-    private final String pseudoId;
+    private final String strongAuthenticationState;
+    private final String strongAuthenticationStateSupplementalKey;
 
     private static final long WAIT_FOR_MINUTES = 9;
 
@@ -45,10 +46,25 @@ public class OAuth1AuthenticationController
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.pseudoId = JwtStateUtils.generatePseudoId(credentialsRequest.getAppUriId());
-        this.state =
+
+        String pseudoId = JwtStateUtils.generatePseudoId(credentialsRequest.getAppUriId());
+        this.strongAuthenticationStateSupplementalKey = OAuthUtils.formatSupplementalKey(pseudoId);
+        this.strongAuthenticationState =
                 JwtStateUtils.tryCreateJwtState(
                         callbackJWTSignatureKeyPair, pseudoId, credentialsRequest.getAppUriId());
+    }
+
+    public OAuth1AuthenticationController(
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            OAuth1Authenticator authenticator,
+            StrongAuthenticationState strongAuthenticationState) {
+        this.persistentStorage = persistentStorage;
+        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.authenticator = authenticator;
+
+        this.strongAuthenticationStateSupplementalKey = strongAuthenticationState.getSupplementalKey();
+        this.strongAuthenticationState = strongAuthenticationState.getState();
     }
 
     @Override
@@ -61,7 +77,7 @@ public class OAuth1AuthenticationController
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        OAuth1Token token = authenticator.getRequestToken(state);
+        OAuth1Token token = authenticator.getRequestToken(strongAuthenticationState);
 
         authenticator.useTemporaryToken(token);
 
@@ -90,7 +106,7 @@ public class OAuth1AuthenticationController
         Map<String, String> callbackData =
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
-                                OAuthUtils.formatSupplementalKey(pseudoId),
+                                strongAuthenticationStateSupplementalKey,
                                 WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
                         .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
