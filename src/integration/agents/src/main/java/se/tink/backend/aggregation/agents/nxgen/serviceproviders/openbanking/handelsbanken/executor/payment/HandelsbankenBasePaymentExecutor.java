@@ -112,7 +112,7 @@ public abstract class HandelsbankenBasePaymentExecutor
 
     protected HandelsbankenPaymentType getSepaOrCrossCurrencyPaymentType(
             PaymentRequest paymentRequest) {
-        return paymentRequest.getPayment().getCurrency().equalsIgnoreCase(Currency.EURO)
+        return Currency.EURO.equalsIgnoreCase(paymentRequest.getPayment().getCurrency())
                         && paymentRequest.getPayment().isSepa()
                 ? HandelsbankenPaymentType.SEPA_CREDIT_TRANSFER
                 : HandelsbankenPaymentType.CROSS_CURRENCY_CREDIT_TRANSFER;
