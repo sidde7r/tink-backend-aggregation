@@ -1,13 +1,18 @@
 package se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordea;
 
 import com.google.common.base.Strings;
+import java.util.Set;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.commands.migrations.ClusterSafeAgentVersionMigration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration {
 
+    private static final AggregationLogger log =
+            new AggregationLogger(NordeaSanitizingMigration.class);
     private static final String OLD_AGENT = "banks.nordea.NordeaAgent";
     private static final String NEW_AGENT = "nxgen.se.banks.nordea.v30.NordeaSEAgent";
     private static final String PASSWORD_KEY = "password";
@@ -34,6 +39,13 @@ public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration 
     @Override
     public boolean isDataMigrated(CredentialsRequest request) {
         CredentialsTypes type = request.getCredentials().getType();
+        if (type == CredentialsTypes.MOBILE_BANKID && hasPin(request)) {
+            log.info(
+                    "encountered credentials with PIN to 'nordea-password' in cluster: "
+                            + getClientIfo().getClusterId()
+                            + " credentials: "
+                            + getLogSafeString(request.getCredentials()));
+        }
         return (type == CredentialsTypes.MOBILE_BANKID && !hasPin(request)
                         || type == CredentialsTypes.MOBILE_BANKID && hasPin(request) && !isOxford()
                         || type == CredentialsTypes.PASSWORD && hasPin(request) && isOxford())
@@ -42,6 +54,23 @@ public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration 
                                 acc ->
                                         acc.getBankId().contains("*")
                                                 || acc.getBankId().contains(":"));
+    }
+
+    private String getLogSafeString(Credentials credentials) {
+
+        Set<String> sensitiveKeys = credentials.getSensitivePayload().keySet();
+        Set<String> fields = credentials.getFields().keySet();
+
+        return String.format(
+                "{id:%s, payload:%s, provider:%s, status:%s, type:%s, userid:%s, sensitivePayload:%s, fields:%s}",
+                credentials.getId(),
+                credentials.getPayload(),
+                credentials.getProviderName(),
+                credentials.getStatus(),
+                credentials.getType(),
+                credentials.getUserId(),
+                sensitiveKeys,
+                fields);
     }
 
     @Override
