@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class CardContractEntity {
     private boolean owned;
     private String cardEngagementId;
     private String currencyCode;
-    private double nonBilledAmount;
+    private BigDecimal nonBilledAmount;
     private String productName;
     private String marketSegment;
     private String serviceLevelDescription;
@@ -48,7 +49,7 @@ public class CardContractEntity {
         return currencyCode;
     }
 
-    public double getNonBilledAmount() {
+    public BigDecimal getNonBilledAmount() {
         return nonBilledAmount;
     }
 

@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CardAccountEntity {
     private String id;
-    private double creditLimit;
-    private double purchaseLimit;
-    private double currentBalance;
-    private double nonBilledAmount;
-    private double disposableAmount;
+    private BigDecimal creditLimit;
+    private BigDecimal purchaseLimit;
+    private BigDecimal currentBalance;
+    private BigDecimal nonBilledAmount;
+    private BigDecimal disposableAmount;
     private String state;
     private String currencyCode;
 
@@ -17,23 +18,23 @@ public class CardAccountEntity {
         return id;
     }
 
-    public double getCreditLimit() {
+    public BigDecimal getCreditLimit() {
         return creditLimit;
     }
 
-    public double getPurchaseLimit() {
+    public BigDecimal getPurchaseLimit() {
         return purchaseLimit;
     }
 
-    public double getCurrentBalance() {
+    public BigDecimal getCurrentBalance() {
         return currentBalance;
     }
 
-    public double getNonBilledAmount() {
+    public BigDecimal getNonBilledAmount() {
         return nonBilledAmount;
     }
 
-    public double getDisposableAmount() {
+    public BigDecimal getDisposableAmount() {
         return disposableAmount;
     }
 
