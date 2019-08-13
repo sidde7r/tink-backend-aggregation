@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -39,5 +40,25 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         persistentStorage.put(SwedbankConstants.StorageKeys.OAUTH_TOKEN, accessToken);
+    }
+
+    public void useConsent(ConsentResponse consentResponse) {
+        persistentStorage.put(
+                SwedbankConstants.StorageKeys.CONSENT, consentResponse.getConsentId());
+        persistentStorage.put(
+                SwedbankConstants.StorageKeys.CONSENT_STATUS, consentResponse.getConsentStatus());
+    }
+
+    public ConsentResponse getConsentForIbanList() {
+        return apiClient.getConsent(
+                apiClient.mapAccountResponseToIbanList(apiClient.fetchAccounts()));
+    }
+
+    public ConsentResponse getConsentForAllAccounts() {
+        return apiClient.createFirstConsent();
+    }
+
+    public boolean getConsentStatus(String consentId) {
+        return apiClient.checkIfConsentIsApproved(consentId);
     }
 }

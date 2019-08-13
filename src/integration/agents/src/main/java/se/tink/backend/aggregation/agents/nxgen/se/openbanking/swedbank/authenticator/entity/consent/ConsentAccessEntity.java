@@ -8,19 +8,13 @@ public class ConsentAccessEntity {
     private List<ConsentAccessIdentifier> accounts;
     private List<ConsentAccessIdentifier> balances;
     private List<ConsentAccessIdentifier> transactions;
-    private String availableAccounts;
-    private String allPsd2;
 
     public ConsentAccessEntity(
             List<ConsentAccessIdentifier> accounts,
             List<ConsentAccessIdentifier> balances,
-            List<ConsentAccessIdentifier> transactions,
-            String availableAccounts,
-            String allPsd2) {
+            List<ConsentAccessIdentifier> transactions) {
         this.accounts = accounts;
         this.balances = balances;
         this.transactions = transactions;
-        this.availableAccounts = availableAccounts;
-        this.allPsd2 = allPsd2;
     }
 }
