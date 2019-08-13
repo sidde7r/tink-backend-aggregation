@@ -63,7 +63,8 @@ public class OAuth1AuthenticationController
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
 
-        this.strongAuthenticationStateSupplementalKey = strongAuthenticationState.getSupplementalKey();
+        this.strongAuthenticationStateSupplementalKey =
+                strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
     }
 

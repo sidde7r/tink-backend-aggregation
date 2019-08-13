@@ -127,7 +127,8 @@ public class OAuth2AuthenticationController
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
 
-        this.strongAuthenticationStateSupplementalKey = strongAuthenticationState.getSupplementalKey();
+        this.strongAuthenticationStateSupplementalKey =
+                strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
     }
 
