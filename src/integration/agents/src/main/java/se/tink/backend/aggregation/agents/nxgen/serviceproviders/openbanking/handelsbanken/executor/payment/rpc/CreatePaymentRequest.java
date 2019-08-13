@@ -17,34 +17,9 @@ public class CreatePaymentRequest {
     @JsonProperty("instructedAmount")
     private AmountEntity amount;
 
-    private CreatePaymentRequest(Builder builder) {
-        this.creditor = builder.creditor;
-        this.debtor = builder.debtor;
-        this.amount = builder.amount;
-    }
-
-    public static class Builder {
-        private AccountEntity creditor;
-        private AccountEntity debtor;
-        private AmountEntity amount;
-
-        public Builder withCreditor(AccountEntity creditor) {
-            this.creditor = creditor;
-            return this;
-        }
-
-        public Builder withDebtor(AccountEntity debtor) {
-            this.debtor = debtor;
-            return this;
-        }
-
-        public Builder withAmount(AmountEntity amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        public CreatePaymentRequest build() {
-            return new CreatePaymentRequest(this);
-        }
+    public CreatePaymentRequest(AccountEntity creditor, AccountEntity debtor, AmountEntity amount) {
+        this.creditor = creditor;
+        this.debtor = debtor;
+        this.amount = amount;
     }
 }

@@ -43,11 +43,7 @@ public abstract class HandelsbankenBasePaymentExecutor
         AmountEntity amount = AmountEntity.amountOf(paymentRequest);
 
         CreatePaymentRequest createPaymentRequest =
-                new CreatePaymentRequest.Builder()
-                        .withAmount(amount)
-                        .withCreditor(creditor)
-                        .withDebtor(debtor)
-                        .build();
+                new CreatePaymentRequest(creditor, debtor, amount);
 
         HandelsbankenPaymentType paymentProduct = getPaymentType(paymentRequest);
 
