@@ -70,7 +70,7 @@ public final class SabadellConstants {
     }
 
     public static final class Headers {
-        public static final String SABADELL_ACCEPT = "application/vnd.idk.bsmobil-v1921+json";
+        public static final String SABADELL_ACCEPT = "application/vnd.idk.bsmobil-v1933+json";
     }
 
     public static final class InitiateSessionRequest {
