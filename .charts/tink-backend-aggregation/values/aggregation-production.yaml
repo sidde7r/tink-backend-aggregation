@@ -84,7 +84,7 @@ agents:
   unicredit:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
-      certificateId: Tink
+      eidasQwac: Tink
   cmcic:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
