@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums;
 
 import java.util.Arrays;
 

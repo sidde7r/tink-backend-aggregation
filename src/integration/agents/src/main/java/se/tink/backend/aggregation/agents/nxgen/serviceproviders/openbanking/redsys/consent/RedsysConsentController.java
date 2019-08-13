@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.sca.ScaRedirectCallbackHandler;
 import se.tink.backend.aggregation.nxgen.http.URL;
