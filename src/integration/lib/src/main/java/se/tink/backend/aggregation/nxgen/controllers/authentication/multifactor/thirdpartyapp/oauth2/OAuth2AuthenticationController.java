@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -93,6 +94,41 @@ public class OAuth2AuthenticationController
         this.strongAuthenticationStateSupplementalKey = OAuthUtils.formatSupplementalKey(pseudoId);
         this.strongAuthenticationState =
                 JwtStateUtils.tryCreateJwtState(callbackJWTSignatureKeyPair, pseudoId, appUriId);
+    }
+
+    public OAuth2AuthenticationController(
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            OAuth2Authenticator authenticator,
+            Credentials credentials,
+            StrongAuthenticationState strongAuthenticationState) {
+        this(
+                persistentStorage,
+                supplementalInformationHelper,
+                authenticator,
+                credentials,
+                strongAuthenticationState,
+                DEFAULT_TOKEN_LIFETIME,
+                DEFAULT_TOKEN_LIFETIME_UNIT);
+    }
+
+    public OAuth2AuthenticationController(
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            OAuth2Authenticator authenticator,
+            Credentials credentials,
+            StrongAuthenticationState strongAuthenticationState,
+            int tokenLifetime,
+            TemporalUnit tokenLifetimeUnit) {
+        this.persistentStorage = persistentStorage;
+        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.authenticator = authenticator;
+        this.credentials = credentials;
+        this.tokenLifetime = tokenLifetime;
+        this.tokenLifetimeUnit = tokenLifetimeUnit;
+
+        this.strongAuthenticationStateSupplementalKey = strongAuthenticationState.getSupplementalKey();
+        this.strongAuthenticationState = strongAuthenticationState.getState();
     }
 
     @Override
