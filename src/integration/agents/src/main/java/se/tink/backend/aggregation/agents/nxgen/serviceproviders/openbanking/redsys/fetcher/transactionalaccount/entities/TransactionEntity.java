@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 @JsonObject
 public class TransactionEntity {
@@ -62,12 +63,20 @@ public class TransactionEntity {
 
     @JsonIgnore
     public Transaction toBookedTransaction() {
-        return toTinkTransaction(false);
+        return Transaction.builder()
+                .setAmount(transactionAmount.toTinkAmount())
+                .setDate(getDate())
+                .setDescription(getDescription())
+                .build();
     }
 
     @JsonIgnore
-    public Transaction toPendingTransaction() {
-        return toTinkTransaction(true);
+    public UpcomingTransaction toPendingTransaction() {
+        return UpcomingTransaction.builder()
+                .setAmount(transactionAmount.toTinkAmount())
+                .setDate(getDate())
+                .setDescription(getDescription())
+                .build();
     }
 
     @JsonIgnore
@@ -85,16 +94,6 @@ public class TransactionEntity {
         } else {
             throw new IllegalStateException("Transaction has no date.");
         }
-    }
-
-    @JsonIgnore
-    private Transaction toTinkTransaction(boolean pending) {
-        return Transaction.builder()
-                .setAmount(transactionAmount.toTinkAmount())
-                .setDate(getDate())
-                .setDescription(getDescription())
-                .setPending(pending)
-                .build();
     }
 
     @JsonIgnore

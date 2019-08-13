@@ -379,7 +379,17 @@ public final class RedsysApiClient {
                         .queryParam(QueryKeys.DATE_TO, formatter.format(toDate))
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
         return fetchTransactions(accountId, request);
+    }
 
+    public TransactionsResponse fetchPendingTransactions(String accountId, String consentId) {
+        final Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
+
+        final RequestBuilder request =
+                createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
+                        .queryParam(QueryKeys.BOOKING_STATUS, BookingStatus.PENDING);
+        return fetchTransactions(accountId, request);
     }
 
     public TransactionsResponse fetchTransactions(

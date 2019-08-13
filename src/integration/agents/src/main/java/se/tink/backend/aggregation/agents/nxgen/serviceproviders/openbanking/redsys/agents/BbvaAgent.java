@@ -25,7 +25,7 @@ public class BbvaAgent extends RedsysAgent {
 
     @Override
     public boolean supportsPendingTransactions() {
-        return false;
+        return true;
     }
 
     @Override

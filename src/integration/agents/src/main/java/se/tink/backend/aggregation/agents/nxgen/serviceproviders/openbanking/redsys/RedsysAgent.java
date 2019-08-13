@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.RedsysPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.RedsysTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.RedsysUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.session.RedsysSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -121,11 +122,19 @@ public abstract class RedsysAgent extends NextGenerationAgent
         final TransactionPaginator<TransactionalAccount> paginator =
                 new TransactionKeyPaginationController<>(accountFetcher);
 
+        final TransactionFetcherController<TransactionalAccount> controller;
+        if (supportsPendingTransactions()) {
+            final RedsysUpcomingTransactionFetcher upcomingTransactionFetcher =
+                    new RedsysUpcomingTransactionFetcher(apiClient, consentController);
+            controller =
+                    new TransactionFetcherController<>(
+                            transactionPaginationHelper, paginator, upcomingTransactionFetcher);
+        } else {
+            controller = new TransactionFetcherController<>(transactionPaginationHelper, paginator);
+        }
+
         return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper, paginator));
+                metricRefreshController, updateController, accountFetcher, controller);
     }
 
     @Override
