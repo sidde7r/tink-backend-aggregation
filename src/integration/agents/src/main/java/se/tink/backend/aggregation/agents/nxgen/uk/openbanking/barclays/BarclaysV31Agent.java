@@ -59,7 +59,7 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
                         new URL(V31.WELL_KNOWN_URL),
                         supplementalInformationHelper,
                         credentials,
-                        configuration.getCallbackJwtSignatureKeyPair());
+                        strongAuthenticationState);
         return Optional.of(
                 new PaymentController(ukOpenbankingV31Executor, ukOpenbankingV31Executor));
     }
