@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
@@ -12,6 +13,7 @@ public class ConsentStatusResponse {
     @JsonProperty private List<TppMessageEntity> tppMessages;
     @JsonProperty private String consentStatus;
 
+    @JsonIgnore
     public ConsentStatus getConsentStatus() {
         return ConsentStatus.fromString(consentStatus);
     }

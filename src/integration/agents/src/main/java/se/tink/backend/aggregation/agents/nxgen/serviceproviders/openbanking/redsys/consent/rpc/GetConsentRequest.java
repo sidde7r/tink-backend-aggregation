@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +20,7 @@ public class GetConsentRequest {
 
     @JsonProperty private boolean combinedServiceIndicator;
 
+    @JsonIgnore
     public GetConsentRequest(
             AccessEntity access,
             boolean recurringIndicator,

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,6 +23,7 @@ public class AccountReferenceEntity {
         return entity;
     }
 
+    @JsonIgnore
     public AccountIdentifier toTinkAccountIdentifier() {
         if (Strings.isNullOrEmpty(iban)) {
             throw new IllegalStateException("Only IBAN accounts supported.");

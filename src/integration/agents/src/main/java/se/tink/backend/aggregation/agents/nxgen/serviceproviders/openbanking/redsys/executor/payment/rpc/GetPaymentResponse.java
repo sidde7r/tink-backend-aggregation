@@ -35,6 +35,7 @@ public class GetPaymentResponse {
     @JsonProperty private String psuMessage;
     @JsonProperty private List<TppMessageEntity> tppMessages;
 
+    @JsonIgnore
     public RedsysTransactionStatus getTransactionStatus() {
         return RedsysTransactionStatus.fromString(transactionStatus);
     }
@@ -59,10 +60,12 @@ public class GetPaymentResponse {
         return creditorAccount.toTinkAccountIdentifier();
     }
 
+    @JsonIgnore
     public LocalDate getRequestedExecutionDate() {
         return requestedExecutionDate;
     }
 
+    @JsonIgnore
     public Optional<String> getRemittanceInformationUnstructured() {
         return Optional.ofNullable(Strings.emptyToNull(remittanceInformationUnstructured));
     }

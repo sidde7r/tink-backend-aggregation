@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,6 +35,7 @@ public class CreatePaymentRequest {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate requestedExecutionDate;
 
+    @JsonIgnore
     private CreatePaymentRequest(Builder builder) {
         this.instructedAmount = AmountEntity.withAmount(builder.amount);
         this.debtorAccount = builder.debtorAccount;

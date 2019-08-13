@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.TppMessageEntity;
@@ -13,6 +14,7 @@ public class PaymentStatusResponse {
     @JsonProperty private String psuMessage;
     @JsonProperty private List<TppMessageEntity> tppMessages;
 
+    @JsonIgnore
     public RedsysTransactionStatus getTransactionStatus() {
         return RedsysTransactionStatus.fromString(transactionStatus);
     }
