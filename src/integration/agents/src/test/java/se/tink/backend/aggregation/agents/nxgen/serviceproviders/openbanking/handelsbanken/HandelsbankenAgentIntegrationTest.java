@@ -89,7 +89,7 @@ public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurati
         this.expectLoggedIn = builder.isExpectLoggedIn();
         this.context =
                 new NewAgentTestContext(
-                        this.user, this.credential, builder.getTransactionsToPrint());
+                        this.user, this.credential, builder.getTransactionsToPrint(), builder.getAppId());
         this.supplementalInformationController =
                 new SupplementalInformationController(this.context, this.credential);
     }
@@ -367,6 +367,7 @@ public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurati
         private boolean expectLoggedIn = true;
         private Set<RefreshableItem> refreshableItems = new HashSet();
         private AisValidator validator;
+        private String appId = "tink";
 
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
@@ -492,6 +493,10 @@ public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurati
             }
 
             return new HandelsbankenAgentIntegrationTest(this);
+        }
+
+        public String getAppId() {
+            return appId;
         }
     }
 }
