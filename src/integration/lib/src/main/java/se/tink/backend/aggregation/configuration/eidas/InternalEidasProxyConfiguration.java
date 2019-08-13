@@ -14,6 +14,8 @@ import java.security.cert.CertificateException;
 import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
 
 public class InternalEidasProxyConfiguration {
+    private static final String DUMMY_CERT_NAME = "trustedcert";
+    private static final String DUMMY_PASSWORD = "password";
     private final String host;
     private final String caPath;
     private final String tlsCrtPath;
@@ -55,9 +57,9 @@ public class InternalEidasProxyConfiguration {
             throw new IllegalStateException("Trusted CA for eiDAS proxy not configured");
         }
         KeyStore keyStore = KeyStore.getInstance("JKS");
-        keyStore.load(null, "password".toCharArray());
+        keyStore.load(null, DUMMY_PASSWORD.toCharArray());
 
-        keyStore.setCertificateEntry("trustedcert", certificate);
+        keyStore.setCertificateEntry(DUMMY_CERT_NAME, certificate);
         return keyStore;
     }
 

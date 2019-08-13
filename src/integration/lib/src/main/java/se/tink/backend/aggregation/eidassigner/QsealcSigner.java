@@ -20,6 +20,9 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 
 public class QsealcSigner {
 
+    private static final String TINK_QSEALC_APPID = "X-Tink-Eidas-Sign-Certificate-Id";
+    private static final String TINK_QSEALC_CLUSTERID = "X-Tink-QSealC-ClusterId";
+
     private final HttpClient httpClient;
     private final QsealcAlg alg;
     private final String host;
@@ -65,8 +68,8 @@ public class QsealcSigner {
             HttpPost post =
                     new HttpPost(StringUtils.stripEnd(this.host, "/") + alg.getSigningType());
             post.setHeader(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
-            post.setHeader("X-Tink-Eidas-Sign-Certificate-Id", appId);
-            post.setHeader("X-Tink-QSealC-ClusterId", clusterId);
+            post.setHeader(TINK_QSEALC_APPID, appId);
+            post.setHeader(TINK_QSEALC_CLUSTERID, clusterId);
             post.setEntity(new ByteArrayEntity(Base64.getEncoder().encode(signingData)));
             HttpResponse response = httpClient.execute(post);
             if (response.getStatusLine().getStatusCode() != 200) {
