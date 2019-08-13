@@ -65,6 +65,7 @@ public final class RedsysApiClient {
     private X509Certificate clientSigningCertificate;
     private AspspConfiguration aspspConfiguration;
     private ConsentStatus cachedConsentStatus = ConsentStatus.UNKNOWN;
+    private String psuIpAddress = null;
 
     public RedsysApiClient(
             TinkHttpClient client,
@@ -265,6 +266,11 @@ public final class RedsysApiClient {
             final String requestID = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
             allHeaders.put(HeaderKeys.REQUEST_ID, requestID);
         }
+
+        if (!Strings.isNullOrEmpty(psuIpAddress)) {
+            allHeaders.put(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
+        }
+
         final String signature =
                 RedsysUtils.generateRequestSignature(
                         configuration,
@@ -437,5 +443,9 @@ public final class RedsysApiClient {
         final String url =
                 makeApiUrl(Urls.PAYMENT_CANCEL, paymentProduct.getProductName(), paymentId);
         createSignedRequest(url).delete();
+    }
+
+    public void setPsuIpAddress(String psuIpAddress) {
+        this.psuIpAddress = psuIpAddress;
     }
 }
