@@ -123,7 +123,8 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
                 new SwedbankDefaultBankIdAuthenticator(apiClient, sessionStorage),
-                persistentStorage);
+                persistentStorage,
+                credentials);
     }
 
     @Override

@@ -133,13 +133,6 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-<<<<<<< HEAD
-        return new BankIdAuthenticationController<>(
-                supplementalRequester,
-                new SwedbankDefaultBankIdAuthenticator(apiClient),
-                persistentStorage,
-                credentials);
-=======
         return new TypedAuthenticationController(constructAuthenticators());
     }
 
@@ -150,9 +143,9 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
             new BankIdAuthenticationController<>(
                     supplementalRequester,
                     new SwedbankDefaultBankIdAuthenticator(apiClient, sessionStorage),
-                    persistentStorage)
+                    persistentStorage,
+                    credentials)
         };
->>>>>>> feat(Swedbank/Bankid&Token): Allow both token and bankid
     }
 
     @Override
