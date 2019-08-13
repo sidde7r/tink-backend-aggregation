@@ -97,7 +97,10 @@ public class SebKortApiClient {
 
     public BillingUnitsResponse fetchBillingUnits() {
         HttpResponse response =
-                client.request(SebKortConstants.Urls.BILLING_UNITS)
+                client.request(
+                                String.format(
+                                        SebKortConstants.Urls.BILLING_UNITS,
+                                        config.getProviderCode()))
                         .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML)
                         .get(HttpResponse.class);
 
