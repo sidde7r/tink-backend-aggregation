@@ -16,8 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.Jys
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.JyskeKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.JyskeInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.session.JyskeSessionHandler;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.TimeoutFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -143,10 +141,9 @@ public class JyskeAgent extends NextGenerationAgent
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setTimeout(SdcConstants.HTTP_TIMEOUT);
         client.addFilter(
                 new TimeoutRetryFilter(
-                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
-                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+                        JyskeConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        JyskeConstants.TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }
 }
