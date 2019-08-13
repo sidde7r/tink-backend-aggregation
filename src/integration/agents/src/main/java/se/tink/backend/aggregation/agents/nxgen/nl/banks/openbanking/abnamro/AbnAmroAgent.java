@@ -77,8 +77,8 @@ public class AbnAmroAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new AbnAmroAuthenticator(apiClient, persistentStorage, configuration),
-                        super.configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

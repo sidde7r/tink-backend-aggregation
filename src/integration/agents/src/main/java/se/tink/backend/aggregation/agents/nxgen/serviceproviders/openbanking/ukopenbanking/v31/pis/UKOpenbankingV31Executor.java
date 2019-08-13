@@ -20,12 +20,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.InternationalPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.UKPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.FundsConfirmationResponse;
-import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -59,7 +59,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     private final UkOpenBankingPis ukOpenBankingPis;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Credentials credentials;
-    private final CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public UKOpenbankingV31Executor(
             UkOpenBankingPisConfig pisConfig,
@@ -69,7 +69,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             URL wellKnownURL,
             SupplementalInformationHelper supplementalInformationHelper,
             Credentials credentials,
-            CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair) {
+            StrongAuthenticationState strongAuthenticationState) {
         this.pisConfig = pisConfig;
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
@@ -79,7 +79,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         this.ukOpenBankingPis = new UkOpenBankingV31Pis(pisConfig);
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.credentials = credentials;
-        this.callbackJwtSignatureKeyPair = callbackJwtSignatureKeyPair;
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     private UKPisConfig getConfig(Payment payment) {
@@ -154,10 +154,9 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                         supplementalInformationHelper,
                         apiClient,
                         paymentAuthenticator,
-                        callbackJwtSignatureKeyPair,
-                        null,
-                        null,
-                        credentials);
+                        credentials,
+                        strongAuthenticationState,
+                        null);
 
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(

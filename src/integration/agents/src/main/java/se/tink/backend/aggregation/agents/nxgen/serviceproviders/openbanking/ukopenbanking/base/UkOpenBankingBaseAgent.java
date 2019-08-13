@@ -221,8 +221,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 supplementalInformationHelper,
                 authenticator,
                 apiClient,
-                callbackJWTSignatureKeyPair,
-                credentials);
+                credentials,
+                strongAuthenticationState);
     }
 
     @Override
