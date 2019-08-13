@@ -36,12 +36,5 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      */
     <V> B putInTemporaryStorage(@Nonnull String key, @Nonnull V value);
 
-    /**
-     * Constructs an account from this builder.
-     *
-     * @return An account with the data provided to this builder.
-     */
-    A build();
-
     B setBankIdentifier(String number);
 }
