@@ -49,8 +49,8 @@ public class OAuth2AuthenticationController
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
 
-    private final String state;
-    private final String pseudoId;
+    private final String strongAuthenticationState;
+    private final String strongAuthenticationStateSupplementalKey;
 
     // This wait time is for the whole user authentication. Different banks have different
     // cumbersome authentication flows.
@@ -89,8 +89,9 @@ public class OAuth2AuthenticationController
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
 
-        this.pseudoId = JwtStateUtils.generatePseudoId(appUriId);
-        this.state =
+        String pseudoId = JwtStateUtils.generatePseudoId(appUriId);
+        this.strongAuthenticationStateSupplementalKey = OAuthUtils.formatSupplementalKey(pseudoId);
+        this.strongAuthenticationState =
                 JwtStateUtils.tryCreateJwtState(callbackJWTSignatureKeyPair, pseudoId, appUriId);
     }
 
@@ -137,7 +138,7 @@ public class OAuth2AuthenticationController
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizeUrl = authenticator.buildAuthorizeUrl(state);
+        URL authorizeUrl = authenticator.buildAuthorizeUrl(strongAuthenticationState);
 
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
 
@@ -162,7 +163,7 @@ public class OAuth2AuthenticationController
         Map<String, String> callbackData =
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
-                                OAuthUtils.formatSupplementalKey(pseudoId),
+                                strongAuthenticationStateSupplementalKey,
                                 WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
                         .orElseThrow(
