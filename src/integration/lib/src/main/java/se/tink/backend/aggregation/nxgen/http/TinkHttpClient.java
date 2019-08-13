@@ -28,7 +28,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.Date;
 import java.util.List;
@@ -516,20 +515,13 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         }
     }
 
-    public void trustRootCaCertificate(Certificate certificate) {
+    private void trustRootCaCertificate(KeyStore keyStore) {
         try {
-            KeyStore keyStore = KeyStore.getInstance("JKS");
-            keyStore.load(null, "password".toCharArray());
-
-            keyStore.setCertificateEntry("trustedcert", certificate);
             TrustRootCaStrategy trustStrategy =
-                    TrustRootCaStrategy.createWithFallbackTrust(keyStore);
+                    TrustRootCaStrategy.createWithoutFallbackTrust(keyStore);
             internalSslContextBuilder.loadTrustMaterial(keyStore, trustStrategy);
 
-        } catch (KeyStoreException
-                | IOException
-                | NoSuchAlgorithmException
-                | CertificateException e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException e) {
             throw new IllegalStateException(e);
         }
     }
@@ -579,7 +571,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     private void setEidasClient(InternalEidasProxyConfiguration conf) {
         try {
-            trustRootCaCertificate(conf.getRootCa());
+            trustRootCaCertificate(conf.getRootCaTrustStore());
             setSslClientCertificate(conf.getClientCertKeystore());
         } catch (KeyStoreException
                 | NoSuchProviderException
