@@ -89,6 +89,10 @@ public abstract class AgentVersionMigration {
      */
     protected void migrateAccounts(CredentialsRequest request, List<Account> accounts) {
 
+        // Preventively generate the description of the accounts, before the objects get modified
+        String originalAccountsDescription =
+                Arrays.toString(accounts.stream().map(Account::getBankId).toArray());
+
         List<Account> accountList = deduplicateAccounts(accounts);
         try {
 
@@ -99,7 +103,7 @@ public abstract class AgentVersionMigration {
             log.error(
                     String.format(
                             "Error updating migrated accounts. Pre: %s Post: %s",
-                            Arrays.toString(accounts.stream().map(Account::getBankId).toArray()),
+                            originalAccountsDescription,
                             Arrays.toString(
                                     accountList.stream().map(Account::getBankId).toArray())));
             throw e;
@@ -115,7 +119,15 @@ public abstract class AgentVersionMigration {
      * @return
      */
     protected Account migrateAccount(Account account) {
-        return getControlWrapper().updateAccountMetaData(account.getId(), account.getBankId());
+        try {
+            return getControlWrapper().updateAccountMetaData(account.getId(), account.getBankId());
+        } catch (UniformInterfaceException e) {
+            log.error(
+                    String.format(
+                            "Error migrating account %s to %s",
+                            account.getId(), account.getBankId()));
+            throw e;
+        }
     }
 
     public void setClientIfo(ClientInfo clientInfo) {
