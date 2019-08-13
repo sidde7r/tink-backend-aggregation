@@ -4,18 +4,25 @@ import static com.fasterxml.jackson.annotation.JsonFormat.DEFAULT_LOCALE;
 
 import java.util.Arrays;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
+@Ignore
 public class FinecoBankAgentTest {
 
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
+
+        manager.before();
+
         UserProfile profile = new UserProfile();
         profile.setLocale(DEFAULT_LOCALE);
 
@@ -29,12 +36,17 @@ public class FinecoBankAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-finecobank-oauth2")
                         .expectLoggedIn(false)
                         .setUser(user)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
     }
 
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
+    }
+
+    private enum Arg {
+        SAVE_AFTER,
+        LOAD_BEFORE
     }
 }
