@@ -37,6 +37,7 @@ import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
 import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.queue.QueueProducer;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
@@ -67,6 +68,15 @@ public class AggregationServiceResource implements AggregationService {
     public Credentials createCredentials(CreateCredentialsRequest request, ClientInfo clientInfo) {
         AgentWorkerOperation createCredentialsOperation =
                 agentWorkerCommandFactory.createOperationCreateCredentials(request, clientInfo);
+
+        // Debugging jira ticket : IFD-92
+        if (request != null
+                && request.getProvider() != null
+                && request.getProvider().getName() != null) {
+            if (request.getProvider().getName().equals("it-credem-oauth2")) {
+                logger.info(SerializationUtils.serializeToString(request));
+            }
+        }
 
         createCredentialsOperation.run();
 
