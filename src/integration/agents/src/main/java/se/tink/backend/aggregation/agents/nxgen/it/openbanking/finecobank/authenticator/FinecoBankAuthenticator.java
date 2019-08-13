@@ -1,36 +1,55 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator;
 
-import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.configuration.FinecoBankConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StatusValues;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccessItem;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.PostConsentBodyRequest;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class FinecoBankAuthenticator implements Authenticator {
+public final class FinecoBankAuthenticator {
 
-    private final FinecoBankApiClient apiClient;
+    private final FinecoBankApiClient finecoBankApiClient;
     private final PersistentStorage persistentStorage;
-    private final FinecoBankConfiguration configuration;
 
     public FinecoBankAuthenticator(
-            FinecoBankApiClient apiClient,
-            PersistentStorage persistentStorage,
-            FinecoBankConfiguration configuration) {
-        this.apiClient = apiClient;
+            FinecoBankApiClient finecoBankApiClient, PersistentStorage persistentStorage) {
+        this.finecoBankApiClient = finecoBankApiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
     }
 
-    private FinecoBankConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    public URL buildAuthorizeUrl(String state) {
+
+        AccessEntity accessEntity = new AccessEntity(FormValues.ALL_ACCOUNTS);
+
+        PostConsentBodyRequest postConsentBody =
+                new PostConsentBodyRequest(
+                        accessEntity,
+                        FormValues.FALSE,
+                        FormValues.FREQUENCY_PER_DAY,
+                        FormValues.TRUE,
+                        LocalDate.now().plus(FormValues.NUMBER_DAYS, ChronoUnit.DAYS).toString());
+
+        ConsentResponse consentResponse = finecoBankApiClient.getConsent(postConsentBody, state);
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+        return new URL(consentResponse.getLinks().getScaRedirect());
     }
 
-    @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {}
+    public boolean getApprovedConsent() {
+        ConsentStatusResponse consentStatusResponse = finecoBankApiClient.getConsentStatus();
+        return consentStatusResponse.getConsentStatus().equalsIgnoreCase(StatusValues.VALID);
+    }
+
+    public void storeAccounts() {
+        AccessItem accessItem = finecoBankApiClient.getConsentAuthorizations().getAccess();
+        persistentStorage.put(StorageKeys.TRANSACTION_ACCOUNTS, accessItem.getTransactions());
+        persistentStorage.put(StorageKeys.BALANCE_ACCOUNTS, accessItem.getBalances());
+    }
 }

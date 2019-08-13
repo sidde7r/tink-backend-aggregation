@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetch
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.entity.common.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.entity.common.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -22,15 +24,27 @@ public class BookedEntity {
     private String creditorName;
     private TransactionAccountEntity creditorAccount;
     private String remittanceInformationStructured;
+    private String remittanceInformationUnStructured;
     private String proprietaryBankTransactionCode;
     private LinksEntity links;
     private String debtorName;
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setDescription(remittanceInformationStructured)
+                .setDescription(getDescrition())
                 .setDate(valueDate)
                 .setAmount(transactionAmount.toTinkAmount())
                 .build();
+    }
+
+    private String getDescrition() {
+        if (!Strings.isNullOrEmpty(remittanceInformationStructured)) {
+            return remittanceInformationStructured;
+        } else if (!Strings.isNullOrEmpty(remittanceInformationUnStructured)) {
+            return remittanceInformationUnStructured;
+        } else if (!Strings.isNullOrEmpty(proprietaryBankTransactionCode)) {
+            return proprietaryBankTransactionCode;
+        }
+        return FormValues.MISSING_DESCRIPTION;
     }
 }
