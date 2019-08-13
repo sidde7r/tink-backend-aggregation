@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -31,6 +32,34 @@ public class OpenIdAuthenticationFlow {
                         request.getAppUriId(),
                         request.getCallbackUri(),
                         credentials);
+
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        openIdAuthenticationController, supplementalInformationHelper),
+                openIdAuthenticationController);
+    }
+
+    public static Authenticator create(
+            CredentialsRequest request,
+            SystemUpdater systemUpdater,
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            OpenIdAuthenticator authenticator,
+            OpenIdApiClient apiClient,
+            Credentials credentials,
+            StrongAuthenticationState strongAuthenticationState) {
+
+        OpenIdAuthenticationController openIdAuthenticationController =
+                new OpenIdAuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        apiClient,
+                        authenticator,
+                        credentials,
+                        strongAuthenticationState,
+                        request.getCallbackUri());
 
         return new AutoAuthenticationController(
                 request,
