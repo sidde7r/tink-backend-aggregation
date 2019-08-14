@@ -121,7 +121,7 @@ public class AgentDataAvailabilityTrackerClientImpl
     @Override
     public void endStreamBlocking() throws InterruptedException {
         requestStream.onCompleted();
-        channel.shutdown().awaitTermination(2000, TimeUnit.MILLISECONDS);
+        channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
     }
 
     @Override
