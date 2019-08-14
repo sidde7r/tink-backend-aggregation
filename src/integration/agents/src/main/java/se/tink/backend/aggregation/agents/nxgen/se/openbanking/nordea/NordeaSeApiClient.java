@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentica
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -47,6 +48,14 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
     public OAuth2Token getToken(GetTokenForm form, String token) {
         return createRequestWithTppToken(NordeaSeConstants.Urls.GET_TOKEN, token)
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED)
+                .post(GetTokenResponse.class)
+                .toTinkToken();
+    }
+
+    @Override
+    public OAuth2Token refreshToken(RefreshTokenForm form) {
+        return createRequest(NordeaSeConstants.Urls.GET_TOKEN)
+                .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(GetTokenResponse.class)
                 .toTinkToken();
     }
