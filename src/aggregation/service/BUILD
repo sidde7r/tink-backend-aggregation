@@ -12,6 +12,7 @@ java_library(
     deps = [
         "//src/aggregation/lib",
         "//src/libraries/draining",
+        "//src/integration/agent_data_availability_tracker/client",
         "//src/libraries/dropwizard_utils",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
