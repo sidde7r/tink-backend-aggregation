@@ -104,7 +104,8 @@ public abstract class BankdataAgent extends NextGenerationAgent
                         bankdataPaymentExecutorSelector,
                         bankdataPaymentExecutorSelector,
                         supplementalInformationHelper,
-                        sessionStorage));
+                        sessionStorage,
+                        strongAuthenticationState));
     }
 
     @Override
