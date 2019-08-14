@@ -70,7 +70,7 @@ git_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "820c42738a8ebb6f30ac40b5310187140ba7b5b5",
+    commit = "0ec16d15f1fe7833fe2b6eda2722eca6b4305c4a",
     remote = "git@github.com:tink-ab/tink-backend",
     shallow_since = "1543992595 +0100",
 )
@@ -140,26 +140,37 @@ http_file(
     urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb"],
 )
 
-# TODO: Build these
+# proto_library rules implicitly depend on @com_google_protobuf//:protoc,
+# which is the proto-compiler.
+PROTOBUF_VERSION = "3.9.0"
+
+GRPC_JAVA_VERSION = "1.22.1"
+
+GRPC_JAVA_NANO_VERSION = "1.21.0"
+
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
-    sha256 = "6f5fc69224f2fa9ed7e1376aedf6c5c6239dcfe566beb89d3a1c77c50fb8886b",
-    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-linux-x86_64.exe"],
+    sha256 = "9b2091268704422f9648827a0b729c4287abcfe81ee3a67bb31978e2075c8a04",
+    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-linux-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
 
 http_file(
     name = "protoc_gen_grpc_java_macosx",
-    sha256 = "f7ad13d42e2a2415d021263ae258ca08157e584c54e9fce093f1a5a871a8763a",
-    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-osx-x86_64.exe"],
+    sha256 = "fd01cffceedf6f3b8ebc3679ad22efeeb3e3b8c3b31495f698137297a0bc5fa6",
+    urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-osx-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
 
-# proto_library rules implicitly depend on @com_google_protobuf//:protoc,
-# which is the proto-compiler.
+http_file(
+    name = "protoc_gen_grpc_java_windows_x86_64",
+    sha256 = "9e2534ab1df91e6d52b0811dae406fbe96371c0b552a8f4c618688d83e7bee0b",
+    urls = ["https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-windows-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
+)
+
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "9510dd2afc29e7245e9e884336f848c8a6600a14ae726adb6befdb4f786f0be2",
-    strip_prefix = "protobuf-3.6.1.3",
-    urls = ["https://github.com/google/protobuf/archive/v3.6.1.3.zip"],
+    sha256 = "8eb5ca331ab8ca0da2baea7fc0607d86c46c80845deca57109a5d637ccb93bb4",
+    strip_prefix = "protobuf-%s" % PROTOBUF_VERSION,
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v%s.zip" % PROTOBUF_VERSION],
 )
 
 bind(
@@ -167,16 +178,36 @@ bind(
     actual = "@com_google_protobuf//:protoc",
 )
 
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+OPENCENSUS_VERSION = "0.21.0"
+
 maven_jar(
     name = "io_opencensus_opencensus_api",
-    artifact = "io.opencensus:opencensus-api:0.19.2",
-    sha1 = "5c052b432727b1da381b52e263cbcb7463c43378",
+    artifact = "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
+    sha1 = "73c07fe6458840443f670b21c7bf57657093b4e1",
 )
 
 maven_jar(
+    name = "io_opencensus_opencensus_contrib_grpc_metrics",
+    artifact = "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
+    sha1 = "f07d3a325f1fe69ee40d6b409086964edfef4e69",
+)
+
+# TODO: Remove when the dependency on tink_backend_shared_libraries is gone
+# Referenced by @tink_backend_shared_libraries//third_party:netty
+maven_jar(
     name = "io_opencensus_opencensus_grpc_metrics",
-    artifact = "io.opencensus:opencensus-contrib-grpc-metrics:0.19.2",
-    sha1 = "0f01f5d7f6689abf980bb0649d6673f286a77f61",
+    artifact = "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
+    sha1 = "f07d3a325f1fe69ee40d6b409086964edfef4e69",
+)
+
+maven_jar(
+    name = "io_perfmark_perfmark_api",
+    artifact = "io.perfmark:perfmark-api:0.17.0",
+    sha1 = "97e81005e3a7f537366ffdf20e11e050303b58c1",
 )
 
 maven_jar(
@@ -2009,56 +2040,68 @@ maven_jar(
 
 maven_jar(
     name = "io_grpc_grpc_protobuf",
-    artifact = "io.grpc:grpc-protobuf:1.20.0",
-    sha1 = "d5216a554532c6d5572321e2ff9624d3eaa40c3c",
+    artifact = "io.grpc:grpc-protobuf:%s" % GRPC_JAVA_VERSION,
+    sha1 = "425bc5c92125afb951e7418b269d9600014fb69e",
 )
 
 maven_jar(
     name = "io_grpc_grpc_auth",
-    artifact = "io.grpc:grpc-auth:1.20.0",
-    sha1 = "bec4a1ea92a79f84b27f8d9ea4e3c26dd56fa8c2",
+    artifact = "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
+    sha1 = "84d6760cc890d2980ff64ee225a3e24d084c7ba7",
 )
 
 maven_jar(
     name = "io_grpc_grpc_context",
-    artifact = "io.grpc:grpc-context:1.20.0",
-    sha1 = "3d98a9a0fd2d881000dfc450c7c2665d5204691b",
+    artifact = "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
+    sha1 = "1a074f9cf6f367b99c25e70dc68589f142f82d11",
 )
 
 maven_jar(
     name = "io_grpc_grpc_protobuf_lite",
-    artifact = "io.grpc:grpc-protobuf-lite:1.20.0",
-    sha1 = "321427369f3bfba0bda9aea09f121f40579ed0e6",
+    artifact = "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
+    sha1 = "db8ab67d6142aa6a80ac1c61c8843e5833f8bb99",
 )
 
 maven_jar(
     name = "io_grpc_grpc_protobuf_nano",
-    artifact = "io.grpc:grpc-protobuf-nano:1.20.0",
-    sha1 = "b52a2d11e6d81f032e0cc654048f596109d011cc",
+    artifact = "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
+    sha1 = "be9ff6c1f004fde5b67ce164ba81f80b0ef64e87",
 )
 
 maven_jar(
     name = "io_grpc_grpc_stub",
-    artifact = "io.grpc:grpc-stub:1.20.0",
-    sha1 = "af81b3b84811716d9607dfa43d13bc720e54a0dd",
+    artifact = "io.grpc:grpc-stub:%s" % GRPC_JAVA_VERSION,
+    sha1 = "910550293aab760b706827c5f71c80551e5490f3",
 )
 
 maven_jar(
     name = "io_grpc_grpc_core",
-    artifact = "io.grpc:grpc-core:1.20.0",
-    sha1 = "cc15b7f92867aaf6b837bc4c77899bbe7f63e8c7",
+    artifact = "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
+    sha1 = "f8b6f872b7f069aaff1c3380b2ba7f91f06e4da1",
+)
+
+maven_jar(
+    name = "io_grpc_grpc_api",
+    artifact = "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
+    sha1 = "77311e5735c4097c5cce57f0f4d0847c51db63bb",
 )
 
 maven_jar(
     name = "io_grpc_grpc_netty",
-    artifact = "io.grpc:grpc-netty:1.20.0",
-    sha1 = "6f4e9423e0430f11ed2dcfb45fa6350156020e8e",
+    artifact = "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
+    sha1 = "6447e7b4aa13b2de695da02ab840e25413e48908",
 )
 
 maven_jar(
     name = "io_grpc_grpc_testing",
-    artifact = "io.grpc:grpc-testing:1.20.0",
-    sha1 = "11a1d97482c40d28dfff5420a6d512b32d578e94",
+    artifact = "io.grpc:grpc-testing:%s" % GRPC_JAVA_VERSION,
+    sha1 = "7b939ca9a56265589c1c9a72cef3c55fb92e990e",
+)
+
+maven_jar(
+    name = "io_grpc_grpc_services",
+    artifact = "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
+    sha1 = "92a305d6cc80761e00c7fb5bb3344cf5cb0c1839",
 )
 
 maven_jar(
@@ -2374,10 +2417,10 @@ http_archive(
 # Used by java_grpc_library
 http_archive(
     name = "io_grpc_grpc_java",
-    sha256 = "9d23d9fec84e24bd3962f5ef9d1fd61ce939d3f649a22bcab0f19e8167fae8ef",
-    strip_prefix = "grpc-java-1.20.0",
+    sha256 = "ceade229adade0d7b156f6d17fbc1df9298bfc8d3c4eeaba596f7a4a4d3701fc",
+    strip_prefix = "grpc-java-%s" % GRPC_JAVA_VERSION,
     urls = [
-        "https://github.com/grpc/grpc-java/archive/v1.20.0.zip",
+        "https://github.com/grpc/grpc-java/archive/v%s.zip" % GRPC_JAVA_VERSION,
     ],
 )
 
