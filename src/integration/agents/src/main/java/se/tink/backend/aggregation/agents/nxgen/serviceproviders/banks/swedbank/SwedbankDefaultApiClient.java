@@ -773,6 +773,21 @@ public class SwedbankDefaultApiClient {
         return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.AUTHORIZATION_FAILED);
     }
 
+    private void handleTokenErrors(HttpResponseException hre) throws SupplementalInfoException {
+        if (isSecurityTokenInvalidFormat(hre)) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception();
+        }
+        if (isSecurityTokenTooOld(hre)) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception();
+        }
+        if (isLoginSecurityTokenInvalid(hre)) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception();
+        }
+        if (isAuthorizationSecurityTokenInvalid(hre)) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception();
+        }
+    }
+
     public SecurityTokenChallengeResponse sendLoginChallenge(LinksEntity links, String challenge)
             throws SupplementalInfoException {
         try {
@@ -781,15 +796,7 @@ public class SwedbankDefaultApiClient {
                     SecurityTokenChallengeRequest.createFromChallenge(challenge),
                     SecurityTokenChallengeResponse.class);
         } catch (HttpResponseException hre) {
-            if (isSecurityTokenInvalidFormat(hre)) {
-                throw SupplementalInfoError.NO_VALID_CODE.exception();
-            }
-            if (isSecurityTokenTooOld(hre)) {
-                throw SupplementalInfoError.NO_VALID_CODE.exception();
-            }
-            if (isLoginSecurityTokenInvalid(hre)) {
-                throw SupplementalInfoError.NO_VALID_CODE.exception();
-            }
+            handleTokenErrors(hre);
             // unknown error: rethrow
             throw hre;
         } catch (HttpClientException hce) {
@@ -809,15 +816,7 @@ public class SwedbankDefaultApiClient {
                     SecurityTokenChallengeRequest.createFromChallenge(challenge),
                     RegisterTransferResponse.class);
         } catch (HttpResponseException hre) {
-            if (isSecurityTokenInvalidFormat(hre)) {
-                throw SupplementalInfoError.NO_VALID_CODE.exception();
-            }
-            if (isSecurityTokenTooOld(hre)) {
-                throw SupplementalInfoError.NO_VALID_CODE.exception();
-            }
-            if (isAuthorizationSecurityTokenInvalid(hre)) {
-                throw SupplementalInfoError.NO_VALID_CODE.exception();
-            }
+            handleTokenErrors(hre);
             // unknown error: rethrow
             throw hre;
         } catch (HttpClientException hce) {
@@ -838,15 +837,7 @@ public class SwedbankDefaultApiClient {
                     SecurityTokenChallengeRequest.createFromChallenge(challenge),
                     RegisterTransferResponse.class);
         } catch (HttpResponseException hre) {
-            if (isSecurityTokenInvalidFormat(hre)) {
-                throw SupplementalInfoError.NO_VALID_CODE.exception();
-            }
-            if (isSecurityTokenTooOld(hre)) {
-                throw SupplementalInfoError.NO_VALID_CODE.exception();
-            }
-            if (isAuthorizationSecurityTokenInvalid(hre)) {
-                throw SupplementalInfoError.NO_VALID_CODE.exception();
-            }
+            handleTokenErrors(hre);
             // unknown error: rethrow
             throw hre;
         } catch (HttpClientException hce) {
