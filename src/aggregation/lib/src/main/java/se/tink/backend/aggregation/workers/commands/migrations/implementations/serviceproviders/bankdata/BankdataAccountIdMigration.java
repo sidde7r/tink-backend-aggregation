@@ -31,7 +31,8 @@ public class BankdataAccountIdMigration extends AgentVersionMigration {
     }
 
     private boolean shouldChangeBankId(Account account) {
-        return (account.getType() == AccountTypes.CHECKING || account.getType() == AccountTypes.SAVINGS)
+        return (account.getType() == AccountTypes.CHECKING
+                        || account.getType() == AccountTypes.SAVINGS)
                 && !account.getBankId().equals(account.getAccountNumber());
     }
 }
