@@ -63,7 +63,7 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
                         account.getAccountId(),
                         new Amount(account.getCurrency(), account.getBalance()))
                 .setAccountNumber(account.getBbanFormatted())
-                .setName(account.getAccountNickname())
+                .setName(account.getAccountTypeName())
                 .addIdentifiers(getIdentifiers(account))
                 .setBankIdentifier(account.getAccountId())
                 .setHolderName(accountHolderName)
@@ -94,7 +94,7 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
         return Transaction.builder()
                 .setAmount(new Amount(transaction.getCurrency(), transaction.getAmount()))
                 .setDescription(createDescription(transaction))
-                .setDate(transaction.getDueDate())
+                .setDate(transaction.getBookingDate())
                 .build();
     }
 
