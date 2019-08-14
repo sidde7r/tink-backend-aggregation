@@ -32,7 +32,7 @@ final class NatWestConstants {
             public static final String PIS_API_URL =
                     "https://api.natwest.com/open-banking/v3.1/pisp";
             public static final String WELL_KNOWN_URL =
-                    "https://secure1.natwest.com/.well-known/openid-configuration";
+                    "https://personal.secure1.natwest.com/.well-known/openid-configuration";
         }
     }
 }
