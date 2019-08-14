@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -19,7 +18,16 @@ public class TransactionEntity {
     private TransactionalLinksEntity links;
 
     public boolean hasMore() {
-        return Optional.ofNullable(links).map(TransactionalLinksEntity::hasNextLink).orElse(false);
+
+        /**
+         * Bank API always sends null as "next" link. For this reason if we run the commented-out
+         * statement, we will assume that there is no next page -which is a mistake-. For this
+         * reason we return TRUE if and only if transactions are not empty here. In this case the
+         * pagination will stop until it fetched certain amount of empty pages
+         */
+        // return
+        // Optional.ofNullable(links).map(TransactionalLinksEntity::hasNextLink).orElse(false);
+        return (booked.size() + pending.size()) > 0;
     }
 
     public Collection<Transaction> toTinkTransactions() {
