@@ -62,4 +62,8 @@ public class CrossKeyTransaction {
     public String getTransactionId() {
         return transactionId;
     }
+
+    public Date getBookingDate() {
+        return bookingDate;
+    }
 }
