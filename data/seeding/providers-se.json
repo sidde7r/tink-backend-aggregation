@@ -1956,6 +1956,25 @@
             "type": "BANK"
         },
         {
+            "name": "se-seb-bankid",
+            "className": "nxgen.se.banks.seb.SebAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SEB",
+            "fields": [],
+            "groupDisplayName": "SEB",
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": "http://www.seb.se/pow/wcp/index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se",
+            "type": "BANK"
+        },
+        {
             "className": "nxgen.se.creditcards.sebkort.sebwallet.SebWalletMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
