@@ -69,7 +69,7 @@ public class SpankkiConstants {
 
     public static class Request {
         public static final String CLIENT_INFO_PLATFORM_NAME = "iPhone9,3";
-        public static final String CLIENT_INFO_APP_VERSION = "1.28.1";
+        public static final String CLIENT_INFO_APP_VERSION = "2.1.1";
         public static final String CLIENT_INFO_LANG = "sv";
         public static final String CLIENT_INFO_PLATFORM_TYPE = "ios";
         public static final String CLIENT_INFO_APP_NAME = "spankki";
