@@ -1,11 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
 import com.google.common.base.Preconditions;
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -18,30 +14,25 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class CbiGlobeAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-    private static final Random random = new SecureRandom();
-    private static final Encoder encoder = Base64.getUrlEncoder();
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CbiGlobeAuthenticator authenticator;
-    private String state;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public CbiGlobeAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
-            CbiGlobeAuthenticator authenticator) {
+            CbiGlobeAuthenticator authenticator,
+            StrongAuthenticationState strongAuthenticationState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-    }
-
-    private static String generateRandomState() {
-        byte[] randomData = new byte[32];
-        random.nextBytes(randomData);
-        return encoder.encodeToString(randomData);
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     public ThirdPartyAppResponse<String> init() {
@@ -56,17 +47,17 @@ public class CbiGlobeAuthenticationController
     @Override
     public ThirdPartyAppResponse<String> collect(String reference) {
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         this.authenticator.tokenAutoAuthentication();
-        this.state = generateRandomState();
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
-                        this.state, this.authenticator.createConsentRequestAccount());
+                        strongAuthenticationState.getState(),
+                        this.authenticator.createConsentRequestAccount());
         return getAppPayload(authorizeUrl);
     }
 
@@ -87,15 +78,10 @@ public class CbiGlobeAuthenticationController
         return Optional.empty();
     }
 
-    private String formatSupplementalKey(String key) {
-        return String.format("tpcb_%s", key);
-    }
-
     public void openThirdPartyApp(GetAccountsResponse getAccountsResponse) {
-        this.state = generateRandomState();
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
-                        this.state,
+                        this.strongAuthenticationState.getState(),
                         this.authenticator.createConsentRequestBalancesTransactions(
                                 getAccountsResponse));
         ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
