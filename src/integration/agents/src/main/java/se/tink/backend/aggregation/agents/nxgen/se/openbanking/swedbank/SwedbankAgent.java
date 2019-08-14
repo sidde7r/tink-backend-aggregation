@@ -69,9 +69,15 @@ public final class SwedbankAgent extends NextGenerationAgent
 
         SwedbankAuthenticator authenticator =
                 new SwedbankAuthenticator(apiClient, persistentStorage);
+
         SwedbankAuthenticationController swedbankAuthenticationController =
                 new SwedbankAuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator, request);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        authenticator,
+                        credentials,
+                        strongAuthenticationState);
+
         return new AutoAuthenticationController(
                 request,
                 context,
@@ -128,7 +134,8 @@ public final class SwedbankAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         SwedbankPaymentAuthenticator paymentAuthenticator =
-                new SwedbankPaymentAuthenticator(supplementalInformationHelper);
+                new SwedbankPaymentAuthenticator(
+                        supplementalInformationHelper, strongAuthenticationState);
         SwedbankPaymentExecutor swedbankPaymentExecutor =
                 new SwedbankPaymentExecutor(apiClient, paymentAuthenticator);
 
