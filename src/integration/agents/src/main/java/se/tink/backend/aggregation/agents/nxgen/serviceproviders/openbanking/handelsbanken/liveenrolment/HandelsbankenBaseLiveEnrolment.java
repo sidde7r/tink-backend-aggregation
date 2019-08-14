@@ -110,7 +110,7 @@ public class HandelsbankenBaseLiveEnrolment {
 
     public void enrolAndSubscribeNewApp() {
         ThirdPartiesResponse thirdPartiesResponse = getThirdPartiesId();
-        TokenResponse tokenResponse = getBearerToken(configuration.getClientId());
+        TokenResponse tokenResponse = getBearerToken(configuration.getTppId());
         SubscriptionResponse subscriptionResponse =
                 getSubscription(
                         thirdPartiesResponse.getClientId(),

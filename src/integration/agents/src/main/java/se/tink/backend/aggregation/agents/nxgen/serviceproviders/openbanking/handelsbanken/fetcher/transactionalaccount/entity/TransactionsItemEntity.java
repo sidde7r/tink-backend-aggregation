@@ -88,27 +88,11 @@ public class TransactionsItemEntity {
     }
 
     private Date getDate() {
-        Optional<Date> date = getDateFromValueDate();
-        if (!date.isPresent()) {
-            date = getDataFromTransactionDate();
-        }
+        Optional<Date> date = getDateFromTransactionDate();
         return date.orElseThrow(() -> new DateTimeException(ExceptionMessages.NOT_PARSE_DATE));
     }
 
-    private Optional<Date> getDateFromValueDate() {
-        Optional<Date> result = Optional.empty();
-        if (valueDate == null) {
-            return result;
-        }
-        try {
-            result = Optional.of(ThreadSafeDateFormat.FORMATTER_DAILY.parse(valueDate));
-        } catch (ParseException e) {
-            LOGGER.warn(HandelsbankenBaseConstants.ExceptionMessages.VALUE_DATE_MISSING);
-        }
-        return result;
-    }
-
-    private Optional<Date> getDataFromTransactionDate() {
+    private Optional<Date> getDateFromTransactionDate() {
         try {
             return Optional.of(ThreadSafeDateFormat.FORMATTER_DAILY.parse(transactionDate));
         } catch (ParseException e) {
