@@ -44,6 +44,10 @@ agents:
       clientId: PSDSE-FINA-44059
       certificateId: Tink
       redirectUri: https://api.tink.se/api/v1/credentials/third-party/callback
+  seb:
+    tink:
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+      eidasQwac: Tink
   axa:
     tink:
       certificateId: Tink

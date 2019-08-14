@@ -98,6 +98,15 @@ data:
             certificateId: "{{ $agentsConfig.icabanken.tink.certificateId }}"
         {{- end }}
 
+        {{- if $agentsConfig.seb }}
+        seb:
+          tink:
+            clientId: "SEB_CLIENT_ID"
+            clientSecret: "SEB_CLIENT_SECRET"
+            redirectUrl: "{{ $agentsConfig.seb.tink.redirectUrl }}"
+            eidasQwac: "{{ $agentsConfig.seb.tink.eidasQwac }}"
+        {{- end }}
+
         {{- if $agentsConfig.axa }}
         axa:
           tink:
