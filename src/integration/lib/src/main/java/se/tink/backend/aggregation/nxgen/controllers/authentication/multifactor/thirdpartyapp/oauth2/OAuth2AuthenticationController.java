@@ -15,23 +15,19 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.ErrorType;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtStateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -56,45 +52,6 @@ public class OAuth2AuthenticationController
     // This wait time is for the whole user authentication. Different banks have different
     // cumbersome authentication flows.
     private static final long WAIT_FOR_MINUTES = 9;
-
-    public OAuth2AuthenticationController(
-            PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
-            OAuth2Authenticator authenticator,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            CredentialsRequest credentialsRequest) {
-        this(
-                persistentStorage,
-                supplementalInformationHelper,
-                authenticator,
-                callbackJWTSignatureKeyPair,
-                credentialsRequest.getCredentials(),
-                credentialsRequest.getAppUriId(),
-                DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT);
-    }
-
-    public OAuth2AuthenticationController(
-            PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
-            OAuth2Authenticator authenticator,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            Credentials credentials,
-            String appUriId,
-            int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit) {
-        this.persistentStorage = persistentStorage;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.authenticator = authenticator;
-        this.credentials = credentials;
-        this.tokenLifetime = tokenLifetime;
-        this.tokenLifetimeUnit = tokenLifetimeUnit;
-
-        String pseudoId = JwtStateUtils.generatePseudoId(appUriId);
-        this.strongAuthenticationStateSupplementalKey = OAuthUtils.formatSupplementalKey(pseudoId);
-        this.strongAuthenticationState =
-                JwtStateUtils.tryCreateJwtState(callbackJWTSignatureKeyPair, pseudoId, appUriId);
-    }
 
     public OAuth2AuthenticationController(
             PersistentStorage persistentStorage,

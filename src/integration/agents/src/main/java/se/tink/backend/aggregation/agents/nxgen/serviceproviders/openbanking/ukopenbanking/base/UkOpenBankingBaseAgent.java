@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -57,7 +56,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected UkOpenBankingApiClient apiClient;
     protected SoftwareStatement softwareStatement;
     protected ProviderConfiguration providerConfiguration;
-    private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private boolean disableSslVerification;
 
     private TransferDestinationRefreshController transferDestinationRefreshController;
@@ -170,8 +168,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         providerConfiguration,
                         OpenIdConstants.ClientMode.ACCOUNTS);
 
-        callbackJWTSignatureKeyPair = configuration.getCallbackJwtSignatureKeyPair();
-
         // -    We cannot configure the paymentsHttpClient from `configureHttpClient()` because it
         // will be null
         //      at that stage.
@@ -207,21 +203,18 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator(UkOpenBankingAisConfig aisConfig) {
         UkOpenBankingAisAuthenticator authenticator =
                 new UkOpenBankingAisAuthenticator(apiClient, aisConfig);
-        return createOpenIdFlowWithAuthenticator(
-                authenticator, callbackJWTSignatureKeyPair.isEnabled(), null);
+        return createOpenIdFlowWithAuthenticator(authenticator, null);
     }
 
     protected Authenticator constructAuthenticator(
             UkOpenBankingAisConfig aisConfig, URL appToAppRedirectURL) {
         UkOpenBankingAisAuthenticator authenticator =
                 new UkOpenBankingAisAuthenticator(apiClient, aisConfig);
-        return createOpenIdFlowWithAuthenticator(
-                authenticator, callbackJWTSignatureKeyPair.isEnabled(), appToAppRedirectURL);
+        return createOpenIdFlowWithAuthenticator(authenticator, appToAppRedirectURL);
     }
 
     protected final Authenticator createOpenIdFlowWithAuthenticator(
-            UkOpenBankingAisAuthenticator authenticator, boolean enabled, URL appToAppRedirectURL) {
-        callbackJWTSignatureKeyPair.setEnabled(enabled);
+            UkOpenBankingAisAuthenticator authenticator, URL appToAppRedirectURL) {
         return OpenIdAuthenticationFlow.create(
                 request,
                 context,
