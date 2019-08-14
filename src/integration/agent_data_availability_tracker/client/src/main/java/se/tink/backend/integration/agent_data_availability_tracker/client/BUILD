@@ -18,5 +18,6 @@ java_library(
         "//third_party:io_netty_netty_all",
         "//third_party:netty",
         "//third_party:org_slf4j_slf4j_api",
+        "//third_party:io_dropwizard_dropwizard_lifecycle",
     ],
 )

@@ -1,5 +1,6 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
+import io.dropwizard.lifecycle.Managed;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.GrpcSslContexts;
@@ -7,7 +8,6 @@ import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.netty.handler.ssl.SslContext;
 import java.io.File;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLException;
 import org.slf4j.Logger;
@@ -20,44 +20,39 @@ import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.PortfolioTrackingSerializer;
 
-public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabilityTrackerClient {
+public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabilityTrackerClient, Managed {
 
     private static final Logger log =
             LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientImpl.class);
 
-    private final ManagedChannel channel;
-    private final AgentDataAvailabilityTrackerServiceGrpc.AgentDataAvailabilityTrackerServiceStub
+    private ManagedChannel channel;
+    private AgentDataAvailabilityTrackerServiceGrpc.AgentDataAvailabilityTrackerServiceStub
             agentctServiceStub;
 
     private StreamObserver<TrackAccountRequest> requestStream;
+    private final NettyChannelBuilder channelBuilder;
+    private final AccountDeque accountDeque;
 
-    private CountDownLatch latch;
-
-    /** Construct client for accessing RouteGuide server at {@code host:port}. */
+    /**
+     * Construct client for accessing RouteGuide server at {@code host:port}.
+     */
     public AgentDataAvailabilityTrackerClientImpl(String host, int port) throws SSLException {
         this(NettyChannelBuilder.forAddress(host, port));
     }
 
-    /** Construct client for accessing RouteGuide server using the existing channel. */
+    /**
+     * Construct client for accessing RouteGuide server using the existing channel.
+     */
     public AgentDataAvailabilityTrackerClientImpl(NettyChannelBuilder channelBuilder)
             throws SSLException {
-
-        SslContext sslContext;
-
-        sslContext =
-                GrpcSslContexts.forClient()
-                        .trustManager(new File("/etc/client-certificate/ca.crt"))
-                        .build();
-
-        channel = channelBuilder.useTransportSecurity().sslContext(sslContext).build();
-        agentctServiceStub = AgentDataAvailabilityTrackerServiceGrpc.newStub(channel);
+        this.channelBuilder = channelBuilder;
+        this.accountDeque = new AccountDeque();
     }
 
+    @Override
     public void beginStream() {
 
         log.debug("Open Tracking Stream");
-
-        latch = new CountDownLatch(1);
 
         StreamObserver<Void> responseObserver =
                 new StreamObserver<Void>() {
@@ -71,13 +66,11 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                         log.warn(
                                 String.format("Tracking error: %s", throwable.getMessage()),
                                 throwable);
-                        latch.countDown();
                     }
 
                     @Override
                     public void onCompleted() {
                         log.debug("Tracking request batch done.");
-                        latch.countDown();
                     }
                 };
 
@@ -109,7 +102,9 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                                             .addFieldName(entry.getName())
                                             .addFieldValue(entry.getValue()));
 
-            requestStream.onNext(requestBuilder.build());
+            accountDeque.add(requestBuilder.build());
+
+            requestStream.onNext(accountDeque.pop());
 
         } catch (StatusRuntimeException e) {
 
@@ -126,21 +121,35 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         }
     }
 
+    @Override
     public void endStreamBlocking() throws InterruptedException {
         requestStream.onCompleted();
-
-        try {
-            latch.await(500, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            log.warn("Waiting for tracking client to catch up for more than 500ms");
-        } finally {
-            latch.await(3, TimeUnit.SECONDS);
-            channel.shutdown().awaitTermination(2000, TimeUnit.MILLISECONDS);
-        }
+        channel.shutdown().awaitTermination(2000, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public boolean isMockClient() {
         return false;
+    }
+
+    @Override
+    public void start() throws Exception {
+
+        SslContext sslContext;
+
+        sslContext =
+                GrpcSslContexts.forClient()
+                        .trustManager(new File("/etc/client-certificate/ca.crt"))
+                        .build();
+
+        channel = channelBuilder.useTransportSecurity().sslContext(sslContext).build();
+        agentctServiceStub = AgentDataAvailabilityTrackerServiceGrpc.newStub(channel);
+
+        beginStream();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        endStreamBlocking();
     }
 }

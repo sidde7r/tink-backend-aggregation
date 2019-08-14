@@ -68,14 +68,11 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
             MetricAction action =
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
             try {
-
-                agentDataAvailabilityTrackerClient.beginStream();
                 context.getCachedAccountsWithFeatures()
                         .forEach(
                                 pair ->
                                         agentDataAvailabilityTrackerClient.sendAccount(
                                                 agentName, pair.first, pair.second));
-                agentDataAvailabilityTrackerClient.endStreamBlocking();
 
                 if (agentDataAvailabilityTrackerClient.isMockClient()) {
 
