@@ -24,7 +24,8 @@ public class PayPalAgentPaymentTest {
                 new AgentIntegrationTest.Builder("at", "at-paypal-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("Dummy");
 
         builder.build().testGenericPayment(createListMockedDomesticPayment(4));
     }
