@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -32,7 +31,7 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.from(AccountTypes.CHECKING))
+                .withType(TransactionalAccountType.CHECKING)
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()
