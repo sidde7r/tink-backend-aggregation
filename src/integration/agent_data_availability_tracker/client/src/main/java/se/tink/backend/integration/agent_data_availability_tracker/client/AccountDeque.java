@@ -1,9 +1,9 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
-import java.util.ArrayDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 
-public class AccountDeque extends ArrayDeque<TrackAccountRequest> {
+public class AccountDeque extends LinkedBlockingDeque<TrackAccountRequest> {
 
     private static final int MAX_SIZE = 1000;
 
@@ -14,7 +14,7 @@ public class AccountDeque extends ArrayDeque<TrackAccountRequest> {
     @Override
     public boolean add(TrackAccountRequest trackAccountRequest) {
 
-        if (super.size() >= MAX_SIZE - 1) {
+        if (super.remainingCapacity() <= 0) {
             super.removeLast();
         }
 
