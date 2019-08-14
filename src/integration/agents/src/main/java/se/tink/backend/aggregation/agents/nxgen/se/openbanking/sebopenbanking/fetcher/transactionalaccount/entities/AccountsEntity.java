@@ -5,7 +5,6 @@ import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -61,11 +60,9 @@ public class AccountsEntity {
     private LinksEntity links;
 
     public TransactionalAccount toTinkAccount() {
-        if (product.toLowerCase().contains(SebCommonConstants.ACCOUNT_TYPES.SAVINGS)) {
-            return parseAccount(TransactionalAccountType.from(AccountTypes.SAVINGS));
-        } else {
-            return parseAccount(TransactionalAccountType.from(AccountTypes.CHECKING));
-        }
+        return (product.toLowerCase().contains(SebCommonConstants.ACCOUNT_TYPES.SAVINGS))
+                ? parseAccount(TransactionalAccountType.SAVINGS)
+                : parseAccount(TransactionalAccountType.CHECKING);
     }
 
     private TransactionalAccount parseAccount(TransactionalAccountType accountType) {
