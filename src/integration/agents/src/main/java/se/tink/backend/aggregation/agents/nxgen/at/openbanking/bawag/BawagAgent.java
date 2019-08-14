@@ -72,7 +72,8 @@ public final class BawagAgent extends NextGenerationAgent
                         new BawagAuthenticator(
                                 apiClient,
                                 persistentStorage,
-                                credentials.getField(CredentialKeys.IBAN)));
+                                credentials.getField(CredentialKeys.IBAN)),
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,
