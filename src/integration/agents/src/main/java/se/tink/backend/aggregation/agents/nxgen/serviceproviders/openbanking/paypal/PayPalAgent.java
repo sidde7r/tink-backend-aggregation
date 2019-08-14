@@ -120,6 +120,7 @@ public final class PayPalAgent extends NextGenerationAgent
         // PayPal has two types of payments, P2P and WiP.
         // P2P uses one controller while WiP uses another.
         // Switch between two payment controllers, P2P and WiP.
+
         PaymentExecutor paymentExecutor =
                 isWiPPaymentInitiated()
                         ? new PayPalOrderPaymentExecutor(apiClient, supplementalInformationHelper)
