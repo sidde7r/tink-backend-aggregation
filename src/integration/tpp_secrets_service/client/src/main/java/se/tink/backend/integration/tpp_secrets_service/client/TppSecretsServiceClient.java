@@ -105,6 +105,10 @@ public class TppSecretsServiceClient {
     }
 
     private GetSecretsRequest buildRequest(String financialInstitutionId, String appId) {
+        Preconditions.checkNotNull(
+                financialInstitutionId, "financialInstitutionId must not be null");
+        Preconditions.checkNotNull(appId, "appId must not be null");
+
         return GetSecretsRequest.newBuilder()
                 .setFinancialInstitutionId(financialInstitutionId)
                 .setAppId(appId)
