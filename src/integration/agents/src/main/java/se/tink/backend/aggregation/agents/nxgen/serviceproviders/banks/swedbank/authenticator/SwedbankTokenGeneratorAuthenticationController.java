@@ -41,13 +41,9 @@ public class SwedbankTokenGeneratorAuthenticationController implements MultiFact
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        String ssn = "";
-        if (credentials.hasField(Field.Key.USERNAME)) {
-            ssn = credentials.getField(Field.Key.USERNAME);
-
-            if (Strings.isNullOrEmpty(ssn)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
+        String ssn = credentials.getField(Field.Key.USERNAME);
+        if (Strings.isNullOrEmpty(ssn)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
         InitSecurityTokenChallengeResponse initSecurityTokenChallengeResponse = initTokenGenerator(ssn);
