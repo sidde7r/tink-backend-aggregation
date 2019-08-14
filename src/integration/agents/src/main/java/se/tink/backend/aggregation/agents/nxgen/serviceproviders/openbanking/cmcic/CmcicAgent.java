@@ -53,7 +53,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         new CmcicPaymentExecutor(
                                 apiClient, sessionStorage, getClientConfiguration()),
                         supplementalInformationHelper,
-                        sessionStorage));
+                        sessionStorage,
+                        strongAuthenticationState));
     }
 
     @Override
