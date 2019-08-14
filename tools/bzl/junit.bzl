@@ -23,8 +23,8 @@ public class %s {
 """
 
 def generate_suite_implementation(ctx):
-    ctx.file_action(output=ctx.outputs.out, content=SUITE_SOURCE
-                    % (SUITE_PACKAGE, ctx.attr.outname))
+    ctx.actions.write(output = ctx.outputs.out, content = SUITE_SOURCE %
+                                                          (SUITE_PACKAGE, ctx.attr.outname))
 
 GenerateSuite = rule(
     attrs = {
@@ -35,14 +35,19 @@ GenerateSuite = rule(
 )
 
 def junit_test(name, srcs, deps, **kwargs):
-    s_name = name.replace('-', '_') + "_junit"
-    GenerateSuite(name = s_name,
-              outname = s_name)
-    native.java_test(name = name,
-                     test_class = SUITE_PACKAGE + "." + s_name,
-                     srcs = srcs + [":" + s_name],
-                     deps = depset(deps + ["//external:cpsuite",
-                                                "//third_party:ch_qos_logback_logback_classic",
-                                                "//third_party:io_dropwizard_dropwizard_logging"
-                                                ]).to_list(),
-                     **kwargs)
+    s_name = name.replace("-", "_") + "TestSuite"
+    GenerateSuite(
+        name = s_name,
+        outname = s_name,
+    )
+    native.java_test(
+        name = name,
+        test_class = SUITE_PACKAGE + "." + s_name,
+        srcs = srcs + [":" + s_name],
+        deps = depset(deps + [
+            "//external:cpsuite",
+            "//third_party:ch_qos_logback_logback_classic",
+            "//third_party:io_dropwizard_dropwizard_logging",
+        ]).to_list(),
+        **kwargs
+    )
