@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 
 // AKA PCBW4311 or PCBW4342
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -13,7 +15,8 @@ public class SebTransaction {
     public String KONTO_NR;
 
     @JsonProperty("PCB_BOKF_DATUM")
-    public String PCB_BOKF_DATUM;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public Date PCB_BOKF_DATUM;
 
     @JsonProperty("TRANSLOPNR")
     public Integer TRANSLOPNR;
@@ -55,7 +58,8 @@ public class SebTransaction {
 
     // Used in pending transactions (PCBW4342)
     @JsonProperty("DATUM")
-    public String DATUM;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public Date DATUM;
 
     @JsonProperty("BELOPP")
     public String BELOPP;
