@@ -20,7 +20,8 @@ import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.PortfolioTrackingSerializer;
 
-public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabilityTrackerClient, Managed {
+public class AgentDataAvailabilityTrackerClientImpl
+        implements AgentDataAvailabilityTrackerClient, Managed {
 
     private static final Logger log =
             LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientImpl.class);
@@ -33,16 +34,12 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     private final NettyChannelBuilder channelBuilder;
     private final AccountDeque accountDeque;
 
-    /**
-     * Construct client for accessing RouteGuide server at {@code host:port}.
-     */
+    /** Construct client for accessing RouteGuide server at {@code host:port}. */
     public AgentDataAvailabilityTrackerClientImpl(String host, int port) throws SSLException {
         this(NettyChannelBuilder.forAddress(host, port));
     }
 
-    /**
-     * Construct client for accessing RouteGuide server using the existing channel.
-     */
+    /** Construct client for accessing RouteGuide server using the existing channel. */
     public AgentDataAvailabilityTrackerClientImpl(NettyChannelBuilder channelBuilder)
             throws SSLException {
         this.channelBuilder = channelBuilder;
