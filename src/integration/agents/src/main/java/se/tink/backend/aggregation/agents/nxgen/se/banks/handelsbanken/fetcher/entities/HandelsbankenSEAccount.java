@@ -3,10 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.entities.CardInvoiceInfo;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
@@ -22,11 +23,9 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -56,37 +55,27 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         BankIdValidator.validate(number);
 
         final String accountNumber = getAccountNumber(transactionsResponse);
-        AccountTypes accountType = getAccountType(client, transactionsResponse);
-
-        TransactionalBuildStep transactionalBuildStep =
-                constructAccount(accountType, accountNumber);
-        if (AccountTypes.CHECKING.equals(accountType)) {
-            transactionalBuildStep.addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT);
-        }
-        return Optional.of(transactionalBuildStep.build());
-    }
-
-    private TransactionalBuildStep constructAccount(
-            AccountTypes accountType, String accountNumber) {
+        Tuple2<TransactionalAccountType, String> accountType =
+                getAccountType(client, transactionsResponse);
 
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.from(accountType))
+                .withType(accountType._1)
+                .withFlagsFrom(
+                        HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_MAPPER, accountType._2)
                 .withBalance(BalanceModule.of(findBalanceAmount().asAmount()))
-                .withId(constructId(accountNumber))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(number)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(name)
+                                .addIdentifier(new SwedishIdentifier(accountNumber))
+                                .addIdentifier(new SwedishSHBInternalIdentifier(number))
+                                .build())
                 .addHolderName(holderName)
                 .setApiIdentifier(number)
-                .setBankIdentifier(number);
-    }
-
-    private IdModule constructId(String accountNumber) {
-        return IdModule.builder()
-                .withUniqueIdentifier(number)
-                .withAccountNumber(accountNumber)
-                .withAccountName(name)
-                .addIdentifier(new SwedishIdentifier(accountNumber))
-                .addIdentifier(new SwedishSHBInternalIdentifier(number))
+                .setBankIdentifier(number)
                 .build();
-    };
+    }
 
     public Optional<CreditCardAccount> toCreditCardAccount(
             TransactionsSEResponse transactionsResponse) {
@@ -124,7 +113,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         return transactionsAccount.getClearingNumber() + "-" + numberFormatted;
     }
 
-    private AccountTypes getAccountType(
+    private Tuple2<TransactionalAccountType, String> getAccountType(
             HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
         String accountTypeName = "";
         AccountInfoResponse accountInfo = null;
@@ -145,12 +134,12 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
             LOG.info("Unable to fetch account info " + e.getMessage());
         }
 
-        AccountTypes accountType =
+        TransactionalAccountType accountType =
                 HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_MAPPER
                         .translate(Strings.nullToEmpty(accountTypeName).toLowerCase())
-                        .orElse(AccountTypes.OTHER);
+                        .orElse(TransactionalAccountType.OTHER);
         // log unknown account types
-        if (accountType == AccountTypes.OTHER && accountInfo != null) {
+        if (accountType == TransactionalAccountType.OTHER && accountInfo != null) {
             LOG.info(
                     String.format(
                             "%s %s",
@@ -158,14 +147,14 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                             SerializationUtils.serializeToString(accountInfo)));
         }
 
-        if (accountType == AccountTypes.OTHER) {
+        if (accountType == TransactionalAccountType.OTHER) {
             accountType =
                     HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_MAPPER
                             .translate(Strings.nullToEmpty(name).toLowerCase())
-                            .orElse(AccountTypes.OTHER);
+                            .orElse(TransactionalAccountType.OTHER);
         }
 
-        return accountType;
+        return Tuple.of(accountType, accountTypeName);
     }
 
     /**

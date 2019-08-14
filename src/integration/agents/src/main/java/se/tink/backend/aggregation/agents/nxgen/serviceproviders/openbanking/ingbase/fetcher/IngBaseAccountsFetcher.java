@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import com.google.common.base.Predicates;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.AccountEntity;
@@ -25,11 +26,13 @@ public class IngBaseAccountsFetcher implements AccountFetcher<TransactionalAccou
     public Collection<TransactionalAccount> fetchAccounts() {
         return client.fetchAccounts().getAccounts(currency).stream()
                 .map(this::enrichAccountWithBalance)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .filter(account -> account.getAccountNumber().equals("NL69INGB0123456789"))
                 .collect(Collectors.toList());
     }
 
-    private TransactionalAccount enrichAccountWithBalance(AccountEntity account) {
+    private Optional<TransactionalAccount> enrichAccountWithBalance(AccountEntity account) {
 
         Amount balance = new Amount();
 

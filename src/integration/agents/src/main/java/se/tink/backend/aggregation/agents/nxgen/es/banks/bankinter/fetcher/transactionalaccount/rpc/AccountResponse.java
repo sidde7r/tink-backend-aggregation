@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.tran
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -72,11 +73,13 @@ public class AccountResponse extends HtmlResponse {
         return namesList;
     }
 
-    public TransactionalAccount toTinkAccount(int accountIndex, JsfUpdateResponse accountInfo) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            int accountIndex, JsfUpdateResponse accountInfo) {
         final AccountIdentifier accountIdentifier = getAccountIdentifier();
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.CHECKING)
+                        .withPaymentAccountFlag()
                         .withBalance(BalanceModule.of(getBalance()))
                         .withId(
                                 IdModule.builder()

@@ -19,7 +19,8 @@ public class AccountResponseTest {
                 loadTestResponse(
                         "3.movimientos-cabecera-head-datos-detalle.xhtml", JsfUpdateResponse.class);
 
-        final TransactionalAccount account = accountResponse.toTinkAccount(0, accountInfo);
+        final TransactionalAccount account =
+                accountResponse.toTinkAccount(0, accountInfo).orElse(null);
         assertEquals("0", account.getApiIdentifier());
         assertEquals(1, account.getIdentifiers().size());
         assertEquals(TEST_DATA_IBAN, account.getIdentifiers().get(0).getIdentifier());

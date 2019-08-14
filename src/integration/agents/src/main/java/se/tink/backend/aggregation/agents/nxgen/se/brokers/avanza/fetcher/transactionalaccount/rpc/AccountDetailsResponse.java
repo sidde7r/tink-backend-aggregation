@@ -269,7 +269,7 @@ public class AccountDetailsResponse {
         return MAPPERS.inferAccountType(accountType).orElse(AccountTypes.OTHER);
     }
 
-    public TransactionalAccount toTinkAccount(HolderName holderName) {
+    public Optional<TransactionalAccount> toTinkAccount(HolderName holderName) {
         final String accountName =
                 Strings.isNullOrEmpty(externalActor) ? accountType : accountType + externalActor;
         final String accountNumber =
@@ -278,7 +278,10 @@ public class AccountDetailsResponse {
                         : accountId;
 
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.from(toTinkAccountType()))
+                .withType(
+                        TransactionalAccountType.from(toTinkAccountType())
+                                .orElse(TransactionalAccountType.OTHER))
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(Amount.inSEK(ownCapital)))
                 .withId(
                         IdModule.builder()

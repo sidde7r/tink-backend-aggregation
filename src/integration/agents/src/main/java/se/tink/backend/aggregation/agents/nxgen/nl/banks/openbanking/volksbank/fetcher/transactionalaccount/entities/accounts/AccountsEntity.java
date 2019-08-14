@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.entities.accounts;
 
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.balances.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -56,7 +57,7 @@ public class AccountsEntity {
         this.currency = currency;
     }
 
-    public TransactionalAccount toTinkAccount(List<BalanceEntity> balances) {
+    public Optional<TransactionalAccount> toTinkAccount(List<BalanceEntity> balances) {
 
         return toCheckingAccount(balances);
 
@@ -75,7 +76,7 @@ public class AccountsEntity {
             return null;*/
     }
 
-    private TransactionalAccount toCheckingAccount(List<BalanceEntity> balances) {
+    private Optional<TransactionalAccount> toCheckingAccount(List<BalanceEntity> balances) {
 
         balances.sort((o1, o2) -> o2.getLastChangeDateTime().compareTo(o1.getLastChangeDateTime()));
 
@@ -84,6 +85,7 @@ public class AccountsEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(lastBalance.toAmount()))
                 .withId(
                         IdModule.builder()

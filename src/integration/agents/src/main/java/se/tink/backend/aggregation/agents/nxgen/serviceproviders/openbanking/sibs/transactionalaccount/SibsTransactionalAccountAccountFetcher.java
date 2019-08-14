@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
@@ -25,10 +26,12 @@ public class SibsTransactionalAccountAccountFetcher
 
         return accountsResponse.getAccountList().stream()
                 .map(this::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    protected TransactionalAccount toTinkAccount(AccountEntity accountEntity) {
+    protected Optional<TransactionalAccount> toTinkAccount(AccountEntity accountEntity) {
 
         Amount balanceAmount =
                 apiClient.getAccountBalances(accountEntity.getId()).getBalances().stream()

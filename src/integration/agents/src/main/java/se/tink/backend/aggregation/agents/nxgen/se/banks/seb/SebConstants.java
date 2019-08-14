@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -135,19 +135,19 @@ public class SebConstants {
         }
     }
 
-    public static final GenericTypeMapper<AccountTypes, Integer> ACCOUNT_TYPE_MAPPER =
-            GenericTypeMapper.<AccountTypes, Integer>genericBuilder()
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
                     // 1: PRIVATKONTO
                     // 3: PERSONALLONEKONTO
                     // 17: SPECIALINLONEKONTO
-                    .put(AccountTypes.CHECKING, 1, 3, 17)
+                    .put(AccountTypes.CHECKING, "1", "3", "17")
                     // 16: ENKLA_SPARKONTOT
                     // 12: ENKLA_SPARKONTOT_FORETAG
-                    .put(AccountTypes.SAVINGS, 16, 12)
+                    .put(AccountTypes.SAVINGS, "16", "12")
                     // 54: ISK_KAPITALKONTO
                     // 22: FUND
                     // 27: IPS
                     // 35: PLACERINGSKONTO
-                    .put(AccountTypes.INVESTMENT, 54, 22, 27, 35)
+                    .put(AccountTypes.INVESTMENT, "54", "22", "27", "35")
                     .build();
 }

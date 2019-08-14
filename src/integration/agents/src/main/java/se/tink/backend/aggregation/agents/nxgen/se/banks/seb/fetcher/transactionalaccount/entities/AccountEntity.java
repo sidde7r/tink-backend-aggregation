@@ -69,7 +69,7 @@ public class AccountEntity {
     private String canTransferFrom;
 
     @JsonProperty("KTOSLAG_KOD")
-    private Integer accountType;
+    private String accountType;
 
     @JsonProperty("KTOUTDR_UTSKR")
     private String KTOUTDR_UTSKR;
@@ -138,7 +138,7 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(String customerId) {
+    public Optional<TransactionalAccount> toTinkAccount(String customerId) {
         final Optional<AccountTypes> accountType = getAccountType();
         Preconditions.checkState(accountType.isPresent());
         Preconditions.checkNotNull(accountNumber);
@@ -156,7 +156,10 @@ public class AccountEntity {
                         .build();
 
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.from(accountType.get()))
+                .withType(
+                        TransactionalAccountType.from(accountType.get())
+                                .orElse(TransactionalAccountType.OTHER))
+                .withPaymentAccountFlag()
                 .withBalance(getBalanceModule())
                 .withId(idModule)
                 .setApiIdentifier(accountNumber)

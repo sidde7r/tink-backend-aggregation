@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vavr.control.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -117,14 +118,19 @@ public class AccountEntity {
                 .maybeToTinkAccountTypes()
                 .filter(isTinkTransactionalAccount())
                 .map(TransactionalAccountType::from)
-                .map(this::toTinkTransactionalAccount);
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(this::toTinkTransactionalAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get);
     }
 
     @JsonIgnore
-    private TransactionalAccount toTinkTransactionalAccount(
+    private Optional<TransactionalAccount> toTinkTransactionalAccount(
             TransactionalAccountType transactionalAccountType) {
         return TransactionalAccount.nxBuilder()
                 .withType(transactionalAccountType)
+                .withoutFlags()
                 .withBalance(BalanceModule.of(new Amount(currency, balance)))
                 .withId(
                         IdModule.builder()

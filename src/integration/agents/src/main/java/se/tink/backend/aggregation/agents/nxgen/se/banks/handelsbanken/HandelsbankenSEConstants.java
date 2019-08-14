@@ -3,13 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 import com.google.common.collect.ImmutableSet;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
@@ -69,16 +70,17 @@ public class HandelsbankenSEConstants {
         public static final String ACCOUNT_TYPE_NAME_LABEL = "kontoform";
         public static final String CREDIT_CARD_IGNORE_TYPE = "A";
 
-        public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-                TypeMapper.<AccountTypes>builder()
+        public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+                TransactionalAccountTypeMapper.builder()
                         .put(
-                                AccountTypes.SAVINGS,
+                                TransactionalAccountType.SAVINGS,
                                 "sparkonto",
                                 "e-kapitalkonto",
                                 "framtidskonto",
                                 "placeringskonto privat")
                         .put(
-                                AccountTypes.CHECKING,
+                                TransactionalAccountType.CHECKING,
+                                AccountFlag.PSD2_PAYMENT_ACCOUNT,
                                 "allkonto",
                                 "allkonto ung",
                                 "privatkonto",

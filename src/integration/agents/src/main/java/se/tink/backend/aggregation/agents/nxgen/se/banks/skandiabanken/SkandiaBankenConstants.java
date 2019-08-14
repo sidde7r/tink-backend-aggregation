@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -177,10 +178,10 @@ public class SkandiaBankenConstants {
         public static final String APPROVED = "Approved";
     }
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "AIE")
-                    .put(AccountTypes.SAVINGS, "Savings")
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(TransactionalAccountType.CHECKING, "AIE")
+                    .put(TransactionalAccountType.SAVINGS, "Savings")
                     .build();
 
     public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAP =

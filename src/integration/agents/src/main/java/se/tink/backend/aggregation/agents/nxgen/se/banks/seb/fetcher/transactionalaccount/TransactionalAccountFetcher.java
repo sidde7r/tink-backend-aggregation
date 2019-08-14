@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactio
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.ServiceInputValues;
@@ -30,6 +31,8 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
         return accountEntities.stream()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(account -> account.toTinkAccount(customerNumber))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }
