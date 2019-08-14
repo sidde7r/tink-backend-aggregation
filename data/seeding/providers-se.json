@@ -660,6 +660,7 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "edcfe750f47948bf8334287c5054b88e",
             "groupDisplayName": "ICAbanken",
             "multiFactor": true,
             "name": "icabanken-bankid",
@@ -690,6 +691,7 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "edcfe750f47948bf8334287c5054b88e",
             "groupDisplayName": "ICAbanken",
             "multiFactor": true,
             "name": "icabanken-bankid-disabled",
