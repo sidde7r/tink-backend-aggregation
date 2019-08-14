@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -31,21 +30,11 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
 
         NordeaBaseConfiguration nordeaConfiguration =
                 getAgentConfigurationController()
+                        .withFallback(
+                                NordeaBaseConstants.Market.INTEGRATION_NAME,
+                                request.getProvider().getPayload())
                         .getAgentConfiguration(NordeaBaseConfiguration.class);
 
-        if (nordeaConfiguration == null) {
-            nordeaConfiguration =
-                    configuration
-                            .getIntegrations()
-                            .getClientConfiguration(
-                                    NordeaBaseConstants.Market.INTEGRATION_NAME,
-                                    request.getProvider().getPayload(),
-                                    NordeaBaseConfiguration.class)
-                            .orElseThrow(
-                                    () ->
-                                            new IllegalStateException(
-                                                    ErrorMessages.MISSING_CONFIGURATION));
-        }
         apiClient.setConfiguration(nordeaConfiguration);
         this.client.setEidasProxy(
                 configuration.getEidasProxy(), nordeaConfiguration.getEidasQwac());
