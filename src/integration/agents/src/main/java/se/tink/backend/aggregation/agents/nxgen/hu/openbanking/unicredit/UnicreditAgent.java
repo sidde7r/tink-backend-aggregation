@@ -35,7 +35,8 @@ public class UnicreditAgent extends UnicreditBaseAgent {
         //      If works on prod custom controller not necessary
         final UnicreditAuthenticationController controller =
                 new UnicreditAuthenticationController(
-                        new UnicreditAuthenticator((UnicreditApiClient) apiClient));
+                        new UnicreditAuthenticator((UnicreditApiClient) apiClient),
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,
