@@ -10,13 +10,13 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -28,7 +28,7 @@ public class RaiffeisenAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final RaiffeisenAuthenticator authenticator;
-    private final String state;
+    private final StrongAuthenticationState strongAuthenticationState;
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
@@ -37,12 +37,13 @@ public class RaiffeisenAuthenticationController
             SupplementalInformationHelper supplementalInformationHelper,
             RaiffeisenAuthenticator authenticator,
             SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage,
+            StrongAuthenticationState strongAuthenticationState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
-        this.state = BerlinGroupUtils.getRequestId();
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
@@ -75,7 +76,7 @@ public class RaiffeisenAuthenticationController
     public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException {
 
         supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         if (authenticator
                 .checkConsentStatus()
@@ -89,7 +90,7 @@ public class RaiffeisenAuthenticationController
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
 
-        URL authorizeUrl = authenticator.fetchAuthorizeUrl(state);
+        URL authorizeUrl = authenticator.fetchAuthorizeUrl(strongAuthenticationState.getState());
 
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
@@ -97,9 +98,5 @@ public class RaiffeisenAuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private String formatSupplementalKey(String key) {
-        return String.format("tpcb_%s", key);
     }
 }
