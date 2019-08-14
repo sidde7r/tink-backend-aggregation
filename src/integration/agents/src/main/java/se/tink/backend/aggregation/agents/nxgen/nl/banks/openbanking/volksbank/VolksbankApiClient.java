@@ -124,12 +124,13 @@ public class VolksbankApiClient {
                 .post(String.class);
     }
 
-    public OAuth2Token getBearerToken(URL url) {
-
+    public OAuth2Token getBearerToken(
+            final URL url, final String clientId, final String clientSecret) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(HeaderKeys.REQUEST_ID, getRequestId())
+                .addBasicAuth(clientId, clientSecret)
                 .post(TokenResponse.class)
                 .toOauthToken();
     }

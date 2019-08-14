@@ -96,6 +96,7 @@ public class VolksbankAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         final URL redirectUrl = volksbankConfiguration.getAisConfiguration().getRedirectUrl();
+        final String clientId = volksbankConfiguration.getAisConfiguration().getClientId();
         final String clientSecret = volksbankConfiguration.getAisConfiguration().getClientSecret();
 
         VolksbankAuthenticator authenticator =
@@ -105,6 +106,7 @@ public class VolksbankAgent extends NextGenerationAgent
                         redirectUrl,
                         urlFactory,
                         consentFetcher,
+                        clientId,
                         clientSecret);
 
         OAuth2AuthenticationController oAuth2AuthenticationController =

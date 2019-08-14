@@ -26,6 +26,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final URL redirectUri;
     private final VolksbankUrlFactory urlFactory;
     private final ConsentFetcher consentFetcher;
+    private final String clientId;
     private final String clientSecret;
 
     public VolksbankAuthenticator(
@@ -34,12 +35,14 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
             URL redirectUri,
             VolksbankUrlFactory urlFactory,
             ConsentFetcher consentFetcher,
+            String clientId,
             String clientSecret) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
         this.urlFactory = urlFactory;
         this.consentFetcher = consentFetcher;
+        this.clientId = clientId;
         this.clientSecret = clientSecret;
     }
 
@@ -76,7 +79,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private OAuth2Token getBearerToken(final URL url) {
 
         try {
-            return client.getBearerToken(url);
+            return client.getBearerToken(url, clientId, clientSecret);
         } catch (HttpResponseException e) {
             if (e.getResponse().getBody(String.class).contains("unsupported_grant_type")) {
                 // Likely indicates that the consent ID has been invalidated. At this point, there
@@ -111,8 +114,6 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
         URL url =
                 urlFactory
                         .buildURL(Paths.TOKEN)
-                        .queryParam(QueryParams.CLIENT_ID, consentFetcher.getClientId())
-                        .queryParam(QueryParams.CLIENT_SECRET, clientSecret)
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.REFRESH_TOKEN)
                         .queryParam(QueryParams.REFRESH_TOKEN, refreshToken);
 
