@@ -46,6 +46,8 @@ public final class SparebankConstants {
         public static final String LIMIT = "limit";
         public static final String OFFSET = "offset";
         public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String DATE_FROM = "dateFrom";
+        public static final String DATE_TO = "dateTo";
         public static final String STATE = "state";
     }
 
@@ -57,6 +59,7 @@ public final class SparebankConstants {
         public static final String TRUE = "true";
         public static final String BOTH = "both";
         public static final String BOOKING_STATUS = "both";
+        public static final String TRANSACTION_LIMIT = "499";
     }
 
     public static class Accounts {

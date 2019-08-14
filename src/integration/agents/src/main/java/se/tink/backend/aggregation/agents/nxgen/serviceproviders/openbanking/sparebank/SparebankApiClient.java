@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sp
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class SparebankApiClient {
 
@@ -98,12 +100,19 @@ public class SparebankApiClient {
                 .get(AccountResponse.class);
     }
 
-    public TransactionResponse fetchTransactions(String resourceId, String offset, Integer limit) {
+    public TransactionResponse fetchTransactions(String resourceId, Date fromDate, Date toDate) {
         return createRequest(
                         new URL(getBaseUrl() + Urls.FETCH_TRANSACTIONS)
                                 .parameter(IdTags.RESOURCE_ID, resourceId))
-                .queryParam(SparebankConstants.QueryKeys.LIMIT, Integer.toString(limit))
-                .queryParam(SparebankConstants.QueryKeys.OFFSET, offset)
+                .queryParam(
+                        SparebankConstants.QueryKeys.DATE_FROM,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(
+                        SparebankConstants.QueryKeys.DATE_TO,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                .queryParam(
+                        SparebankConstants.QueryKeys.LIMIT,
+                        SparebankConstants.QueryValues.TRANSACTION_LIMIT)
                 .queryParam(
                         SparebankConstants.QueryKeys.BOOKING_STATUS,
                         SparebankConstants.QueryValues.BOOKING_STATUS)
