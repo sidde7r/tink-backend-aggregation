@@ -59,8 +59,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
                         apiClient,
                         consentStorage,
                         supplementalInformationHelper,
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request.getAppUriId());
+                        strongAuthenticationState);
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
