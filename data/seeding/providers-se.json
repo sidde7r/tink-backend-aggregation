@@ -358,6 +358,7 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "564cdcaad29e45489fd66b8ed1b6d8cb",
             "groupDisplayName": "Danske Bank",
             "market": "SE",
             "multiFactor": true,
@@ -395,6 +396,7 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "564cdcaad29e45489fd66b8ed1b6d8cb",
             "groupDisplayName": "Danske Bank",
             "market": "SE",
             "multiFactor": true,
@@ -590,6 +592,7 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "ea3b5ac45e274e62b3fd1181aa3aca9c",
             "groupDisplayName": "Handelsbanken",
             "market": "SE",
             "multiFactor": false,
@@ -626,6 +629,7 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "ea3b5ac45e274e62b3fd1181aa3aca9c",
             "groupDisplayName": "Handelsbanken",
             "market": "SE",
             "multiFactor": true,
@@ -1453,6 +1457,7 @@
                     "patternError": "Please supply a valid social security number."
                 }
             ],
+            "financialInstitutionId": "564cdcaad29e45489fd66b8ed1b6d8cb",
             "multiFactor": true,
             "name": "se-danskebank-bankid",
             "passwordHelpText": "Use Mobile BankID the same way as with the Danske Bank mobile app. You can order a Mobile BankID using the bank's web service.",
@@ -1491,6 +1496,7 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "564cdcaad29e45489fd66b8ed1b6d8cb",
             "multiFactor": false,
             "name": "se-danskebank-password",
             "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
@@ -1517,6 +1523,7 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "564cdcaad29e45489fd66b8ed1b6d8cb",
             "groupDisplayName": "Nordea",
             "market": "SE",
             "multiFactor": true,
