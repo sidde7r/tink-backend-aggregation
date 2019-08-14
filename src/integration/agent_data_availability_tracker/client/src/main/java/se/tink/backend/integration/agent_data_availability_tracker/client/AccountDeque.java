@@ -14,7 +14,7 @@ public class AccountDeque extends ArrayDeque<TrackAccountRequest> {
     @Override
     public boolean add(TrackAccountRequest trackAccountRequest) {
 
-        if (super.size() == MAX_SIZE - 1) {
+        if (super.size() >= MAX_SIZE - 1) {
             super.removeLast();
         }
 
