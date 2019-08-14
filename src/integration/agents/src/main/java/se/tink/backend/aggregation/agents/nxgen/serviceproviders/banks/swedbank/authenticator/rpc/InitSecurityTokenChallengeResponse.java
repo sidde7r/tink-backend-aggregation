@@ -8,4 +8,8 @@ public class InitSecurityTokenChallengeResponse {
     private String challenge;
     private LinksEntity links;
     private boolean useOneTimePassword;
+
+    public LinksEntity getLinks() {
+        return links;
+    }
 }

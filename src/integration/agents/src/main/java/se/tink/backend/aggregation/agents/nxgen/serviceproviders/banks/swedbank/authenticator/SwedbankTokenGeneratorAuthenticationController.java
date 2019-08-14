@@ -50,7 +50,7 @@ public class SwedbankTokenGeneratorAuthenticationController implements MultiFact
             }
         }
 
-        initTokenGenerator(ssn);
+        InitSecurityTokenChallengeResponse initSecurityTokenChallengeResponse = initTokenGenerator(ssn);
 
         Map<String, String> supplementalInformation =
                 supplementalInformationController.askSupplementalInformation(responseField());
@@ -64,7 +64,7 @@ public class SwedbankTokenGeneratorAuthenticationController implements MultiFact
         }
 
         SecurityTokenChallengeResponse securityTokenChallengeResponse =
-                apiClient.sendLoginChallenge(challenge.get());
+                apiClient.sendLoginChallenge(initSecurityTokenChallengeResponse.getLinks(), challenge.get());
         apiClient.completeAuthentication(
                 securityTokenChallengeResponse.getLinks().getNextOrThrow());
     }

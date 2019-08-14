@@ -52,7 +52,6 @@ public class SwedbankBaseConstants {
     public enum Url implements UrlEnum {
         INIT_BANKID(createUrlWithHost("/v5/identification/bankid/mobile")),
         INIT_TOKEN(createUrlWithHost("/v5/identification/securitytoken/challenge")),
-        INIT_TOKEN_RESPONSE(createUrlWithHost("/v5/identification/securitytoken")),
         TOUCH(createUrlWithHost("/v5/identification/touch")),
         LOGOUT(createUrlWithHost("/v5/identification/logout"));
 

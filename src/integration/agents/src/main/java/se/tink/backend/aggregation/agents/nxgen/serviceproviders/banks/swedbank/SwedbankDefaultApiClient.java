@@ -59,6 +59,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.MenuItemLinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.SelectedProfileResponse;
@@ -772,11 +773,11 @@ public class SwedbankDefaultApiClient {
         return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.AUTHORIZATION_FAILED);
     }
 
-    public SecurityTokenChallengeResponse sendLoginChallenge(String challenge)
+    public SecurityTokenChallengeResponse sendLoginChallenge(LinksEntity links, String challenge)
             throws SupplementalInfoException {
         try {
-            return makePostRequest(
-                    SwedbankBaseConstants.Url.INIT_TOKEN_RESPONSE.get(),
+            return makeRequest(
+                    links.getNext(),
                     SecurityTokenChallengeRequest.createFromChallenge(challenge),
                     SecurityTokenChallengeResponse.class);
         } catch (HttpResponseException hre) {
