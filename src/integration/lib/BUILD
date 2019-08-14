@@ -150,6 +150,7 @@ junit_test(
         "//src/libraries/transfer:mocks",
         "//src/libraries/transfer:rpc",
         "//src/libraries/user:rpc",
+        "//src/libraries/uuid",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_github_tomakehurst_wiremock",

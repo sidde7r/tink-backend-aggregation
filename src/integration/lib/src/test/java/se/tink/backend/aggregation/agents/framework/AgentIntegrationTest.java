@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.assertj.core.util.Strings;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,7 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
 
@@ -131,13 +133,20 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     private RefreshInformationRequest createRefreshInformationRequest() {
-        return new RefreshInformationRequest(
-                user,
-                provider,
-                credential,
-                requestFlagManual,
-                requestFlagCreate,
-                requestFlagUpdate);
+        RefreshInformationRequest refreshInformationRequest =
+                new RefreshInformationRequest(
+                        user,
+                        provider,
+                        credential,
+                        requestFlagManual,
+                        requestFlagCreate,
+                        requestFlagUpdate);
+
+        if (Strings.isNullOrEmpty(refreshInformationRequest.getAppUriId())) {
+            refreshInformationRequest.setAppUriId(UUIDUtils.generateUUID());
+        }
+
+        return refreshInformationRequest;
     }
 
     private Agent createAgent(CredentialsRequest credentialsRequest) {
