@@ -8,6 +8,7 @@ import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.netty.handler.ssl.SslContext;
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLException;
 import org.slf4j.Logger;
@@ -34,12 +35,16 @@ public class AgentDataAvailabilityTrackerClientImpl
     private final NettyChannelBuilder channelBuilder;
     private final AccountDeque accountDeque;
 
-    /** Construct client for accessing RouteGuide server at {@code host:port}. */
+    /**
+     * Construct client for accessing RouteGuide server at {@code host:port}.
+     */
     public AgentDataAvailabilityTrackerClientImpl(String host, int port) throws SSLException {
         this(NettyChannelBuilder.forAddress(host, port));
     }
 
-    /** Construct client for accessing RouteGuide server using the existing channel. */
+    /**
+     * Construct client for accessing RouteGuide server using the existing channel.
+     */
     public AgentDataAvailabilityTrackerClientImpl(NettyChannelBuilder channelBuilder)
             throws SSLException {
         this.channelBuilder = channelBuilder;
@@ -101,7 +106,7 @@ public class AgentDataAvailabilityTrackerClientImpl
 
             accountDeque.add(requestBuilder.build());
 
-            requestStream.onNext(accountDeque.pop());
+            CompletableFuture.runAsync(() -> requestStream.onNext(accountDeque.pop()));
 
         } catch (StatusRuntimeException e) {
 
