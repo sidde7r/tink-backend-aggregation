@@ -60,8 +60,8 @@ public final class IcaBankenAgent extends NextGenerationAgent
                                     sessionStorage,
                                     icaBankenConfiguration,
                                     credentialsRequest),
-                            configuration.getCallbackJwtSignatureKeyPair(),
-                            request);
+                            credentials,
+                            strongAuthenticationState);
 
             return new AutoAuthenticationController(
                     request,

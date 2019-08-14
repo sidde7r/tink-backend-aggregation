@@ -46,8 +46,8 @@ public final class NordeaNoAgent extends NordeaBaseAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
         return new AutoAuthenticationController(
                 request,
                 context,

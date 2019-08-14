@@ -96,8 +96,8 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new CrosskeyBaseAuthenticator(apiClient),
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

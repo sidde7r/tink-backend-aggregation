@@ -58,8 +58,8 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
         return new AutoAuthenticationController(
                 request,
                 context,

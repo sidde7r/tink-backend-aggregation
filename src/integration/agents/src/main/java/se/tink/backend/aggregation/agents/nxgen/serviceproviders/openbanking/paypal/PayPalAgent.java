@@ -62,8 +62,8 @@ public final class PayPalAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new PayPalAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()),
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

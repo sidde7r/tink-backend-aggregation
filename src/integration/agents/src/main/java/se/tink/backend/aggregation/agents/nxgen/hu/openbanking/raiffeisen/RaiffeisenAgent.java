@@ -67,8 +67,8 @@ public final class RaiffeisenAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
         return new AutoAuthenticationController(
                 request,
                 context,

@@ -55,8 +55,8 @@ public final class LaBanquePostaleAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new LaBanquePostaleAuthenticator(apiClient, sessionStorage),
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

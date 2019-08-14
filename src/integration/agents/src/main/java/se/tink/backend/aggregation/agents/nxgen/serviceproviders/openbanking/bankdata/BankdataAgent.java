@@ -82,8 +82,8 @@ public abstract class BankdataAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new BankdataAuthenticator(apiClient, getClientConfiguration()),
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,
