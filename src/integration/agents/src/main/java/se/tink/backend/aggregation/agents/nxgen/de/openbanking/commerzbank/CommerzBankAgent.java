@@ -52,8 +52,8 @@ public final class CommerzBankAgent extends Xs2aDevelopersAgent {
                                 persistentStorage,
                                 getClientConfiguration(),
                                 credentials.getField(CredentialKeys.IBAN)),
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

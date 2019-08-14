@@ -96,7 +96,8 @@ public final class CreditAgricoleAgent extends NextGenerationAgent
                         new CreditAgricolePaymentExecutor(
                                 apiClient, sessionStorage, getClientConfiguration()),
                         supplementalInformationHelper,
-                        sessionStorage));
+                        sessionStorage,
+                        strongAuthenticationState));
     }
 
     @Override

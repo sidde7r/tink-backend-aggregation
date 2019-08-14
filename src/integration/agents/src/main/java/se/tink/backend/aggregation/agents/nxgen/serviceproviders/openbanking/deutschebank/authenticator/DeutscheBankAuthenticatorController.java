@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator;
 
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -15,32 +11,25 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class DeutscheBankAuthenticatorController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-
-    private static final Random random = new SecureRandom();
-    private static final Encoder encoder = Base64.getUrlEncoder();
     private static final long WAIT_FOR_MINUTES = 9L;
     private SupplementalInformationHelper supplementalInformationHelper;
     private final DeutscheBankAuthenticator authenticator;
-    private String state;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public DeutscheBankAuthenticatorController(
             final SupplementalInformationHelper supplementalInformationHelper,
-            final DeutscheBankAuthenticator authenticator) {
+            final DeutscheBankAuthenticator authenticator,
+            StrongAuthenticationState strongAuthenticationState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.state = generateRandomState();
-    }
-
-    private static String generateRandomState() {
-        final byte[] randomData = new byte[32];
-        random.nextBytes(randomData);
-        return encoder.encodeToString(randomData);
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     public ThirdPartyAppResponse<String> init() {
@@ -55,23 +44,19 @@ public class DeutscheBankAuthenticatorController
     @Override
     public ThirdPartyAppResponse<String> collect(final String reference) {
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
     @SuppressWarnings("Duplicates")
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        final URL authorizeUrl = authenticator.authenticate(state);
+        final URL authorizeUrl = authenticator.authenticate(strongAuthenticationState.getState());
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(final ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private String formatSupplementalKey(final String key) {
-        return String.format("tpcb_%s", key);
     }
 }

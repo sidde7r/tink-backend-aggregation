@@ -39,8 +39,8 @@ public final class ComdirectAgent extends Xs2aDevelopersAgent {
                                 persistentStorage,
                                 getClientConfiguration(),
                                 CredentialKeys.IBAN),
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

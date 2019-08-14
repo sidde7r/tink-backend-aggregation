@@ -102,7 +102,6 @@ public abstract class BecConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String SCOPE = "scope";
         public static final String STATE = "state";
-        public static final String SUPPLEMENTAL_INFORMATION = "tpcb_%s";
     }
 
     public static class QueryValues {

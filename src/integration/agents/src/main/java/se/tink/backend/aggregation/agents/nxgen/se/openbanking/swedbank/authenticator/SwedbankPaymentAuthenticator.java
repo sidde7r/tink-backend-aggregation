@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator;
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Base64.Encoder;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
@@ -12,32 +8,25 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class SwedbankPaymentAuthenticator {
-    private static final Random random = new SecureRandom();
-    private static final Encoder encoder = Base64.getUrlEncoder();
     private static final long WAIT_FOR_SECONDS = 5;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final String state;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public SwedbankPaymentAuthenticator(
-            SupplementalInformationHelper supplementalInformationHelper) {
+            SupplementalInformationHelper supplementalInformationHelper,
+            StrongAuthenticationState strongAuthenticationState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
-        this.state = generateRandomState();
-    }
-
-    private static String generateRandomState() {
-        byte[] randomData = new byte[32];
-        random.nextBytes(randomData);
-        return encoder.encodeToString(randomData);
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     private ThirdPartyAppResponse<String> collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                OAuthUtils.formatSupplementalKey(this.state), WAIT_FOR_SECONDS, TimeUnit.SECONDS);
+                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_SECONDS, TimeUnit.SECONDS);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }

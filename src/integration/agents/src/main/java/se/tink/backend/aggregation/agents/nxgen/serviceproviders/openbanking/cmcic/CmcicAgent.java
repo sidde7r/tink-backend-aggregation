@@ -53,7 +53,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         new CmcicPaymentExecutor(
                                 apiClient, sessionStorage, getClientConfiguration()),
                         supplementalInformationHelper,
-                        sessionStorage));
+                        sessionStorage,
+                        strongAuthenticationState));
     }
 
     @Override
@@ -76,8 +77,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new CmcicAuthenticator(apiClient, persistentStorage),
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

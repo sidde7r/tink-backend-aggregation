@@ -78,7 +78,8 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
                                 apiClient,
                                 sessionStorage,
                                 credentials.getField(CredentialKeys.IBAN),
-                                credentials.getField(CredentialKeys.PSU_ID)));
+                                credentials.getField(CredentialKeys.PSU_ID)),
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator;
 
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -16,25 +12,25 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class UnicreditAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-    private static final Random random = new SecureRandom();
-    private static final Encoder encoder = Base64.getUrlEncoder();
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final UnicreditAuthenticator authenticator;
-    private final String state;
+    private final StrongAuthenticationState strongAuthenticationState;
     private static final long WAIT_FOR_MINUTES = 9L;
 
     public UnicreditAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
-            UnicreditAuthenticator authenticator) {
+            UnicreditAuthenticator authenticator,
+            StrongAuthenticationState strongAuthenticationState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.state = generateRandomState();
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     public ThirdPartyAppResponse<String> init() {
@@ -50,7 +46,7 @@ public class UnicreditAuthenticationController
     public ThirdPartyAppResponse<String> collect(String reference) throws SessionException {
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         if (!authenticator.isConsentValid()) {
             throw new IllegalStateException("Authorization failed");
@@ -60,7 +56,8 @@ public class UnicreditAuthenticationController
     }
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizeUrl = this.authenticator.buildAuthorizeUrl(this.state);
+        URL authorizeUrl =
+                this.authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
         Android androidPayload = new Android();
         androidPayload.setIntent(authorizeUrl.get());
@@ -75,15 +72,5 @@ public class UnicreditAuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private static String generateRandomState() {
-        byte[] randomData = new byte[32];
-        random.nextBytes(randomData);
-        return encoder.encodeToString(randomData);
-    }
-
-    private String formatSupplementalKey(String key) {
-        return String.format("tpcb_%s", key);
     }
 }

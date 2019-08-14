@@ -1,20 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment;
 
 import com.google.common.base.Preconditions;
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Base64.Encoder;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -26,27 +22,21 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class CmcicPaymentController extends PaymentController {
-
-    private static final Random random = new SecureRandom();
-    private static final Encoder encoder = Base64.getUrlEncoder();
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final String state;
+    private final StrongAuthenticationState strongAuthenticationState;
     private final SessionStorage sessionStorage;
 
     public CmcicPaymentController(
             PaymentExecutor paymentExecutor,
             SupplementalInformationHelper supplementalInformationHelper,
-            SessionStorage sessionStorage) {
+            SessionStorage sessionStorage,
+            StrongAuthenticationState strongAuthenticationState) {
         super(paymentExecutor);
 
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.sessionStorage = sessionStorage;
-        this.state = generateRandomState();
-    }
-
-    private static String generateRandomState() {
-        return new String(RandomUtils.secureRandom(32));
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     private ThirdPartyAppResponse<String> init() {
@@ -55,7 +45,7 @@ public class CmcicPaymentController extends PaymentController {
 
     private ThirdPartyAppResponse<String> collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
@@ -81,7 +71,7 @@ public class CmcicPaymentController extends PaymentController {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        sessionStorage.put(StorageKeys.STATE, state);
+        sessionStorage.put(StorageKeys.STATE, strongAuthenticationState.getState());
         return super.create(paymentRequest);
     }
 
@@ -97,9 +87,5 @@ public class CmcicPaymentController extends PaymentController {
         collect();
 
         return super.sign(paymentMultiStepRequest);
-    }
-
-    private String formatSupplementalKey(String key) {
-        return String.format("tpcb_%s", key);
     }
 }

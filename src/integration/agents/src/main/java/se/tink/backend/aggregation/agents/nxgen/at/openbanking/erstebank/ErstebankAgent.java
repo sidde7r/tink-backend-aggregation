@@ -35,8 +35,8 @@ public final class ErstebankAgent
                 persistentStorage,
                 supplementalInformationHelper,
                 new ErstebankAuthenticator(apiClient, sessionStorage),
-                configuration.getCallbackJwtSignatureKeyPair(),
-                request);
+                credentials,
+                strongAuthenticationState);
     }
 
     @Override

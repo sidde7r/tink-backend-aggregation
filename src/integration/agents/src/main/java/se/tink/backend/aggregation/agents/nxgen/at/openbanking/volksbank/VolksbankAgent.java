@@ -61,7 +61,9 @@ public final class VolksbankAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         final VolksbankAuthenticationController controller =
                 new VolksbankAuthenticationController(
-                        supplementalInformationHelper, new VolksbankAuthenticator(apiClient));
+                        supplementalInformationHelper,
+                        new VolksbankAuthenticator(apiClient),
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

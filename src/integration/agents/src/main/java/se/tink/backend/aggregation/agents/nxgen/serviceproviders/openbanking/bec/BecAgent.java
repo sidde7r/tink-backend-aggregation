@@ -71,7 +71,8 @@ public class BecAgent extends NextGenerationAgent
                 new BecController(
                         supplementalInformationHelper,
                         persistentStorage,
-                        new BecAuthenticator(apiClient, sessionStorage));
+                        new BecAuthenticator(apiClient, sessionStorage),
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

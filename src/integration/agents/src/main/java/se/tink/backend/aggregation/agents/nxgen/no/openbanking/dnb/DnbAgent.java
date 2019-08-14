@@ -71,7 +71,9 @@ public final class DnbAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         final DnbAuthenticatorController controller =
                 new DnbAuthenticatorController(
-                        supplementalInformationHelper, new DnbAuthenticator(apiClient));
+                        supplementalInformationHelper,
+                        new DnbAuthenticator(apiClient),
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

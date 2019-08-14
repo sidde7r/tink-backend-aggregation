@@ -31,8 +31,8 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
                 persistentStorage,
                 supplementalInformationHelper,
                 new TriodosAuthenticator(apiClient),
-                configuration.getCallbackJwtSignatureKeyPair(),
-                request);
+                credentials,
+                strongAuthenticationState);
     }
 
     @Override

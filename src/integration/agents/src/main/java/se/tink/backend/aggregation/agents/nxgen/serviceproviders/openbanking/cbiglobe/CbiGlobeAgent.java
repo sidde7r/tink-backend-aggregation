@@ -64,7 +64,8 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
                 new CbiGlobeAuthenticationController(
                         supplementalInformationHelper,
                         new CbiGlobeAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                                apiClient, persistentStorage, getClientConfiguration()),
+                        strongAuthenticationState);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 

@@ -1,11 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator;
 
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -18,25 +14,25 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-    private static final Random random = new SecureRandom();
-    private static final Encoder encoder = Base64.getUrlEncoder();
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SparebankAuthenticator authenticator;
-    private final String state;
+    private final StrongAuthenticationState strongAuthenticationState;
     private String errorMessage;
 
     public SparebankController(
             final SupplementalInformationHelper supplementalInformationHelper,
-            final SparebankAuthenticator authenticator) {
+            final SparebankAuthenticator authenticator,
+            StrongAuthenticationState strongAuthenticationState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.state = generateRandomState();
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
@@ -55,7 +51,7 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
         Map<String, String> supplementalInformation =
                 this.supplementalInformationHelper
                         .waitForSupplementalInformation(
-                                this.formatSupplementalKey(state),
+                                strongAuthenticationState.getSupplementalKey(),
                                 WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
                         .orElseThrow(
@@ -84,7 +80,8 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
         final Android androidPayload = new Android();
         payload.setAndroid(androidPayload);
 
-        final URL authorizeUrl = this.authenticator.buildAuthorizeUrl(state);
+        final URL authorizeUrl =
+                this.authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
         androidPayload.setIntent(authorizeUrl.get());
 
         final Ios iOsPayload = new Ios();
@@ -98,15 +95,5 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.ofNullable(errorMessage).map(LocalizableKey::of);
-    }
-
-    private String formatSupplementalKey(final String key) {
-        return String.format("tpcb_%s", key);
-    }
-
-    private static String generateRandomState() {
-        final byte[] randomData = new byte[32];
-        random.nextBytes(randomData);
-        return encoder.encodeToString(randomData);
     }
 }

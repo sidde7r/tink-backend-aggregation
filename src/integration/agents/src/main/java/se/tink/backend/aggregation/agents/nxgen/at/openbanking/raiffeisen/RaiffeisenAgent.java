@@ -73,7 +73,8 @@ public final class RaiffeisenAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         authenticator,
                         sessionStorage,
-                        persistentStorage);
+                        persistentStorage,
+                        strongAuthenticationState);
         return new AutoAuthenticationController(
                 request,
                 context,

@@ -30,8 +30,8 @@ public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, Samli
                 persistentStorage,
                 supplementalInformationHelper,
                 new SamlinkAuthenticator(apiClient),
-                configuration.getCallbackJwtSignatureKeyPair(),
-                request);
+                credentials,
+                strongAuthenticationState);
     }
 
     @Override
