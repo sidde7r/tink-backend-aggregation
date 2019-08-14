@@ -35,16 +35,12 @@ public class AgentDataAvailabilityTrackerClientImpl
     private final NettyChannelBuilder channelBuilder;
     private final AccountDeque accountDeque;
 
-    /**
-     * Construct client for accessing RouteGuide server at {@code host:port}.
-     */
+    /** Construct client for accessing RouteGuide server at {@code host:port}. */
     public AgentDataAvailabilityTrackerClientImpl(String host, int port) throws SSLException {
         this(NettyChannelBuilder.forAddress(host, port));
     }
 
-    /**
-     * Construct client for accessing RouteGuide server using the existing channel.
-     */
+    /** Construct client for accessing RouteGuide server using the existing channel. */
     public AgentDataAvailabilityTrackerClientImpl(NettyChannelBuilder channelBuilder)
             throws SSLException {
         this.channelBuilder = channelBuilder;

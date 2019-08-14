@@ -60,7 +60,9 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
 
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
-        environment.lifecycle().manage(injector.getInstance(AgentDataAvailabilityTrackerClientImpl.class));
+        environment
+                .lifecycle()
+                .manage(injector.getInstance(AgentDataAvailabilityTrackerClientImpl.class));
     }
 
     /**
