@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -37,7 +36,7 @@ public class AccountEntity {
     public TransactionalAccount toTinkAccount(Amount balance) {
 
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.from(AccountTypes.CHECKING))
+                .withType(TransactionalAccountType.CHECKING)
                 .withBalance(BalanceModule.of(balance))
                 .withId(
                         IdModule.builder()
