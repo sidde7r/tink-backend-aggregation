@@ -96,6 +96,8 @@ agents:
   swedbank:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+      eidasQwac: Tink
+      bypassTransactionConsent: false
   cbi:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
