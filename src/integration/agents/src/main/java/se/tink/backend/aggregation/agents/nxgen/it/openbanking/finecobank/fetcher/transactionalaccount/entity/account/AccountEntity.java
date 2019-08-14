@@ -30,10 +30,16 @@ public class AccountEntity {
 
     public Optional<TransactionalAccount> toTinkAccount() {
 
-        String name2 = name.substring(0, name.length() - 4);
+        final String nameTrimmed = name.substring(0, name.length() - 4);
 
         final AccountTypes type =
-                FinecoBankConstants.ACCOUNT_TYPE_MAPPER.translate(name2).orElse(AccountTypes.OTHER);
+                FinecoBankConstants.ACCOUNT_TYPE_MAPPER
+                        .translate(nameTrimmed)
+                        .orElse(AccountTypes.OTHER);
+
+        /*return type == (AccountTypes.CHECKING || AccountTypes.SAVINGS)
+        ? Optional.ofNullable(toTypeAccount(type))
+        : Optional.empty();*/
 
         switch (type) {
             case CHECKING:
@@ -58,7 +64,7 @@ public class AccountEntity {
                 .filter(BalanceEntity::isInterimBalanceAvailable)
                 .findAny()
                 .map(balanceEntity -> balanceEntity.getBalanceAmount().toTinkAmount())
-                .orElse(new ExactCurrencyAmount(new BigDecimal(0), Formats.CURRENCY));
+                .orElse(new ExactCurrencyAmount(BigDecimal.ZERO, Formats.CURRENCY));
     }
 
     public TransactionalAccount toTypeAccount(TransactionalAccountType transactionalAccountType) {

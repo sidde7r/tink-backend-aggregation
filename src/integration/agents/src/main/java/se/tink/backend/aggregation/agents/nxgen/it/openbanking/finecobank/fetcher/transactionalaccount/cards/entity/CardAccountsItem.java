@@ -76,11 +76,15 @@ public class CardAccountsItem {
                         .translate(product)
                         .orElse(AccountTypes.CREDIT_CARD);
 
-        if (type.equals(AccountTypes.CREDIT_CARD)) {
+        return type == AccountTypes.CREDIT_CARD
+                ? Optional.ofNullable(toCreditCardAccount())
+                : Optional.empty();
+
+        /*if (type.equals(AccountTypes.CREDIT_CARD)) {
             return Optional.ofNullable(toCreditCardAccount());
         } else {
             return Optional.empty();
-        }
+        }*/
     }
 
     @JsonIgnore
@@ -89,7 +93,7 @@ public class CardAccountsItem {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(maskedPan.replace('X', '0'))
+                                .withCardNumber(maskedPan)
                                 .withBalance(getBalance())
                                 .withAvailableCredit(creditLimit.toTinkAmount())
                                 .withCardAlias(name)
@@ -123,6 +127,6 @@ public class CardAccountsItem {
                 .filter(BalancesEntity::isInterimBalanceAvailable)
                 .findAny()
                 .map(balanceEntity -> balanceEntity.getBalanceAmount().toTinkAmount())
-                .orElse(new ExactCurrencyAmount(new BigDecimal(0), Formats.CURRENCY));
+                .orElse(new ExactCurrencyAmount(BigDecimal.ZERO, Formats.CURRENCY));
     }
 }

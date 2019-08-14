@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.cards.entity;
 
-import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.BalanceTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -19,12 +18,10 @@ public class BalancesEntity {
     }
 
     public boolean isForwardBalanceAvailable() {
-        return !Strings.isNullOrEmpty(balanceType)
-                && balanceType.equalsIgnoreCase(FinecoBankConstants.BalanceTypes.FORWARD_AVAILABLE);
+        return BalanceTypes.FORWARD_AVAILABLE.equalsIgnoreCase(balanceType);
     }
 
     public boolean isInterimBalanceAvailable() {
-        return !Strings.isNullOrEmpty(balanceType)
-                && balanceType.equalsIgnoreCase(FinecoBankConstants.BalanceTypes.INTERIM_AVAILABLE);
+        return BalanceTypes.INTERIM_AVAILABLE.equalsIgnoreCase(balanceType);
     }
 }

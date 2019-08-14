@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Urls;
@@ -81,7 +80,7 @@ public final class FinecoBankApiClient {
                         HeaderKeys.TPP_REDIRECT_URI,
                         (new URL(getConfiguration().getRedirectUrl())
                                 .queryParam(QueryKeys.STATE, state)))
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .body(postConsentBodyRequest)
                 .post(ConsentResponse.class);
     }
@@ -92,7 +91,7 @@ public final class FinecoBankApiClient {
                                 StorageKeys.CONSENT_ID,
                                 persistentStorage.get(StorageKeys.CONSENT_ID)))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .get(ConsentStatusResponse.class);
     }
 
@@ -103,7 +102,7 @@ public final class FinecoBankApiClient {
                         FinecoBankConstants.HeaderKeys.CONSENT_ID,
                         persistentStorage.get(StorageKeys.CONSENT_ID))
                 .queryParam(FinecoBankConstants.QueryKeys.WITH_BALANCE, String.valueOf(true))
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .get(CardAccountsResponse.class);
     }
 
@@ -115,7 +114,7 @@ public final class FinecoBankApiClient {
                         FinecoBankConstants.HeaderKeys.CONSENT_ID,
                         persistentStorage.get(StorageKeys.CONSENT_ID))
                 .queryParam(FinecoBankConstants.QueryKeys.WITH_BALANCE, String.valueOf(true))
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .get(AccountsResponse.class);
     }
 
@@ -130,7 +129,7 @@ public final class FinecoBankApiClient {
                                 FinecoBankConstants.ParameterKeys.ACCOUNT_ID,
                                 account.getApiIdentifier()))
                 .header(FinecoBankConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .header(
                         FinecoBankConstants.HeaderKeys.CONSENT_ID,
                         persistentStorage.get(StorageKeys.CONSENT_ID))
@@ -157,7 +156,7 @@ public final class FinecoBankApiClient {
                                 FinecoBankConstants.ParameterKeys.ACCOUNT_ID,
                                 account.getApiIdentifier()))
                 .header(FinecoBankConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .header(
                         FinecoBankConstants.HeaderKeys.CONSENT_ID,
                         persistentStorage.get(StorageKeys.CONSENT_ID))
@@ -180,7 +179,7 @@ public final class FinecoBankApiClient {
                                 StorageKeys.CONSENT_ID,
                                 persistentStorage.get(StorageKeys.CONSENT_ID)))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .get(ConsentAuthorizationsResponse.class);
     }
 }

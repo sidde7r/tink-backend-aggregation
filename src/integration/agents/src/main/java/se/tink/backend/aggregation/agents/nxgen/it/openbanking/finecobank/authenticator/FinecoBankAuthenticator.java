@@ -44,7 +44,7 @@ public final class FinecoBankAuthenticator {
 
     public boolean getApprovedConsent() {
         ConsentStatusResponse consentStatusResponse = finecoBankApiClient.getConsentStatus();
-        return consentStatusResponse.getConsentStatus().equalsIgnoreCase(StatusValues.VALID);
+        return StatusValues.VALID.equalsIgnoreCase(consentStatusResponse.getConsentStatus());
     }
 
     public void storeAccounts() {

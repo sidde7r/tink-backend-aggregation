@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.cards.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.base.Strings;
 import java.util.Date;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FormValues;
 import se.tink.backend.aggregation.annotations.JsonObject;

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator;
 
+import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -7,7 +8,6 @@ import java.util.Base64.Encoder;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;

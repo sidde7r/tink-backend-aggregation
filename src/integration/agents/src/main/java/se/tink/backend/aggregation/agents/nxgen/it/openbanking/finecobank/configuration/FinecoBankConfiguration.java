@@ -13,6 +13,7 @@ public class FinecoBankConfiguration implements ClientConfiguration {
     private String baseUrl;
     private String redirectUrl;
     private String certificateId;
+    private String psuIpAddress;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -40,5 +41,12 @@ public class FinecoBankConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(certificateId),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
         return certificateId;
+    }
+
+    public String getPsuIpAddress() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(psuIpAddress),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
+        return psuIpAddress;
     }
 }

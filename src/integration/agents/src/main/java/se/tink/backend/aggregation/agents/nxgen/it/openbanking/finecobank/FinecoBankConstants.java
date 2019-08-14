@@ -102,7 +102,6 @@ public final class FinecoBankConstants {
     }
 
     public static class ParameterKeys {
-
         public static final String ACCOUNT_ID = "account-id";
     }
 
@@ -111,7 +110,6 @@ public final class FinecoBankConstants {
         public static final String X_REQUEST_ID_TRANSACTIONS =
                 "123e4567-e89b-42d3-a456-556642440071";
         public static final String CONSENT_ID = "76b908cc-4605-4d06-8869-4387f5daa318";
-        public static final String PSU_IP_ADDRESS = "127.0.0.1";
     }
 
     public static class FormValues {

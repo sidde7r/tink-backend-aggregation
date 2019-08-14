@@ -42,8 +42,6 @@ public final class FinecoBankAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        client.setDebugProxy("http://127.0.0.1:8888");
-
         this.clientName = request.getProvider().getPayload();
 
         this.finecoBankConfiguration =
