@@ -153,7 +153,7 @@ public final class AgentConfigurationController {
         log.info("Falling back to k8s, try to use secrets service instead.");
 
         return integrationsConfiguration
-                .getClientConfiguration(financialInstitutionId, appId, clientConfigClass)
+                .getClientConfiguration(integrationName, clientName, clientConfigClass)
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
