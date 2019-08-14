@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.QueryParams;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class VolksbankAuthenticator implements OAuth2Authenticator {
@@ -68,7 +70,23 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
                         .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString());
 
-        return client.getBearerToken(url);
+        return getBearerToken(url);
+    }
+
+    private OAuth2Token getBearerToken(final URL url) {
+
+        try {
+            return client.getBearerToken(url);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(String.class).contains("unsupported_grant_type")) {
+                // Likely indicates that the consent ID has been invalidated. At this point, there
+                // is nothing left to do but to clear everything and start over.
+                persistentStorage.remove(Storage.CONSENT);
+                persistentStorage.remove(Storage.OAUTH_TOKEN);
+                throw BankServiceError.CONSENT_REVOKED.exception();
+            }
+            throw e;
+        }
     }
 
     @Override
@@ -98,7 +116,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.REFRESH_TOKEN)
                         .queryParam(QueryParams.REFRESH_TOKEN, refreshToken);
 
-        return client.getBearerToken(url);
+        return getBearerToken(url);
     }
 
     @Override
