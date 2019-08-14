@@ -70,8 +70,7 @@ public class TransactionalAccountBuilder
     public WithBalanceStep<TransactionalBuildStep> withTypeAndFlagsFrom(
             AccountTypeMapper mapper, String typeKey) {
         withTypeAndFlagsFrom(mapper, typeKey, null);
-
-        return null;
+        return this;
     }
 
     @Override

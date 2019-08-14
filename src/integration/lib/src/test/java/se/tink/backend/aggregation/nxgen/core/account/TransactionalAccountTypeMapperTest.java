@@ -200,10 +200,13 @@ public class TransactionalAccountTypeMapperTest {
                                         AccountFlag.PSD2_PAYMENT_ACCOUNT, AccountFlag.BUSINESS),
                                 "AZ")
                         .put(AccountTypes.CREDIT_CARD, "b", "c")
+                        .put(AccountTypes.CHECKING, "d")
                         .build();
 
         assertEquals(Collections.emptyList(), mapper.getItems("b"));
         assertEquals(Lists.newArrayList(AccountFlag.PSD2_PAYMENT_ACCOUNT), mapper.getItems("AA"));
+        assertEquals(Collections.emptyList(), mapper.getItems("d"));
+        assertEquals(Optional.of(AccountTypes.CHECKING), mapper.translate("d"));
         assertEquals(
                 Lists.newArrayList(AccountFlag.PSD2_PAYMENT_ACCOUNT, AccountFlag.BUSINESS),
                 mapper.getItems("aZ"));
