@@ -9,7 +9,13 @@ public enum BankServiceError implements AgentRuntimeError {
             new LocalizableKey("The bank service has temporarily failed; please try again later.")),
     ACCESS_EXCEEDED(
             new LocalizableKey(
-                    "The maximum allowed number of requests to the bank service has been exceeded; please try again later."));
+                    "The maximum allowed number of requests to the bank service has been exceeded; please try again later.")),
+    // This should probably be a (checked) authorization error, but it's not supported by
+    // OAuth2Authenticator
+    CONSENT_REVOKED(
+            new LocalizableKey(
+                    "The consent given to us to access your data has been revoked by the bank. ")),
+    ;
 
     private final LocalizableKey userMessage;
 
