@@ -68,7 +68,9 @@ public class SparebankAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         final SparebankController controller =
                 new SparebankController(
-                        supplementalInformationHelper, new SparebankAuthenticator(apiClient));
+                        supplementalInformationHelper,
+                        new SparebankAuthenticator(apiClient),
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,
@@ -128,7 +130,8 @@ public class SparebankAgent extends NextGenerationAgent
                         sparebankPaymentExecutor,
                         sparebankPaymentExecutor,
                         supplementalInformationHelper,
-                        sessionStorage));
+                        sessionStorage,
+                        strongAuthenticationState));
     }
 
     private List<String> splitPayload(String payload) {
