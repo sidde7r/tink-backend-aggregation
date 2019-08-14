@@ -2,13 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank;
 
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 
-@Ignore
 public class CommerzBankAgentTest {
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
@@ -26,8 +24,8 @@ public class CommerzBankAgentTest {
                 new AgentIntegrationTest.Builder("de", "de-commerzbank-oauth2")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
     }
 
     @Test
@@ -37,5 +35,7 @@ public class CommerzBankAgentTest {
 
     private enum Arg {
         IBAN,
+        SAVE_AFTER,
+        LOAD_BEFORE
     }
 }
