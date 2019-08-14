@@ -35,8 +35,8 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
                 persistentStorage,
                 supplementalInformationHelper,
                 new KbcAuthenticator(apiClient),
-                configuration.getCallbackJwtSignatureKeyPair(),
-                request);
+                credentials,
+                strongAuthenticationState);
     }
 
     @Override
