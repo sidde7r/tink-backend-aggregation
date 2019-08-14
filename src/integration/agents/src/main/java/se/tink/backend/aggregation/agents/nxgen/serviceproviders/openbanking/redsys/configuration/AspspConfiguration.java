@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration;
 
 import java.time.LocalDate;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 
 public interface AspspConfiguration {
     /** ASPSP code used in path */
@@ -17,4 +18,7 @@ public interface AspspConfiguration {
      * SCA flow for creating a new consent.
      */
     LocalDate oldestTransactionDate();
+
+    /** Class to use for transactions response. This allows to customise transaction parsing. */
+    Class<? extends BaseTransactionsResponse> getTransactionsResponseClass();
 }

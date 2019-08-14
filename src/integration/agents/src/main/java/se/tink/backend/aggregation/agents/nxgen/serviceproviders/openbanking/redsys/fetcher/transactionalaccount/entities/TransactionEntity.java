@@ -40,8 +40,7 @@ public class TransactionEntity {
     @JsonProperty private AccountReferenceEntity debtorAccount;
     @JsonProperty private String ultimateDebtor;
 
-    @JsonProperty private String remittanceInformationUnstructured;
-    @JsonProperty private String remittanceInformationStructured;
+    @JsonProperty protected String remittanceInformationUnstructured;
 
     @JsonProperty private String purposeCo; // ExternalPurpose1Co
 
@@ -81,8 +80,7 @@ public class TransactionEntity {
 
     @JsonIgnore
     public String getDescription() {
-        return Optional.ofNullable(remittanceInformationUnstructured)
-                .orElse(remittanceInformationStructured);
+        return remittanceInformationUnstructured;
     }
 
     @JsonIgnore

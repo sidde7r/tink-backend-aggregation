@@ -10,12 +10,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountReportEntity {
+public class AccountReportEntity<T extends TransactionEntity> {
     @JsonProperty("booked")
-    private List<TransactionEntity> bookedTransactions;
+    private List<T> bookedTransactions;
 
     @JsonProperty("pending")
-    private List<TransactionEntity> pendingTransactions;
+    private List<T> pendingTransactions;
 
     @JsonProperty("_links")
     private Map<String, LinkEntity> links;
@@ -29,12 +29,12 @@ public class AccountReportEntity {
     }
 
     @JsonIgnore
-    public List<TransactionEntity> getBookedTransactions() {
+    public List<T> getBookedTransactions() {
         return Optional.ofNullable(bookedTransactions).orElseGet(Collections::emptyList);
     }
 
     @JsonIgnore
-    public List<TransactionEntity> getPendingTransactions() {
+    public List<T> getPendingTransactions() {
         return Optional.ofNullable(pendingTransactions).orElseGet(Collections::emptyList);
     }
 }

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
@@ -22,7 +22,7 @@ public class RedsysUpcomingTransactionFetcher
     @Override
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
             TransactionalAccount account) {
-        final TransactionsResponse response =
+        final BaseTransactionsResponse response =
                 apiClient.fetchPendingTransactions(
                         account.getApiIdentifier(), consentController.getConsentId());
         return response.getUpcomingTransactions();
