@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
@@ -76,6 +77,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final boolean isBankId;
 
     public SwedbankAbstractAgent(
             CredentialsRequest request,
@@ -98,6 +100,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
             SwedbankApiClientProvider apiClientProvider) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
+        this.isBankId = request.getProvider().getCredentialsType().equals(CredentialsTypes.MOBILE_BANKID);
         this.configuration = configuration;
         this.apiClient =
                 apiClientProvider.getApiAgent(client, configuration, credentials, sessionStorage);
@@ -139,10 +142,10 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     protected TypedAuthenticator[] constructAuthenticators() {
         return new TypedAuthenticator[] {
             new SwedbankTokenGeneratorAuthenticationController(
-                    apiClient, sessionStorage, supplementalInformationController, catalog),
+                    apiClient, supplementalInformationController, catalog),
             new BankIdAuthenticationController<>(
                     supplementalRequester,
-                    new SwedbankDefaultBankIdAuthenticator(apiClient, sessionStorage),
+                    new SwedbankDefaultBankIdAuthenticator(apiClient),
                     persistentStorage,
                     credentials)
         };
@@ -251,7 +254,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     protected Optional<TransferController> constructTransferController() {
         SwedbankTransferHelper transferHelper =
                 new SwedbankTransferHelper(
-                        context, catalog, sessionStorage, supplementalInformationHelper, apiClient);
+                        context, catalog, supplementalInformationHelper, apiClient, isBankId);
         SwedbankDefaultBankTransferExecutor transferExecutor =
                 new SwedbankDefaultBankTransferExecutor(catalog, apiClient, transferHelper);
         SwedbankDefaultPaymentExecutor paymentExecutor =

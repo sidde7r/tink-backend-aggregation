@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.utils.QrCodeParser;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
@@ -43,21 +42,21 @@ public class SwedbankTransferHelper {
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SwedbankDefaultApiClient apiClient;
-    private final SessionStorage sessionStorage;
     private static final Logger log = LoggerFactory.getLogger(SwedbankTransferHelper.class);
+    private final boolean isBankId;
 
     public SwedbankTransferHelper(
             AgentContext context,
             Catalog catalog,
-            SessionStorage sessionStorage,
             SupplementalInformationHelper supplementalInformationHelper,
-            SwedbankDefaultApiClient apiClient) {
+            SwedbankDefaultApiClient apiClient,
+            boolean isBankId) {
         this.context = context;
         this.supplementalRequester = context;
         this.catalog = catalog;
-        this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
+        this.isBankId = isBankId;
     }
 
     public LinksEntity collectBankId(AbstractBankIdSignResponse bankIdSignResponse) {
@@ -286,7 +285,7 @@ public class SwedbankTransferHelper {
     }
 
     private Optional<LinksEntity> signNewRecipient(LinkEntity signLink) {
-        if (isBankId()) {
+        if (isBankId) {
             InitiateSignTransferResponse initiateSignTransfer =
                     apiClient.signExternalTransferBankId(signLink);
             return Optional.ofNullable(collectBankId(initiateSignTransfer));
@@ -318,16 +317,6 @@ public class SwedbankTransferHelper {
                     .setMessage(SwedbankBaseConstants.ErrorMessage.TOKEN_SIGN_FAILED)
                     .build();
         }
-    }
-
-    public boolean isBankId() {
-        Optional<String> authMethod =
-                sessionStorage.get(
-                        SwedbankBaseConstants.StorageKey.AUTHENTICATION_METHOD, String.class);
-        if (!authMethod.isPresent()) {
-            return false;
-        }
-        return authMethod.get().equalsIgnoreCase(SwedbankBaseConstants.AuthorizationMethod.BANK_ID);
     }
 
     private Field getChallengeField(String challenge) {
@@ -392,5 +381,9 @@ public class SwedbankTransferHelper {
                     .build();
         }
         return registerTransferResponse.getLinks();
+    }
+
+    public boolean isBankId() {
+        return isBankId;
     }
 }

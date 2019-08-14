@@ -29,13 +29,11 @@ public class SwedbankDefaultBankIdAuthenticator
     private static final Logger log =
             LoggerFactory.getLogger(SwedbankDefaultBankIdAuthenticator.class);
     private final SwedbankDefaultApiClient apiClient;
-    private final SessionStorage sessionStorage;
     private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
 
     public SwedbankDefaultBankIdAuthenticator(
-            SwedbankDefaultApiClient apiClient, SessionStorage sessionStorage) {
+            SwedbankDefaultApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -135,9 +133,6 @@ public class SwedbankDefaultBankIdAuthenticator
     private void completeBankIdLogin(CollectBankIdResponse collectBankIdResponse)
             throws AuthenticationException {
         apiClient.completeAuthentication(collectBankIdResponse.getLinks().getNextOrThrow());
-        sessionStorage.put(
-                SwedbankBaseConstants.StorageKey.AUTHENTICATION_METHOD,
-                SwedbankBaseConstants.AuthorizationMethod.BANK_ID);
     }
 
     private InitBankIdResponse initBankId(String ssn) throws BankIdException {

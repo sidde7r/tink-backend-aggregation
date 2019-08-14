@@ -22,16 +22,13 @@ import se.tink.libraries.i18n.Catalog;
 public class SwedbankTokenGeneratorAuthenticationController implements MultiFactorAuthenticator {
     private final SwedbankDefaultApiClient apiClient;
     private final SupplementalInformationController supplementalInformationController;
-    private final SessionStorage sessionStorage;
     private final Catalog catalog;
 
     public SwedbankTokenGeneratorAuthenticationController(
             SwedbankDefaultApiClient apiClient,
-            SessionStorage sessionStorage,
             SupplementalInformationController supplementalInformationController,
             Catalog catalog) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
         this.supplementalInformationController = supplementalInformationController;
         this.catalog = catalog;
     }
@@ -70,9 +67,6 @@ public class SwedbankTokenGeneratorAuthenticationController implements MultiFact
                 apiClient.sendLoginChallenge(challenge.get());
         apiClient.completeAuthentication(
                 securityTokenChallengeResponse.getLinks().getNextOrThrow());
-        sessionStorage.put(
-                SwedbankBaseConstants.StorageKey.AUTHENTICATION_METHOD,
-                SwedbankBaseConstants.AuthorizationMethod.SECURITY_TOKEN);
     }
 
     private InitSecurityTokenChallengeResponse initTokenGenerator(String ssn) {
