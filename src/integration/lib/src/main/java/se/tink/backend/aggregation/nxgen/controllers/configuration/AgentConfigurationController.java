@@ -26,6 +26,10 @@ public final class AgentConfigurationController {
     private final String financialInstitutionId;
     private final String appId;
     private Map<String, String> allSecrets;
+    // For fallback
+    private boolean fallback = false;
+    private String integrationName;
+    private String clientName;
 
     public AgentConfigurationController(
             TppSecretsServiceConfiguration tppSecretsServiceConfiguration,
@@ -53,6 +57,20 @@ public final class AgentConfigurationController {
         this.integrationsConfiguration = integrationsConfiguration;
         this.financialInstitutionId = financialInstitutionId;
         this.appId = appId;
+    }
+
+    public AgentConfigurationController withFallback(String integrationName, String clientName) {
+        this.fallback = true;
+        this.integrationName = integrationName;
+        this.clientName = clientName;
+        return this;
+    }
+
+    public AgentConfigurationController withoutFallback() {
+        this.fallback = false;
+        this.integrationName = null;
+        this.clientName = null;
+        return this;
     }
 
     public boolean init() {
@@ -97,15 +115,19 @@ public final class AgentConfigurationController {
     public <T extends ClientConfiguration> T getAgentConfiguration(
             final Class<T> clientConfigClass) {
 
+        // TODO: Remove once fallback is no longer needed
+        if (fallback && allSecrets == null) {
+            Preconditions.checkNotNull(
+                    integrationName,
+                    "integrationName cannot be null when using fallback to fetch secrets.");
+            Preconditions.checkNotNull(
+                    clientName, "clientName cannot be null when using fallback to fetch secrets.");
+            return getAgentConfigurationFallback(integrationName, clientName, clientConfigClass);
+        }
+
         // For local development we can use the development.yml file.
         if (!tppSecretsServiceEnabled) {
             return getAgentConfigurationDev(clientConfigClass);
-        }
-
-        // TODO: Remove once fallback is no longer needed
-        if (allSecrets == null) {
-            log.info("Falling back to k8s, try to use secrets service instead.");
-            return null;
         }
 
         Preconditions.checkNotNull(
@@ -126,10 +148,28 @@ public final class AgentConfigurationController {
                                                 + appId));
     }
 
+    private <T extends ClientConfiguration> T getAgentConfigurationFallback(
+            String integrationName, String clientName, Class<T> clientConfigClass) {
+        log.info("Falling back to k8s, try to use secrets service instead.");
+
+        return integrationsConfiguration
+                .getClientConfiguration(financialInstitutionId, appId, clientConfigClass)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Agent configuration for agent: "
+                                                + clientConfigClass.toString()
+                                                + " is missing for integrationName: "
+                                                + integrationName
+                                                + " and clientName: "
+                                                + clientName
+                                                + ". In the development.yml file."));
+    }
+
     // Used to read agent configuration from development.yml instead of Secrets Service
     private <T extends ClientConfiguration> T getAgentConfigurationDev(
             final Class<T> clientConfigClass) {
-        log.warn(
+        log.info(
                 "Not reading agent configuration from Secrets Service, make sure that you have "
                         + "uploaded the configuration to Secrets Service in staging and/or "
                         + "production.");
