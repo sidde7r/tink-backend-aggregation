@@ -19,7 +19,8 @@ public class SwedbankApiErrors {
         }
 
         ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-        // The field which contains the error is called RESPONSE. If this field exists the security token is invalid.
+        // The field which contains the error is called RESPONSE. If this field exists the security
+        // token is invalid.
         return errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.RESPONSE);
     }
 
@@ -65,7 +66,8 @@ public class SwedbankApiErrors {
         return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.AUTHORIZATION_FAILED);
     }
 
-    public static void handleTokenErrors(HttpResponseException hre) throws SupplementalInfoException {
+    public static void handleTokenErrors(HttpResponseException hre)
+            throws SupplementalInfoException {
         if (isSecurityTokenInvalidFormat(hre)) {
             throw SupplementalInfoError.NO_VALID_CODE.exception();
         }
