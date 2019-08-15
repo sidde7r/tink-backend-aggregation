@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public class ThirdPartyAppAuthenticationPayload {
     private Android android;
     private Ios ios;
+    private Desktop desktop;
     private String downloadTitle;
     private String downloadMessage;
     private String upgradeTitle;
@@ -22,8 +23,12 @@ public class ThirdPartyAppAuthenticationPayload {
         iOsPayload.setAppScheme(url.getScheme());
         iOsPayload.setDeepLinkUrl(url.get());
 
+        final Desktop desktop = new Desktop();
+        desktop.setUrl(url.get());
+
         payload.setAndroid(androidPayload);
         payload.setIos(iOsPayload);
+        payload.setDesktop(desktop);
         return payload;
     }
 
@@ -73,6 +78,14 @@ public class ThirdPartyAppAuthenticationPayload {
 
     public void setIos(Ios ios) {
         this.ios = ios;
+    }
+
+    public Desktop getDesktop() {
+        return desktop;
+    }
+
+    public void setDesktop(Desktop desktop) {
+        this.desktop = desktop;
     }
 
     public static class Ios {
@@ -153,6 +166,14 @@ public class ThirdPartyAppAuthenticationPayload {
 
         public String getIntent() {
             return intent;
+        }
+    }
+
+    public static class Desktop {
+        private String url;
+
+        private void setUrl(String url) {
+            this.url = url;
         }
     }
 }
