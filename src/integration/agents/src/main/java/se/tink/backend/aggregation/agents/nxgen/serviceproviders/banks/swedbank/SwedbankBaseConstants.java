@@ -18,12 +18,6 @@ import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.strings.StringUtils;
 
 public class SwedbankBaseConstants {
-
-    public static class AuthorizationMethod {
-        public static final String SECURITY_TOKEN = "SECURITY_TOKEN";
-        public static final String BANK_ID = "BANK_ID";
-    }
-
     public static class TransferScope {
         public static final String PAYMENT_FROM = "PAYMENT_FROM";
         public static final String TRANSFER_FROM = "TRANSFER_FROM";
@@ -128,7 +122,6 @@ public class SwedbankBaseConstants {
         public static final String CREDIT_CARD_RESPONSE = "creditCardResponse";
         public static final String BANK_PROFILE_HANDLER = "BANK_PROFILES";
         public static final String ID = "id";
-        public static final String AUTHENTICATION_METHOD = "authmethod";
     }
 
     public static class SavingAccountTypes {
