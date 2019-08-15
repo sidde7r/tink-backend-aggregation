@@ -74,9 +74,10 @@ public final class FinecoBankAuthenticator
                                 new IllegalMonitorStateException(
                                         "No supplemental info found in api response"));
 
-        while (!finecoAuthenticator.getApprovedConsent()
-                || System.currentTimeMillis() - startTime < FormValues.MAX_TIMEOUT_COUNTER) {
-            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        for (int i = 0; i < FormValues.MAX_POLLS_COUNTER; ++i) {
+            while (!finecoAuthenticator.getApprovedConsent()) {
+                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            }
         }
 
         finecoAuthenticator.storeAccounts();
