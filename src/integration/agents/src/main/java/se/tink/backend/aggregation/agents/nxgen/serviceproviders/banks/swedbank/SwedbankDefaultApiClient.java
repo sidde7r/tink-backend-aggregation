@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank;
 
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -22,7 +23,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitAuthenticationRequest;
@@ -57,7 +57,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfileHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.MenuItemLinkEntity;
@@ -73,7 +72,6 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankApiErrors.handleTokenErrors;
 
 public class SwedbankDefaultApiClient {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultApiClient.class);
@@ -220,7 +218,7 @@ public class SwedbankDefaultApiClient {
         try {
             profileResponse = makeRequest(linkEntity, ProfileResponse.class);
         } catch (HttpResponseException hre) {
-            if (isUserNotACustomer(hre)) {
+            if (SwedbankApiErrors.isUserNotACustomer(hre)) {
                 throw LoginError.NOT_CUSTOMER.exception();
             }
             // unknown error: rethrow
@@ -338,7 +336,7 @@ public class SwedbankDefaultApiClient {
                     request,
                     RegisterTransferRecipientResponse.class);
         } catch (HttpResponseException hre) {
-            if (isAccountNumberInvalid(hre)) {
+            if (SwedbankApiErrors.isAccountNumberInvalid(hre)) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                         .setEndUserMessage(
                                 TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
@@ -655,34 +653,6 @@ public class SwedbankDefaultApiClient {
                 SwedbankBaseConstants.MenuItemKey.PAYMENT_BASEINFO, PaymentBaseinfoResponse.class);
     }
 
-    private boolean isUserNotACustomer(HttpResponseException hre) {
-        // This method expects an response with the following characteristics:
-        // - Http status: 404
-        // - Http body: `ErrorResponse` with `general` error code of "NOT_FOUND"
-
-        HttpResponse httpResponse = hre.getResponse();
-        if (httpResponse.getStatus() != HttpStatus.SC_NOT_FOUND) {
-            return false;
-        }
-
-        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.NOT_FOUND);
-    }
-
-    private boolean isAccountNumberInvalid(HttpResponseException hre) {
-        // This method expects an response with the following characteristics:
-        // - Http status: 400
-        // - Http body: `ErrorResponse` with error field of "RECIPIENT_NUMBER"
-
-        HttpResponse httpResponse = hre.getResponse();
-        if (httpResponse.getStatus() != HttpStatus.SC_BAD_REQUEST) {
-            return false;
-        }
-
-        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-        return errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.RECIPIENT_NUMBER);
-    }
-
     private boolean hasValidProfile(ProfileResponse profileResponse) {
         boolean hasValidBank =
                 configuration.isSavingsBank()
@@ -726,7 +696,7 @@ public class SwedbankDefaultApiClient {
                     SecurityTokenChallengeRequest.createFromChallenge(challenge),
                     SecurityTokenChallengeResponse.class);
         } catch (HttpResponseException hre) {
-            handleTokenErrors(hre);
+            SwedbankApiErrors.handleTokenErrors(hre);
             // unknown error: rethrow
             throw hre;
         } catch (HttpClientException hce) {
@@ -746,7 +716,7 @@ public class SwedbankDefaultApiClient {
                     SecurityTokenChallengeRequest.createFromChallenge(challenge),
                     RegisterTransferResponse.class);
         } catch (HttpResponseException hre) {
-            handleTokenErrors(hre);
+            SwedbankApiErrors.handleTokenErrors(hre);
             // unknown error: rethrow
             throw hre;
         } catch (HttpClientException hce) {
@@ -767,7 +737,7 @@ public class SwedbankDefaultApiClient {
                     SecurityTokenChallengeRequest.createFromChallenge(challenge),
                     RegisterTransferResponse.class);
         } catch (HttpResponseException hre) {
-            handleTokenErrors(hre);
+            SwedbankApiErrors.handleTokenErrors(hre);
             // unknown error: rethrow
             throw hre;
         } catch (HttpClientException hce) {

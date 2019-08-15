@@ -81,4 +81,32 @@ public class SwedbankApiErrors {
             throw SupplementalInfoError.NO_VALID_CODE.exception();
         }
     }
+
+    public static boolean isUserNotACustomer(HttpResponseException hre) {
+        // This method expects an response with the following characteristics:
+        // - Http status: 404
+        // - Http body: `ErrorResponse` with `general` error code of "NOT_FOUND"
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_NOT_FOUND) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.NOT_FOUND);
+    }
+
+    public static boolean isAccountNumberInvalid(HttpResponseException hre) {
+        // This method expects an response with the following characteristics:
+        // - Http status: 400
+        // - Http body: `ErrorResponse` with error field of "RECIPIENT_NUMBER"
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_BAD_REQUEST) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.RECIPIENT_NUMBER);
+    }
 }
