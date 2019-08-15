@@ -31,7 +31,7 @@ public class SparebankAuthenticator {
                 : Try.failure(e);
     }
 
-    public void setUpPsuAndSession(String psuId, String tppSessionId) {
+    void setUpPsuAndSession(String psuId, String tppSessionId) {
         apiClient.setPsuId(psuId);
         apiClient.setTppSessionId(tppSessionId);
     }
