@@ -311,11 +311,7 @@ public class SwedbankTransferHelper {
                             supplementalAnswer.get());
             return Optional.ofNullable(signNewRecipientResponse.getLinks());
         } catch (SupplementalInfoException sie) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(
-                            TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.TOKEN_SIGN_FAILED)
-                    .build();
+            return Optional.empty();
         }
     }
 
