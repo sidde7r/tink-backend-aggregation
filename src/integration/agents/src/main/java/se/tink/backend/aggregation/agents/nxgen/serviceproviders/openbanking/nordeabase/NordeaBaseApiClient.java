@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
@@ -106,6 +107,23 @@ public class NordeaBaseApiClient implements TokenInterface {
     public GetAccountsResponse getAccounts() {
         return createRequestInSession(NordeaBaseConstants.Urls.GET_ACCOUNTS)
                 .get(GetAccountsResponse.class);
+    }
+
+    public GetAccountsResponse getCorporateAccounts() {
+        return createRequestInSession(Urls.GET_CORPORATE_ACCOUNTS)
+            .get(GetAccountsResponse.class);
+    }
+
+    public GetTransactionsResponse getCorporateTransactions(TransactionalAccount account, String key) {
+        URL url =
+            Optional.ofNullable(key)
+                .map(k -> new URL(Urls.BASE_CORPORATE_URL + k))
+                .orElse(
+                    NordeaBaseConstants.Urls.GET_CORPORATE_TRANSACTIONS.parameter(
+                        NordeaBaseConstants.IdTags.ACCOUNT_ID,
+                        account.getApiIdentifier()));
+
+        return createRequestInSession(url).get(GetTransactionsResponse.class);
     }
 
     public GetTransactionsResponse getTransactions(TransactionalAccount account, String key) {

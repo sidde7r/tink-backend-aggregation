@@ -78,7 +78,7 @@ public final class NordeaNoAgent extends NordeaBaseAgent
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         NordeaBaseTransactionalAccountFetcher accountFetcher =
-                new NordeaNoTransactionalAccountFetcher((NordeaNoApiClient) apiClient);
+                new NordeaNoTransactionalAccountFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
