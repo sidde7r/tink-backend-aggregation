@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.entities;
 
-import net.minidev.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.amount.Amount;
