@@ -37,5 +37,5 @@ public class TransactionsResponse implements PaginatorResponse {
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.of(false);
-    }
+    } // TODO change once pagination is fixed
 }

@@ -51,7 +51,7 @@ public class FinecoBankCreditCardAccountFetcher
     public PaginatorResponse getTransactionsFor(
             CreditCardAccount account, Date fromDate, Date toDate) {
 
-        if (isCreditAccountConsent(account)) {
+        if (isEmptyCreditAccountConsent(account)) {
             throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
         }
 
@@ -70,7 +70,7 @@ public class FinecoBankCreditCardAccountFetcher
         }
     }
 
-    private boolean isCreditAccountConsent(CreditCardAccount creditCardAccount) {
+    private boolean isEmptyCreditAccountConsent(CreditCardAccount creditCardAccount) {
         List<TransactionsItem> transactionsItems =
                 persistentStorage
                         .get(

@@ -33,14 +33,14 @@ public class BookedEntity {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setDescription(getDescrition())
+                .setDescription(getDescription())
                 .setDate(valueDate)
                 .setAmount(transactionAmount.toTinkAmount())
                 .build();
     }
 
     @JsonIgnore
-    private String getDescrition() {
+    private String getDescription() {
         if (!Strings.isNullOrEmpty(remittanceInformationStructured)) {
             return remittanceInformationStructured;
         } else if (!Strings.isNullOrEmpty(remittanceInformationUnStructured)) {

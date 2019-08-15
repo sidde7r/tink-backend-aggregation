@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -22,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -34,17 +34,18 @@ public final class FinecoBankAuthenticator
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final PersistentStorage persistentStorage;
     private final FinecoBankAuthenticationHelper finecoAuthenticator;
-    private final String state;
+    private final StrongAuthenticationState strongAuthenticationState;
     private static final Encoder encoder = Base64.getUrlEncoder();
 
     public FinecoBankAuthenticator(
             SupplementalInformationHelper supplementalInformationHelper,
             PersistentStorage persistentStorage,
-            FinecoBankAuthenticationHelper finecoAuthenticator) {
+            FinecoBankAuthenticationHelper finecoAuthenticator,
+            StrongAuthenticationState strongAuthenticationState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.persistentStorage = persistentStorage;
         this.finecoAuthenticator = finecoAuthenticator;
-        this.state = generateRandomState();
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
@@ -68,16 +69,18 @@ public final class FinecoBankAuthenticator
         long startTime = System.currentTimeMillis();
         this.supplementalInformationHelper
                 .waitForSupplementalInformation(
-                        this.formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES)
+                        strongAuthenticationState.getSupplementalKey(),
+                        WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES)
                 .orElseThrow(
                         () ->
                                 new IllegalMonitorStateException(
                                         "No supplemental info found in api response"));
 
-        for (int i = 0; i < FormValues.MAX_POLLS_COUNTER; ++i) {
-            while (!finecoAuthenticator.getApprovedConsent()) {
-                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-            }
+        for (int i = 0;
+                i < FormValues.MAX_POLLS_COUNTER && !finecoAuthenticator.getApprovedConsent();
+                ++i) {
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
         }
 
         finecoAuthenticator.storeAccounts();
@@ -86,21 +89,12 @@ public final class FinecoBankAuthenticator
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        return ThirdPartyAppAuthenticationPayload.of(finecoAuthenticator.buildAuthorizeUrl(state));
+        return ThirdPartyAppAuthenticationPayload.of(
+                finecoAuthenticator.buildAuthorizeUrl(strongAuthenticationState.getState()));
     }
 
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private String formatSupplementalKey(final String key) {
-        return String.format(QueryKeys.SUPPLEMENTAL_INFORMATION, key);
-    }
-
-    private static String generateRandomState() {
-        final byte[] randomData = new byte[32];
-        random.nextBytes(randomData);
-        return encoder.encodeToString(randomData);
     }
 }

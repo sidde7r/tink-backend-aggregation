@@ -52,7 +52,7 @@ public class FinecoBankTransactionalAccountFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
-        if (isTransactionAccountConsent(account)) {
+        if (isEmptyTransactionAccountConsent(account)) {
             throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
         }
 
@@ -68,7 +68,7 @@ public class FinecoBankTransactionalAccountFetcher
         }
     }
 
-    private boolean isTransactionAccountConsent(TransactionalAccount transactionalAccount) {
+    private boolean isEmptyTransactionAccountConsent(TransactionalAccount transactionalAccount) {
         List<TransactionsItem> transactionsItems =
                 persistentStorage
                         .get(
