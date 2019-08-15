@@ -1,19 +1,20 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.entity.account;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.cards.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.BalanceTypes;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.entity.common.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BalanceEntity {
+public class BalancesEntity {
 
-    private AmountEntity balanceAmount;
     private String balanceType;
-    private String referenceDate;
-    private Boolean creditLimitIncluded;
+    private BalanceAmountEntity balanceAmount;
 
-    public AmountEntity getBalanceAmount() {
+    public String getBalanceType() {
+        return balanceType;
+    }
+
+    public BalanceAmountEntity getBalanceAmount() {
         return balanceAmount;
     }
 

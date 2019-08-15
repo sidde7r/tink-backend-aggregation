@@ -12,37 +12,36 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.Fineco
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.TransactionsItem;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.entity.account.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.cards.entity.CardAccountsItem;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class FinecoBankTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>,
-                TransactionDatePaginator<TransactionalAccount> {
+public class FinecoBankCreditCardAccountFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
 
-    private final FinecoBankApiClient apiClient;
+    private final FinecoBankApiClient finecoBankApiClient;
     private final PersistentStorage persistentStorage;
 
-    public FinecoBankTransactionalAccountFetcher(
-            FinecoBankApiClient apiClient, PersistentStorage persistentStorage) {
-        this.apiClient = apiClient;
+    public FinecoBankCreditCardAccountFetcher(
+            FinecoBankApiClient finecoBankApiClient, PersistentStorage persistentStorage) {
+        this.finecoBankApiClient = finecoBankApiClient;
         this.persistentStorage = persistentStorage;
     }
 
     @Override
-    public Collection<TransactionalAccount> fetchAccounts() {
+    public Collection<CreditCardAccount> fetchAccounts() {
 
-        if (apiClient.isEmptyBalanceConsent()) {
+        if (finecoBankApiClient.isEmptyBalanceConsent()) {
             throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_BALANCES);
         }
 
-        return this.apiClient.fetchAccounts().getAccounts().stream()
-                .map(AccountEntity::toTinkAccount)
+        return this.finecoBankApiClient.fetchCreditCardAccounts().getCardAccounts().stream()
+                .map(CardAccountsItem::toTinkCreditAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
@@ -50,17 +49,20 @@ public class FinecoBankTransactionalAccountFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+            CreditCardAccount account, Date fromDate, Date toDate) {
 
-        if (isEmptyTransactionAccountConsent(account)) {
+        if (isEmptyCreditAccountConsent(account)) {
             throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
         }
 
         try {
             return PaginatorResponseImpl.create(
-                    apiClient.getTransactions(account, fromDate, toDate).getTinkTransactions());
+                    finecoBankApiClient
+                            .getCreditTransactions(account, fromDate, toDate)
+                            .getTinkTransactions());
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == ErrorMessages.ACCESS_EXCEEDED_ERROR_CODE) {
+            if (e.getResponse().getStatus() == ErrorMessages.ACCESS_EXCEEDED_ERROR_CODE
+                    || e.getResponse().getStatus() == ErrorMessages.PERIOD_INVALID_ERROR) {
                 return PaginatorResponseImpl.createEmpty(false);
             } else {
                 throw e;
@@ -68,7 +70,7 @@ public class FinecoBankTransactionalAccountFetcher
         }
     }
 
-    private boolean isEmptyTransactionAccountConsent(TransactionalAccount transactionalAccount) {
+    private boolean isEmptyCreditAccountConsent(CreditCardAccount creditCardAccount) {
         List<TransactionsItem> transactionsItems =
                 persistentStorage
                         .get(
@@ -77,13 +79,12 @@ public class FinecoBankTransactionalAccountFetcher
                         .orElse(Collections.emptyList());
         if (!transactionsItems.isEmpty()) {
             for (TransactionsItem transactionsItem : transactionsItems) {
-                if (!Strings.isNullOrEmpty(transactionsItem.getIban())) {
+                if (!Strings.isNullOrEmpty(transactionsItem.getMaskedPan()))
                     if (transactionsItem
-                            .getIban()
-                            .equals(transactionalAccount.getIdModule().getAccountNumber())) {
+                            .getMaskedPan()
+                            .equals(creditCardAccount.getIdModule().getAccountNumber())) {
                         return false;
                     }
-                }
             }
         }
         return true;
