@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.test.CbiGlobeAgentIntegrationTest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
