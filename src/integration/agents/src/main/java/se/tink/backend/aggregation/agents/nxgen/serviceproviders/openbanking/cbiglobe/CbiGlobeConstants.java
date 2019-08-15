@@ -25,6 +25,8 @@ public final class CbiGlobeConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String BALANCE_NOT_FOUND = "Balance cannot be found.";
+        public static final String MAPPING =
+                "Cannot map payment status: %s to Tink payment status.";
     }
 
     public static class Urls {
@@ -36,30 +38,37 @@ public final class CbiGlobeConstants {
         public static final URL BALANCES = new URL(BASE_URL + ApiServices.BALANCES);
         public static final URL TRANSACTIONS = new URL(BASE_URL + ApiServices.TRANSACTIONS);
         public static final URL CONSENTS_STATUS = new URL(BASE_URL + ApiServices.CONSENTS_STATUS);
+        public static final URL PAYMENT = new URL(BASE_URL + ApiServices.PAYMENT);
+        public static final URL FETCH_PAYMENT = new URL(BASE_URL + ApiServices.FETCH_PAYMENT);
     }
 
+    // TODO: Remove 'sbx' prefix for production
     public static class ApiServices {
         public static final String TOKEN = "/auth/oauth/v2/token";
         public static final String CONSENTS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/consents";
+                "/sbx/platform/enabler/psd2orchestrator/ais/2.3.2/consents";
         public static final String ACCOUNTS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts";
+                "/sbx/platform/enabler/psd2orchestrator/ais/2.3.2/accounts";
         public static final String BALANCES =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/balances";
+                "/sbx/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/balances";
         public static final String TRANSACTIONS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/transactions";
+                "/sbx/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/transactions";
         public static final String CONSENTS_STATUS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
+                "/sbx/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
+        private static final String PAYMENT =
+                "/sbx/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers";
+        private static final String FETCH_PAYMENT =
+                "/sbx/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}";
     }
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "consent-id";
         public static final String ACCOUNTS = "accounts";
+        public static final String LINK = "link";
     }
 
     public static class QueryKeys {
-
         public static final String GRANT_TYPE = "grant_type";
         public static final String STATE = "state";
         public static final String CODE = "code";
@@ -69,15 +78,14 @@ public final class CbiGlobeConstants {
     }
 
     public static class QueryValues {
-
         public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String CODE = "code";
         public static final String BOTH = "both";
         public static final String BOOKED = "booked";
+        public static final String STATE = "state";
     }
 
     public static class HeaderKeys {
-
         public static final String AUTHORIZATION = "Authorization";
         public static final String ASPSP_CODE = "aspsp-code";
         public static final String ASPSP_PRODUCT_CODE = "aspsp-product-code";
@@ -92,14 +100,12 @@ public final class CbiGlobeConstants {
     }
 
     public static class HeaderValues {
-
         public static final String DEFAULT_PSU_IP_ADDRESS = "0.0.0.0";
     }
 
-    public static class FormKeys {}
-
     public static class FormValues {
 
+        public static final String TRANSACTION_TYPE = "remote_transaction";
         public static final String ALL_ACCOUNTS = "allAccounts";
         public static final String TRUE = "true";
         public static final String FREQUENCY_PER_DAY_ONE = "1";
@@ -114,5 +120,6 @@ public final class CbiGlobeConstants {
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String CONSENT_ID = "consentId";
+        public static final String PAYMENT_ID = "payment-id";
     }
 }
