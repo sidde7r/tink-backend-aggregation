@@ -284,6 +284,10 @@ public class AgentWorkerOperationFactory {
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
+                new DecryptCredentialsWorkerCommand(
+                        context,
+                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
+        commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));
 
@@ -310,10 +314,6 @@ public class AgentWorkerOperationFactory {
                         createCommandMetricState(request),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
-        commands.add(
-                new DecryptCredentialsWorkerCommand(
-                        context,
-                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
@@ -370,6 +370,10 @@ public class AgentWorkerOperationFactory {
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
+                new DecryptCredentialsWorkerCommand(
+                        context,
+                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
+        commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));
 
@@ -386,10 +390,6 @@ public class AgentWorkerOperationFactory {
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, metricsName, reportMetricsAgentWorkerCommandState));
 
-        commands.add(
-                new DecryptCredentialsWorkerCommand(
-                        context,
-                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
@@ -496,6 +496,7 @@ public class AgentWorkerOperationFactory {
                         request.getProvider()),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
                 new LockAgentWorkerCommand(context),
+                new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo),
                 // Update the status to `UPDATED` if the credential isn't waiting on transactions
@@ -523,7 +524,6 @@ public class AgentWorkerOperationFactory {
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(
                                         RefreshableItem.REFRESHABLE_ITEMS_ALL))),
-                new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new CreateAgentConfigurationControllerWorkerCommand(context),
@@ -626,13 +626,13 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, "keep-alive", reportMetricsAgentWorkerCommandState));
-        commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
@@ -752,6 +752,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));
@@ -778,7 +779,6 @@ public class AgentWorkerOperationFactory {
                         createCommandMetricState(request),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
-        commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
@@ -841,6 +841,10 @@ public class AgentWorkerOperationFactory {
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
+                new DecryptCredentialsWorkerCommand(
+                        context,
+                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
+        commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));
         // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
@@ -866,10 +870,6 @@ public class AgentWorkerOperationFactory {
                         createCommandMetricState(request),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
-        commands.add(
-                new DecryptCredentialsWorkerCommand(
-                        context,
-                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
