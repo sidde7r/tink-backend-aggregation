@@ -1,8 +1,3 @@
-// With the current implementation of the framework, this is the only way to override the method
-// "doGenericPaymentBankTransfer" in
-// which the expected status of the fetched payment needs to be different than in base
-// implementation
-
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,9 +7,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,8 +25,13 @@ import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
+import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.annotations.ProgressiveAuth;
@@ -39,8 +39,10 @@ import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -58,11 +60,14 @@ import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
-public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase {
+public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase {
+
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
+
     private final Provider provider;
     private final User user;
     private final boolean loadCredentialsBefore;
@@ -70,13 +75,16 @@ public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurati
     private final boolean requestFlagManual;
     private final boolean doLogout;
     private final boolean expectLoggedIn;
+    private final Set<RefreshableItem> refreshableItems;
+    private final AisValidator validator;
     private final NewAgentTestContext context;
     private final SupplementalInformationController supplementalInformationController;
     private Credentials credential;
+    // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
 
-    private HandelsbankenAgentIntegrationTest(HandelsbankenAgentIntegrationTest.Builder builder) {
+    protected HandelsbankenAgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
         this.user = builder.getUser();
         this.credential = builder.getCredential();
@@ -87,132 +95,149 @@ public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurati
         this.requestFlagManual = builder.isRequestFlagManual();
         this.doLogout = builder.isDoLogout();
         this.expectLoggedIn = builder.isExpectLoggedIn();
+        this.refreshableItems = builder.getRefreshableItems();
+        this.validator = builder.validator;
+
         this.context =
                 new NewAgentTestContext(
-                        this.user,
-                        this.credential,
-                        builder.getTransactionsToPrint(),
-                        builder.getAppId());
+                        user, credential, builder.getTransactionsToPrint(), builder.getAppId());
+
         this.supplementalInformationController =
-                new SupplementalInformationController(this.context, this.credential);
+                new SupplementalInformationController(context, credential);
     }
 
     private boolean loadCredentials() {
-        if (!this.loadCredentialsBefore) {
+        if (!loadCredentialsBefore) {
             return false;
-        } else {
-            Optional<Credentials> optionalCredential =
-                    AgentTestServerClient.loadCredential(
-                            this.provider.getName(), this.credential.getId());
-            optionalCredential.ifPresent(
-                    (c) -> {
-                        this.credential = c;
-                    });
-            return optionalCredential.isPresent();
         }
+
+        Optional<Credentials> optionalCredential =
+                AgentTestServerClient.loadCredential(provider.getName(), credential.getId());
+
+        optionalCredential.ifPresent(c -> this.credential = c);
+
+        return optionalCredential.isPresent();
     }
 
     private void saveCredentials(Agent agent) {
-        if (this.saveCredentialsAfter && agent instanceof PersistentLogin) {
-            PersistentLogin persistentAgent = (PersistentLogin) agent;
-            persistentAgent.persistLoginSession();
-            AgentTestServerClient.saveCredential(this.provider.getName(), this.credential);
+        if (!saveCredentialsAfter || !(agent instanceof PersistentLogin)) {
+            return;
         }
+
+        PersistentLogin persistentAgent = (PersistentLogin) agent;
+
+        // Tell the agent to store data onto the credential (cookies etcetera)
+        persistentAgent.persistLoginSession();
+
+        AgentTestServerClient.saveCredential(provider.getName(), credential);
     }
 
     private RefreshInformationRequest createRefreshInformationRequest() {
         return new RefreshInformationRequest(
-                this.user,
-                this.provider,
-                this.credential,
-                this.requestFlagManual,
-                this.requestFlagCreate,
-                this.requestFlagUpdate);
+                user,
+                provider,
+                credential,
+                requestFlagManual,
+                requestFlagCreate,
+                requestFlagUpdate);
     }
 
     private Agent createAgent(CredentialsRequest credentialsRequest) {
         try {
             AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
-                    (AgentsServiceConfigurationWrapper)
-                            this.CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
-            this.configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
-            AgentFactory factory = new AgentFactory(this.configuration);
-            Class<? extends Agent> cls = AgentClassFactory.getAgentClass(this.provider);
-            return factory.create(cls, credentialsRequest, this.context);
-        } catch (FileNotFoundException var5) {
-            if (var5.getMessage().equals("File etc/development.yml not found")) {
-                String message =
-                        "etc/development.yml missing. Please make a copy of etc/development.template.yml.";
+                    CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
+            configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
+            AgentConfigurationController agentConfigurationController =
+                    new AgentConfigurationController(
+                            configuration.getTppSecretsServiceConfiguration(),
+                            configuration.getIntegrations(),
+                            provider.getFinancialInstitutionId(),
+                            context.getAppId());
+            if (!agentConfigurationController.init()) {
                 throw new IllegalStateException(
-                        "etc/development.yml missing. Please make a copy of etc/development.template.yml.");
-            } else {
-                throw new IllegalStateException(var5);
+                        "Error when initializing AgentConfigurationController.");
             }
-        } catch (Exception var6) {
-            throw new IllegalStateException(var6);
+            context.setAgentConfigurationController(agentConfigurationController);
+
+            AgentFactory factory = new AgentFactory(configuration);
+
+            Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
+            return factory.create(cls, credentialsRequest, context);
+        } catch (FileNotFoundException e) {
+            if (e.getMessage().equals("File etc/development.yml not found")) {
+                final String message =
+                        "etc/development.yml missing. Please make a copy of etc/development.template.yml.";
+                throw new IllegalStateException(message);
+            }
+            throw new IllegalStateException(e);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
     }
 
     private boolean isLoggedIn(Agent agent) throws Exception {
         if (!(agent instanceof PersistentLogin)) {
             return false;
-        } else {
-            PersistentLogin persistentAgent = (PersistentLogin) agent;
-            persistentAgent.loadLoginSession();
-            if (!persistentAgent.isLoggedIn()) {
-                persistentAgent.clearLoginSession();
-                return false;
-            } else {
-                return true;
-            }
         }
+
+        PersistentLogin persistentAgent = (PersistentLogin) agent;
+
+        persistentAgent.loadLoginSession();
+        if (!persistentAgent.isLoggedIn()) {
+            persistentAgent.clearLoginSession();
+            return false;
+        }
+        return true;
     }
 
     private void progressiveLogin(final Agent agent) throws Exception {
-        ProgressiveAuthAgent progressiveAgent = (ProgressiveAuthAgent) agent;
-
-        Map map;
-        for (SteppableAuthenticationResponse response =
-                        progressiveAgent.login(SteppableAuthenticationRequest.initialRequest());
-                response.getStep().isPresent();
-                response =
-                        progressiveAgent.login(
-                                SteppableAuthenticationRequest.subsequentRequest(
-                                        (Class) response.getStep().get(),
-                                        new ArrayList(map.values())))) {
-            List<Field> fields = response.getFields();
-            map =
-                    this.supplementalInformationController.askSupplementalInformation(
-                            (Field[]) fields.toArray(new Field[fields.size()]));
+        final ProgressiveAuthAgent progressiveAgent = (ProgressiveAuthAgent) agent;
+        SteppableAuthenticationResponse response =
+                progressiveAgent.login(SteppableAuthenticationRequest.initialRequest());
+        while (response.getStep().isPresent()) {
+            // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
+            // etc.
+            final List<Field> fields = response.getFields();
+            final Map<String, String> map =
+                    supplementalInformationController.askSupplementalInformation(
+                            fields.toArray(new Field[fields.size()]));
+            response =
+                    progressiveAgent.login(
+                            SteppableAuthenticationRequest.subsequentRequest(
+                                    response.getStep().get(), new ArrayList<>(map.values())));
         }
     }
 
     private void login(Agent agent) throws Exception {
-        if (!this.isLoggedIn(agent)) {
-            if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
-                this.progressiveLogin(agent);
-            } else {
-                boolean loginSuccessful = agent.login();
-                Assert.assertTrue("Agent could not login successfully.", loginSuccessful);
-            }
+        if (isLoggedIn(agent)) {
+            return;
         }
+        if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
+            progressiveLogin(agent);
+            return;
+        }
+
+        boolean loginSuccessful = agent.login();
+        Assert.assertTrue("Agent could not login successfully.", loginSuccessful);
     }
 
     private boolean keepAlive(Agent agent) throws Exception {
         if (!(agent instanceof PersistentLogin)) {
+            // Consider it being alive even though it doesn't implement the correct interface.
             return true;
-        } else {
-            PersistentLogin persistentAgent = (PersistentLogin) agent;
-            boolean alive = persistentAgent.keepAlive();
-            if (!alive) {
-                persistentAgent.clearLoginSession();
-                log.info("Credential is not alive.");
-            } else {
-                log.info("Credential is alive.");
-            }
-
-            return alive;
         }
+
+        PersistentLogin persistentAgent = (PersistentLogin) agent;
+
+        boolean alive = persistentAgent.keepAlive();
+        if (!alive) {
+            persistentAgent.clearLoginSession();
+            log.info("Credential is not alive.");
+        } else {
+            log.info("Credential is alive.");
+        }
+
+        return alive;
     }
 
     private void logout(Agent agent) throws Exception {
@@ -220,63 +245,179 @@ public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurati
         agent.logout();
     }
 
-    private void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
+    private void refresh(Agent agent) throws Exception {
+        credential.setStatus(CredentialsStatus.UPDATING);
+
+        log.info("Starting refresh.");
+
+        if (agent instanceof DeprecatedRefreshExecutor) {
+            log.warn("DeprecatedRefreshExecutor");
+            ((DeprecatedRefreshExecutor) agent).refresh();
+        } else {
+            List<RefreshableItem> sortedItems = RefreshableItem.sort(refreshableItems);
+            for (RefreshableItem item : sortedItems) {
+                if (item == RefreshableItem.IDENTITY_DATA
+                        && agent instanceof RefreshIdentityDataExecutor) {
+
+                    context.sendIdentityToIdentityAggregatorService(
+                            ((RefreshIdentityDataExecutor) agent)
+                                    .fetchIdentityData()
+                                    .getIdentityData());
+                } else {
+                    RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
+                }
+            }
+
+            if (!RefreshableItem.hasAccounts(sortedItems)) {
+                Assert.assertTrue(context.getUpdatedAccounts().isEmpty());
+            }
+
+            if (!RefreshableItem.hasTransactions(sortedItems)) {
+                Assert.assertTrue(context.getTransactions().isEmpty());
+            }
+
+            if (!refreshableItems.contains(RefreshableItem.EINVOICES)) {
+                Assert.assertTrue(context.getTransfers().isEmpty());
+            }
+
+            if (!refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
+                Assert.assertTrue(context.getTransferDestinationPatterns().isEmpty());
+            }
+        }
+
+        log.info("Done with refresh.");
+    }
+
+    protected void doGenericPaymentBankTransferUKOB(Agent agent, List<Payment> paymentList)
             throws Exception {
-        if (!(agent instanceof SubsequentGenerationAgent)) {
+        if (agent instanceof SubsequentGenerationAgent) {
+            log.info("Executing transfer for UkOpenbanking Agent");
+            PaymentController paymentController =
+                    ((SubsequentGenerationAgent) agent)
+                            .constructPaymentController()
+                            .orElseThrow(Exception::new);
+
+            for (Payment payment : paymentList) {
+                log.info("Executing bank transfer.");
+
+                PaymentResponse createPaymentResponse =
+                        paymentController.create(new PaymentRequest(payment));
+
+                Storage storage = Storage.copyOf(createPaymentResponse.getStorage());
+
+                PaymentMultiStepResponse signPaymentMultiStepResponse =
+                        paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
+
+                Map<String, String> map;
+                List<Field> fields;
+                String nextStep = signPaymentMultiStepResponse.getStep();
+                Payment paymentSign = signPaymentMultiStepResponse.getPayment();
+                Storage storageSign = signPaymentMultiStepResponse.getStorage();
+
+                while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+                    fields = signPaymentMultiStepResponse.getFields();
+                    map = Collections.emptyMap();
+
+                    signPaymentMultiStepResponse =
+                            paymentController.sign(
+                                    new PaymentMultiStepRequest(
+                                            payment,
+                                            storage,
+                                            nextStep,
+                                            fields,
+                                            new ArrayList<>(map.values())));
+                    nextStep = signPaymentMultiStepResponse.getStep();
+                    paymentSign = signPaymentMultiStepResponse.getPayment();
+                    storageSign = signPaymentMultiStepResponse.getStorage();
+                }
+
+                PaymentResponse paymentResponse =
+                        paymentController.fetch(
+                                PaymentMultiStepRequest.of(signPaymentMultiStepResponse));
+                PaymentStatus statusResult = paymentResponse.getPayment().getStatus();
+
+                Assert.assertTrue(
+                        statusResult.equals(PaymentStatus.SIGNED)
+                                || statusResult.equals(PaymentStatus.PAID));
+
+                log.info("Done with bank transfer.");
+            }
+        } else {
             throw new AssertionError(
                     String.format(
                             "%s does not implement a transfer executor interface.",
                             agent.getClass().getSimpleName()));
-        } else {
-            PaymentController paymentController =
-                    (PaymentController)
-                            ((SubsequentGenerationAgent) agent)
-                                    .constructPaymentController()
-                                    .orElseThrow(Exception::new);
-            ArrayList<PaymentRequest> paymentRequests = new ArrayList();
-            Iterator var5 = paymentList.iterator();
+        }
+    }
 
-            PaymentResponse paymentResponse;
-            while (var5.hasNext()) {
-                Payment payment = (Payment) var5.next();
+    protected void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
+            throws Exception {
+
+        if (agent instanceof SubsequentGenerationAgent) {
+            PaymentController paymentController =
+                    ((SubsequentGenerationAgent) agent)
+                            .constructPaymentController()
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    "Agent doesn't implement constructPaymentController method."));
+
+            ArrayList<PaymentRequest> paymentRequests = new ArrayList<>();
+            for (Payment payment : paymentList) {
                 log.info("Executing bank transfer.");
-                paymentResponse = paymentController.create(new PaymentRequest(payment));
-                PaymentResponse fetchPaymentResponse =
-                        paymentController.fetch(PaymentRequest.of(paymentResponse));
-                Assert.assertEquals(
-                        PaymentStatus.PAID, fetchPaymentResponse.getPayment().getStatus());
-                paymentRequests.add(PaymentRequest.of(fetchPaymentResponse));
+
+                PaymentResponse createPaymentResponse =
+                        paymentController.create(new PaymentRequest(payment));
+
+                if (paymentController.canFetch()) {
+                    PaymentResponse fetchPaymentResponse =
+                            paymentController.fetch(PaymentRequest.of(createPaymentResponse));
+
+                    Assert.assertEquals(
+                            PaymentStatus.PAID, fetchPaymentResponse.getPayment().getStatus());
+
+                    paymentRequests.add(PaymentRequest.of(fetchPaymentResponse));
+                } else {
+                    paymentRequests.add(new PaymentRequest(payment));
+                }
             }
 
-            PaymentListResponse paymentListResponse =
-                    paymentController.fetchMultiple(new PaymentListRequest(paymentRequests));
-            Iterator var17 = paymentListResponse.getPaymentResponseList().iterator();
+            PaymentListResponse paymentListResponse = null;
+            if (paymentController.canFetch()) {
+                paymentListResponse =
+                        paymentController.fetchMultiple(new PaymentListRequest(paymentRequests));
+            } else {
+                paymentListResponse = PaymentListResponse.of(paymentRequests);
+            }
 
-            while (var17.hasNext()) {
-                paymentResponse = (PaymentResponse) var17.next();
+            for (PaymentResponse paymentResponse : paymentListResponse.getPaymentResponseList()) {
                 Payment retrievedPayment = paymentResponse.getPayment();
                 Storage storage = Storage.copyOf(paymentResponse.getStorage());
+
                 PaymentMultiStepRequest paymentMultiStepRequest =
                         new PaymentMultiStepRequest(
                                 retrievedPayment,
                                 storage,
-                                "init",
+                                AuthenticationStepConstants.STEP_INIT,
                                 Collections.emptyList(),
                                 Collections.emptyList());
+
                 PaymentMultiStepResponse paymentMultiStepResponse =
                         paymentController.sign(paymentMultiStepRequest);
-                String nextStep = paymentMultiStepResponse.getStep();
 
-                for (retrievedPayment = paymentMultiStepResponse.getPayment();
-                        !"finalize".equals(nextStep);
-                        storage = paymentMultiStepResponse.getStorage()) {
-                    Map map;
-                    List fields;
-                    if (this.isSupplementalStep(paymentMultiStepResponse.getStep())) {
+                Map<String, String> map;
+                List<Field> fields;
+                String nextStep = paymentMultiStepResponse.getStep();
+                retrievedPayment = paymentMultiStepResponse.getPayment();
+                while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+                    // TODO auth: think about cases other than supplemental info, e.g. bankid,
+                    // redirect
+                    // etc.
+                    if (isSupplementalStep(paymentMultiStepResponse.getStep())) {
                         fields = paymentMultiStepResponse.getFields();
                         map =
-                                this.supplementalInformationController.askSupplementalInformation(
-                                        (Field[]) fields.toArray(new Field[fields.size()]));
+                                supplementalInformationController.askSupplementalInformation(
+                                        fields.toArray(new Field[fields.size()]));
                     } else {
                         fields = paymentMultiStepResponse.getFields();
                         map = Collections.emptyMap();
@@ -289,22 +430,31 @@ public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurati
                                             storage,
                                             nextStep,
                                             fields,
-                                            new ArrayList(map.values())));
+                                            new ArrayList<>(map.values())));
                     nextStep = paymentMultiStepResponse.getStep();
                     fields = paymentMultiStepResponse.getFields();
                     retrievedPayment = paymentMultiStepResponse.getPayment();
+                    storage = paymentMultiStepResponse.getStorage();
                 }
 
                 PaymentStatus statusResult = paymentMultiStepResponse.getPayment().getStatus();
                 Assert.assertTrue(
                         statusResult.equals(PaymentStatus.SIGNED)
                                 || statusResult.equals(PaymentStatus.PAID));
+
                 log.info("Done with bank transfer.");
             }
 
+            // The assert is done here instead of at the beginning of the loop to sign all the
+            // pending payments so they will not be present and mess with the test the next time we
+            // run it.
             Assert.assertEquals(
-                    (long) paymentList.size(),
-                    (long) paymentListResponse.getPaymentResponseList().size());
+                    paymentList.size(), paymentListResponse.getPaymentResponseList().size());
+        } else {
+            throw new AssertionError(
+                    String.format(
+                            "%s does not implement a transfer executor interface.",
+                            agent.getClass().getSimpleName()));
         }
     }
 
@@ -312,64 +462,179 @@ public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurati
         return false;
     }
 
-    private void initiateCredentials() {
-        if (this.loadCredentials()) {
-            if (this.requestFlagCreate == null) {
-                this.requestFlagCreate = false;
+    private void doBankTransfer(Agent agent, Transfer transfer, boolean isUpdate) throws Exception {
+        log.info("Executing bank transfer.");
+
+        if (agent instanceof TransferExecutorNxgen) {
+            if (isUpdate) {
+                ((TransferExecutorNxgen) agent).update(transfer);
+            } else {
+                ((TransferExecutorNxgen) agent).execute(transfer);
+            }
+        } else if (agent instanceof TransferExecutor) {
+            if (isUpdate) {
+                ((TransferExecutor) agent).update(transfer);
+            } else {
+                ((TransferExecutor) agent).execute(transfer);
             }
 
-            if (this.requestFlagUpdate == null) {
-                this.requestFlagUpdate = false;
+        } else {
+            throw new AssertionError(
+                    String.format(
+                            "%s does not implement a transfer executor interface.",
+                            agent.getClass().getSimpleName()));
+        }
+
+        log.info("Done with bank transfer.");
+    }
+
+    private void initiateCredentials() {
+        if (loadCredentials()) {
+            // If the credential loaded successful AND the flags were not overridden
+            // == non-create/update refresh
+            if (requestFlagCreate == null) {
+                requestFlagCreate = false;
+            }
+
+            if (requestFlagUpdate == null) {
+                requestFlagUpdate = false;
             }
         } else {
-            if (this.requestFlagCreate == null) {
-                this.requestFlagCreate = true;
+            // If the credential failed to load (perhaps none previously stored) AND the flags were
+            // not overridden
+            // == Create new credential
+            if (requestFlagCreate == null) {
+                requestFlagCreate = true;
             }
 
-            if (this.requestFlagUpdate == null) {
-                this.requestFlagUpdate = false;
+            if (requestFlagUpdate == null) {
+                requestFlagUpdate = false;
             }
         }
+    }
+
+    public NewAgentTestContext testRefresh() throws Exception {
+        initiateCredentials();
+        Agent agent = createAgent(createRefreshInformationRequest());
+        try {
+            login(agent);
+            refresh(agent);
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.validateFetchedData(validator);
+        context.printCollectedData();
+        return context;
+    }
+
+    private void testBankTransfer(Transfer transfer, boolean isUpdate) throws Exception {
+        initiateCredentials();
+        Agent agent = createAgent(createRefreshInformationRequest());
+        try {
+            login(agent);
+            doBankTransfer(agent, transfer, isUpdate);
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
+    public void testBankTransfer(Transfer transfer) throws Exception {
+        testBankTransfer(transfer, false);
+    }
+
+    public void testUpdateTransfer(Transfer transfer) throws Exception {
+        testBankTransfer(transfer, true);
     }
 
     public void testGenericPayment(List<Payment> paymentList) throws Exception {
-        this.initiateCredentials();
-        Agent agent = this.createAgent(this.createRefreshInformationRequest());
-
+        initiateCredentials();
+        Agent agent = createAgent(createRefreshInformationRequest());
         try {
-            this.login(agent);
-            if (!(agent instanceof SubsequentGenerationAgent)) {
+            login(agent);
+            if (agent instanceof SubsequentGenerationAgent) {
+                doGenericPaymentBankTransfer(agent, paymentList);
+            } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
             }
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
-            this.doGenericPaymentBankTransfer(agent, paymentList);
-            Assert.assertTrue(
-                    "Expected to be logged in.", !this.expectLoggedIn || this.keepAlive(agent));
-            if (this.doLogout) {
-                this.logout(agent);
+            if (doLogout) {
+                logout(agent);
             }
         } finally {
-            this.saveCredentials(agent);
+            saveCredentials(agent);
         }
 
-        this.context.printCollectedData();
+        context.printCollectedData();
+    }
+
+    public void testGenericPaymentUKOB(List<Payment> paymentList) throws Exception {
+        initiateCredentials();
+        Agent agent = createAgent(createRefreshInformationRequest());
+        try {
+            // login(agent);
+            if (agent instanceof SubsequentGenerationAgent) {
+                doGenericPaymentBankTransferUKOB(agent, paymentList);
+            } else {
+                throw new NotImplementedException(
+                        String.format("%s", agent.getAgentClass().getSimpleName()));
+            }
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
+    public Provider getProvider() {
+        return provider;
     }
 
     public static class Builder {
+        private static final String DEFAULT_USER_ID = "deadbeefdeadbeefdeadbeefdeadbeef";
+        private static final String DEFAULT_CREDENTIAL_ID = "cafebabecafebabecafebabecafebabe";
+        private static final String DEFAULT_LOCALE = "sv_SE";
+
         private final Provider provider;
         private User user = createDefaultUser();
         private Credentials credential = createDefaultCredential();
+
         private int transactionsToPrint = 32;
         private boolean loadCredentialsBefore = false;
         private boolean saveCredentialsAfter = false;
+
+        // if it should override standard logic
         private Boolean requestFlagCreate = null;
         private Boolean requestFlagUpdate = null;
+
         private boolean requestFlagManual = true;
+
         private boolean doLogout = false;
         private boolean expectLoggedIn = true;
-        private Set<RefreshableItem> refreshableItems = new HashSet();
+
+        private Set<RefreshableItem> refreshableItems = new HashSet<>();
+
         private AisValidator validator;
+
         private String appId = "tink";
 
         public Builder(String market, String providerName) {
@@ -387,119 +652,200 @@ public final class HandelsbankenAgentIntegrationTest extends AbstractConfigurati
             String providersFilePath =
                     "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
             File providersFile = new File(providersFilePath);
-            ObjectMapper mapper = new ObjectMapper();
-
+            final ObjectMapper mapper = new ObjectMapper();
             try {
-                return (ProviderConfig) mapper.readValue(providersFile, ProviderConfig.class);
-            } catch (IOException var5) {
-                throw new IllegalStateException(var5);
+                return mapper.readValue(providersFile, ProviderConfig.class);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
             }
         }
 
         private static User createDefaultUser() {
             UserProfile profile = new UserProfile();
-            profile.setLocale("sv_SE");
+            profile.setLocale(DEFAULT_LOCALE);
+
             User user = new User();
-            user.setId("deadbeefdeadbeefdeadbeefdeadbeef");
+            user.setId(DEFAULT_USER_ID);
             user.setProfile(profile);
             user.setFlags(Lists.newArrayList());
+
             return user;
         }
 
         private static Credentials createDefaultCredential() {
             Credentials credential = new Credentials();
-            credential.setId("cafebabecafebabecafebabecafebabe");
-            credential.setUserId("deadbeefdeadbeefdeadbeefdeadbeef");
+            credential.setId(DEFAULT_CREDENTIAL_ID);
+            credential.setUserId(DEFAULT_USER_ID);
             credential.setStatus(CredentialsStatus.CREATED);
+
             return credential;
         }
 
         public Provider getProvider() {
-            return this.provider;
+            return provider;
         }
 
         public User getUser() {
-            return this.user;
+            return user;
+        }
+
+        public Builder setUser(User user) {
+            this.user = user;
+            return this;
         }
 
         public Credentials getCredential() {
-            return this.credential;
+            return credential;
         }
 
         public int getTransactionsToPrint() {
-            return this.transactionsToPrint;
+            return transactionsToPrint;
         }
 
         public boolean isLoadCredentialsBefore() {
-            return this.loadCredentialsBefore;
+            return loadCredentialsBefore;
         }
 
         public boolean isSaveCredentialsAfter() {
-            return this.saveCredentialsAfter;
+            return saveCredentialsAfter;
         }
 
         public Boolean getRequestFlagCreate() {
-            return this.requestFlagCreate;
+            return requestFlagCreate;
+        }
+
+        public Builder setRequestFlagCreate(boolean requestFlagCreate) {
+            this.requestFlagCreate = requestFlagCreate;
+            return this;
         }
 
         public Boolean getRequestFlagUpdate() {
-            return this.requestFlagUpdate;
+            return requestFlagUpdate;
+        }
+
+        public Builder setRequestFlagUpdate(boolean requestFlagUpdate) {
+            this.requestFlagUpdate = requestFlagUpdate;
+            return this;
         }
 
         public boolean isRequestFlagManual() {
-            return this.requestFlagManual;
+            return requestFlagManual;
+        }
+
+        public Builder setRequestFlagManual(boolean requestFlagManual) {
+            this.requestFlagManual = requestFlagManual;
+            return this;
         }
 
         public boolean isDoLogout() {
-            return this.doLogout;
+            return doLogout;
         }
 
         public boolean isExpectLoggedIn() {
-            return this.expectLoggedIn;
+            return expectLoggedIn;
         }
 
-        public HandelsbankenAgentIntegrationTest.Builder loadCredentialsBefore(
-                boolean loadCredentialsBefore) {
-            this.loadCredentialsBefore = loadCredentialsBefore;
+        public Set<RefreshableItem> getRefreshableItems() {
+            return refreshableItems;
+        }
+
+        public Builder setRefreshableItems(Set<RefreshableItem> refreshableItems) {
+            this.refreshableItems = refreshableItems;
             return this;
-        }
-
-        public HandelsbankenAgentIntegrationTest.Builder saveCredentialsAfter(
-                boolean saveCredentialsAfter) {
-            this.saveCredentialsAfter = saveCredentialsAfter;
-            return this;
-        }
-
-        public HandelsbankenAgentIntegrationTest.Builder expectLoggedIn(boolean expectLoggedIn) {
-            this.expectLoggedIn = expectLoggedIn;
-            return this;
-        }
-
-        public HandelsbankenAgentIntegrationTest.Builder addCredentialField(
-                String key, String value) {
-            this.credential.setField(key, value);
-            return this;
-        }
-
-        public HandelsbankenAgentIntegrationTest build() {
-            if (this.refreshableItems.isEmpty()) {
-                this.refreshableItems.addAll(
-                        RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL));
-            }
-
-            Preconditions.checkNotNull(this.provider, "Provider was not set.");
-            Preconditions.checkNotNull(this.credential, "Credential was not set.");
-            this.credential.setProviderName(this.provider.getName());
-            this.credential.setType(this.provider.getCredentialsType());
-            if (this.validator == null) {
-                this.validator = ValidatorFactory.getExtensiveValidator();
-            }
-
-            return new HandelsbankenAgentIntegrationTest(this);
         }
 
         public String getAppId() {
             return appId;
+        }
+
+        public Builder setAppId(final String appId) {
+            this.appId = appId;
+            return this;
+        }
+
+        public Builder setFinancialInstitutionId(final String financialInstitutionId) {
+            this.provider.setFinancialInstitutionId(financialInstitutionId);
+            return this;
+        }
+
+        public Builder setUserLocale(String locale) {
+            Preconditions.checkNotNull(this.user, "User not set.");
+            Preconditions.checkNotNull(this.user.getProfile(), "User has no profile.");
+            this.user.getProfile().setLocale(locale);
+            return this;
+        }
+
+        public Builder transactionsToPrint(int transactionsToPrint) {
+            this.transactionsToPrint = transactionsToPrint;
+            return this;
+        }
+
+        public Builder loadCredentialsBefore(boolean loadCredentialsBefore) {
+            this.loadCredentialsBefore = loadCredentialsBefore;
+            return this;
+        }
+
+        public Builder saveCredentialsAfter(boolean saveCredentialsAfter) {
+            this.saveCredentialsAfter = saveCredentialsAfter;
+            return this;
+        }
+
+        public Builder doLogout(boolean doLogout) {
+            this.doLogout = doLogout;
+            return this;
+        }
+
+        public Builder expectLoggedIn(boolean expectLoggedIn) {
+            this.expectLoggedIn = expectLoggedIn;
+            return this;
+        }
+
+        public Builder addRefreshableItems(RefreshableItem... items) {
+            this.refreshableItems.addAll(Arrays.asList(items));
+            return this;
+        }
+
+        public Builder setCredentialId(String credentialId) {
+            credential.setId(credentialId);
+            return this;
+        }
+
+        public Builder setCredentialFields(Map<String, String> fields) {
+            this.credential.setFields(fields);
+            return this;
+        }
+
+        public Builder addCredentialField(String key, String value) {
+            this.credential.setField(key, value);
+            return this;
+        }
+
+        public Builder addCredentialField(Field.Key key, String value) {
+            return addCredentialField(key.getFieldKey(), value);
+        }
+
+        /** Inject a custom validator of AIS data. */
+        public Builder setValidator(final AisValidator validator) {
+            this.validator = validator;
+            return this;
+        }
+
+        public HandelsbankenAgentIntegrationTest build() {
+            if (refreshableItems.isEmpty()) {
+                refreshableItems.addAll(
+                        RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL));
+            }
+
+            Preconditions.checkNotNull(provider, "Provider was not set.");
+            Preconditions.checkNotNull(credential, "Credential was not set.");
+            credential.setProviderName(provider.getName());
+            credential.setType(provider.getCredentialsType());
+
+            if (validator == null) {
+                validator = ValidatorFactory.getExtensiveValidator();
+            }
+
+            return new HandelsbankenAgentIntegrationTest(this);
         }
     }
 }
