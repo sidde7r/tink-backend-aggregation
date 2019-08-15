@@ -54,7 +54,8 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(
-                new PaymentController(new HandelsbankenPaymentExecutorSelector(apiClient)));
+        HandelsbankenPaymentExecutorSelector paymentExecutorSelector =
+                new HandelsbankenPaymentExecutorSelector(apiClient);
+        return Optional.of(new PaymentController(paymentExecutorSelector, paymentExecutorSelector));
     }
 }
