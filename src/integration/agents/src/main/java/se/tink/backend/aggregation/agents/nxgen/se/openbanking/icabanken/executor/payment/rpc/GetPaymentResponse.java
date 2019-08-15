@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.rpc;
 
-import java.time.LocalDate;
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.entities.InstructedAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.entities.LinkEntity;
