@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount;
 
+import com.google.common.base.Strings;
 import java.util.Collection;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;

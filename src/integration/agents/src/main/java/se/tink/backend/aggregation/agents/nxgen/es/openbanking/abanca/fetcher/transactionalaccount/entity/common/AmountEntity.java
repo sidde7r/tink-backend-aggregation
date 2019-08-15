@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.entity.common;
 
-import org.assertj.core.util.Strings;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
