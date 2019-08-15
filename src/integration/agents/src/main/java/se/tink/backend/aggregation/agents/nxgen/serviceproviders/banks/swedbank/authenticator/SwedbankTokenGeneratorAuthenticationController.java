@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.SecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
 public class SwedbankTokenGeneratorAuthenticationController implements MultiFactorAuthenticator {
@@ -46,7 +45,8 @@ public class SwedbankTokenGeneratorAuthenticationController implements MultiFact
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        InitSecurityTokenChallengeResponse initSecurityTokenChallengeResponse = initTokenGenerator(ssn);
+        InitSecurityTokenChallengeResponse initSecurityTokenChallengeResponse =
+                initTokenGenerator(ssn);
 
         Map<String, String> supplementalInformation =
                 supplementalInformationController.askSupplementalInformation(responseField());
@@ -60,7 +60,8 @@ public class SwedbankTokenGeneratorAuthenticationController implements MultiFact
         }
 
         SecurityTokenChallengeResponse securityTokenChallengeResponse =
-                apiClient.sendLoginChallenge(initSecurityTokenChallengeResponse.getLinks(), challenge.get());
+                apiClient.sendLoginChallenge(
+                        initSecurityTokenChallengeResponse.getLinks(), challenge.get());
         apiClient.completeAuthentication(
                 securityTokenChallengeResponse.getLinks().getNextOrThrow());
     }

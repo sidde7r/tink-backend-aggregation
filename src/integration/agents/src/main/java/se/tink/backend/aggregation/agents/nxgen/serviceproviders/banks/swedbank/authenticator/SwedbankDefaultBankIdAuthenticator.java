@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SwedbankDefaultBankIdAuthenticator
         implements BankIdAuthenticator<AbstractBankIdAuthResponse> {
@@ -31,8 +30,7 @@ public class SwedbankDefaultBankIdAuthenticator
     private final SwedbankDefaultApiClient apiClient;
     private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
 
-    public SwedbankDefaultBankIdAuthenticator(
-            SwedbankDefaultApiClient apiClient) {
+    public SwedbankDefaultBankIdAuthenticator(SwedbankDefaultApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
