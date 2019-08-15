@@ -128,7 +128,7 @@ public class RedsysUtils {
         return getOrganizationIdentifier(cert);
     }
 
-    static final String[] SIGN_HEADERS = {
+    private static final String[] SIGN_HEADERS = {
         HeaderKeys.DIGEST, HeaderKeys.REQUEST_ID, HeaderKeys.TPP_REDIRECT_URI
     };
 
@@ -165,8 +165,7 @@ public class RedsysUtils {
                             + "\n-----END CERTIFICATE-----";
             InputStream in = new ByteArrayInputStream(certificatePem.getBytes(Charsets.US_ASCII));
             CertificateFactory factory = CertificateFactory.getInstance("X.509");
-            X509Certificate cert = (X509Certificate) factory.generateCertificate(in);
-            return cert;
+            return (X509Certificate) factory.generateCertificate(in);
         } catch (CertificateException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }

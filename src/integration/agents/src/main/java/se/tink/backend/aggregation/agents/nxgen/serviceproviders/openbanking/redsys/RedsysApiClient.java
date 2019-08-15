@@ -329,11 +329,9 @@ public final class RedsysApiClient {
 
     private LocalDate transactionsFromDate(String accountId) {
         final Optional<LocalDate> fetchedDate = fetchedTransactionsUntil(accountId);
-        if (fetchedDate.isPresent()) {
-            return fetchedDate.get().minusDays(7);
-        } else {
-            return aspspConfiguration.oldestTransactionDate();
-        }
+        return fetchedDate
+                .map(localDate -> localDate.minusDays(7))
+                .orElseGet(() -> aspspConfiguration.oldestTransactionDate());
     }
 
     private Optional<LocalDate> fetchedTransactionsUntil(String accountId) {

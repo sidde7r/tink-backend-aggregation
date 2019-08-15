@@ -29,15 +29,15 @@ public class BalanceEntity {
     private Date referenceDate;
 
     @JsonIgnore
-    public ExactCurrencyAmount getAmount() {
+    private ExactCurrencyAmount getAmount() {
         return balanceAmount.toTinkAmount();
     }
 
-    public Date getReferenceDate() {
+    private Date getReferenceDate() {
         return referenceDate;
     }
 
-    public String getBalanceType() {
+    private String getBalanceType() {
         return balanceType;
     }
 

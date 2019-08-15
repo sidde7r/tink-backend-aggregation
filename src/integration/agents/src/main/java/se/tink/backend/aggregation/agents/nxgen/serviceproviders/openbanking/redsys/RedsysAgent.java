@@ -41,7 +41,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
 
     private final String clientName;
     private final RedsysApiClient apiClient;
-    protected final RedsysConsentStorage consentStorage;
+    private final RedsysConsentStorage consentStorage;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final RedsysConsentController consentController;

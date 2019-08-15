@@ -70,10 +70,7 @@ public class BaseTransactionsResponse<T extends TransactionEntity>
     @JsonIgnore
     public String nextKey() {
         final Optional<LinkEntity> nextLink = getNextLink();
-        if (nextLink.isPresent()) {
-            return nextLink.get().getHref();
-        }
-        return null;
+        return nextLink.map(LinkEntity::getHref).orElse(null);
     }
 
     @JsonIgnore
