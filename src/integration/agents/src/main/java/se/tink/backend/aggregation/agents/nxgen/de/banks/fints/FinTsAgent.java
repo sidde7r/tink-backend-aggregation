@@ -60,7 +60,9 @@ public class FinTsAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
+        // Add this to test eidas production
+        client.setEidasProxy(
+                configuration.getEidasProxy(), "e643eb7981d24acfb47834ef338a4e2a");
         FinTsIntegrationConfiguration finTsIntegrationConfiguration =
                 configuration
                         .getIntegrations()
