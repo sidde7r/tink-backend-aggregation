@@ -31,9 +31,11 @@ public final class HandelsbankenBaseConstants {
 
         public static final String PIS_BASE_URL =
                 "https://sandbox.handelsbanken.com/openbanking/psd2/v1";
-        public static final String INITIATE_PAYMENT = "/payments/{paymentProduct}";
-        public static final String CONFIRM_PAYMENT = "/payments/{paymentProduct}/{paymentId}";
-        public static final String GET_PAYMENT = "/payments/{paymentProduct}/{paymentId}/status";
+        public static final String INITIATE_PAYMENT = PIS_BASE_URL + "/payments/{paymentProduct}";
+        public static final String CONFIRM_PAYMENT =
+                PIS_BASE_URL + "/payments/{paymentProduct}/{paymentId}";
+        public static final String GET_PAYMENT =
+                PIS_BASE_URL + "/payments/{paymentProduct}/{paymentId}/status";
     }
 
     public static class UrlParams {
