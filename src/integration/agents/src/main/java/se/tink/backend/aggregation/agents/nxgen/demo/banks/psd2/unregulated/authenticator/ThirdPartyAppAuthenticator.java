@@ -98,6 +98,11 @@ public class ThirdPartyAppAuthenticator
 
         payload.setAndroid(android);
 
+        ThirdPartyAppAuthenticationPayload.Desktop desktop =
+                new ThirdPartyAppAuthenticationPayload.Desktop();
+        desktop.setUrl("https://test.com");
+        payload.setDesktop(desktop);
+
         return payload;
     }
 
