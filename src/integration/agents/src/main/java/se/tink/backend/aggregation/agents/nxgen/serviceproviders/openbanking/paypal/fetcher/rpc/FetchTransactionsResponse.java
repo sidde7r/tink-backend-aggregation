@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.ListUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.LinkRelations;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.QueryKeys;
@@ -19,6 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pay
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import tink.org.apache.http.NameValuePair;
+import tink.org.apache.http.client.utils.URLEncodedUtils;
 
 @JsonObject
 public class FetchTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
@@ -60,7 +61,8 @@ public class FetchTransactionsResponse implements TransactionKeyPaginatorRespons
 
     private String extractNextPageToken(LinkEntity link) {
         try {
-            return URLEncodedUtils.parse(new URI(link.getReference()), "UTF-8").stream()
+            return URLEncodedUtils.parse(new URI(link.getReference()), Charset.forName("UTF-8"))
+                    .stream()
                     .filter(p -> p.getName().equals(QueryKeys.NEXT_PAGE_TOKEN))
                     .findFirst()
                     .map(NameValuePair::getValue)

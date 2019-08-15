@@ -31,6 +31,12 @@ public final class PayPalConstants {
         public static final URL IDENTITY = new URL(BASE + Endpoints.IDENTITY);
         public static final URL BALANCE = new URL(BASE + Endpoints.BALANCE);
         public static final URL TRANSACTIONS = new URL(BASE + Endpoints.TRANSACTIONS);
+        public static final URL CREATE_PERSONAL_PAYMENT =
+                new URL(BASE + Endpoints.PERSONAL_PAYMENT);
+        public static final URL PAYMENT_DETAILS = new URL(BASE + Endpoints.PAYMENT_DETAILS);
+        public static final URL ORDER_PAYMENT = new URL(BASE + Endpoints.ORDER_PAYMENT);
+        public static final URL ORDER_PAYMENT_DETAILS =
+                new URL(BASE + Endpoints.ORDER_PAYMENT_DETAILS);
     }
 
     public static class Endpoints {
@@ -39,6 +45,11 @@ public final class PayPalConstants {
         public static final String IDENTITY = "/v1/identity/oauth2/userinfo";
         public static final String BALANCE = "/v2/wallet/balance-accounts";
         public static final String TRANSACTIONS = "/v1/activities/activities";
+        public static final String PERSONAL_PAYMENT = "/v1/payments/personal-payment-tokens";
+        public static final String PAYMENT_DETAILS =
+                "/v1/payments/personal-payment-tokens/{payment_token}";
+        public static final String ORDER_PAYMENT = "/v2/checkout/orders";
+        public static final String ORDER_PAYMENT_DETAILS = "/v2/checkout/orders/{paymentId}";
     }
 
     public static class StorageKeys {
@@ -64,8 +75,6 @@ public final class PayPalConstants {
         public static final String SCHEMA = "paypalv1.1";
     }
 
-    public static class HeaderKeys {}
-
     public static class FormKeys {
         public static final String GRANT_TYPE = "grant_type";
         public static final String CODE = "code";
@@ -75,6 +84,7 @@ public final class PayPalConstants {
     public static class FormValues {
         public static final String GRANT_TYPE = "authorization_code";
         public static final String GRANT_TYPE_REFRESH = "refresh_token";
+        public static final String CLIENT_CREDENTIALS = "client_credentials";
     }
 
     public static class Formats {
@@ -87,5 +97,42 @@ public final class PayPalConstants {
 
     public static class LinkRelations {
         public static final String NEXT = "next";
+    }
+
+    public static class PathTags {
+        public static final String PAYMENT_TOKEN = "payment_token";
+        public static final String PAYMENT_ID = "paymentId";
+    }
+
+    public static class RequestConstants {
+        public static final String CAPTURE = "CAPTURE";
+        public static final String REFERENCE_TYPE = "LINKS";
+        public static final String PERSONAL = "PERSONAL";
+    }
+
+    public static class LinkTypes {
+        public static final String APPROVE = "approve";
+    }
+
+    public static class RunConfigurationKeys {
+        public static final String RUN_CONFIGURATION = "RUN_CONFIGURATION";
+    }
+
+    public static class RunConfigurationValues {
+        public static final String WIP = "WiP";
+    }
+
+    public static class ExceptionMessages {
+        public static final String UNRECOGNIZED_PAYPAL_ACCOUNT =
+                "Unrecognized PayPal account type: %s";
+        public static final String UNRECOGNIZED_TINK_ACCOUNT = "Unrecognized Tink account type: %s";
+        public static final String NO_LINK_WITH_TYPE = "No link with type: %s";
+        public static final String UNKNOWN_STEP = "Unknown step: %s";
+        public static final String CANNOT_MAP_TINK_TO_PAYPAL =
+                "Cannot map Tink account type : %s to PayPal account type.";
+        public static final String CANNOT_MAP_PAYPAL_TO_TINK =
+                "Cannot map PayPal account type : %s to a Tink account type.";
+        public static final String CANNOT_MAP_PAYPAL_STATUS_TO_TINK_STATUS =
+                "Cannot map PayPal payment status: %s to Tink payment status.";
     }
 }
