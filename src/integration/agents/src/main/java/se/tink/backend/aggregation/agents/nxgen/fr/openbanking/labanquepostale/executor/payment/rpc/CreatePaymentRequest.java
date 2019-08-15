@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.util.Lists;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.entities.CreditTransferTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.entities.CreditorAccountEntity;
@@ -88,7 +88,7 @@ public class CreatePaymentRequest {
 
     @JsonIgnore
     private CreditTransferTransactionEntity getTransactionFromList() {
-        return Optional.ofNullable(creditTransferTransaction).orElse(Lists.emptyList()).stream()
+        return Optional.ofNullable(creditTransferTransaction).orElse(Lists.newArrayList()).stream()
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.PAYMENT_NOT_FOUND));
     }

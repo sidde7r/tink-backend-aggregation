@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.session;
 
-import org.assertj.core.util.Strings;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaApiClient;

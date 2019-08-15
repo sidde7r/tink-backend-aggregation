@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.authenticator;
 
+import com.google.common.base.Preconditions;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
