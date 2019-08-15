@@ -51,6 +51,11 @@ agents:
   bankdata:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+  sparebank:
+    tink:
+      qwacCertId: Tink
+      qsealcCertId: evry
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   monzo:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   bunq:
