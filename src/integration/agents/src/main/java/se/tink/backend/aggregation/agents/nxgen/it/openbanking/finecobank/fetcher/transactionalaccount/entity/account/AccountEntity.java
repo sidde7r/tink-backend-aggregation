@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.entity.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class AccountEntity {
     private List<BalanceEntity> balances;
     private LinksEntity links;
 
+    @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount() {
 
         final String nameTrimmed = name.substring(0, name.length() - 4);
@@ -36,10 +38,6 @@ public class AccountEntity {
                 FinecoBankConstants.ACCOUNT_TYPE_MAPPER
                         .translate(nameTrimmed)
                         .orElse(AccountTypes.OTHER);
-
-        /*return type == (AccountTypes.CHECKING || AccountTypes.SAVINGS)
-        ? Optional.ofNullable(toTypeAccount(type))
-        : Optional.empty();*/
 
         switch (type) {
             case CHECKING:
@@ -51,6 +49,7 @@ public class AccountEntity {
         }
     }
 
+    @JsonIgnore
     private ExactCurrencyAmount getBalance() {
         return balances.stream()
                 .filter(BalanceEntity::isForwardBalanceAvailable)
@@ -59,6 +58,7 @@ public class AccountEntity {
                 .orElseGet(this::getInterimBalance);
     }
 
+    @JsonIgnore
     private ExactCurrencyAmount getInterimBalance() {
         return balances.stream()
                 .filter(BalanceEntity::isInterimBalanceAvailable)
@@ -67,6 +67,7 @@ public class AccountEntity {
                 .orElse(new ExactCurrencyAmount(BigDecimal.ZERO, Formats.CURRENCY));
     }
 
+    @JsonIgnore
     public TransactionalAccount toTypeAccount(TransactionalAccountType transactionalAccountType) {
         return TransactionalAccount.nxBuilder()
                 .withType(transactionalAccountType)

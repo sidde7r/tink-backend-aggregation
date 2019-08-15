@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.entity.transaction;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants;
@@ -29,6 +30,7 @@ public class BookedEntity {
     private LinksEntity links;
     private String debtorName;
 
+    @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDescription(getDescrition())
@@ -37,6 +39,7 @@ public class BookedEntity {
                 .build();
     }
 
+    @JsonIgnore
     private String getDescrition() {
         if (!Strings.isNullOrEmpty(remittanceInformationStructured)) {
             return remittanceInformationStructured;

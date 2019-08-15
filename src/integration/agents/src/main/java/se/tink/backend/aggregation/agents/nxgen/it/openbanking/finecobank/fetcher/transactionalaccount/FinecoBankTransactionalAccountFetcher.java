@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetch
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Strings;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +11,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.BalancesItem;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.TransactionsItem;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -37,7 +37,7 @@ public class FinecoBankTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
 
-        if (isAvailableBalance()) {
+        if (apiClient.isEmptyBalanceConsent()) {
             throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_BALANCES);
         }
 
@@ -52,7 +52,7 @@ public class FinecoBankTransactionalAccountFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
-        if (isAvailableTransactions(account)) {
+        if (isTransactionAccountConsent(account)) {
             throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
         }
 
@@ -68,26 +68,13 @@ public class FinecoBankTransactionalAccountFetcher
         }
     }
 
-    private boolean isAvailableBalance() {
-        List<BalancesItem> balancesItems =
-                persistentStorage
-                        .get(
-                                StorageKeys.BALANCE_ACCOUNTS,
-                                new TypeReference<List<BalancesItem>>() {})
-                        .get();
-        if (!balancesItems.isEmpty()) {
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isAvailableTransactions(TransactionalAccount transactionalAccount) {
+    private boolean isTransactionAccountConsent(TransactionalAccount transactionalAccount) {
         List<TransactionsItem> transactionsItems =
                 persistentStorage
                         .get(
                                 StorageKeys.TRANSACTION_ACCOUNTS,
                                 new TypeReference<List<TransactionsItem>>() {})
-                        .get();
+                        .orElse(Collections.emptyList());
         if (!transactionsItems.isEmpty()) {
             for (TransactionsItem transactionsItem : transactionsItems) {
                 if (!Strings.isNullOrEmpty(transactionsItem.getIban())) {

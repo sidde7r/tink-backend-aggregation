@@ -79,12 +79,6 @@ public class CardAccountsItem {
         return type == AccountTypes.CREDIT_CARD
                 ? Optional.ofNullable(toCreditCardAccount())
                 : Optional.empty();
-
-        /*if (type.equals(AccountTypes.CREDIT_CARD)) {
-            return Optional.ofNullable(toCreditCardAccount());
-        } else {
-            return Optional.empty();
-        }*/
     }
 
     @JsonIgnore
@@ -114,6 +108,7 @@ public class CardAccountsItem {
                 .build();
     }
 
+    @JsonIgnore
     private ExactCurrencyAmount getBalance() {
         return balances.stream()
                 .filter(BalancesEntity::isForwardBalanceAvailable)
@@ -122,6 +117,7 @@ public class CardAccountsItem {
                 .orElseGet(this::getInterimBalance);
     }
 
+    @JsonIgnore
     private ExactCurrencyAmount getInterimBalance() {
         return balances.stream()
                 .filter(BalancesEntity::isInterimBalanceAvailable)

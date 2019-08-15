@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -12,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.Fineco
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.BalancesItem;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentAuthorizationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentStatusResponse;
@@ -181,5 +185,15 @@ public final class FinecoBankApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .get(ConsentAuthorizationsResponse.class);
+    }
+
+    public boolean isEmptyBalanceConsent() {
+        List<BalancesItem> balancesItems =
+                persistentStorage
+                        .get(
+                                StorageKeys.BALANCE_ACCOUNTS,
+                                new TypeReference<List<BalancesItem>>() {})
+                        .orElse(Collections.emptyList());
+        return balancesItems.isEmpty();
     }
 }

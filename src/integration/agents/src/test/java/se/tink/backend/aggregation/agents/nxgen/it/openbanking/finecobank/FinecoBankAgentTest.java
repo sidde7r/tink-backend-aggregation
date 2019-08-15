@@ -4,7 +4,6 @@ import static com.fasterxml.jackson.annotation.JsonFormat.DEFAULT_LOCALE;
 
 import java.util.Arrays;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -12,7 +11,6 @@ import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
-@Ignore
 public class FinecoBankAgentTest {
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());

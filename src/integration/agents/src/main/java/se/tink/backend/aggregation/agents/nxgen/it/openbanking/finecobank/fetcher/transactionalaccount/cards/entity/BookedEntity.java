@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.cards.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants;
@@ -47,6 +48,7 @@ public class BookedEntity {
         return cardTransactionId;
     }
 
+    @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDescription(getDescription())
@@ -55,6 +57,7 @@ public class BookedEntity {
                 .build();
     }
 
+    @JsonIgnore
     private String getDescription() {
         if (!Strings.isNullOrEmpty(transactionDetails)) {
             return transactionDetails;

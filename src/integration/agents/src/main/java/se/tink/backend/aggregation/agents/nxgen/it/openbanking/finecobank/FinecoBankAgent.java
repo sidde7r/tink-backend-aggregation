@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankAuthenticationHelper;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.configuration.FinecoBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.FinecoBankCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.FinecoBankTransactionalAccountFetcher;
@@ -72,18 +72,18 @@ public final class FinecoBankAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
 
-        final FinecoBankController finecoBankController =
-                new FinecoBankController(
+        final FinecoBankAuthenticator finecoBankAuthenticator =
+                new FinecoBankAuthenticator(
                         supplementalInformationHelper,
                         persistentStorage,
-                        new FinecoBankAuthenticator(apiClient, persistentStorage));
+                        new FinecoBankAuthenticationHelper(apiClient, persistentStorage));
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
-                        finecoBankController, supplementalInformationHelper),
-                finecoBankController);
+                        finecoBankAuthenticator, supplementalInformationHelper),
+                finecoBankAuthenticator);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
@@ -24,6 +25,7 @@ public class TransactionsResponse implements PaginatorResponse {
     @JsonProperty("_links")
     private LinksEntity links;
 
+    @JsonIgnore
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.getBooked().stream()
@@ -31,6 +33,7 @@ public class TransactionsResponse implements PaginatorResponse {
                 .collect(Collectors.toList());
     }
 
+    @JsonIgnore
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.of(false);

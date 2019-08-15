@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class FinecoBankConfiguration implements ClientConfiguration {
 
     private String clientId;
-    private String baseUrl;
     private String redirectUrl;
     private String certificateId;
     private String psuIpAddress;
@@ -20,13 +19,6 @@ public class FinecoBankConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(clientId),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
         return clientId;
-    }
-
-    public String getBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(baseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
-        return baseUrl;
     }
 
     public String getRedirectUrl() {
