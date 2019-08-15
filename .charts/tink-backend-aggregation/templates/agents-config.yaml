@@ -171,6 +171,15 @@ data:
               certificateId: "abnamro2"
         {{- end }}
 
+        {{- if $agentsConfig.bec }}
+        bec:
+          tink:
+            eidasQwac: "{{ $agentsConfig.bec.tink.eidasQwac }}"
+            qSealc: "BEC_QSEALC"
+            keyId: "BEC_KEY_ID"
+            tppRedirectUrl: "{{ $agentsConfig.bec.tink.tppRedirectUrl }}"
+        {{- end }}
+
         {{- if $agentsConfig.fints }}
         fints:
           regNumber: "FINTS_REG_NUMBER"
