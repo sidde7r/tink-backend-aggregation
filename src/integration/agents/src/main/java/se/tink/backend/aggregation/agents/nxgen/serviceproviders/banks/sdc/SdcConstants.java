@@ -52,6 +52,10 @@ public class SdcConstants {
                     .contains(DEVICE_REGISTRATION_NOT_ALLOWED.message.toLowerCase());
         }
 
+        public static boolean isPinInvalid(String msg) {
+            return msg.toLowerCase().contains(PIN_OR_CODE_NOT_VALID.message);
+        }
+
         public boolean isLoginError(String msg) {
             return msg.toLowerCase().contains(this.message);
         }
