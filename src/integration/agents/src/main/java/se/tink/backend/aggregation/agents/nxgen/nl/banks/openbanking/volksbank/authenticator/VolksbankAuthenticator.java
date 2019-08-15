@@ -68,8 +68,6 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 urlFactory
                         .buildURL(Paths.TOKEN)
                         .queryParam(QueryParams.CODE, code)
-                        .queryParam(QueryParams.CLIENT_ID, consentFetcher.getClientId())
-                        .queryParam(QueryParams.CLIENT_SECRET, clientSecret)
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
                         .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString());
 
