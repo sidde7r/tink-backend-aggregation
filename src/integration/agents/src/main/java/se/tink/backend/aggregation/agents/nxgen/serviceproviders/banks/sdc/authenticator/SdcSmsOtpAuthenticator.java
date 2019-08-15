@@ -125,8 +125,23 @@ public class SdcSmsOtpAuthenticator
     public void authenticate(String otp, InitValues initValues)
             throws AuthenticationException, AuthorizationException {
 
-        this.apiClient.signOTP(
-                initValues.transId, otp, this.credentials.getField(Field.Key.PASSWORD));
+        try {
+            this.apiClient.signOTP(
+                    initValues.transId, otp, this.credentials.getField(Field.Key.PASSWORD));
+        } catch (HttpResponseException hre) {
+            String errorMessage =
+                    Optional.ofNullable(
+                                    hre.getResponse()
+                                            .getHeaders()
+                                            .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
+                            .orElse("");
+
+            if (SdcConstants.ErrorMessage.isPinInvalid(errorMessage)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            throw hre;
+        }
         this.persistentStorage.putSignedDeviceId(initValues.device.getDeviceId());
 
         DeviceToken deviceToken = new DeviceToken(initValues.challenge, initValues.device);
