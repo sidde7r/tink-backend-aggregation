@@ -1,0 +1,208 @@
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment;
+
+import java.security.interfaces.RSAPrivateKey;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.SignatureValues;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.Amt;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.CdtTrfTxInf;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.Cdtr;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.CdtrAcct;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.CstmrCdtTrfInitn;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.Dbtr;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.DbtrAcct;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.GrpHdr;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.IbanId;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.Id;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.InitgPty;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.InstdAmt;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.OrgId;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.Othr;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.PmtId;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.PmtInf;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.PmtTpInf;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.PsuDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.RmtInf;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.SchmeNm;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.SvcLvl;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.AuthorizePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.PaymentDocument;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.JWTUtils;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.XmlUtils;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.serialization.utils.SerializationUtils;
+
+public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+    private final FiduciaApiClient apiClient;
+    private final FiduciaConfiguration configuration;
+    private final String psuId;
+    private final String password;
+    private final String certificate;
+    private final String keyId;
+    private final RSAPrivateKey privateKey;
+
+    public FiduciaPaymentExecutor(
+            FiduciaApiClient apiClient,
+            FiduciaConfiguration configuration,
+            String psuId,
+            String password) {
+        this.apiClient = apiClient;
+        this.configuration = configuration;
+        this.psuId = psuId;
+        this.password = password;
+        certificate = JWTUtils.readFile(configuration.getCertificatePath());
+        keyId = configuration.getKeyId();
+        privateKey = JWTUtils.getKey(configuration.getKeyPath());
+    }
+
+    @Override
+    public PaymentResponse create(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
+        Creditor creditor = payment.getCreditor();
+        Debtor debtor = payment.getDebtor();
+        Amount amount = payment.getAmount();
+
+        Othr other = new Othr(FormValues.OTHER_ID, new SchmeNm(FormValues.SCHEME_NAME));
+
+        GrpHdr groupHeader =
+                new GrpHdr(
+                        payment.getExecutionDate()
+                                .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)),
+                        amount.getValue().toString(),
+                        new InitgPty(new Id(new OrgId(other)), FormValues.PAYMENT_INITIATOR),
+                        FormValues.NUMBER_OF_TRANSACTIONS,
+                        FormValues.MESSAGE_ID);
+
+        CdtTrfTxInf trfInf =
+                new CdtTrfTxInf(
+                        new Cdtr(creditor.getName()),
+                        new CdtrAcct(new IbanId(creditor.getAccountNumber())),
+                        new PmtId(FormValues.PAYMENT_ID),
+                        new Amt(new InstdAmt(amount.getCurrency(), amount.getValue().toString())),
+                        new RmtInf(FormValues.RMT_INF));
+
+        PmtInf paymentInfo =
+                new PmtInf(
+                        trfInf,
+                        new PmtTpInf(new SvcLvl(FormValues.PAYMENT_TYPE)),
+                        new DbtrAcct(new IbanId(debtor.getAccountNumber())),
+                        payment.getExecutionDate()
+                                .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)),
+                        FormValues.CHRG_BR,
+                        FormValues.PAYMENT_INFORMATION_ID,
+                        amount.getValue().toString(),
+                        new Dbtr(psuId),
+                        FormValues.NUMBER_OF_TRANSACTIONS,
+                        FormValues.PAYMENT_METHOD);
+
+        PaymentDocument document =
+                new PaymentDocument(new CstmrCdtTrfInitn(groupHeader, paymentInfo));
+        String body = XmlUtils.convertToXml(document);
+
+        String digest = SignatureUtils.createDigest(body);
+        String date = SignatureUtils.getCurrentDateFormatted();
+        String reqId = String.valueOf(UUID.randomUUID());
+        String signature =
+                SignatureUtils.createSignature(
+                        privateKey,
+                        keyId,
+                        SignatureValues.HEADERS_WITH_PSU_ID,
+                        digest,
+                        reqId,
+                        date,
+                        psuId);
+
+        CreatePaymentResponse createPaymentResponse =
+                apiClient.createPayment(body, psuId, digest, certificate, signature, reqId, date);
+
+        return createPaymentResponse.toTinkPayment(creditor, debtor, amount);
+    }
+
+    @Override
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+        Payment payment = paymentMultiStepRequest.getPayment();
+        String body =
+                SerializationUtils.serializeToString(
+                        new AuthorizePaymentRequest(new PsuDataEntity(password)));
+
+        String digest = SignatureUtils.createDigest(body);
+        String date = SignatureUtils.getCurrentDateFormatted();
+        String reqId = String.valueOf(UUID.randomUUID());
+
+        String signature =
+                SignatureUtils.createSignature(
+                        privateKey,
+                        keyId,
+                        SignatureValues.HEADERS_WITH_PSU_ID,
+                        digest,
+                        reqId,
+                        date,
+                        psuId);
+
+        apiClient.authorizePayment(
+                payment.getUniqueId(), body, psuId, digest, certificate, signature, reqId, date);
+        payment.setStatus(PaymentStatus.PAID);
+
+        return new PaymentMultiStepResponse(payment, SigningStepConstants.STEP_FINALIZE, null);
+    }
+
+    @Override
+    public CreateBeneficiaryMultiStepResponse createBeneficiary(
+            CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
+        throw new NotImplementedException(
+                "createBeneficiary not yet implemented for " + this.getClass().getName());
+    }
+
+    @Override
+    public PaymentResponse cancel(PaymentRequest paymentRequest) {
+        throw new NotImplementedException(
+                "cancel not yet implemented for " + this.getClass().getName());
+    }
+
+    @Override
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
+        String paymentId = payment.getUniqueId();
+        String digest = SignatureUtils.createDigest(SignatureValues.EMPTY_BODY);
+        String date = SignatureUtils.getCurrentDateFormatted();
+        String reqId = String.valueOf(UUID.randomUUID());
+        String signature =
+                SignatureUtils.createSignature(
+                        privateKey, keyId, SignatureValues.HEADERS, digest, reqId, date, null);
+
+        PaymentDocument paymentDocument =
+                apiClient.getPayment(paymentId, digest, certificate, signature, reqId, date);
+
+        return paymentDocument.toTinkPayment(paymentId, payment.getStatus());
+    }
+
+    @Override
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
+        return new PaymentListResponse(
+                paymentListRequest.getPaymentRequestList().stream()
+                        .map(paymentRequest -> new PaymentResponse(paymentRequest.getPayment()))
+                        .collect(Collectors.toList()));
+    }
+}

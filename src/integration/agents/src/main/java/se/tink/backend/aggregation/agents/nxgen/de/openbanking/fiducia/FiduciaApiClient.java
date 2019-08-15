@@ -13,6 +13,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.AuthorizePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.PaymentDocument;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
@@ -148,5 +151,58 @@ public final class FiduciaApiClient {
         return createRequestInSession(url, reqId, digest, signature, certificate, date)
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .get(GetTransactionsResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(
+            String body,
+            String psuId,
+            String digest,
+            String certificate,
+            String signature,
+            String reqId,
+            String date) {
+        return createRequest(Urls.CREATE_PAYMENT, reqId, digest, signature, certificate, date)
+                .header(HeaderKeys.PSU_ID, psuId)
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .type(MediaType.APPLICATION_XML_TYPE)
+                .post(CreatePaymentResponse.class, body);
+    }
+
+    public AuthorizePaymentResponse authorizePayment(
+            String paymentId,
+            String body,
+            String psuId,
+            String digest,
+            String certificate,
+            String signature,
+            String reqId,
+            String date) {
+        return createRequest(
+                        Urls.AUTHORIZE_PAYMENT.parameter(IdTags.PAYMENT_ID, paymentId),
+                        reqId,
+                        digest,
+                        signature,
+                        certificate,
+                        date)
+                .header(HeaderKeys.PSU_ID, psuId)
+                .post(AuthorizePaymentResponse.class, body);
+    }
+
+    public PaymentDocument getPayment(
+            String paymentId,
+            String digest,
+            String certificate,
+            String signature,
+            String reqId,
+            String date) {
+        return createRequest(
+                        Urls.GET_PAYMENT.parameter(IdTags.PAYMENT_ID, paymentId),
+                        reqId,
+                        digest,
+                        signature,
+                        certificate,
+                        date)
+                .accept(MediaType.APPLICATION_XML)
+                .get(PaymentDocument.class);
     }
 }
