@@ -334,6 +334,16 @@ agentsServiceConfiguration:
         clientSigningCertificateSerialNumber: ""
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         aspspCode: "CEMAH"
+    cofidis:
+      tink:
+        baseUrl: ""
+        certificateId: Tink
+        clientId: ""
+        clientSecret: ""
+        clientSigningCertificate: ""
+        clientSigningCertificateSerialNumber: ""
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        aspspCode: "provideRealAspsWhenCofidisWillBeAvailable"
     creditoagricola:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
