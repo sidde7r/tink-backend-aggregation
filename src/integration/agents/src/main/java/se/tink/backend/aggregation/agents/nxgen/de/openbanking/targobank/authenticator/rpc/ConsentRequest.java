@@ -14,7 +14,7 @@ public class ConsentRequest {
 
     @JsonProperty
     @JsonFormat(pattern = "yyyy-MM-dd")
-    protected Date validUntil;
+    private Date validUntil;
 
     private String frequencyPerDay;
 
@@ -31,7 +31,6 @@ public class ConsentRequest {
 
     public ConsentRequest() {
         AccessEntity access = new AccessEntity("allAccounts");
-        this.access = access;
         final Calendar now = Calendar.getInstance();
         now.add(Calendar.MONTH, 11);
         validUntil = now.getTime();

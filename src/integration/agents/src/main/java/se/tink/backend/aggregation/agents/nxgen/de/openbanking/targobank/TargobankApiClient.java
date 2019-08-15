@@ -127,7 +127,7 @@ public final class TargobankApiClient {
 
     // Endpoint for fetching transactions doesn't work. This is made to make test pass.
     // TODO: Delete for production
-    public PaginatorResponse getEmptyPaginatorResponse() {
+    private PaginatorResponse getEmptyPaginatorResponse() {
         return new PaginatorResponse() {
             @Override
             public Collection<? extends Transaction> getTinkTransactions() {
