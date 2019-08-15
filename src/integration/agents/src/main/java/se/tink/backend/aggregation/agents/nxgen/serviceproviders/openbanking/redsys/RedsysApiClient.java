@@ -60,6 +60,8 @@ public final class RedsysApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
+    private final String appId;
+    private final String clusterId;
     private RedsysConfiguration configuration;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private X509Certificate clientSigningCertificate;
@@ -71,11 +73,15 @@ public final class RedsysApiClient {
             TinkHttpClient client,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
-            AspspConfiguration aspspConfiguration) {
+            AspspConfiguration aspspConfiguration,
+            String appId,
+            String clusterId) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.aspspConfiguration = aspspConfiguration;
+        this.appId = appId;
+        this.clusterId = clusterId;
     }
 
     private RedsysConfiguration getConfiguration() {
@@ -276,6 +282,8 @@ public final class RedsysApiClient {
                         configuration,
                         eidasProxyConfiguration,
                         clientSigningCertificate,
+                        appId,
+                        clusterId,
                         allHeaders);
         allHeaders.put(HeaderKeys.SIGNATURE, signature);
         allHeaders.put(

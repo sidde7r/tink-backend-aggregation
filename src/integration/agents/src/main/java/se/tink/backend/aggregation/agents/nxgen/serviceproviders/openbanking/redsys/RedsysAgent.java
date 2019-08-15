@@ -52,7 +52,14 @@ public abstract class RedsysAgent extends NextGenerationAgent
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration.getSignatureKeyPair());
 
-        apiClient = new RedsysApiClient(client, sessionStorage, persistentStorage, this);
+        apiClient =
+                new RedsysApiClient(
+                        client,
+                        sessionStorage,
+                        persistentStorage,
+                        this,
+                        context.getAppId(),
+                        context.getClusterId());
         consentStorage = new RedsysConsentStorage(persistentStorage);
         consentController =
                 new RedsysConsentController(
