@@ -310,6 +310,12 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
+    protected TransferExecutionException duplicatePaymentError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setEndUserMessage(NordeaSEConstants.LogMessages.DUPLICATE_PAYMENT)
+                .build();
+    }
+
     private TransferExecutionException transferRejectedError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.ErrorCodes.TRANSFER_REJECTED)

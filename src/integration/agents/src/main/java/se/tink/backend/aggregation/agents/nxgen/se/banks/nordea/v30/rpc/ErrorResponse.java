@@ -58,4 +58,9 @@ public class ErrorResponse {
     public boolean hasNoConnectedAccount() {
         return NordeaSEConstants.ErrorCodes.UNABLE_TO_LOAD_CUSTOMER.equalsIgnoreCase(error);
     }
+
+    @JsonIgnore
+    public boolean isDuplicatePayment() {
+        return NordeaSEConstants.ErrorCodes.DUPLICATE_PAYMENT.equalsIgnoreCase(errorDescription);
+    }
 }

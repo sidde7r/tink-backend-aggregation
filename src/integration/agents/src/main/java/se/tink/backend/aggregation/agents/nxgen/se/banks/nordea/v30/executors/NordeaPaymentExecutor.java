@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einv
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -122,6 +123,10 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
             executorHelper.confirm(paymentResponse.getApiIdentifier());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+                if (errorResponse.isDuplicatePayment()) {
+                    throw executorHelper.duplicatePaymentError();
+                }
                 log.warn("Payment execution failed", e);
                 throw executorHelper.paymentFailedError();
             }

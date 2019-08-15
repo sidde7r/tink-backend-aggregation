@@ -246,6 +246,8 @@ public class NordeaSEConstants {
                 "Not allowed to update e-invoice source";
         public static final String EINVOICE_MODIFY_DESTINATION =
                 "Not allowed to update e-invoice destination";
+        public static final String DUPLICATE_PAYMENT =
+                "This payment seems to be duplicate. Please check your outgoing payments in the banks app.";
     }
 
     public static class TransactionalAccounts {
@@ -272,6 +274,8 @@ public class NordeaSEConstants {
         public static final String INVALID_GRANT = "invalid_grant";
         public static final String AUTHENTICATION_COLLISION = "authentication_collision";
         public static final String UNABLE_TO_FETCH_ACCOUNTS = "Could not retrieve accounts.";
+        public static final String DUPLICATE_PAYMENT =
+                "Duplicate payment. Technical code. Please try again.";
         public static final String TRANSFER_REJECTED = "Transfer rejected by Nordea";
         public static final String TRANSFER_ERROR = "Something went wrong with the transfer.";
         public static final String PAYMENT_ERROR = "Something went wrong with the payment.";

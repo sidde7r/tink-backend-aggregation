@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einv
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
@@ -53,6 +54,10 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                 createNewTransfer(transfer);
             }
         } catch (HttpResponseException e) {
+            final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if (errorResponse.isDuplicatePayment()) {
+                throw executorHelper.duplicatePaymentError();
+            }
             log.warn("Transfer execution failed", e);
             throw executorHelper.transferFailedError();
         }
