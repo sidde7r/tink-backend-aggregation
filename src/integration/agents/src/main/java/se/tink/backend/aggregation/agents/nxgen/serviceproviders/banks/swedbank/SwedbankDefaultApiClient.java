@@ -73,6 +73,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankApiErrors.handleTokenErrors;
 
 public class SwedbankDefaultApiClient {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultApiClient.class);
@@ -655,7 +656,7 @@ public class SwedbankDefaultApiClient {
     }
 
     private boolean isUserNotACustomer(HttpResponseException hre) {
-        // This method expects an response with the following charectaristics:
+        // This method expects an response with the following characteristics:
         // - Http status: 404
         // - Http body: `ErrorResponse` with `general` error code of "NOT_FOUND"
 
@@ -669,7 +670,7 @@ public class SwedbankDefaultApiClient {
     }
 
     private boolean isAccountNumberInvalid(HttpResponseException hre) {
-        // This method expects an response with the following charectaristics:
+        // This method expects an response with the following characteristics:
         // - Http status: 400
         // - Http body: `ErrorResponse` with error field of "RECIPIENT_NUMBER"
 
@@ -714,77 +715,6 @@ public class SwedbankDefaultApiClient {
             }
 
             throw hce;
-        }
-    }
-
-    private boolean isSecurityTokenInvalidFormat(HttpResponseException hre) {
-        // This method expects an response with the following charectaristics:
-        // - Http status: 400
-        // - Http body: `ErrorResponse` with error field of "RESPONSE"
-
-        HttpResponse httpResponse = hre.getResponse();
-        if (httpResponse.getStatus() != HttpStatus.SC_BAD_REQUEST) {
-            return false;
-        }
-
-        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-        return errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.RESPONSE);
-    }
-
-    private boolean isSecurityTokenTooOld(HttpResponseException hre) {
-        // This method expects an response with the following charectaristics:
-        // - Http status: 405
-        // - Http body: `ErrorResponse` with error field of "NOT_ALLOWED"
-
-        HttpResponse httpResponse = hre.getResponse();
-        if (httpResponse.getStatus() != HttpStatus.SC_METHOD_NOT_ALLOWED) {
-            return false;
-        }
-
-        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.NOT_ALLOWED);
-    }
-
-    private boolean isLoginSecurityTokenInvalid(HttpResponseException hre) {
-        // This method expects an response with the following charectaristics:
-        // - Http status: 401
-        // - Http body: `ErrorResponse` with error field of "LOGIN_FAILED"
-
-        HttpResponse httpResponse = hre.getResponse();
-        if (httpResponse.getStatus() != HttpStatus.SC_UNAUTHORIZED) {
-            return false;
-        }
-
-        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.LOGIN_FAILED);
-    }
-
-    private boolean isAuthorizationSecurityTokenInvalid(HttpResponseException hre) {
-        // This method expects an response with the following charectaristics:
-        // - Http status: 401
-        // - Http body: `ErrorResponse` with error field of "AUTHORIZATION_FAILED"
-
-        HttpResponse httpResponse = hre.getResponse();
-        if (httpResponse.getStatus() != HttpStatus.SC_UNAUTHORIZED) {
-            return false;
-        }
-
-        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.AUTHORIZATION_FAILED);
-    }
-
-    private void handleTokenErrors(HttpResponseException hre) throws SupplementalInfoException {
-        if (isSecurityTokenInvalidFormat(hre)) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception();
-        }
-        if (isSecurityTokenTooOld(hre)) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception();
-        }
-        if (isLoginSecurityTokenInvalid(hre)) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception();
-        }
-        if (isAuthorizationSecurityTokenInvalid(hre)) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception();
         }
     }
 
