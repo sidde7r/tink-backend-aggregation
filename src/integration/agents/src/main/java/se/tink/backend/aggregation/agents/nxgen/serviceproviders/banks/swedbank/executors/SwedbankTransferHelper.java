@@ -305,11 +305,11 @@ public class SwedbankTransferHelper {
             return Optional.empty();
         }
         try {
-            RegisterTransferResponse registerTransferResponse =
+            RegisterTransferResponse signNewRecipientResponse =
                     apiClient.sendNewRecipientChallenge(
                             initiateSecurityTokenSignTransferResponse.getLinks().getNext(),
                             supplementalAnswer.get());
-            return Optional.ofNullable(registerTransferResponse.getLinks());
+            return Optional.ofNullable(signNewRecipientResponse.getLinks());
         } catch (SupplementalInfoException sie) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
