@@ -358,7 +358,7 @@ public class SwedbankTransferHelper {
         Optional<String> userChallenge =
                 requestSecurityTokenSignTransferChallengeSupplemental(challenge);
         if (!userChallenge.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage("No security token provided. Transfer failed.")
                     .setEndUserMessage(
                             TransferExecutionException.EndUserMessage.CHALLENGE_NO_RESPONSE)
@@ -373,7 +373,7 @@ public class SwedbankTransferHelper {
                             initiateSecurityTokenSignTransferResponse.getLinks().getNext(),
                             userChallenge.get());
         } catch (SupplementalInfoException sie) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage("Invalid security token provided. Transfer failed.")
                     .setEndUserMessage(
                             TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED)
