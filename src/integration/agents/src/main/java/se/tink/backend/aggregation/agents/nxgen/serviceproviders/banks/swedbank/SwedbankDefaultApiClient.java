@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank;
 
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
