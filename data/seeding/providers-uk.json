@@ -25,8 +25,36 @@
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
-            "status": "DISABLED",
+            "status": "ENABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.firsttrust.FirstTrustV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "FirstTrust",
+            "fields": [
+                {
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true,
+                    "name": "info",
+                    "value": "Connecting your bank"
+                }
+            ],
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "name": "uk-firsttrust-oauth2",
+            "passwordhelptext": "Authentication is done on external page",
+            "payload": "tink:firsttrust",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "financialInstitutionId": "asfsdf",
             "type": "BANK"
         },
         {
