@@ -109,6 +109,10 @@ agents:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
+  bec:
+    tink:
+      tppRedirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+      eidasQwac: Tink
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: true
