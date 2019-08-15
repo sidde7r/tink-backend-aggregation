@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.CreditEntity;
@@ -68,7 +69,7 @@ public class FetchLoanDetailsResponse {
                 .setName(getNickname())
                 .setAccountNumber(loanFormattedId)
                 .setBankIdentifier(maskAccountNumber())
-                .setInterestRate(interest.getRate())
+                .setInterestRate(AgentParsingUtils.parsePercentageFormInterest(interest.getRate()))
                 .setDetails(getLoanDetails())
                 .setHolderName(getHolderName())
                 .build();
@@ -84,6 +85,7 @@ public class FetchLoanDetailsResponse {
                 .setInitialDate(firstDrawDownDate)
                 .setLoanNumber(loanId)
                 .setMonthlyAmortization(getInstalmentValue())
+                .setNextDayOfTermsChange(interest.getDiscountedRateEndDate())
                 .build();
     }
 
