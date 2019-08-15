@@ -117,6 +117,12 @@ public final class SwedbankApiClient {
                 .collect(Collectors.toList());
     }
 
+    public List<String> mapAccountResponseToResourceList(FetchAccountResponse accounts) {
+        return accounts.getAccountList().stream()
+                .map(AccountEntity::getResourceId)
+                .collect(Collectors.toList());
+    }
+
     public URL getAuthorizeUrl(String state) {
         return new URL(
                 client.request(

@@ -35,6 +35,7 @@ public final class SwedbankAgent extends NextGenerationAgent
     private final String clientName;
     private final SwedbankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private SwedbankTransactionFetcher transactionFetcher;
 
     public SwedbankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -76,7 +77,9 @@ public final class SwedbankAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         authenticator,
                         credentials,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        transactionFetcher,
+                        getClientConfiguration());
 
         return new AutoAuthenticationController(
                 request,
@@ -115,7 +118,7 @@ public final class SwedbankAgent extends NextGenerationAgent
         SwedbankTransactionalAccountFetcher accountFetcher =
                 new SwedbankTransactionalAccountFetcher(apiClient);
 
-        SwedbankTransactionFetcher transactionFetcher =
+        this.transactionFetcher =
                 new SwedbankTransactionFetcher(apiClient, supplementalInformationHelper);
 
         return new TransactionalAccountRefreshController(

@@ -2,8 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authent
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +20,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.configuration.SwedbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -50,6 +55,8 @@ public class SwedbankAuthenticationController
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
     private final StrongAuthenticationState strongAuthenticationState;
+    private final SwedbankTransactionFetcher swedbankTransactionFetcher;
+    private final SwedbankConfiguration swedbankConfiguration;
 
     // This wait time is for the whole user authentication. Different banks have different
     // cumbersome authentication flows.
@@ -60,7 +67,9 @@ public class SwedbankAuthenticationController
             SupplementalInformationHelper supplementalInformationHelper,
             SwedbankAuthenticator authenticator,
             Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState strongAuthenticationState,
+            SwedbankTransactionFetcher swedbankTransactionFetcher,
+            SwedbankConfiguration swedbankConfiguration) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -68,7 +77,9 @@ public class SwedbankAuthenticationController
                 credentials,
                 strongAuthenticationState,
                 DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT);
+                DEFAULT_TOKEN_LIFETIME_UNIT,
+                swedbankTransactionFetcher,
+                swedbankConfiguration);
     }
 
     public SwedbankAuthenticationController(
@@ -78,7 +89,9 @@ public class SwedbankAuthenticationController
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit) {
+            TemporalUnit tokenLifetimeUnit,
+            SwedbankTransactionFetcher swedbankTransactionFetcher,
+            SwedbankConfiguration swedbankConfiguration) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
@@ -86,6 +99,8 @@ public class SwedbankAuthenticationController
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
         this.strongAuthenticationState = strongAuthenticationState;
+        this.swedbankTransactionFetcher = swedbankTransactionFetcher;
+        this.swedbankConfiguration = swedbankConfiguration;
     }
 
     @Override
@@ -184,6 +199,8 @@ public class SwedbankAuthenticationController
         ConsentResponse initConsent = authenticator.getConsentForAllAccounts();
         authenticator.useConsent(initConsent);
 
+        List<String> ibanList = authenticator.getAccountList();
+
         ConsentResponse consentResponseIbanList = authenticator.getConsentForIbanList();
         authenticator.useConsent(consentResponseIbanList);
 
@@ -194,6 +211,15 @@ public class SwedbankAuthenticationController
         while (!authenticator.getConsentStatus(consentResponseIbanList.getConsentId())) {
             Uninterruptibles.sleepUninterruptibly(
                     SwedbankConstants.TimeValues.SLEEP_TIME_MILLISECONDS, TimeUnit.MILLISECONDS);
+        }
+
+        for (String iban : ibanList) {
+            swedbankTransactionFetcher.startScaAuthorization(
+                    iban,
+                    Timestamp.valueOf(
+                            LocalDateTime.now()
+                                    .minusMonths(swedbankConfiguration.getMonthsToFetch())),
+                    Timestamp.valueOf(LocalDateTime.now()));
         }
     }
 

@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
@@ -38,7 +40,12 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
             TransactionalAccount account, Date fromDate, Date toDate) {
 
         try {
-            return apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
+            return apiClient.getTransactions(
+                    account.getApiIdentifier(),
+                    Timestamp.valueOf(
+                            LocalDateTime.now()
+                                    .minusMonths(apiClient.getConfiguration().getMonthsToFetch())),
+                    toDate);
 
         } catch (HttpResponseException e) {
             if (checkIfScaIsRequired(e)) {
@@ -87,6 +94,25 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
             } else {
                 throw e;
             }
+        }
+    }
+
+    public void startScaAuthorization(String account, Date fromDate, Date toDate) {
+        try {
+            Response response = apiClient.startScaTransactionRequest(account, fromDate, toDate);
+
+            if (!apiClient.getConfiguration().getBypassConsent()) {
+                poll(
+                        response,
+                        apiClient.startAuthorization(
+                                response.getLinks().getHrefEntity().getHref()));
+            }
+        } catch (HttpResponseException e) {
+            if (checkIfScaIsAlreadyDone(e)) {
+                logger.info(
+                        "Request SCA, but its already been signed for the requested period, proceeding with authentication");
+            }
+            throw e;
         }
     }
 

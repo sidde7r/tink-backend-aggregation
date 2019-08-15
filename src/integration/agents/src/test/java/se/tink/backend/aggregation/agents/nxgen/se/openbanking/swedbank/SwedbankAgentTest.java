@@ -15,6 +15,7 @@ public class SwedbankAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-swedbank-oauth2")
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("swedbank")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
