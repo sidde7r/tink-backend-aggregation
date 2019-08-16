@@ -183,7 +183,9 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionId": "e8ce90be687146e388286f976e6aaf81",
+            "financialInstitutionName": "Bankinter"
         },
         {
             "className": "nxgen.es.banks.evobanco.EvoBancoAgent",
