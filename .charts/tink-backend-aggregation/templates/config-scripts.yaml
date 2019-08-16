@@ -104,3 +104,4 @@ data:
     substitute-secret SPAREBANK_CERTIFICATE "$SPAREBANK_CERTIFICATE"
     substitute-secret SPAREBANK_KEY_ID "$SPAREBANK_KEY_ID"
     substitute-secret SPAREBANK_TPP_ID "$SPAREBANK_TPP_ID"
+    substitute-secret HANDELSBANKEN_APP_ID_TAG "$HANDELSBANKEN_APP_ID"

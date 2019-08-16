@@ -521,6 +521,14 @@ spec:
               key: cmcic-key-id
               optional: true
         {{- end }}
+        {{- if $agentsConfig.handelsbanken }}
+        - name: HANDELSBANKEN_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: hendelsbanken-app-id
+              optional: true
+        {{- end }}
         {{- if $agentsConfig.cbi }}
         - name: CBI_CLIENT_ID
           valueFrom:
