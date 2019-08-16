@@ -35,6 +35,6 @@ public class BaseV31Response<T> {
     }
 
     protected Optional<String> searchLink(String linkId) {
-        return Optional.ofNullable(links.get(linkId));
+        return links == null ? Optional.empty() : Optional.ofNullable(links.get(linkId));
     }
 }
