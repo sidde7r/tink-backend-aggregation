@@ -17,8 +17,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.agents.utils.jersey.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidas.EidasProxyConstants.Algorithm;
-import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public class SibsMessageSignInterceptor extends MessageSignInterceptor {
 
@@ -36,11 +37,15 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
 
     private SibsConfiguration configuration;
     protected EidasProxyConfiguration eidasConf;
+    private EidasIdentity eidasIdentity;
 
     public SibsMessageSignInterceptor(
-            SibsConfiguration configuration, EidasProxyConfiguration eidasConf) {
+            SibsConfiguration configuration,
+            EidasProxyConfiguration eidasConf,
+            EidasIdentity eidasIdentity) {
         this.configuration = configuration;
         this.eidasConf = eidasConf;
+        this.eidasIdentity = eidasIdentity;
     }
 
     @Override
@@ -113,9 +118,13 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     }
 
     private String signMessage(String toSignString) {
-        QsealcEidasProxySigner proxySigner =
-                new QsealcEidasProxySigner(
-                        eidasConf, configuration.getCertificateId(), Algorithm.EIDAS_RSA_SHA256);
-        return proxySigner.getSignatureBase64(toSignString.getBytes());
+        QsealcSigner signer =
+                QsealcSigner.build(
+                        eidasConf.toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        eidasIdentity,
+                        configuration.getCertificateId());
+
+        return signer.getSignatureBase64(toSignString.getBytes());
     }
 }

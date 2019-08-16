@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -54,7 +55,10 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
         apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
         client.setMessageSignInterceptor(
                 new SibsMessageSignInterceptor(
-                        getClientConfiguration(), configuration.getEidasProxy()));
+                        getClientConfiguration(),
+                        configuration.getEidasProxy(),
+                        new EidasIdentity(
+                                context.getClusterId(), context.getAppId(), this.getAgentClass())));
     }
 
     protected SibsConfiguration getClientConfiguration() {
