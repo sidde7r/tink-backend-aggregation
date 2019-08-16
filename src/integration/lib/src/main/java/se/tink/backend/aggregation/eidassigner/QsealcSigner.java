@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.eidassigner;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -20,26 +21,49 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 
 public class QsealcSigner {
 
-    private static final String TINK_QSEALC_APPID = "X-Tink-Eidas-Sign-Certificate-Id";
+    private static final String TINK_QSEALC_OLD_CERTID = "X-Tink-Eidas-Sign-Certificate-Id";
+    private static final String TINK_QSEALC_APPID = "X-Tink-QSealC-AppId";
     private static final String TINK_QSEALC_CLUSTERID = "X-Tink-QSealC-ClusterId";
+    private static final String TINK_REQUESTER = "X-SignRequester";
 
     private final HttpClient httpClient;
     private final QsealcAlg alg;
     private final String host;
-    private final String appId;
-    private final String clusterId;
+    private final String oldCertId;
+    private final EidasIdentity eidasIdentity;
 
     private QsealcSigner(
-            HttpClient httpClient, QsealcAlg alg, String host, String appId, String clusterId) {
+            HttpClient httpClient,
+            QsealcAlg alg,
+            String host,
+            String oldCertId,
+            EidasIdentity eidasIdentity) {
         this.httpClient = httpClient;
         this.alg = alg;
         this.host = host;
-        this.appId = appId;
-        this.clusterId = clusterId;
+        this.oldCertId = oldCertId;
+        this.eidasIdentity = eidasIdentity;
     }
 
+    /**
+     * This is the preferred builder. This will send the cluster and app ID's chosen in the
+     * EidasIdentity object.
+     */
     public static QsealcSigner build(
-            InternalEidasProxyConfiguration conf, QsealcAlg alg, String appId, String clusterId) {
+            InternalEidasProxyConfiguration conf, QsealcAlg alg, EidasIdentity eidasIdentity) {
+        return build(conf, alg, eidasIdentity, null);
+    }
+
+    /**
+     * This builder should be used for 'legacy' agents in clusters where the ESS is not deployed yet
+     * and a certificate override must be provided. 'oldCertId' will override the cert chosen by
+     * 'appId'.
+     */
+    public static QsealcSigner build(
+            InternalEidasProxyConfiguration conf,
+            QsealcAlg alg,
+            EidasIdentity eidasIdentity,
+            String oldCertId) {
         try {
 
             KeyStore trustStore = conf.getRootCaTrustStore();
@@ -57,29 +81,48 @@ public class QsealcSigner {
                             .setHostnameVerifier(new AllowAllHostnameVerifier())
                             .setSslcontext(sslContext)
                             .build();
-            return new QsealcSigner(httpClient, alg, conf.getHost(), appId, clusterId);
+            return new QsealcSigner(httpClient, alg, conf.getHost(), oldCertId, eidasIdentity);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
+    @Deprecated
+    public static QsealcSigner build(
+            InternalEidasProxyConfiguration conf,
+            QsealcAlg alg,
+            String oldCertId,
+            String clusterId) {
+        StackTraceElement e = Thread.currentThread().getStackTrace()[2];
+        String requester = e.getClassName() + "." + e.getMethodName() + ":" + e.getLineNumber();
+        return build(conf, alg, new EidasIdentity(clusterId, "", requester), oldCertId);
+    }
+
     private byte[] getSignatureBase64Bytes(byte[] signingData) {
+
         try {
             HttpPost post =
                     new HttpPost(StringUtils.stripEnd(this.host, "/") + alg.getSigningType());
             post.setHeader(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
-            post.setHeader(TINK_QSEALC_APPID, appId);
-            post.setHeader(TINK_QSEALC_CLUSTERID, clusterId);
+            post.setHeader(TINK_QSEALC_OLD_CERTID, oldCertId);
+            if (!Strings.isNullOrEmpty(eidasIdentity.getAppId())) {
+                post.setHeader(TINK_QSEALC_APPID, eidasIdentity.getAppId());
+            }
+            post.setHeader(TINK_QSEALC_CLUSTERID, eidasIdentity.getClusterId());
+            post.setHeader(TINK_REQUESTER, eidasIdentity.getSignRequester());
             post.setEntity(new ByteArrayEntity(Base64.getEncoder().encode(signingData)));
             HttpResponse response = httpClient.execute(post);
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            response.getEntity().writeTo(outputStream);
+
             if (response.getStatusLine().getStatusCode() != 200) {
                 throw new QsealcSignerException(
                         "Unexpected status code "
                                 + response.getStatusLine()
-                                + " requesting QSealC signature");
+                                + " requesting QSealC signature: "
+                                + new String(outputStream.toByteArray()));
             }
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            response.getEntity().writeTo(outputStream);
             return outputStream.toByteArray();
 
         } catch (IOException ex) {
