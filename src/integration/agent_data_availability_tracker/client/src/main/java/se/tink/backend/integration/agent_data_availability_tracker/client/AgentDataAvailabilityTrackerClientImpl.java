@@ -8,7 +8,6 @@ import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.netty.handler.ssl.SslContext;
 import java.io.File;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLException;
 import org.slf4j.Logger;
@@ -102,7 +101,7 @@ public class AgentDataAvailabilityTrackerClientImpl
 
             accountDeque.add(requestBuilder.build());
 
-            CompletableFuture.runAsync(() -> requestStream.onNext(accountDeque.pop()));
+            requestStream.onNext(accountDeque.pop());
 
         } catch (StatusRuntimeException e) {
 
@@ -133,9 +132,7 @@ public class AgentDataAvailabilityTrackerClientImpl
     @Override
     public void start() throws Exception {
 
-        SslContext sslContext;
-
-        sslContext =
+        SslContext sslContext =
                 GrpcSslContexts.forClient()
                         .trustManager(new File("/etc/client-certificate/ca.crt"))
                         .build();
