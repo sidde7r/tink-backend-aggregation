@@ -64,6 +64,10 @@ public class AccountsItemEntity {
                                 .withAccountName(Optional.ofNullable(name).orElse(accountType))
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.SE,
+                                                clearingNumber.concat(bban)))
                                 .build())
                 .addHolderName(ownerName)
                 .setApiIdentifier(accountId)

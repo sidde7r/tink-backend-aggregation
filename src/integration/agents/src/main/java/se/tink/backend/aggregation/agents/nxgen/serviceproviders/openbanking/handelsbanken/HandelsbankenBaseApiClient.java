@@ -68,7 +68,7 @@ public class HandelsbankenBaseApiClient {
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
-                .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getAppId())
+                .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getClientId())
                 .addBearerToken(getOauthFromSession())
                 .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
@@ -141,7 +141,7 @@ public class HandelsbankenBaseApiClient {
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .body(
                         new SessionRequest(
-                                configuration.getAppId(),
+                                configuration.getClientId(),
                                 BodyValues.AIS_SCOPE + ":" + consentId,
                                 configuration.getPsuIpAddress(),
                                 personalId,
@@ -153,9 +153,9 @@ public class HandelsbankenBaseApiClient {
 
     public SessionResponse getSession(String ssn) {
 
-        TokenResponse tokenResponse = getBearerToken(configuration.getAppId());
+        TokenResponse tokenResponse = getBearerToken(configuration.getClientId());
         AuthorizationResponse authResponse =
-                getAuthorizationToken(tokenResponse.getAccessToken(), configuration.getAppId());
+                getAuthorizationToken(tokenResponse.getAccessToken(), configuration.getClientId());
 
         return getSessionId(ssn, authResponse.getConsentId());
     }
@@ -166,7 +166,7 @@ public class HandelsbankenBaseApiClient {
                 Form.builder()
                         .put(BodyKeys.GRANT_TYPE, BodyValues.REFRESH_TOKEN)
                         .put(BodyKeys.REFRESH_TOKEN, refreshToken)
-                        .put(BodyKeys.CLIENT_ID, configuration.getAppId())
+                        .put(BodyKeys.CLIENT_ID, configuration.getClientId())
                         .build();
 
         return client.request(Urls.TOKEN)
