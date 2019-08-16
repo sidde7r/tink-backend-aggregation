@@ -21,13 +21,20 @@ public class TransactionEntity {
 
         /**
          * Bank API always sends null as "next" link. For this reason if we run the commented-out
-         * statement, we will assume that there is no next page -which is a mistake-. For this
-         * reason we return TRUE if and only if transactions are not empty here. In this case the
-         * pagination will stop until it fetched certain amount of empty pages
+         * statement (first statement), we will assume that there is no next page -which is a
+         * mistake-. For this reason we return TRUE if and only if transactions are not empty here.
+         * In this case the pagination will stop until it fetched certain amount of empty pages
          */
         // return
         // Optional.ofNullable(links).map(TransactionalLinksEntity::hasNextLink).orElse(false);
-        return (booked.size() + pending.size()) > 0;
+        // return (booked.size() + pending.size()) > 0;
+        /**
+         * We detected another bank side failure: when a user has a pending transaction, this
+         * transaction is sent in response no matter what date range the agent uses in the request.
+         * For such users, the return statement that we used above (second statement) would cause
+         * infinite pagination. For this reason, temporarily we will use the return statement below.
+         */
+        return booked.size() > 0;
     }
 
     public Collection<Transaction> toTinkTransactions() {

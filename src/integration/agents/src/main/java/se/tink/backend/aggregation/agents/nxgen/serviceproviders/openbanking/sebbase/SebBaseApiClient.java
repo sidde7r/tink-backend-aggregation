@@ -85,7 +85,7 @@ public abstract class SebBaseApiClient {
     protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED);
+                .type(MediaType.APPLICATION_JSON);
     }
 
     public OAuth2Token refreshToken(String url, RefreshRequest request) throws SessionException {
