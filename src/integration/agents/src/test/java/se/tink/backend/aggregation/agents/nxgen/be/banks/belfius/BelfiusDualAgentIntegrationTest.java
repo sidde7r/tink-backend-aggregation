@@ -38,10 +38,10 @@ public class BelfiusDualAgentIntegrationTest {
                                 .loadCredentialsBefore(false)
                                 .saveCredentialsAfter(false)
                                 .build(),
-
                         new AgentIntegrationTest.Builder("be", "be-belfius-cardreader")
-                            .addCredentialField(Field.Key.USERNAME, manager.get(Arg.CARD_NUMBER))
-                            .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                                .addCredentialField(
+                                        Field.Key.USERNAME, manager.get(Arg.CARD_NUMBER))
+                                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                                 .expectLoggedIn(false)
                                 .loadCredentialsBefore(false)
                                 .saveCredentialsAfter(true)
@@ -49,4 +49,3 @@ public class BelfiusDualAgentIntegrationTest {
                 .testAndCompare();
     }
 }
-
