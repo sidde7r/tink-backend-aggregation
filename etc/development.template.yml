@@ -142,7 +142,7 @@ agentsServiceConfiguration:
         baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
-        certificateId: "Tink-qsealc"
+        certificateId: "Tink"
       tink:
         clientId: "dummyClientId"
         clientSecret: "dummyClientSecret"
@@ -150,7 +150,7 @@ agentsServiceConfiguration:
         baseUrl: "https://api.rabobank.nl/openapi"
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
-        certificateId: "Tink-qsealc"
+        certificateId: "Tink"
     abnamro:
       tink:
         clientId: "dummyClientId"
@@ -207,7 +207,7 @@ agentsServiceConfiguration:
     activobank:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -217,7 +217,7 @@ agentsServiceConfiguration:
     atlanticoeuropa:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -227,7 +227,7 @@ agentsServiceConfiguration:
     bancobpi-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -237,7 +237,7 @@ agentsServiceConfiguration:
     bancoctt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -247,7 +247,7 @@ agentsServiceConfiguration:
     bancomontepio:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -257,7 +257,7 @@ agentsServiceConfiguration:
     bankinter:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -267,7 +267,7 @@ agentsServiceConfiguration:
     big:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -277,7 +277,7 @@ agentsServiceConfiguration:
     bpg:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -287,7 +287,7 @@ agentsServiceConfiguration:
     caixa-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -307,7 +307,7 @@ agentsServiceConfiguration:
     caixacrl-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -317,7 +317,7 @@ agentsServiceConfiguration:
     caixa-fr:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -327,7 +327,7 @@ agentsServiceConfiguration:
     cemah:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -347,7 +347,7 @@ agentsServiceConfiguration:
     creditoagricola:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -358,7 +358,7 @@ agentsServiceConfiguration:
     eurobic-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -369,7 +369,7 @@ agentsServiceConfiguration:
     millenniumbcp:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -380,7 +380,7 @@ agentsServiceConfiguration:
     novobanco:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -400,7 +400,7 @@ agentsServiceConfiguration:
     novobancoacores:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -411,7 +411,7 @@ agentsServiceConfiguration:
     santander-pt:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink-qsealc
+        certificateId: Tink
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
