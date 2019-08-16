@@ -22,9 +22,11 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -56,23 +58,35 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         final String accountNumber = getAccountNumber(transactionsResponse);
         AccountTypes accountType = getAccountType(client, transactionsResponse);
 
-        return Optional.of(
-                TransactionalAccount.nxBuilder()
-                        .withType(TransactionalAccountType.from(accountType))
-                        .withBalance(BalanceModule.of(findBalanceAmount().asAmount()))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier(number)
-                                        .withAccountNumber(accountNumber)
-                                        .withAccountName(name)
-                                        .addIdentifier(new SwedishIdentifier(accountNumber))
-                                        .addIdentifier(new SwedishSHBInternalIdentifier(number))
-                                        .build())
-                        .addHolderName(holderName)
-                        .setApiIdentifier(number)
-                        .setBankIdentifier(number)
-                        .build());
+        TransactionalBuildStep transactionalBuildStep =
+                constructAccount(accountType, accountNumber);
+        if (AccountTypes.CHECKING.equals(accountType)) {
+            transactionalBuildStep.addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        }
+        return Optional.of(transactionalBuildStep.build());
     }
+
+    private TransactionalBuildStep constructAccount(
+            AccountTypes accountType, String accountNumber) {
+
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.from(accountType))
+                .withBalance(BalanceModule.of(findBalanceAmount().asAmount()))
+                .withId(constructId(accountNumber))
+                .addHolderName(holderName)
+                .setApiIdentifier(number)
+                .setBankIdentifier(number);
+    }
+
+    private IdModule constructId(String accountNumber) {
+        return IdModule.builder()
+                .withUniqueIdentifier(number)
+                .withAccountNumber(accountNumber)
+                .withAccountName(name)
+                .addIdentifier(new SwedishIdentifier(accountNumber))
+                .addIdentifier(new SwedishSHBInternalIdentifier(number))
+                .build();
+    };
 
     public Optional<CreditCardAccount> toCreditCardAccount(
             TransactionsSEResponse transactionsResponse) {
