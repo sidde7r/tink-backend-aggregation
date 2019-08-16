@@ -43,6 +43,10 @@ agents:
   bankdata:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+  bpost:
+    tink:
+      certificateId: Tink
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   sparebank:
     tink:
       qwacCertId: Tink

@@ -627,6 +627,14 @@ spec:
               key: axa-psd2-client-id
               optional: true
         {{- end }}
+        {{- if $agentsConfig.bpost }}
+        - name: BPOST_PSD2_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bpost-psd2-client-id
+              optional: true
+        {{- end }}
       containers:
       - name: tink-backend-aggregation
         {{- if eq "local" .Values.Cluster }}

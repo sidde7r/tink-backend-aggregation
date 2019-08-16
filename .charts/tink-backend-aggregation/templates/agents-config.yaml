@@ -124,6 +124,15 @@ data:
             redirectUrl: "{{ $agentsConfig.bankdata.tink.redirectUrl }}"
         {{- end }}
 
+        {{- if $agentsConfig.bpost }}
+        bpost:
+          tink:
+            clientId: "BPOST_PSD2_CLIENT_ID"
+            redirectUrl: "{{ $agentsConfig.bpost.tink.redirectUrl }}"
+            certificateId: "{{ $agentsConfig.bpost.tink.certificateId }}"
+            baseUrl: "https://api.psd2.bpostbank.be"
+        {{- end }}
+
         {{- if $agentsConfig.sparebank }}
         sparebank:
           tink:
