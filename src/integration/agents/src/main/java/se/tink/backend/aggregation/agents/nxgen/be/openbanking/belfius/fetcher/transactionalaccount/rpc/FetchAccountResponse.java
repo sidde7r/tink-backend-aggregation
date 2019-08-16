@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -53,6 +54,7 @@ public class FetchAccountResponse {
                                 .build())
                 .addHolderName(type)
                 .setApiIdentifier(logicalId)
+                .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .build();
     }
 
