@@ -110,18 +110,18 @@ public class NordeaBaseApiClient implements TokenInterface {
     }
 
     public GetAccountsResponse getCorporateAccounts() {
-        return createRequestInSession(Urls.GET_CORPORATE_ACCOUNTS)
-            .get(GetAccountsResponse.class);
+        return createRequestInSession(Urls.GET_CORPORATE_ACCOUNTS).get(GetAccountsResponse.class);
     }
 
-    public GetTransactionsResponse getCorporateTransactions(TransactionalAccount account, String key) {
+    public GetTransactionsResponse getCorporateTransactions(
+            TransactionalAccount account, String key) {
         URL url =
-            Optional.ofNullable(key)
-                .map(k -> new URL(Urls.BASE_CORPORATE_URL + k))
-                .orElse(
-                    NordeaBaseConstants.Urls.GET_CORPORATE_TRANSACTIONS.parameter(
-                        NordeaBaseConstants.IdTags.ACCOUNT_ID,
-                        account.getApiIdentifier()));
+                Optional.ofNullable(key)
+                        .map(k -> new URL(Urls.BASE_CORPORATE_URL + k))
+                        .orElse(
+                                NordeaBaseConstants.Urls.GET_CORPORATE_TRANSACTIONS.parameter(
+                                        NordeaBaseConstants.IdTags.ACCOUNT_ID,
+                                        account.getApiIdentifier()));
 
         return createRequestInSession(url).get(GetTransactionsResponse.class);
     }

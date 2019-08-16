@@ -30,9 +30,12 @@ public final class NordeaBaseConstants {
         public static final URL GET_PAYMENT = new URL(BASE_URL + ApiService.GET_PAYMENT);
         public static final URL GET_PAYMENTS = new URL(BASE_URL + ApiService.GET_PAYMENTS);
 
-        public static final String BASE_CORPORATE_URL = "https://api.nordeaopenbanking.com/xs2a-business";
-        public static final URL GET_CORPORATE_ACCOUNTS = new URL(BASE_CORPORATE_URL + ApiService.GET_CORPORATE_ACCOUNTS);
-        public static final URL GET_CORPORATE_TRANSACTIONS = new URL(BASE_CORPORATE_URL + ApiService.GET_CORPORATE_TRANSACTIONS);
+        public static final String BASE_CORPORATE_URL =
+                "https://api.nordeaopenbanking.com/xs2a-business";
+        public static final URL GET_CORPORATE_ACCOUNTS =
+                new URL(BASE_CORPORATE_URL + ApiService.GET_CORPORATE_ACCOUNTS);
+        public static final URL GET_CORPORATE_TRANSACTIONS =
+                new URL(BASE_CORPORATE_URL + ApiService.GET_CORPORATE_TRANSACTIONS);
     }
 
     public static class TransactionalAccounts {
