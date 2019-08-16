@@ -78,17 +78,22 @@ public class SibsDecoupledAuthenticationController
     }
 
     private ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL androidRedirectUrl = new URL(SibsConstants.Urls.ANDROID_DEEPLINK_REDIRECT);
+        URL androidRedirectUrl = new URL(SibsConstants.AppPayload.ANDROID_DEEPLINK_REDIRECT);
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
+        payload.setDownloadMessage(SibsConstants.AppPayload.DOWNLOAD_MESSAGE.get());
+        payload.setDownloadTitle(SibsConstants.AppPayload.DOWNLOAD_TITLE.get());
+
         ThirdPartyAppAuthenticationPayload.Android androidPayload =
                 new ThirdPartyAppAuthenticationPayload.Android();
         androidPayload.setIntent(androidRedirectUrl.get());
         payload.setAndroid(androidPayload);
-        URL iosRedirectUrl = new URL(SibsConstants.Urls.IOS_DEEPLINK_REDIRECT);
+
+        URL iosRedirectUrl = new URL(SibsConstants.AppPayload.IOS_DEEPLINK_REDIRECT);
         ThirdPartyAppAuthenticationPayload.Ios iOsPayload =
                 new ThirdPartyAppAuthenticationPayload.Ios();
         iOsPayload.setAppScheme(iosRedirectUrl.getScheme());
         iOsPayload.setDeepLinkUrl(iosRedirectUrl.get());
+        iOsPayload.setAppStoreUrl(SibsConstants.AppPayload.APP_STORE_URL);
         payload.setIos(iOsPayload);
         return payload;
     }
