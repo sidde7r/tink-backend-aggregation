@@ -41,6 +41,11 @@ public class SibsRedirectCallbackHandler {
         iOsPayload.setDeepLinkUrl(url.get());
         payload.setIos(iOsPayload);
 
+        ThirdPartyAppAuthenticationPayload.Desktop desktop =
+                new ThirdPartyAppAuthenticationPayload.Desktop();
+        desktop.setUrl(url.get());
+        payload.setDesktop(desktop);
+
         return payload;
     }
 

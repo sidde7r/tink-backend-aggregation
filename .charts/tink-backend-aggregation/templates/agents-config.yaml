@@ -98,6 +98,15 @@ data:
             certificateId: "{{ $agentsConfig.icabanken.tink.certificateId }}"
         {{- end }}
 
+        {{- if $agentsConfig.seb }}
+        seb:
+          tink:
+            clientId: "SEB_CLIENT_ID"
+            clientSecret: "SEB_CLIENT_SECRET"
+            redirectUrl: "{{ $agentsConfig.seb.tink.redirectUrl }}"
+            eidasQwac: "{{ $agentsConfig.seb.tink.eidasQwac }}"
+        {{- end }}
+
         {{- if $agentsConfig.axa }}
         axa:
           tink:
@@ -113,6 +122,15 @@ data:
             clientId: "BANKDATA_CLIENT_ID"
             apiKey: "BANKDATA_API_KEY"
             redirectUrl: "{{ $agentsConfig.bankdata.tink.redirectUrl }}"
+        {{- end }}
+
+        {{- if $agentsConfig.bpost }}
+        bpost:
+          tink:
+            clientId: "BPOST_PSD2_CLIENT_ID"
+            redirectUrl: "{{ $agentsConfig.bpost.tink.redirectUrl }}"
+            certificateId: "{{ $agentsConfig.bpost.tink.certificateId }}"
+            baseUrl: "https://api.psd2.bpostbank.be"
         {{- end }}
 
         {{- if $agentsConfig.sparebank }}
@@ -169,6 +187,15 @@ data:
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_ABN_TAG"
               redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
               certificateId: "abnamro2"
+        {{- end }}
+
+        {{- if $agentsConfig.bec }}
+        bec:
+          tink:
+            eidasQwac: "{{ $agentsConfig.bec.tink.eidasQwac }}"
+            qSealc: "BEC_QSEALC"
+            keyId: "BEC_KEY_ID"
+            tppRedirectUrl: "{{ $agentsConfig.bec.tink.tppRedirectUrl }}"
         {{- end }}
 
         {{- if $agentsConfig.fints }}

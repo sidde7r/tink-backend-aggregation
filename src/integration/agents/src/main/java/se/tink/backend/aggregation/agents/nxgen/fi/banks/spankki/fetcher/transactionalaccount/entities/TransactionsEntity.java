@@ -13,7 +13,9 @@ public class TransactionsEntity {
     @JsonFormat(pattern = "yyyyMMdd")
     private Date dueDate;
 
-    private String bookingDate;
+    @JsonFormat(pattern = "yyyyMMdd")
+    private Date bookingDate;
+
     private double amount;
     private String currency;
     private String originalAmount;
@@ -30,7 +32,7 @@ public class TransactionsEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(new Amount(currency, amount))
-                .setDate(dueDate)
+                .setDate(bookingDate)
                 .setDescription(recieverName)
                 .build();
     }

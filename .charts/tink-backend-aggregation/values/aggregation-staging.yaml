@@ -32,12 +32,20 @@ agents:
       clientId: PSDSE-FINA-44059
       certificateId: Tink
       redirectUri: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+  seb:
+    tink:
+      eidasQwac: Tink
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   axa:
     tink:
       certificateId: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   bankdata:
     tink:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+  bpost:
+    tink:
+      certificateId: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   sparebank:
     tink:
@@ -104,10 +112,14 @@ agents:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
-      bypassTransactionConsent: false
+      bypassTransactionConsent: true
   cbi:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+      eidasQwac: Tink
+  bec:
+    tink:
+      tppRedirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
   handelsbanken:
     tink:

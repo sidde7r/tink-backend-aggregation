@@ -2291,6 +2291,102 @@
                 "MORTGAGE_AGGREGATION"
             ],
             "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayDescription": "Token generator",
+            "displayName": "Swedbank",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                },
+                {
+                    "description": "Password",
+                    "hint": "NNNN",
+                    "masked": true,
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{8})",
+                    "patternError": "Please enter eight digits.",
+                    "sensitive": true
+                }
+            ],
+            "groupDisplayName": "Swedbank och Sparbankerna",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "swedbank-token",
+            "passwordHelpText": "You need access to your token generator to create a screen code.",
+            "payload": "swedbank",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayDescription": "Token generator",
+            "displayName": "Sparbankerna",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                },
+                {
+                    "description": "Password",
+                    "hint": "NNNN",
+                    "masked": true,
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{8})",
+                    "patternError": "Please enter eight digits.",
+                    "sensitive": true
+                }
+            ],
+            "groupDisplayName": "Swedbank och Sparbankerna",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "savingsbank-token",
+            "passwordHelpText": "You need access to your token generator to create a screen code.",
+            "payload": "savingsbank",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Swedbank Ung",

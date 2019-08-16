@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -99,7 +100,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
             return;
         }
         hasRefreshed = true;
-
+        checkBankSideError();
         Matcher matcher = this.reBalance.matcher(this.loginResponse);
 
         if (!matcher.find()) {
@@ -189,6 +190,13 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
             }
 
             throw hce;
+        }
+    }
+
+    private void checkBankSideError() throws BankServiceException {
+        String csnResp = get("https://www.csn.se/");
+        if (csnResp.contains("Tekniska problem i våra e-tjänster")) {
+            throw new BankServiceException(BankServiceError.BANK_SIDE_FAILURE);
         }
     }
 

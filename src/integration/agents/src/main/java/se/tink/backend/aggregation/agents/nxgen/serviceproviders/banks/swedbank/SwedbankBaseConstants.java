@@ -18,7 +18,6 @@ import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.strings.StringUtils;
 
 public class SwedbankBaseConstants {
-
     public static class TransferScope {
         public static final String PAYMENT_FROM = "PAYMENT_FROM";
         public static final String TRANSFER_FROM = "TRANSFER_FROM";
@@ -46,6 +45,7 @@ public class SwedbankBaseConstants {
 
     public enum Url implements UrlEnum {
         INIT_BANKID(createUrlWithHost("/v5/identification/bankid/mobile")),
+        INIT_TOKEN(createUrlWithHost("/v5/identification/securitytoken/challenge")),
         TOUCH(createUrlWithHost("/v5/identification/touch")),
         LOGOUT(createUrlWithHost("/v5/identification/logout"));
 
@@ -245,6 +245,10 @@ public class SwedbankBaseConstants {
         }
     }
 
+    public static final class DeviceAuthentication {
+        public static final String CHALLENGE = "challenge";
+    }
+
     public enum MenuItemKey {
         ACCOUNTS("EngagementOverview"),
         UPCOMING_TRANSACTIONS("UpcomingTransactions"),
@@ -309,6 +313,7 @@ public class SwedbankBaseConstants {
                 "Timeout when collecting bankID for signing transfer";
         public static final String COLLECT_BANKID_CANCELLED =
                 "Could not confirm transfer with BankID signing.";
+        public static final String TOKEN_SIGN_FAILED = "Could not verify security token.";
         public static final String NOT_EXACTLY_ONE_UNSIGNED_TRANSFER =
                 "Number of unsigned transfers not equal to one - Cancelling to not sign more than one transfer.";
         public static final String UNSIGNED_TRANFERS =
@@ -319,6 +324,8 @@ public class SwedbankBaseConstants {
         public static final String NEEDS_EXTENDED_USE =
                 "Activation of extended use for BankId required";
         public static final String CONNECT_TIMEOUT = "connect timed out";
+        public static final String CHALLENGE_NO_RESPONSE =
+                "Transfer or payment was not signed with security token device";
     }
 
     public static class UserMessage {
@@ -334,12 +341,16 @@ public class SwedbankBaseConstants {
 
     public static class ErrorCode {
         public static final String NOT_FOUND = "NOT_FOUND";
+        public static final String LOGIN_FAILED = "LOGIN_FAILED";
+        public static final String NOT_ALLOWED = "NOT_ALLOWED";
+        public static final String AUTHORIZATION_FAILED = "AUTHORIZATION_FAILED";
     }
 
     public static class ErrorField {
         public static final String DATE = "date";
         public static final String USER_ID = "userid";
         public static final String RECIPIENT_NUMBER = "recipientnumber";
+        public static final String RESPONSE = "response";
     }
 
     public static class TransactionType {

@@ -129,6 +129,18 @@ spec:
               name: aggregation-secrets
               key: nordea-client-secret
               optional: true
+        - name: SEB_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: seb-client-id
+              optional: true
+        - name: SEB_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: seb-client-secret
+              optional: true
         - name: BANKDATA_CLIENT_ID
           valueFrom:
             secretKeyRef:
@@ -170,6 +182,18 @@ spec:
             secretKeyRef:
               name: aggregation-secrets
               key: monzo-client-secret
+              optional: true
+        - name: BEC_QSEALC
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bec-qsealc
+              optional: true
+        - name: BEC_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bec-key-id
               optional: true
         - name: STARLING_AIS_CLIENT_ID
           valueFrom:
@@ -609,6 +633,14 @@ spec:
             secretKeyRef:
               name: aggregation-secrets
               key: axa-psd2-client-id
+              optional: true
+        {{- end }}
+        {{- if $agentsConfig.bpost }}
+        - name: BPOST_PSD2_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bpost-psd2-client-id
               optional: true
         {{- end }}
       containers:

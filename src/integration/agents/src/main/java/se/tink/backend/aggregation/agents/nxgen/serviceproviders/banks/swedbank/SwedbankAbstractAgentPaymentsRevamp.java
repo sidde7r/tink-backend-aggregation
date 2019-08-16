@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
@@ -66,6 +67,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final boolean isBankId;
 
     public SwedbankAbstractAgentPaymentsRevamp(
             CredentialsRequest request,
@@ -88,6 +90,8 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
             SwedbankApiClientProvider apiClientProvider) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
+        this.isBankId =
+                request.getProvider().getCredentialsType().equals(CredentialsTypes.MOBILE_BANKID);
         this.configuration = configuration;
         this.apiClient =
                 apiClientProvider.getApiAgent(client, configuration, credentials, sessionStorage);
@@ -230,7 +234,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     protected Optional<TransferController> constructTransferController() {
         SwedbankTransferHelper transferHelper =
                 new SwedbankTransferHelper(
-                        context, catalog, supplementalInformationHelper, apiClient);
+                        context, catalog, supplementalInformationHelper, apiClient, isBankId);
         SwedbankDefaultBankTransferExecutorNxgen transferExecutor =
                 new SwedbankDefaultBankTransferExecutorNxgen(catalog, apiClient, transferHelper);
         SwedbankDefaultPaymentExecutor paymentExecutor =

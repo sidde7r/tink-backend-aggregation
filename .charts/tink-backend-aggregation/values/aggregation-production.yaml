@@ -44,6 +44,10 @@ agents:
       clientId: PSDSE-FINA-44059
       certificateId: Tink
       redirectUri: https://api.tink.se/api/v1/credentials/third-party/callback
+  seb:
+    tink:
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+      eidasQwac: Tink
   axa:
     tink:
       certificateId: Tink
@@ -106,6 +110,10 @@ agents:
   cbi:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+      eidasQwac: Tink
+  bec:
+    tink:
+      tppRedirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       eidasQwac: Tink
   handelsbanken:
     tink:
@@ -201,8 +209,12 @@ clients:
     aggregatorIdentifier: "Middelfart Sparekasse"
   middelfart-testing:
     aggregatorIdentifier: "Middelfart Sparekasse"
+  no-68-nord-testing:
+    aggregatorIdentifier: "Sparebank 68 Nord"
   no-easybank-asa-production:
     aggregatorIdentifier: "Easybank ASA"
+  no-ofoten-testing:
+    aggregatorIdentifier: "Ofoten Sparebank"
   no-sandnes-sparebank-production:
     aggregatorIdentifier: "Sandnes Sparebank"
   no-sandnes-sparebank-testing:

@@ -30,9 +30,9 @@ public class FinTsAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshInvestmentAccountsExecutor {
-    private FinTsApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
+    private FinTsApiClient apiClient;
 
     public FinTsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -60,7 +60,8 @@ public class FinTsAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
+        // Add this to test eidas production
+        client.setEidasProxy(configuration.getEidasProxy(), "e643eb7981d24acfb47834ef338a4e2a");
         FinTsIntegrationConfiguration finTsIntegrationConfiguration =
                 configuration
                         .getIntegrations()
