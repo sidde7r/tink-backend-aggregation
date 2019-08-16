@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
+import se.tink.libraries.i18n.LocalizableKey;
+
 public final class SibsConstants {
 
     private SibsConstants() {}
@@ -34,8 +36,18 @@ public final class SibsConstants {
                 "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}";
         public static final String GET_PAYMENT_STATUS_REQUEST =
                 "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}/status";
+    }
+
+    public static class AppPayload {
         public static final String ANDROID_DEEPLINK_REDIRECT = "cgd.pt.caixadirectaparticulares";
         public static final String IOS_DEEPLINK_REDIRECT = "caixadirectaparticulares://app";
+        public static final String APP_STORE_URL =
+                "https://apps.apple.com/pt/app/caixadirecta/id1369089471";
+        public static final LocalizableKey DOWNLOAD_TITLE =
+                new LocalizableKey("Download Caixadirecta");
+        public static final LocalizableKey DOWNLOAD_MESSAGE =
+                new LocalizableKey(
+                        "You need to download the Caixadirecta app in order to continue.");
     }
 
     public static class StorageKeys {
