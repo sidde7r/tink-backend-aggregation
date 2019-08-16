@@ -1,80 +1,62 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent;
 
 import com.google.common.base.Strings;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.controllers.utils.sca.ScaRedirectCallbackHandler;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
 
-public class RedsysConsentController implements ConsentController {
+public class RedsysConsentController {
     private final RedsysApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final RedsysConsentStorage consentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public RedsysConsentController(
             RedsysApiClient apiClient,
-            SessionStorage sessionStorage,
-            SupplementalInformationHelper supplementalInformationHelper) {
+            RedsysConsentStorage consentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.consentStorage = consentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
-    @Override
-    public boolean storedConsentIsValid() {
-        final String consentId = sessionStorage.get(RedsysConstants.StorageKeys.CONSENT_ID);
-        if (Strings.isNullOrEmpty(consentId)) {
-            return false;
-        }
-        return apiClient
-                .fetchConsentStatus(consentId)
-                .equalsIgnoreCase(RedsysConstants.ConsentStatus.VALID);
+    public String getConsentId() {
+        return consentStorage.getConsentId();
     }
 
-    @Override
-    public Pair<String, URL> requestConsent(String stateToken) {
-        final Pair<String, URL> consentRequest = apiClient.requestConsent(stateToken);
-        return consentRequest;
+    private boolean hasStoredConsent() {
+        final String consentId = consentStorage.getConsentId();
+        return !Strings.isNullOrEmpty(consentId);
     }
 
-    @Override
-    public ConsentStatus getConsentStatus(String consentId) {
-        final String consentStatus = apiClient.fetchConsentStatus(consentId);
-        if (consentStatus.equalsIgnoreCase(RedsysConstants.ConsentStatus.VALID)) {
-            return ConsentStatus.VALID;
-        } else if (consentStatus.equalsIgnoreCase(RedsysConstants.ConsentStatus.RECEIVED)) {
-            return ConsentStatus.RECEIVED;
-        } else {
-            return ConsentStatus.OTHER;
+    public void requestConsentIfNeeded() {
+        if (!hasStoredConsent()) {
+            requestConsent();
         }
     }
 
-    @Override
-    public void useConsentId(String consentId) {
-        sessionStorage.put(RedsysConstants.StorageKeys.CONSENT_ID, consentId);
-    }
+    public void requestConsent() {
+        final String supplementalKey = strongAuthenticationState.getSupplementalKey();
+        final String state = strongAuthenticationState.getState();
 
-    @Override
-    public void askForConsentIfNeeded() {
-        if (storedConsentIsValid()) {
-            return;
-        }
-
-        final String scaToken = UUID.randomUUID().toString();
-        final Pair<String, URL> consentRequest = requestConsent(scaToken);
+        final Pair<String, URL> consentRequest = apiClient.requestConsent(state);
         final String consentId = consentRequest.first;
         final URL consentUrl = consentRequest.second;
 
-        new ScaRedirectCallbackHandler(supplementalInformationHelper, 30, TimeUnit.SECONDS)
-                .handleRedirect(consentUrl, scaToken);
+        supplementalInformationHelper.openThirdPartyApp(
+                ThirdPartyAppAuthenticationPayload.of(consentUrl));
+        supplementalInformationHelper.waitForSupplementalInformation(
+                supplementalKey, 10, TimeUnit.MINUTES);
 
-        if (getConsentStatus(consentId).equals(ConsentStatus.VALID)) {
-            useConsentId(consentId);
+        if (apiClient.fetchConsentStatus(consentId) == ConsentStatus.VALID) {
+            consentStorage.useConsentId(consentId);
         } else {
             // timed out or failed
             throw new IllegalStateException("Did not get consent.");

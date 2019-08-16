@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.serializers.LocalDateDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class GetPaymentResponse {
@@ -35,18 +35,19 @@ public class GetPaymentResponse {
     @JsonProperty private String psuMessage;
     @JsonProperty private List<TppMessageEntity> tppMessages;
 
+    @JsonIgnore
     public RedsysTransactionStatus getTransactionStatus() {
         return RedsysTransactionStatus.fromString(transactionStatus);
     }
 
     @JsonIgnore
-    public Amount getAmount() {
+    public ExactCurrencyAmount getAmount() {
         return instructedAmount.toTinkAmount();
     }
 
     @JsonIgnore
     public String getCurrency() {
-        return instructedAmount.toTinkAmount().getCurrency();
+        return instructedAmount.toTinkAmount().getCurrencyCode();
     }
 
     @JsonIgnore
@@ -59,10 +60,12 @@ public class GetPaymentResponse {
         return creditorAccount.toTinkAccountIdentifier();
     }
 
+    @JsonIgnore
     public LocalDate getRequestedExecutionDate() {
         return requestedExecutionDate;
     }
 
+    @JsonIgnore
     public Optional<String> getRemittanceInformationUnstructured() {
         return Optional.ofNullable(Strings.emptyToNull(remittanceInformationUnstructured));
     }

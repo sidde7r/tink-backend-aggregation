@@ -24,14 +24,17 @@ public class CreatePaymentResponse {
     @JsonProperty private String psuMessage;
     @JsonProperty private List<TppMessageEntity> tppMessages;
 
+    @JsonIgnore
     public String getPaymentId() {
         return paymentId;
     }
 
+    @JsonIgnore
     public AmountEntity getTransactionFees() {
         return transactionFees;
     }
 
+    @JsonIgnore
     public RedsysTransactionStatus getTransactionStatus() {
         return RedsysTransactionStatus.fromString(transactionStatus);
     }

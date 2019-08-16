@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public final class RedsysConstants {
 
@@ -13,10 +13,10 @@ public final class RedsysConstants {
     }
 
     // partial ISO 20022 ExternalCashAccountType1Code
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "CACC")
-                    .put(AccountTypes.SAVINGS, "SVGS")
+    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
+                    .put(TransactionalAccountType.CHECKING, "CACC", "TRAN")
+                    .put(TransactionalAccountType.SAVINGS, "SVGS")
                     .build();
 
     public static class ErrorMessages {
@@ -45,8 +45,13 @@ public final class RedsysConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "consentId";
+        public static final String CONSENT_VALID_FROM = "consentValidFrom";
         public static final String SCA_REDIRECT = "scaRedirect";
         public static final String SCA_STATE = "scaState";
+        public static final String TRANSACTIONS_URL = "transactionsUrl";
+        public static final String BALANCES_URL = "balancesUrl";
+        public static final String ACCOUNT_REQUEST_ID = "requestId:";
+        public static final String FETCHED_TRANSACTIONS_UNTIL = "fetchedTxUntil:";
     }
 
     public static class QueryKeys {
@@ -60,12 +65,15 @@ public final class RedsysConstants {
         public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String OK = "ok";
+        public static final String DATE_FROM = "dateFrom";
+        public static final String DATE_TO = "dateTo";
+        public static final String ENTRY_REFERENCE_FROM = "entryReferenceFrom";
     }
 
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
         public static final String SCOPE = "AIS PIS";
-        public static final String CODE_CHALLENGE_METHOD = "plain";
+        public static final String CODE_CHALLENGE_METHOD = "S256";
         public static final String TRUE = "true";
         public static final String FALSE = "false";
 
@@ -110,8 +118,7 @@ public final class RedsysConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final boolean TRUE = true;
         public static final boolean FALSE = false;
-        public static final int FREQUENCY_PER_DAY = 100;
-        public static final String VALID_UNTIL = "9999-12-31";
+        public static final int FREQUENCY_PER_DAY = 4;
         public static final String ALL_ACCOUNTS = "allAccounts";
     }
 
@@ -142,17 +149,21 @@ public final class RedsysConstants {
         public static final String DOWNLOAD = "download";
     }
 
-    public static class ConsentStatus {
-        public static final String RECEIVED = "received";
-        public static final String REJECTED = "rejected";
-        public static final String VALID = "valid";
-        public static final String EXPIRED = "expired";
-        public static final String REVOKED_BY_PSU = "revokedByPsu";
-        public static final String TERMINATED_BY_TPP = "terminatedByTpp";
-    }
-
     public static class AccountType {
         public static final String PERSONAL = "PRIV";
         public static final String BUSINESS = "ORGA";
+    }
+
+    public static class ErrorCodes {
+        public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
+    }
+
+    public static class BalanceType {
+        public static final String CLOSING_BOOKED = "closingBooked";
+        public static final String EXPECTED = "expected";
+        public static final String OPENING_BOOKED = "openingBooked";
+        public static final String INTERIM_AVAILABLE = "interimAvailable";
+        public static final String INTERIM_BOOKED = "interimBooked";
+        public static final String FORWARD_AVAILABLE = "forwardAvailable";
     }
 }

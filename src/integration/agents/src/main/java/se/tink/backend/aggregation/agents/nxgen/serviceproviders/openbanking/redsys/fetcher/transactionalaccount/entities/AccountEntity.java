@@ -5,22 +5,21 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.BalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.CheckingBuildStep;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.SavingsBuildStep;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -43,32 +42,66 @@ public class AccountEntity {
     private Map<String, LinkEntity> links;
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount() {
-        AccountTypes accountType =
-                ACCOUNT_TYPE_MAPPER.translate(cashAccountType).orElse(AccountTypes.OTHER);
+    public TransactionalAccount toTinkAccount(List<BalanceEntity> accountBalances) {
+        TransactionalAccountType accountType =
+                ACCOUNT_TYPE_MAPPER
+                        .translate(cashAccountType)
+                        .orElse(TransactionalAccountType.OTHER);
         if (cashAccountType == null) {
             // field is optional
-            accountType = AccountTypes.CHECKING;
+            accountType = TransactionalAccountType.CHECKING;
         }
-        switch (accountType) {
-            case CHECKING:
-                return Optional.of(toCheckingAccount());
-            case SAVINGS:
-                return Optional.of(toSavingsAccount());
-            default:
-                return Optional.empty();
+
+        final ExactCurrencyAmount balance =
+                BalanceEntity.getBalanceOfType(
+                        accountBalances,
+                        BalanceType.EXPECTED,
+                        BalanceType.INTERIM_AVAILABLE,
+                        BalanceType.CLOSING_BOOKED,
+                        BalanceType.OPENING_BOOKED);
+        if (balance == null) {
+            throw new IllegalStateException("Did not find balance for account.");
         }
+
+        final IdBuildStep idBuilder =
+                IdModule.builder()
+                        .withUniqueIdentifier(iban)
+                        .withAccountNumber(iban)
+                        .withAccountName(Strings.nullToEmpty(name))
+                        .addIdentifier(AccountIdentifier.create(Type.IBAN, iban));
+
+        if (!Strings.isNullOrEmpty(product)) {
+            idBuilder.setProductName(product);
+        } else if (!Strings.isNullOrEmpty(details)) {
+            idBuilder.setProductName(details);
+        }
+
+        TransactionalBuildStep builder =
+                TransactionalAccount.nxBuilder()
+                        .withType(accountType)
+                        .withBalance(BalanceModule.of(balance))
+                        .withId(idBuilder.build())
+                        .setApiIdentifier(resourceId);
+        if (links != null) {
+            links.forEach((key, link) -> builder.putInTemporaryStorage(key, link.getHref()));
+        }
+
+        return builder.build();
     }
 
     @JsonIgnore
-    private Amount getLatestBalance() {
-        if (balances == null) {
-            return new Amount(currency, 0.0);
-        }
-        return balances.stream()
-                .max(Comparator.comparing(BalanceEntity::getReferenceDate))
-                .map(BalanceEntity::getAmount)
-                .orElse(new Amount(currency, 0.0));
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    @JsonIgnore
+    public boolean hasBalances() {
+        return balances != null;
+    }
+
+    @JsonIgnore
+    public List<BalanceEntity> getBalances() {
+        return balances;
     }
 
     @JsonIgnore
@@ -77,55 +110,5 @@ public class AccountEntity {
             return Optional.empty();
         }
         return Optional.ofNullable(links.get(linkName));
-    }
-
-    @JsonIgnore
-    private TransactionalAccount toCheckingAccount() {
-        AccountIdentifier accountIdentifier =
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
-
-        CheckingBuildStep builder =
-                CheckingAccount.builder()
-                        .setUniqueIdentifier(iban)
-                        .setAccountNumber(iban)
-                        .setBalance(getLatestBalance())
-                        .setAlias(name)
-                        .addAccountIdentifier(accountIdentifier)
-                        .setApiIdentifier(resourceId);
-
-        if (!Strings.isNullOrEmpty(product)) {
-            builder = builder.setProductName(product);
-        }
-
-        if (RedsysConstants.AccountType.BUSINESS.equalsIgnoreCase(accountType)) {
-            builder = builder.addAccountFlags(AccountFlag.BUSINESS);
-        }
-
-        return builder.build();
-    }
-
-    @JsonIgnore
-    private TransactionalAccount toSavingsAccount() {
-        AccountIdentifier accountIdentifier =
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
-
-        SavingsBuildStep builder =
-                SavingsAccount.builder()
-                        .setUniqueIdentifier(iban)
-                        .setAccountNumber(iban)
-                        .setBalance(getLatestBalance())
-                        .setAlias(name)
-                        .addAccountIdentifier(accountIdentifier)
-                        .setApiIdentifier(resourceId);
-
-        if (!Strings.isNullOrEmpty(product)) {
-            builder = builder.setProductName(product);
-        }
-
-        if (RedsysConstants.AccountType.BUSINESS.equalsIgnoreCase(accountType)) {
-            builder = builder.addAccountFlags(AccountFlag.BUSINESS);
-        }
-
-        return builder.build();
     }
 }
