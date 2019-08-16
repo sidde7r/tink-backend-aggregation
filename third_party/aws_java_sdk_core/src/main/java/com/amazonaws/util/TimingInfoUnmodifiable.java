@@ -24,7 +24,7 @@ final class TimingInfoUnmodifiable extends TimingInfo {
     /**
      * @see TimingInfo#unmodifiableTimingInfo(long, Long)
      * @see TimingInfo#unmodifiableTimingInfo(long, long, Long)
-     * 
+     *
      * @param startEpochTimeMilli
      *            start time since epoch in millisecond; or null if not known
      * @param startTimeNano
@@ -39,13 +39,13 @@ final class TimingInfoUnmodifiable extends TimingInfo {
     /**
      * Always throws {@link UnsupportedOperationException}.
      */
-    @Override public void setEndTime(long _) {
+    @Override public void setEndTime(long ignored) {
         throw new UnsupportedOperationException();
     }
     /**
      * Always throws {@link UnsupportedOperationException}.
      */
-    @Override public void setEndTimeNano(long _) {
+    @Override public void setEndTimeNano(long ignored) {
         throw new UnsupportedOperationException();
     }
     /**
