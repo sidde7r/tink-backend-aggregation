@@ -38,7 +38,7 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setAmount(new Amount(currency, amount))
                 .setPending(!booked)
-                .setDescription(String.format(title))
+                .setDescription(title)
                 .setDate(bookingDate)
                 .build();
     }
