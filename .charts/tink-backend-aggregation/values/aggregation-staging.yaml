@@ -125,6 +125,11 @@ agents:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
+  belfius:
+    tink:
+      baseUrl: https://psd2.b2b.belfius.be:8443
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+      certificateId: Tink
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: true
