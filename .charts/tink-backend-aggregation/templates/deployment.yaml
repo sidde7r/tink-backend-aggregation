@@ -327,6 +327,21 @@ spec:
               name: aggregation-secrets
               key: swedbank-client-secret
               optional: true
+
+        {{- if $agentsConfig.belfius }}
+        - name: BELFIUS_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: belfius-client-id
+        - name: BELFIUS_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: belfius-client-secret
+              optional: true
+        {{- end }}
+
         {{- if $agentsConfig.bunq }}
         - name: BUNQ_CLIENT_ID_TINK
           valueFrom:

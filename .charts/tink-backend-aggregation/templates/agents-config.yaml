@@ -90,6 +90,17 @@ data:
             eidasQwac: "{{ $agentsConfig.nordea.tink.eidasQwac }}"
         {{- end }}
 
+
+        {{- if $agentsConfig.belfius }}
+        belfius:
+          tink:
+            clientId: "BELFIUS_CLIENT_ID_TAG"
+            clientSecret: "BELFIUS_CLIENT_SECRET_TAG"
+            redirectUrl: "{{ $agentsConfig.belfius.tink.redirectUrl }}"
+            baseUrl: "{{ $agentsConfig.belfius.tink.baseUrl }}"
+            certificateId: "{{ $agentsConfig.belfius.tink.certificateId }}"
+        {{- end }}
+
         {{- if $agentsConfig.icabanken }}
         icabanken:
           tink:
