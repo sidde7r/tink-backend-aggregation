@@ -42,13 +42,6 @@ git_repository(
 )
 
 git_repository(
-    name = "tink_aws_sdk_1_11",
-    commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a",
-    remote = "git@github.com:tink-ab/aws-sdk-java.git",
-    shallow_since = "1543992595 +0100",
-)
-
-git_repository(
     name = "tink_backend_shared_libraries",
     commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
     remote = "git@github.com:tink-ab/tink-backend-shared-libraries",

@@ -1,5 +1,6 @@
 # This is an inline version of tink-ab/aws-sdk-java as of
 # 1bd88709966b245373b4b71f5bca4c0d7202bf1a
+# It's based on 863a7e6f3699fc139af8e9ee69b74e6d75072fa7 from aws/aws-sdk-java
 java_library(
     name = "aws_java_sdk_core",
     srcs = glob(["src/main/java/**/*.java"]),
