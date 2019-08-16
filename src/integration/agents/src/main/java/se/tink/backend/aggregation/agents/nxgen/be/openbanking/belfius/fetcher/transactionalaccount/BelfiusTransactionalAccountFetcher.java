@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -42,11 +42,12 @@ public class BelfiusTransactionalAccountFetcher
 
         return accounts.stream()
                 .map(
-                        logicalId -> {
-                            FetchAccountResponse response =
-                                    apiClient.fetchAccountById(getOauth2Token(), apiIdentifier);
-                            return response.toTinkAccount(logicalId);
-                        })
+                        logicalId ->
+                                apiClient
+                                        .fetchAccountById(getOauth2Token(), apiIdentifier)
+                                        .toTinkAccount(logicalId))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

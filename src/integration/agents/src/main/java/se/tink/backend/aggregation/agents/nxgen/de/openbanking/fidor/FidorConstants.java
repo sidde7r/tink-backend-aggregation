@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public final class FidorConstants {
 
@@ -12,10 +13,12 @@ public final class FidorConstants {
         throw new AssertionError();
     }
 
-    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<TransactionalAccountType>builder()
-                    .put(TransactionalAccountType.CHECKING, "Girokonto")
-                    .setDefaultTranslationValue(TransactionalAccountType.OTHER)
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "Girokonto")
                     .build();
 
     public static class ErrorMessages {

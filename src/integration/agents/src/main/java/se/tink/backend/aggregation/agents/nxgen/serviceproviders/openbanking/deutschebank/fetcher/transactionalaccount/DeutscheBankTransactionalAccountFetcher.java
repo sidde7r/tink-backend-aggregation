@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.AccountEntity;
@@ -25,7 +25,8 @@ public class DeutscheBankTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().getAccounts().stream()
                 .map(AccountEntity::toTinkAccount)
-                .filter(Objects::nonNull)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

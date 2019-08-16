@@ -20,6 +20,8 @@ public class AccountsResponseEntity {
     public Collection<TransactionalAccount> toTinkAccounts() {
         return Optional.of(accounts).orElse(Collections.emptyList()).stream()
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

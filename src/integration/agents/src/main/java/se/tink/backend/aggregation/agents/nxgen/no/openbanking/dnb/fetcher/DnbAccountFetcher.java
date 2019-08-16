@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.entity.AccountEntityResponse;
@@ -20,10 +21,12 @@ public class DnbAccountFetcher implements AccountFetcher<TransactionalAccount> {
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().getAccountEntities().stream()
                 .map(this::addBalanceAndToTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private TransactionalAccount addBalanceAndToTinkAccount(
+    private Optional<TransactionalAccount> addBalanceAndToTinkAccount(
             final AccountEntityResponse accountEntityResponse) {
         final BalancesResponse balancesResponse =
                 apiClient.fetchBalance(accountEntityResponse.getBban());

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.account.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -41,9 +42,10 @@ public class FetchAccountResponse {
         this.links = links;
     }
 
-    public TransactionalAccount toTinkAccount(String logicalId) {
+    public Optional<TransactionalAccount> toTinkAccount(String logicalId) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(new ExactCurrencyAmount(balance, currency)))
                 .withId(
                         IdModule.builder()

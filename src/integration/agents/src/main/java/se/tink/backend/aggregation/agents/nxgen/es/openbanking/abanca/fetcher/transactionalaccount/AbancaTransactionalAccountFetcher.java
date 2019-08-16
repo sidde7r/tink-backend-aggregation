@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.t
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.entity.account.AccountEntity;
@@ -23,10 +24,12 @@ public class AbancaTransactionalAccountFetcher implements AccountFetcher<Transac
 
         return apiClient.fetchAccounts().getData().stream()
                 .map(this::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private TransactionalAccount toTinkAccount(final AccountEntity accountEntity) {
+    private Optional<TransactionalAccount> toTinkAccount(final AccountEntity accountEntity) {
         return accountEntity.toTinkAccount(
                 Objects.requireNonNull(apiClient.fetchBalance(accountEntity.getId())).getBalance());
     }

@@ -47,6 +47,8 @@ public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<Tra
                                 acc.toTinkAccount(
                                         apiClient.getBalance(
                                                 acc.getResourceId(), signature, reqId)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

@@ -30,33 +30,34 @@ public class AccountEntity {
     private LinksEntity links;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
-                .withType(
-                        TargobankConstants.ACCOUNT_TYPE_MAPPER
-                                .translate(cashAccountType)
-                                .orElse(TransactionalAccountType.OTHER))
-                .withBalance(BalanceModule.of(getBallanceAmmount()))
+                .withTypeAndFlagsFrom(
+                        TargobankConstants.ACCOUNT_TYPE_MAPPER,
+                        cashAccountType,
+                        TransactionalAccountType.OTHER)
+                .withBalance(BalanceModule.of(getBalanceAmount()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(resourceId)
-                                .withAccountName(Optional.ofNullable(name).orElse(""))
+                                .withAccountName(Optional.ofNullable(name).orElse(resourceId))
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)
-                .addHolderName(Optional.ofNullable(name).orElse(""))
+                .addHolderName(name)
                 .build();
     }
 
     @JsonIgnore
-    private ExactCurrencyAmount getBallanceAmmount() {
+    private ExactCurrencyAmount getBalanceAmount() {
         BalanceAmountEntity balanceAmount =
                 balances.stream()
                         .findFirst()
-                        .orElseThrow(() -> new IllegalStateException(""))
+                        .orElseThrow(IllegalStateException::new)
                         .getBalanceAmount();
+
         return new ExactCurrencyAmount(
                 new BigDecimal(balanceAmount.getAmount()), balanceAmount.getCurrency());
     }

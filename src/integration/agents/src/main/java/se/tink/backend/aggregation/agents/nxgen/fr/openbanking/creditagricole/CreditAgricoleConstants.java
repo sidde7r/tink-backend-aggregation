@@ -1,16 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public final class CreditAgricoleConstants {
 
     public static final String INTEGRATION_NAME = "creditagricole";
-    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<TransactionalAccountType>builder()
-                    .put(TransactionalAccountType.CHECKING, "CACC")
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "CACC")
                     .ignoreKeys("CARD")
                     .build();
 

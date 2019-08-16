@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
@@ -29,17 +28,12 @@ public class AccountEntity {
     @JsonProperty("_links")
     private AccountLinksWithHrefEntity links;
 
-    public TransactionalAccount toTinkAccount() {
-        return DeutscheBankConstants.ACCOUNT_TYPE_MAPPER
-                .translate(cashAccountType)
-                .map(this::toTinkAccountWithType)
-                .filter(Objects::nonNull)
-                .orElse(null);
-    }
-
-    private TransactionalAccount toTinkAccountWithType(TransactionalAccountType type) {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
-                .withType(type)
+                .withTypeAndFlagsFrom(
+                        DeutscheBankConstants.ACCOUNT_TYPE_MAPPER,
+                        cashAccountType,
+                        TransactionalAccountType.OTHER)
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()

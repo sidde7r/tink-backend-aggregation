@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -38,18 +38,17 @@ public class AccountEntity {
 
     public AccountEntity() {}
 
-    public boolean hasBalance() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         if (!getBalance().isPresent()) {
             LOGGER.error(
-                    "%s %s",
-                    "BalanceFetch error", BankdataConstants.LogTags.ERROR_FETCHING_BALANCE);
-        }
-        return getBalance().isPresent();
-    }
+                    "Balance fetch error: {}", BankdataConstants.LogTags.ERROR_FETCHING_BALANCE);
 
-    public TransactionalAccount toTinkAccount() {
+            return Optional.empty();
+        }
+
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getBalance().get()))
                 .withId(
                         IdModule.builder()
@@ -74,7 +73,7 @@ public class AccountEntity {
         return Optional.ofNullable(links).map(a -> a.getBalances().getLink()).orElse("");
     }
 
-    private Optional<Amount> getBalance() {
+    private Optional<ExactCurrencyAmount> getBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()

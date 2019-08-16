@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.entity;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.BalanceTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.Balance;
@@ -23,9 +24,10 @@ public class AccountEntityResponse {
         return bban;
     }
 
-    public TransactionalAccount toTinkAccount(final BalancesResponse balancesResponse) {
+    public Optional<TransactionalAccount> toTinkAccount(final BalancesResponse balancesResponse) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getAmount(balancesResponse)))
                 .withId(
                         IdModule.builder()

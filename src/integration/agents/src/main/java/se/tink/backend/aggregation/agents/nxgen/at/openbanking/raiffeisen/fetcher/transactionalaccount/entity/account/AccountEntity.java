@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetch
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.Currency;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -32,12 +33,13 @@ public class AccountEntity {
     private List<BalanceEntity> balances;
     private LinksEntity links;
 
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
                 .withType(
                         RaiffeisenConstants.ACCOUNT_TYPE_MAPPER
                                 .translate(cashAccountType)
                                 .orElse(TransactionalAccountType.CHECKING))
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()

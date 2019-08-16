@@ -65,15 +65,12 @@ public class AccountsItemEntity {
         return currency;
     }
 
-    private TransactionalAccountType getAccountType() {
-        return BnpParibasBaseConstants.ACCOUNT_TYPE_MAPPER
-                .translate(cashAccountType)
-                .orElse(TransactionalAccountType.OTHER);
-    }
-
-    public TransactionalAccount toTinkAccount(BalanceResponse balanceResponse) {
+    public Optional<TransactionalAccount> toTinkAccount(BalanceResponse balanceResponse) {
         return TransactionalAccount.nxBuilder()
-                .withType(getAccountType())
+                .withTypeAndFlagsFrom(
+                        BnpParibasBaseConstants.ACCOUNT_TYPE_MAPPER,
+                        cashAccountType,
+                        TransactionalAccountType.OTHER)
                 .withBalance(BalanceModule.of(getAvailableBalance(balanceResponse)))
                 .withId(
                         IdModule.builder()

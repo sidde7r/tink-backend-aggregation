@@ -27,9 +27,10 @@ public class AccountEntity {
         return status.equalsIgnoreCase(VolvoFinansConstants.Accounts.STATUS_ENABLED);
     }
 
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()

@@ -28,12 +28,10 @@ public class AccountEntity {
     @JsonProperty("_links")
     private LinksEntity links;
 
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
-                .withType(
-                        FidorConstants.ACCOUNT_TYPE_MAPPER
-                                .translate(product)
-                                .orElse(TransactionalAccountType.OTHER))
+                .withTypeAndFlagsFrom(
+                        FidorConstants.ACCOUNT_TYPE_MAPPER, product, TransactionalAccountType.OTHER)
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()

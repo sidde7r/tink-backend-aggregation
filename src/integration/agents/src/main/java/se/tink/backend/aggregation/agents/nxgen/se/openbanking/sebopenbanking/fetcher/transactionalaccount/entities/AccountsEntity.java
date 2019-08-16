@@ -59,15 +59,16 @@ public class AccountsEntity {
     @JsonProperty("_links")
     private LinksEntity links;
 
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return (product.toLowerCase().contains(SebCommonConstants.ACCOUNT_TYPES.SAVINGS))
                 ? parseAccount(TransactionalAccountType.SAVINGS)
                 : parseAccount(TransactionalAccountType.CHECKING);
     }
 
-    private TransactionalAccount parseAccount(TransactionalAccountType accountType) {
+    private Optional<TransactionalAccount> parseAccount(TransactionalAccountType accountType) {
         return TransactionalAccount.nxBuilder()
                 .withType(accountType)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.entity.account.AccountEntity;
@@ -19,10 +20,12 @@ public class SdcTransactionalAccountFetcher implements AccountFetcher<Transactio
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().getAccounts().stream()
                 .map(this::toTinkAccountWithBalance)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private TransactionalAccount toTinkAccountWithBalance(AccountEntity accountEntity) {
+    private Optional<TransactionalAccount> toTinkAccountWithBalance(AccountEntity accountEntity) {
         return accountEntity.toTinkAccount(
                 apiClient.fetchAccountBalances(accountEntity.getResourceId()).getBalance());
     }

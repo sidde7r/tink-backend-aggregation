@@ -1,16 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public abstract class BerlinGroupConstants {
 
     public static final String CLIENT_NAME = "tink";
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
                     .put(
-                            AccountTypes.CHECKING,
+                            TransactionalAccountType.CHECKING,
                             "CACC",
                             "CASH",
                             "CHAR",
@@ -21,7 +21,7 @@ public abstract class BerlinGroupConstants {
                             "TRAS",
                             "CurrentAccount",
                             "Current")
-                    .put(AccountTypes.SAVINGS, "LLSV", "ONDP", "SVGS")
+                    .put(TransactionalAccountType.SAVINGS, "LLSV", "ONDP", "SVGS")
                     .build();
 
     private BerlinGroupConstants() {

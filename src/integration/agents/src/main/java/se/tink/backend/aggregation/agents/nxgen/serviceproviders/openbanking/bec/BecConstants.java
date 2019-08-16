@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec;
 
 import java.util.Arrays;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 
@@ -27,10 +29,11 @@ public abstract class BecConstants {
                     .put(PaymentStatus.SIGNED, "ACCP")
                     .build();
 
-    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<TransactionalAccountType>builder()
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
                     .put(
                             TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "basal indlånskonto",
                             "konto personale",
                             "personalekonto",
@@ -52,6 +55,7 @@ public abstract class BecConstants {
                             "Totalløn")
                     .put(
                             TransactionalAccountType.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "aldersopsparing",
                             "børneopsparing",
                             "spar nord stjernekonto",
@@ -74,7 +78,6 @@ public abstract class BecConstants {
                             "Coop Budget",
                             "SVGS",
                             "LLSV")
-                    .setDefaultTranslationValue(TransactionalAccountType.CHECKING)
                     .build();
 
     public static class ApiService {

@@ -1,14 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public final class NordeaBaseConstants {
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "Current")
-                    .put(AccountTypes.SAVINGS, "Savings")
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "Current")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "Savings")
                     .build();
 
     private NordeaBaseConstants() {

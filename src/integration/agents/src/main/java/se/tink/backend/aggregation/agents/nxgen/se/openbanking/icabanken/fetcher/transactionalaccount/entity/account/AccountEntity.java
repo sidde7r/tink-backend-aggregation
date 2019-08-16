@@ -24,9 +24,10 @@ public class AccountEntity {
     private List<String> owner;
     private String resourceId;
 
-    public TransactionalAccount toTinkModel() {
+    public Optional<TransactionalAccount> toTinkModel() {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()

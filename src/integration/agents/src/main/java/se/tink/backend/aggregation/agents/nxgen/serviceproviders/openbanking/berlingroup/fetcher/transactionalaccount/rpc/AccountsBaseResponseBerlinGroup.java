@@ -32,8 +32,9 @@ public class AccountsBaseResponseBerlinGroup implements BerlinGroupAccountRespon
     @Override
     public Collection<TransactionalAccount> toTinkAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
-                .filter(BerlinGroupAccountEntity::isCheckingOrSavingsType)
                 .map(BerlinGroupAccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

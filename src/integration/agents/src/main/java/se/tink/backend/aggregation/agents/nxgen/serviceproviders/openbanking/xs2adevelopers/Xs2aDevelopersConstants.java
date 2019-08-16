@@ -4,22 +4,29 @@ import com.google.common.collect.ImmutableList;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.TimeUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class Xs2aDevelopersConstants {
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
                     .put(
                             AccountTypes.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "SAC",
                             "start2bank zichtrekening",
                             "0-Euro-Konto Vorteil",
                             "b.compact account",
                             "Current Account",
                             "Girokonto")
-                    .put(AccountTypes.SAVINGS, "SAV", "Tagesgeldkonto")
+                    .put(
+                            AccountTypes.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "SAV",
+                            "Tagesgeldkonto")
                     .put(AccountTypes.CREDIT_CARD, "Prepaid-Kreditkarte")
                     .build();
 
