@@ -59,11 +59,11 @@ public class AccountEntity {
     }
 
     private String getUniqueIdentifier() {
-        return iban;
+        return bban;
     }
 
     private String getAccountNumber() {
-        return iban;
+        return bban;
     }
 
     private AccountIdentifier getIdentifier() {
