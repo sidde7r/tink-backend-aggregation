@@ -18,25 +18,21 @@ package com.amazonaws.util;
 import com.amazonaws.annotation.SdkProtectedApi;
 import com.amazonaws.annotation.SdkTestInternalApi;
 import com.amazonaws.protocol.DefaultValueSupplier;
-
 import java.util.UUID;
 
-/**
- * Utility class to manage idempotency token
- */
+/** Utility class to manage idempotency token */
 @SdkProtectedApi
 public final class IdempotentUtils {
 
-    private static DefaultValueSupplier<String> generator = new DefaultValueSupplier<String>() {
-        @Override
-        public String get() {
-            return UUID.randomUUID().toString();
-        }
-    };
+    private static DefaultValueSupplier<String> generator =
+            new DefaultValueSupplier<String>() {
+                @Override
+                public String get() {
+                    return UUID.randomUUID().toString();
+                }
+            };
 
-    /**
-     * @deprecated By {@link #getGenerator()}
-     */
+    /** @deprecated By {@link #getGenerator()} */
     @Deprecated
     @SdkProtectedApi
     public static String resolveString(String token) {
@@ -47,7 +43,6 @@ public final class IdempotentUtils {
     public static DefaultValueSupplier<String> getGenerator() {
         return generator;
     }
-
 
     @SdkTestInternalApi
     public static void setGenerator(DefaultValueSupplier<String> newGenerator) {

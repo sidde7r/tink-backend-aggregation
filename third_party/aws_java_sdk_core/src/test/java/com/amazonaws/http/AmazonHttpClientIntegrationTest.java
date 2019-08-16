@@ -15,13 +15,13 @@
 
 package com.amazonaws.http;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Request;
 import org.junit.Before;
 import org.junit.Test;
 import utils.http.WireMockTestBase;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 public class AmazonHttpClientIntegrationTest extends WireMockTestBase {
     private static final String OPERATION = "/some-operation";
@@ -41,7 +41,9 @@ public class AmazonHttpClientIntegrationTest extends WireMockTestBase {
         AmazonHttpClient sut = createClient(HEADER, CONFIG_HEADER_VALUE);
         sut.requestExecutionBuilder().request(request).execute();
 
-        verify(getRequestedFor(urlPathEqualTo(OPERATION)).withHeader(HEADER, matching(CONFIG_HEADER_VALUE)));
+        verify(
+                getRequestedFor(urlPathEqualTo(OPERATION))
+                        .withHeader(HEADER, matching(CONFIG_HEADER_VALUE)));
     }
 
     @Test
@@ -53,7 +55,9 @@ public class AmazonHttpClientIntegrationTest extends WireMockTestBase {
 
         sut.requestExecutionBuilder().request(request).execute();
 
-        verify(getRequestedFor(urlPathEqualTo(OPERATION)).withHeader(HEADER, matching(REQUEST_HEADER_VALUE)));
+        verify(
+                getRequestedFor(urlPathEqualTo(OPERATION))
+                        .withHeader(HEADER, matching(REQUEST_HEADER_VALUE)));
     }
 
     @Test
@@ -68,7 +72,8 @@ public class AmazonHttpClientIntegrationTest extends WireMockTestBase {
     }
 
     private AmazonHttpClient createClient(String headerName, String headerValue) {
-        ClientConfiguration clientConfiguration = new ClientConfiguration().withHeader(headerName, headerValue);
+        ClientConfiguration clientConfiguration =
+                new ClientConfiguration().withHeader(headerName, headerValue);
         return new AmazonHttpClient(clientConfiguration);
     }
 }

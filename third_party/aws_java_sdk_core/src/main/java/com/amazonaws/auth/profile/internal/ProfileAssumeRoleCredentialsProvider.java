@@ -32,14 +32,15 @@ import com.amazonaws.util.StringUtils;
 @Immutable
 public class ProfileAssumeRoleCredentialsProvider implements AWSCredentialsProvider {
 
-
     private final AllProfiles allProfiles;
     private final BasicProfile profile;
     private final ProfileCredentialsService profileCredentialsService;
     private final AWSCredentialsProvider assumeRoleCredentialsProvider;
 
-    public ProfileAssumeRoleCredentialsProvider(ProfileCredentialsService profileCredentialsService,
-                                                AllProfiles allProfiles, BasicProfile profile) {
+    public ProfileAssumeRoleCredentialsProvider(
+            ProfileCredentialsService profileCredentialsService,
+            AllProfiles allProfiles,
+            BasicProfile profile) {
         this.allProfiles = allProfiles;
         this.profile = profile;
         this.profileCredentialsService = profileCredentialsService;
@@ -52,34 +53,38 @@ public class ProfileAssumeRoleCredentialsProvider implements AWSCredentialsProvi
     }
 
     @Override
-    public void refresh() {
-    }
+    public void refresh() {}
 
     private AWSCredentialsProvider fromAssumeRole() {
         if (StringUtils.isNullOrEmpty(profile.getRoleSourceProfile())) {
-            throw new SdkClientException(String.format(
-                    "Unable to load credentials from profile [%s]: Source profile name is not specified",
-                    profile.getProfileName()));
+            throw new SdkClientException(
+                    String.format(
+                            "Unable to load credentials from profile [%s]: Source profile name is not specified",
+                            profile.getProfileName()));
         }
 
-        final BasicProfile sourceProfile = allProfiles
-                .getProfile(this.profile.getRoleSourceProfile());
+        final BasicProfile sourceProfile =
+                allProfiles.getProfile(this.profile.getRoleSourceProfile());
         if (sourceProfile == null) {
-            throw new SdkClientException(String.format(
-                    "Unable to load source profile [%s]: Source profile was not found [%s]",
-                    profile.getProfileName(), profile.getRoleSourceProfile()));
+            throw new SdkClientException(
+                    String.format(
+                            "Unable to load source profile [%s]: Source profile was not found [%s]",
+                            profile.getProfileName(), profile.getRoleSourceProfile()));
         }
-        AWSCredentials sourceCredentials = new ProfileStaticCredentialsProvider(sourceProfile)
-                .getCredentials();
+        AWSCredentials sourceCredentials =
+                new ProfileStaticCredentialsProvider(sourceProfile).getCredentials();
 
+        final String roleSessionName =
+                (this.profile.getRoleSessionName() == null)
+                        ? "aws-sdk-java-" + System.currentTimeMillis()
+                        : this.profile.getRoleSessionName();
 
-        final String roleSessionName = (this.profile.getRoleSessionName() == null) ?
-                "aws-sdk-java-" + System.currentTimeMillis() : this.profile.getRoleSessionName();
-
-        RoleInfo roleInfo = new RoleInfo().withRoleArn(this.profile.getRoleArn())
-                .withRoleSessionName(roleSessionName)
-                .withExternalId(this.profile.getRoleExternalId())
-                .withLongLivedCredentials(sourceCredentials);
+        RoleInfo roleInfo =
+                new RoleInfo()
+                        .withRoleArn(this.profile.getRoleArn())
+                        .withRoleSessionName(roleSessionName)
+                        .withExternalId(this.profile.getRoleExternalId())
+                        .withLongLivedCredentials(sourceCredentials);
         return profileCredentialsService.getAssumeRoleCredentialsProvider(roleInfo);
     }
 }

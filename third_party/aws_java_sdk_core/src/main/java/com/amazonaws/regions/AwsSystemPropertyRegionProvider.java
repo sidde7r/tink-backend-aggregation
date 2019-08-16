@@ -18,8 +18,8 @@ import com.amazonaws.SDKGlobalConfiguration;
 import com.amazonaws.SdkClientException;
 
 /**
- * Loads region information from the '{@value com.amazonaws.SDKGlobalConfiguration#AWS_REGION_SYSTEM_PROPERTY}' JVM system
- * property.
+ * Loads region information from the '{@value
+ * com.amazonaws.SDKGlobalConfiguration#AWS_REGION_SYSTEM_PROPERTY}' JVM system property.
  */
 public class AwsSystemPropertyRegionProvider extends AwsRegionProvider {
 

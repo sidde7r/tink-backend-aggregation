@@ -18,17 +18,17 @@ import com.amazonaws.Request;
 import com.amazonaws.annotation.SdkProtectedApi;
 
 /**
- * Interface used by generated marshallers to transform a Java POJO in a {@link Request} object which represents an HTTP request.
+ * Interface used by generated marshallers to transform a Java POJO in a {@link Request} object
+ * which represents an HTTP request.
  *
- * <p><b>Example Usage:</b></p>
- * <pre>
- * {@code
+ * <p><b>Example Usage:</b>
+ *
+ * <pre>{@code
  * ProtocolRequestMarshaller<FooRequest> = createProtocolMarshaller(...);
  * protocolMarshaller.startMarshalling();
  * protocolMarshaller.marshall(obj, marshallingInfo);
  * Request<FooRequest> marshalledRequest = protocolMarshaller.finishMarshalling();
- * }
- * </pre>
+ * }</pre>
  *
  * @param <OrigRequest> Type of the original request object.
  */
@@ -36,17 +36,16 @@ import com.amazonaws.annotation.SdkProtectedApi;
 public interface ProtocolRequestMarshaller<OrigRequest> extends ProtocolMarshaller {
 
     /**
-     * Hook to perform an initialization that needs to happen at the start of marshalling. Must be called before
-     * any call to {@link #marshall(Object, MarshallingInfo)}.
+     * Hook to perform an initialization that needs to happen at the start of marshalling. Must be
+     * called before any call to {@link #marshall(Object, MarshallingInfo)}.
      */
     void startMarshalling();
 
     /**
-     * Finializes the marshalling and produces a {@link Request} object that can be sent for execution. Must be the last
-     * method called in the marshaller.
+     * Finializes the marshalling and produces a {@link Request} object that can be sent for
+     * execution. Must be the last method called in the marshaller.
      *
      * @return Marshalled {@link Request} object.
      */
     Request<OrigRequest> finishMarshalling();
-
 }

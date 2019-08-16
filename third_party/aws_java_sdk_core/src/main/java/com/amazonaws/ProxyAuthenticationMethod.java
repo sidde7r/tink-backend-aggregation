@@ -18,8 +18,8 @@ package com.amazonaws;
 import java.util.List;
 
 /**
- * Methods by which the SDK can authenticate against an HTTP proxy. These can be configured on a client using
- * {@link ClientConfiguration#setProxyAuthenticationMethods(List)}.
+ * Methods by which the SDK can authenticate against an HTTP proxy. These can be configured on a
+ * client using {@link ClientConfiguration#setProxyAuthenticationMethods(List)}.
  */
 public enum ProxyAuthenticationMethod {
     SPNEGO,

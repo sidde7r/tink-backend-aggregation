@@ -16,16 +16,12 @@ package com.amazonaws.regions;
 
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.util.ValidationUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Region metadata provider that holds all data in memory and returns data
- * from them.
- */
+/** Region metadata provider that holds all data in memory and returns data from them. */
 @SdkInternalApi
 public class InMemoryRegionsProvider extends AbstractRegionMetadataProvider {
 
@@ -34,8 +30,7 @@ public class InMemoryRegionsProvider extends AbstractRegionMetadataProvider {
 
     public InMemoryRegionsProvider(List<Region> regions) {
         ValidationUtils.assertNotNull(regions, "regions");
-        this.regions = Collections.unmodifiableList(new ArrayList<Region>
-                (regions));
+        this.regions = Collections.unmodifiableList(new ArrayList<Region>(regions));
     }
 
     @Override

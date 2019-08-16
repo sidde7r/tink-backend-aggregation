@@ -17,7 +17,6 @@ package com.amazonaws.protocol.json;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.annotation.NotThreadSafe;
 import com.amazonaws.annotation.SdkProtectedApi;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +29,8 @@ import java.util.List;
 @SdkProtectedApi
 public class JsonClientMetadata {
 
-    private final List<JsonErrorShapeMetadata> errorsMetadata = new ArrayList<JsonErrorShapeMetadata>();
+    private final List<JsonErrorShapeMetadata> errorsMetadata =
+            new ArrayList<JsonErrorShapeMetadata>();
 
     private String protocolVersion;
 
@@ -40,10 +40,9 @@ public class JsonClientMetadata {
 
     private boolean supportsIon;
 
-    /**
-     * Base class is initialized to {@link AmazonServiceException} for backwards compatibility.
-     */
-    private Class<? extends RuntimeException> baseServiceExceptionClass = AmazonServiceException.class;
+    /** Base class is initialized to {@link AmazonServiceException} for backwards compatibility. */
+    private Class<? extends RuntimeException> baseServiceExceptionClass =
+            AmazonServiceException.class;
 
     public JsonClientMetadata addErrorMetadata(JsonErrorShapeMetadata errorShapeMetadata) {
         this.errorsMetadata.add(errorShapeMetadata);

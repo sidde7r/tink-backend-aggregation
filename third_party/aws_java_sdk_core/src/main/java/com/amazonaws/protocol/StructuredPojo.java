@@ -16,16 +16,15 @@ package com.amazonaws.protocol;
 
 import com.amazonaws.annotation.SdkProtectedApi;
 
-/**
- * Interface implemented by model classes so that they may marshaller themselves.
- */
+/** Interface implemented by model classes so that they may marshaller themselves. */
 @SdkProtectedApi
 public interface StructuredPojo {
 
     /**
      * Marshalls this structured data using the given {@link ProtocolMarshaller}.
      *
-     * @param protocolMarshaller Implementation of {@link ProtocolMarshaller} used to marshall this object's data.
+     * @param protocolMarshaller Implementation of {@link ProtocolMarshaller} used to marshall this
+     *     object's data.
      */
     void marshall(ProtocolMarshaller protocolMarshaller);
 }

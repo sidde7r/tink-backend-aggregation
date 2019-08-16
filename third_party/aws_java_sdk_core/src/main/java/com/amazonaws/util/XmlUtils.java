@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
  * A copy of the License is located at
- * 
+ *
  *  http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
@@ -26,19 +26,18 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public class XmlUtils {
 
-    /**
-     * Shared factory for creating XML event readers
-     */
-    private static final ThreadLocal<XMLInputFactory> xmlInputFactory = SdkThreadLocalsRegistry.register(
-            new ThreadLocal<XMLInputFactory>() {
-                @Override
-                protected XMLInputFactory initialValue() {
-                    return createXmlInputFactory();
-                }
-            });
+    /** Shared factory for creating XML event readers */
+    private static final ThreadLocal<XMLInputFactory> xmlInputFactory =
+            SdkThreadLocalsRegistry.register(
+                    new ThreadLocal<XMLInputFactory>() {
+                        @Override
+                        protected XMLInputFactory initialValue() {
+                            return createXmlInputFactory();
+                        }
+                    });
 
     public static XMLReader parse(InputStream in, ContentHandler handler)
-        throws SAXException, IOException {
+            throws SAXException, IOException {
 
         XMLReader reader = XMLReaderFactory.createXMLReader();
         reader.setContentHandler(handler);
@@ -47,9 +46,7 @@ public class XmlUtils {
         return reader;
     }
 
-    /**
-     * @return A {@link ThreadLocal} copy of {@link XMLInputFactory}.
-     */
+    /** @return A {@link ThreadLocal} copy of {@link XMLInputFactory}. */
     public static XMLInputFactory getXmlInputFactory() {
         return xmlInputFactory.get();
     }
@@ -57,7 +54,9 @@ public class XmlUtils {
     /**
      * Disables certain dangerous features that attempt to automatically fetch DTDs
      *
-     * See <a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet">OWASP XXE Cheat Sheet</a>
+     * <p>See <a
+     * href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet">OWASP
+     * XXE Cheat Sheet</a>
      */
     private static XMLInputFactory createXmlInputFactory() {
         XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -65,5 +64,4 @@ public class XmlUtils {
         factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
         return factory;
     }
-
 }

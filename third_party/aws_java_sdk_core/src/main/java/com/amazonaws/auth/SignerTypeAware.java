@@ -15,7 +15,8 @@
 package com.amazonaws.auth;
 
 /**
- * Used to mark implementations of {@link com.amazonaws.AmazonWebServiceRequest} that specify a custom signer type.
+ * Used to mark implementations of {@link com.amazonaws.AmazonWebServiceRequest} that specify a
+ * custom signer type.
  */
 public interface SignerTypeAware {
     String getSignerType();

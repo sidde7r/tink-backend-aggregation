@@ -23,38 +23,21 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.UUID;
-
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author hchar
- */
-public class Base16CodecTest
-{
+/** @author hchar */
+public class Base16CodecTest {
     @Test
     public void testVectorsPerRfc4648()
-        throws NoSuchAlgorithmException, UnsupportedEncodingException
-    {
+            throws NoSuchAlgorithmException, UnsupportedEncodingException {
         String[] testVectors = {
-                "",
-                "f",
-                "fo",
-                "foo",
-                "foob",
-                "fooba",
-                "foobar",
+            "", "f", "fo", "foo", "foob", "fooba", "foobar",
         };
         String[] expected = {
-                "",
-                "66",
-                "666F",
-                "666F6F",
-                "666F6F62",
-                "666F6F6261",
-                "666F6F626172",
+            "", "66", "666F", "666F6F", "666F6F62", "666F6F6261", "666F6F626172",
         };
-        for (int i=0; i < testVectors.length; i++) {
+        for (int i = 0; i < testVectors.length; i++) {
             String data = testVectors[i];
             byte[] source = data.getBytes("UTF-8");
             String b16encoded = Base16.encodeAsString(data.getBytes("UTF-8"));
@@ -70,14 +53,13 @@ public class Base16CodecTest
 
     @Test
     public void testCodecConsistency()
-        throws NoSuchAlgorithmException, UnsupportedEncodingException
-    {
+            throws NoSuchAlgorithmException, UnsupportedEncodingException {
         byte[] decoded = null;
 
-        for (int h=0; h < 1000; h++) {
-            byte[] digest = MessageDigest.getInstance("SHA-1").digest(
-                UUID.randomUUID().toString().getBytes("UTF-8")
-            );
+        for (int h = 0; h < 1000; h++) {
+            byte[] digest =
+                    MessageDigest.getInstance("SHA-1")
+                            .digest(UUID.randomUUID().toString().getBytes("UTF-8"));
             String b16Encoded = Base16.encodeAsString(digest);
             {
                 decoded = Base16.decode(b16Encoded);
@@ -85,7 +67,7 @@ public class Base16CodecTest
                 decoded = Base16Lower.decode(b16Encoded);
                 Assert.assertTrue(Arrays.equals(decoded, digest));
             }
-            {   // test decoding case insensitivity
+            { // test decoding case insensitivity
                 decoded = Base16.decode(b16Encoded.toLowerCase());
                 Assert.assertTrue(Arrays.equals(decoded, digest));
                 decoded = Base16Lower.decode(b16Encoded.toLowerCase());

@@ -24,7 +24,6 @@ import java.io.InputStream;
 public class StreamUtils {
     public static void consumeInputStream(InputStream in) throws IOException {
         byte[] buffer = new byte[1024 * 10];
-        while (in.read(buffer) > -1) {
-        }
+        while (in.read(buffer) > -1) {}
     }
 }

@@ -43,14 +43,10 @@ import org.apache.commons.logging.LogFactory;
 @SdkInternalApi
 public class JsonResponseHandler<T> implements HttpResponseHandler<AmazonWebServiceResponse<T>> {
 
-    /**
-     * The JSON unmarshaller to use when handling the response
-     */
+    /** The JSON unmarshaller to use when handling the response */
     private Unmarshaller<T, JsonUnmarshallerContext> responseUnmarshaller;
 
-    /**
-     * Shared logger for profiling information
-     */
+    /** Shared logger for profiling information */
     private static final Log log = LogFactory.getLog("com.amazonaws.request");
 
     private final JsonFactory jsonFactory;
@@ -60,22 +56,26 @@ public class JsonResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
     private final boolean isPayloadJson;
 
     private final Map<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>> simpleTypeUnmarshallers;
-    private final Map<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>> customTypeMarshallers;
+    private final Map<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>>
+            customTypeMarshallers;
 
     /**
      * Constructs a new response handler that will use the specified JSON unmarshaller to unmarshall
      * the service response and uses the specified response element path to find the root of the
      * business data in the service's response.
-     * @param responseUnmarshaller    The JSON unmarshaller to use on the response.
+     *
+     * @param responseUnmarshaller The JSON unmarshaller to use on the response.
      * @param simpleTypeUnmarshallers List of unmarshallers to be used for scalar types.
-     * @param customTypeMarshallers   List of custom unmarshallers to be used for special types.
-     * @param jsonFactory             the json factory to be used for parsing the response.
+     * @param customTypeMarshallers List of custom unmarshallers to be used for special types.
+     * @param jsonFactory the json factory to be used for parsing the response.
      */
-    public JsonResponseHandler(Unmarshaller<T, JsonUnmarshallerContext> responseUnmarshaller,
-                               Map<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>> simpleTypeUnmarshallers,
-                               Map<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>> customTypeMarshallers,
-                               JsonFactory jsonFactory, boolean needsConnectionLeftOpen,
-                               boolean isPayloadJson) {
+    public JsonResponseHandler(
+            Unmarshaller<T, JsonUnmarshallerContext> responseUnmarshaller,
+            Map<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>> simpleTypeUnmarshallers,
+            Map<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>> customTypeMarshallers,
+            JsonFactory jsonFactory,
+            boolean needsConnectionLeftOpen,
+            boolean isPayloadJson) {
         /*
          * Even if the invoked operation just returns null, we still need an
          * unmarshaller to run so we can pull out response metadata.
@@ -89,15 +89,14 @@ public class JsonResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
         this.needsConnectionLeftOpen = needsConnectionLeftOpen;
         this.isPayloadJson = isPayloadJson;
 
-        this.simpleTypeUnmarshallers = ValidationUtils.assertNotNull(simpleTypeUnmarshallers, "simple type unmarshallers");
-        this.customTypeMarshallers = ValidationUtils.assertNotNull(customTypeMarshallers, "custom type marshallers");
+        this.simpleTypeUnmarshallers =
+                ValidationUtils.assertNotNull(simpleTypeUnmarshallers, "simple type unmarshallers");
+        this.customTypeMarshallers =
+                ValidationUtils.assertNotNull(customTypeMarshallers, "custom type marshallers");
         this.jsonFactory = ValidationUtils.assertNotNull(jsonFactory, "JSONFactory");
     }
 
-
-    /**
-     * @see HttpResponseHandler#handle(HttpResponse)
-     */
+    /** @see HttpResponseHandler#handle(HttpResponse) */
     public AmazonWebServiceResponse<T> handle(HttpResponse response) throws Exception {
         log.trace("Parsing service response JSON");
 
@@ -111,8 +110,9 @@ public class JsonResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
 
         try {
             AmazonWebServiceResponse<T> awsResponse = new AmazonWebServiceResponse<T>();
-            JsonUnmarshallerContext unmarshallerContext = new JsonUnmarshallerContextImpl(
-                    jsonParser, simpleTypeUnmarshallers, customTypeMarshallers, response);
+            JsonUnmarshallerContext unmarshallerContext =
+                    new JsonUnmarshallerContextImpl(
+                            jsonParser, simpleTypeUnmarshallers, customTypeMarshallers, response);
             registerAdditionalMetadataExpressions(unmarshallerContext);
 
             T result = responseUnmarshaller.unmarshall(unmarshallerContext);
@@ -135,8 +135,9 @@ public class JsonResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
             awsResponse.setResult(result);
 
             Map<String, String> metadata = unmarshallerContext.getMetadata();
-            metadata.put(ResponseMetadata.AWS_REQUEST_ID,
-                         response.getHeaders().get(X_AMZN_REQUEST_ID_HEADER));
+            metadata.put(
+                    ResponseMetadata.AWS_REQUEST_ID,
+                    response.getHeaders().get(X_AMZN_REQUEST_ID_HEADER));
             awsResponse.setResponseMetadata(new ResponseMetadata(metadata));
 
             log.trace("Done parsing service response");
@@ -156,23 +157,18 @@ public class JsonResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
      * Hook for subclasses to override in order to collect additional metadata from service
      * responses.
      *
-     * @param unmarshallerContext
-     *            The unmarshaller context used to configure a service's response
-     *            data.
+     * @param unmarshallerContext The unmarshaller context used to configure a service's response
+     *     data.
      */
     protected void registerAdditionalMetadataExpressions(
-            JsonUnmarshallerContext unmarshallerContext) {
-    }
+            JsonUnmarshallerContext unmarshallerContext) {}
 
     public boolean needsConnectionLeftOpen() {
         return needsConnectionLeftOpen;
     }
 
-    /**
-     * @return True if the payload will be parsed as JSON, false otherwise.
-     */
+    /** @return True if the payload will be parsed as JSON, false otherwise. */
     private boolean shouldParsePayloadAsJson() {
         return !needsConnectionLeftOpen && isPayloadJson;
     }
-
 }

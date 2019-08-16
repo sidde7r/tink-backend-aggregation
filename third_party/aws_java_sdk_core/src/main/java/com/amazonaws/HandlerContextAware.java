@@ -18,16 +18,18 @@ package com.amazonaws;
 import com.amazonaws.handlers.HandlerContextKey;
 
 /**
- * An implementing object is capable of storing context that is visible to all {@link com.amazonaws.handlers.RequestHandler2}.
+ * An implementing object is capable of storing context that is visible to all {@link
+ * com.amazonaws.handlers.RequestHandler2}.
  *
- * <p>This interface is subject to change and should not be implemented by users of the SDK.</p>
+ * <p>This interface is subject to change and should not be implemented by users of the SDK.
  */
 public interface HandlerContextAware {
     /**
      * Adds a context to that is visible to all {@link com.amazonaws.handlers.RequestHandler2}s.
      *
-     * Note that, context added here will available only for the scope of
-     * the request execution and will not be marshalled over the wire.
+     * <p>Note that, context added here will available only for the scope of the request execution
+     * and will not be marshalled over the wire.
+     *
      * @param key the key for the property being set in the request.
      * @param value the value for the property being set in the request.
      */

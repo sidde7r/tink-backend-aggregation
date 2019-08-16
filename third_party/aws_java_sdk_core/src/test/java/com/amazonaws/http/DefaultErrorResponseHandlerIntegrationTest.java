@@ -45,7 +45,9 @@ public class DefaultErrorResponseHandlerIntegrationTest extends WireMockTestBase
     private static final String RESOURCE = "/some-path";
     private LogCaptor logCaptor = new LogCaptor.DefaultLogCaptor(Level.DEBUG);
     private final AmazonHttpClient client = new AmazonHttpClient(new ClientConfiguration());
-    private final DefaultErrorResponseHandler sut = new DefaultErrorResponseHandler(new ArrayList<Unmarshaller<AmazonServiceException, Node>>());
+    private final DefaultErrorResponseHandler sut =
+            new DefaultErrorResponseHandler(
+                    new ArrayList<Unmarshaller<AmazonServiceException, Node>>());
 
     @Before
     public void setUp() {
@@ -58,14 +60,17 @@ public class DefaultErrorResponseHandlerIntegrationTest extends WireMockTestBase
 
         executeRequest();
 
-        Matcher<Iterable<? super LoggingEvent>> matcher = hasItem(hasEventWithContent("Invocation Id"));
+        Matcher<Iterable<? super LoggingEvent>> matcher =
+                hasItem(hasEventWithContent("Invocation Id"));
         assertThat(debugEvents(), matcher);
     }
 
     @Test
     public void invalidXmlLogsXmlContentToDebug() throws Exception {
         String content = RandomStringUtils.randomAlphanumeric(10);
-        stubFor(get(urlPathEqualTo(RESOURCE)).willReturn(aResponse().withStatus(418).withBody(content)));
+        stubFor(
+                get(urlPathEqualTo(RESOURCE))
+                        .willReturn(aResponse().withStatus(418).withBody(content)));
 
         executeRequest();
 
@@ -77,7 +82,12 @@ public class DefaultErrorResponseHandlerIntegrationTest extends WireMockTestBase
     public void requestIdIsLoggedWithDebugIfInTheHeader() throws Exception {
         String requestId = RandomStringUtils.randomAlphanumeric(10);
 
-        stubFor(get(urlPathEqualTo(RESOURCE)).willReturn(aResponse().withStatus(418).withHeader(X_AMZN_REQUEST_ID_HEADER, requestId)));
+        stubFor(
+                get(urlPathEqualTo(RESOURCE))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(418)
+                                        .withHeader(X_AMZN_REQUEST_ID_HEADER, requestId)));
 
         executeRequest();
 
@@ -86,12 +96,16 @@ public class DefaultErrorResponseHandlerIntegrationTest extends WireMockTestBase
     }
 
     private void executeRequest() {
-        expectException(new Runnable() {
-            @Override
-            public void run() {
-                client.requestExecutionBuilder().errorResponseHandler(sut).request(newGetRequest(RESOURCE)).execute();
-            }
-        });
+        expectException(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        client.requestExecutionBuilder()
+                                .errorResponseHandler(sut)
+                                .request(newGetRequest(RESOURCE))
+                                .execute();
+                    }
+                });
     }
 
     @SuppressWarnings("EmptyCatchBlock")
@@ -118,4 +132,3 @@ public class DefaultErrorResponseHandlerIntegrationTest extends WireMockTestBase
         return hasProperty("message", containsString(content));
     }
 }
-

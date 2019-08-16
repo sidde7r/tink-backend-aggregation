@@ -21,9 +21,12 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.AmazonWebServiceRequest;
+import com.amazonaws.Request;
+import com.amazonaws.Response;
+import com.amazonaws.http.HttpResponse;
 import java.util.ArrayList;
-
-import tink.org.apache.http.client.methods.HttpGet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -31,12 +34,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.AmazonWebServiceRequest;
-import com.amazonaws.Request;
-import com.amazonaws.Response;
-import com.amazonaws.http.HttpResponse;
+import tink.org.apache.http.client.methods.HttpGet;
 
 @RunWith(Enclosed.class)
 public class StackedRequestHandlerTest {
@@ -49,8 +47,7 @@ public class StackedRequestHandlerTest {
 
         private StackedRequestHandler stackedRequestHandler;
 
-        @Mock
-        private Request<?> request;
+        @Mock private Request<?> request;
 
         private Response<?> response;
 
@@ -59,7 +56,9 @@ public class StackedRequestHandlerTest {
             MockitoAnnotations.initMocks(this);
             stackedRequestHandler = new StackedRequestHandler(new ArrayList<RequestHandler2>());
 
-            response = new Response<String>("Dummy response", new HttpResponse(request, new HttpGet()));
+            response =
+                    new Response<String>(
+                            "Dummy response", new HttpResponse(request, new HttpGet()));
         }
 
         @Test
@@ -98,11 +97,9 @@ public class StackedRequestHandlerTest {
 
         private StackedRequestHandler stackedRequestHandler;
 
-        @Mock
-        private RequestHandler2 only;
+        @Mock private RequestHandler2 only;
 
-        @Mock
-        private Request<?> request;
+        @Mock private Request<?> request;
 
         private Response<?> response;
 
@@ -111,7 +108,9 @@ public class StackedRequestHandlerTest {
             MockitoAnnotations.initMocks(this);
             stackedRequestHandler = new StackedRequestHandler(only);
 
-            response = new Response<String>("Dummy response", new HttpResponse(request, new HttpGet()));
+            response =
+                    new Response<String>(
+                            "Dummy response", new HttpResponse(request, new HttpGet()));
         }
 
         @Test
@@ -146,7 +145,6 @@ public class StackedRequestHandlerTest {
             stackedRequestHandler.afterError(request, response, exception);
             verify(only).afterError(request, response, exception);
         }
-
     }
 
     /**
@@ -159,17 +157,13 @@ public class StackedRequestHandlerTest {
 
         private StackedRequestHandler stackedRequestHandler;
 
-        @Mock
-        private RequestHandler2 first;
+        @Mock private RequestHandler2 first;
 
-        @Mock
-        private RequestHandler2 second;
+        @Mock private RequestHandler2 second;
 
-        @Mock
-        private RequestHandler2 third;
+        @Mock private RequestHandler2 third;
 
-        @Mock
-        private Request<?> request;
+        @Mock private Request<?> request;
 
         private Response<?> response;
 
@@ -178,7 +172,9 @@ public class StackedRequestHandlerTest {
             MockitoAnnotations.initMocks(this);
             stackedRequestHandler = new StackedRequestHandler(first, second, third);
 
-            response = new Response<String>("Dummy response", new HttpResponse(request, new HttpGet()));
+            response =
+                    new Response<String>(
+                            "Dummy response", new HttpResponse(request, new HttpGet()));
         }
 
         @Test
@@ -193,24 +189,28 @@ public class StackedRequestHandlerTest {
 
         /**
          * The beforeMarshalling step is a bit different. It's expected to take the potentially
-         * modified {@link AmazonWebServiceRequest} returned by
-         * {@link RequestHandler2#beforeMarshalling(AmazonWebServiceRequest)} and forward that
-         * result as input to the next request handler in the chain. This tests makes sure that each
-         * request handler forwards the appropriate the result to the next in the chain and that the
-         * end result is what's returned by the last request handler in the chain
+         * modified {@link AmazonWebServiceRequest} returned by {@link
+         * RequestHandler2#beforeMarshalling(AmazonWebServiceRequest)} and forward that result as
+         * input to the next request handler in the chain. This tests makes sure that each request
+         * handler forwards the appropriate the result to the next in the chain and that the end
+         * result is what's returned by the last request handler in the chain
          */
         @Test
         public void beforeMarshalling_ModifiedRequestForwardedToNextInChain() {
             final AmazonWebServiceRequest origAwsRequest = mock(AmazonWebServiceRequest.class);
-            final AmazonWebServiceRequest afterFirstAwsRequest = mock(AmazonWebServiceRequest.class);
-            final AmazonWebServiceRequest afterSecondAwsRequest = mock(AmazonWebServiceRequest.class);
-            final AmazonWebServiceRequest afterThirdAwsRequest = mock(AmazonWebServiceRequest.class);
+            final AmazonWebServiceRequest afterFirstAwsRequest =
+                    mock(AmazonWebServiceRequest.class);
+            final AmazonWebServiceRequest afterSecondAwsRequest =
+                    mock(AmazonWebServiceRequest.class);
+            final AmazonWebServiceRequest afterThirdAwsRequest =
+                    mock(AmazonWebServiceRequest.class);
 
             doReturn(afterFirstAwsRequest).when(first).beforeMarshalling(origAwsRequest);
             doReturn(afterSecondAwsRequest).when(second).beforeMarshalling(afterFirstAwsRequest);
             doReturn(afterThirdAwsRequest).when(third).beforeMarshalling(afterSecondAwsRequest);
 
-            assertEquals(afterThirdAwsRequest, stackedRequestHandler.beforeMarshalling(origAwsRequest));
+            assertEquals(
+                    afterThirdAwsRequest, stackedRequestHandler.beforeMarshalling(origAwsRequest));
 
             InOrder inOrder = inOrder(first, second, third);
             inOrder.verify(first).beforeMarshalling(origAwsRequest);
@@ -245,11 +245,19 @@ public class StackedRequestHandlerTest {
             final HttpResponse afterSecondHttpResponse = mock(HttpResponse.class);
             final HttpResponse afterThirdHttpResponse = mock(HttpResponse.class);
 
-            doReturn(afterThirdHttpResponse).when(third).beforeUnmarshalling(request, origHttpResponse);
-            doReturn(afterSecondHttpResponse).when(second).beforeUnmarshalling(request, afterThirdHttpResponse);
-            doReturn(afterFirstHttpResponse).when(first).beforeUnmarshalling(request, afterSecondHttpResponse);
+            doReturn(afterThirdHttpResponse)
+                    .when(third)
+                    .beforeUnmarshalling(request, origHttpResponse);
+            doReturn(afterSecondHttpResponse)
+                    .when(second)
+                    .beforeUnmarshalling(request, afterThirdHttpResponse);
+            doReturn(afterFirstHttpResponse)
+                    .when(first)
+                    .beforeUnmarshalling(request, afterSecondHttpResponse);
 
-            assertEquals(afterFirstHttpResponse, stackedRequestHandler.beforeUnmarshalling(request, origHttpResponse));
+            assertEquals(
+                    afterFirstHttpResponse,
+                    stackedRequestHandler.beforeUnmarshalling(request, origHttpResponse));
 
             InOrder inOrder = inOrder(third, second, first);
             inOrder.verify(third).beforeUnmarshalling(request, origHttpResponse);
@@ -277,7 +285,5 @@ public class StackedRequestHandlerTest {
             inOrder.verify(second).afterError(request, response, exception);
             inOrder.verify(first).afterError(request, response, exception);
         }
-
     }
-
 }

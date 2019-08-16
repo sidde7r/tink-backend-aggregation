@@ -24,59 +24,51 @@ import static org.junit.Assert.fail;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
 import org.junit.Test;
 
-/**
- * This test demonstrates why we should call mark(Integer.MAX_VALUE) instead of
- * mark(-1).
- */
+/** This test demonstrates why we should call mark(Integer.MAX_VALUE) instead of mark(-1). */
 public class BufferedInputStreamResetTest {
     @Test
     public void testNeatives() throws IOException {
-        testNegative(-1);   // fixed buffer
-        testNegative(19);   // 1 byte short
+        testNegative(-1); // fixed buffer
+        testNegative(19); // 1 byte short
     }
 
     private void testNegative(final int readLimit) throws IOException {
         byte[] bytes = new byte[100];
-        for (int i=0; i < bytes.length; i++)
-            bytes[i] = (byte)i;
+        for (int i = 0; i < bytes.length; i++) bytes[i] = (byte) i;
         // buffer of 10 bytes
-        BufferedInputStream bis =
-            new BufferedInputStream(new ByteArrayInputStream(bytes), 10);
+        BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(bytes), 10);
         // skip 10 bytes
         bis.skip(10);
-        bis.mark(readLimit);   // 1 byte short in buffer size
+        bis.mark(readLimit); // 1 byte short in buffer size
         // read 30 bytes in total, with internal buffer incread to 20
         bis.read(new byte[20]);
         try {
             bis.reset();
             fail();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             assertEquals("Resetting to invalid mark", ex.getMessage());
         }
     }
- 
+
     @Test
     public void testPositives() throws IOException {
-        testPositive(20);   // just enough
+        testPositive(20); // just enough
         testPositive(Integer.MAX_VALUE);
     }
 
     private void testPositive(final int readLimit) throws IOException {
         byte[] bytes = new byte[100];
-        for (int i=0; i < bytes.length; i++)
-            bytes[i] = (byte)i;
+        for (int i = 0; i < bytes.length; i++) bytes[i] = (byte) i;
         // buffer of 10 bytes
-        BufferedInputStream bis =
-            new BufferedInputStream(new ByteArrayInputStream(bytes), 10);
+        BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(bytes), 10);
         // skip 10 bytes
         bis.skip(10);
-        bis.mark(readLimit);   // buffer size would increase up to readLimit
+        bis.mark(readLimit); // buffer size would increase up to readLimit
         // read 30 bytes in total, with internal buffer increased to 20
         bis.read(new byte[20]);
         bis.reset();
-        assert(bis.read() == 10);
+        assert (bis.read() == 10);
     }
 }

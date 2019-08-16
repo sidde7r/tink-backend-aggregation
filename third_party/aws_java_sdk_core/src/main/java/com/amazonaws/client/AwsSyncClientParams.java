@@ -17,20 +17,19 @@ package com.amazonaws.client;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.annotation.SdkProtectedApi;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.monitoring.MonitoringListener;
 import com.amazonaws.handlers.RequestHandler2;
 import com.amazonaws.internal.auth.SignerProvider;
 import com.amazonaws.metrics.RequestMetricCollector;
 import com.amazonaws.monitoring.CsmConfigurationProvider;
+import com.amazonaws.monitoring.MonitoringListener;
 import com.amazonaws.retry.RetryPolicyAdapter;
 import com.amazonaws.retry.v2.RetryPolicy;
-
 import java.net.URI;
 import java.util.List;
 
 /**
- * Provides access to all params needed in a synchronous AWS service client constructor. Abstract
- * to allow additions to the params while maintaining backwards compatibility.
+ * Provides access to all params needed in a synchronous AWS service client constructor. Abstract to
+ * allow additions to the params while maintaining backwards compatibility.
  */
 @SdkProtectedApi
 public abstract class AwsSyncClientParams {

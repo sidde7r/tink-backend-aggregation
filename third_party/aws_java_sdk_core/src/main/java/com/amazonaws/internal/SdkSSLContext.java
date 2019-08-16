@@ -14,19 +14,16 @@
  */
 package com.amazonaws.internal;
 
-import tink.org.apache.http.conn.ssl.SSLContexts;
-import tink.org.apache.http.conn.ssl.SSLInitializationException;
-
-import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import javax.net.ssl.SSLContext;
+import tink.org.apache.http.conn.ssl.SSLContexts;
+import tink.org.apache.http.conn.ssl.SSLInitializationException;
 
 public class SdkSSLContext {
 
-    /**
-     * @see SSLContexts#createDefault()
-     */
+    /** @see SSLContexts#createDefault() */
     public static final SSLContext getPreferredSSLContext(final SecureRandom secureRandom) {
         try {
             final SSLContext sslcontext = SSLContext.getInstance("TLS");

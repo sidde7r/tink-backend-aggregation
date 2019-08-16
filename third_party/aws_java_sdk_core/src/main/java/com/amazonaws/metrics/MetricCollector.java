@@ -14,54 +14,63 @@
  */
 package com.amazonaws.metrics;
 
-
 /**
- * Metric Collector SPI.  This is a class instead of interface so in case of
- * adding new methods in the future we can do that safetly without breaking
- * any existing clients that implements this SPI.
+ * Metric Collector SPI. This is a class instead of interface so in case of adding new methods in
+ * the future we can do that safetly without breaking any existing clients that implements this SPI.
  */
-public abstract class MetricCollector 
-{
-    /**
-     * Can be used to serve as a factory for the request metric collector.
-     */
+public abstract class MetricCollector {
+    /** Can be used to serve as a factory for the request metric collector. */
     public static interface Factory {
-        /**
-         * Returns an instance of the collector; or null if if failed to create
-         * one.
-         */
+        /** Returns an instance of the collector; or null if if failed to create one. */
         public MetricCollector getInstance();
     }
     /**
      * Starts the request metric collector.
-     * 
+     *
      * @return true if the collector is successfully started; false otherwise.
      */
     public abstract boolean start();
 
-    /** 
+    /**
      * Stops the request metric collector.
      *
-     * @return true if the collector is successfully stopped; false if the
-     *         collector is not running and therefore the call has no effect.
+     * @return true if the collector is successfully stopped; false if the collector is not running
+     *     and therefore the call has no effect.
      */
     public abstract boolean stop();
     /** Returns true if this collector is enabled; false otherwise. */
     public abstract boolean isEnabled();
+
     public abstract RequestMetricCollector getRequestMetricCollector();
+
     public abstract ServiceMetricCollector getServiceMetricCollector();
 
     /** A convenient instance of a no-op request metric collector. */
-    public static final MetricCollector NONE = new MetricCollector() {
-        @Override public boolean start() { return true; }
-        @Override public boolean stop() { return true; }
-        /** Always returns false. */
-        @Override public boolean isEnabled() { return false; }
-        @Override public RequestMetricCollector getRequestMetricCollector() {
-            return RequestMetricCollector.NONE;
-        }
-        @Override public ServiceMetricCollector getServiceMetricCollector() {
-            return ServiceMetricCollector.NONE;
-        }
-    };
+    public static final MetricCollector NONE =
+            new MetricCollector() {
+                @Override
+                public boolean start() {
+                    return true;
+                }
+
+                @Override
+                public boolean stop() {
+                    return true;
+                }
+                /** Always returns false. */
+                @Override
+                public boolean isEnabled() {
+                    return false;
+                }
+
+                @Override
+                public RequestMetricCollector getRequestMetricCollector() {
+                    return RequestMetricCollector.NONE;
+                }
+
+                @Override
+                public ServiceMetricCollector getServiceMetricCollector() {
+                    return ServiceMetricCollector.NONE;
+                }
+            };
 }

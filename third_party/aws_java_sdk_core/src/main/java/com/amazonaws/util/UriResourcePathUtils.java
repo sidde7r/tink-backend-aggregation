@@ -19,13 +19,12 @@ import com.amazonaws.Request;
 public final class UriResourcePathUtils {
 
     /**
-     * Identifies the static query parameters in Uri resource path for and adds it to
-     * request.
+     * Identifies the static query parameters in Uri resource path for and adds it to request.
      *
-     * Returns the updated uriResourcePath.
+     * <p>Returns the updated uriResourcePath.
      */
-    public static String addStaticQueryParamtersToRequest(final Request<?> request,
-                                                        final String uriResourcePath) {
+    public static String addStaticQueryParamtersToRequest(
+            final Request<?> request, final String uriResourcePath) {
 
         if (request == null || uriResourcePath == null) {
             return null;
@@ -43,7 +42,7 @@ public final class UriResourcePathUtils {
                 if (index != -1) {
                     request.addParameter(s.substring(0, index), s.substring(index + 1));
                 } else {
-                    request.addParameter(s, (String)null);
+                    request.addParameter(s, (String) null);
                 }
             }
         }

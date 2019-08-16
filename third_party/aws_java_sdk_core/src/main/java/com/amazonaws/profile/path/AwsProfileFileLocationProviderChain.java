@@ -15,21 +15,21 @@
 package com.amazonaws.profile.path;
 
 import com.amazonaws.annotation.SdkInternalApi;
-import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Delegates to a chain of {@link AwsProfileFileLocationProvider}. Returns null if no provider in
- * the chain can come up with a location to the shared credentials file.
+ * Delegates to a chain of {@link com.amazonaws.profile.path.AwsProfileFileLocationProvider}.
+ * Returns null if no provider in the chain can come up with a location to the shared credentials
+ * file.
  */
 @SdkInternalApi
 public class AwsProfileFileLocationProviderChain implements AwsProfileFileLocationProvider {
 
-    private final List<AwsProfileFileLocationProvider> providers = new ArrayList<AwsProfileFileLocationProvider>();
+    private final List<AwsProfileFileLocationProvider> providers =
+            new ArrayList<AwsProfileFileLocationProvider>();
 
     public AwsProfileFileLocationProviderChain(AwsProfileFileLocationProvider... providers) {
         Collections.addAll(this.providers, providers);

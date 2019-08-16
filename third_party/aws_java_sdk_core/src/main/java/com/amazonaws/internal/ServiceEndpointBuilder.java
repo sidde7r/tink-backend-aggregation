@@ -14,18 +14,15 @@
  */
 package com.amazonaws.internal;
 
+import com.amazonaws.regions.Region;
 import java.net.URI;
 
-import com.amazonaws.regions.Region;
-
-/**
- * Construct a service endpoint based on metadata like service name and region
- */
+/** Construct a service endpoint based on metadata like service name and region */
 public abstract class ServiceEndpointBuilder {
 
     /**
      * Get the URI of the service endpoint
-     * 
+     *
      * @return URI of endpoint
      */
     public abstract URI getServiceEndpoint();
@@ -34,9 +31,8 @@ public abstract class ServiceEndpointBuilder {
 
     /**
      * Changes the region of the endpoint builder
-     * 
-     * @param region
-     *            New region to use in endpoint determination
+     *
+     * @param region New region to use in endpoint determination
      * @return A reference to this updated object so that method calls can be chained together.
      */
     public abstract ServiceEndpointBuilder withRegion(Region region);

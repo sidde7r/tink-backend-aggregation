@@ -19,31 +19,29 @@ import com.amazonaws.auth.ContainerCredentialsProvider;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 
 /**
- * Custom retry policy for credentials providers ({@link InstanceProfileCredentialsProvider},
- * {@link ContainerCredentialsProvider}) that retrieve credentials from a local endpoint in EC2 host.
+ * Custom retry policy for credentials providers ({@link InstanceProfileCredentialsProvider}, {@link
+ * ContainerCredentialsProvider}) that retrieve credentials from a local endpoint in EC2 host.
  *
- * Internal use only.
+ * <p>Internal use only.
  */
 @SdkInternalApi
 public interface CredentialsEndpointRetryPolicy {
 
-    public static final CredentialsEndpointRetryPolicy NO_RETRY = new CredentialsEndpointRetryPolicy() {
+    public static final CredentialsEndpointRetryPolicy NO_RETRY =
+            new CredentialsEndpointRetryPolicy() {
 
-        @Override
-        public boolean shouldRetry(int retriesAttempted, CredentialsEndpointRetryParameters retryParams) {
-            return false;
-        }
-    };
+                @Override
+                public boolean shouldRetry(
+                        int retriesAttempted, CredentialsEndpointRetryParameters retryParams) {
+                    return false;
+                }
+            };
 
     /**
      * Returns whether a failed request should be retried.
      *
-     * @param retriesAttempted
-     *            The number of times the current request has been
-     *            attempted.
-     *
+     * @param retriesAttempted The number of times the current request has been attempted.
      * @return True if the failed request should be retried.
      */
     boolean shouldRetry(int retriesAttempted, CredentialsEndpointRetryParameters retryParams);
-
 }

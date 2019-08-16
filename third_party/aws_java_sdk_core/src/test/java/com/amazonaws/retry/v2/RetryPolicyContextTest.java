@@ -14,15 +14,13 @@
  */
 package com.amazonaws.retry.v2;
 
-import com.amazonaws.DefaultRequest;
-import com.amazonaws.SdkClientException;
-
-import org.junit.Test;
-
-import utils.model.EmptyAmazonWebServiceRequest;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import com.amazonaws.DefaultRequest;
+import com.amazonaws.SdkClientException;
+import org.junit.Test;
+import utils.model.EmptyAmazonWebServiceRequest;
 
 public class RetryPolicyContextTest {
 
@@ -47,14 +45,14 @@ public class RetryPolicyContextTest {
         final DefaultRequest<EmptyAmazonWebServiceRequest> request =
                 new DefaultRequest<EmptyAmazonWebServiceRequest>(origRequest, "foo");
         final SdkClientException exception = new SdkClientException("boom");
-        final RetryPolicyContext context = RetryPolicyContext.builder()
-                .retriesAttempted(3)
-                .httpStatusCode(400)
-                .request(request)
-                .exception(exception)
-                .originalRequest(origRequest)
-                .build();
-
+        final RetryPolicyContext context =
+                RetryPolicyContext.builder()
+                        .retriesAttempted(3)
+                        .httpStatusCode(400)
+                        .request(request)
+                        .exception(exception)
+                        .originalRequest(origRequest)
+                        .build();
 
         assertEquals(3, context.retriesAttempted());
         assertEquals(Integer.valueOf(400), context.httpStatusCode());
@@ -62,5 +60,4 @@ public class RetryPolicyContextTest {
         assertEquals(exception, context.exception());
         assertEquals(origRequest, context.originalRequest());
     }
-
 }

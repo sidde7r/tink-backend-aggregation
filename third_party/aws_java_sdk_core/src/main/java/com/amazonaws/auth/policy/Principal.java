@@ -16,41 +16,36 @@ package com.amazonaws.auth.policy;
 
 /**
  * A principal is an AWS account or AWS web serivce, which is being allowed or denied access to a
- * resource through an access control policy. The principal is a property of the
- * {@link Statement} object, not directly the {@link Policy} object.
- * <p>
- * The principal is A in the statement
- * "A has permission to do B to C where D applies."
- * <p>
- * In an access control policy statement, you can set the principal to all
- * authenticated AWS users through the {@link Principal#AllUsers} member. This
- * is useful when you don't want to restrict access based on the identity of the
- * requester, but instead on other identifying characteristics such as the
- * requester's IP address.
+ * resource through an access control policy. The principal is a property of the {@link Statement}
+ * object, not directly the {@link Policy} object.
+ *
+ * <p>The principal is A in the statement "A has permission to do B to C where D applies."
+ *
+ * <p>In an access control policy statement, you can set the principal to all authenticated AWS
+ * users through the {@link Principal#AllUsers} member. This is useful when you don't want to
+ * restrict access based on the identity of the requester, but instead on other identifying
+ * characteristics such as the requester's IP address.
  */
 public class Principal {
 
     /**
      * Principal instance that includes all users, including anonymous users.
-     * <p>
-     * This is useful when you don't want to restrict access based on the
-     * identity of the requester, but instead on other identifying
-     * characteristics such as the requester's IP address.
+     *
+     * <p>This is useful when you don't want to restrict access based on the identity of the
+     * requester, but instead on other identifying characteristics such as the requester's IP
+     * address.
      */
     public static final Principal AllUsers = new Principal("AWS", "*");
 
-    /**
-     * Principal instance that includes all AWS web services.
-     */
+    /** Principal instance that includes all AWS web services. */
     public static final Principal AllServices = new Principal("Service", "*");
 
-    /**
-     * Principal instance that includes all the web identity providers.
-     */
+    /** Principal instance that includes all the web identity providers. */
     public static final Principal AllWebProviders = new Principal("Federated", "*");
 
     /**
-     * Principal instance that includes all the AWS accounts, AWS web services and web identity providers.
+     * Principal instance that includes all the AWS accounts, AWS web services and web identity
+     * providers.
      */
     public static final Principal All = new Principal("*", "*");
 
@@ -58,28 +53,24 @@ public class Principal {
     private final String provider;
 
     /**
-     * Constructs a new principal with the specified AWS web service which
-     * is being allowed or denied access to a resource through an access control
-     * policy.
+     * Constructs a new principal with the specified AWS web service which is being allowed or
+     * denied access to a resource through an access control policy.
      *
-     * @param service
-     *            An AWS service.
+     * @param service An AWS service.
      */
     public Principal(Services service) {
         if (service == null) {
             throw new IllegalArgumentException("Null AWS service name specified");
         }
-       id = service.getServiceId();
-       provider = "Service";
+        id = service.getServiceId();
+        provider = "Service";
     }
 
-
     /**
-     * Constructs a new principal with the specified AWS account ID. This method
-     * automatically strips hyphen characters found in the account Id.
+     * Constructs a new principal with the specified AWS account ID. This method automatically
+     * strips hyphen characters found in the account Id.
      *
-     * @param accountId
-     *            An AWS account ID.
+     * @param accountId An AWS account ID.
      */
     public Principal(String accountId) {
         this("AWS", accountId);
@@ -90,29 +81,26 @@ public class Principal {
     }
 
     /**
-     * Constructs a new principal with the specified id and provider. This
-     * method automatically strips hyphen characters found in the account ID if
-     * the provider is "AWS".
+     * Constructs a new principal with the specified id and provider. This method automatically
+     * strips hyphen characters found in the account ID if the provider is "AWS".
      */
     public Principal(String provider, String id) {
         this(provider, id, provider.equals("AWS"));
     }
 
     /**
-     * Constructs a new principal with the specified id and provider. This
-     * method optionally strips hyphen characters found in the account Id.
+     * Constructs a new principal with the specified id and provider. This method optionally strips
+     * hyphen characters found in the account Id.
      */
     public Principal(String provider, String id, boolean stripHyphen) {
         this.provider = provider;
-        this.id = stripHyphen ?
-                id.replace("-", "") : id;
+        this.id = stripHyphen ? id.replace("-", "") : id;
     }
 
     /**
      * Constructs a new principal with the specified web identity provider.
      *
-     * @param webIdentityProvider
-     *            An web identity provider.
+     * @param webIdentityProvider An web identity provider.
      */
     public Principal(WebIdentityProviders webIdentityProvider) {
         if (webIdentityProvider == null) {
@@ -123,13 +111,13 @@ public class Principal {
     }
 
     /**
-     * Returns the provider for this principal, which indicates in what group of
-     * users this principal resides.
+     * Returns the provider for this principal, which indicates in what group of users this
+     * principal resides.
      *
      * @return The provider for this principal.
      */
     public String getProvider() {
-       return provider;
+        return provider;
     }
 
     /**
@@ -138,18 +126,16 @@ public class Principal {
      * @return The unique ID for this principal.
      */
     public String getId() {
-            return id;
+        return id;
     }
 
     /**
-     * The services who have the right to do the assume the role
-     * action. The AssumeRole action returns a set of temporary security
-     * credentials that you can use to access resources that are defined in the
-     * role's policy. The returned credentials consist of an Access Key ID, a
-     * Secret Access Key, and a security token.
+     * The services who have the right to do the assume the role action. The AssumeRole action
+     * returns a set of temporary security credentials that you can use to access resources that are
+     * defined in the role's policy. The returned credentials consist of an Access Key ID, a Secret
+     * Access Key, and a security token.
      */
-    static public enum Services {
-        
+    public static enum Services {
         AmazonApiGateway("apigateway.amazonaws.com"),
         AWSDataPipeline("datapipeline.amazonaws.com"),
         AmazonElasticTranscoder("elastictranscoder.amazonaws.com"),
@@ -159,9 +145,7 @@ public class Principal {
         AllServices("*");
         private String serviceId;
 
-        /**
-         * The service which has the right to assume the role.
-         */
+        /** The service which has the right to assume the role. */
         private Services(String serviceId) {
             this.serviceId = serviceId;
         }
@@ -170,9 +154,7 @@ public class Principal {
             return serviceId;
         }
 
-        /**
-         * Construct the Services object from a string representing the service id.
-         */
+        /** Construct the Services object from a string representing the service id. */
         public static Services fromString(String serviceId) {
             if (serviceId != null) {
                 for (Services s : Services.values()) {
@@ -184,15 +166,10 @@ public class Principal {
 
             return null;
         }
-
-
     }
 
-    /**
-     * Web identity providers, such as Login with Amazon, Facebook, or Google.
-     */
-    static public enum WebIdentityProviders {
-
+    /** Web identity providers, such as Login with Amazon, Facebook, or Google. */
+    public static enum WebIdentityProviders {
         Facebook("graph.facebook.com"),
         Google("accounts.google.com"),
         Amazon("www.amazon.com"),
@@ -200,9 +177,7 @@ public class Principal {
 
         private String webIdentityProvider;
 
-        /**
-         * The web identity provider which has the right to assume the role.
-         */
+        /** The web identity provider which has the right to assume the role. */
         private WebIdentityProviders(String webIdentityProvider) {
             this.webIdentityProvider = webIdentityProvider;
         }
@@ -211,9 +186,7 @@ public class Principal {
             return webIdentityProvider;
         }
 
-        /**
-         * Construct the Services object from a string representing web identity provider.
-         */
+        /** Construct the Services object from a string representing web identity provider. */
         public static WebIdentityProviders fromString(String webIdentityProvider) {
             if (webIdentityProvider != null) {
                 for (WebIdentityProviders provider : WebIdentityProviders.values()) {
@@ -225,8 +198,6 @@ public class Principal {
 
             return null;
         }
-
-
     }
 
     @Override
@@ -255,14 +226,10 @@ public class Principal {
 
         Principal other = (Principal) principal;
 
-        if (this.getProvider().equals(other.getProvider())
-                && this.getId().equals(other.getId())) {
+        if (this.getProvider().equals(other.getProvider()) && this.getId().equals(other.getId())) {
             return true;
         }
 
         return false;
     }
-
-
-
 }

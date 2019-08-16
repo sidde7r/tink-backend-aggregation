@@ -22,7 +22,6 @@ import com.amazonaws.auth.profile.internal.BasicProfileConfigLoader;
 import com.amazonaws.auth.profile.internal.ProfileKeyConstants;
 import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
 import com.amazonaws.util.StringUtils;
-
 import java.io.File;
 
 public class AwsProfileEndpointDiscoveryProvider implements EndpointDiscoveryProvider {
@@ -36,14 +35,17 @@ public class AwsProfileEndpointDiscoveryProvider implements EndpointDiscoveryPro
     }
 
     public AwsProfileEndpointDiscoveryProvider(String profileName) {
-        this(profileName, AwsProfileFileLocationProvider.DEFAULT_CONFIG_LOCATION_PROVIDER,
-             BasicProfileConfigLoader.INSTANCE);
+        this(
+                profileName,
+                AwsProfileFileLocationProvider.DEFAULT_CONFIG_LOCATION_PROVIDER,
+                BasicProfileConfigLoader.INSTANCE);
     }
 
     @SdkTestInternalApi
-    AwsProfileEndpointDiscoveryProvider(String profileName,
-                                        AwsProfileFileLocationProvider locationProvider,
-                                        BasicProfileConfigLoader configLoader) {
+    AwsProfileEndpointDiscoveryProvider(
+            String profileName,
+            AwsProfileFileLocationProvider locationProvider,
+            BasicProfileConfigLoader configLoader) {
         this.profileName = profileName;
         this.locationProvider = locationProvider;
         this.profileConfigLoader = configLoader;
@@ -59,7 +61,8 @@ public class AwsProfileEndpointDiscoveryProvider implements EndpointDiscoveryPro
                 try {
                     endpointDiscoveryEnabled = Boolean.parseBoolean(profile.getEndpointDiscovery());
                 } catch (Exception e) {
-                    throw new RuntimeException("Unable to parse value for " + ProfileKeyConstants.ENDPOINT_DISCOVERY);
+                    throw new RuntimeException(
+                            "Unable to parse value for " + ProfileKeyConstants.ENDPOINT_DISCOVERY);
                 }
             }
         }

@@ -14,21 +14,20 @@
  */
 package com.amazonaws.http.settings;
 
-import com.amazonaws.Protocol;
-import com.amazonaws.ProxyAuthenticationMethod;
-import java.net.InetAddress;
-import java.security.SecureRandom;
-
 import com.amazonaws.ApacheHttpClientConfig;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.DnsResolver;
+import com.amazonaws.Protocol;
+import com.amazonaws.ProxyAuthenticationMethod;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.util.ValidationUtils;
+import java.net.InetAddress;
+import java.security.SecureRandom;
 import java.util.List;
 
 /**
- * A convienient class that expose all settings in {@link ClientConfiguration} and other internal settings to the
- * underlying http client.
+ * A convienient class that expose all settings in {@link ClientConfiguration} and other internal
+ * settings to the underlying http client.
  */
 @SdkInternalApi
 public class HttpClientSettings {
@@ -39,22 +38,25 @@ public class HttpClientSettings {
 
     private final boolean calculateCRC32FromCompressedData;
 
-    HttpClientSettings(final ClientConfiguration config,
-                       final boolean useBrowserCompatibleHostNameVerifier,
-                       final boolean calculateCRC32FromCompressedData) {
+    HttpClientSettings(
+            final ClientConfiguration config,
+            final boolean useBrowserCompatibleHostNameVerifier,
+            final boolean calculateCRC32FromCompressedData) {
         this.config = ValidationUtils.assertNotNull(config, "client configuration");
         this.useBrowserCompatibleHostNameVerifier = useBrowserCompatibleHostNameVerifier;
         this.calculateCRC32FromCompressedData = calculateCRC32FromCompressedData;
     }
 
-    public static HttpClientSettings adapt(final ClientConfiguration config,
+    public static HttpClientSettings adapt(
+            final ClientConfiguration config,
             final boolean useBrowserCompatibleHostNameVerifier,
             final boolean calculateCRC32FromCompressedData) {
-        return new HttpClientSettings(config, useBrowserCompatibleHostNameVerifier, calculateCRC32FromCompressedData);
+        return new HttpClientSettings(
+                config, useBrowserCompatibleHostNameVerifier, calculateCRC32FromCompressedData);
     }
 
-    public static HttpClientSettings adapt(final ClientConfiguration config,
-                                           final boolean useBrowserCompatibleHostNameVerifier) {
+    public static HttpClientSettings adapt(
+            final ClientConfiguration config, final boolean useBrowserCompatibleHostNameVerifier) {
         return adapt(config, useBrowserCompatibleHostNameVerifier, false);
     }
 

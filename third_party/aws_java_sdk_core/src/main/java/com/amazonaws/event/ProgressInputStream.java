@@ -18,13 +18,10 @@ import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.annotation.NotThreadSafe;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.internal.SdkFilterInputStream;
-
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Used for input stream progress tracking purposes.
- */
+/** Used for input stream progress tracking purposes. */
 @NotThreadSafe
 public abstract class ProgressInputStream extends SdkFilterInputStream {
     /**
@@ -35,50 +32,47 @@ public abstract class ProgressInputStream extends SdkFilterInputStream {
      * @deprecated
      */
     @Deprecated
-    public static InputStream inputStreamForRequest(InputStream is,
-            AmazonWebServiceRequest req) {
-        return req == null
-             ? is
-             : inputStreamForRequest(is, req.getGeneralProgressListener());
+    public static InputStream inputStreamForRequest(InputStream is, AmazonWebServiceRequest req) {
+        return req == null ? is : inputStreamForRequest(is, req.getGeneralProgressListener());
     }
 
     /**
-     * @param is               the request content input stream
+     * @param is the request content input stream
      * @param progressListener Optional progress listener
      * @return If the progress listener is non null returns a new input stream decorated with
-     * progress reporting functionality. If progress listener is null it returns the same input
-     * stream.
+     *     progress reporting functionality. If progress listener is null it returns the same input
+     *     stream.
      */
     @SdkInternalApi
-    public static InputStream inputStreamForRequest(InputStream is, ProgressListener progressListener) {
-        return progressListener == null
-                ? is
-                : new RequestProgressInputStream(is, progressListener);
+    public static InputStream inputStreamForRequest(
+            InputStream is, ProgressListener progressListener) {
+        return progressListener == null ? is : new RequestProgressInputStream(is, progressListener);
     }
 
     /**
-     * Returns an input stream for response progress tracking purposes. If
-     * request/response progress tracking is not enabled, this method simply
-     * return the given input stream as is.
-     * 
+     * Returns an input stream for response progress tracking purposes. If request/response progress
+     * tracking is not enabled, this method simply return the given input stream as is.
+     *
      * @param is the response content input stream
      */
     public static InputStream inputStreamForResponse(InputStream is, AmazonWebServiceRequest req) {
         return req == null
-             ? is
-             : new ResponseProgressInputStream(is, req.getGeneralProgressListener());
+                ? is
+                : new ResponseProgressInputStream(is, req.getGeneralProgressListener());
     }
 
     /**
-     * Returns an input stream for response progress tracking purposes. If request/response progress tracking is not enabled, this
-     * method simply return the given input stream as is.
+     * Returns an input stream for response progress tracking purposes. If request/response progress
+     * tracking is not enabled, this method simply return the given input stream as is.
      *
-     * @param is               the response content input stream
+     * @param is the response content input stream
      * @param progressListener Optional progress listener
-     * @return If the progress listener is non null returns a new input stream decorated with progress reporting functionality. If
-     * progress listener is null it returns the same input stream.
+     * @return If the progress listener is non null returns a new input stream decorated with
+     *     progress reporting functionality. If progress listener is null it returns the same input
+     *     stream.
      */
-    public static InputStream inputStreamForResponse(InputStream is, ProgressListener progressListener) {
+    public static InputStream inputStreamForResponse(
+            InputStream is, ProgressListener progressListener) {
         return progressListener == null
                 ? is
                 : new ResponseProgressInputStream(is, progressListener);
@@ -91,6 +85,7 @@ public abstract class ProgressInputStream extends SdkFilterInputStream {
     private final int notifyThresHold;
     /** The number of bytes read that the listener hasn't been notified about yet. */
     private int unnotifiedByteCount;
+
     private boolean hasBeenRead;
     private boolean doneEOF;
     private long notifiedByteCount;
@@ -101,44 +96,32 @@ public abstract class ProgressInputStream extends SdkFilterInputStream {
 
     public ProgressInputStream(InputStream is, ProgressListener listener, int notifyThresHold) {
         super(is);
-        if (is == null || listener == null)
-            throw new IllegalArgumentException();
+        if (is == null || listener == null) throw new IllegalArgumentException();
         this.notifyThresHold = notifyThresHold;
         this.listener = listener;
     }
 
-    /**
-     * The read method is called for the very first time.
-     * Defaults to do nothing.
-     */
+    /** The read method is called for the very first time. Defaults to do nothing. */
     protected void onFirstRead() {}
-    /**
-     * An end-of-file event is to be notified.
-     * Defaults to do nothing.
-     */
+    /** An end-of-file event is to be notified. Defaults to do nothing. */
     protected void onEOF() {}
 
-    /**
-     * Defaults to behave the same as {@link #onEOF()}.
-     */
+    /** Defaults to behave the same as {@link #onEOF()}. */
     protected void onClose() {
         eof();
     }
-    /**
-     * A reset event is to be notified.  Default to do nothing.
-     */
+    /** A reset event is to be notified. Default to do nothing. */
     protected void onReset() {}
     /**
-     * Upon notification of the number of bytes transferred since last
-     * notification.  Default to do nothing.
+     * Upon notification of the number of bytes transferred since last notification. Default to do
+     * nothing.
      */
     protected void onNotifyBytesRead() {}
 
     /**
-     * Upon reading the given number of bytes.
-     * The default behavior is to accumulate the byte count and only fire off
-     * a notification by invoking {@link #onNotifyBytesRead()} if the count
-     * has exceeded the threshold.
+     * Upon reading the given number of bytes. The default behavior is to accumulate the byte count
+     * and only fire off a notification by invoking {@link #onNotifyBytesRead()} if the count has
+     * exceeded the threshold.
      */
     private void onBytesRead(int bytesRead) {
         unnotifiedByteCount += bytesRead;
@@ -156,10 +139,8 @@ public abstract class ProgressInputStream extends SdkFilterInputStream {
             hasBeenRead = true;
         }
         int ch = super.read();
-        if (ch == -1)
-            eof();
-        else
-            onBytesRead(1);
+        if (ch == -1) eof();
+        else onBytesRead(1);
         return ch;
     }
 
@@ -178,16 +159,13 @@ public abstract class ProgressInputStream extends SdkFilterInputStream {
             hasBeenRead = true;
         }
         int bytesRead = super.read(b, off, len);
-        if (bytesRead == -1)
-            eof();
-        else
-            onBytesRead(bytesRead);
+        if (bytesRead == -1) eof();
+        else onBytesRead(bytesRead);
         return bytesRead;
     }
 
     private void eof() {
-        if (doneEOF)
-            return;
+        if (doneEOF) return;
         onEOF();
         unnotifiedByteCount = 0;
         doneEOF = true;

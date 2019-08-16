@@ -16,5 +16,4 @@ package utils.model;
 
 import com.amazonaws.AmazonWebServiceRequest;
 
-public class EmptyAmazonWebServiceRequest extends AmazonWebServiceRequest {
-}
+public class EmptyAmazonWebServiceRequest extends AmazonWebServiceRequest {}

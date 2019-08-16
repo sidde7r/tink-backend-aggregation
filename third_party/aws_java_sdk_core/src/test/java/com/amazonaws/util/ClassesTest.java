@@ -26,12 +26,12 @@ import java.io.IOException;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
 import org.joda.time.DateTimeZone;
 import org.junit.Test;
 
 public class ClassesTest {
     private static final boolean VERBOSE = false;
+
     @Test
     public void basics() {
         // super class of ClassesTest is Object
@@ -41,7 +41,7 @@ public class ClassesTest {
         // not reflexive
         assertNull(Classes.childClassOf(ClassesTest.class, this));
     }
-    
+
     @Test
     public void jarFileOf() throws IOException {
         JarFile jf = Classes.jarFileOf(DateTimeZone.class);

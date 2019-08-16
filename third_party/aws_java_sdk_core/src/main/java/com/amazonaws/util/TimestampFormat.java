@@ -16,7 +16,6 @@
 package com.amazonaws.util;
 
 public enum TimestampFormat {
-
     ISO_8601("iso8601"),
     UNIX_TIMESTAMP("unixTimestamp"),
     UNIX_TIMESTAMP_IN_MILLIS("unixTimestampInMillis"),

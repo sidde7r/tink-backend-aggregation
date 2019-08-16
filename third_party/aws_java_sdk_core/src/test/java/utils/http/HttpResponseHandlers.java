@@ -23,15 +23,17 @@ import com.amazonaws.util.IOUtils;
 public class HttpResponseHandlers {
 
     public static HttpResponseHandler<AmazonWebServiceResponse<String>> stringResponseHandler() {
-        return responseHandler(new FunctionWithException<HttpResponse, String>() {
-            @Override
-            public String apply(HttpResponse in) throws Exception {
-                return IOUtils.toString(in.getContent());
-            }
-        });
+        return responseHandler(
+                new FunctionWithException<HttpResponse, String>() {
+                    @Override
+                    public String apply(HttpResponse in) throws Exception {
+                        return IOUtils.toString(in.getContent());
+                    }
+                });
     }
 
-    public static <T> HttpResponseHandler<AmazonWebServiceResponse<T>> responseHandler(final FunctionWithException<HttpResponse, T> handle) {
+    public static <T> HttpResponseHandler<AmazonWebServiceResponse<T>> responseHandler(
+            final FunctionWithException<HttpResponse, T> handle) {
         return new HttpResponseHandler<AmazonWebServiceResponse<T>>() {
 
             @Override

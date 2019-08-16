@@ -22,7 +22,6 @@ import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Request;
 import com.amazonaws.RequestClientOptions;
 import com.amazonaws.Response;
-import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.auth.internal.SignerConstants;
 import com.amazonaws.handlers.HandlerAfterAttemptContext;
@@ -38,7 +37,6 @@ import com.amazonaws.util.ImmutableMapParameter;
 import com.amazonaws.util.StringUtils;
 import com.amazonaws.util.Throwables;
 import com.amazonaws.util.TimingInfo;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,7 +46,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Client Side Monitoring Request Handler to generate monitoring events and send them to agent listener.
+ * Client Side Monitoring Request Handler to generate monitoring events and send them to agent
+ * listener.
  */
 @SdkInternalApi
 public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
@@ -63,20 +62,23 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
     private static final String CLIENT_ID_KEY = "ClientId";
     private static final String USER_AGENT_KEY = "UserAgent";
     private static final Integer VERSION = 1;
-    private static final List<String> SECURITY_TOKENS = Arrays.asList("x-amz-security-token", SignerConstants
-        .X_AMZ_SECURITY_TOKEN);
+    private static final List<String> SECURITY_TOKENS =
+            Arrays.asList("x-amz-security-token", SignerConstants.X_AMZ_SECURITY_TOKEN);
 
-    private static final Map<String, Integer> ENTRY_TO_MAX_SIZE = new ImmutableMapParameter.Builder<String, Integer>()
-        .put(CLIENT_ID_KEY, 255)
-        .put(USER_AGENT_KEY, 256)
-        .put(EXCEPTION_MESSAGE_KEY, 512)
-        .put(EXCEPTION_KEY, 128).build();
+    private static final Map<String, Integer> ENTRY_TO_MAX_SIZE =
+            new ImmutableMapParameter.Builder<String, Integer>()
+                    .put(CLIENT_ID_KEY, 255)
+                    .put(USER_AGENT_KEY, 256)
+                    .put(EXCEPTION_MESSAGE_KEY, 512)
+                    .put(EXCEPTION_KEY, 128)
+                    .build();
 
     private final String clientId;
 
     private final Collection<MonitoringListener> monitoringListeners;
 
-    public ClientSideMonitoringRequestHandler(String clientId, Collection<MonitoringListener> monitoringListeners) {
+    public ClientSideMonitoringRequestHandler(
+            String clientId, Collection<MonitoringListener> monitoringListeners) {
         this.clientId = trimValueIfExceedsMaxLength(CLIENT_ID_KEY, clientId);
         this.monitoringListeners = monitoringListeners;
     }
@@ -99,10 +101,9 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
         handToMonitoringListeners(event);
     }
 
-    /**
-     * Collect {@link ApiCallAttemptMonitoringEvent} per attempt.
-     */
-    private ApiCallAttemptMonitoringEvent generateApiCallAttemptMonitoringEvent(HandlerAfterAttemptContext context) {
+    /** Collect {@link ApiCallAttemptMonitoringEvent} per attempt. */
+    private ApiCallAttemptMonitoringEvent generateApiCallAttemptMonitoringEvent(
+            HandlerAfterAttemptContext context) {
         Request<?> request = context.getRequest();
         AWSRequestMetrics metrics = context.getRequest().getAWSRequestMetrics();
 
@@ -113,7 +114,9 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
 
         String accessKey = null;
         if (request.getHandlerContext(HandlerContextKey.AWS_CREDENTIALS) != null) {
-            accessKey = request.getHandlerContext(HandlerContextKey.AWS_CREDENTIALS).getAWSAccessKeyId();
+            accessKey =
+                    request.getHandlerContext(HandlerContextKey.AWS_CREDENTIALS)
+                            .getAWSAccessKeyId();
         }
 
         String fqdn = extractFqdn(request.getEndpoint());
@@ -123,32 +126,34 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
         Long timestamp = null;
         Long attemptLatency = null;
 
-        if (timingInfo != null && timingInfo.getLastSubMeasurement(HttpRequestTime.name()) != null) {
+        if (timingInfo != null
+                && timingInfo.getLastSubMeasurement(HttpRequestTime.name()) != null) {
             httpRequestTime = timingInfo.getLastSubMeasurement(HttpRequestTime.name());
             timestamp = httpRequestTime.getStartEpochTimeMilliIfKnown();
             attemptLatency = convertToLongIfNotNull(httpRequestTime.getTimeTakenMillisIfKnown());
         }
 
-        ApiCallAttemptMonitoringEvent event = new ApiCallAttemptMonitoringEvent()
-            .withFqdn(fqdn)
-            .withVersion(VERSION)
-            .withService(serviceId)
-            .withClientId(clientId)
-            .withRegion(signingRegion)
-            .withAccessKey(accessKey)
-            .withUserAgent(trimValueIfExceedsMaxLength(USER_AGENT_KEY, getDefaultUserAgent(request)))
-            .withTimestamp(timestamp)
-            .withAttemptLatency(attemptLatency)
-            .withSessionToken(sessionToken)
-            .withApi(apiName);
+        ApiCallAttemptMonitoringEvent event =
+                new ApiCallAttemptMonitoringEvent()
+                        .withFqdn(fqdn)
+                        .withVersion(VERSION)
+                        .withService(serviceId)
+                        .withClientId(clientId)
+                        .withRegion(signingRegion)
+                        .withAccessKey(accessKey)
+                        .withUserAgent(
+                                trimValueIfExceedsMaxLength(
+                                        USER_AGENT_KEY, getDefaultUserAgent(request)))
+                        .withTimestamp(timestamp)
+                        .withAttemptLatency(attemptLatency)
+                        .withSessionToken(sessionToken)
+                        .withApi(apiName);
 
         addConditionalFieldsToAttemptEvent(metrics, context, event);
         return event;
     }
 
-    /**
-     * Collect {@link ApiCallMonitoringEvent} per request.
-     */
+    /** Collect {@link ApiCallMonitoringEvent} per request. */
     private ApiCallMonitoringEvent generateApiCallMonitoringEvent(Request<?> request) {
         String apiName = request.getHandlerContext(HandlerContextKey.OPERATION_NAME);
         String serviceId = request.getHandlerContext(HandlerContextKey.SERVICE_ID);
@@ -160,10 +165,15 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
 
         if (metrics != null) {
             TimingInfo timingInfo = metrics.getTimingInfo();
-            requestCount = timingInfo.getCounter(AWSRequestMetrics.Field.RequestCount.name()) == null ? 0 :
-                           timingInfo.getCounter(AWSRequestMetrics.Field.RequestCount.name()).intValue();
+            requestCount =
+                    timingInfo.getCounter(AWSRequestMetrics.Field.RequestCount.name()) == null
+                            ? 0
+                            : timingInfo
+                                    .getCounter(AWSRequestMetrics.Field.RequestCount.name())
+                                    .intValue();
 
-            TimingInfo latencyTimingInfo = timingInfo.getSubMeasurement(AwsClientSideMonitoringMetrics.Latency.name());
+            TimingInfo latencyTimingInfo =
+                    timingInfo.getSubMeasurement(AwsClientSideMonitoringMetrics.Latency.name());
             if (latencyTimingInfo != null) {
                 latency = convertToLongIfNotNull(latencyTimingInfo.getTimeTakenMillisIfKnown());
                 timestamp = latencyTimingInfo.getStartEpochTimeMilliIfKnown();
@@ -171,21 +181,24 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
         }
 
         return new ApiCallMonitoringEvent()
-            .withApi(apiName)
-            .withVersion(VERSION)
-            .withService(serviceId)
-            .withClientId(clientId)
-            .withAttemptCount(requestCount)
-            .withLatency(latency)
-            .withTimestamp(timestamp);
+                .withApi(apiName)
+                .withVersion(VERSION)
+                .withService(serviceId)
+                .withClientId(clientId)
+                .withAttemptCount(requestCount)
+                .withLatency(latency)
+                .withTimestamp(timestamp);
     }
 
     /**
-     * Add conditional fields to {@link ApiCallAttemptMonitoringEvent} based on the
-     * {@link HandlerAfterAttemptContext#getResponse()} and {@link HandlerAfterAttemptContext#getException()}
+     * Add conditional fields to {@link ApiCallAttemptMonitoringEvent} based on the {@link
+     * HandlerAfterAttemptContext#getResponse()} and {@link
+     * HandlerAfterAttemptContext#getException()}
      */
-    private void addConditionalFieldsToAttemptEvent(AWSRequestMetrics metrics, HandlerAfterAttemptContext context,
-                                                    ApiCallAttemptMonitoringEvent event) {
+    private void addConditionalFieldsToAttemptEvent(
+            AWSRequestMetrics metrics,
+            HandlerAfterAttemptContext context,
+            ApiCallAttemptMonitoringEvent event) {
         TimingInfo timingInfo = metrics == null ? null : metrics.getTimingInfo();
         Response<?> response = context.getResponse();
         Integer statusCode = null;
@@ -212,10 +225,10 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
         }
 
         event.withXAmznRequestId(xAmznRequestId)
-             .withXAmzRequestId(xAmzRequestId)
-             .withXAmzId2(xAmzId2)
-             .withHttpStatusCode(statusCode)
-             .withRequestLatency(requestLatency);
+                .withXAmzRequestId(xAmzRequestId)
+                .withXAmzId2(xAmzId2)
+                .withHttpStatusCode(statusCode)
+                .withRequestLatency(requestLatency);
         addException(context.getException(), event);
     }
 
@@ -225,16 +238,17 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
                 monitoringListener.handleEvent(event);
             } catch (Exception exception) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(String.format("MonitoringListener: %s failed to handle event", monitoringListener.toString()),
-                              exception);
+                    LOG.debug(
+                            String.format(
+                                    "MonitoringListener: %s failed to handle event",
+                                    monitoringListener.toString()),
+                            exception);
                 }
             }
         }
     }
 
-    /**
-     * Extract fqdn from endpoint. eg: https:some-service.aws.com:8080 -> some-service.aws.com
-     */
+    /** Extract fqdn from endpoint. eg: https:some-service.aws.com:8080 -> some-service.aws.com */
     private String extractFqdn(URI endpoint) {
         if (endpoint == null) {
             return null;
@@ -244,7 +258,8 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
     }
 
     /**
-     * If the entry exceeds the maximum length limit associated with the entry, its value will be trimmed to meet its limit.
+     * If the entry exceeds the maximum length limit associated with the entry, its value will be
+     * trimmed to meet its limit.
      */
     private String trimValueIfExceedsMaxLength(String entry, String value) {
         if (value == null) {
@@ -259,12 +274,12 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
         return result;
     }
 
-    /**
-     * Get the default user agent and append the user agent marker if there are any.
-     */
+    /** Get the default user agent and append the user agent marker if there are any. */
     private String getDefaultUserAgent(Request<?> request) {
-        String userAgentMarker = request.getOriginalRequest().getRequestClientOptions().getClientMarker(RequestClientOptions
-                                                                                                            .Marker.USER_AGENT);
+        String userAgentMarker =
+                request.getOriginalRequest()
+                        .getRequestClientOptions()
+                        .getClientMarker(RequestClientOptions.Marker.USER_AGENT);
         String userAgent = ClientConfiguration.DEFAULT_USER_AGENT;
         if (StringUtils.hasValue(userAgentMarker)) {
             userAgent += " " + userAgentMarker;
@@ -290,21 +305,26 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
     }
 
     /**
-     * Calculate the request latency. RequestLatency = httpClientSendRequestTime + HttpClientReceiveResponseTime
+     * Calculate the request latency. RequestLatency = httpClientSendRequestTime +
+     * HttpClientReceiveResponseTime
      */
     private Long calculateRequestLatency(TimingInfo timingInfo) {
         if (timingInfo == null) {
             return null;
         }
 
-        TimingInfo httpClientSendRequestTime = timingInfo.getLastSubMeasurement(AWSRequestMetrics.Field.HttpClientSendRequestTime
-                                                                                    .name());
-        TimingInfo httpClientReceiveResponseTime = timingInfo.getLastSubMeasurement(AWSRequestMetrics.Field
-                                                                                        .HttpClientReceiveResponseTime.name());
-        if (httpClientSendRequestTime != null && httpClientSendRequestTime.getTimeTakenMillisIfKnown() != null &&
-            httpClientReceiveResponseTime != null && httpClientReceiveResponseTime.getTimeTakenMillisIfKnown() != null) {
+        TimingInfo httpClientSendRequestTime =
+                timingInfo.getLastSubMeasurement(
+                        AWSRequestMetrics.Field.HttpClientSendRequestTime.name());
+        TimingInfo httpClientReceiveResponseTime =
+                timingInfo.getLastSubMeasurement(
+                        AWSRequestMetrics.Field.HttpClientReceiveResponseTime.name());
+        if (httpClientSendRequestTime != null
+                && httpClientSendRequestTime.getTimeTakenMillisIfKnown() != null
+                && httpClientReceiveResponseTime != null
+                && httpClientReceiveResponseTime.getTimeTakenMillisIfKnown() != null) {
             return httpClientSendRequestTime.getTimeTakenMillisIfKnown().longValue()
-                   + httpClientReceiveResponseTime.getTimeTakenMillisIfKnown().longValue();
+                    + httpClientReceiveResponseTime.getTimeTakenMillisIfKnown().longValue();
         }
         return null;
     }
@@ -319,15 +339,16 @@ public final class ClientSideMonitoringRequestHandler extends RequestHandler2 {
             String errorMessage = ((AmazonServiceException) exception).getErrorMessage();
 
             event.withAwsException(trimValueIfExceedsMaxLength(EXCEPTION_KEY, errorCode));
-            event.withAwsExceptionMessage(trimValueIfExceedsMaxLength(EXCEPTION_MESSAGE_KEY, errorMessage));
+            event.withAwsExceptionMessage(
+                    trimValueIfExceedsMaxLength(EXCEPTION_MESSAGE_KEY, errorMessage));
 
         } else {
             String exceptionClassName = exception.getClass().getName();
             String exceptionMessage = getRootCauseMessage(exception);
 
             event.withSdkException(trimValueIfExceedsMaxLength(EXCEPTION_KEY, exceptionClassName));
-            event.withSdkExceptionMessage(trimValueIfExceedsMaxLength(EXCEPTION_MESSAGE_KEY,
-                                                                      exceptionMessage));
+            event.withSdkExceptionMessage(
+                    trimValueIfExceedsMaxLength(EXCEPTION_MESSAGE_KEY, exceptionMessage));
         }
     }
 

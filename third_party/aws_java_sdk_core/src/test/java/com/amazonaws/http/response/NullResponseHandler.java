@@ -49,6 +49,7 @@ public class NullResponseHandler implements HttpResponseHandler<AmazonWebService
 
     /**
      * Enable streaming
+     *
      * @return Object for method chaining
      */
     public NullResponseHandler leaveConnectionOpen() {

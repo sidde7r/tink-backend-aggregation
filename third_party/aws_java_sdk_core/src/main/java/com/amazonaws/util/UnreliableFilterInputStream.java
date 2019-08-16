@@ -14,26 +14,18 @@
  */
 package com.amazonaws.util;
 
+import com.amazonaws.util.json.Jackson;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.amazonaws.util.json.Jackson;
-
-/**
- * An internal class used solely for the purpose of testing via failure
- * injection.
- */
+/** An internal class used solely for the purpose of testing via failure injection. */
 public class UnreliableFilterInputStream extends FilterInputStream {
-    /**
-     * Max number of errors that can be triggered.
-     */
+    /** Max number of errors that can be triggered. */
     private int maxNumErrors = 1;
-    /**
-     * Current number of errors that have been triggered.
-     */
+    /** Current number of errors that have been triggered. */
     private int currNumErrors;
-    
+
     private int bytesReadBeforeException = 100;
     private int marked;
     private int position;
@@ -41,13 +33,12 @@ public class UnreliableFilterInputStream extends FilterInputStream {
     private final boolean isFakeIOException;
     private int resetCount; // number of times the reset method has been called
     /**
-     * used to control whether an exception would be thrown based on the reset
-     * recurrence; not applicable if set to zero. For example, if
-     * resetIntervalBeforeException == n, the exception can only be thrown
-     * before the n_th reset (or after the n_th minus 1 reset), 2n_th reset (or
+     * used to control whether an exception would be thrown based on the reset recurrence; not
+     * applicable if set to zero. For example, if resetIntervalBeforeException == n, the exception
+     * can only be thrown before the n_th reset (or after the n_th minus 1 reset), 2n_th reset (or
      * after the 2n_th minus 1) reset), etc.
      */
-    private int resetIntervalBeforeException; 
+    private int resetIntervalBeforeException;
 
     public UnreliableFilterInputStream(InputStream in, boolean isFakeIOException) {
         super(in);
@@ -85,20 +76,25 @@ public class UnreliableFilterInputStream extends FilterInputStream {
     }
 
     private void triggerError() throws FakeIOException {
-        if (currNumErrors >= maxNumErrors)
-            return;
+        if (currNumErrors >= maxNumErrors) return;
 
         if (position >= bytesReadBeforeException) {
             if (resetIntervalBeforeException > 0
-            &&  resetCount % resetIntervalBeforeException != (resetIntervalBeforeException-1))
-                return;
+                    && resetCount % resetIntervalBeforeException
+                            != (resetIntervalBeforeException - 1)) return;
             currNumErrors++;
             if (isFakeIOException)
-                throw new FakeIOException("Fake IO error " + currNumErrors
-                    + " on UnreliableFileInputStream: " + this);
+                throw new FakeIOException(
+                        "Fake IO error "
+                                + currNumErrors
+                                + " on UnreliableFileInputStream: "
+                                + this);
             else
-                throw new RuntimeException("Injected runtime error " + currNumErrors
-                        + " on UnreliableFileInputStream: " + this);
+                throw new RuntimeException(
+                        "Injected runtime error "
+                                + currNumErrors
+                                + " on UnreliableFileInputStream: "
+                                + this);
         }
     }
 
@@ -112,11 +108,10 @@ public class UnreliableFilterInputStream extends FilterInputStream {
 
     public UnreliableFilterInputStream withMaxNumErrors(int maxNumErrors) {
         this.maxNumErrors = maxNumErrors;
-        return this; 
+        return this;
     }
 
-    public UnreliableFilterInputStream withBytesReadBeforeException(
-            int bytesReadBeforeException) {
+    public UnreliableFilterInputStream withBytesReadBeforeException(int bytesReadBeforeException) {
         this.bytesReadBeforeException = bytesReadBeforeException;
         return this;
     }
@@ -126,13 +121,10 @@ public class UnreliableFilterInputStream extends FilterInputStream {
     }
 
     /**
-     * @param resetIntervalBeforeException
-     *            used to control whether an exception would be thrown based on
-     *            the reset recurrence; not applicable if set to zero. For
-     *            example, if resetIntervalBeforeException == n, the exception
-     *            can only be thrown before the n_th reset (or after the n_th
-     *            minus 1 reset), 2n_th reset (or after the 2n_th minus 1)
-     *            reset), etc.
+     * @param resetIntervalBeforeException used to control whether an exception would be thrown
+     *     based on the reset recurrence; not applicable if set to zero. For example, if
+     *     resetIntervalBeforeException == n, the exception can only be thrown before the n_th reset
+     *     (or after the n_th minus 1 reset), 2n_th reset (or after the 2n_th minus 1) reset), etc.
      */
     public UnreliableFilterInputStream withResetIntervalBeforeException(
             int resetIntervalBeforeException) {
@@ -143,7 +135,7 @@ public class UnreliableFilterInputStream extends FilterInputStream {
     public int getResetIntervalBeforeException() {
         return resetIntervalBeforeException;
     }
- 
+
     public int getMarked() {
         return marked;
     }
@@ -159,7 +151,7 @@ public class UnreliableFilterInputStream extends FilterInputStream {
     public int getResetCount() {
         return resetCount;
     }
-    
+
     @Override
     public String toString() {
         return Jackson.toJsonString(this);

@@ -14,7 +14,5 @@
  */
 package com.amazonaws.http.conn;
 
-/**
- * An internal marker interface to defend against accidental recursive wrappings.
- */
+/** An internal marker interface to defend against accidental recursive wrappings. */
 interface Wrapped {}

@@ -18,32 +18,26 @@ package com.amazonaws.util;
 import com.amazonaws.ResponseMetadata;
 import com.amazonaws.annotation.SdkInternalApi;
 
-/**
- * Interface for caches interacting with response metadata.
- */
+/** Interface for caches interacting with response metadata. */
 @SdkInternalApi
 public interface MetadataCache {
 
     /**
-     * Adds a new entry to this cache, possibly evicting the oldest entry if the
-     * cache is at its size limit.
+     * Adds a new entry to this cache, possibly evicting the oldest entry if the cache is at its
+     * size limit.
      *
-     * @param obj
-     *            The key by which to store the metadata.
-     * @param metadata
-     *            The metadata for this entry.
+     * @param obj The key by which to store the metadata.
+     * @param metadata The metadata for this entry.
      */
     void add(Object obj, ResponseMetadata metadata);
 
     /**
-     * Returns the response metadata associated with the specified object, or
-     * null if no metadata is associated with that object.
+     * Returns the response metadata associated with the specified object, or null if no metadata is
+     * associated with that object.
      *
-     * @param obj
-     *            The key by which the desired metadata is stored.
-     *
-     * @return The response metadata associated with the given object key,
-     *         otherwise null if no metadata is associated with that object.
+     * @param obj The key by which the desired metadata is stored.
+     * @return The response metadata associated with the given object key, otherwise null if no
+     *     metadata is associated with that object.
      */
     ResponseMetadata get(Object obj);
 }

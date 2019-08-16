@@ -22,15 +22,14 @@ import tink.org.apache.http.client.methods.HttpRequestBase;
  */
 public class NoOpClientExecutionAbortTrackerTask implements ClientExecutionAbortTrackerTask {
 
-    public static final NoOpClientExecutionAbortTrackerTask INSTANCE = new NoOpClientExecutionAbortTrackerTask();
+    public static final NoOpClientExecutionAbortTrackerTask INSTANCE =
+            new NoOpClientExecutionAbortTrackerTask();
 
     // Singleton
-    private NoOpClientExecutionAbortTrackerTask() {
-    }
+    private NoOpClientExecutionAbortTrackerTask() {}
 
     @Override
-    public void setCurrentHttpRequest(HttpRequestBase newRequest) {
-    }
+    public void setCurrentHttpRequest(HttpRequestBase newRequest) {}
 
     @Override
     public boolean hasTimeoutExpired() {
@@ -43,7 +42,5 @@ public class NoOpClientExecutionAbortTrackerTask implements ClientExecutionAbort
     }
 
     @Override
-    public void cancelTask() {
-    }
-
+    public void cancelTask() {}
 }

@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-
 import org.junit.Test;
 
 public class BinaryUtilsTest {
@@ -54,7 +53,7 @@ public class BinaryUtilsTest {
 
     @Test
     public void testCopyBytesFromByteBuffer() {
-        byte[] ba = {1,2,3,4,5};
+        byte[] ba = {1, 2, 3, 4, 5};
         // capacity: 100
         final ByteBuffer b = ByteBuffer.allocate(100);
         b.put(ba);
@@ -80,7 +79,7 @@ public class BinaryUtilsTest {
 
     @Test
     public void testCopyBytesFrom_DirectByteBuffer() {
-        byte[] ba = {1,2,3,4,5};
+        byte[] ba = {1, 2, 3, 4, 5};
         // capacity: 100
         final ByteBuffer b = ByteBuffer.allocateDirect(100);
         b.put(ba);
@@ -106,7 +105,7 @@ public class BinaryUtilsTest {
 
     @Test
     public void testCopyBytesFromByteBuffer_Idempotent() {
-        byte[] ba = {1,2,3,4,5};
+        byte[] ba = {1, 2, 3, 4, 5};
         final ByteBuffer b = ByteBuffer.wrap(ba);
         b.limit(4);
         assertTrue(b.limit() == 4);
@@ -121,7 +120,7 @@ public class BinaryUtilsTest {
         assertTrue(b.position() == 1);
         assertFalse(allData1 == allData2);
         assertTrue(allData1.length == 4);
-        assertTrue(Arrays.equals(new byte[]{1,2,3,4}, allData1));
+        assertTrue(Arrays.equals(new byte[] {1, 2, 3, 4}, allData1));
 
         // copy partial bytes should be idempotent
         byte[] partial1 = BinaryUtils.copyBytesFrom(b);
@@ -130,12 +129,12 @@ public class BinaryUtilsTest {
         assertTrue(b.position() == 1);
         assertFalse(partial1 == partial2);
         assertTrue(partial1.length == 3);
-        assertTrue(Arrays.equals(new byte[]{2,3,4}, partial1));
+        assertTrue(Arrays.equals(new byte[] {2, 3, 4}, partial1));
     }
 
     @Test
     public void testCopyBytesFrom_DirectByteBuffer_Idempotent() {
-        byte[] ba = {1,2,3,4,5};
+        byte[] ba = {1, 2, 3, 4, 5};
         final ByteBuffer b = ByteBuffer.allocateDirect(ba.length);
         b.put(ba).rewind();
         b.limit(4);
@@ -151,7 +150,7 @@ public class BinaryUtilsTest {
         assertTrue(b.position() == 1);
         assertFalse(allData1 == allData2);
         assertTrue(allData1.length == 4);
-        assertTrue(Arrays.equals(new byte[]{1,2,3,4}, allData1));
+        assertTrue(Arrays.equals(new byte[] {1, 2, 3, 4}, allData1));
 
         // copy partial bytes should be idempotent
         byte[] partial1 = BinaryUtils.copyBytesFrom(b);
@@ -160,6 +159,6 @@ public class BinaryUtilsTest {
         assertTrue(b.position() == 1);
         assertFalse(partial1 == partial2);
         assertTrue(partial1.length == 3);
-        assertTrue(Arrays.equals(new byte[]{2,3,4}, partial1));
+        assertTrue(Arrays.equals(new byte[] {2, 3, 4}, partial1));
     }
 }

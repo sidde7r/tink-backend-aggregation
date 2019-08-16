@@ -14,10 +14,6 @@
  */
 package com.amazonaws.util.json;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-
 import com.amazonaws.SdkClientException;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -26,14 +22,19 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
 
 public enum Jackson {
     ;
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
     static {
         objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     };
+
     private static final ObjectWriter writer = objectMapper.writer();
     private static final ObjectWriter prettyWriter = objectMapper.writerWithDefaultPrettyPrinter();
 
@@ -54,12 +55,11 @@ public enum Jackson {
     }
 
     /**
-     * Returns the deserialized object from the given json string and target
-     * class; or null if the given json string is null.
+     * Returns the deserialized object from the given json string and target class; or null if the
+     * given json string is null.
      */
     public static <T> T fromJsonString(String json, Class<T> clazz) {
-        if (json == null)
-            return null;
+        if (json == null) return null;
         try {
             return objectMapper.readValue(json, clazz);
         } catch (Exception e) {

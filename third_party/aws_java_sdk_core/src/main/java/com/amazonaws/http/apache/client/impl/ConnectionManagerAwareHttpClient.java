@@ -18,14 +18,11 @@ import tink.org.apache.http.client.HttpClient;
 import tink.org.apache.http.conn.HttpClientConnectionManager;
 
 /**
- * An extension of Apache's HttpClient that expose the connection manager
- * associated with the client.
+ * An extension of Apache's HttpClient that expose the connection manager associated with the
+ * client.
  */
 public interface ConnectionManagerAwareHttpClient extends HttpClient {
 
-    /**
-     * Returns the {@link HttpClientConnectionManager} associated with the
-     * http client.
-     */
+    /** Returns the {@link HttpClientConnectionManager} associated with the http client. */
     HttpClientConnectionManager getHttpClientConnectionManager();
 }

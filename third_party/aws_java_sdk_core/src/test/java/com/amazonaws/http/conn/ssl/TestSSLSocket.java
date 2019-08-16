@@ -31,16 +31,12 @@ class TestSSLSocket extends SSLSocket {
         protocolsEnabled = true;
     }
 
-    /**
-     * Indicates if setEnabledProtocols was invoked
-     */
+    /** Indicates if setEnabledProtocols was invoked */
     public boolean wereProtocolsEnabled() {
         return protocolsEnabled;
     }
 
-    /**
-     * Returns the protocol array given to setEnabledProtocols
-     */
+    /** Returns the protocol array given to setEnabledProtocols */
     public String[] getCapturedProtocols() {
         return capturedProtocols;
     }
@@ -61,8 +57,7 @@ class TestSSLSocket extends SSLSocket {
     }
 
     @Override
-    public void setEnabledCipherSuites(String[] suites) {
-    }
+    public void setEnabledCipherSuites(String[] suites) {}
 
     @Override
     public String[] getSupportedProtocols() {
@@ -75,22 +70,16 @@ class TestSSLSocket extends SSLSocket {
     }
 
     @Override
-    public void addHandshakeCompletedListener(
-        HandshakeCompletedListener listener) {
-    }
+    public void addHandshakeCompletedListener(HandshakeCompletedListener listener) {}
 
     @Override
-    public void removeHandshakeCompletedListener(
-        HandshakeCompletedListener listener) {
-    }
+    public void removeHandshakeCompletedListener(HandshakeCompletedListener listener) {}
 
     @Override
-    public void startHandshake() throws IOException {
-    }
+    public void startHandshake() throws IOException {}
 
     @Override
-    public void setUseClientMode(boolean mode) {
-    }
+    public void setUseClientMode(boolean mode) {}
 
     @Override
     public boolean getUseClientMode() {
@@ -98,8 +87,7 @@ class TestSSLSocket extends SSLSocket {
     }
 
     @Override
-    public void setNeedClientAuth(boolean need) {
-    }
+    public void setNeedClientAuth(boolean need) {}
 
     @Override
     public boolean getNeedClientAuth() {
@@ -107,8 +95,7 @@ class TestSSLSocket extends SSLSocket {
     }
 
     @Override
-    public void setWantClientAuth(boolean want) {
-    }
+    public void setWantClientAuth(boolean want) {}
 
     @Override
     public boolean getWantClientAuth() {
@@ -116,8 +103,7 @@ class TestSSLSocket extends SSLSocket {
     }
 
     @Override
-    public void setEnableSessionCreation(boolean flag) {
-    }
+    public void setEnableSessionCreation(boolean flag) {}
 
     @Override
     public boolean getEnableSessionCreation() {

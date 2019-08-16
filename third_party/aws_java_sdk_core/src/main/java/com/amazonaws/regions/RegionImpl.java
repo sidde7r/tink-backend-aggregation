@@ -14,14 +14,10 @@
  */
 package com.amazonaws.regions;
 
-
 import com.amazonaws.annotation.SdkInternalApi;
-
 import java.util.Collection;
 
-/**
- * Interface for an region implementation.
- */
+/** Interface for an region implementation. */
 @SdkInternalApi
 public interface RegionImpl {
 
@@ -49,47 +45,35 @@ public interface RegionImpl {
     /**
      * Returns whether the given service is supported in this region.
      *
-     * @param serviceName
-     *         The service endpoint prefix which can be retrieved from the
-     *         constant ENDPOINT_PREFIX of the specific service client interface,
-     *         e.g. AmazonEC2.ENDPOINT_PREFIX.
+     * @param serviceName The service endpoint prefix which can be retrieved from the constant
+     *     ENDPOINT_PREFIX of the specific service client interface, e.g. AmazonEC2.ENDPOINT_PREFIX.
      */
     boolean isServiceSupported(String serviceName);
 
     /**
      * Returns the endpoint for the service given.
      *
-     * @param serviceName
-     *         The service endpoint prefix which can be retrieved from the
-     *         constant ENDPOINT_PREFIX of the specific service client interface,
-     *         e.g. AmazonEC2.ENDPOINT_PREFIX.
+     * @param serviceName The service endpoint prefix which can be retrieved from the constant
+     *     ENDPOINT_PREFIX of the specific service client interface, e.g. AmazonEC2.ENDPOINT_PREFIX.
      */
     String getServiceEndpoint(String serviceName);
 
     /**
      * Returns whether the given service support the http protocol in this region.
      *
-     * @param serviceName
-     *         The service endpoint prefix which can be retrieved from the
-     *         constant ENDPOINT_PREFIX of the specific service client interface,
-     *         e.g. AmazonEC2.ENDPOINT_PREFIX.
+     * @param serviceName The service endpoint prefix which can be retrieved from the constant
+     *     ENDPOINT_PREFIX of the specific service client interface, e.g. AmazonEC2.ENDPOINT_PREFIX.
      */
     boolean hasHttpEndpoint(String serviceName);
 
     /**
      * Returns whether the given service support the https protocol in this region.
      *
-     * @param serviceName
-     *         The service endpoint prefix which can be retrieved from the
-     *         constant ENDPOINT_PREFIX of the specific service client interface,
-     *         e.g. AmazonEC2.ENDPOINT_PREFIX.
+     * @param serviceName The service endpoint prefix which can be retrieved from the constant
+     *     ENDPOINT_PREFIX of the specific service client interface, e.g. AmazonEC2.ENDPOINT_PREFIX.
      */
     boolean hasHttpsEndpoint(String serviceName);
 
-    /**
-     * Returns an immutable collection of all the endpoints available in the
-     * region
-     * metadata.
-     */
+    /** Returns an immutable collection of all the endpoints available in the region metadata. */
     Collection<String> getAvailableEndpoints();
 }

@@ -25,7 +25,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.TimeUnit;
-
 import org.junit.Test;
 
 public class TimingInfoTest {
@@ -34,11 +33,8 @@ public class TimingInfoTest {
         // Start timing
         final long startTimeNano = System.nanoTime();
         final long startTimeMilli = System.currentTimeMillis();
-        TimingInfo[] tis = {
-            TimingInfo.startTimingFullSupport(),
-            TimingInfo.startTiming()
-        };
-        for (TimingInfo ti: tis) {
+        TimingInfo[] tis = {TimingInfo.startTimingFullSupport(), TimingInfo.startTiming()};
+        for (TimingInfo ti : tis) {
             assertTrue(ti.isStartEpochTimeMilliKnown());
             assertTrue(ti.getStartTimeNano() >= startTimeNano);
             assertTrue(ti.getStartEpochTimeMilli() >= startTimeMilli);
@@ -56,7 +52,7 @@ public class TimingInfoTest {
             assertTrue(ti.getEndEpochTimeMilli() >= startTimeMilli);
             assertTrue(ti.getEndTime() == ti.getEndEpochTimeMilli());
             assertTrue(ti.getTimeTakenMillis() >= 0);
-            assertTrue(ti.getElapsedTimeMillis() >=0 );
+            assertTrue(ti.getElapsedTimeMillis() >= 0);
         }
     }
 
@@ -64,9 +60,10 @@ public class TimingInfoTest {
     public void newTimingWithClockTime() throws InterruptedException {
         final long startTimeMilli = System.currentTimeMillis();
         final long startTimeNano = System.nanoTime();
-        Thread.sleep(1);// sleep for 1 millisecond
+        Thread.sleep(1); // sleep for 1 millisecond
         final long endTimeNano = System.nanoTime();
-        TimingInfo ti = TimingInfo.newTimingInfoFullSupport(startTimeMilli, startTimeNano, endTimeNano);
+        TimingInfo ti =
+                TimingInfo.newTimingInfoFullSupport(startTimeMilli, startTimeNano, endTimeNano);
         assertTrue(ti.isStartEpochTimeMilliKnown());
         assertTrue(ti.getStartTimeNano() == startTimeNano);
         assertTrue(ti.getStartEpochTimeMilli() == startTimeMilli);
@@ -75,13 +72,13 @@ public class TimingInfoTest {
         assertTrue(ti.getEndEpochTimeMilli() >= startTimeMilli);
         assertTrue(ti.getEndTime() == ti.getEndEpochTimeMilli());
         assertTrue(ti.getTimeTakenMillis() >= 0);
-        assertTrue(ti.getElapsedTimeMillis() >=0 );
+        assertTrue(ti.getElapsedTimeMillis() >= 0);
     }
 
     @Test
     public void newTimingWithNoClockTime() throws InterruptedException {
         final long startTimeNano = System.nanoTime();
-        Thread.sleep(1);// sleep for 1 millisecond
+        Thread.sleep(1); // sleep for 1 millisecond
         final long endTimeNano = System.nanoTime();
         TimingInfo ti = TimingInfo.newTimingInfoFullSupport(startTimeNano, endTimeNano);
         assertFalse(ti.isStartEpochTimeMilliKnown());
@@ -92,7 +89,7 @@ public class TimingInfoTest {
         assertTrue(ti.getEndEpochTimeMilli() == UNKNOWN);
         assertTrue(ti.getEndTime() == ti.getEndEpochTimeMilli());
         assertTrue(ti.getTimeTakenMillis() >= 0);
-        assertTrue(ti.getElapsedTimeMillis() >=0 );
+        assertTrue(ti.getElapsedTimeMillis() >= 0);
     }
 
     // Test the absurd case when the start/end times were insanely swapped
@@ -100,7 +97,7 @@ public class TimingInfoTest {
     @Test
     public void absurdTimingWithNoClock() throws InterruptedException {
         final long startTimeNano = System.nanoTime();
-        Thread.sleep(1);// sleep for 1 millisecond
+        Thread.sleep(1); // sleep for 1 millisecond
         final long endTimeNano = System.nanoTime();
         // absurdly swap the start/end times
         TimingInfo ti = TimingInfo.newTimingInfoFullSupport(endTimeNano, startTimeNano);
@@ -111,7 +108,8 @@ public class TimingInfoTest {
         assertTrue(ti.getEndTimeNano() < endTimeNano);
         assertTrue(ti.getEndEpochTimeMilli() == UNKNOWN);
         assertTrue(ti.getEndTime() == ti.getEndEpochTimeMilli());
-        double double_diff = (double)TimeUnit.NANOSECONDS.toMicros(startTimeNano - endTimeNano)/1000.0;
+        double double_diff =
+                (double) TimeUnit.NANOSECONDS.toMicros(startTimeNano - endTimeNano) / 1000.0;
         assertTrue(ti.getTimeTakenMillis() == double_diff);
         long long_diff = TimeUnit.NANOSECONDS.toMillis(startTimeNano - endTimeNano);
         assertTrue(ti.getElapsedTimeMillis() == long_diff);
@@ -123,20 +121,22 @@ public class TimingInfoTest {
     public void absurdTimingWithClock() throws InterruptedException {
         final long startTimeMilli = System.currentTimeMillis();
         final long startTimeNano = System.nanoTime();
-        Thread.sleep(1);// sleep for 1 millisecond
+        Thread.sleep(1); // sleep for 1 millisecond
         final long endTimeNano = System.nanoTime();
         // absurdly swap the start/end times
-        TimingInfo ti = TimingInfo.newTimingInfoFullSupport(startTimeMilli, endTimeNano, startTimeNano);
+        TimingInfo ti =
+                TimingInfo.newTimingInfoFullSupport(startTimeMilli, endTimeNano, startTimeNano);
         assertTrue(ti.isStartEpochTimeMilliKnown());
         assertTrue(ti.getStartTimeNano() > startTimeNano);
         assertTrue(ti.getStartEpochTimeMilli() == startTimeMilli);
         assertTrue(ti.isEndTimeKnown());
         assertTrue(ti.getEndTimeNano() < endTimeNano);
-        long end_epoch_time = startTimeMilli
-                + TimeUnit.NANOSECONDS.toMillis(startTimeNano - endTimeNano);
+        long end_epoch_time =
+                startTimeMilli + TimeUnit.NANOSECONDS.toMillis(startTimeNano - endTimeNano);
         assertTrue(ti.getEndEpochTimeMilli() == end_epoch_time);
         assertTrue(ti.getEndTime() == ti.getEndEpochTimeMilli());
-        double double_diff = (double)TimeUnit.NANOSECONDS.toMicros(startTimeNano - endTimeNano)/1000.0;
+        double double_diff =
+                (double) TimeUnit.NANOSECONDS.toMicros(startTimeNano - endTimeNano) / 1000.0;
         assertTrue(ti.getTimeTakenMillis() == double_diff);
         long long_diff = TimeUnit.NANOSECONDS.toMillis(startTimeNano - endTimeNano);
         assertTrue(ti.getElapsedTimeMillis() == long_diff);
@@ -169,9 +169,10 @@ public class TimingInfoTest {
     public void newTimingWithClockTimeIfKnown() throws InterruptedException {
         final long startTimeMilli = System.currentTimeMillis();
         final long startTimeNano = System.nanoTime();
-        Thread.sleep(1);// sleep for 1 millisecond
+        Thread.sleep(1); // sleep for 1 millisecond
         final long endTimeNano = System.nanoTime();
-        TimingInfo ti = TimingInfo.newTimingInfoFullSupport(startTimeMilli, startTimeNano, endTimeNano);
+        TimingInfo ti =
+                TimingInfo.newTimingInfoFullSupport(startTimeMilli, startTimeNano, endTimeNano);
         assertTrue(ti.isStartEpochTimeMilliKnown());
         assertTrue(ti.getStartTimeNano() == startTimeNano);
         assertTrue(ti.getStartEpochTimeMilliIfKnown().longValue() == startTimeMilli);
@@ -185,7 +186,7 @@ public class TimingInfoTest {
     @Test
     public void newTimingWithNoClockTimeIfKnown() throws InterruptedException {
         final long startTimeNano = System.nanoTime();
-        Thread.sleep(1);// sleep for 1 millisecond
+        Thread.sleep(1); // sleep for 1 millisecond
         final long endTimeNano = System.nanoTime();
         TimingInfo ti = TimingInfo.newTimingInfoFullSupport(startTimeNano, endTimeNano);
         assertFalse(ti.isStartEpochTimeMilliKnown());
@@ -202,7 +203,7 @@ public class TimingInfoTest {
     @Test
     public void absurdTimingWithNoClockIfKnown() throws InterruptedException {
         final long startTimeNano = System.nanoTime();
-        Thread.sleep(1);// sleep for 1 millisecond
+        Thread.sleep(1); // sleep for 1 millisecond
         final long endTimeNano = System.nanoTime();
         // absurdly swap the start/end times
         TimingInfo ti = TimingInfo.newTimingInfoFullSupport(endTimeNano, startTimeNano);
@@ -212,7 +213,8 @@ public class TimingInfoTest {
         assertTrue(ti.isEndTimeKnown());
         assertTrue(ti.getEndTimeNanoIfKnown().longValue() < endTimeNano);
         assertNull(ti.getEndEpochTimeMilliIfKnown());
-        double double_diff = (double)TimeUnit.NANOSECONDS.toMicros(startTimeNano - endTimeNano)/1000.0;
+        double double_diff =
+                (double) TimeUnit.NANOSECONDS.toMicros(startTimeNano - endTimeNano) / 1000.0;
         assertTrue(ti.getTimeTakenMillisIfKnown().doubleValue() == double_diff);
         long long_diff = TimeUnit.NANOSECONDS.toMillis(startTimeNano - endTimeNano);
         assertTrue(ti.getTimeTakenMillisIfKnown().longValue() == long_diff);
@@ -224,25 +226,27 @@ public class TimingInfoTest {
     public void absurdTimingWithClockIfKnown() throws InterruptedException {
         final long startTimeMilli = System.currentTimeMillis();
         final long startTimeNano = System.nanoTime();
-        Thread.sleep(1);// sleep for 1 millisecond
+        Thread.sleep(1); // sleep for 1 millisecond
         final long endTimeNano = System.nanoTime();
         // absurdly swap the start/end times
-        TimingInfo ti = TimingInfo.newTimingInfoFullSupport(startTimeMilli, endTimeNano, startTimeNano);
+        TimingInfo ti =
+                TimingInfo.newTimingInfoFullSupport(startTimeMilli, endTimeNano, startTimeNano);
         assertTrue(ti.isStartEpochTimeMilliKnown());
         assertTrue(ti.getStartTimeNano() > startTimeNano);
         assertTrue(ti.getStartEpochTimeMilliIfKnown().longValue() == startTimeMilli);
         assertTrue(ti.isEndTimeKnown());
         assertTrue(ti.getEndTimeNanoIfKnown().longValue() < endTimeNano);
-        long end_epoch_time = startTimeMilli
-                + TimeUnit.NANOSECONDS.toMillis(startTimeNano - endTimeNano);
+        long end_epoch_time =
+                startTimeMilli + TimeUnit.NANOSECONDS.toMillis(startTimeNano - endTimeNano);
         assertTrue(ti.getEndEpochTimeMilliIfKnown().longValue() == end_epoch_time);
         assertTrue(ti.getEndEpochTimeMilliIfKnown().longValue() == ti.getEndEpochTimeMilli());
-        double double_diff = (double)TimeUnit.NANOSECONDS.toMicros(startTimeNano - endTimeNano)/1000.0;
+        double double_diff =
+                (double) TimeUnit.NANOSECONDS.toMicros(startTimeNano - endTimeNano) / 1000.0;
         assertTrue(ti.getTimeTakenMillisIfKnown().doubleValue() == double_diff);
         long long_diff = TimeUnit.NANOSECONDS.toMillis(startTimeNano - endTimeNano);
         assertTrue(ti.getTimeTakenMillisIfKnown().longValue() == long_diff);
     }
-    
+
     @Test
     public void subEventsEnabled() {
         TimingInfo ti = TimingInfo.startTimingFullSupport();
@@ -268,5 +272,4 @@ public class TimingInfoTest {
         ti.setCounter("c2", 0);
         assertTrue(ti.getAllCounters().size() == 0);
     }
-    
 }

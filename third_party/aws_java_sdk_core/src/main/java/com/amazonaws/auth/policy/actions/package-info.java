@@ -14,8 +14,8 @@
  */
 
 /**
- * Collection of actions for AWS access control policies.  Actions describe how
- * AWS resources are being accessed or modified when an AWS access control policy
- * is evaluated for an incoming request.
+ * Collection of actions for AWS access control policies. Actions describe how AWS resources are
+ * being accessed or modified when an AWS access control policy is evaluated for an incoming
+ * request.
  */
 package com.amazonaws.auth.policy.actions;

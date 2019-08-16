@@ -18,18 +18,18 @@ import static com.fasterxml.jackson.core.JsonToken.END_ARRAY;
 import static com.fasterxml.jackson.core.JsonToken.END_OBJECT;
 import static com.fasterxml.jackson.core.JsonToken.FIELD_NAME;
 
+import com.fasterxml.jackson.core.JsonToken;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.fasterxml.jackson.core.JsonToken;
-
 
 public class MapUnmarshaller<K, V> implements Unmarshaller<Map<K, V>, JsonUnmarshallerContext> {
 
     private final Unmarshaller<K, JsonUnmarshallerContext> keyUnmarshaller;
     private final Unmarshaller<V, JsonUnmarshallerContext> valueUnmarshaller;
 
-    public MapUnmarshaller(Unmarshaller<K, JsonUnmarshallerContext> keyUnmarshaller, Unmarshaller<V, JsonUnmarshallerContext> valueUnmarshaller) {
+    public MapUnmarshaller(
+            Unmarshaller<K, JsonUnmarshallerContext> keyUnmarshaller,
+            Unmarshaller<V, JsonUnmarshallerContext> valueUnmarshaller) {
         this.keyUnmarshaller = keyUnmarshaller;
         this.valueUnmarshaller = valueUnmarshaller;
     }
@@ -56,5 +56,4 @@ public class MapUnmarshaller<K, V> implements Unmarshaller<Map<K, V>, JsonUnmars
             }
         }
     }
-
 }

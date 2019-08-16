@@ -14,12 +14,10 @@
  */
 package com.amazonaws.http.timers.client;
 
-import java.util.concurrent.ScheduledFuture;
-
-import tink.org.apache.http.client.methods.HttpRequestBase;
-
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.util.ValidationUtils;
+import java.util.concurrent.ScheduledFuture;
+import tink.org.apache.http.client.methods.HttpRequestBase;
 
 /**
  * Keeps track of the scheduled {@link ClientExecutionAbortTask} and the associated {@link Future}
@@ -30,7 +28,8 @@ public class ClientExecutionAbortTrackerTaskImpl implements ClientExecutionAbort
     private final ClientExecutionAbortTask task;
     private final ScheduledFuture<?> future;
 
-    public ClientExecutionAbortTrackerTaskImpl(final ClientExecutionAbortTask task, final ScheduledFuture<?> future) {
+    public ClientExecutionAbortTrackerTaskImpl(
+            final ClientExecutionAbortTask task, final ScheduledFuture<?> future) {
         this.task = ValidationUtils.assertNotNull(task, "task");
         this.future = ValidationUtils.assertNotNull(future, "future");
     }

@@ -14,22 +14,6 @@
  */
 package com.amazonaws.internal;
 
-import com.amazonaws.AmazonWebServiceRequest;
-import com.amazonaws.RequestClientOptions;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.event.ProgressListener;
-import com.amazonaws.metrics.RequestMetricCollector;
-
-import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import utils.model.EmptyAmazonWebServiceRequest;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasEntry;
@@ -37,6 +21,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+
+import com.amazonaws.AmazonWebServiceRequest;
+import com.amazonaws.RequestClientOptions;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.event.ProgressListener;
+import com.amazonaws.metrics.RequestMetricCollector;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import org.junit.Test;
+import utils.model.EmptyAmazonWebServiceRequest;
 
 public class AmazonWebServiceRequestAdapterTest {
 
@@ -171,13 +168,13 @@ public class AmazonWebServiceRequestAdapterTest {
         EmptyAmazonWebServiceRequest request = new EmptyAmazonWebServiceRequest();
         request.getRequestClientOptions().appendUserAgent("foo-agent");
         AmazonWebServiceRequestAdapter adapter = new AmazonWebServiceRequestAdapter(request);
-        assertThat(adapter.getRequestClientOptions().getClientMarker(
-                RequestClientOptions.Marker.USER_AGENT), containsString("foo-agent"));
+        assertThat(
+                adapter.getRequestClientOptions()
+                        .getClientMarker(RequestClientOptions.Marker.USER_AGENT),
+                containsString("foo-agent"));
     }
 
     private AmazonWebServiceRequestAdapter adaptEmpty() {
-        return new AmazonWebServiceRequestAdapter(
-                new EmptyAmazonWebServiceRequest());
+        return new AmazonWebServiceRequestAdapter(new EmptyAmazonWebServiceRequest());
     }
-
 }

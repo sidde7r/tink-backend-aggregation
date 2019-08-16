@@ -18,32 +18,23 @@ import com.amazonaws.annotation.Immutable;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.util.StringUtils;
 
-/**
- * Loads profile name from the usual places or uses the default profile name.
- */
+/** Loads profile name from the usual places or uses the default profile name. */
 @SdkInternalApi
 @Immutable
 public class AwsProfileNameLoader {
 
-    /**
-     * Name of the default profile as specified in the configuration file.
-     */
+    /** Name of the default profile as specified in the configuration file. */
     public static final String DEFAULT_PROFILE_NAME = "default";
 
-    /**
-     * Environment variable name for overriding the default AWS profile
-     */
+    /** Environment variable name for overriding the default AWS profile */
     public static final String AWS_PROFILE_ENVIRONMENT_VARIABLE = "AWS_PROFILE";
 
-    /**
-     * System property name for overriding the default AWS profile
-     */
+    /** System property name for overriding the default AWS profile */
     public static final String AWS_PROFILE_SYSTEM_PROPERTY = "aws.profile";
 
     public static final AwsProfileNameLoader INSTANCE = new AwsProfileNameLoader();
 
-    private AwsProfileNameLoader() {
-    }
+    private AwsProfileNameLoader() {}
 
     /**
      * TODO The order would make more sense as System Property, Environment Variable, Default

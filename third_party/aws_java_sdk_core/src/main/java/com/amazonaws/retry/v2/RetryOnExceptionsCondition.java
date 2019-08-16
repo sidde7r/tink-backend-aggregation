@@ -14,30 +14,31 @@
  */
 package com.amazonaws.retry.v2;
 
+import static com.amazonaws.util.ValidationUtils.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.amazonaws.util.ValidationUtils.assertNotNull;
-
 /**
- * Retry condition implementation that retries if the exception or the cause of the exception matches the classes defined.
+ * Retry condition implementation that retries if the exception or the cause of the exception
+ * matches the classes defined.
  */
 public class RetryOnExceptionsCondition implements RetryCondition {
 
     private final List<Class<? extends Exception>> exceptionsToRetryOn;
 
-    /**
-     * @param exceptionsToRetryOn Exception classes to retry on.
-     */
+    /** @param exceptionsToRetryOn Exception classes to retry on. */
     public RetryOnExceptionsCondition(List<Class<? extends Exception>> exceptionsToRetryOn) {
-        this.exceptionsToRetryOn = new ArrayList<Class<? extends Exception>>(
-                assertNotNull(exceptionsToRetryOn, "exceptionsToRetryOn"));
+        this.exceptionsToRetryOn =
+                new ArrayList<Class<? extends Exception>>(
+                        assertNotNull(exceptionsToRetryOn, "exceptionsToRetryOn"));
     }
 
     /**
-     * @param context Context about the state of the last request and information about the number of requests made.
-     * @return True if the exception class matches one of the whitelisted exceptions or if the cause of the exception matches the
-     * whitelisted exception.
+     * @param context Context about the state of the last request and information about the number
+     *     of requests made.
+     * @return True if the exception class matches one of the whitelisted exceptions or if the cause
+     *     of the exception matches the whitelisted exception.
      */
     @Override
     public boolean shouldRetry(RetryPolicyContext context) {
@@ -46,7 +47,8 @@ public class RetryOnExceptionsCondition implements RetryCondition {
                 if (exceptionMatches(context, exceptionClass)) {
                     return true;
                 }
-                // Note that we check the wrapped exception too because for things like SocketException or IOException
+                // Note that we check the wrapped exception too because for things like
+                // SocketException or IOException
                 // we wrap them in an SdkClientException before throwing.
                 if (wrappedCauseMatches(context, exceptionClass)) {
                     return true;
@@ -57,20 +59,22 @@ public class RetryOnExceptionsCondition implements RetryCondition {
     }
 
     /**
-     * @param context        Context containing exception.
+     * @param context Context containing exception.
      * @param exceptionClass Expected exception class.
      * @return True if the exception in the context matches the provided class.
      */
-    private boolean exceptionMatches(RetryPolicyContext context, Class<? extends Exception> exceptionClass) {
+    private boolean exceptionMatches(
+            RetryPolicyContext context, Class<? extends Exception> exceptionClass) {
         return context.exception().getClass().equals(exceptionClass);
     }
 
     /**
-     * @param context        Context containing exception.
+     * @param context Context containing exception.
      * @param exceptionClass Expected exception class.
      * @return True if the cause of the exception in the context matches the provided class.
      */
-    private boolean wrappedCauseMatches(RetryPolicyContext context, Class<? extends Exception> exceptionClass) {
+    private boolean wrappedCauseMatches(
+            RetryPolicyContext context, Class<? extends Exception> exceptionClass) {
         if (context.exception().getCause() == null) {
             return false;
         }

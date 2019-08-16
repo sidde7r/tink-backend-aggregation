@@ -14,19 +14,16 @@
  */
 package com.amazonaws.auth.profile;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.profile.internal.AllProfiles;
-import com.amazonaws.auth.profile.internal.BasicProfile;
-import com.amazonaws.auth.profile.internal.BasicProfileConfigLoader;
-
-import org.junit.Test;
-
-import java.io.File;
-
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.auth.profile.internal.AllProfiles;
+import com.amazonaws.auth.profile.internal.BasicProfile;
+import com.amazonaws.auth.profile.internal.BasicProfileConfigLoader;
+import java.io.File;
+import org.junit.Test;
 
 public class BasicProfileConfigLoaderTest {
 
@@ -93,5 +90,4 @@ public class BasicProfileConfigLoaderTest {
     public AllProfiles loadProfiles(File file) {
         return BasicProfileConfigLoader.INSTANCE.loadProfiles(file);
     }
-
 }

@@ -15,15 +15,11 @@
 package com.amazonaws.regions;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.util.EC2MetadataUtils;
 import org.apache.commons.logging.LogFactory;
 
-import com.amazonaws.util.EC2MetadataUtils;
-
-/**
- * Enumeration of region names
- */
+/** Enumeration of region names */
 public enum Regions {
-
     GovCloud("us-gov-west-1", "AWS GovCloud (US)"),
     US_EAST_1("us-east-1", "US East (N. Virginia)"),
     US_EAST_2("us-east-2", "US East (Ohio)"),
@@ -44,8 +40,8 @@ public enum Regions {
     CA_CENTRAL_1("ca-central-1", "Canada (Central)");
 
     /**
-     * The default region that new customers in the US are encouraged to use
-     * when using AWS services for the first time.
+     * The default region that new customers in the US are encouraged to use when using AWS services
+     * for the first time.
      */
     public static final Regions DEFAULT_REGION = US_WEST_2;
 
@@ -57,16 +53,12 @@ public enum Regions {
         this.description = description;
     }
 
-    /**
-     * The name of this region, used in the regions.xml file to identify it.
-     */
+    /** The name of this region, used in the regions.xml file to identify it. */
     public String getName() {
         return name;
     }
 
-    /**
-     * Descriptive readable name for this region.
-     */
+    /** Descriptive readable name for this region. */
     public String getDescription() {
         return description;
     }
@@ -74,8 +66,7 @@ public enum Regions {
     /**
      * Returns a region enum corresponding to the given region name.
      *
-     * @param regionName
-     *            The name of the region. Ex.: eu-west-1
+     * @param regionName The name of the region. Ex.: eu-west-1
      * @return Region enum representing the given region name.
      */
     public static Regions fromName(String regionName) {
@@ -88,18 +79,16 @@ public enum Regions {
     }
 
     /**
-     * Returns a Region object representing the region the application is
-     * running in, when running in EC2. If this method is called from a non-EC2
-     * environment, it will return null.
+     * Returns a Region object representing the region the application is running in, when running
+     * in EC2. If this method is called from a non-EC2 environment, it will return null.
      */
     public static Region getCurrentRegion() {
         try {
             final String region = EC2MetadataUtils.getEC2InstanceRegion();
-            if (region != null)
-                return RegionUtils.getRegion(region);
+            if (region != null) return RegionUtils.getRegion(region);
         } catch (AmazonClientException e) {
-            LogFactory.getLog(Regions.class).debug(
-                "Ignoring failure to retrieve the region: " + e.getMessage());
+            LogFactory.getLog(Regions.class)
+                    .debug("Ignoring failure to retrieve the region: " + e.getMessage());
         }
         return null;
     }

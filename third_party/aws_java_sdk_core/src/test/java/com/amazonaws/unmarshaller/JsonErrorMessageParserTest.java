@@ -14,22 +14,21 @@
  */
 package com.amazonaws.unmarshaller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import com.amazonaws.http.HttpResponse;
 import com.amazonaws.internal.http.JsonErrorMessageParser;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 public class JsonErrorMessageParserTest {
 
-    private static final JsonErrorMessageParser parser = JsonErrorMessageParser.DEFAULT_ERROR_MESSAGE_PARSER;
+    private static final JsonErrorMessageParser parser =
+            JsonErrorMessageParser.DEFAULT_ERROR_MESSAGE_PARSER;
 
     private static final String MESSAGE_CONTENT = "boom";
 
@@ -122,5 +121,4 @@ public class JsonErrorMessageParserTest {
         String parsed = parser.parseErrorMessage(response, jsonNode);
         assertEquals(MESSAGE_CONTENT, parsed);
     }
-
 }

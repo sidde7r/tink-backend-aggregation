@@ -14,7 +14,6 @@
  */
 package com.amazonaws.metrics.internal;
 
-import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.Request;
 import com.amazonaws.metrics.AwsSdkMetrics;
 import com.amazonaws.metrics.ServiceMetricType;
@@ -22,32 +21,29 @@ import com.amazonaws.metrics.SimpleThroughputMetricType;
 import com.amazonaws.metrics.ThroughputMetricType;
 
 /**
- * An internal helper factory for generating service specific {@link ServiceMetricType}
- * without causing compile time dependency on the service specific artifacts.
- * 
- * There exists a S3ServiceMetricTest.java unit test in the S3 client library
- * that ensures this class behaves consistently with the service metric enum
- * defined in the S3 client library.
+ * An internal helper factory for generating service specific {@link ServiceMetricType} without
+ * causing compile time dependency on the service specific artifacts.
+ *
+ * <p>There exists a S3ServiceMetricTest.java unit test in the S3 client library that ensures this
+ * class behaves consistently with the service metric enum defined in the S3 client library.
  */
 public enum ServiceMetricTypeGuesser {
     ;
     /**
-     * Returned the best-guessed throughput metric type for the given request,
-     * or null if there is none or if metric is disabled.
+     * Returned the best-guessed throughput metric type for the given request, or null if there is
+     * none or if metric is disabled.
      */
     public static ThroughputMetricType guessThroughputMetricType(
             final Request<?> req,
             final String metricNameSuffix,
-            final String byteCountMetricNameSuffix)
-    {
-        if (!AwsSdkMetrics.isMetricsEnabled())
-            return null;    // metric disabled
+            final String byteCountMetricNameSuffix) {
+        if (!AwsSdkMetrics.isMetricsEnabled()) return null; // metric disabled
         Object orig = req.getOriginalRequestObject();
         if (orig.getClass().getName().startsWith("com.amazonaws.services.s3")) {
             return new SimpleThroughputMetricType(
-                "S3" + metricNameSuffix,
-                req.getServiceName(),
-                "S3" + byteCountMetricNameSuffix);
+                    "S3" + metricNameSuffix,
+                    req.getServiceName(),
+                    "S3" + byteCountMetricNameSuffix);
         }
         return null;
     }

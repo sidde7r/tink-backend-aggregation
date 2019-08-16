@@ -16,13 +16,11 @@ package com.amazonaws.regions;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentialsProviderChain;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Composite {@link AwsRegionProvider} that sequentially delegates to a chain of providers looking
@@ -49,13 +47,19 @@ public class AwsRegionProviderChain extends AwsRegionProvider {
                 }
             } catch (Exception e) {
                 // Ignore any exceptions and move onto the next provider
-                LOG.debug("Unable to load region from " + provider.toString() +
-                          ": " + e.getMessage());
+                LOG.debug(
+                        "Unable to load region from "
+                                + provider.toString()
+                                + ": "
+                                + e.getMessage());
             }
         }
-        // Note: This is a bug in the provider chain. The chain should return null when no region is found according to
-        // the interface, but an exception is thrown  here instead. This class is used in too many places to change now.
+        // Note: This is a bug in the provider chain. The chain should return null when no region is
+        // found according to
+        // the interface, but an exception is thrown  here instead. This class is used in too many
+        // places to change now.
         // TODO: In 2.0, be sure this bug does not carry through.
-        throw new SdkClientException("Unable to load region information from any provider in the chain");
+        throw new SdkClientException(
+                "Unable to load region information from any provider in the chain");
     }
 }

@@ -22,9 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.internal.CredentialsEndpointProvider;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,17 +35,9 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.internal.CredentialsEndpointProvider;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
-/**
- * Tests for the ContainerCredentialsProvider.
- */
+/** Tests for the ContainerCredentialsProvider. */
 public class ContainerCredentialsProviderTest {
-    @ClassRule
-    public static WireMockRule mockServer = new WireMockRule(0);
+    @ClassRule public static WireMockRule mockServer = new WireMockRule(0);
 
     /** Environment variable name for the AWS ECS Container credentials path */
     private static final String CREDENTIALS_PATH = "/dummy/credentials/path";
@@ -59,7 +54,10 @@ public class ContainerCredentialsProviderTest {
 
     @BeforeClass
     public static void setup() {
-        containerCredentialsProvider = new ContainerCredentialsProvider(new TestCredentialsEndpointProvider("http://localhost:" + mockServer.port()));
+        containerCredentialsProvider =
+                new ContainerCredentialsProvider(
+                        new TestCredentialsEndpointProvider(
+                                "http://localhost:" + mockServer.port()));
     }
 
     @Before
@@ -68,34 +66,37 @@ public class ContainerCredentialsProviderTest {
     }
 
     /**
-     * Tests that when "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" is not set,
-     * throws an AmazonClientException.
+     * Tests that when "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" is not set, throws an
+     * AmazonClientException.
      */
-    @Test (expected = AmazonClientException.class)
+    @Test(expected = AmazonClientException.class)
     public void testEnvVariableNotSet() {
         ContainerCredentialsProvider credentialsProvider = new ContainerCredentialsProvider();
         credentialsProvider.getCredentials();
     }
 
     /**
-     * Tests that the getCredentials parses the response properly when
-     * it receives a valid 200 response from endpoint.
+     * Tests that the getCredentials parses the response properly when it receives a valid 200
+     * response from endpoint.
      */
     @Test
     public void testGetCredentialsReturnsValidResponseFromEcsEndpoint() {
         stubForSuccessResponse();
 
-        BasicSessionCredentials credentials = (BasicSessionCredentials) containerCredentialsProvider.getCredentials();
+        BasicSessionCredentials credentials =
+                (BasicSessionCredentials) containerCredentialsProvider.getCredentials();
 
         Assert.assertEquals(ACCESS_KEY_ID, credentials.getAWSAccessKeyId());
         Assert.assertEquals(SECRET_ACCESS_KEY, credentials.getAWSSecretKey());
         Assert.assertEquals(TOKEN, credentials.getSessionToken());
-        Assert.assertEquals(new DateTime(EXPIRATION_DATE).toDate(), containerCredentialsProvider.getCredentialsExpiration());
+        Assert.assertEquals(
+                new DateTime(EXPIRATION_DATE).toDate(),
+                containerCredentialsProvider.getCredentialsExpiration());
     }
 
     /**
-     * Tests when the response is 404 Not found,
-     * then getCredentials method throws an AmazonClientException.
+     * Tests when the response is 404 Not found, then getCredentials method throws an
+     * AmazonClientException.
      */
     @Test
     public void testGetCredentialsThrowsAceFor404ErrorResponse() {
@@ -104,13 +105,13 @@ public class ContainerCredentialsProviderTest {
             containerCredentialsProvider.getCredentials();
             fail("The test should throw an exception");
         } catch (AmazonClientException exception) {
-             assertNotNull(exception.getMessage());
+            assertNotNull(exception.getMessage());
         }
     }
 
     /**
-     * Tests when the request to http endpoint returns a non-200 or non-404 response,
-     * then getCredentials method throws an AmazonServiceException.
+     * Tests when the request to http endpoint returns a non-200 or non-404 response, then
+     * getCredentials method throws an AmazonServiceException.
      */
     @Test
     public void testGetCredentialsThrowsAseForNon200AndNon404ErrorResponse() {
@@ -125,32 +126,36 @@ public class ContainerCredentialsProviderTest {
         }
     }
 
-
-
     private void stubForSuccessResponse() {
         stubFor(
                 get(urlPathEqualTo(CREDENTIALS_PATH))
-                .willReturn(aResponse()
-                                .withStatus(200)
-                                .withHeader("Content-Type", "application/json")
-                                .withHeader("charset", "utf-8")
-                                .withBody("{\"AccessKeyId\":\"ACCESS_KEY_ID\",\"SecretAccessKey\":\"SECRET_ACCESS_KEY\",\"Token\":\"TOKEN_TOKEN_TOKEN\","
-                                        + "\"Expiration\":\"3000-05-03T04:55:54Z\"}")));
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader("charset", "utf-8")
+                                        .withBody(
+                                                "{\"AccessKeyId\":\"ACCESS_KEY_ID\",\"SecretAccessKey\":\"SECRET_ACCESS_KEY\",\"Token\":\"TOKEN_TOKEN_TOKEN\","
+                                                        + "\"Expiration\":\"3000-05-03T04:55:54Z\"}")));
     }
 
     private void stubForErrorResponse(int statusCode) {
         stubFor(
                 get(urlPathEqualTo(CREDENTIALS_PATH))
-                .willReturn(aResponse()
-                                .withStatus(statusCode)
-                                .withHeader("Content-Type", "application/json")
-                                .withHeader("charset", "utf-8")
-                                .withBody("{\"code\":\"" + statusCode + "\",\"message\":\"DetailedErrorMessage\"}")));
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(statusCode)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader("charset", "utf-8")
+                                        .withBody(
+                                                "{\"code\":\""
+                                                        + statusCode
+                                                        + "\",\"message\":\"DetailedErrorMessage\"}")));
     }
 
     /**
-     * Dummy CredentialsPathProvider that overrides the endpoint
-     * and connects to the WireMock server.
+     * Dummy CredentialsPathProvider that overrides the endpoint and connects to the WireMock
+     * server.
      */
     private static class TestCredentialsEndpointProvider extends CredentialsEndpointProvider {
 

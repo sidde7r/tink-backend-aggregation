@@ -14,6 +14,15 @@
  */
 package com.amazonaws.http.timers.request;
 
+import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.assertNumberOfRetries;
+import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.assertNumberOfTasksTriggered;
+import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.execute;
+import static com.amazonaws.http.timers.TimeoutTestConstants.TEST_TIMEOUT;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.spy;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.TestPreConditions;
@@ -26,23 +35,13 @@ import com.amazonaws.http.exception.HttpRequestTimeoutException;
 import com.amazonaws.http.server.MockServer;
 import com.amazonaws.http.server.MockServer.ServerBehavior;
 import com.amazonaws.http.settings.HttpClientSettings;
+import java.io.IOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-
-import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.assertNumberOfRetries;
-import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.assertNumberOfTasksTriggered;
-import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.execute;
-import static com.amazonaws.http.timers.TimeoutTestConstants.TEST_TIMEOUT;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.spy;
-
 /**
- * Tests requiring an Overloaded server, that is a server that responds but can't close the connection in a timely
- * fashion
+ * Tests requiring an Overloaded server, that is a server that responds but can't close the
+ * connection in a timely fashion
  */
 public class OverloadedServerIntegrationTests extends OverloadedMockServerTestBase {
 
@@ -61,10 +60,14 @@ public class OverloadedServerIntegrationTests extends OverloadedMockServerTestBa
     @Test(timeout = TEST_TIMEOUT)
     public void requestTimeoutEnabled_HonorsRetryPolicy() throws IOException {
         int maxRetries = 2;
-        ClientConfiguration config = new ClientConfiguration().withRequestTimeout(1 * 1000)
-                .withMaxErrorRetry(maxRetries);
-        HttpClientFactory<ConnectionManagerAwareHttpClient> httpClientFactory = new ApacheHttpClientFactory();
-        ConnectionManagerAwareHttpClient rawHttpClient = spy(httpClientFactory.create(HttpClientSettings.adapt(config)));
+        ClientConfiguration config =
+                new ClientConfiguration()
+                        .withRequestTimeout(1 * 1000)
+                        .withMaxErrorRetry(maxRetries);
+        HttpClientFactory<ConnectionManagerAwareHttpClient> httpClientFactory =
+                new ApacheHttpClientFactory();
+        ConnectionManagerAwareHttpClient rawHttpClient =
+                spy(httpClientFactory.create(HttpClientSettings.adapt(config)));
 
         httpClient = new AmazonHttpClient(config, rawHttpClient, null);
 
@@ -76,8 +79,8 @@ public class OverloadedServerIntegrationTests extends OverloadedMockServerTestBa
             assertThat(e.getCause(), instanceOf(HttpRequestTimeoutException.class));
             int expectedNumberOfRequests = 1 + maxRetries;
             assertNumberOfRetries(rawHttpClient, expectedNumberOfRequests);
-            assertNumberOfTasksTriggered(httpClient.getHttpRequestTimer(), expectedNumberOfRequests);
+            assertNumberOfTasksTriggered(
+                    httpClient.getHttpRequestTimer(), expectedNumberOfRequests);
         }
     }
-
 }

@@ -20,13 +20,11 @@ import com.amazonaws.SdkClientException;
 public class WaiterUnrecoverableException extends SdkClientException {
 
     /**
-     * Constructs a new WaiterUnrecoverableException with the specified error
-     * message.
+     * Constructs a new WaiterUnrecoverableException with the specified error message.
      *
      * @param message Describes the error encountered.
      */
     public WaiterUnrecoverableException(String message) {
         super(message);
     }
-
 }

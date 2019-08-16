@@ -18,7 +18,6 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.internal.CredentialsEndpointProvider;
 import com.amazonaws.retry.internal.CredentialsEndpointRetryPolicy;
 import com.amazonaws.util.CollectionUtils;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -29,14 +28,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * <p>
- * {@link AWSCredentialsProvider} implementation that loads credentials
- * from an Amazon Elastic Container.
- * </p>
- * <p>
- * By default, the URI path is retrieved from the environment variable
+ * {@link AWSCredentialsProvider} implementation that loads credentials from an Amazon Elastic
+ * Container.
+ *
+ * <p>By default, the URI path is retrieved from the environment variable
  * "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" in the container's environment.
- * </p>
  */
 public class ContainerCredentialsProvider implements AWSCredentialsProvider {
 
@@ -55,9 +51,7 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
 
     private final EC2CredentialsFetcher credentialsFetcher;
 
-    /**
-     * @deprecated use {@link #ContainerCredentialsProvider(CredentialsEndpointProvider)}
-     */
+    /** @deprecated use {@link #ContainerCredentialsProvider(CredentialsEndpointProvider)} */
     @Deprecated
     public ContainerCredentialsProvider() {
         this(new ECSCredentialsEndpointProvider());
@@ -81,7 +75,6 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
         return credentialsFetcher.getCredentialsExpiration();
     }
 
-
     static class ECSCredentialsEndpointProvider extends CredentialsEndpointProvider {
         @Override
         public URI getCredentialsEndpoint() throws URISyntaxException {
@@ -93,17 +86,17 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
 
             return new URI(ECS_CREDENTIALS_ENDPOINT + path);
         }
+
         @Override
         public CredentialsEndpointRetryPolicy getRetryPolicy() {
             return ContainerCredentialsRetryPolicy.getInstance();
         }
-
     }
 
     /**
-     * A URI resolver that uses environment variable {@value CONTAINER_CREDENTIALS_FULL_URI} as the URI
-     * for the metadata service.
-     * Optionally an authorization token can be provided using the {@value CONTAINER_AUTHORIZATION_TOKEN} environment variable.
+     * A URI resolver that uses environment variable {@value CONTAINER_CREDENTIALS_FULL_URI} as the
+     * URI for the metadata service. Optionally an authorization token can be provided using the
+     * {@value CONTAINER_AUTHORIZATION_TOKEN} environment variable.
      */
     static class FullUriCredentialsEndpointProvider extends CredentialsEndpointProvider {
 
@@ -111,15 +104,21 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
         public URI getCredentialsEndpoint() throws URISyntaxException {
             String fullUri = System.getenv(CONTAINER_CREDENTIALS_FULL_URI);
             if (fullUri == null || fullUri.length() == 0) {
-                throw new SdkClientException("The environment variable " + CONTAINER_CREDENTIALS_FULL_URI + " is empty");
+                throw new SdkClientException(
+                        "The environment variable " + CONTAINER_CREDENTIALS_FULL_URI + " is empty");
             }
 
             URI uri = new URI(fullUri);
 
             if (!ALLOWED_FULL_URI_HOSTS.contains(uri.getHost())) {
-                throw new SdkClientException("The full URI (" + uri + ") contained withing environment variable " +
-                    CONTAINER_CREDENTIALS_FULL_URI + " has an invalid host. Host can only be one of [" +
-                    CollectionUtils.join(ALLOWED_FULL_URI_HOSTS, ", ") + "]");
+                throw new SdkClientException(
+                        "The full URI ("
+                                + uri
+                                + ") contained withing environment variable "
+                                + CONTAINER_CREDENTIALS_FULL_URI
+                                + " has an invalid host. Host can only be one of ["
+                                + CollectionUtils.join(ALLOWED_FULL_URI_HOSTS, ", ")
+                                + "]");
             }
 
             return uri;
@@ -128,7 +127,8 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
         @Override
         public Map<String, String> getHeaders() {
             if (System.getenv(CONTAINER_AUTHORIZATION_TOKEN) != null) {
-                return Collections.singletonMap("Authorization", System.getenv(CONTAINER_AUTHORIZATION_TOKEN));
+                return Collections.singletonMap(
+                        "Authorization", System.getenv(CONTAINER_AUTHORIZATION_TOKEN));
             }
             return new HashMap<String, String>();
         }
@@ -140,5 +140,4 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
         hosts.add("localhost");
         return Collections.unmodifiableSet(hosts);
     }
-
 }

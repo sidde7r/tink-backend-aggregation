@@ -38,12 +38,14 @@ public class IOUtilsTest {
 
     @Test
     public void testZeroByteStream() throws Exception {
-        String s = IOUtils.toString(new InputStream() {
-            @Override
-            public int read() throws IOException {
-                return -1;
-            }
-        });
+        String s =
+                IOUtils.toString(
+                        new InputStream() {
+                            @Override
+                            public int read() throws IOException {
+                                return -1;
+                            }
+                        });
         assertEquals("", s);
     }
 
@@ -56,8 +58,7 @@ public class IOUtilsTest {
     @Test
     public void drainInputStream_AlreadyEos_DoesNotThrowException() throws IOException {
         final InputStream inputStream = randomInputStream();
-        while (inputStream.read() != -1) {
-        }
+        while (inputStream.read() != -1) {}
         IOUtils.drainInputStream(inputStream);
     }
 

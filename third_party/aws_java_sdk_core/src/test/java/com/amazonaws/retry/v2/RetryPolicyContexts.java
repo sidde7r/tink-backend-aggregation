@@ -17,45 +17,34 @@ package com.amazonaws.retry.v2;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.SdkBaseException;
-
 import utils.model.EmptyAmazonWebServiceRequest;
 
-/**
- * Precanned instances of {@link RetryPolicyContext} and factory methods for creating contexts.
- */
+/** Precanned instances of {@link RetryPolicyContext} and factory methods for creating contexts. */
 public class RetryPolicyContexts {
 
-    /**
-     * Empty context object.
-     */
+    /** Empty context object. */
     public static final RetryPolicyContext EMPTY = RetryPolicyContext.builder().build();
 
-    public static final RetryPolicyContext LEGACY = RetryPolicyContexts.fromLegacy(
-            new AmazonClientException("boom"),
-            new EmptyAmazonWebServiceRequest(),
-            2);
+    public static final RetryPolicyContext LEGACY =
+            RetryPolicyContexts.fromLegacy(
+                    new AmazonClientException("boom"), new EmptyAmazonWebServiceRequest(), 2);
 
     public static RetryPolicyContext withException(SdkBaseException e) {
-        return RetryPolicyContext.builder()
-                .exception(e)
-                .build();
+        return RetryPolicyContext.builder().exception(e).build();
     }
 
     public static RetryPolicyContext withStatusCode(Integer httpStatusCode) {
-        return RetryPolicyContext.builder()
-                .httpStatusCode(httpStatusCode)
-                .build();
+        return RetryPolicyContext.builder().httpStatusCode(httpStatusCode).build();
     }
 
     public static RetryPolicyContext withRetriesAttempted(int retriesAttempted) {
-        return RetryPolicyContext.builder()
-                .retriesAttempted(retriesAttempted)
-                .build();
+        return RetryPolicyContext.builder().retriesAttempted(retriesAttempted).build();
     }
 
-    public static RetryPolicyContext fromLegacy(AmazonClientException exception,
-                                                AmazonWebServiceRequest origRequest,
-                                                int retriesAttempted) {
+    public static RetryPolicyContext fromLegacy(
+            AmazonClientException exception,
+            AmazonWebServiceRequest origRequest,
+            int retriesAttempted) {
         return RetryPolicyContext.builder()
                 .exception(exception)
                 .originalRequest(origRequest)

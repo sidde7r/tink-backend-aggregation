@@ -28,10 +28,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -41,23 +39,28 @@ public class XpathUtilsSyncTest {
     public void test() throws Exception {
         // System.setProperty("com.sun.org.apache.xml.internal.dtm.DTMManager",
         // "com.sun.org.apache.xml.internal.dtm.ref.DTMManagerDefault");
-        final String content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<Error>"
-                + "  <Code>NoSuchKey</Code>"
-                + "  <Message>The resource you requested does not exist</Message>"
-                + "  <Resource>/mybucket/myfoto.jpg</Resource> "
-                + "  <RequestId>4442587FB7D0A2F9</RequestId>" + "</Error>";
+        final String content =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                        + "<Error>"
+                        + "  <Code>NoSuchKey</Code>"
+                        + "  <Message>The resource you requested does not exist</Message>"
+                        + "  <Resource>/mybucket/myfoto.jpg</Resource> "
+                        + "  <RequestId>4442587FB7D0A2F9</RequestId>"
+                        + "</Error>";
         ExecutorService es = Executors.newCachedThreadPool();
 
-        Callable<Void> task = new Callable<Void>() {
-            @Override
-            public Void call() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
-                final Document document = XpathUtils.documentFrom(content);
-                final String message = asString("Error/Message", document);
-                assertEquals("The resource you requested does not exist", message);
-                return null;
-            }
-        };
+        Callable<Void> task =
+                new Callable<Void>() {
+                    @Override
+                    public Void call()
+                            throws SAXException, IOException, ParserConfigurationException,
+                                    XPathExpressionException {
+                        final Document document = XpathUtils.documentFrom(content);
+                        final String message = asString("Error/Message", document);
+                        assertEquals("The resource you requested does not exist", message);
+                        return null;
+                    }
+                };
         @SuppressWarnings("unchecked")
         Callable<Void>[] a = new Callable[50];
         Arrays.fill(a, task);
@@ -68,7 +71,7 @@ public class XpathUtilsSyncTest {
         task.call();
         task.call();
     }
-    
+
     public static void main(String[] args) throws Exception {
         new XpathUtilsSyncTest().test();
         System.exit(0);

@@ -34,10 +34,9 @@ import org.junit.Test;
 
 public class AwsSdkMetricsTest {
     /**
-     * By default the AWS SDK metric collection is disabled. Enabling it should
-     * fail unless the necessary CloudWatch related jars are on the classpath.
-     * Therefore, this test is expected to fail in enabling the default metric
-     * collection, but have absolutely no impact otherwise.
+     * By default the AWS SDK metric collection is disabled. Enabling it should fail unless the
+     * necessary CloudWatch related jars are on the classpath. Therefore, this test is expected to
+     * fail in enabling the default metric collection, but have absolutely no impact otherwise.
      */
     @Test
     public void enableDefaultMetrics() {
@@ -93,15 +92,18 @@ public class AwsSdkMetricsTest {
         assertSame(empty, empty3);
         AwsSdkMetrics.set(orig);
     }
+
     @Test
     public void addNull() {
         assertFalse(AwsSdkMetrics.add(null));
     }
+
     @Test
     public void addAllNull() {
         assertFalse(AwsSdkMetrics.addAll(null));
         assertFalse(AwsSdkMetrics.addAll(Collections.<MetricType>emptyList()));
     }
+
     @Test
     public void removeNull() {
         assertFalse(AwsSdkMetrics.remove(null));
@@ -167,19 +169,33 @@ public class AwsSdkMetricsTest {
         AwsSdkMetrics.setMetricCollector(MetricCollector.NONE);
         assertFalse(AwsSdkMetrics.isMetricsEnabled());
         // set to a custom collector, so now considered enabled
-        AwsSdkMetrics.setMetricCollector(new MetricCollector() {
-            @Override public boolean start() { return true; }
-            @Override public boolean stop() { return false; }
-            @Override public boolean isEnabled() { return true; }
-            @Override
-            public RequestMetricCollector getRequestMetricCollector() {
-                return RequestMetricCollector.NONE;
-            }
-            @Override
-            public ServiceMetricCollector getServiceMetricCollector() {
-                return ServiceMetricCollector.NONE;
-            }
-        });
+        AwsSdkMetrics.setMetricCollector(
+                new MetricCollector() {
+                    @Override
+                    public boolean start() {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean stop() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isEnabled() {
+                        return true;
+                    }
+
+                    @Override
+                    public RequestMetricCollector getRequestMetricCollector() {
+                        return RequestMetricCollector.NONE;
+                    }
+
+                    @Override
+                    public ServiceMetricCollector getServiceMetricCollector() {
+                        return ServiceMetricCollector.NONE;
+                    }
+                });
         assertTrue(AwsSdkMetrics.isMetricsEnabled());
     }
 
@@ -200,5 +216,4 @@ public class AwsSdkMetricsTest {
         AwsSdkMetrics.setRegion("non-existent-region");
         assertEquals("non-existent-region", AwsSdkMetrics.getRegionName());
     }
-
 }

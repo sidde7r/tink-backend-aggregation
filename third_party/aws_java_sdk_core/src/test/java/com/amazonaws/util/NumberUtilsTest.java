@@ -44,5 +44,4 @@ public class NumberUtilsTest {
     public static void assertIntEquals(int expected, Integer actual) {
         assertEquals(Integer.valueOf(expected), actual);
     }
-
 }

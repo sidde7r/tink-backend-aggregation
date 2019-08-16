@@ -21,8 +21,8 @@ import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.handlers.HandlerContextKey;
 
 /**
- * Contains useful information about a failed request that can be used to make retry and backoff decisions. See {@link
- * RetryPolicy}.
+ * Contains useful information about a failed request that can be used to make retry and backoff
+ * decisions. See {@link RetryPolicy}.
  */
 @Immutable
 public class RetryPolicyContext {
@@ -33,11 +33,12 @@ public class RetryPolicyContext {
     private final int retriesAttempted;
     private final Integer httpStatusCode;
 
-    private RetryPolicyContext(Object originalRequest,
-                               Request<?> request,
-                               SdkBaseException exception,
-                               int retriesAttempted,
-                               Integer httpStatusCode) {
+    private RetryPolicyContext(
+            Object originalRequest,
+            Request<?> request,
+            SdkBaseException exception,
+            int retriesAttempted,
+            Integer httpStatusCode) {
         this.originalRequest = originalRequest;
         this.request = request;
         this.exception = exception;
@@ -45,44 +46,38 @@ public class RetryPolicyContext {
         this.httpStatusCode = httpStatusCode;
     }
 
-    /**
-     * @return The original request passed to the client method for an operation.
-     */
+    /** @return The original request passed to the client method for an operation. */
     public Object originalRequest() {
         return this.originalRequest;
     }
 
     /**
-     * @return The marshalled request. See {@link Request#addHandlerContext(HandlerContextKey, Object)} for a mechanism to store
-     * request level state across invocations of the retry policy.
+     * @return The marshalled request. See {@link Request#addHandlerContext(HandlerContextKey,
+     *     Object)} for a mechanism to store request level state across invocations of the retry
+     *     policy.
      */
     public Request<?> request() {
         return this.request;
     }
 
-    /**
-     * @return The previous exception (may be a client or a service exception).
-     */
+    /** @return The previous exception (may be a client or a service exception). */
     public SdkBaseException exception() {
         return this.exception;
     }
 
-    /**
-     * @return Number of retries attempted thus far.
-     */
+    /** @return Number of retries attempted thus far. */
     public int retriesAttempted() {
         return this.retriesAttempted;
     }
 
-    /**
-     * @return The total number of requests made thus far.
-     */
+    /** @return The total number of requests made thus far. */
     public int totalRequests() {
         return retriesAttempted() + 1;
     }
 
     /**
-     * @return HTTP status code of response. May be null if no response was received from the service.
+     * @return HTTP status code of response. May be null if no response was received from the
+     *     service.
      */
     public Integer httpStatusCode() {
         return this.httpStatusCode;
@@ -102,8 +97,7 @@ public class RetryPolicyContext {
         private int retriesAttempted;
         private Integer httpStatusCode;
 
-        private Builder() {
-        }
+        private Builder() {}
 
         public Builder originalRequest(Object originalRequest) {
             this.originalRequest = originalRequest;
@@ -131,8 +125,8 @@ public class RetryPolicyContext {
         }
 
         public RetryPolicyContext build() {
-            return new RetryPolicyContext(originalRequest, request, exception, retriesAttempted, httpStatusCode);
+            return new RetryPolicyContext(
+                    originalRequest, request, exception, retriesAttempted, httpStatusCode);
         }
-
     }
 }

@@ -22,11 +22,6 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import java.net.SocketTimeoutException;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.TestPreConditions;
@@ -34,7 +29,9 @@ import com.amazonaws.http.AmazonHttpClient;
 import com.amazonaws.http.UnresponsiveMockServerTestBase;
 import com.amazonaws.http.exception.HttpRequestTimeoutException;
 import com.amazonaws.http.request.EmptyHttpRequest;
-
+import java.net.SocketTimeoutException;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import utils.model.EmptyAmazonWebServiceRequest;
 
 /**
@@ -57,8 +54,12 @@ public class UnresponsiveServerTests extends UnresponsiveMockServerTestBase {
     @Test(timeout = TEST_TIMEOUT)
     public void requestTimeoutDisabled_ConnectionClosedBySocketTimeout_NoThreadsCreated() {
         final int socketTimeout = 1000;
-        httpClient = new AmazonHttpClient(
-                new ClientConfiguration().withSocketTimeout(socketTimeout).withRequestTimeout(0).withMaxErrorRetry(0));
+        httpClient =
+                new AmazonHttpClient(
+                        new ClientConfiguration()
+                                .withSocketTimeout(socketTimeout)
+                                .withRequestTimeout(0)
+                                .withMaxErrorRetry(0));
 
         try {
             execute(httpClient, newGetRequest());
@@ -70,13 +71,18 @@ public class UnresponsiveServerTests extends UnresponsiveMockServerTestBase {
     }
 
     @Test(timeout = TEST_TIMEOUT)
-    public void requestTimeoutSetInRequestObject_WithLongerSocketTimeout_ThrowsRequestTimeoutException() {
-        httpClient = new AmazonHttpClient(
-                new ClientConfiguration().withSocketTimeout(LONGER_SOCKET_TIMEOUT).withMaxErrorRetry(0));
+    public void
+            requestTimeoutSetInRequestObject_WithLongerSocketTimeout_ThrowsRequestTimeoutException() {
+        httpClient =
+                new AmazonHttpClient(
+                        new ClientConfiguration()
+                                .withSocketTimeout(LONGER_SOCKET_TIMEOUT)
+                                .withMaxErrorRetry(0));
 
         try {
             EmptyHttpRequest request = newGetRequest();
-            request.setOriginalRequest(new EmptyAmazonWebServiceRequest().withSdkRequestTimeout(REQUEST_TIMEOUT));
+            request.setOriginalRequest(
+                    new EmptyAmazonWebServiceRequest().withSdkRequestTimeout(REQUEST_TIMEOUT));
             execute(httpClient, request);
             fail("Exception expected");
         } catch (AmazonClientException e) {
@@ -85,13 +91,18 @@ public class UnresponsiveServerTests extends UnresponsiveMockServerTestBase {
     }
 
     @Test(timeout = TEST_TIMEOUT)
-    public void requestTimeoutSetInRequestObject_WithShorterSocketTimeout_ThrowsRequestTimeoutException() {
-        httpClient = new AmazonHttpClient(
-                new ClientConfiguration().withSocketTimeout(SHORTER_SOCKET_TIMEOUT).withMaxErrorRetry(0));
+    public void
+            requestTimeoutSetInRequestObject_WithShorterSocketTimeout_ThrowsRequestTimeoutException() {
+        httpClient =
+                new AmazonHttpClient(
+                        new ClientConfiguration()
+                                .withSocketTimeout(SHORTER_SOCKET_TIMEOUT)
+                                .withMaxErrorRetry(0));
 
         try {
             EmptyHttpRequest request = newGetRequest();
-            request.setOriginalRequest(new EmptyAmazonWebServiceRequest().withSdkRequestTimeout(REQUEST_TIMEOUT));
+            request.setOriginalRequest(
+                    new EmptyAmazonWebServiceRequest().withSdkRequestTimeout(REQUEST_TIMEOUT));
             execute(httpClient, request);
             fail("Exception expected");
         } catch (AmazonClientException e) {
@@ -103,12 +114,17 @@ public class UnresponsiveServerTests extends UnresponsiveMockServerTestBase {
     public void requestTimeoutSetInRequestObject_TakesPrecedenceOverClientConfiguration() {
         // Client configuration is set arbitrarily high so that the test will timeout if the
         // client configuration is incorrectly honored over the request config
-        httpClient = new AmazonHttpClient(new ClientConfiguration().withSocketTimeout(LONGER_SOCKET_TIMEOUT)
-                .withRequestTimeout(REQUEST_TIMEOUT * 1000).withMaxErrorRetry(0));
+        httpClient =
+                new AmazonHttpClient(
+                        new ClientConfiguration()
+                                .withSocketTimeout(LONGER_SOCKET_TIMEOUT)
+                                .withRequestTimeout(REQUEST_TIMEOUT * 1000)
+                                .withMaxErrorRetry(0));
 
         try {
             EmptyHttpRequest request = newGetRequest();
-            request.setOriginalRequest(new EmptyAmazonWebServiceRequest().withSdkRequestTimeout(REQUEST_TIMEOUT));
+            request.setOriginalRequest(
+                    new EmptyAmazonWebServiceRequest().withSdkRequestTimeout(REQUEST_TIMEOUT));
             execute(httpClient, request);
             fail("Exception expected");
         } catch (AmazonClientException e) {
@@ -121,8 +137,12 @@ public class UnresponsiveServerTests extends UnresponsiveMockServerTestBase {
         final int socketTimeout = REQUEST_TIMEOUT;
         // Client configuration is set arbitrarily low so that the request will be aborted if
         // the client configuration is incorrectly honored over the request config
-        httpClient = new AmazonHttpClient(
-                new ClientConfiguration().withSocketTimeout(socketTimeout).withRequestTimeout(1).withMaxErrorRetry(0));
+        httpClient =
+                new AmazonHttpClient(
+                        new ClientConfiguration()
+                                .withSocketTimeout(socketTimeout)
+                                .withRequestTimeout(1)
+                                .withMaxErrorRetry(0));
 
         try {
             EmptyHttpRequest request = newGetRequest();
@@ -133,5 +153,4 @@ public class UnresponsiveServerTests extends UnresponsiveMockServerTestBase {
             assertThat(e.getCause(), instanceOf(SocketTimeoutException.class));
         }
     }
-
 }

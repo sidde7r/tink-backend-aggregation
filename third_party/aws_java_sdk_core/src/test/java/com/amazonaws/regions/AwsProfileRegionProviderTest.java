@@ -14,6 +14,11 @@
  */
 package com.amazonaws.regions;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 import com.amazonaws.auth.profile.ProfileResourceLoader;
 import com.amazonaws.auth.profile.internal.AllProfiles;
 import com.amazonaws.auth.profile.internal.BasicProfile;
@@ -21,29 +26,20 @@ import com.amazonaws.auth.profile.internal.BasicProfileConfigLoader;
 import com.amazonaws.auth.profile.internal.ProfileKeyConstants;
 import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
 import com.amazonaws.util.ImmutableMapParameter;
-
+import java.io.File;
+import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.File;
-import java.util.HashMap;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
 public class AwsProfileRegionProviderTest {
 
     private static final String PROFILE = "test_profile";
 
-    @Mock
-    private BasicProfileConfigLoader configLoader;
+    @Mock private BasicProfileConfigLoader configLoader;
 
-    @Mock
-    private AwsProfileFileLocationProvider locationProvider;
+    @Mock private AwsProfileFileLocationProvider locationProvider;
 
     private AwsRegionProvider regionProvider;
 
@@ -77,10 +73,12 @@ public class AwsProfileRegionProviderTest {
     @Test
     public void profilesNonEmptyButGivenProfileNotPresent_ProvidesNullRegion() {
         final String otherProfileName = "other_profile";
-        final BasicProfile other_profile = new BasicProfile(otherProfileName, ImmutableMapParameter
-                .of(ProfileKeyConstants.REGION, "us-east-8"));
-        final AllProfiles profiles = new AllProfiles(
-                ImmutableMapParameter.of(otherProfileName, other_profile));
+        final BasicProfile other_profile =
+                new BasicProfile(
+                        otherProfileName,
+                        ImmutableMapParameter.of(ProfileKeyConstants.REGION, "us-east-8"));
+        final AllProfiles profiles =
+                new AllProfiles(ImmutableMapParameter.of(otherProfileName, other_profile));
         stubLoadProfile(profiles);
         assertNull(regionProvider.getRegion());
     }
@@ -95,8 +93,8 @@ public class AwsProfileRegionProviderTest {
 
     @Test
     public void profilePresentButRegionIsEmpty_ProvidesNullRegion() {
-        final BasicProfile profile = new BasicProfile(PROFILE, ImmutableMapParameter
-                .of(ProfileKeyConstants.REGION, ""));
+        final BasicProfile profile =
+                new BasicProfile(PROFILE, ImmutableMapParameter.of(ProfileKeyConstants.REGION, ""));
         final AllProfiles profiles = new AllProfiles(ImmutableMapParameter.of(PROFILE, profile));
         stubLoadProfile(profiles);
         assertNull(regionProvider.getRegion());
@@ -105,8 +103,10 @@ public class AwsProfileRegionProviderTest {
     @Test
     public void profilePresentAndRegionIsSet_ProvidesCorrectRegion() {
         final String expectedRegion = "us-east-8";
-        final BasicProfile profile = new BasicProfile(PROFILE, ImmutableMapParameter
-                .of(ProfileKeyConstants.REGION, expectedRegion));
+        final BasicProfile profile =
+                new BasicProfile(
+                        PROFILE,
+                        ImmutableMapParameter.of(ProfileKeyConstants.REGION, expectedRegion));
         final AllProfiles profiles = new AllProfiles(ImmutableMapParameter.of(PROFILE, profile));
         stubLoadProfile(profiles);
         assertEquals(expectedRegion, regionProvider.getRegion());
@@ -115,5 +115,4 @@ public class AwsProfileRegionProviderTest {
     private void stubLoadProfile(AllProfiles toReturn) {
         when(configLoader.loadProfiles(any(File.class))).thenReturn(toReturn);
     }
-
 }

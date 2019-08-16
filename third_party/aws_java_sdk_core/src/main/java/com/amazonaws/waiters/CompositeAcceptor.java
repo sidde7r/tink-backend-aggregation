@@ -18,45 +18,37 @@ package com.amazonaws.waiters;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.util.ValidationUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @SdkInternalApi
 class CompositeAcceptor<Output> {
 
-    /**
-     * List of acceptors defined for each waiter
-     */
+    /** List of acceptors defined for each waiter */
     private List<WaiterAcceptor<Output>> acceptors = new ArrayList<WaiterAcceptor<Output>>();
 
     /**
-     * Constructs a new Composite Acceptor with the given list of acceptors.
-     * Throws an assertion exception if the acceptor list is empty or null
+     * Constructs a new Composite Acceptor with the given list of acceptors. Throws an assertion
+     * exception if the acceptor list is empty or null
      *
-     * @param acceptors List of acceptors defined for each waiter. It shouldn't
-     *                  be null or empty
+     * @param acceptors List of acceptors defined for each waiter. It shouldn't be null or empty
      */
     public CompositeAcceptor(List<WaiterAcceptor<Output>> acceptors) {
         this.acceptors = ValidationUtils.assertNotEmpty(acceptors, "acceptors");
     }
 
-    /**
-     * @return List of acceptors defined for each waiter
-     */
+    /** @return List of acceptors defined for each waiter */
     public List<WaiterAcceptor<Output>> getAcceptors() {
         return this.acceptors;
     }
 
     /**
-     * Compares the response against each response acceptor and returns
-     * the state of the acceptor it matches on. If none is matched, returns
-     * retry state by default
+     * Compares the response against each response acceptor and returns the state of the acceptor it
+     * matches on. If none is matched, returns retry state by default
      *
-     * @param response Response object got by executing the specified
-     *                 waiter operation
-     * @return (Enum) Corresponding waiter state defined by the acceptor or
-     * retry state if none matched
+     * @param response Response object got by executing the specified waiter operation
+     * @return (Enum) Corresponding waiter state defined by the acceptor or retry state if none
+     *     matched
      */
     public WaiterState accepts(Output response) {
         for (WaiterAcceptor<Output> acceptor : acceptors) {
@@ -65,18 +57,15 @@ class CompositeAcceptor<Output> {
             }
         }
         return WaiterState.RETRY;
-
     }
 
     /**
-     * Compares the exception thrown against each exception acceptor and
-     * returns the state of the acceptor it matches on. If none is
-     * matched, it rethrows the exception to the caller
+     * Compares the exception thrown against each exception acceptor and returns the state of the
+     * acceptor it matches on. If none is matched, it rethrows the exception to the caller
      *
-     * @param exception Exception thrown by executing the specified
-     *                  waiter operation
-     * @return (Enum) Corresponding waiter state defined by the acceptor or
-     * rethrows the exception back to the caller if none matched
+     * @param exception Exception thrown by executing the specified waiter operation
+     * @return (Enum) Corresponding waiter state defined by the acceptor or rethrows the exception
+     *     back to the caller if none matched
      * @throws Exception
      */
     public WaiterState accepts(AmazonServiceException exception) throws AmazonServiceException {

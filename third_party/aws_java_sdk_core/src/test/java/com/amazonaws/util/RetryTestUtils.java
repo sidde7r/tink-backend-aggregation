@@ -22,14 +22,17 @@ public class RetryTestUtils {
 
     /**
      * Checks the RequestCount metric and compares it against the expected value.
+     *
      * @param expectedRetryAttempts number of expected retries
      * @param context request execution context
      */
-    public static void assertExpectedRetryCount(final int expectedRetryAttempts, final ExecutionContext context) {
+    public static void assertExpectedRetryCount(
+            final int expectedRetryAttempts, final ExecutionContext context) {
         Assert.assertEquals(
                 expectedRetryAttempts + 1, // request count = retries + 1
                 context.getAwsRequestMetrics()
-                        .getTimingInfo().getCounter(AWSRequestMetrics.Field.RequestCount.toString()).intValue());
+                        .getTimingInfo()
+                        .getCounter(AWSRequestMetrics.Field.RequestCount.toString())
+                        .intValue());
     }
-
 }

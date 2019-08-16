@@ -15,6 +15,8 @@
 
 package com.amazonaws.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -22,22 +24,21 @@ import org.apache.log4j.spi.LoggingEvent;
 import org.junit.After;
 import org.junit.Before;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * A test utility that allows inspection of log statements
- * during testing.
- * <p>
- * Can either be used stand-alone for example
+ * A test utility that allows inspection of log statements during testing.
+ *
+ * <p>Can either be used stand-alone for example
+ *
  * <pre><code>
  *     private LogCaptor logCaptor = new LogCaptor.DefaultLogCaptor(Level.INFO);
  *     // Do stuff that you expect to log things
  *     assertThat(logCaptor.loggedEvents(), is(not(empty())));
  * </code></pre>
+ *
+ * <p>Or can extend it to make use of @Before / @After test annotations
+ *
  * <p>
- * Or can extend it to make use of @Before / @After test annotations
- * <p>
+ *
  * <pre><code>
  *     class MyTestClass extends LogCaptor.LogCaptorTestBase {
  *         {@literal @}Test
@@ -48,7 +49,6 @@ import java.util.List;
  *     }
  * </code></pre>
  */
-
 public interface LogCaptor {
 
     List<LoggingEvent> loggedEvents();
@@ -116,9 +116,11 @@ public interface LogCaptor {
         }
 
         @Override
-        public boolean requiresLayout() { return false; }
+        public boolean requiresLayout() {
+            return false;
+        }
 
         @Override
-        public void close() { }
+        public void close() {}
     }
 }

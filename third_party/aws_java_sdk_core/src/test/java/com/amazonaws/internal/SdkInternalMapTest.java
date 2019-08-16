@@ -14,16 +14,13 @@
  */
 package com.amazonaws.internal;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * Unit test for SdkInternalMap
- */
+/** Unit test for SdkInternalMap */
 public class SdkInternalMapTest {
 
     @Test
@@ -36,8 +33,7 @@ public class SdkInternalMapTest {
 
         Assert.assertTrue(map1.equals(map2));
 
-        SdkInternalMap<String, String> internalMap = new
-                SdkInternalMap<String, String>(map2);
+        SdkInternalMap<String, String> internalMap = new SdkInternalMap<String, String>(map2);
         Assert.assertTrue(internalMap.equals(map1));
         Assert.assertTrue(map1.equals(internalMap));
         Assert.assertEquals(map1.hashCode(), map2.hashCode());
@@ -64,6 +60,5 @@ public class SdkInternalMapTest {
 
         Assert.assertNotNull(map1.toString());
         Assert.assertThat(map1.toString(), Matchers.containsString("foo"));
-
     }
- }
+}

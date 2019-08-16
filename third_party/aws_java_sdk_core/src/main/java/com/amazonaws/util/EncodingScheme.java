@@ -16,10 +16,11 @@ package com.amazonaws.util;
 
 /**
  * Encoding scheme.
- *  
+ *
  * @author Hanson Char
  */
 public interface EncodingScheme {
     public String encodeAsString(byte[] bytes);
+
     public byte[] decode(String encoded);
 }

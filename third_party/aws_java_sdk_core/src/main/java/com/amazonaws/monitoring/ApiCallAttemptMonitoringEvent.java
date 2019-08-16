@@ -15,10 +15,7 @@
 
 package com.amazonaws.monitoring;
 
-
-/**
- * A Monitoring Event that described the results of an Api Call Attempt.
- */
+/** A Monitoring Event that described the results of an Api Call Attempt. */
 public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
 
     public static final String API_CALL_ATTEMPT_MONITORING_EVENT_TYPE = "ApiCallAttempt";
@@ -66,8 +63,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
     /**
      * {@inheritDoc}
      *
-     * <p>
-     * This is when the request attempt is passed to the http client.
+     * <p>This is when the request attempt is passed to the http client.
      */
     @Override
     public ApiCallAttemptMonitoringEvent withTimestamp(Long timestamp) {
@@ -76,7 +72,8 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
     }
 
     /**
-     * @return the fully-qualified domain name of the endpoint that the request attempt was submitted to.
+     * @return the fully-qualified domain name of the endpoint that the request attempt was
+     *     submitted to.
      */
     public String getFqdn() {
         return fqdn;
@@ -93,9 +90,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return the signing region used by the service client that made the request attempt.
-     */
+    /** @return the signing region used by the service client that made the request attempt. */
     public String getRegion() {
         return region;
     }
@@ -111,9 +106,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return The full value of the SDK's default user agent header for http requests.
-     */
+    /** @return The full value of the SDK's default user agent header for http requests. */
     public String getUserAgent() {
         return userAgent;
     }
@@ -129,9 +122,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return Contains the aws_access_key value that was used to sign the http request.
-     */
+    /** @return Contains the aws_access_key value that was used to sign the http request. */
     public String getAccessKey() {
         return accessKey;
     }
@@ -147,9 +138,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return Contains the session token passed in the x-amz-security-token header.
-     */
+    /** @return Contains the session token passed in the x-amz-security-token header. */
     public String getSessionToken() {
         return sessionToken;
     }
@@ -165,9 +154,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return the attempt's response status code, as returned by the http client.
-     */
+    /** @return the attempt's response status code, as returned by the http client. */
     public Integer getHttpStatusCode() {
         return httpStatusCode;
     }
@@ -183,9 +170,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return the value of x-amzn-RequestId in response header
-     */
+    /** @return the value of x-amzn-RequestId in response header */
     public String getxAmznRequestId() {
         return xAmznRequestId;
     }
@@ -201,9 +186,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return the value of x-amz-request-id in response header
-     */
+    /** @return the value of x-amz-request-id in response header */
     public String getxAmzRequestId() {
         return xAmzRequestId;
     }
@@ -219,9 +202,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return the value of x-amz-id-2 in response header
-     */
+    /** @return the value of x-amz-id-2 in response header */
     public String getxAmzId2() {
         return xAmzId2;
     }
@@ -237,9 +218,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return the Aws exception code
-     */
+    /** @return the Aws exception code */
     public String getAwsException() {
         return awsException;
     }
@@ -255,9 +234,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return the exception message
-     */
+    /** @return the exception message */
     public String getAwsExceptionMessage() {
         return awsExceptionMessage;
     }
@@ -273,9 +250,7 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
         return this;
     }
 
-    /**
-     * @return the exception class name
-     */
+    /** @return the exception class name */
     public String getSdkException() {
         return sdkException;
     }
@@ -292,7 +267,8 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
     }
 
     /**
-     * @return Contains the full text for any attempt-level failure that is due to something other than an Aws exception.
+     * @return Contains the full text for any attempt-level failure that is due to something other
+     *     than an Aws exception.
      */
     public String getSdkExceptionMessage() {
         return sdkExceptionMessage;
@@ -310,8 +286,9 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
     }
 
     /**
-     * @return the elapsed time, in milliseconds, between the construction of the http request and the point in time where the
-     * http response has been parsed or the attempt has definitively failed
+     * @return the elapsed time, in milliseconds, between the construction of the http request and
+     *     the point in time where the http response has been parsed or the attempt has definitively
+     *     failed
      */
     public Long getAttemptLatency() {
         return attemptLatency;
@@ -329,7 +306,8 @@ public class ApiCallAttemptMonitoringEvent extends ApiMonitoringEvent {
     }
 
     /**
-     * @return the time interval (in milliseconds) between when the request begins transmission to the service and when the response has been parsed, excluding streaming payloads.
+     * @return the time interval (in milliseconds) between when the request begins transmission to
+     *     the service and when the response has been parsed, excluding streaming payloads.
      */
     public Long getRequestLatency() {
         return requestLatency;

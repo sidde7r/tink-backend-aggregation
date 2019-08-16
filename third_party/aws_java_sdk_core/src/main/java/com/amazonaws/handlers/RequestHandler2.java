@@ -23,11 +23,11 @@ import com.amazonaws.util.TimingInfo;
 /**
  * Interface for addition request handling in clients. A request handler is executed on a request
  * object <b>before</b> it is sent to the client runtime to be executed.
- * <p>
- * This interface deprecates {@link RequestHandler} by providing access to not only the AWS
+ *
+ * <p>This interface deprecates {@link RequestHandler} by providing access to not only the AWS
  * response, but also the associated http response via {@link Response}.
- * <p>
- * Note {@link TimingInfo} is accessible via {@link Request#getAWSRequestMetrics()} and hence is
+ *
+ * <p>Note {@link TimingInfo} is accessible via {@link Request#getAWSRequestMetrics()} and hence is
  * omitted from the interface to reduce duplication by design.
  */
 public abstract class RequestHandler2 implements IRequestHandler2 {
@@ -43,12 +43,10 @@ public abstract class RequestHandler2 implements IRequestHandler2 {
     }
 
     @Override
-    public void beforeRequest(Request<?> request) {
-    }
+    public void beforeRequest(Request<?> request) {}
 
     @Override
-    public void beforeAttempt(HandlerBeforeAttemptContext context) {
-    }
+    public void beforeAttempt(HandlerBeforeAttemptContext context) {}
 
     @Override
     public HttpResponse beforeUnmarshalling(Request<?> request, HttpResponse httpResponse) {
@@ -56,16 +54,13 @@ public abstract class RequestHandler2 implements IRequestHandler2 {
     }
 
     @Override
-    public void afterAttempt(HandlerAfterAttemptContext context) {
-    }
+    public void afterAttempt(HandlerAfterAttemptContext context) {}
 
     @Override
-    public void afterResponse(Request<?> request, Response<?> response) {
-    }
+    public void afterResponse(Request<?> request, Response<?> response) {}
 
     @Override
-    public void afterError(Request<?> request, Response<?> response, Exception e) {
-    }
+    public void afterError(Request<?> request, Response<?> response, Exception e) {}
 
     /**
      * Returns an instance of request handler adapted to the {@link RequestHandler2} interface from

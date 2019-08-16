@@ -15,7 +15,7 @@
 package com.amazonaws.retry.v2;
 
 /**
- * Aggregate interface combining a {@link RetryCondition} and {@link BackoffStrategy} into a single policy.
+ * Aggregate interface combining a {@link RetryCondition} and {@link BackoffStrategy} into a single
+ * policy.
  */
-public interface RetryPolicy extends RetryCondition, BackoffStrategy {
-}
+public interface RetryPolicy extends RetryCondition, BackoffStrategy {}

@@ -24,8 +24,7 @@ public class HttpClientConfigJsonHelper implements Builder<HttpClientConfig> {
     private String serviceName;
     private String regionMetadataServiceName;
 
-    public HttpClientConfigJsonHelper() {
-    }
+    public HttpClientConfigJsonHelper() {}
 
     public HttpClientConfigJsonHelper(String serviceName, String regionMetadataServiceName) {
         this.serviceName = serviceName;
@@ -34,7 +33,10 @@ public class HttpClientConfigJsonHelper implements Builder<HttpClientConfig> {
 
     @Override
     public String toString() {
-        return "serviceName: " + serviceName + ", regionMetadataServiceName: " + regionMetadataServiceName;
+        return "serviceName: "
+                + serviceName
+                + ", regionMetadataServiceName: "
+                + regionMetadataServiceName;
     }
 
     public String getServiceName() {

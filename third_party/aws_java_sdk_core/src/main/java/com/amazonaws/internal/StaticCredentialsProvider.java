@@ -35,7 +35,5 @@ public class StaticCredentialsProvider implements AWSCredentialsProvider {
         return credentials;
     }
 
-    public void refresh() {
-    }
-
+    public void refresh() {}
 }

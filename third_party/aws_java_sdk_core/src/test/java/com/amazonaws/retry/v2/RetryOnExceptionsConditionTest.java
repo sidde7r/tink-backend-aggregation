@@ -14,26 +14,25 @@
  */
 package com.amazonaws.retry.v2;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.amazonaws.SdkBaseException;
 import com.amazonaws.SdkClientException;
-
-import org.junit.Test;
-
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.Collections;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 public class RetryOnExceptionsConditionTest {
 
-    private RetryCondition condition = new RetryOnExceptionsCondition(Arrays.asList(
-            RetryableServiceException.class,
-            RetryableClientException.class,
-            SocketTimeoutException.class
-    ));
+    private RetryCondition condition =
+            new RetryOnExceptionsCondition(
+                    Arrays.asList(
+                            RetryableServiceException.class,
+                            RetryableClientException.class,
+                            SocketTimeoutException.class));
 
     @Test
     public void noExceptionInContext_ReturnsFalse() {
@@ -42,49 +41,69 @@ public class RetryOnExceptionsConditionTest {
 
     @Test
     public void retryableServiceException_ReturnsTrue() {
-        assertTrue(condition.shouldRetry(RetryPolicyContexts.withException(new RetryableServiceException())));
+        assertTrue(
+                condition.shouldRetry(
+                        RetryPolicyContexts.withException(new RetryableServiceException())));
     }
 
     @Test
     public void nonRetryableServiceException_ReturnsFalse() {
-        assertFalse(condition.shouldRetry(RetryPolicyContexts.withException(new NonRetryableServiceException())));
+        assertFalse(
+                condition.shouldRetry(
+                        RetryPolicyContexts.withException(new NonRetryableServiceException())));
     }
 
     @Test
     public void retryableClientException_ReturnsTrue() {
-        assertTrue(condition.shouldRetry(RetryPolicyContexts.withException(new RetryableClientException())));
+        assertTrue(
+                condition.shouldRetry(
+                        RetryPolicyContexts.withException(new RetryableClientException())));
     }
 
     @Test
     public void nonRetryableClientException_ReturnsFalse() {
-        assertFalse(condition.shouldRetry(RetryPolicyContexts.withException(new NonRetryableClientException())));
+        assertFalse(
+                condition.shouldRetry(
+                        RetryPolicyContexts.withException(new NonRetryableClientException())));
     }
 
     @Test
     public void retryableWrappedClientException_ReturnsTrue() {
-        assertTrue(condition.shouldRetry(RetryPolicyContexts.withException(new SdkClientException(new SocketTimeoutException("foo")))));
+        assertTrue(
+                condition.shouldRetry(
+                        RetryPolicyContexts.withException(
+                                new SdkClientException(new SocketTimeoutException("foo")))));
     }
 
     @Test
     public void nonRetryableWrappedClientException_ReturnsFalse() {
-        assertFalse(condition.shouldRetry(RetryPolicyContexts.withException(new SdkClientException(new ConnectException("foo")))));
+        assertFalse(
+                condition.shouldRetry(
+                        RetryPolicyContexts.withException(
+                                new SdkClientException(new ConnectException("foo")))));
     }
 
     @Test
     public void genericClientException_ReturnsFalse() {
-        assertFalse(condition.shouldRetry(RetryPolicyContexts.withException(new SdkClientException("foo"))));
+        assertFalse(
+                condition.shouldRetry(
+                        RetryPolicyContexts.withException(new SdkClientException("foo"))));
     }
 
     @Test
     public void genericBaseException_ReturnsFalse() {
-        assertFalse(condition.shouldRetry(RetryPolicyContexts.withException(new SdkBaseException("foo"))));
+        assertFalse(
+                condition.shouldRetry(
+                        RetryPolicyContexts.withException(new SdkBaseException("foo"))));
     }
 
     @Test
     public void noRetryableExceptions_ReturnsFalse() {
-        final RetryCondition noExceptionsCondition = new RetryOnExceptionsCondition(
-                Collections.<Class<? extends Exception>>emptyList());
-        assertFalse(noExceptionsCondition.shouldRetry(RetryPolicyContexts.withException(new RetryableServiceException())));
+        final RetryCondition noExceptionsCondition =
+                new RetryOnExceptionsCondition(Collections.<Class<? extends Exception>>emptyList());
+        assertFalse(
+                noExceptionsCondition.shouldRetry(
+                        RetryPolicyContexts.withException(new RetryableServiceException())));
     }
 
     @Test(expected = IllegalArgumentException.class)

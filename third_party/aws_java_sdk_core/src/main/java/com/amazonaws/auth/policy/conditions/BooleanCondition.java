@@ -14,26 +14,21 @@
  */
 package com.amazonaws.auth.policy.conditions;
 
+import com.amazonaws.auth.policy.Condition;
 import java.util.Arrays;
 
-import com.amazonaws.auth.policy.Condition;
-
 /**
- * AWS access control policy condition that allows an access control statement to be
- * conditionally applied based on a comparison of boolean values.
+ * AWS access control policy condition that allows an access control statement to be conditionally
+ * applied based on a comparison of boolean values.
  */
 public class BooleanCondition extends Condition {
 
     /**
-     * Constructs a new access policy condition that performs a boolean
-     * comparison.
+     * Constructs a new access policy condition that performs a boolean comparison.
      *
-     * @param key
-     *            The access policy condition key specifying where to get the
-     *            first boolean value for the comparison (ex:
-     *            aws:SecureTransport).
-     * @param value
-     *            The boolean to compare against.
+     * @param key The access policy condition key specifying where to get the first boolean value
+     *     for the comparison (ex: aws:SecureTransport).
+     * @param value The boolean to compare against.
      */
     public BooleanCondition(String key, boolean value) {
         super.type = "Bool";

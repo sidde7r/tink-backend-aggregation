@@ -30,15 +30,12 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-/**
- * Tests broken up by fixture.
- */
+/** Tests broken up by fixture. */
 @RunWith(Enclosed.class)
 public class InstanceMetadataRegionProviderTest {
 
     /**
-     * If the EC2 metadata service is running it should return the region the server is mocked
-     * with.
+     * If the EC2 metadata service is running it should return the region the server is mocked with.
      */
     public static class MetadataServiceRunningTest {
 
@@ -51,8 +48,9 @@ public class InstanceMetadataRegionProviderTest {
             server = new EC2MetadataUtilsServer("localhost", 0);
             server.start();
 
-            System.setProperty(SDKGlobalConfiguration.EC2_METADATA_SERVICE_OVERRIDE_SYSTEM_PROPERTY,
-                               "http://localhost:" + server.getLocalPort());
+            System.setProperty(
+                    SDKGlobalConfiguration.EC2_METADATA_SERVICE_OVERRIDE_SYSTEM_PROPERTY,
+                    "http://localhost:" + server.getLocalPort());
         }
 
         @AfterClass
@@ -79,7 +77,7 @@ public class InstanceMetadataRegionProviderTest {
                 regionProvider.getRegion();
                 fail("exception not thrown when EC2Metadata disabled");
             } catch (AmazonClientException ex) {
-                //expected
+                // expected
             } finally {
                 System.clearProperty("com.amazonaws.sdk.disableEc2Metadata");
             }
@@ -99,8 +97,9 @@ public class InstanceMetadataRegionProviderTest {
 
         @Before
         public void setup() {
-            System.setProperty(SDKGlobalConfiguration.EC2_METADATA_SERVICE_OVERRIDE_SYSTEM_PROPERTY,
-                               "http://localhost:54123");
+            System.setProperty(
+                    SDKGlobalConfiguration.EC2_METADATA_SERVICE_OVERRIDE_SYSTEM_PROPERTY,
+                    "http://localhost:54123");
             regionProvider = new InstanceMetadataRegionProvider();
         }
 
@@ -108,8 +107,5 @@ public class InstanceMetadataRegionProviderTest {
         public void metadataServiceRunning_ProvidesCorrectRegion() {
             assertNull(regionProvider.getRegion());
         }
-
     }
-
-
 }

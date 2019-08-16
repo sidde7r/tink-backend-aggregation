@@ -15,15 +15,12 @@
 
 package com.amazonaws.internal;
 
+import com.amazonaws.util.AWSRequestMetrics;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
-import com.amazonaws.util.AWSRequestMetrics;
-
-/**
- * A wrapper to Socket with metrics feature to record socket read time.
- */
+/** A wrapper to Socket with metrics feature to record socket read time. */
 public class SdkMetricsSocket extends DelegateSocket {
 
     private MetricsInputStream metricsIS;
@@ -32,13 +29,10 @@ public class SdkMetricsSocket extends DelegateSocket {
         super(sock);
     }
 
-    /**
-     * {@link AWSRequestMetrics} is set per request.
-     */
+    /** {@link AWSRequestMetrics} is set per request. */
     public void setMetrics(AWSRequestMetrics metrics) {
         if (metricsIS == null) {
-            throw new IllegalStateException(
-                    "The underlying input stream must be initialized!");
+            throw new IllegalStateException("The underlying input stream must be initialized!");
         }
         metricsIS.setMetrics(metrics);
     }
@@ -48,5 +42,4 @@ public class SdkMetricsSocket extends DelegateSocket {
         metricsIS = new MetricsInputStream(sock.getInputStream());
         return metricsIS;
     }
-
 }

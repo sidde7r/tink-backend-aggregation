@@ -14,6 +14,7 @@
  */
 package com.amazonaws.http.apache.client.impl;
 
+import java.io.IOException;
 import tink.org.apache.http.HttpHost;
 import tink.org.apache.http.HttpRequest;
 import tink.org.apache.http.HttpResponse;
@@ -26,27 +27,22 @@ import tink.org.apache.http.conn.HttpClientConnectionManager;
 import tink.org.apache.http.params.HttpParams;
 import tink.org.apache.http.protocol.HttpContext;
 
-import java.io.IOException;
-
 /**
- * An instance of {@link ConnectionManagerAwareHttpClient} that delegates all the requests to the given http client.
+ * An instance of {@link ConnectionManagerAwareHttpClient} that delegates all the requests to the
+ * given http client.
  */
-public class SdkHttpClient implements
-        ConnectionManagerAwareHttpClient {
+public class SdkHttpClient implements ConnectionManagerAwareHttpClient {
 
     private final HttpClient delegate;
 
     private final HttpClientConnectionManager cm;
 
-    public SdkHttpClient(final HttpClient delegate,
-                         final HttpClientConnectionManager cm) {
+    public SdkHttpClient(final HttpClient delegate, final HttpClientConnectionManager cm) {
         if (delegate == null) {
-            throw new IllegalArgumentException("delegate " +
-                    "cannot be null");
+            throw new IllegalArgumentException("delegate " + "cannot be null");
         }
         if (cm == null) {
-            throw new IllegalArgumentException("connection manager " +
-                    "cannot be null");
+            throw new IllegalArgumentException("connection manager " + "cannot be null");
         }
         this.delegate = delegate;
         this.cm = cm;
@@ -63,42 +59,58 @@ public class SdkHttpClient implements
     }
 
     @Override
-    public HttpResponse execute(HttpUriRequest request) throws IOException, ClientProtocolException {
+    public HttpResponse execute(HttpUriRequest request)
+            throws IOException, ClientProtocolException {
         return delegate.execute(request);
     }
 
     @Override
-    public HttpResponse execute(HttpUriRequest request, HttpContext context) throws IOException, ClientProtocolException {
+    public HttpResponse execute(HttpUriRequest request, HttpContext context)
+            throws IOException, ClientProtocolException {
         return delegate.execute(request, context);
     }
 
     @Override
-    public HttpResponse execute(HttpHost target, HttpRequest request) throws IOException, ClientProtocolException {
+    public HttpResponse execute(HttpHost target, HttpRequest request)
+            throws IOException, ClientProtocolException {
         return delegate.execute(target, request);
     }
 
     @Override
-    public HttpResponse execute(HttpHost target, HttpRequest request, HttpContext context) throws IOException, ClientProtocolException {
+    public HttpResponse execute(HttpHost target, HttpRequest request, HttpContext context)
+            throws IOException, ClientProtocolException {
         return delegate.execute(target, request, context);
     }
 
     @Override
-    public <T> T execute(HttpUriRequest request, ResponseHandler<? extends T> responseHandler) throws IOException, ClientProtocolException {
+    public <T> T execute(HttpUriRequest request, ResponseHandler<? extends T> responseHandler)
+            throws IOException, ClientProtocolException {
         return delegate.execute(request, responseHandler);
     }
 
     @Override
-    public <T> T execute(HttpUriRequest request, ResponseHandler<? extends T> responseHandler, HttpContext context) throws IOException, ClientProtocolException {
+    public <T> T execute(
+            HttpUriRequest request,
+            ResponseHandler<? extends T> responseHandler,
+            HttpContext context)
+            throws IOException, ClientProtocolException {
         return delegate.execute(request, responseHandler, context);
     }
 
     @Override
-    public <T> T execute(HttpHost target, HttpRequest request, ResponseHandler<? extends T> responseHandler) throws IOException, ClientProtocolException {
+    public <T> T execute(
+            HttpHost target, HttpRequest request, ResponseHandler<? extends T> responseHandler)
+            throws IOException, ClientProtocolException {
         return delegate.execute(target, request, responseHandler);
     }
 
     @Override
-    public <T> T execute(HttpHost target, HttpRequest request, ResponseHandler<? extends T> responseHandler, HttpContext context) throws IOException, ClientProtocolException {
+    public <T> T execute(
+            HttpHost target,
+            HttpRequest request,
+            ResponseHandler<? extends T> responseHandler,
+            HttpContext context)
+            throws IOException, ClientProtocolException {
         return delegate.execute(target, request, responseHandler, context);
     }
 

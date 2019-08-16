@@ -17,15 +17,11 @@ package com.amazonaws.waiters;
 
 public class MaxAttemptsRetryStrategy implements PollingStrategy.RetryStrategy {
 
-    /**
-     * Represents default number of maximum attempts allowed
-     * for polling
-     */
+    /** Represents default number of maximum attempts allowed for polling */
     private final int defaultMaxAttempts;
 
     /**
-     * Constructs a new MaxAttemptsRetryStrategy with the given
-     * default number of attempts
+     * Constructs a new MaxAttemptsRetryStrategy with the given default number of attempts
      *
      * @param defaultMaxAttempts
      */
@@ -34,10 +30,10 @@ public class MaxAttemptsRetryStrategy implements PollingStrategy.RetryStrategy {
     }
 
     /**
-     * Default way of checking if polling should be retried
-     * or fast failed
+     * Default way of checking if polling should be retried or fast failed
      *
-     * @param pollingStrategyContext Provides the polling context required to make the retry decision
+     * @param pollingStrategyContext Provides the polling context required to make the retry
+     *     decision
      * @return false if the number of re
      */
     @Override

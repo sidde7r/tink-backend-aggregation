@@ -27,5 +27,4 @@ public class ClientExecutionTimeoutException extends SdkClientException {
     }
 
     private static final long serialVersionUID = 4861767589924758934L;
-
 }

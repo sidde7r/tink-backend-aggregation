@@ -20,17 +20,20 @@ import com.amazonaws.protocol.MarshallingInfo;
 import com.amazonaws.protocol.ProtocolRequestMarshaller;
 
 /**
- * AWS services expect an empty body when the payload member is null instead of an explicit JSON null.
- * This implementation can be removed once CR-6541513 has been deployed to all services that use the payload trait.
+ * AWS services expect an empty body when the payload member is null instead of an explicit JSON
+ * null. This implementation can be removed once CR-6541513 has been deployed to all services that
+ * use the payload trait.
  *
  * @param <OrigRequest> Type of the original request object.
  */
 @SdkInternalApi
-public class NullAsEmptyBodyProtocolRequestMarshaller<OrigRequest> implements ProtocolRequestMarshaller<OrigRequest> {
+public class NullAsEmptyBodyProtocolRequestMarshaller<OrigRequest>
+        implements ProtocolRequestMarshaller<OrigRequest> {
 
     private final ProtocolRequestMarshaller<OrigRequest> delegate;
 
-    public NullAsEmptyBodyProtocolRequestMarshaller(ProtocolRequestMarshaller<OrigRequest> delegate) {
+    public NullAsEmptyBodyProtocolRequestMarshaller(
+            ProtocolRequestMarshaller<OrigRequest> delegate) {
         this.delegate = delegate;
     }
 
@@ -41,7 +44,8 @@ public class NullAsEmptyBodyProtocolRequestMarshaller<OrigRequest> implements Pr
 
     @Override
     public <V> void marshall(V val, MarshallingInfo<V> marshallingInfo) {
-        // If the payload member is null then don't marshall it (since it will become an explicit null)
+        // If the payload member is null then don't marshall it (since it will become an explicit
+        // null)
         if (marshallingInfo.isExplicitPayloadMember() && val == null) {
             return;
         }

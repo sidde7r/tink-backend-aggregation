@@ -26,7 +26,8 @@ import com.amazonaws.protocol.json.internal.NullAsEmptyBodyProtocolRequestMarsha
 import com.amazonaws.protocol.json.internal.SimpleTypeJsonMarshallers;
 
 /**
- * Builder to create an appropriate implementation of {@link ProtocolMarshaller} for JSON based services.
+ * Builder to create an appropriate implementation of {@link ProtocolMarshaller} for JSON based
+ * services.
  *
  * @param <T> Type of the original request object.
  */
@@ -60,10 +61,11 @@ public class JsonProtocolMarshallerBuilder<T> {
     }
 
     /**
-     * @param sendExplicitNullForPayload True if an explicit JSON null should be sent as the body when the
-     *                                   payload member is null. See {@link NullAsEmptyBodyProtocolRequestMarshaller}.
+     * @param sendExplicitNullForPayload True if an explicit JSON null should be sent as the body
+     *     when the payload member is null. See {@link NullAsEmptyBodyProtocolRequestMarshaller}.
      */
-    public JsonProtocolMarshallerBuilder<T> sendExplicitNullForPayload(boolean sendExplicitNullForPayload) {
+    public JsonProtocolMarshallerBuilder<T> sendExplicitNullForPayload(
+            boolean sendExplicitNullForPayload) {
         this.sendExplicitNullForPayload = sendExplicitNullForPayload;
         return this;
     }
@@ -77,29 +79,33 @@ public class JsonProtocolMarshallerBuilder<T> {
      * Registers an override for the marshaller registry.
      *
      * @param marshallLocation Location to override marshaller for.
-     * @param marshallingType  Type to override marshaller for.
-     * @param marshaller       Marshaller to use for the given location and type.
-     * @param <MarshallT>      Type of thing being marshalled.
+     * @param marshallingType Type to override marshaller for.
+     * @param marshaller Marshaller to use for the given location and type.
+     * @param <MarshallT> Type of thing being marshalled.
      * @return This builder for method chaining.
      */
-    public <MarshallT> JsonProtocolMarshallerBuilder<T> marshallerOverride(MarshallLocation marshallLocation,
-                                                                           MarshallingType<MarshallT> marshallingType,
-                                                                           StructuredJsonMarshaller<MarshallT> marshaller) {
+    public <MarshallT> JsonProtocolMarshallerBuilder<T> marshallerOverride(
+            MarshallLocation marshallLocation,
+            MarshallingType<MarshallT> marshallingType,
+            StructuredJsonMarshaller<MarshallT> marshaller) {
         if (marshallerRegistry == null) {
             this.marshallerRegistry = MarshallerRegistry.builder();
         }
-        marshallerRegistry.addMarshaller(marshallLocation, marshallingType, SimpleTypeJsonMarshallers.adapt(marshaller));
+        marshallerRegistry.addMarshaller(
+                marshallLocation, marshallingType, SimpleTypeJsonMarshallers.adapt(marshaller));
         return this;
     }
 
     public ProtocolRequestMarshaller<T> build() {
-        final ProtocolRequestMarshaller<T> protocolMarshaller = new JsonProtocolMarshaller<T>(jsonGenerator,
-                                                                                              contentType,
-                                                                                              operationInfo,
-                                                                                              originalRequest,
-                                                                                              marshallerRegistry);
-        return sendExplicitNullForPayload ? protocolMarshaller :
-                new NullAsEmptyBodyProtocolRequestMarshaller<T>(protocolMarshaller);
+        final ProtocolRequestMarshaller<T> protocolMarshaller =
+                new JsonProtocolMarshaller<T>(
+                        jsonGenerator,
+                        contentType,
+                        operationInfo,
+                        originalRequest,
+                        marshallerRegistry);
+        return sendExplicitNullForPayload
+                ? protocolMarshaller
+                : new NullAsEmptyBodyProtocolRequestMarshaller<T>(protocolMarshaller);
     }
-
 }

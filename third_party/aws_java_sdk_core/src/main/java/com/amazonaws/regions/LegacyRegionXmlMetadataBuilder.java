@@ -14,22 +14,19 @@
  */
 package com.amazonaws.regions;
 
-import com.amazonaws.SdkClientException;
 import com.amazonaws.SDKGlobalConfiguration;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.internal.config.Builder;
 import com.amazonaws.util.IOUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A region metadata builder that loads the data by looking at all the
- * legacy metadata locations.
+ * A region metadata builder that loads the data by looking at all the legacy metadata locations.
  */
 @SdkInternalApi
 public class LegacyRegionXmlMetadataBuilder implements Builder<RegionMetadata> {
@@ -51,8 +48,8 @@ public class LegacyRegionXmlMetadataBuilder implements Builder<RegionMetadata> {
         RegionMetadata metadata = loadFromSystemProperty();
 
         if (metadata == null) {
-            InputStream override = RegionUtils.class
-                    .getResourceAsStream(OVERRIDE_ENDPOINTS_RESOURCE_PATH);
+            InputStream override =
+                    RegionUtils.class.getResourceAsStream(OVERRIDE_ENDPOINTS_RESOURCE_PATH);
             if (override != null) {
                 metadata = loadFromStream(override);
                 IOUtils.closeQuietly(override, LOG);
@@ -63,45 +60,37 @@ public class LegacyRegionXmlMetadataBuilder implements Builder<RegionMetadata> {
     }
 
     /**
-     * Loads region metadata from file location specified in
-     * {@link #REGIONS_FILE_OVERRIDE} property.
-     * Returns null if no such property exists.
+     * Loads region metadata from file location specified in {@link #REGIONS_FILE_OVERRIDE}
+     * property. Returns null if no such property exists.
      *
-     * @throws SdkClientException if any error occurs while loading the
-     *                               metadata file.
+     * @throws SdkClientException if any error occurs while loading the metadata file.
      */
     private RegionMetadata loadFromSystemProperty() {
-        final String overrideFilePath = System.getProperty
-                (REGIONS_FILE_OVERRIDE);
+        final String overrideFilePath = System.getProperty(REGIONS_FILE_OVERRIDE);
 
         if (overrideFilePath != null) {
             try {
-                return LegacyRegionXmlLoadUtils.load(new File
-                        (overrideFilePath));
+                return LegacyRegionXmlLoadUtils.load(new File(overrideFilePath));
             } catch (IOException exception) {
                 throw new SdkClientException(
-                        "Error parsing region metadata from " + overrideFilePath,
-                        exception);
+                        "Error parsing region metadata from " + overrideFilePath, exception);
             }
         }
         return null;
     }
 
     /**
-     * Loads region metadata from file location specified in
-     * {@link #REGIONS_FILE_OVERRIDE} property.
-     * Returns null if no such property exists.
+     * Loads region metadata from file location specified in {@link #REGIONS_FILE_OVERRIDE}
+     * property. Returns null if no such property exists.
      *
-     * @throws SdkClientException if any error occurs while loading the
-     *                               metadata file.
+     * @throws SdkClientException if any error occurs while loading the metadata file.
      */
     private RegionMetadata loadFromStream(final InputStream stream) {
         try {
             return LegacyRegionXmlLoadUtils.load(stream);
         } catch (IOException exception) {
             throw new SdkClientException(
-                    "Error parsing region metadata from input stream",
-                    exception);
+                    "Error parsing region metadata from input stream", exception);
         }
     }
 }

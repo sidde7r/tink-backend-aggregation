@@ -31,18 +31,13 @@ public class PredefinedClientConfigurations {
         return new ClientConfiguration();
     }
 
-    /**
-     * Factory method for DynamoDB's default {@link ClientConfiguration}
-     */
+    /** Factory method for DynamoDB's default {@link ClientConfiguration} */
     public static ClientConfiguration dynamoDefault() {
         return new ClientConfiguration().withRetryPolicy(PredefinedRetryPolicies.DYNAMODB_DEFAULT);
     }
 
-    /**
-     * Factory method for Simple Workflow's default {@link ClientConfiguration}
-     */
+    /** Factory method for Simple Workflow's default {@link ClientConfiguration} */
     public static ClientConfiguration swfDefault() {
         return new ClientConfiguration().withMaxConnections(1000).withSocketTimeout(90000);
     }
-
 }

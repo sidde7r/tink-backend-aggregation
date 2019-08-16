@@ -22,6 +22,18 @@ import com.amazonaws.http.conn.SdkPlainSocketFactory;
 import com.amazonaws.http.conn.ssl.SdkTLSSocketFactory;
 import com.amazonaws.http.settings.HttpClientSettings;
 import com.amazonaws.internal.SdkSSLContext;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import tink.org.apache.http.HttpHost;
@@ -37,24 +49,9 @@ import tink.org.apache.http.impl.conn.DefaultSchemePortResolver;
 import tink.org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import tink.org.apache.http.protocol.HttpContext;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.concurrent.TimeUnit;
-
-/**
- * Factory class to create connection manager used by the apache client.
- */
-public class ApacheConnectionManagerFactory implements
-        ConnectionManagerFactory<HttpClientConnectionManager> {
+/** Factory class to create connection manager used by the apache client. */
+public class ApacheConnectionManagerFactory
+        implements ConnectionManagerFactory<HttpClientConnectionManager> {
 
     private final Log LOG = LogFactory.getLog(AmazonHttpClient.class);
 
@@ -62,14 +59,14 @@ public class ApacheConnectionManagerFactory implements
     public HttpClientConnectionManager create(final HttpClientSettings settings) {
         ConnectionSocketFactory sslsf = getPreferredSocketFactory(settings);
 
-        final PoolingHttpClientConnectionManager cm = new
-                PoolingHttpClientConnectionManager(
-                createSocketFactoryRegistry(sslsf),
-                null,
-                DefaultSchemePortResolver.INSTANCE,
-                new DelegatingDnsResolver(settings.getDnsResolver()),
-                settings.getConnectionPoolTTL(),
-                TimeUnit.MILLISECONDS);
+        final PoolingHttpClientConnectionManager cm =
+                new PoolingHttpClientConnectionManager(
+                        createSocketFactoryRegistry(sslsf),
+                        null,
+                        DefaultSchemePortResolver.INSTANCE,
+                        new DelegatingDnsResolver(settings.getDnsResolver()),
+                        settings.getConnectionPoolTTL(),
+                        TimeUnit.MILLISECONDS);
 
         cm.setValidateAfterInactivity(settings.getValidateAfterInactivityMillis());
         cm.setDefaultMaxPerRoute(settings.getMaxConnections());
@@ -86,10 +83,9 @@ public class ApacheConnectionManagerFactory implements
         return sslsf != null
                 ? sslsf
                 : new SdkTLSSocketFactory(
-                SdkSSLContext.getPreferredSSLContext(settings.getSecureRandom()),
-                getHostNameVerifier(settings));
+                        SdkSSLContext.getPreferredSSLContext(settings.getSecureRandom()),
+                        getHostNameVerifier(settings));
     }
-
 
     private SocketConfig buildSocketConfig(HttpClientSettings settings) {
         return SocketConfig.custom()
@@ -101,25 +97,23 @@ public class ApacheConnectionManagerFactory implements
 
     private ConnectionConfig buildConnectionConfig(HttpClientSettings settings) {
 
-        int socketBufferSize = Math.max(settings.getSocketBufferSize()[0],
-                settings.getSocketBufferSize()[1]);
+        int socketBufferSize =
+                Math.max(settings.getSocketBufferSize()[0], settings.getSocketBufferSize()[1]);
 
         return socketBufferSize <= 0
                 ? null
-                : ConnectionConfig.custom()
-                .setBufferSize(socketBufferSize)
-                .build();
+                : ConnectionConfig.custom().setBufferSize(socketBufferSize).build();
     }
 
-    private HostnameVerifier getHostNameVerifier
-            (HttpClientSettings options) {
+    private HostnameVerifier getHostNameVerifier(HttpClientSettings options) {
         // TODO Need to find a better way to handle these deprecations.
         return options.useBrowserCompatibleHostNameVerifier()
                 ? SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER
                 : SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
     }
 
-    private Registry<ConnectionSocketFactory> createSocketFactoryRegistry(ConnectionSocketFactory sslSocketFactory) {
+    private Registry<ConnectionSocketFactory> createSocketFactoryRegistry(
+            ConnectionSocketFactory sslSocketFactory) {
 
         /*
          * If SSL cert checking for endpoints has been explicitly disabled,
@@ -128,8 +122,9 @@ public class ApacheConnectionManagerFactory implements
          */
         if (SDKGlobalConfiguration.isCertCheckingDisabled()) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("SSL Certificate checking for endpoints has been " +
-                        "explicitly disabled.");
+                LOG.warn(
+                        "SSL Certificate checking for endpoints has been "
+                                + "explicitly disabled.");
             }
             sslSocketFactory = new TrustingSocketFactory();
         }
@@ -141,19 +136,17 @@ public class ApacheConnectionManagerFactory implements
     }
 
     /**
-     * Simple implementation of SchemeSocketFactory (and
-     * LayeredSchemeSocketFactory) that bypasses SSL certificate checks. This
-     * class is only intended to be used for testing purposes.
+     * Simple implementation of SchemeSocketFactory (and LayeredSchemeSocketFactory) that bypasses
+     * SSL certificate checks. This class is only intended to be used for testing purposes.
      */
-    private static class TrustingSocketFactory implements
-            LayeredConnectionSocketFactory {
+    private static class TrustingSocketFactory implements LayeredConnectionSocketFactory {
 
         private SSLContext sslcontext = null;
 
         private static SSLContext createSSLContext() throws IOException {
             try {
                 SSLContext context = SSLContext.getInstance("TLS");
-                context.init(null, new TrustManager[]{new TrustingX509TrustManager()}, null);
+                context.init(null, new TrustManager[] {new TrustingX509TrustManager()}, null);
                 return context;
             } catch (Exception e) {
                 throw new IOException(e.getMessage(), e);
@@ -161,9 +154,10 @@ public class ApacheConnectionManagerFactory implements
         }
 
         @Override
-        public Socket createLayeredSocket(Socket socket, String target, int port, HttpContext context) throws IOException, UnknownHostException {
-            return getSSLContext().getSocketFactory().createSocket(socket,
-                    target, port, true);
+        public Socket createLayeredSocket(
+                Socket socket, String target, int port, HttpContext context)
+                throws IOException, UnknownHostException {
+            return getSSLContext().getSocketFactory().createSocket(socket, target, port, true);
         }
 
         @Override
@@ -172,12 +166,17 @@ public class ApacheConnectionManagerFactory implements
         }
 
         @Override
-        public Socket connectSocket(int connectTimeout, Socket sock, HttpHost host, InetSocketAddress remoteAddress, InetSocketAddress localAddress, HttpContext context) throws IOException {
+        public Socket connectSocket(
+                int connectTimeout,
+                Socket sock,
+                HttpHost host,
+                InetSocketAddress remoteAddress,
+                InetSocketAddress localAddress,
+                HttpContext context)
+                throws IOException {
 
-            SSLSocket sslsock = (SSLSocket) ((sock != null) ? sock :
-                    createSocket(context));
+            SSLSocket sslsock = (SSLSocket) ((sock != null) ? sock : createSocket(context));
             if (localAddress != null) sslsock.bind(localAddress);
-
 
             sslsock.connect(remoteAddress, connectTimeout);
             // socket timeout is set internally by the
@@ -192,8 +191,8 @@ public class ApacheConnectionManagerFactory implements
     }
 
     /**
-     * Simple implementation of X509TrustManager that trusts all certificates.
-     * This class is only intended to be used for testing purposes.
+     * Simple implementation of X509TrustManager that trusts all certificates. This class is only
+     * intended to be used for testing purposes.
      */
     private static class TrustingX509TrustManager implements X509TrustManager {
         private static final X509Certificate[] X509_CERTIFICATES = new X509Certificate[0];

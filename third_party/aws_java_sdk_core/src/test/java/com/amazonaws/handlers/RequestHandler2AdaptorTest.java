@@ -23,30 +23,30 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.amazonaws.Request;
 import com.amazonaws.util.TimingInfo;
+import org.junit.Test;
 
 public class RequestHandler2AdaptorTest {
     final boolean[] bs = new boolean[3];
+
     @Test
     public void testDelegation() {
-        for (int i=0; i < bs.length; i++) {
+        for (int i = 0; i < bs.length; i++) {
             assertFalse(bs[i]);
         }
         RequestHandler old = createRequestHandler();
         RequestHandler2 v2 = new RequestHandler2Adaptor(old);
         v2.beforeRequest(null);
-        int i=0;
+        int i = 0;
         assertTrue("beforeRequest is expected to have been invoked", bs[i++]);
-        bs[i-1] = false;    // reset the flag
+        bs[i - 1] = false; // reset the flag
         v2.afterResponse(null, null);
         assertTrue("beforeRequest is expected to have been invoked", bs[i++]);
-        bs[i-1] = false;    // reset the flag
+        bs[i - 1] = false; // reset the flag
         v2.afterError(null, null, null);
         assertTrue("beforeRequest is expected to have been invoked", bs[i++]);
-        bs[i-1] = false;    // reset the flag
+        bs[i - 1] = false; // reset the flag
     }
 
     @Test
@@ -76,13 +76,12 @@ public class RequestHandler2AdaptorTest {
             public void beforeRequest(Request<?> request) {
                 bs[0] = true;
             }
-            
+
             @Override
-            public void afterResponse(Request<?> request, Object response,
-                    TimingInfo timingInfo) {
+            public void afterResponse(Request<?> request, Object response, TimingInfo timingInfo) {
                 bs[1] = true;
             }
-            
+
             @Override
             public void afterError(Request<?> request, Exception e) {
                 bs[2] = true;

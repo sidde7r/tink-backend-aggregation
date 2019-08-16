@@ -15,12 +15,9 @@
 package utils.builder;
 
 import com.amazonaws.client.builder.ExecutorFactory;
-
 import java.util.concurrent.ExecutorService;
 
-/**
- * Mock {@link ExecutorFactory} that just returns the same executor every time.
- */
+/** Mock {@link ExecutorFactory} that just returns the same executor every time. */
 public class StaticExecutorFactory implements ExecutorFactory {
 
     private final ExecutorService executorService;

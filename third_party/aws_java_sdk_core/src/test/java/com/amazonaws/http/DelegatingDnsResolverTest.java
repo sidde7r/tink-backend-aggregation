@@ -14,12 +14,9 @@
  */
 package com.amazonaws.http;
 
-import com.amazonaws.*;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
+import com.amazonaws.*;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
@@ -27,8 +24,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class DelegatingDnsResolverTest {
 
@@ -43,15 +42,17 @@ public class DelegatingDnsResolverTest {
 
         ClientConfiguration clientConfiguration = new ClientConfiguration();
         clientConfiguration.withMaxErrorRetry(0);
-        clientConfiguration.withDnsResolver(new DnsResolver() {
-            DnsResolver system = new SystemDefaultDnsResolver();
-            @Override
-            public InetAddress[] resolve(String host) throws UnknownHostException {
-                dnsResolutionCounter.incrementAndGet();
-                requestedHosts.add(host);
-                return system.resolve(host);
-            }
-        });
+        clientConfiguration.withDnsResolver(
+                new DnsResolver() {
+                    DnsResolver system = new SystemDefaultDnsResolver();
+
+                    @Override
+                    public InetAddress[] resolve(String host) throws UnknownHostException {
+                        dnsResolutionCounter.incrementAndGet();
+                        requestedHosts.add(host);
+                        return system.resolve(host);
+                    }
+                });
 
         testedClient = new AmazonHttpClient(clientConfiguration);
     }
@@ -60,7 +61,8 @@ public class DelegatingDnsResolverTest {
     public void tearDown() {
         try {
             testedClient.shutdown();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     @Test
@@ -69,19 +71,25 @@ public class DelegatingDnsResolverTest {
         ExecutionContext context = new ExecutionContext(true);
         String randomHost = UUID.randomUUID().toString();
         final Request<String> request = new DefaultRequest<String>("bob") {};
-        request.setEndpoint(URI.create("http://" + randomHost+"/"));
+        request.setEndpoint(URI.create("http://" + randomHost + "/"));
         request.setHttpMethod(HttpMethodName.GET);
 
         try {
-            testedClient.requestExecutionBuilder().request(request).executionContext(context).execute();
+            testedClient
+                    .requestExecutionBuilder()
+                    .request(request)
+                    .executionContext(context)
+                    .execute();
             Assert.fail("AmazonClientException is expected.");
         } catch (AmazonClientException ace) {
         }
 
-        assertTrue("dnsResolver should have been called at least once",
+        assertTrue(
+                "dnsResolver should have been called at least once",
                 dnsResolutionCounter.get() > 0);
 
-        assertTrue("An attempt to resolve host " + randomHost + " should have been made",
+        assertTrue(
+                "An attempt to resolve host " + randomHost + " should have been made",
                 requestedHosts.contains(randomHost));
     }
 
@@ -89,19 +97,19 @@ public class DelegatingDnsResolverTest {
     public void testDelegatingDnsResolverCallsResolveOnDelegate() throws Exception {
         final AtomicInteger timesCalled = new AtomicInteger();
 
-        DnsResolver delegate = new DnsResolver() {
-            @Override
-            public InetAddress[] resolve(String host) throws UnknownHostException {
-                timesCalled.incrementAndGet();
-                return new InetAddress[0];
-            }
-        };
+        DnsResolver delegate =
+                new DnsResolver() {
+                    @Override
+                    public InetAddress[] resolve(String host) throws UnknownHostException {
+                        timesCalled.incrementAndGet();
+                        return new InetAddress[0];
+                    }
+                };
 
         tink.org.apache.http.conn.DnsResolver resolver = new DelegatingDnsResolver(delegate);
 
         resolver.resolve("localhost");
 
         assertEquals("Delegate Resolver should have been executed", 1, timesCalled.get());
-
     }
 }

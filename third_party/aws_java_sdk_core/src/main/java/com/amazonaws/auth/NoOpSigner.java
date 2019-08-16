@@ -16,11 +16,9 @@ package com.amazonaws.auth;
 
 import com.amazonaws.SignableRequest;
 
-/**
- * A No-Op Signer Implementation.
- */
+/** A No-Op Signer Implementation. */
 public class NoOpSigner implements Signer {
 
     @Override
-    public void sign(SignableRequest<?> request, AWSCredentials credentials) { }
+    public void sign(SignableRequest<?> request, AWSCredentials credentials) {}
 }

@@ -22,28 +22,22 @@ import com.amazonaws.annotation.SdkProtectedApi;
 public abstract class WaiterAcceptor<Output> {
 
     /**
-     * Default method definition that matches the response
-     * state with the expected state defined by the acceptor.
-     * Overriden by each acceptor definition of matches.
+     * Default method definition that matches the response state with the expected state defined by
+     * the acceptor. Overriden by each acceptor definition of matches.
      *
      * @param output Response got by the execution of the operation
-     * @return False by default.
-     * When overriden, returns True if it matches, False
-     * otherwise
+     * @return False by default. When overriden, returns True if it matches, False otherwise
      */
     public boolean matches(Output output) {
         return false;
     }
 
     /**
-     * Default method definition that matches the exception
-     * with the expected state defined by the acceptor.
-     * Overriden by each acceptor definition of matches.
+     * Default method definition that matches the exception with the expected state defined by the
+     * acceptor. Overriden by each acceptor definition of matches.
      *
      * @param output Exception thrown by the execution of the operation
-     * @return False by default.
-     * When overriden, returns True if it matches, False
-     * otherwise
+     * @return False by default. When overriden, returns True if it matches, False otherwise
      */
     public boolean matches(AmazonServiceException output) {
         return false;
@@ -56,5 +50,3 @@ public abstract class WaiterAcceptor<Output> {
      */
     public abstract WaiterState getState();
 }
-
-

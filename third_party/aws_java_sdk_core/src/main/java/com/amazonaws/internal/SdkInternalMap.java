@@ -20,23 +20,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Map with auto construct flag to indicate whether it is auto constructed by
- * Java SDK.
- */
-public class SdkInternalMap<K,V> implements Map<K,V>, Serializable {
+/** Map with auto construct flag to indicate whether it is auto constructed by Java SDK. */
+public class SdkInternalMap<K, V> implements Map<K, V>, Serializable {
     private static final long serialVersionUID = 1L;
 
     private final Map<K, V> map;
 
-    /**
-    * Auto construct flag to indicate whether the map is auto constructed by
-    * Java SDK.
-    */
+    /** Auto construct flag to indicate whether the map is auto constructed by Java SDK. */
     private final boolean autoConstruct;
 
     public SdkInternalMap() {
-        this.map = new HashMap<K,V>();
+        this.map = new HashMap<K, V>();
         autoConstruct = true;
     }
 
@@ -45,9 +39,7 @@ public class SdkInternalMap<K,V> implements Map<K,V>, Serializable {
         autoConstruct = false;
     }
 
-    /**
-    * Return true if the map is auto constructed by Java SDK; false otherwise.
-    */
+    /** Return true if the map is auto constructed by Java SDK; false otherwise. */
     public boolean isAutoConstruct() {
         return autoConstruct;
     }
@@ -115,9 +107,9 @@ public class SdkInternalMap<K,V> implements Map<K,V>, Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (map == null ) return o == null;
-        if (!(o instanceof Map<?,?>)) return false;
-        
+        if (map == null) return o == null;
+        if (!(o instanceof Map<?, ?>)) return false;
+
         Map<?, ?> that = (Map<?, ?>) o;
 
         return map.equals(that);

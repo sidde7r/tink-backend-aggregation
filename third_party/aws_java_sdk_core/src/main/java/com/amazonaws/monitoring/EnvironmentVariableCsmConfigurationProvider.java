@@ -14,19 +14,18 @@
  */
 package com.amazonaws.monitoring;
 
-import com.amazonaws.SdkClientException;
-import com.amazonaws.annotation.ThreadSafe;
-import com.amazonaws.util.StringUtils;
-
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_CLIENT_ID_ENV_VAR;
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_ENABLED_ENV_VAR;
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_PORT_ENV_VAR;
 import static com.amazonaws.SDKGlobalConfiguration.DEFAULT_AWS_CSM_CLIENT_ID;
 import static com.amazonaws.SDKGlobalConfiguration.DEFAULT_AWS_CSM_PORT;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.annotation.ThreadSafe;
+
 /**
- * Configuration provider that sources the client side monitoring
- * configuration parameters from environment variables.
+ * Configuration provider that sources the client side monitoring configuration parameters from
+ * environment variables.
  *
  * @see com.amazonaws.SDKGlobalConfiguration#AWS_CSM_CLIENT_ID_ENV_VAR
  * @see com.amazonaws.SDKGlobalConfiguration#AWS_CSM_ENABLED_ENV_VAR
@@ -39,8 +38,9 @@ public final class EnvironmentVariableCsmConfigurationProvider implements CsmCon
         String enabled = System.getenv(AWS_CSM_ENABLED_ENV_VAR);
 
         if (enabled == null) {
-            throw new SdkClientException("Unable to load Client Side Monitoring configurations from"
-                                         + " environment variables!");
+            throw new SdkClientException(
+                    "Unable to load Client Side Monitoring configurations from"
+                            + " environment variables!");
         }
 
         String port = System.getenv(AWS_CSM_PORT_ENV_VAR);
@@ -52,8 +52,10 @@ public final class EnvironmentVariableCsmConfigurationProvider implements CsmCon
             return new CsmConfiguration(Boolean.parseBoolean(enabled), portNumber, clientId);
 
         } catch (Exception e) {
-            throw new SdkClientException("Unable to load Client Side Monitoring configurations from"
-                    + " environment variables!", e);
+            throw new SdkClientException(
+                    "Unable to load Client Side Monitoring configurations from"
+                            + " environment variables!",
+                    e);
         }
     }
 }

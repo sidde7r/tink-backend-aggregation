@@ -16,11 +16,7 @@ package com.amazonaws.endpointdiscovery;
 
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.cache.CacheLoader;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,13 +24,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 @SdkInternalApi
 public abstract class EndpointDiscoveryRefreshCache<K> {
 
     private static final Log log = LogFactory.getLog(EndpointDiscoveryRefreshCache.class);
 
-    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(DaemonThreadFactory.INSTANCE);
+    private final ScheduledExecutorService executorService =
+            Executors.newSingleThreadScheduledExecutor(DaemonThreadFactory.INSTANCE);
     private final CacheLoader<String, Map<String, String>> cacheLoader;
 
     protected final Map<String, URI> cache = new ConcurrentHashMap<String, URI>();
@@ -44,9 +43,8 @@ public abstract class EndpointDiscoveryRefreshCache<K> {
     }
 
     /**
-     * Abstract method to be implemented by each service to handle retrieving
-     * endpoints from a cache. Each service must handle converting a request
-     * object into the relevant cache key.
+     * Abstract method to be implemented by each service to handle retrieving endpoints from a
+     * cache. Each service must handle converting a request object into the relevant cache key.
      *
      * @param key - The cache key to use
      * @param required - Whether or not the service requires use of endpoint discovery
@@ -56,9 +54,9 @@ public abstract class EndpointDiscoveryRefreshCache<K> {
     public abstract URI get(K key, boolean required, URI defaultEndpoint);
 
     /**
-     * Abstract method to be implemented by each service to handle storing endpoints
-     * in it's cache. This method must schedule refresh of cache values whenever putting
-     * a new endpoint into it's cache.
+     * Abstract method to be implemented by each service to handle storing endpoints in it's cache.
+     * This method must schedule refresh of cache values whenever putting a new endpoint into it's
+     * cache.
      *
      * @param key - The cache key
      * @param endpointDetails - The details for an endpoint including the address and cache period.
@@ -77,27 +75,30 @@ public abstract class EndpointDiscoveryRefreshCache<K> {
             } catch (Exception e) {
                 return defaultEndpoint;
             }
-        }  else {
+        } else {
             loadAndScheduleRefresh(key, 1, defaultEndpoint);
             return defaultEndpoint;
         }
     }
 
-    public ScheduledFuture<URI> loadAndScheduleRefresh(final String key,
-                                                       final long refreshPeriod,
-                                                       final URI defaultEndpoint) {
-        return executorService.schedule(new Callable<URI>() {
-            @Override
-            public URI call() {
-                try {
-                    return put(key, cacheLoader.load(key), defaultEndpoint);
-                } catch (Exception e) {
-                    log.debug("Failed to refresh cached endpoint. Scheduling another refresh in 5 minutes");
-                    loadAndScheduleRefresh(key, 5, defaultEndpoint);
-                    return null;
-                }
-            }
-        }, refreshPeriod, TimeUnit.MINUTES);
+    public ScheduledFuture<URI> loadAndScheduleRefresh(
+            final String key, final long refreshPeriod, final URI defaultEndpoint) {
+        return executorService.schedule(
+                new Callable<URI>() {
+                    @Override
+                    public URI call() {
+                        try {
+                            return put(key, cacheLoader.load(key), defaultEndpoint);
+                        } catch (Exception e) {
+                            log.debug(
+                                    "Failed to refresh cached endpoint. Scheduling another refresh in 5 minutes");
+                            loadAndScheduleRefresh(key, 5, defaultEndpoint);
+                            return null;
+                        }
+                    }
+                },
+                refreshPeriod,
+                TimeUnit.MINUTES);
     }
 
     public void shutdown() {

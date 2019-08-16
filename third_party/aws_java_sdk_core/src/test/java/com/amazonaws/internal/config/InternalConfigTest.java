@@ -15,23 +15,22 @@
 
 package com.amazonaws.internal.config;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+
 import com.amazonaws.regions.Regions;
 import com.amazonaws.util.ClassLoaderHelper;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class InternalConfigTest {
 
@@ -46,8 +45,7 @@ public class InternalConfigTest {
     private static final Map<String, String> serviceSignerMap = new HashMap<String, String>();
 
     @BeforeClass
-    public static void setUp() throws JsonParseException, JsonMappingException,
-            IOException {
+    public static void setUp() throws JsonParseException, JsonMappingException, IOException {
         config = InternalConfig.Factory.getInternalConfig();
         assertNotNull(config);
         assertSame(config, InternalConfig.Factory.getInternalConfig());
@@ -62,10 +60,7 @@ public class InternalConfigTest {
         serviceSignerMap.put("route53", DEFAULT_SIGNER_TYPE);
     }
 
-    /**
-     * This test case tests signers for all AWS regions mentioned in the
-     * <code>Regions</code>
-     */
+    /** This test case tests signers for all AWS regions mentioned in the <code>Regions</code> */
     @Test
     public void testServiceSpecificSigners() {
         Set<Map.Entry<String, String>> entrySet = serviceSignerMap.entrySet();
@@ -88,17 +83,14 @@ public class InternalConfigTest {
         }
     }
 
-    /**
-     * This test case tests the Amazon S3 specific signers.
-     */
+    /** This test case tests the Amazon S3 specific signers. */
     @Test
     public void testS3Signers() {
         final String serviceName = "s3";
         assertSignerType(S3V4_SIGNER_TYPE, serviceName, null);
 
         for (Regions region : Regions.values()) {
-            assertSignerType(S3V4_SIGNER_TYPE, serviceName,
-                    region.getName());
+            assertSignerType(S3V4_SIGNER_TYPE, serviceName, region.getName());
         }
         assertSignerType(S3V4_SIGNER_TYPE, serviceName, NEW_REGION);
     }
@@ -115,17 +107,13 @@ public class InternalConfigTest {
         assertSignerType("QueryStringSignerType", "sdb", "eu-west-1");
     }
 
-    /**
-     * This test case tests the Import/Export specific signers.
-     */
+    /** This test case tests the Import/Export specific signers. */
     @Test
     public void testImportExportSigners() {
         assertSignerType("QueryStringSignerType", "importexport", null);
     }
 
-    /**
-     * This test case tests the Simple Email Service specific signers.
-     */
+    /** This test case tests the Simple Email Service specific signers. */
     @Test
     public void testSimpleEmailServiceSigners() {
         assertSignerType(DEFAULT_SIGNER_TYPE, "email", "us-east-1");
@@ -134,10 +122,7 @@ public class InternalConfigTest {
         assertSignerType(DEFAULT_SIGNER_TYPE, "email", NEW_REGION);
     }
 
-    /**
-     * This test cases tests the default signers for any new regions added to
-     * any AWS service.
-     */
+    /** This test cases tests the default signers for any new regions added to any AWS service. */
     @Test
     public void testNewRegions() {
         assertSignerType(DEFAULT_SIGNER_TYPE, "dynamodb", NEW_REGION);
@@ -147,24 +132,21 @@ public class InternalConfigTest {
         assertSignerType(DEFAULT_SIGNER_TYPE, "sdb", NEW_REGION);
     }
 
-    private void assertSignerType(String expected, String serviceName,
-            String region) {
+    private void assertSignerType(String expected, String serviceName, String region) {
         SignerConfig signer = config.getSignerConfig(serviceName, region);
-        assertEquals("Service Signer validation failed for " + serviceName
-                + " in region " + region, expected, signer.getSignerType());
+        assertEquals(
+                "Service Signer validation failed for " + serviceName + " in region " + region,
+                expected,
+                signer.getSignerType());
     }
 
-    /**
-     * This test case tests the Cognito specific signers.
-     */
+    /** This test case tests the Cognito specific signers. */
     @Test
     public void testCognitoAssertions() {
         assertSignerType("AWS4SignerType", "cognito-identity", null);
-        assertSignerType("AWS4SignerType", "cognito-identity",
-                Regions.US_EAST_1.getName());
+        assertSignerType("AWS4SignerType", "cognito-identity", Regions.US_EAST_1.getName());
         assertSignerType("AWS4SignerType", "cognito-sync", null);
-        assertSignerType("AWS4SignerType", "cognito-sync",
-                Regions.US_EAST_1.getName());
+        assertSignerType("AWS4SignerType", "cognito-sync", Regions.US_EAST_1.getName());
     }
 
     @Test

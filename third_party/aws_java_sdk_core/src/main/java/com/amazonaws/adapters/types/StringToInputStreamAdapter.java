@@ -15,12 +15,11 @@
  */
 package com.amazonaws.adapters.types;
 
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkProtectedApi;
 import com.amazonaws.util.StringInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 @SdkProtectedApi
 public class StringToInputStreamAdapter implements TypeAdapter<String, InputStream> {

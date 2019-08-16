@@ -14,6 +14,13 @@
  */
 package com.amazonaws.http.timers.request;
 
+import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.assertNumberOfRetries;
+import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.assertNumberOfTasksTriggered;
+import static com.amazonaws.http.timers.TimeoutTestConstants.TEST_TIMEOUT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.spy;
+
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.TestPreConditions;
@@ -27,22 +34,11 @@ import com.amazonaws.http.response.ErrorDuringUnmarshallingResponseHandler;
 import com.amazonaws.http.response.NullErrorResponseHandler;
 import com.amazonaws.http.server.MockServer;
 import com.amazonaws.http.settings.HttpClientSettings;
-
+import java.io.IOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-
-import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.assertNumberOfRetries;
-import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.assertNumberOfTasksTriggered;
-import static com.amazonaws.http.timers.TimeoutTestConstants.TEST_TIMEOUT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.spy;
-
-/**
- * Tests that use a server that returns a predetermined response within the timeout limit
- */
+/** Tests that use a server that returns a predetermined response within the timeout limit */
 public class DummyResponseServerIntegrationTests extends MockServerTestBase {
 
     private static final int STATUS_CODE = 500;
@@ -56,25 +52,33 @@ public class DummyResponseServerIntegrationTests extends MockServerTestBase {
     @Override
     protected MockServer buildMockServer() {
         return new MockServer(
-                MockServer.DummyResponseServerBehavior.build(STATUS_CODE, "Internal Server Failure", "Dummy response"));
+                MockServer.DummyResponseServerBehavior.build(
+                        STATUS_CODE, "Internal Server Failure", "Dummy response"));
     }
 
     @Test(timeout = TEST_TIMEOUT)
-    public void requestTimeoutEnabled_ServerRespondsWithRetryableError_RetriesUpToLimitThenThrowsServerException()
-            throws IOException {
+    public void
+            requestTimeoutEnabled_ServerRespondsWithRetryableError_RetriesUpToLimitThenThrowsServerException()
+                    throws IOException {
         int maxRetries = 2;
-        ClientConfiguration config = new ClientConfiguration().withRequestTimeout(25 * 1000)
-                .withClientExecutionTimeout(25 * 1000).withMaxErrorRetry(maxRetries);
-        HttpClientFactory<ConnectionManagerAwareHttpClient> httpClientFactory = new ApacheHttpClientFactory();
-        ConnectionManagerAwareHttpClient rawHttpClient = spy(httpClientFactory.create(HttpClientSettings.adapt(config)));
+        ClientConfiguration config =
+                new ClientConfiguration()
+                        .withRequestTimeout(25 * 1000)
+                        .withClientExecutionTimeout(25 * 1000)
+                        .withMaxErrorRetry(maxRetries);
+        HttpClientFactory<ConnectionManagerAwareHttpClient> httpClientFactory =
+                new ApacheHttpClientFactory();
+        ConnectionManagerAwareHttpClient rawHttpClient =
+                spy(httpClientFactory.create(HttpClientSettings.adapt(config)));
 
         httpClient = new AmazonHttpClient(config, rawHttpClient, null);
 
         try {
-            httpClient.execute(newGetRequest(),
-                               new ErrorDuringUnmarshallingResponseHandler(),
-                               new NullErrorResponseHandler(),
-                               new ExecutionContext());
+            httpClient.execute(
+                    newGetRequest(),
+                    new ErrorDuringUnmarshallingResponseHandler(),
+                    new NullErrorResponseHandler(),
+                    new ExecutionContext());
             fail("Exception expected");
         } catch (AmazonServiceException e) {
             assertEquals(e.getStatusCode(), STATUS_CODE);
@@ -84,6 +88,4 @@ public class DummyResponseServerIntegrationTests extends MockServerTestBase {
             assertNumberOfTasksTriggered(httpClient.getClientExecutionTimer(), 0);
         }
     }
-
-
 }

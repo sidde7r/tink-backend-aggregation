@@ -32,14 +32,13 @@ import tink.org.apache.http.conn.HttpClientConnectionManager;
 import tink.org.apache.http.impl.client.HttpClientBuilder;
 import tink.org.apache.http.impl.client.HttpClients;
 
-/**
- * Factory class that builds the apache http client from the settings.
- */
-public class ApacheHttpClientFactory implements HttpClientFactory<ConnectionManagerAwareHttpClient> {
+/** Factory class that builds the apache http client from the settings. */
+public class ApacheHttpClientFactory
+        implements HttpClientFactory<ConnectionManagerAwareHttpClient> {
 
     private static final Log LOG = LogFactory.getLog(AmazonHttpClient.class);
-    private final ConnectionManagerFactory<HttpClientConnectionManager>
-            cmFactory = new ApacheConnectionManagerFactory();
+    private final ConnectionManagerFactory<HttpClientConnectionManager> cmFactory =
+            new ApacheConnectionManagerFactory();
 
     @Override
     public ConnectionManagerAwareHttpClient create(HttpClientSettings settings) {
@@ -83,18 +82,26 @@ public class ApacheHttpClientFactory implements HttpClientFactory<ConnectionMana
         return httpClient;
     }
 
-    private void addProxyConfig(HttpClientBuilder builder,
-                                HttpClientSettings settings) {
+    private void addProxyConfig(HttpClientBuilder builder, HttpClientSettings settings) {
         if (settings.isProxyEnabled()) {
 
-            LOG.info("Configuring Proxy. Proxy Host: " + settings.getProxyHost() + " " +
-                    "Proxy Port: " + settings.getProxyPort());
+            LOG.info(
+                    "Configuring Proxy. Proxy Host: "
+                            + settings.getProxyHost()
+                            + " "
+                            + "Proxy Port: "
+                            + settings.getProxyPort());
 
-            builder.setRoutePlanner(new SdkProxyRoutePlanner(
-                    settings.getProxyHost(), settings.getProxyPort(), settings.getProxyProtocol(), settings.getNonProxyHosts()));
+            builder.setRoutePlanner(
+                    new SdkProxyRoutePlanner(
+                            settings.getProxyHost(),
+                            settings.getProxyPort(),
+                            settings.getProxyProtocol(),
+                            settings.getNonProxyHosts()));
 
             if (settings.isAuthenticatedProxy()) {
-                builder.setDefaultCredentialsProvider(ApacheUtils.newProxyCredentialsProvider(settings));
+                builder.setDefaultCredentialsProvider(
+                        ApacheUtils.newProxyCredentialsProvider(settings));
             }
         }
     }

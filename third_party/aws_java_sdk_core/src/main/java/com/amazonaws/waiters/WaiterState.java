@@ -19,9 +19,8 @@ import com.amazonaws.annotation.SdkProtectedApi;
 
 @SdkProtectedApi
 public enum WaiterState {
-    /**
-     * Three different states a resource can be based
-     * on the waiter definition
-     */
-    SUCCESS, RETRY, FAILURE
+    /** Three different states a resource can be based on the waiter definition */
+    SUCCESS,
+    RETRY,
+    FAILURE
 }

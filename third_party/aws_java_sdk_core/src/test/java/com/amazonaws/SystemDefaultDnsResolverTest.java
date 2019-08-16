@@ -25,6 +25,6 @@ public class SystemDefaultDnsResolverTest {
         DnsResolver resolver = new SystemDefaultDnsResolver();
         assertNotNull(resolver.resolve("127.0.0.1"));
         assertEquals("Should resolve to 1 address", 1, resolver.resolve("127.0.0.1").length);
-        assertTrue("Should resolve localhost",  resolver.resolve("localhost").length > 0);
+        assertTrue("Should resolve localhost", resolver.resolve("localhost").length > 0);
     }
 }

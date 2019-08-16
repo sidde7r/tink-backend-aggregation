@@ -18,10 +18,7 @@ import com.amazonaws.Request;
 import com.amazonaws.annotation.SdkProtectedApi;
 import com.amazonaws.http.HttpMethodName;
 
-
-/**
- * Static information about an API operation used to marshall it correctly.
- */
+/** Static information about an API operation used to marshall it correctly. */
 @SdkProtectedApi
 public class OperationInfo {
 
@@ -46,7 +43,8 @@ public class OperationInfo {
     }
 
     /**
-     * @return The protocol of the client. Gives hints to the marshaller on how things should be transformed.
+     * @return The protocol of the client. Gives hints to the marshaller on how things should be
+     *     transformed.
      */
     public Protocol protocol() {
         return protocol;
@@ -59,42 +57,42 @@ public class OperationInfo {
         return requestUri;
     }
 
-    /**
-     * @return HTTP Method that should be used when sending the request.
-     */
+    /** @return HTTP Method that should be used when sending the request. */
     public HttpMethodName httpMethodName() {
         return httpMethodName;
     }
 
     /**
-     * @return Identifer for the operation/API being invoked. This is used for RPC based protocols that
-     * need to identify which action is being taken. For Query/EC2 protocol this is sent as the 'Action' query
-     * parameter, for JSON RPC this is sent as the 'X-Amz-Target' header.
+     * @return Identifer for the operation/API being invoked. This is used for RPC based protocols
+     *     that need to identify which action is being taken. For Query/EC2 protocol this is sent as
+     *     the 'Action' query parameter, for JSON RPC this is sent as the 'X-Amz-Target' header.
      */
     public String operationIdentifier() {
         return operationIdentifier;
     }
 
     /**
-     * @return Display name for the service. Mainly used for the metrics system but is also available on the {@link Request}
-     * object (to do something in a {@link com.amazonaws.handlers.RequestHandler2} for example). This is usually the service
-     * interface name but may be customized at generation time ('AmazonDynamoDBv2' for example).
+     * @return Display name for the service. Mainly used for the metrics system but is also
+     *     available on the {@link Request} object (to do something in a {@link
+     *     com.amazonaws.handlers.RequestHandler2} for example). This is usually the service
+     *     interface name but may be customized at generation time ('AmazonDynamoDBv2' for example).
      */
     public String serviceName() {
         return serviceName;
     }
 
     /**
-     * @return True if the operation has a member that's explicitly marked as the payload. False otherwise. (Applicable only to
-     * RESTUL protocols).
+     * @return True if the operation has a member that's explicitly marked as the payload. False
+     *     otherwise. (Applicable only to RESTUL protocols).
      */
     public boolean hasExplicitPayloadMember() {
         return hasExplicitPayloadMember;
     }
 
     /**
-     * @return True if the operation has members bound to the payload. Some requests (especially GET and DELETE) may not
-     * have any members bound to the payload. (Applicable only to RESTFUL protocols).
+     * @return True if the operation has members bound to the payload. Some requests (especially GET
+     *     and DELETE) may not have any members bound to the payload. (Applicable only to RESTFUL
+     *     protocols).
      */
     public boolean hasPayloadMembers() {
         return hasPayloadMembers;
@@ -104,16 +102,12 @@ public class OperationInfo {
         return serviceId;
     }
 
-    /**
-     * @return Builder instance to construct a {@link OperationInfo}.
-     */
+    /** @return Builder instance to construct a {@link OperationInfo}. */
     public static Builder builder() {
         return new Builder();
     }
 
-    /**
-     * Builder for a {@link OperationInfo}.
-     */
+    /** Builder for a {@link OperationInfo}. */
     public static final class Builder {
 
         private Protocol protocol;
@@ -165,12 +159,9 @@ public class OperationInfo {
             return this;
         }
 
-        private Builder() {
-        }
+        private Builder() {}
 
-        /**
-         * @return An immutable {@link OperationInfo} object.
-         */
+        /** @return An immutable {@link OperationInfo} object. */
         public OperationInfo build() {
             return new OperationInfo(this);
         }

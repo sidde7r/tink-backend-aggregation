@@ -31,16 +31,12 @@ public class ProfileResourceLoader {
         this.resourceName = fileName;
     }
 
-    /**
-     * Load resource as a {@link File} object
-     */
+    /** Load resource as a {@link File} object */
     public File asFile() {
         return new File(asUrl().getFile());
     }
 
-    /**
-     * Load resource as a {@link URL}
-     */
+    /** Load resource as a {@link URL} */
     public URL asUrl() {
         return getClass().getResource(PREFIX + resourceName);
     }
@@ -132,5 +128,4 @@ public class ProfileResourceLoader {
     public static ProfileResourceLoader roleProfileWithRoleSource() {
         return new ProfileResourceLoader("RoleProfileWithRoleSource.tst");
     }
-
 }

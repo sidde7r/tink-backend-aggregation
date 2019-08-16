@@ -14,15 +14,14 @@
  */
 package com.amazonaws.regions;
 
-import com.amazonaws.AmazonClientException;
-
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import com.amazonaws.AmazonClientException;
+import org.junit.Test;
 
 public class AwsRegionProviderChainTest {
 
@@ -31,8 +30,8 @@ public class AwsRegionProviderChainTest {
         AwsRegionProvider providerOne = mock(AwsRegionProvider.class);
         AwsRegionProvider providerTwo = mock(AwsRegionProvider.class);
         AwsRegionProvider providerThree = mock(AwsRegionProvider.class);
-        AwsRegionProviderChain chain = new AwsRegionProviderChain(providerOne, providerTwo,
-                                                                  providerThree);
+        AwsRegionProviderChain chain =
+                new AwsRegionProviderChain(providerOne, providerTwo, providerThree);
         final String expectedRegion = "some-region-string";
         when(providerOne.getRegion()).thenReturn(expectedRegion);
         assertEquals(expectedRegion, chain.getRegion());
@@ -44,20 +43,22 @@ public class AwsRegionProviderChainTest {
     @Test
     public void lastProviderInChainGivesRegionInformation() {
         final String expectedRegion = "some-region-string";
-        AwsRegionProviderChain chain = new AwsRegionProviderChain(new NeverAwsRegionProvider(),
-                                                                  new NeverAwsRegionProvider(),
-                                                                  new StaticAwsRegionProvider(
-                                                                          expectedRegion));
+        AwsRegionProviderChain chain =
+                new AwsRegionProviderChain(
+                        new NeverAwsRegionProvider(),
+                        new NeverAwsRegionProvider(),
+                        new StaticAwsRegionProvider(expectedRegion));
         assertEquals(expectedRegion, chain.getRegion());
     }
 
     @Test
     public void providerThrowsException_ContinuesToNextInChain() {
         final String expectedRegion = "some-region-string";
-        AwsRegionProviderChain chain = new AwsRegionProviderChain(new NeverAwsRegionProvider(),
-                                                                  new FaultyAwsRegionProvider(),
-                                                                  new StaticAwsRegionProvider(
-                                                                          expectedRegion));
+        AwsRegionProviderChain chain =
+                new AwsRegionProviderChain(
+                        new NeverAwsRegionProvider(),
+                        new FaultyAwsRegionProvider(),
+                        new StaticAwsRegionProvider(expectedRegion));
         assertEquals(expectedRegion, chain.getRegion());
     }
 
@@ -68,18 +69,21 @@ public class AwsRegionProviderChainTest {
     @Test(expected = Error.class)
     public void providerThrowsError_DoesNotContinueChain() {
         final String expectedRegion = "some-region-string";
-        AwsRegionProviderChain chain = new AwsRegionProviderChain(new NeverAwsRegionProvider(),
-                                                                  new FatalAwsRegionProvider(),
-                                                                  new StaticAwsRegionProvider(
-                                                                          expectedRegion));
+        AwsRegionProviderChain chain =
+                new AwsRegionProviderChain(
+                        new NeverAwsRegionProvider(),
+                        new FatalAwsRegionProvider(),
+                        new StaticAwsRegionProvider(expectedRegion));
         assertEquals(expectedRegion, chain.getRegion());
     }
 
     @Test(expected = AmazonClientException.class)
     public void noProviderGivesRegion_ThrowsAmazonClientException() {
-        AwsRegionProviderChain chain = new AwsRegionProviderChain(new NeverAwsRegionProvider(),
-                                                                  new NeverAwsRegionProvider(),
-                                                                  new NeverAwsRegionProvider());
+        AwsRegionProviderChain chain =
+                new AwsRegionProviderChain(
+                        new NeverAwsRegionProvider(),
+                        new NeverAwsRegionProvider(),
+                        new NeverAwsRegionProvider());
         chain.getRegion();
     }
 

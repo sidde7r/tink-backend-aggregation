@@ -16,9 +16,7 @@ package com.amazonaws.retry.internal;
 
 import com.amazonaws.annotation.SdkInternalApi;
 
-/**
- * Parameters that are used in {@link CredentialsEndpointRetryPolicy}.
- */
+/** Parameters that are used in {@link CredentialsEndpointRetryPolicy}. */
 @SdkInternalApi
 public class CredentialsEndpointRetryParameters {
 
@@ -45,41 +43,38 @@ public class CredentialsEndpointRetryParameters {
 
     public static class Builder {
 
-         private final Integer statusCode;
+        private final Integer statusCode;
 
-         private final Exception exception;
+        private final Exception exception;
 
-         private Builder() {
-             this.statusCode = null;
-             this.exception = null;
-         }
+        private Builder() {
+            this.statusCode = null;
+            this.exception = null;
+        }
 
-         private Builder(Integer statusCode, Exception exception) {
-             this.statusCode = statusCode;
-             this.exception = exception;
-         }
+        private Builder(Integer statusCode, Exception exception) {
+            this.statusCode = statusCode;
+            this.exception = exception;
+        }
 
-         /**
-          * @param statusCode The status code from Http response.
-          *
-          * @return This object for method chaining.
-          */
-         public Builder withStatusCode(Integer statusCode) {
-             return new Builder(statusCode, this.exception);
-         }
+        /**
+         * @param statusCode The status code from Http response.
+         * @return This object for method chaining.
+         */
+        public Builder withStatusCode(Integer statusCode) {
+            return new Builder(statusCode, this.exception);
+        }
 
-         /**
-          *
-          * @param exception The exception that was thrown.
-          * @return This object for method chaining.
-          */
-         public Builder withException(Exception exception) {
-             return new Builder(this.statusCode, exception);
-         }
+        /**
+         * @param exception The exception that was thrown.
+         * @return This object for method chaining.
+         */
+        public Builder withException(Exception exception) {
+            return new Builder(this.statusCode, exception);
+        }
 
-         public CredentialsEndpointRetryParameters build() {
-             return new CredentialsEndpointRetryParameters(this);
-         }
-
+        public CredentialsEndpointRetryParameters build() {
+            return new CredentialsEndpointRetryParameters(this);
+        }
     }
 }

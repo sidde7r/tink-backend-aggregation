@@ -17,21 +17,20 @@ package com.amazonaws.event;
 import com.amazonaws.event.request.Progress;
 import com.amazonaws.event.request.ProgressSupport;
 
-/**
- * Default implementation for progress tracking.
- */
+/** Default implementation for progress tracking. */
 public class ProgressTracker extends SyncProgressListener {
-    public static final ProgressTracker NOOP = new ProgressTracker() {
-        @Override public void progressChanged(ProgressEvent progressEvent) {}
-    };
+    public static final ProgressTracker NOOP =
+            new ProgressTracker() {
+                @Override
+                public void progressChanged(ProgressEvent progressEvent) {}
+            };
 
     private final Progress progress = new ProgressSupport();
 
     @Override
     public void progressChanged(ProgressEvent progressEvent) {
         long bytes = progressEvent.getBytes();
-        if (bytes <= 0)
-            return;
+        if (bytes <= 0) return;
         switch (progressEvent.getEventType()) {
             case REQUEST_CONTENT_LENGTH_EVENT:
                 progress.addRequestContentLength(bytes);
@@ -46,16 +45,18 @@ public class ProgressTracker extends SyncProgressListener {
                 progress.addResponseBytesTransferred(bytes);
                 break;
             case HTTP_REQUEST_CONTENT_RESET_EVENT:
-                progress.addRequestBytesTransferred(0-bytes);
+                progress.addRequestBytesTransferred(0 - bytes);
                 break;
-            case HTTP_RESPONSE_CONTENT_RESET_EVENT: 
-            case RESPONSE_BYTE_DISCARD_EVENT: 
-                progress.addResponseBytesTransferred(0-bytes);
+            case HTTP_RESPONSE_CONTENT_RESET_EVENT:
+            case RESPONSE_BYTE_DISCARD_EVENT:
+                progress.addResponseBytesTransferred(0 - bytes);
                 break;
             default:
                 break;
         }
     }
-    
-    public Progress getProgress() { return progress; }
+
+    public Progress getProgress() {
+        return progress;
+    }
 }

@@ -43,22 +43,17 @@ import tink.org.apache.http.client.methods.HttpPost;
 import tink.org.apache.http.client.methods.HttpPut;
 import tink.org.apache.http.client.methods.HttpRequestBase;
 
-/**
- * Responsible for creating Apache HttpClient 4 request objects.
- */
-public class ApacheHttpRequestFactory implements
-        HttpRequestFactory<HttpRequestBase> {
+/** Responsible for creating Apache HttpClient 4 request objects. */
+public class ApacheHttpRequestFactory implements HttpRequestFactory<HttpRequestBase> {
 
     private static final String DEFAULT_ENCODING = "UTF-8";
 
-    private static final List<String> ignoreHeaders = Arrays.asList
-            (HttpHeaders.CONTENT_LENGTH, HttpHeaders.HOST);
+    private static final List<String> ignoreHeaders =
+            Arrays.asList(HttpHeaders.CONTENT_LENGTH, HttpHeaders.HOST);
 
     @Override
-    public HttpRequestBase create(final Request<?> request,
-                                  final HttpClientSettings settings)
-            throws
-            FakeIOException {
+    public HttpRequestBase create(final Request<?> request, final HttpClientSettings settings)
+            throws FakeIOException {
         URI endpoint = request.getEndpoint();
 
         /*
@@ -66,8 +61,7 @@ public class ApacheHttpRequestFactory implements
          * have to escape the double-slash between endpoint and resource-path
          * into "/%2F"
          */
-        String uri = SdkHttpUtils.appendUri(endpoint.toString(), request
-                .getResourcePath(), true);
+        String uri = SdkHttpUtils.appendUri(endpoint.toString(), request.getResourcePath(), true);
         String encodedParams = SdkHttpUtils.encodeParameters(request);
 
         /*
@@ -89,15 +83,16 @@ public class ApacheHttpRequestFactory implements
         return base;
     }
 
-    private void addRequestConfig(final HttpRequestBase base,
-                                  final Request<?> request,
-                                  final HttpClientSettings settings) {
-        final RequestConfig.Builder requestConfigBuilder = RequestConfig
-                .custom()
-                .setConnectionRequestTimeout(settings.getConnectionPoolRequestTimeout())
-                .setConnectTimeout(settings.getConnectionTimeout())
-                .setSocketTimeout(settings.getSocketTimeout())
-                .setLocalAddress(settings.getLocalAddress());
+    private void addRequestConfig(
+            final HttpRequestBase base,
+            final Request<?> request,
+            final HttpClientSettings settings) {
+        final RequestConfig.Builder requestConfigBuilder =
+                RequestConfig.custom()
+                        .setConnectionRequestTimeout(settings.getConnectionPoolRequestTimeout())
+                        .setConnectTimeout(settings.getConnectionTimeout())
+                        .setSocketTimeout(settings.getSocketTimeout())
+                        .setLocalAddress(settings.getLocalAddress());
 
         /*
          * Enable 100-continue support for PUT operations, since this is
@@ -115,7 +110,8 @@ public class ApacheHttpRequestFactory implements
         base.setConfig(requestConfigBuilder.build());
     }
 
-    private HttpRequestBase createApacheRequest(Request<?> request, String uri, String encodedParams) throws FakeIOException {
+    private HttpRequestBase createApacheRequest(
+            Request<?> request, String uri, String encodedParams) throws FakeIOException {
         switch (request.getHttpMethod()) {
             case HEAD:
                 return new HttpHead(uri);
@@ -132,13 +128,16 @@ public class ApacheHttpRequestFactory implements
             case PUT:
                 return wrapEntity(request, new HttpPut(uri), encodedParams);
             default:
-                throw new SdkClientException("Unknown HTTP method name: " + request.getHttpMethod());
+                throw new SdkClientException(
+                        "Unknown HTTP method name: " + request.getHttpMethod());
         }
     }
 
-    private HttpRequestBase wrapEntity(Request<?> request,
-                                       HttpEntityEnclosingRequestBase entityEnclosingRequest,
-                                       String encodedParams) throws FakeIOException {
+    private HttpRequestBase wrapEntity(
+            Request<?> request,
+            HttpEntityEnclosingRequestBase entityEnclosingRequest,
+            String encodedParams)
+            throws FakeIOException {
 
         if (HttpMethodName.POST == request.getHttpMethod()) {
             /*
@@ -175,9 +174,7 @@ public class ApacheHttpRequestFactory implements
         return entityEnclosingRequest;
     }
 
-    /**
-     * Configures the headers in the specified Apache HTTP request.
-     */
+    /** Configures the headers in the specified Apache HTTP request. */
     private void addHeadersToRequest(HttpRequestBase httpRequest, Request<?> request) {
 
         httpRequest.addHeader(HttpHeaders.HOST, getHostHeaderValue(request.getEndpoint()));
@@ -196,12 +193,13 @@ public class ApacheHttpRequestFactory implements
         }
 
         /* Set content type and encoding */
-        if (httpRequest.getHeaders(HttpHeaders.CONTENT_TYPE) == null || httpRequest
-                .getHeaders
-                        (HttpHeaders.CONTENT_TYPE).length == 0) {
-            httpRequest.addHeader(HttpHeaders.CONTENT_TYPE,
-                    "application/x-www-form-urlencoded; " +
-                            "charset=" + DEFAULT_ENCODING.toLowerCase());
+        if (httpRequest.getHeaders(HttpHeaders.CONTENT_TYPE) == null
+                || httpRequest.getHeaders(HttpHeaders.CONTENT_TYPE).length == 0) {
+            httpRequest.addHeader(
+                    HttpHeaders.CONTENT_TYPE,
+                    "application/x-www-form-urlencoded; "
+                            + "charset="
+                            + DEFAULT_ENCODING.toLowerCase());
         }
     }
 
@@ -220,16 +218,20 @@ public class ApacheHttpRequestFactory implements
     }
 
     /**
-     * Update the provided request configuration builder to specify the proxy authentication schemes that should be used when
-     * authenticating against the HTTP proxy.
+     * Update the provided request configuration builder to specify the proxy authentication schemes
+     * that should be used when authenticating against the HTTP proxy.
      *
      * @see ClientConfiguration#setProxyAuthenticationMethods(List)
      */
-    private void addProxyConfig(RequestConfig.Builder requestConfigBuilder, HttpClientSettings settings) {
-        if (settings.isProxyEnabled() && settings.isAuthenticatedProxy() && settings.getProxyAuthenticationMethods() != null) {
+    private void addProxyConfig(
+            RequestConfig.Builder requestConfigBuilder, HttpClientSettings settings) {
+        if (settings.isProxyEnabled()
+                && settings.isAuthenticatedProxy()
+                && settings.getProxyAuthenticationMethods() != null) {
             List<String> apacheAuthenticationSchemes = new ArrayList<String>();
 
-            for (ProxyAuthenticationMethod authenticationMethod : settings.getProxyAuthenticationMethods()) {
+            for (ProxyAuthenticationMethod authenticationMethod :
+                    settings.getProxyAuthenticationMethods()) {
                 apacheAuthenticationSchemes.add(toApacheAuthenticationScheme(authenticationMethod));
             }
 
@@ -238,20 +240,29 @@ public class ApacheHttpRequestFactory implements
     }
 
     /**
-     * Convert the customer-facing authentication method into an apache-specific authentication method.
+     * Convert the customer-facing authentication method into an apache-specific authentication
+     * method.
      */
     private String toApacheAuthenticationScheme(ProxyAuthenticationMethod authenticationMethod) {
         if (authenticationMethod == null) {
-            throw new IllegalStateException("The configured proxy authentication methods must not be null.");
+            throw new IllegalStateException(
+                    "The configured proxy authentication methods must not be null.");
         }
 
         switch (authenticationMethod) {
-            case NTLM: return AuthSchemes.NTLM;
-            case BASIC: return AuthSchemes.BASIC;
-            case DIGEST: return AuthSchemes.DIGEST;
-            case SPNEGO: return AuthSchemes.SPNEGO;
-            case KERBEROS: return AuthSchemes.KERBEROS;
-            default: throw new IllegalStateException("Unknown authentication scheme: " + authenticationMethod);
+            case NTLM:
+                return AuthSchemes.NTLM;
+            case BASIC:
+                return AuthSchemes.BASIC;
+            case DIGEST:
+                return AuthSchemes.DIGEST;
+            case SPNEGO:
+                return AuthSchemes.SPNEGO;
+            case KERBEROS:
+                return AuthSchemes.KERBEROS;
+            default:
+                throw new IllegalStateException(
+                        "Unknown authentication scheme: " + authenticationMethod);
         }
     }
 }

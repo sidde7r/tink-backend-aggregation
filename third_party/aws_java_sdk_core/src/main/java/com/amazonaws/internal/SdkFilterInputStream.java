@@ -16,17 +16,13 @@ package com.amazonaws.internal;
 
 import static com.amazonaws.util.SdkRuntime.shouldAbort;
 
+import com.amazonaws.AbortedException;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.amazonaws.AbortedException;
-
-/**
- * Base class for AWS Java SDK specific {@link FilterInputStream}.
- */
-public class SdkFilterInputStream extends FilterInputStream implements
-        MetricAware, Releasable {
+/** Base class for AWS Java SDK specific {@link FilterInputStream}. */
+public class SdkFilterInputStream extends FilterInputStream implements MetricAware, Releasable {
     private volatile boolean aborted = false;
 
     protected SdkFilterInputStream(InputStream in) {
@@ -36,28 +32,29 @@ public class SdkFilterInputStream extends FilterInputStream implements
     @Override
     public boolean isMetricActivated() {
         if (in instanceof MetricAware) {
-            MetricAware metricAware = (MetricAware)in;
+            MetricAware metricAware = (MetricAware) in;
             return metricAware.isMetricActivated();
         }
         return false;
     }
 
     /**
-     * Aborts with subclass specific abortion logic executed if needed.
-     * Note the interrupted status of the thread is cleared by this method.
+     * Aborts with subclass specific abortion logic executed if needed. Note the interrupted status
+     * of the thread is cleared by this method.
+     *
      * @throws AbortedException if found necessary.
      */
     protected final void abortIfNeeded() {
         if (shouldAbort()) {
-            abort();    // execute subclass specific abortion logic
+            abort(); // execute subclass specific abortion logic
             throw new AbortedException();
         }
     }
 
     /**
-     * Can be used to provide abortion logic prior to throwing the
-     * AbortedException. If the wrapped {@code InputStream} is also an instance
-     * of this class, then it will also be aborted, otherwise this is a no-op.
+     * Can be used to provide abortion logic prior to throwing the AbortedException. If the wrapped
+     * {@code InputStream} is also an instance of this class, then it will also be aborted,
+     * otherwise this is a no-op.
      */
     public void abort() {
         if (in instanceof SdkFilterInputStream) {
@@ -125,7 +122,7 @@ public class SdkFilterInputStream extends FilterInputStream implements
         if (in instanceof Releasable) {
             // This allows any underlying stream that has the close operation
             // disabled to be truly released
-            Releasable r = (Releasable)in;
+            Releasable r = (Releasable) in;
             r.release();
         }
     }

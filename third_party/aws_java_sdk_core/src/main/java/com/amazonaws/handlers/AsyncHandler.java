@@ -17,27 +17,24 @@ package com.amazonaws.handlers;
 import com.amazonaws.AmazonWebServiceRequest;
 
 /**
- * Callback interface for notification on web service requests executed with the
- * asynchronous clients in the AWS SDK for Java.
+ * Callback interface for notification on web service requests executed with the asynchronous
+ * clients in the AWS SDK for Java.
  */
 public interface AsyncHandler<REQUEST extends AmazonWebServiceRequest, RESULT> {
 
-	/**
-	 * Invoked after an asynchronous request 
-	 * @param exception
-	 */
-	public void onError(Exception exception);
+    /**
+     * Invoked after an asynchronous request
+     *
+     * @param exception
+     */
+    public void onError(Exception exception);
 
-	/**
-	 * Invoked after an asynchronous request has completed successfully. Callers
-	 * have access to the original request object and the returned response
-	 * object.
-	 *
-	 * @param request
-	 *            The initial request created by the caller
-	 * @param result
-	 *            The successful result of the executed operation.
-	 */
-	public void onSuccess(REQUEST request, RESULT result);
-
+    /**
+     * Invoked after an asynchronous request has completed successfully. Callers have access to the
+     * original request object and the returned response object.
+     *
+     * @param request The initial request created by the caller
+     * @param result The successful result of the executed operation.
+     */
+    public void onSuccess(REQUEST request, RESULT result);
 }

@@ -20,11 +20,11 @@ import com.amazonaws.annotation.SdkTestInternalApi;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.SdkClock;
 import com.amazonaws.internal.auth.SignerProvider;
-
 import java.net.URI;
 
 /**
- * Params object passed to the presigner extension class for a service client and also for {@link PresignerFacade}.
+ * Params object passed to the presigner extension class for a service client and also for {@link
+ * PresignerFacade}.
  */
 @Immutable
 @SdkProtectedApi
@@ -35,10 +35,11 @@ public class PresignerParams {
     private final SignerProvider signerProvider;
     private final SdkClock clock;
 
-    public PresignerParams(URI endpoint,
-                           AWSCredentialsProvider credentialsProvider,
-                           SignerProvider signerProvider,
-                           SdkClock clock) {
+    public PresignerParams(
+            URI endpoint,
+            AWSCredentialsProvider credentialsProvider,
+            SignerProvider signerProvider,
+            SdkClock clock) {
         this.endpoint = endpoint;
         this.credentialsProvider = credentialsProvider;
         this.signerProvider = signerProvider;
@@ -61,9 +62,7 @@ public class PresignerParams {
         return signerProvider;
     }
 
-    /**
-     * @return Clock providing the current time in milliseconds.
-     */
+    /** @return Clock providing the current time in milliseconds. */
     public SdkClock clock() {
         return this.clock;
     }
@@ -75,8 +74,7 @@ public class PresignerParams {
         private SignerProvider signerProvider;
         private SdkClock clock;
 
-        private Builder() {
-        }
+        private Builder() {}
 
         public Builder endpoint(URI endpoint) {
             this.endpoint = endpoint;
@@ -100,7 +98,8 @@ public class PresignerParams {
         }
 
         public PresignerParams build() {
-            return new PresignerParams(endpoint, credentialsProvider, signerProvider, resolveClock());
+            return new PresignerParams(
+                    endpoint, credentialsProvider, signerProvider, resolveClock());
         }
 
         private SdkClock resolveClock() {

@@ -13,6 +13,7 @@
  * permissions and limitations under the License.
  */
 package com.amazonaws.http;
+
 import org.junit.Assert;
 import org.junit.Test;
 

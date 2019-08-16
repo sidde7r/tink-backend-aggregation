@@ -23,14 +23,11 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.FileWriter;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- * Unit tests for the PropertiesFileCredentialsProvider.
- */
+/** Unit tests for the PropertiesFileCredentialsProvider. */
 public class PropertiesFileCredentialsProviderIntegrationTest {
 
     private static String fileName = "propertiesCredentials";
@@ -41,8 +38,7 @@ public class PropertiesFileCredentialsProviderIntegrationTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        file = File.createTempFile(String.valueOf(System.currentTimeMillis()),
-                fileName);
+        file = File.createTempFile(String.valueOf(System.currentTimeMillis()), fileName);
 
         FileWriter fw = null;
         try {
@@ -63,8 +59,8 @@ public class PropertiesFileCredentialsProviderIntegrationTest {
     /** Tests that the credentials provider loads credentials appropriately */
     @Test
     public void testPropertiesCredentialsMethod() throws Exception {
-        PropertiesFileCredentialsProvider provider = new PropertiesFileCredentialsProvider(
-                file.getAbsolutePath());
+        PropertiesFileCredentialsProvider provider =
+                new PropertiesFileCredentialsProvider(file.getAbsolutePath());
 
         assertNotNull(provider.getCredentials());
         assertEquals(provider.getCredentials().getAWSAccessKeyId(), "testKey");

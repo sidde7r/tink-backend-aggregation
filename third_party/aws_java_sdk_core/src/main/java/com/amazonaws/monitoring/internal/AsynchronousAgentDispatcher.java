@@ -21,9 +21,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -31,15 +28,16 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Dispatches {@link MonitoringEvent}s to the local agent asynchronously.
- * <p />
- * The singleton instance of this class is meant to be used across multiple
- * {@link com.amazonaws.AmazonWebServiceClient}s that are producing monitoring
- * events meant to be sent to a local agent.  Each client that obtains a
- * reference to the instance must first call {@link #init()} before use, and
- * {@link #release()} when it is no longer needed.
+ *
+ * <p>The singleton instance of this class is meant to be used across multiple {@link
+ * com.amazonaws.AmazonWebServiceClient}s that are producing monitoring events meant to be sent to a
+ * local agent. Each client that obtains a reference to the instance must first call {@link #init()}
+ * before use, and {@link #release()} when it is no longer needed.
  */
 @SdkInternalApi
 public class AsynchronousAgentDispatcher {
@@ -54,10 +52,11 @@ public class AsynchronousAgentDispatcher {
     private volatile boolean initialized = false;
 
     private AsynchronousAgentDispatcher() {
-        this.writer = new ObjectMapper()
-                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-                .setPropertyNamingStrategy(new PropertyNamingStrategy.PascalCaseStrategy())
-                .writer();
+        this.writer =
+                new ObjectMapper()
+                        .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                        .setPropertyNamingStrategy(new PropertyNamingStrategy.PascalCaseStrategy())
+                        .writer();
     }
 
     @SdkTestInternalApi
@@ -66,15 +65,14 @@ public class AsynchronousAgentDispatcher {
     }
 
     /**
-     * Add a task to asynchronously write {@code event} to the {@code channel}
-     * if its serialized form does not exceed {@code maxSize}.
+     * Add a task to asynchronously write {@code event} to the {@code channel} if its serialized
+     * form does not exceed {@code maxSize}.
      *
      * @param event The event to write.
      * @param channel The channel to write to.
      * @param maxSize The maximum allowed size for the serialized {@code event}.
-     *
-     * @throws IllegalStateException If this dispatcher has not yet been
-     * initialized via {@link #init()}.
+     * @throws IllegalStateException If this dispatcher has not yet been initialized via {@link
+     *     #init()}.
      */
     public void addWriteTask(MonitoringEvent event, DatagramChannel channel, int maxSize) {
         if (!initialized) {
@@ -107,7 +105,7 @@ public class AsynchronousAgentDispatcher {
         }
     }
 
-    public synchronized static AsynchronousAgentDispatcher getInstance() {
+    public static synchronized AsynchronousAgentDispatcher getInstance() {
         if (instance == null) {
             instance = new AsynchronousAgentDispatcher();
         }
@@ -127,8 +125,10 @@ public class AsynchronousAgentDispatcher {
                     byte[] eventBytes = serialize(wt.event);
                     if (eventBytes.length > wt.maxSize) {
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("Event exceeds the send maximum event size of " + wt.maxSize
-                                    + ". Dropping event.");
+                            LOG.debug(
+                                    "Event exceeds the send maximum event size of "
+                                            + wt.maxSize
+                                            + ". Dropping event.");
                         }
                     } else {
                         wt.channel.write(ByteBuffer.wrap(eventBytes));

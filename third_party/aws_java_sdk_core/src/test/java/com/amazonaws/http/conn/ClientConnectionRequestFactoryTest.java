@@ -14,33 +14,35 @@
  */
 package com.amazonaws.http.conn;
 
-import tink.org.apache.http.HttpClientConnection;
-import tink.org.apache.http.conn.ConnectionPoolTimeoutException;
-import tink.org.apache.http.conn.ConnectionRequest;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import org.junit.Test;
+import tink.org.apache.http.HttpClientConnection;
+import tink.org.apache.http.conn.ConnectionPoolTimeoutException;
+import tink.org.apache.http.conn.ConnectionRequest;
 
 public class ClientConnectionRequestFactoryTest {
-    ConnectionRequest noop = new ConnectionRequest() {
+    ConnectionRequest noop =
+            new ConnectionRequest() {
 
-        @Override
-        public HttpClientConnection get(long timeout, TimeUnit tunit) throws InterruptedException, ExecutionException, ConnectionPoolTimeoutException {
-            return null;
-        }
+                @Override
+                public HttpClientConnection get(long timeout, TimeUnit tunit)
+                        throws InterruptedException, ExecutionException,
+                                ConnectionPoolTimeoutException {
+                    return null;
+                }
 
-        @Override
-        public boolean cancel() {
-            return false;
-        }
-    };
+                @Override
+                public boolean cancel() {
+                    return false;
+                }
+            };
 
     @Test
     public void wrapOnce() {
-        ConnectionRequest wrapped = ClientConnectionRequestFactory
-                .wrap(noop);
+        ConnectionRequest wrapped = ClientConnectionRequestFactory.wrap(noop);
         assertTrue(wrapped instanceof Wrapped);
     }
 

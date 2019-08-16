@@ -18,10 +18,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.net.URI;
-
-import org.junit.Rule;
-
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.DefaultRequest;
 import com.amazonaws.Request;
@@ -30,14 +26,13 @@ import com.amazonaws.http.HttpResponse;
 import com.amazonaws.http.HttpResponseHandler;
 import com.amazonaws.http.JsonErrorResponseHandler;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import java.net.URI;
+import org.junit.Rule;
 
-/**
- * Base class for tests that use a WireMock server
- */
+/** Base class for tests that use a WireMock server */
 public abstract class WireMockTestBase {
 
-    @Rule
-    public WireMockRule mockServer = new WireMockRule(0);
+    @Rule public WireMockRule mockServer = new WireMockRule(0);
 
     protected Request<?> newGetRequest(String resourcePath) {
         Request<?> request = newRequest(resourcePath);
@@ -52,7 +47,8 @@ public abstract class WireMockTestBase {
     }
 
     protected HttpResponseHandler<AmazonServiceException> stubErrorHandler() throws Exception {
-        HttpResponseHandler<AmazonServiceException> errorHandler = mock(JsonErrorResponseHandler.class);
+        HttpResponseHandler<AmazonServiceException> errorHandler =
+                mock(JsonErrorResponseHandler.class);
         when(errorHandler.handle(any(HttpResponse.class))).thenReturn(mockException());
         return errorHandler;
     }

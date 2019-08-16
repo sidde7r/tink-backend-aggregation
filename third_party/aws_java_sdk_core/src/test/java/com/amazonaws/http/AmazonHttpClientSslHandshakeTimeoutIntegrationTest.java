@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2016. Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
@@ -16,59 +15,56 @@
 
 package com.amazonaws.http;
 
+import static org.junit.Assert.fail;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.http.request.EmptyHttpRequest;
-import com.amazonaws.http.response.NullErrorResponseHandler;
-import com.amazonaws.http.response.NullResponseHandler;
-import com.amazonaws.http.server.MockServer;
-import tink.org.apache.http.HttpHost;
-import tink.org.apache.http.config.SocketConfig;
-import tink.org.apache.http.conn.ConnectTimeoutException;
-import tink.org.apache.http.conn.ManagedHttpClientConnection;
-import tink.org.apache.http.protocol.HttpContext;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.net.InetSocketAddress;
-
-import static org.junit.Assert.fail;
+import tink.org.apache.http.conn.ConnectTimeoutException;
 
 /**
- * This test is to verify that the apache-httpclient library has fixed the bug where socket timeout configuration is
- * incorrectly ignored during SSL handshake. This test is expected to hang (and fail after the junit timeout) if run
- * against the problematic httpclient version (e.g. 4.3).
+ * This test is to verify that the apache-httpclient library has fixed the bug where socket timeout
+ * configuration is incorrectly ignored during SSL handshake. This test is expected to hang (and
+ * fail after the junit timeout) if run against the problematic httpclient version (e.g. 4.3).
  *
  * @link https://issues.apache.org/jira/browse/HTTPCLIENT-1478
  */
-public class AmazonHttpClientSslHandshakeTimeoutIntegrationTest extends UnresponsiveMockServerTestBase {
+public class AmazonHttpClientSslHandshakeTimeoutIntegrationTest
+        extends UnresponsiveMockServerTestBase {
 
     private static final int CLIENT_SOCKET_TO = 1 * 1000;
 
     @Test(timeout = 60 * 1000)
     public void testSslHandshakeTimeout() {
-        AmazonHttpClient httpClient = new AmazonHttpClient(new ClientConfiguration()
-                .withSocketTimeout(CLIENT_SOCKET_TO).withMaxErrorRetry(0));
+        AmazonHttpClient httpClient =
+                new AmazonHttpClient(
+                        new ClientConfiguration()
+                                .withSocketTimeout(CLIENT_SOCKET_TO)
+                                .withMaxErrorRetry(0));
 
         System.out.println("Sending request to localhost...");
 
         try {
-            httpClient.requestExecutionBuilder()
+            httpClient
+                    .requestExecutionBuilder()
                     .request(new EmptyHttpRequest(server.getHttpsEndpoint(), HttpMethodName.GET))
                     .execute();
             fail("Client-side socket read timeout is expected!");
 
         } catch (AmazonClientException e) {
             /**
-             * Http client catches the SocketTimeoutException and throws a
-             * ConnectTimeoutException.
-             * {@link tink.org.apache.http.impl.conn.DefaultHttpClientConnectionOperator#connect(ManagedHttpClientConnection, HttpHost, InetSocketAddress, int, SocketConfig, HttpContext)}
+             * Http client catches the SocketTimeoutException and throws a ConnectTimeoutException.
+             * {@link
+             * tink.org.apache.http.impl.conn.DefaultHttpClientConnectionOperator#connect(ManagedHttpClientConnection,
+             * HttpHost, InetSocketAddress, int, SocketConfig, HttpContext)}
              */
             Assert.assertTrue(e.getCause() instanceof ConnectTimeoutException);
 
             ConnectTimeoutException cte = (ConnectTimeoutException) e.getCause();
-            Assert.assertThat(cte.getMessage(), org.hamcrest.Matchers
-                    .containsString("Read timed out"));
+            Assert.assertThat(
+                    cte.getMessage(), org.hamcrest.Matchers.containsString("Read timed out"));
         }
     }
 }

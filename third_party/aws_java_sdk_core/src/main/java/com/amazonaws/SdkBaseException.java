@@ -15,21 +15,17 @@
 package com.amazonaws;
 
 /**
- *
- * Base class for all exceptions thrown by the SDK.
- * Exception may be a client side exception or an unmarshalled service exception.
+ * Base class for all exceptions thrown by the SDK. Exception may be a client side exception or an
+ * unmarshalled service exception.
  */
 public class SdkBaseException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new SdkBaseException with the specified message, and root
-     * cause.
+     * Creates a new SdkBaseException with the specified message, and root cause.
      *
-     * @param message
-     *            An error message describing why this exception was thrown.
-     * @param t
-     *            The underlying cause of this exception.
+     * @param message An error message describing why this exception was thrown.
+     * @param t The underlying cause of this exception.
      */
     public SdkBaseException(String message, Throwable t) {
         super(message, t);
@@ -38,8 +34,7 @@ public class SdkBaseException extends RuntimeException {
     /**
      * Creates a new SdkBaseException with the specified message.
      *
-     * @param message
-     *            An error message describing why this exception was thrown.
+     * @param message An error message describing why this exception was thrown.
      */
     public SdkBaseException(String message) {
         super(message);
@@ -48,8 +43,7 @@ public class SdkBaseException extends RuntimeException {
     /**
      * Creates a new SdkBaseException with the root cause.
      *
-     * @param t
-     *          The underlying cause of this exception.
+     * @param t The underlying cause of this exception.
      */
     public SdkBaseException(Throwable t) {
         super(t);

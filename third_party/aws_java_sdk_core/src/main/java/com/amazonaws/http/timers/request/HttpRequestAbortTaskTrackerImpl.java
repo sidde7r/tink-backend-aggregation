@@ -14,22 +14,20 @@
  */
 package com.amazonaws.http.timers.request;
 
+import com.amazonaws.annotation.SdkInternalApi;
+import com.amazonaws.util.ValidationUtils;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
-import com.amazonaws.annotation.SdkInternalApi;
-import com.amazonaws.util.ValidationUtils;
-
-/**
- * Keeps track of the scheduled {@link HttpRequestAbortTask} and the associated {@link Future}
- */
+/** Keeps track of the scheduled {@link HttpRequestAbortTask} and the associated {@link Future} */
 @SdkInternalApi
 public class HttpRequestAbortTaskTrackerImpl implements HttpRequestAbortTaskTracker {
 
     private final HttpRequestAbortTask task;
     private final ScheduledFuture<?> future;
 
-    public HttpRequestAbortTaskTrackerImpl(final HttpRequestAbortTask task, final ScheduledFuture<?> future) {
+    public HttpRequestAbortTaskTrackerImpl(
+            final HttpRequestAbortTask task, final ScheduledFuture<?> future) {
         this.task = ValidationUtils.assertNotNull(task, "task");
         this.future = ValidationUtils.assertNotNull(future, "future");
     }
@@ -48,5 +46,4 @@ public class HttpRequestAbortTaskTrackerImpl implements HttpRequestAbortTaskTrac
     public void cancelTask() {
         future.cancel(false);
     }
-
 }

@@ -14,16 +14,15 @@
  */
 package com.amazonaws.protocol.json;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.annotation.SdkInternalApi;
+import com.amazonaws.util.BinaryUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Date;
-
-import com.amazonaws.annotation.SdkInternalApi;
-import com.amazonaws.SdkClientException;
-import com.amazonaws.util.BinaryUtils;
 import software.amazon.ion.IonType;
 import software.amazon.ion.IonWriter;
 import software.amazon.ion.Timestamp;
@@ -222,7 +221,8 @@ abstract class SdkIonGenerator implements StructuredJsonGenerator {
     private static class ByteArraySdkIonGenerator extends SdkIonGenerator {
         private final ByteArrayOutputStream bytes;
 
-        public ByteArraySdkIonGenerator(ByteArrayOutputStream bytes, IonWriter writer, String contentType) {
+        public ByteArraySdkIonGenerator(
+                ByteArrayOutputStream bytes, IonWriter writer, String contentType) {
             super(writer, contentType);
             this.bytes = bytes;
         }

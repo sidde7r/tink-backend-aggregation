@@ -19,9 +19,8 @@
 
 package com.amazonaws.regions;
 
-import org.junit.*;
-
 import com.amazonaws.*;
+import org.junit.*;
 
 public class RegionsTest {
 
@@ -35,21 +34,18 @@ public class RegionsTest {
     public void testSetEndpointByRegion() {
 
         InMemoryRegionImpl regionImpl = new InMemoryRegionImpl("region", "example.com");
-        regionImpl.addEndpoint("service",
-                "service-region.example.com");
+        regionImpl.addEndpoint("service", "service-region.example.com");
         Region region = new Region(regionImpl);
 
         // This should use the configured region.
         AmazonServiceClient service = new AmazonServiceClient();
         service.setRegion(region);
-        Assert.assertEquals("https://service-region.example.com",
-                            service.getEndpoint());
+        Assert.assertEquals("https://service-region.example.com", service.getEndpoint());
 
         // This should guess at an endpoint based on the region's domain.
         AmazonUnknownServiceClient unknown = new AmazonUnknownServiceClient();
         unknown.setRegion(region);
-        Assert.assertEquals("https://unknownservice.region.example.com",
-                            unknown.getEndpoint());
+        Assert.assertEquals("https://unknownservice.region.example.com", unknown.getEndpoint());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -73,7 +69,7 @@ public class RegionsTest {
     }
 
     private static class AmazonServiceClient extends AmazonWebServiceClient {
-        
+
         public AmazonServiceClient() {
             super(new ClientConfiguration());
         }
@@ -83,8 +79,7 @@ public class RegionsTest {
         }
     }
 
-    private static class AmazonUnknownServiceClient
-            extends AmazonWebServiceClient {
+    private static class AmazonUnknownServiceClient extends AmazonWebServiceClient {
 
         public AmazonUnknownServiceClient() {
             super(new ClientConfiguration());

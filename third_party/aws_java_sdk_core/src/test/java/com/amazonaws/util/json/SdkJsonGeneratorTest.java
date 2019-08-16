@@ -14,30 +14,26 @@
  */
 package com.amazonaws.util.json;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.amazonaws.protocol.json.SdkJsonGenerator;
 import com.amazonaws.protocol.json.StructuredJsonGenerator;
 import com.amazonaws.util.Base64;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Date;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 
 public class SdkJsonGeneratorTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    /**
-     * Delta for comparing double values
-     */
+    /** Delta for comparing double values */
     private static final double DELTA = .0001;
 
     private StructuredJsonGenerator jsonGenerator;
@@ -74,7 +70,7 @@ public class SdkJsonGeneratorTest {
 
     @Test
     public void simpleObject_WithBinaryData_WritesAsBase64() throws IOException {
-        byte[] data = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        byte[] data = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         jsonGenerator.writeStartObject();
         jsonGenerator.writeFieldName("binaryProp").writeValue(ByteBuffer.wrap(data));
         jsonGenerator.writeEndObject();
@@ -139,5 +135,4 @@ public class SdkJsonGeneratorTest {
     private JsonNode toJsonNode() throws IOException {
         return MAPPER.readTree(jsonGenerator.getBytes());
     }
-
 }

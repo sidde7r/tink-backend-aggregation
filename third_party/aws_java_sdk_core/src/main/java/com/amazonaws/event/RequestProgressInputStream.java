@@ -19,9 +19,7 @@ import static com.amazonaws.event.SDKProgressPublisher.publishRequestReset;
 
 import java.io.InputStream;
 
-/**
- * Used for request input stream progress tracking purposes.
- */
+/** Used for request input stream progress tracking purposes. */
 class RequestProgressInputStream extends ProgressInputStream {
 
     RequestProgressInputStream(InputStream is, ProgressListener listener) {

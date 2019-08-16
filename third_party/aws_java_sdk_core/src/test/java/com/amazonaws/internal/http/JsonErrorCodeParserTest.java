@@ -17,24 +17,18 @@ package com.amazonaws.internal.http;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Test;
-
 import com.amazonaws.http.HttpResponse;
-import com.amazonaws.internal.http.JsonErrorCodeParser;
 import com.amazonaws.protocol.json.JsonContent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.junit.Test;
 
 public class JsonErrorCodeParserTest {
 
-    /**
-     * Value of error type present in headers for tests below
-     */
+    /** Value of error type present in headers for tests below */
     private static final String HEADER_ERROR_TYPE = "headerErrorType";
 
-    /**
-     * Value of error type present in JSON content for tests below
-     */
+    /** Value of error type present in JSON content for tests below */
     private static final String JSON_ERROR_TYPE = "jsonErrorType";
 
     private static final String ERROR_FIELD_NAME = "testErrorCode";
@@ -44,30 +38,38 @@ public class JsonErrorCodeParserTest {
 
     @Test
     public void parseErrorType_ErrorTypeInHeadersTakesPrecedence_NoSuffix() {
-        String actualErrorType = parser.parseErrorCode(
-                httpResponseWithHeaders(JsonErrorCodeParser.X_AMZN_ERROR_TYPE, HEADER_ERROR_TYPE),
-                toJsonContent(JSON_ERROR_TYPE));
+        String actualErrorType =
+                parser.parseErrorCode(
+                        httpResponseWithHeaders(
+                                JsonErrorCodeParser.X_AMZN_ERROR_TYPE, HEADER_ERROR_TYPE),
+                        toJsonContent(JSON_ERROR_TYPE));
         assertEquals(HEADER_ERROR_TYPE, actualErrorType);
     }
 
     @Test
     public void parseErrorType_ErrorTypeInHeadersTakesPrecedence_SuffixIgnored() {
-        String actualErrorType = parser.parseErrorCode(
-                httpResponseWithHeaders(JsonErrorCodeParser.X_AMZN_ERROR_TYPE,
-                        String.format("%s:%s", HEADER_ERROR_TYPE, "someSuffix")), toJsonContent(JSON_ERROR_TYPE));
+        String actualErrorType =
+                parser.parseErrorCode(
+                        httpResponseWithHeaders(
+                                JsonErrorCodeParser.X_AMZN_ERROR_TYPE,
+                                String.format("%s:%s", HEADER_ERROR_TYPE, "someSuffix")),
+                        toJsonContent(JSON_ERROR_TYPE));
         assertEquals(HEADER_ERROR_TYPE, actualErrorType);
     }
 
     @Test
     public void parseErrorType_ErrorTypeInContent_NoPrefix() {
-        String actualErrorType = parser.parseErrorCode(httpResponseWithoutHeaders(), toJsonContent(JSON_ERROR_TYPE));
+        String actualErrorType =
+                parser.parseErrorCode(httpResponseWithoutHeaders(), toJsonContent(JSON_ERROR_TYPE));
         assertEquals(JSON_ERROR_TYPE, actualErrorType);
     }
 
     @Test
     public void parseErrorType_ErrorTypeInContent_PrefixIgnored() {
-        String actualErrorType = parser.parseErrorCode(httpResponseWithoutHeaders(),
-                toJsonContent(String.format("%s#%s", "somePrefix", JSON_ERROR_TYPE)));
+        String actualErrorType =
+                parser.parseErrorCode(
+                        httpResponseWithoutHeaders(),
+                        toJsonContent(String.format("%s#%s", "somePrefix", JSON_ERROR_TYPE)));
         assertEquals(JSON_ERROR_TYPE, actualErrorType);
     }
 
@@ -78,7 +80,10 @@ public class JsonErrorCodeParserTest {
 
     @Test
     public void parseErrorType_NotPresentInHeadersAndEmptyContent_ReturnsNull() {
-        assertNull(parser.parseErrorCode(httpResponseWithoutHeaders(), new JsonContent(null, new ObjectMapper().createObjectNode())));
+        assertNull(
+                parser.parseErrorCode(
+                        httpResponseWithoutHeaders(),
+                        new JsonContent(null, new ObjectMapper().createObjectNode())));
     }
 
     private static JsonContent toJsonContent(String errorType) {

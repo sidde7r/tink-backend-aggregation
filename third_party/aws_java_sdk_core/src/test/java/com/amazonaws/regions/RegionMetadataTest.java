@@ -19,9 +19,7 @@
 package com.amazonaws.regions;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,18 +30,24 @@ public class RegionMetadataTest {
 
     @BeforeClass
     public static void setUp() {
-        Region us_east_1_region = new Region(new InMemoryRegionImpl
-                ("us-east-1",
-                null).addEndpoint("s3", "s3.amazonaws.com"));
+        Region us_east_1_region =
+                new Region(
+                        new InMemoryRegionImpl("us-east-1", null)
+                                .addEndpoint("s3", "s3.amazonaws.com"));
 
-        Region us_west_1_region = new Region(new InMemoryRegionImpl
-                ("us-west-1", null).addEndpoint("s3", "s3-us-west-1.amazonaws.com"));
+        Region us_west_1_region =
+                new Region(
+                        new InMemoryRegionImpl("us-west-1", null)
+                                .addEndpoint("s3", "s3-us-west-1.amazonaws.com"));
 
-        Region cn_north_1_region = new Region(new InMemoryRegionImpl("cn-north-1",
-                "amazonaws.com.cn"));
+        Region cn_north_1_region =
+                new Region(new InMemoryRegionImpl("cn-north-1", "amazonaws.com.cn"));
 
-        metadata = new RegionMetadata(new InMemoryRegionsProvider(Arrays
-                .asList(us_east_1_region, us_west_1_region,cn_north_1_region)));
+        metadata =
+                new RegionMetadata(
+                        new InMemoryRegionsProvider(
+                                Arrays.asList(
+                                        us_east_1_region, us_west_1_region, cn_north_1_region)));
     }
 
     @Test
@@ -80,8 +84,7 @@ public class RegionMetadataTest {
 
     @Test
     public void testGetRegionByEndpoint() {
-        Region region =
-            metadata.getRegionByEndpoint("s3-us-west-1.amazonaws.com");
+        Region region = metadata.getRegionByEndpoint("s3-us-west-1.amazonaws.com");
 
         Assert.assertNotNull(region);
         Assert.assertEquals("us-west-1", region.getName());

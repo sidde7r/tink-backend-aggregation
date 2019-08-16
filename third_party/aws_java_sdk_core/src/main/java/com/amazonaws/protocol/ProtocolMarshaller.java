@@ -17,21 +17,19 @@ package com.amazonaws.protocol;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkProtectedApi;
 
-/**
- * Interface used by generated marshallers to marshall a Java POJO.
- */
+/** Interface used by generated marshallers to marshall a Java POJO. */
 @SdkProtectedApi
 public interface ProtocolMarshaller {
 
     /**
-     * Marshalls the value into the appropriate location based on the {@link MarshallingInfo} metadata.
+     * Marshalls the value into the appropriate location based on the {@link MarshallingInfo}
+     * metadata.
      *
-     * @param val             Value to marshall. May be null if the location allows it (for example, members bound to the path
-     *                        must never be null or empty).
+     * @param val Value to marshall. May be null if the location allows it (for example, members
+     *     bound to the path must never be null or empty).
      * @param marshallingInfo Metadata about how and where to marshall the data. Must not be null.
-     * @throws com.amazonaws.SdkClientException If invalid parameters or combination of parameters are provided (I.E. null value
-     *                                          provided for member bound to the path).
+     * @throws com.amazonaws.SdkClientException If invalid parameters or combination of parameters
+     *     are provided (I.E. null value provided for member bound to the path).
      */
     <T> void marshall(T val, MarshallingInfo<T> marshallingInfo) throws SdkClientException;
-
 }

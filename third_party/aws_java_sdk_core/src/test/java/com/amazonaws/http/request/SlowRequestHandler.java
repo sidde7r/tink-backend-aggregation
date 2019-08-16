@@ -22,9 +22,7 @@ import com.amazonaws.Request;
 import com.amazonaws.Response;
 import com.amazonaws.handlers.RequestHandler2;
 
-/**
- * Implementation of {@link RequestHandler2} with configurable wait times
- */
+/** Implementation of {@link RequestHandler2} with configurable wait times */
 public class SlowRequestHandler extends RequestHandler2 {
 
     private int beforeRequestWait;
@@ -71,5 +69,4 @@ public class SlowRequestHandler extends RequestHandler2 {
         this.afterErrorWait = afterErrorWait;
         return this;
     }
-
 }

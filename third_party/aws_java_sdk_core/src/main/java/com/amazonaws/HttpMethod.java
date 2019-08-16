@@ -14,11 +14,12 @@
  */
 package com.amazonaws;
 
-/**
- * Enumeration of valid HTTP methods.
- */
+/** Enumeration of valid HTTP methods. */
 public enum HttpMethod {
-
-    GET, POST, PUT, DELETE, HEAD, PATCH;
-
+    GET,
+    POST,
+    PUT,
+    DELETE,
+    HEAD,
+    PATCH;
 }

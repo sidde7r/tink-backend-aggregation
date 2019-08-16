@@ -18,14 +18,10 @@ import com.amazonaws.AmazonWebServiceClient;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.util.ValidationUtils;
-
 import java.lang.reflect.Constructor;
 import java.util.Collection;
 
-/**
- * Metadata for an AWS region, including its name and what services
- * are available in it.
- */
+/** Metadata for an AWS region, including its name and what services are available in it. */
 public class Region {
 
     private final RegionImpl regionImpl;
@@ -36,8 +32,8 @@ public class Region {
     }
 
     /**
-     * Returns the region with the id given, or null if it cannot be found in
-     * the current regions.xml file.
+     * Returns the region with the id given, or null if it cannot be found in the current
+     * regions.xml file.
      */
     public static Region getRegion(Regions region) {
         return RegionUtils.getRegion(region.getName());
@@ -73,10 +69,8 @@ public class Region {
     /**
      * Returns the endpoint for the service given.
      *
-     * @param endpointPrefix
-     *         The service endpoint prefix which can be retrieved from the
-     *         constant ENDPOINT_PREFIX of the specific service client interface,
-     *         e.g. AmazonEC2.ENDPOINT_PREFIX.
+     * @param endpointPrefix The service endpoint prefix which can be retrieved from the constant
+     *     ENDPOINT_PREFIX of the specific service client interface, e.g. AmazonEC2.ENDPOINT_PREFIX.
      */
     public String getServiceEndpoint(String endpointPrefix) {
         return regionImpl.getServiceEndpoint(endpointPrefix);
@@ -85,10 +79,8 @@ public class Region {
     /**
      * Returns whether the given service is supported in this region.
      *
-     * @param serviceName
-     *         The service endpoint prefix which can be retrieved from the
-     *         constant ENDPOINT_PREFIX of the specific service client interface,
-     *         e.g. AmazonEC2.ENDPOINT_PREFIX.
+     * @param serviceName The service endpoint prefix which can be retrieved from the constant
+     *     ENDPOINT_PREFIX of the specific service client interface, e.g. AmazonEC2.ENDPOINT_PREFIX.
      */
     public boolean isServiceSupported(String serviceName) {
         return regionImpl.isServiceSupported(serviceName);
@@ -97,10 +89,8 @@ public class Region {
     /**
      * Returns whether the given service support the https protocol in this region.
      *
-     * @param serviceName
-     *         The service endpoint prefix which can be retrieved from the
-     *         constant ENDPOINT_PREFIX of the specific service client interface,
-     *         e.g. AmazonEC2.ENDPOINT_PREFIX.
+     * @param serviceName The service endpoint prefix which can be retrieved from the constant
+     *     ENDPOINT_PREFIX of the specific service client interface, e.g. AmazonEC2.ENDPOINT_PREFIX.
      */
     public boolean hasHttpsEndpoint(String serviceName) {
         return regionImpl.hasHttpsEndpoint(serviceName);
@@ -109,40 +99,33 @@ public class Region {
     /**
      * Returns whether the given service support the http protocol in this region.
      *
-     * @param serviceName
-     *         The service endpoint prefix which can be retrieved from the
-     *         constant ENDPOINT_PREFIX of the specific service client interface,
-     *         e.g. AmazonEC2.ENDPOINT_PREFIX.
+     * @param serviceName The service endpoint prefix which can be retrieved from the constant
+     *     ENDPOINT_PREFIX of the specific service client interface, e.g. AmazonEC2.ENDPOINT_PREFIX.
      */
     public boolean hasHttpEndpoint(String serviceName) {
         return regionImpl.hasHttpEndpoint(serviceName);
     }
 
-    /**
-     * Returns a immutable collection of all endpoints available in the
-     * metadata.
-     */
+    /** Returns a immutable collection of all endpoints available in the metadata. */
     public Collection<String> getAvailableEndpoints() {
         return regionImpl.getAvailableEndpoints();
     }
 
     /**
-     * Creates a new service client of the class given and configures it. If
-     * credentials or config are null, defaults will be used.
+     * Creates a new service client of the class given and configures it. If credentials or config
+     * are null, defaults will be used.
      *
      * @param serviceClass The service client class to instantiate, e.g. AmazonS3Client.class
-     * @param credentials  The credentials provider to use, or null for the default
-     *                     credentials provider
-     * @param config       The configuration to use, or null for the default
-     *                     configuration
-     * @deprecated use appropriate {@link com.amazonaws.client.builder.AwsClientBuilder} implementation
-     *             for the service being constructed. For example:
-     *             {@code AmazonSNSClientBuilder.standard().withRegion(region).build();}
+     * @param credentials The credentials provider to use, or null for the default credentials
+     *     provider
+     * @param config The configuration to use, or null for the default configuration
+     * @deprecated use appropriate {@link com.amazonaws.client.builder.AwsClientBuilder}
+     *     implementation for the service being constructed. For example: {@code
+     *     AmazonSNSClientBuilder.standard().withRegion(region).build();}
      */
     @Deprecated
-    public <T extends AmazonWebServiceClient> T createClient(Class<T> serviceClass,
-                                                             AWSCredentialsProvider credentials,
-                                                             ClientConfiguration config) {
+    public <T extends AmazonWebServiceClient> T createClient(
+            Class<T> serviceClass, AWSCredentialsProvider credentials, ClientConfiguration config) {
         Constructor<T> constructor;
         T client;
         try {
@@ -156,7 +139,9 @@ public class Region {
                 constructor = serviceClass.getConstructor(AWSCredentialsProvider.class);
                 client = constructor.newInstance(credentials);
             } else {
-                constructor = serviceClass.getConstructor(AWSCredentialsProvider.class, ClientConfiguration.class);
+                constructor =
+                        serviceClass.getConstructor(
+                                AWSCredentialsProvider.class, ClientConfiguration.class);
                 client = constructor.newInstance(credentials, config);
             }
 
@@ -169,8 +154,7 @@ public class Region {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Region == false)
-            return false;
+        if (obj instanceof Region == false) return false;
 
         Region region = (Region) obj;
         return this.getName().equals(region.getName());
@@ -185,5 +169,4 @@ public class Region {
     public String toString() {
         return getName();
     }
-
 }

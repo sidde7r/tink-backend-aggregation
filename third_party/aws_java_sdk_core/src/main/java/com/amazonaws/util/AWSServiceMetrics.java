@@ -18,20 +18,22 @@ package com.amazonaws.util;
 import com.amazonaws.metrics.ServiceMetricType;
 
 /**
- * Predefined AWS SDK non-request specific metric types general across all AWS
- * clients. Client specific predefined metrics like S3 or DynamoDB are defined
- * in the client specific packages.
+ * Predefined AWS SDK non-request specific metric types general across all AWS clients. Client
+ * specific predefined metrics like S3 or DynamoDB are defined in the client specific packages.
  */
 public enum AWSServiceMetrics implements ServiceMetricType {
-    /**
-     * Time taken to get a connection by the http client library.
-     */
+    /** Time taken to get a connection by the http client library. */
     HttpClientGetConnectionTime("HttpClient"),
     ;
 
     private final String serviceName;
+
     private AWSServiceMetrics(String serviceName) {
         this.serviceName = serviceName;
     }
-    @Override public String getServiceName() { return serviceName; }
+
+    @Override
+    public String getServiceName() {
+        return serviceName;
+    }
 }

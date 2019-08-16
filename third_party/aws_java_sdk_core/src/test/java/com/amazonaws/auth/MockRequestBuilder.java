@@ -15,22 +15,21 @@
 
 package com.amazonaws.auth;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.amazonaws.SignableRequest;
 import com.amazonaws.http.HttpMethodName;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 class MockRequestBuilder {
     private final SignableRequest<?> request;
@@ -41,20 +40,26 @@ class MockRequestBuilder {
         this.request = mock(SignableRequest.class);
         when(request.getHeaders()).thenReturn(headers);
 
-        doAnswer(new KeyValuePairHandler() {
-            @Override
-            void apply(String name, String value) {
-                headers.put(name, value);
-            }
-        }).when(request).addHeader(anyString(), anyString());
+        doAnswer(
+                        new KeyValuePairHandler() {
+                            @Override
+                            void apply(String name, String value) {
+                                headers.put(name, value);
+                            }
+                        })
+                .when(request)
+                .addHeader(anyString(), anyString());
 
         when(request.getParameters()).thenReturn(parameters);
-        doAnswer(new KeyValuePairHandler() {
-            @Override
-            void apply(String name, String value) {
-                addParameter(name, value);
-            }
-        }).when(request).addParameter(anyString(), anyString());
+        doAnswer(
+                        new KeyValuePairHandler() {
+                            @Override
+                            void apply(String name, String value) {
+                                addParameter(name, value);
+                            }
+                        })
+                .when(request)
+                .addParameter(anyString(), anyString());
 
         when(request.getHttpMethod()).thenReturn(HttpMethodName.POST);
         when(request.getTimeOffset()).thenReturn(0);
@@ -100,7 +105,8 @@ class MockRequestBuilder {
     }
 
     private void addParameter(String name, String value) {
-        List<String> lst = parameters.containsKey(name) ? parameters.get(name) : new ArrayList<String>();
+        List<String> lst =
+                parameters.containsKey(name) ? parameters.get(name) : new ArrayList<String>();
         lst.add(value);
         parameters.put(name, lst);
     }

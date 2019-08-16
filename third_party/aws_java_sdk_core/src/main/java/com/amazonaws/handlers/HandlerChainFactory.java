@@ -27,19 +27,20 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-/**
- * Factory for creating request/response handler chains.
- */
+/** Factory for creating request/response handler chains. */
 public class HandlerChainFactory {
 
-    private static final String GLOBAL_HANDLER_PATH = "com/amazonaws/global/handlers/request.handler2s";
+    private static final String GLOBAL_HANDLER_PATH =
+            "com/amazonaws/global/handlers/request.handler2s";
 
     /**
-     * For backward compatibility, constructs a new request handler chain adapted to {@link RequestHandler2} by analyzing the
-     * specified classpath resource.
+     * For backward compatibility, constructs a new request handler chain adapted to {@link
+     * RequestHandler2} by analyzing the specified classpath resource.
      *
-     * @param resource The resource to load from the classpath containing the list of request handlers to instantiate.
-     * @return A list of request handlers based on the handlers referenced in the specified resource.
+     * @param resource The resource to load from the classpath containing the list of request
+     *     handlers to instantiate.
+     * @return A list of request handlers based on the handlers referenced in the specified
+     *     resource.
      */
     public List<RequestHandler2> newRequestHandlerChain(String resource) {
         return createRequestHandlerChain(resource, RequestHandler.class);
@@ -48,8 +49,10 @@ public class HandlerChainFactory {
     /**
      * Constructs a new request handler (v2) chain by analyzing the specified classpath resource.
      *
-     * @param resource The resource to load from the classpath containing the list of request handlers to instantiate.
-     * @return A list of request handlers based on the handlers referenced in the specified resource.
+     * @param resource The resource to load from the classpath containing the list of request
+     *     handlers to instantiate.
+     * @return A list of request handlers based on the handlers referenced in the specified
+     *     resource.
      */
     public List<RequestHandler2> newRequestHandler2Chain(String resource) {
         return createRequestHandlerChain(resource, RequestHandler2.class);
@@ -60,18 +63,20 @@ public class HandlerChainFactory {
         BufferedReader fileReader = null;
 
         try {
-            List<URL> globalHandlerListLocations = Collections
-                    .list(getGlobalHandlerResources());
+            List<URL> globalHandlerListLocations = Collections.list(getGlobalHandlerResources());
 
             for (URL url : globalHandlerListLocations) {
 
-                fileReader = new BufferedReader(new InputStreamReader(url.openStream(), StringUtils.UTF8));
+                fileReader =
+                        new BufferedReader(
+                                new InputStreamReader(url.openStream(), StringUtils.UTF8));
                 while (true) {
                     String requestHandlerClassName = fileReader.readLine();
                     if (requestHandlerClassName == null) {
                         break;
                     }
-                    RequestHandler2 requestHandler = createRequestHandler(requestHandlerClassName, RequestHandler2.class);
+                    RequestHandler2 requestHandler =
+                            createRequestHandler(requestHandlerClassName, RequestHandler2.class);
                     if (requestHandler == null) {
                         continue;
                     }
@@ -80,8 +85,8 @@ public class HandlerChainFactory {
             }
 
         } catch (Exception e) {
-            throw new AmazonClientException("Unable to instantiate request handler chain for client: "
-                                            + e.getMessage(), e);
+            throw new AmazonClientException(
+                    "Unable to instantiate request handler chain for client: " + e.getMessage(), e);
         } finally {
             try {
                 if (fileReader != null) {
@@ -107,9 +112,8 @@ public class HandlerChainFactory {
         if (handlerClassName.equals("")) {
             return null;
         }
-        Class<?> requestHandlerClass = ClassLoaderHelper.loadClass(
-                handlerClassName,
-                handlerApiClass, getClass());
+        Class<?> requestHandlerClass =
+                ClassLoaderHelper.loadClass(handlerClassName, handlerApiClass, getClass());
         Object requestHandlerObject = requestHandlerClass.newInstance();
         if (handlerApiClass.isInstance(requestHandlerObject)) {
             if (handlerApiClass == RequestHandler2.class) {
@@ -124,14 +128,17 @@ public class HandlerChainFactory {
         } else {
             throw new AmazonClientException(
                     "Unable to instantiate request handler chain for client.  "
-                    + "Listed request handler ('"
-                    + handlerClassName + "') "
-                    + "does not implement the "
-                    + handlerApiClass + " API.");
+                            + "Listed request handler ('"
+                            + handlerClassName
+                            + "') "
+                            + "does not implement the "
+                            + handlerApiClass
+                            + " API.");
         }
     }
 
-    private List<RequestHandler2> createRequestHandlerChain(String resource, Class<?> handlerApiClass) {
+    private List<RequestHandler2> createRequestHandlerChain(
+            String resource, Class<?> handlerApiClass) {
         List<RequestHandler2> handlers = new ArrayList<RequestHandler2>();
         BufferedReader reader = null;
 
@@ -147,15 +154,16 @@ public class HandlerChainFactory {
                 if (requestHandlerClassName == null) {
                     break;
                 }
-                RequestHandler2 requestHandler = createRequestHandler(requestHandlerClassName, handlerApiClass);
+                RequestHandler2 requestHandler =
+                        createRequestHandler(requestHandlerClassName, handlerApiClass);
                 if (requestHandler == null) {
                     continue;
                 }
                 handlers.add(requestHandler);
             }
         } catch (Exception e) {
-            throw new AmazonClientException("Unable to instantiate request handler chain for client: "
-                                            + e.getMessage(), e);
+            throw new AmazonClientException(
+                    "Unable to instantiate request handler chain for client: " + e.getMessage(), e);
         } finally {
             try {
                 if (reader != null) {

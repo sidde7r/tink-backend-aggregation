@@ -14,9 +14,12 @@
  */
 package com.amazonaws.http.protocol;
 
+import com.amazonaws.internal.SdkMetricsSocket;
+import com.amazonaws.internal.SdkSSLMetricsSocket;
+import com.amazonaws.util.AWSRequestMetrics;
+import com.amazonaws.util.AWSRequestMetrics.Field;
 import java.io.IOException;
 import java.net.Socket;
-
 import tink.org.apache.http.HttpClientConnection;
 import tink.org.apache.http.HttpException;
 import tink.org.apache.http.HttpRequest;
@@ -25,36 +28,29 @@ import tink.org.apache.http.conn.ManagedHttpClientConnection;
 import tink.org.apache.http.protocol.HttpContext;
 import tink.org.apache.http.protocol.HttpRequestExecutor;
 
-import com.amazonaws.internal.SdkMetricsSocket;
-import com.amazonaws.internal.SdkSSLMetricsSocket;
-import com.amazonaws.util.AWSRequestMetrics;
-import com.amazonaws.util.AWSRequestMetrics.Field;
-
 /**
- * Used to capture the http send-request and receive-response latency metrics
- * of the http client library, with no retries involved.
+ * Used to capture the http send-request and receive-response latency metrics of the http client
+ * library, with no retries involved.
  */
 public class SdkHttpRequestExecutor extends HttpRequestExecutor {
     @Override
     protected HttpResponse doSendRequest(
-        final HttpRequest request,
-        final HttpClientConnection conn,
-        final HttpContext context)
-        throws IOException, HttpException {
-        AWSRequestMetrics awsRequestMetrics = (AWSRequestMetrics) context
-            .getAttribute(AWSRequestMetrics.SIMPLE_NAME);
+            final HttpRequest request, final HttpClientConnection conn, final HttpContext context)
+            throws IOException, HttpException {
+        AWSRequestMetrics awsRequestMetrics =
+                (AWSRequestMetrics) context.getAttribute(AWSRequestMetrics.SIMPLE_NAME);
 
         if (awsRequestMetrics == null) {
             return super.doSendRequest(request, conn, context);
         }
         if (conn instanceof ManagedHttpClientConnection) {
-            ManagedHttpClientConnection managedConn = (ManagedHttpClientConnection)conn;
+            ManagedHttpClientConnection managedConn = (ManagedHttpClientConnection) conn;
             Socket sock = managedConn.getSocket();
             if (sock instanceof SdkMetricsSocket) {
-                SdkMetricsSocket sdkMetricsSocket = (SdkMetricsSocket)sock;
+                SdkMetricsSocket sdkMetricsSocket = (SdkMetricsSocket) sock;
                 sdkMetricsSocket.setMetrics(awsRequestMetrics);
             } else if (sock instanceof SdkSSLMetricsSocket) {
-                SdkSSLMetricsSocket sdkSSLMetricsSocket = (SdkSSLMetricsSocket)sock;
+                SdkSSLMetricsSocket sdkSSLMetricsSocket = (SdkSSLMetricsSocket) sock;
                 sdkSSLMetricsSocket.setMetrics(awsRequestMetrics);
             }
         }
@@ -68,12 +64,10 @@ public class SdkHttpRequestExecutor extends HttpRequestExecutor {
 
     @Override
     protected HttpResponse doReceiveResponse(
-        final HttpRequest          request,
-        final HttpClientConnection conn,
-        final HttpContext          context)
-        throws HttpException, IOException {
-        AWSRequestMetrics awsRequestMetrics = (AWSRequestMetrics) context
-            .getAttribute(AWSRequestMetrics.SIMPLE_NAME);
+            final HttpRequest request, final HttpClientConnection conn, final HttpContext context)
+            throws HttpException, IOException {
+        AWSRequestMetrics awsRequestMetrics =
+                (AWSRequestMetrics) context.getAttribute(AWSRequestMetrics.SIMPLE_NAME);
         if (awsRequestMetrics == null) {
             return super.doReceiveResponse(request, conn, context);
         }

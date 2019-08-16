@@ -31,29 +31,23 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Default implementation of HttpResponseHandler that handles a successful
- * response from an AWS service and unmarshalls the result using a StAX
- * unmarshaller.
+ * Default implementation of HttpResponseHandler that handles a successful response from an AWS
+ * service and unmarshalls the result using a StAX unmarshaller.
  *
  * @param <T> Indicates the type being unmarshalled by this response handler.
  */
 public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServiceResponse<T>> {
 
-    /**
-     * The StAX unmarshaller to use when handling the response
-     */
+    /** The StAX unmarshaller to use when handling the response */
     private Unmarshaller<T, StaxUnmarshallerContext> responseUnmarshaller;
 
-    /**
-     * Shared logger for profiling information
-     */
+    /** Shared logger for profiling information */
     private static final Log log = LogFactory.getLog("com.amazonaws.request");
 
     /**
-     * Constructs a new response handler that will use the specified StAX
-     * unmarshaller to unmarshall the service response and uses the specified
-     * response element path to find the root of the business data in the
-     * service's response.
+     * Constructs a new response handler that will use the specified StAX unmarshaller to unmarshall
+     * the service response and uses the specified response element path to find the root of the
+     * business data in the service's response.
      *
      * @param responseUnmarshaller The StAX unmarshaller to use on the response.
      */
@@ -72,10 +66,7 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
         }
     }
 
-
-    /**
-     * @see HttpResponseHandler#handle(HttpResponse)
-     */
+    /** @see HttpResponseHandler#handle(HttpResponse) */
     public AmazonWebServiceResponse<T> handle(HttpResponse response) throws Exception {
         log.trace("Parsing service response XML");
         InputStream content = response.getContent();
@@ -92,9 +83,12 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
 
         try {
             AmazonWebServiceResponse<T> awsResponse = new AmazonWebServiceResponse<T>();
-            StaxUnmarshallerContext unmarshallerContext = new StaxUnmarshallerContext(eventReader, response.getHeaders());
-            unmarshallerContext.registerMetadataExpression("ResponseMetadata/RequestId", 2, ResponseMetadata.AWS_REQUEST_ID);
-            unmarshallerContext.registerMetadataExpression("requestId", 2, ResponseMetadata.AWS_REQUEST_ID);
+            StaxUnmarshallerContext unmarshallerContext =
+                    new StaxUnmarshallerContext(eventReader, response.getHeaders());
+            unmarshallerContext.registerMetadataExpression(
+                    "ResponseMetadata/RequestId", 2, ResponseMetadata.AWS_REQUEST_ID);
+            unmarshallerContext.registerMetadataExpression(
+                    "requestId", 2, ResponseMetadata.AWS_REQUEST_ID);
             registerAdditionalMetadataExpressions(unmarshallerContext);
 
             T result = responseUnmarshaller.unmarshall(unmarshallerContext);
@@ -104,8 +98,9 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
             Map<String, String> responseHeaders = response.getHeaders();
             if (responseHeaders != null) {
                 if (responseHeaders.get(X_AMZN_REQUEST_ID_HEADER) != null) {
-                    metadata.put(ResponseMetadata.AWS_REQUEST_ID,
-                                 responseHeaders.get(X_AMZN_REQUEST_ID_HEADER));
+                    metadata.put(
+                            ResponseMetadata.AWS_REQUEST_ID,
+                            responseHeaders.get(X_AMZN_REQUEST_ID_HEADER));
                 }
             }
             awsResponse.setResponseMetadata(getResponseMetadata(metadata));
@@ -124,8 +119,8 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
     }
 
     /**
-     * If the exception was caused by an {@link IOException}, wrap it an another IOE so
-     * that it will be exposed to the RetryPolicy.
+     * If the exception was caused by an {@link IOException}, wrap it an another IOE so that it will
+     * be exposed to the RetryPolicy.
      */
     private Exception handleXmlStreamException(XMLStreamException e) throws Exception {
         if (e.getNestedException() instanceof IOException) {
@@ -143,24 +138,22 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
     }
 
     /**
-     * Hook for subclasses to override in order to collect additional metadata
-     * from service responses.
+     * Hook for subclasses to override in order to collect additional metadata from service
+     * responses.
      *
      * @param unmarshallerContext The unmarshaller context used to configure a service's response
-     *                            data.
+     *     data.
      */
-    protected void registerAdditionalMetadataExpressions(StaxUnmarshallerContext unmarshallerContext) {
-    }
+    protected void registerAdditionalMetadataExpressions(
+            StaxUnmarshallerContext unmarshallerContext) {}
 
     /**
-     * Since this response handler completely consumes all the data from the
-     * underlying HTTP connection during the handle method, we don't need to
-     * keep the HTTP connection open.
+     * Since this response handler completely consumes all the data from the underlying HTTP
+     * connection during the handle method, we don't need to keep the HTTP connection open.
      *
      * @see com.amazonaws.http.HttpResponseHandler#needsConnectionLeftOpen()
      */
     public boolean needsConnectionLeftOpen() {
         return false;
     }
-
 }

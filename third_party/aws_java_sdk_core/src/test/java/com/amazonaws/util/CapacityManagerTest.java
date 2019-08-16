@@ -18,15 +18,10 @@ package com.amazonaws.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Tests the behavior of the {@link CapacityManager}
- */
+/** Tests the behavior of the {@link CapacityManager} */
 public class CapacityManagerTest {
 
-    /**
-     * Tests that capacity can be acquired when available and can not be
-     * once exhausted.
-     */
+    /** Tests that capacity can be acquired when available and can not be once exhausted. */
     @Test
     public void acquire() {
         CapacityManager mgr = new CapacityManager(10);
@@ -40,8 +35,8 @@ public class CapacityManagerTest {
     }
 
     /**
-     * Tests that capacity can be properly released, making additional capacity
-     * available to be acquired.
+     * Tests that capacity can be properly released, making additional capacity available to be
+     * acquired.
      */
     @Test
     public void release() {
@@ -56,8 +51,8 @@ public class CapacityManagerTest {
     }
 
     /**
-     * Tests that, if created with negative capacity, CapacityManager effectively operates
-     * in a no-op mode.
+     * Tests that, if created with negative capacity, CapacityManager effectively operates in a
+     * no-op mode.
      */
     @Test
     public void noOp() {
@@ -68,5 +63,4 @@ public class CapacityManagerTest {
         Assert.assertEquals(mgr.availableCapacity(), -1);
         Assert.assertEquals(mgr.consumedCapacity(), 0);
     }
-
 }

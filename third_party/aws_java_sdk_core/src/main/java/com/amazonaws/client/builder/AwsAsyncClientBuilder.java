@@ -20,7 +20,6 @@ import com.amazonaws.annotation.SdkProtectedApi;
 import com.amazonaws.annotation.SdkTestInternalApi;
 import com.amazonaws.client.AwsAsyncClientParams;
 import com.amazonaws.regions.AwsRegionProvider;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -31,8 +30,8 @@ import java.util.concurrent.Executors;
  */
 @NotThreadSafe
 @SdkProtectedApi
-public abstract class AwsAsyncClientBuilder<Subclass extends AwsAsyncClientBuilder, TypeToBuild> extends
-                                                                                                 AwsClientBuilder<Subclass, TypeToBuild> {
+public abstract class AwsAsyncClientBuilder<Subclass extends AwsAsyncClientBuilder, TypeToBuild>
+        extends AwsClientBuilder<Subclass, TypeToBuild> {
     private ExecutorFactory executorFactory;
 
     protected AwsAsyncClientBuilder(ClientConfigurationFactory clientConfigFactory) {
@@ -40,15 +39,12 @@ public abstract class AwsAsyncClientBuilder<Subclass extends AwsAsyncClientBuild
     }
 
     @SdkTestInternalApi
-    protected AwsAsyncClientBuilder(ClientConfigurationFactory clientConfigFactory,
-                                    AwsRegionProvider regionProvider) {
+    protected AwsAsyncClientBuilder(
+            ClientConfigurationFactory clientConfigFactory, AwsRegionProvider regionProvider) {
         super(clientConfigFactory, regionProvider);
     }
 
-
-    /**
-     * @return The {@link ExecutorFactory} currently configured by the client.
-     */
+    /** @return The {@link ExecutorFactory} currently configured by the client. */
     public final ExecutorFactory getExecutorFactory() {
         return executorFactory;
     }
@@ -84,15 +80,13 @@ public abstract class AwsAsyncClientBuilder<Subclass extends AwsAsyncClientBuild
 
     /**
      * @return An instance of AwsAsyncClientParams that has all params to be used in the async
-     * client constructor.
+     *     client constructor.
      */
     protected final AwsAsyncClientParams getAsyncClientParams() {
         return new AsyncBuilderParams(executorFactory);
     }
 
-    /**
-     * Presents a view of the builder to be used in the async client constructor.
-     */
+    /** Presents a view of the builder to be used in the async client constructor. */
     protected class AsyncBuilderParams extends SyncBuilderParams {
 
         private final ExecutorService _executorService;
@@ -107,12 +101,9 @@ public abstract class AwsAsyncClientBuilder<Subclass extends AwsAsyncClientBuild
             return this._executorService;
         }
 
-        /**
-         * @return Default async Executor to use if none is explicitly provided by user.
-         */
+        /** @return Default async Executor to use if none is explicitly provided by user. */
         private ExecutorService defaultExecutor() {
             return Executors.newFixedThreadPool(getClientConfiguration().getMaxConnections());
         }
     }
-
 }

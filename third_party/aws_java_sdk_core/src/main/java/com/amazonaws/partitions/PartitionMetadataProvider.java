@@ -19,8 +19,6 @@ import com.amazonaws.partitions.model.Partition;
 import com.amazonaws.regions.AbstractRegionMetadataProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.util.ValidationUtils;
-
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,14 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Region metadata provider based on partitions.
- */
+/** Region metadata provider based on partitions. */
 @SdkInternalApi
 public class PartitionMetadataProvider extends AbstractRegionMetadataProvider {
 
-    private final Map<String, Partition> partitionMap = new HashMap<String,
-            Partition>();
+    private final Map<String, Partition> partitionMap = new HashMap<String, Partition>();
 
     private final Map<String, Region> regionCache = new ConcurrentHashMap<String, Region>();
 
@@ -52,10 +47,9 @@ public class PartitionMetadataProvider extends AbstractRegionMetadataProvider {
         final List<Region> regions = new ArrayList<Region>();
 
         for (Partition p : partitionMap.values()) {
-            for (Map.Entry<String, com.amazonaws.partitions.model.Region>
-                    entry : p.getRegions().entrySet()) {
-                regions.add(new Region(new PartitionRegionImpl(entry.getKey(),
-                        p)));
+            for (Map.Entry<String, com.amazonaws.partitions.model.Region> entry :
+                    p.getRegions().entrySet()) {
+                regions.add(new Region(new PartitionRegionImpl(entry.getKey(), p)));
             }
         }
         return Collections.unmodifiableList(regions);
@@ -81,7 +75,8 @@ public class PartitionMetadataProvider extends AbstractRegionMetadataProvider {
                 return cacheRegion(new PartitionRegionImpl(regionName, p));
             }
         }
-        // If we can't match the regex with any partition then assume the AWS partition if it's available.
+        // If we can't match the regex with any partition then assume the AWS partition if it's
+        // available.
         Partition awsPartition = partitionMap.get("aws");
         if (awsPartition != null) {
             return cacheRegion(new PartitionRegionImpl(regionName, awsPartition));

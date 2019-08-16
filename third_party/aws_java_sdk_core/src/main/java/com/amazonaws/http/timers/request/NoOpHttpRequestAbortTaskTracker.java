@@ -20,11 +20,11 @@ package com.amazonaws.http.timers.request;
  */
 public class NoOpHttpRequestAbortTaskTracker implements HttpRequestAbortTaskTracker {
 
-    public static final NoOpHttpRequestAbortTaskTracker INSTANCE = new NoOpHttpRequestAbortTaskTracker();
+    public static final NoOpHttpRequestAbortTaskTracker INSTANCE =
+            new NoOpHttpRequestAbortTaskTracker();
 
     // Singleton
-    private NoOpHttpRequestAbortTaskTracker() {
-    }
+    private NoOpHttpRequestAbortTaskTracker() {}
 
     @Override
     public boolean httpRequestAborted() {
@@ -37,7 +37,5 @@ public class NoOpHttpRequestAbortTaskTracker implements HttpRequestAbortTaskTrac
     }
 
     @Override
-    public void cancelTask() {
-    }
-
+    public void cancelTask() {}
 }

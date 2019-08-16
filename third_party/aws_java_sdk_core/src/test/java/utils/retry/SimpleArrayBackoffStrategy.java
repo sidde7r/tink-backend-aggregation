@@ -31,9 +31,10 @@ public final class SimpleArrayBackoffStrategy implements BackoffStrategy {
     }
 
     @Override
-    public long delayBeforeNextRetry(AmazonWebServiceRequest originalRequest,
-                                     AmazonClientException exception,
-                                     int retriesAttempted) {
+    public long delayBeforeNextRetry(
+            AmazonWebServiceRequest originalRequest,
+            AmazonClientException exception,
+            int retriesAttempted) {
         return backoffValues[retriesAttempted];
     }
 }

@@ -24,19 +24,18 @@ import com.amazonaws.annotation.SdkInternalApi;
 @SdkInternalApi
 public interface JsonMarshaller<T> {
 
-    JsonMarshaller<Void> NULL = new JsonMarshaller<Void>() {
-        @Override
-        public void marshall(Void val, JsonMarshallerContext context, String paramName) {
-        }
-    };
+    JsonMarshaller<Void> NULL =
+            new JsonMarshaller<Void>() {
+                @Override
+                public void marshall(Void val, JsonMarshallerContext context, String paramName) {}
+            };
 
     /**
      * Marshall the data into the request.
      *
-     * @param val       Data to marshall (may be null).
-     * @param context   Dependencies needed for marshalling.
+     * @param val Data to marshall (may be null).
+     * @param context Dependencies needed for marshalling.
      * @param paramName Optional param/field name. May be null in certain situations.
      */
     void marshall(T val, JsonMarshallerContext context, String paramName);
-
 }

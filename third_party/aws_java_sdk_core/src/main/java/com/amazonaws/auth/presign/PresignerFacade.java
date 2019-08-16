@@ -24,15 +24,15 @@ import com.amazonaws.internal.auth.SignerProvider;
 import com.amazonaws.internal.auth.SignerProviderContext;
 import com.amazonaws.util.CredentialUtils;
 import com.amazonaws.util.RuntimeHttpUtils;
-
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Really thin facade over {@link Presigner} to deal with some common concerns like credential resolution, adding custom headers
- * and query params to be included in signing, and conversion to a usable URL.
+ * Really thin facade over {@link Presigner} to deal with some common concerns like credential
+ * resolution, adding custom headers and query params to be included in signing, and conversion to a
+ * usable URL.
  */
 @Immutable
 @SdkProtectedApi
@@ -47,11 +47,14 @@ public final class PresignerFacade {
     }
 
     public URL presign(Request<?> request, Date expirationDate) {
-        final Presigner presigner = (Presigner) signerProvider.getSigner(SignerProviderContext.builder()
-                                                                                 .withIsRedirect(false)
-                                                                                 .withRequest(request)
-                                                                                 .withUri(request.getEndpoint())
-                                                                                 .build());
+        final Presigner presigner =
+                (Presigner)
+                        signerProvider.getSigner(
+                                SignerProviderContext.builder()
+                                        .withIsRedirect(false)
+                                        .withRequest(request)
+                                        .withUri(request.getEndpoint())
+                                        .build());
         if (request.getOriginalRequest() != null) {
             addCustomQueryParams(request);
             addCustomHeaders(request);
@@ -62,7 +65,8 @@ public final class PresignerFacade {
     }
 
     private void addCustomQueryParams(Request<?> request) {
-        final Map<String, List<String>> queryParameters = request.getOriginalRequest().getCustomQueryParameters();
+        final Map<String, List<String>> queryParameters =
+                request.getOriginalRequest().getCustomQueryParameters();
         if (queryParameters == null || queryParameters.isEmpty()) {
             return;
         }
@@ -82,16 +86,18 @@ public final class PresignerFacade {
     }
 
     private AWSCredentialsProvider resolveCredentials(Request<?> request) {
-        return CredentialUtils.getCredentialsProvider(request.getOriginalRequest(), this.credentialsProvider);
+        return CredentialUtils.getCredentialsProvider(
+                request.getOriginalRequest(), this.credentialsProvider);
     }
 
     /**
-     * Empty request object useful for setting request level credentials without having the user facing presiging request extend
-     * from {@link AmazonWebServiceRequest}.
+     * Empty request object useful for setting request level credentials without having the user
+     * facing presiging request extend from {@link AmazonWebServiceRequest}.
      */
     public static class PresigningRequest extends AmazonWebServiceRequest {
 
-        public PresigningRequest withRequestCredentialsProvider(AWSCredentialsProvider credentialsProvider) {
+        public PresigningRequest withRequestCredentialsProvider(
+                AWSCredentialsProvider credentialsProvider) {
             setRequestCredentialsProvider(credentialsProvider);
             return this;
         }

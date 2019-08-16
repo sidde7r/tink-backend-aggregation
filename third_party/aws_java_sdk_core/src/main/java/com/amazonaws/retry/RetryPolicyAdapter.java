@@ -14,17 +14,17 @@
  */
 package com.amazonaws.retry;
 
+import static com.amazonaws.util.ValidationUtils.assertNotNull;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.retry.v2.RetryPolicyContext;
 
-import static com.amazonaws.util.ValidationUtils.assertNotNull;
-
 /**
- * Adapts a legacy {@link RetryPolicy} to the new {@link com.amazonaws.retry.v2.RetryPolicy}. This class is intended for internal
- * use by the SDK.
+ * Adapts a legacy {@link RetryPolicy} to the new {@link com.amazonaws.retry.v2.RetryPolicy}. This
+ * class is intended for internal use by the SDK.
  */
 @SdkInternalApi
 public class RetryPolicyAdapter implements com.amazonaws.retry.v2.RetryPolicy {
@@ -32,17 +32,20 @@ public class RetryPolicyAdapter implements com.amazonaws.retry.v2.RetryPolicy {
     private final RetryPolicy legacyRetryPolicy;
     private final ClientConfiguration clientConfiguration;
 
-    public RetryPolicyAdapter(RetryPolicy legacyRetryPolicy, ClientConfiguration clientConfiguration) {
+    public RetryPolicyAdapter(
+            RetryPolicy legacyRetryPolicy, ClientConfiguration clientConfiguration) {
         this.legacyRetryPolicy = assertNotNull(legacyRetryPolicy, "legacyRetryPolicy");
         this.clientConfiguration = assertNotNull(clientConfiguration, "clientConfiguration");
     }
 
     @Override
     public long computeDelayBeforeNextRetry(RetryPolicyContext context) {
-        return legacyRetryPolicy.getBackoffStrategy().delayBeforeNextRetry(
-                (AmazonWebServiceRequest) context.originalRequest(),
-                (AmazonClientException) context.exception(),
-                context.retriesAttempted());
+        return legacyRetryPolicy
+                .getBackoffStrategy()
+                .delayBeforeNextRetry(
+                        (AmazonWebServiceRequest) context.originalRequest(),
+                        (AmazonClientException) context.exception(),
+                        context.retriesAttempted());
     }
 
     @Override
@@ -50,10 +53,12 @@ public class RetryPolicyAdapter implements com.amazonaws.retry.v2.RetryPolicy {
         if (context.retriesAttempted() >= getMaxErrorRetry()) {
             return false;
         }
-        return legacyRetryPolicy.getRetryCondition().shouldRetry(
-                (AmazonWebServiceRequest) context.originalRequest(),
-                (AmazonClientException) context.exception(),
-                context.retriesAttempted());
+        return legacyRetryPolicy
+                .getRetryCondition()
+                .shouldRetry(
+                        (AmazonWebServiceRequest) context.originalRequest(),
+                        (AmazonClientException) context.exception(),
+                        context.retriesAttempted());
     }
 
     public RetryPolicy getLegacyRetryPolicy() {
@@ -61,10 +66,10 @@ public class RetryPolicyAdapter implements com.amazonaws.retry.v2.RetryPolicy {
     }
 
     private int getMaxErrorRetry() {
-        if(legacyRetryPolicy.isMaxErrorRetryInClientConfigHonored() && clientConfiguration.getMaxErrorRetry() >= 0) {
+        if (legacyRetryPolicy.isMaxErrorRetryInClientConfigHonored()
+                && clientConfiguration.getMaxErrorRetry() >= 0) {
             return clientConfiguration.getMaxErrorRetry();
         }
         return legacyRetryPolicy.getMaxErrorRetry();
     }
-
 }

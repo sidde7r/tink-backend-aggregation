@@ -23,25 +23,23 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
-import java.util.concurrent.CountDownLatch;
-
-import org.junit.Test;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.event.ProgressListener.ExceptionReporter;
+import java.util.concurrent.CountDownLatch;
+import org.junit.Test;
 
 public class ProgressListenerTest {
     // Listener is executed synchronously
     @Test
     public void throwErrorWithSyncListener() {
-        ProgressListener syncListener = new SyncProgressListener() {
-            @Override
-            public void progressChanged(ProgressEvent progressEvent) {
-                throw new Error();
-            }
-        };
-        ExceptionReporter reporter =
-            ExceptionReporter.wrap(syncListener);
+        ProgressListener syncListener =
+                new SyncProgressListener() {
+                    @Override
+                    public void progressChanged(ProgressEvent progressEvent) {
+                        throw new Error();
+                    }
+                };
+        ExceptionReporter reporter = ExceptionReporter.wrap(syncListener);
         publishProgress(syncListener, ProgressEventType.CLIENT_REQUEST_STARTED_EVENT);
         assertNull(reporter.getCause());
         publishProgress(reporter, ProgressEventType.CLIENT_REQUEST_STARTED_EVENT);
@@ -49,7 +47,7 @@ public class ProgressListenerTest {
         try {
             reporter.throwExceptionIfAny();
             fail();
-        } catch(AmazonClientException ex) {
+        } catch (AmazonClientException ex) {
             // expected
         }
     }
@@ -58,25 +56,28 @@ public class ProgressListenerTest {
     @Test
     public void throwErrorWithAsyncListener() throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
-        ProgressListener asyncListener = new ProgressListener() {
-            @Override
-            public void progressChanged(ProgressEvent progressEvent) {
-                throw new Error();
-            }
-        };
-        ExceptionReporter reporter = new ExceptionReporter(asyncListener) {
-            @Override public void progressChanged(ProgressEvent progressEvent) {
-                super.progressChanged(progressEvent);
-                latch.countDown();
-            }
-        };
+        ProgressListener asyncListener =
+                new ProgressListener() {
+                    @Override
+                    public void progressChanged(ProgressEvent progressEvent) {
+                        throw new Error();
+                    }
+                };
+        ExceptionReporter reporter =
+                new ExceptionReporter(asyncListener) {
+                    @Override
+                    public void progressChanged(ProgressEvent progressEvent) {
+                        super.progressChanged(progressEvent);
+                        latch.countDown();
+                    }
+                };
         publishProgress(reporter, ProgressEventType.CLIENT_REQUEST_STARTED_EVENT);
         latch.await();
         assertNotNull(reporter.getCause());
         try {
             reporter.throwExceptionIfAny();
             fail();
-        } catch(AmazonClientException ex) {
+        } catch (AmazonClientException ex) {
             // expected
         }
     }

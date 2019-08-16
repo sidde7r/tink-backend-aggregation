@@ -15,7 +15,6 @@
 
 package com.amazonaws.http;
 
-
 import com.amazonaws.transform.StaxUnmarshallerContext;
 import com.amazonaws.transform.Unmarshaller;
 import java.io.IOException;
@@ -27,8 +26,7 @@ import org.mockito.Mock;
 
 public class StaxResponseHandlerTest {
 
-    @Mock
-    private Unmarshaller<Void, StaxUnmarshallerContext> unmarshaller;
+    @Mock private Unmarshaller<Void, StaxUnmarshallerContext> unmarshaller;
 
     private StaxResponseHandler<Void> responseHandler;
 
@@ -38,43 +36,45 @@ public class StaxResponseHandlerTest {
     }
 
     /**
-     * This throws a socket timeout exception immediately. When creating an XML event reader,
-     * it may read ahead a few bytes so we have to handle the {@link javax.xml.stream.XMLStreamException} in
-     * two places.
+     * This throws a socket timeout exception immediately. When creating an XML event reader, it may
+     * read ahead a few bytes so we have to handle the {@link javax.xml.stream.XMLStreamException}
+     * in two places.
      */
     @Test(expected = IOException.class)
     public void socketTimeoutThrownFromInputStream_ThrowsIoException() throws Exception {
         HttpResponse response = new HttpResponse(null, null);
-        response.setContent(new InputStream() {
-            @Override
-            public int read() throws IOException {
-                throw new SocketTimeoutException("socket timeout");
-            }
-        });
+        response.setContent(
+                new InputStream() {
+                    @Override
+                    public int read() throws IOException {
+                        throw new SocketTimeoutException("socket timeout");
+                    }
+                });
         responseHandler.handle(response);
     }
 
     /**
-     * The XML reader throws an {@link javax.xml.stream.XMLStreamException} which wraps the IO Exception. The handler
-     * must unwrap it so that it's handled by retry policies correctly.
+     * The XML reader throws an {@link javax.xml.stream.XMLStreamException} which wraps the IO
+     * Exception. The handler must unwrap it so that it's handled by retry policies correctly.
      */
     @Test(expected = IOException.class)
     public void socketTimeoutThrownAfternInitialContent_ThrowsIoException() throws Exception {
         HttpResponse response = new HttpResponse(null, null);
-        response.setContent(new InputStream() {
-            String content = "<OperationNameResponse><OperationNameResult><Str>myname</Str><FooNum>123</FooNum><FalseBool>false</FalseBool><TrueBool>true</TrueBool><Float>1.2</Float><Double>1.3</Double><Long>200</Long><Char>a</Char><Timestamp>2015-01-25T08:00:00Z</Timestamp></OperationNameResult><ResponseMetadata><RequestId>request-id</RequestId></ResponseMetadata></OperationNameResponse>";
-            int read = 0;
+        response.setContent(
+                new InputStream() {
+                    String content =
+                            "<OperationNameResponse><OperationNameResult><Str>myname</Str><FooNum>123</FooNum><FalseBool>false</FalseBool><TrueBool>true</TrueBool><Float>1.2</Float><Double>1.3</Double><Long>200</Long><Char>a</Char><Timestamp>2015-01-25T08:00:00Z</Timestamp></OperationNameResult><ResponseMetadata><RequestId>request-id</RequestId></ResponseMetadata></OperationNameResponse>";
+                    int read = 0;
 
-            @Override
-            public int read() throws IOException {
-                // Let it read some content first to get past creating an event reader.
-                if (read > 50) {
-                    throw new SocketTimeoutException("socket timeout");
-                }
-                return content.charAt(read++);
-            }
-        });
+                    @Override
+                    public int read() throws IOException {
+                        // Let it read some content first to get past creating an event reader.
+                        if (read > 50) {
+                            throw new SocketTimeoutException("socket timeout");
+                        }
+                        return content.charAt(read++);
+                    }
+                });
         responseHandler.handle(response);
     }
-
 }

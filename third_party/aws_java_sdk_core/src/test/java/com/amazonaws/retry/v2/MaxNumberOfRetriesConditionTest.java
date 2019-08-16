@@ -14,10 +14,10 @@
  */
 package com.amazonaws.retry.v2;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 public class MaxNumberOfRetriesConditionTest {
 
@@ -33,17 +33,22 @@ public class MaxNumberOfRetriesConditionTest {
 
     @Test
     public void positiveMaxRetries_OneMoreAttemptToMax_ReturnsTrue() {
-        assertTrue(new MaxNumberOfRetriesCondition(3).shouldRetry(RetryPolicyContexts.withRetriesAttempted(2)));
+        assertTrue(
+                new MaxNumberOfRetriesCondition(3)
+                        .shouldRetry(RetryPolicyContexts.withRetriesAttempted(2)));
     }
 
     @Test
     public void positiveMaxRetries_AtMaxAttempts_ReturnsFalse() {
-        assertFalse(new MaxNumberOfRetriesCondition(3).shouldRetry(RetryPolicyContexts.withRetriesAttempted(3)));
+        assertFalse(
+                new MaxNumberOfRetriesCondition(3)
+                        .shouldRetry(RetryPolicyContexts.withRetriesAttempted(3)));
     }
 
     @Test
     public void positiveMaxRetries_PastMaxAttempts_ReturnsFalse() {
-        assertFalse(new MaxNumberOfRetriesCondition(3).shouldRetry(RetryPolicyContexts.withRetriesAttempted(4)));
+        assertFalse(
+                new MaxNumberOfRetriesCondition(3)
+                        .shouldRetry(RetryPolicyContexts.withRetriesAttempted(4)));
     }
-
 }

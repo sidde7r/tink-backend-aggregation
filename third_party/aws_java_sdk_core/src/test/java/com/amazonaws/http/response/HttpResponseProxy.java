@@ -18,22 +18,19 @@
  */
 package com.amazonaws.http.response;
 
+import com.amazonaws.annotation.NotThreadSafe;
 import java.io.IOException;
 import java.util.Locale;
-
 import tink.org.apache.http.Header;
 import tink.org.apache.http.HeaderIterator;
 import tink.org.apache.http.HttpEntity;
 import tink.org.apache.http.HttpResponse;
 import tink.org.apache.http.ProtocolVersion;
 import tink.org.apache.http.StatusLine;
-import com.amazonaws.annotation.NotThreadSafe;
 import tink.org.apache.http.client.methods.CloseableHttpResponse;
 import tink.org.apache.http.params.HttpParams;
 
-/**
- * A proxy class for {@link tink.org.apache.http.HttpResponse}.
- */
+/** A proxy class for {@link tink.org.apache.http.HttpResponse}. */
 @NotThreadSafe
 public class HttpResponseProxy implements CloseableHttpResponse {
 
@@ -44,9 +41,7 @@ public class HttpResponseProxy implements CloseableHttpResponse {
     }
 
     @Override
-    public void close() throws IOException {
-
-    }
+    public void close() throws IOException {}
 
     @Override
     public StatusLine getStatusLine() {
@@ -192,5 +187,4 @@ public class HttpResponseProxy implements CloseableHttpResponse {
         sb.append('}');
         return sb.toString();
     }
-
 }

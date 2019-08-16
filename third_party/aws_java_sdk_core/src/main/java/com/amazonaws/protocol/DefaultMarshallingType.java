@@ -16,8 +16,9 @@
 package com.amazonaws.protocol;
 
 /**
- * A base implementation for {@link MarshallingType}s that are the default marshallers for their respective types. This will
- * return "true" for {@link #isDefaultMarshallerForType(Class)} if the provided class is a subclass of this class's type.
+ * A base implementation for {@link MarshallingType}s that are the default marshallers for their
+ * respective types. This will return "true" for {@link #isDefaultMarshallerForType(Class)} if the
+ * provided class is a subclass of this class's type.
  */
 final class DefaultMarshallingType<T> implements MarshallingType<T> {
     private final Class<T> type;

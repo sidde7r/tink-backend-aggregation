@@ -25,9 +25,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Unit tests for RegionUtils class.
- */
+/** Unit tests for RegionUtils class. */
 public class RegionUtilsIntegrationTest {
 
     @Before
@@ -38,20 +36,22 @@ public class RegionUtilsIntegrationTest {
     }
 
     /**
-     * Tests that region file override could be properly loaded, and the
-     * endpoint verification is also disabled so that invalid (not owned by AWS)
-     * endpoints don't trigger RuntimeException.
+     * Tests that region file override could be properly loaded, and the endpoint verification is
+     * also disabled so that invalid (not owned by AWS) endpoints don't trigger RuntimeException.
      */
     @Test
     public void testRegionFileOverride() {
-        String fakeRegionFilePath = RegionUtilsIntegrationTest.class.getResource("fake-regions.xml").getPath();
+        String fakeRegionFilePath =
+                RegionUtilsIntegrationTest.class.getResource("fake-regions.xml").getPath();
         System.setProperty(REGIONS_FILE_OVERRIDE_SYSTEM_PROPERTY, fakeRegionFilePath);
 
         RegionUtils.initialize();
         assertEquals(2, RegionUtils.getRegions().size());
 
         assertEquals("hostname.com", RegionUtils.getRegion("us-east-1").getDomain());
-        assertEquals("fake.hostname.com", RegionUtils.getRegion("us-east-1").getServiceEndpoint("cloudformation"));
+        assertEquals(
+                "fake.hostname.com",
+                RegionUtils.getRegion("us-east-1").getServiceEndpoint("cloudformation"));
 
         assertEquals("amazonaws.com", RegionUtils.getRegion("us-west-1").getDomain());
     }

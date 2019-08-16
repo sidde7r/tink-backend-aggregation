@@ -22,13 +22,11 @@ import com.amazonaws.internal.http.JsonErrorMessageParser;
 import com.amazonaws.protocol.json.JsonContent;
 import com.amazonaws.transform.JsonErrorUnmarshaller;
 import com.fasterxml.jackson.core.JsonFactory;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 @SdkInternalApi
 public class JsonErrorResponseHandler implements HttpResponseHandler<AmazonServiceException> {
@@ -66,7 +64,8 @@ public class JsonErrorResponseHandler implements HttpResponseHandler<AmazonServi
         // Throwables, but sometimes the service passes the error message in
         // other JSON fields - handle it here.
         if (ase.getErrorMessage() == null) {
-            ase.setErrorMessage(errorMessageParser.parseErrorMessage(response, jsonContent.getJsonNode()));
+            ase.setErrorMessage(
+                    errorMessageParser.parseErrorMessage(response, jsonContent.getJsonNode()));
         }
 
         ase.setErrorCode(errorCode);
@@ -86,17 +85,16 @@ public class JsonErrorResponseHandler implements HttpResponseHandler<AmazonServi
      * Create an AmazonServiceException using the chain of unmarshallers. This method will never
      * return null, it will always return a valid AmazonServiceException
      *
-     * @param errorCode
-     *            Error code to find an appropriate unmarshaller
-     * @param jsonContent
-     *            JsonContent of HTTP response
+     * @param errorCode Error code to find an appropriate unmarshaller
+     * @param jsonContent JsonContent of HTTP response
      * @return AmazonServiceException
      */
     private AmazonServiceException createException(String errorCode, JsonContent jsonContent) {
         AmazonServiceException ase = unmarshallException(errorCode, jsonContent);
         if (ase == null) {
-            ase = new AmazonServiceException(
-                    "Unable to unmarshall exception response with the unmarshallers provided");
+            ase =
+                    new AmazonServiceException(
+                            "Unable to unmarshall exception response with the unmarshallers provided");
         }
         return ase;
     }
@@ -127,5 +125,4 @@ public class JsonErrorResponseHandler implements HttpResponseHandler<AmazonServi
         }
         return null;
     }
-
 }

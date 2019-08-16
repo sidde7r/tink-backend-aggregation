@@ -18,10 +18,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Helper class to capture the byte throughput.
- * <p>
- * Note this class is only relevant
- * when metric is enabled. Otherwise it should not even be involved in the call
- * stack to minimize runtime overhead.
+ *
+ * <p>Note this class is only relevant when metric is enabled. Otherwise it should not even be
+ * involved in the call stack to minimize runtime overhead.
  */
 class ByteThroughputHelper extends ByteThroughputProvider {
     private static final int REPORT_INTERVAL_SECS = 10;
@@ -36,7 +35,6 @@ class ByteThroughputHelper extends ByteThroughputProvider {
         }
         return System.nanoTime();
     }
-    
 
     void reportMetrics() {
         if (getByteCount() > 0) {

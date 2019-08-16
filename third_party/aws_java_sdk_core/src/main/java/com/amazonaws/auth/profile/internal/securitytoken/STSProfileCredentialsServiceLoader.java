@@ -23,10 +23,10 @@ import com.amazonaws.auth.AWSCredentialsProvider;
  */
 @SdkInternalApi
 public class STSProfileCredentialsServiceLoader implements ProfileCredentialsService {
-    private static final STSProfileCredentialsServiceLoader INSTANCE = new STSProfileCredentialsServiceLoader();
+    private static final STSProfileCredentialsServiceLoader INSTANCE =
+            new STSProfileCredentialsServiceLoader();
 
-    private STSProfileCredentialsServiceLoader() {
-    }
+    private STSProfileCredentialsServiceLoader() {}
 
     @Override
     public AWSCredentialsProvider getAssumeRoleCredentialsProvider(RoleInfo targetRoleInfo) {

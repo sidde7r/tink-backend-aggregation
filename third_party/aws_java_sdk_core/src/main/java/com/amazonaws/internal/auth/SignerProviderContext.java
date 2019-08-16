@@ -17,7 +17,6 @@ package com.amazonaws.internal.auth;
 
 import com.amazonaws.Request;
 import com.amazonaws.RequestConfig;
-
 import java.net.URI;
 
 public class SignerProviderContext {
@@ -56,8 +55,7 @@ public class SignerProviderContext {
 
     public static class Builder {
 
-        private Builder() {
-        }
+        private Builder() {}
 
         private URI uri;
         private boolean isRedirect;
@@ -87,6 +85,5 @@ public class SignerProviderContext {
         public SignerProviderContext build() {
             return new SignerProviderContext(this);
         }
-
     }
 }

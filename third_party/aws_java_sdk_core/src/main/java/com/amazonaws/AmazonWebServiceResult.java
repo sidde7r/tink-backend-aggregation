@@ -17,8 +17,8 @@ package com.amazonaws;
 import com.amazonaws.http.SdkHttpMetadata;
 
 /**
- * Base type for all AWS response objects. Exposes metadata about the request such as the request
- * id and access to details in the HTTP response.
+ * Base type for all AWS response objects. Exposes metadata about the request such as the request id
+ * and access to details in the HTTP response.
  *
  * @param <T> Type of {@link ResponseMetadata}.
  */
@@ -28,9 +28,7 @@ public class AmazonWebServiceResult<T extends ResponseMetadata> {
 
     private SdkHttpMetadata sdkHttpMetadata;
 
-    /**
-     * @return The response metadata associated with this request.
-     */
+    /** @return The response metadata associated with this request. */
     public T getSdkResponseMetadata() {
         return sdkResponseMetadata;
     }
@@ -40,9 +38,7 @@ public class AmazonWebServiceResult<T extends ResponseMetadata> {
         return this;
     }
 
-    /**
-     * @return HTTP related metadata like headers and status code.
-     */
+    /** @return HTTP related metadata like headers and status code. */
     public SdkHttpMetadata getSdkHttpMetadata() {
         return sdkHttpMetadata;
     }

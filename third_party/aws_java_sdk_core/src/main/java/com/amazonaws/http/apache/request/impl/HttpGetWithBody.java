@@ -19,9 +19,7 @@ import java.net.URI;
 import tink.org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import tink.org.apache.http.client.methods.HttpGet;
 
-/**
- * Allows sending a GET request with a request body.
- */
+/** Allows sending a GET request with a request body. */
 public class HttpGetWithBody extends HttpEntityEnclosingRequestBase {
 
     public HttpGetWithBody(String uri) {

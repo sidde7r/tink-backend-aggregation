@@ -28,18 +28,13 @@ class Base16Codec implements Codec {
         private static final byte[] DECODED = decodeTable();
 
         private static byte[] decodeTable() {
-            final byte[] dest = new byte['f'+1];
+            final byte[] dest = new byte['f' + 1];
 
-            for (int i=0; i <= 'f'; i++)
-            {
-                if (i >= '0' && i <= '9')
-                    dest[i] = (byte)(i - '0');
-                else if (i >= 'A' && i <= 'F')
-                    dest[i] = (byte)(i - OFFSET_OF_A);
-                else if (i >= 'a' && i <= 'f')
-                    dest[i] = (byte)(i - OFFSET_OF_a);
-                else
-                    dest[i] = -1;
+            for (int i = 0; i <= 'f'; i++) {
+                if (i >= '0' && i <= '9') dest[i] = (byte) (i - '0');
+                else if (i >= 'A' && i <= 'F') dest[i] = (byte) (i - OFFSET_OF_A);
+                else if (i >= 'a' && i <= 'f') dest[i] = (byte) (i - OFFSET_OF_a);
+                else dest[i] = -1;
             }
             return dest;
         }
@@ -52,9 +47,10 @@ class Base16Codec implements Codec {
     }
 
     Base16Codec(boolean upperCase) {
-        this.alphabets = upperCase
-                  ? CodecUtils.toBytesDirect("0123456789ABCDEF")
-                  : CodecUtils.toBytesDirect("0123456789abcdef");
+        this.alphabets =
+                upperCase
+                        ? CodecUtils.toBytesDirect("0123456789ABCDEF")
+                        : CodecUtils.toBytesDirect("0123456789abcdef");
     }
 
     @Override
@@ -62,32 +58,23 @@ class Base16Codec implements Codec {
         byte[] dest = new byte[src.length * 2];
         byte p;
 
-        for (int i=0,j=0; i < src.length; i++) {
-            dest[j++] = (byte)alphabets[(p=src[i]) >>> 4 & MASK_4BITS];
-            dest[j++] = (byte)alphabets[p & MASK_4BITS];
+        for (int i = 0, j = 0; i < src.length; i++) {
+            dest[j++] = (byte) alphabets[(p = src[i]) >>> 4 & MASK_4BITS];
+            dest[j++] = (byte) alphabets[p & MASK_4BITS];
         }
         return dest;
     }
 
     @Override
-    public byte[] decode(byte[] src, final int length)
-    {
+    public byte[] decode(byte[] src, final int length) {
         if (length % 2 != 0) {
             throw new IllegalArgumentException(
-                "Input is expected to be encoded in multiple of 2 bytes but found: "
-                + length
-            );
+                    "Input is expected to be encoded in multiple of 2 bytes but found: " + length);
         }
         final byte[] dest = new byte[length / 2];
 
-        for (int i=0, j=0; j < dest.length; j++)
-        {
-            dest[j] = (byte)
-                    (
-                        pos(src[i++]) << 4 | pos(src[i++])
-                    )
-                    ;
-
+        for (int i = 0, j = 0; j < dest.length; j++) {
+            dest[j] = (byte) (pos(src[i++]) << 4 | pos(src[i++]));
         }
         return dest;
     }
@@ -95,8 +82,7 @@ class Base16Codec implements Codec {
     protected int pos(byte in) {
         int pos = LazyHolder.DECODED[in];
 
-        if (pos > -1)
-            return pos;
-        throw new IllegalArgumentException("Invalid base 16 character: \'" + (char)in + "\'");
+        if (pos > -1) return pos;
+        throw new IllegalArgumentException("Invalid base 16 character: \'" + (char) in + "\'");
     }
 }

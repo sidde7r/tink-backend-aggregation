@@ -18,14 +18,14 @@
  */
 package com.amazonaws.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
 
 import com.amazonaws.AbortedException;
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonWebServiceResponse;
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.DefaultRequest;
+import com.amazonaws.Request;
 import com.amazonaws.Response;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -37,6 +37,18 @@ import com.amazonaws.http.apache.client.impl.ConnectionManagerAwareHttpClient;
 import com.amazonaws.http.apache.request.impl.ApacheHttpRequestFactory;
 import com.amazonaws.http.request.HttpRequestFactory;
 import com.amazonaws.http.settings.HttpClientSettings;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import org.easymock.Capture;
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import tink.org.apache.http.ProtocolVersion;
 import tink.org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import tink.org.apache.http.client.methods.HttpRequestBase;
@@ -44,20 +56,6 @@ import tink.org.apache.http.client.methods.HttpUriRequest;
 import tink.org.apache.http.entity.BasicHttpEntity;
 import tink.org.apache.http.message.BasicHttpResponse;
 import tink.org.apache.http.protocol.HttpContext;
-import org.easymock.Capture;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonWebServiceResponse;
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.DefaultRequest;
-import com.amazonaws.Request;
-
-import static org.junit.Assert.assertEquals;
 
 public class AmazonHttpClientTest {
 
@@ -90,24 +88,21 @@ public class AmazonHttpClientTest {
 
         EasyMock.reset(httpClient);
 
-        EasyMock
-            .expect(httpClient.getConnectionManager())
-            .andReturn(null)
-            .anyTimes();
+        EasyMock.expect(httpClient.getConnectionManager()).andReturn(null).anyTimes();
 
-        EasyMock
-            .expect(httpClient.execute(EasyMock.<HttpUriRequest>anyObject(),
-                                       EasyMock.<HttpContext>anyObject()))
-            .andThrow(exception)
-            .times(4);
+        EasyMock.expect(
+                        httpClient.execute(
+                                EasyMock.<HttpUriRequest>anyObject(),
+                                EasyMock.<HttpContext>anyObject()))
+                .andThrow(exception)
+                .times(4);
 
         EasyMock.replay(httpClient);
 
         ExecutionContext context = new ExecutionContext();
 
         Request<?> request = new DefaultRequest<Object>("testsvc");
-        request.setEndpoint(java.net.URI.create(
-                "http://testsvc.region.amazonaws.com"));
+        request.setEndpoint(java.net.URI.create("http://testsvc.region.amazonaws.com"));
         request.setContent(new ByteArrayInputStream(new byte[0]));
 
         try {
@@ -130,15 +125,11 @@ public class AmazonHttpClientTest {
         HttpResponseHandler<AmazonWebServiceResponse<Object>> handler =
                 EasyMock.createMock(HttpResponseHandler.class);
 
-        EasyMock
-            .expect(handler.needsConnectionLeftOpen())
-            .andReturn(false)
-            .anyTimes();
+        EasyMock.expect(handler.needsConnectionLeftOpen()).andReturn(false).anyTimes();
 
-        EasyMock
-            .expect(handler.handle(EasyMock.<HttpResponse>anyObject()))
-            .andThrow(exception)
-            .times(4);
+        EasyMock.expect(handler.handle(EasyMock.<HttpResponse>anyObject()))
+                .andThrow(exception)
+                .times(4);
 
         EasyMock.replay(handler);
 
@@ -146,29 +137,29 @@ public class AmazonHttpClientTest {
 
         EasyMock.reset(httpClient);
 
-        EasyMock
-            .expect(httpClient.getConnectionManager())
-            .andReturn(null)
-            .anyTimes();
+        EasyMock.expect(httpClient.getConnectionManager()).andReturn(null).anyTimes();
 
-        EasyMock
-            .expect(httpClient.execute(EasyMock.<HttpUriRequest>anyObject(),
-                                       EasyMock.<HttpContext>anyObject()))
-            .andReturn(response)
-            .times(4);
+        EasyMock.expect(
+                        httpClient.execute(
+                                EasyMock.<HttpUriRequest>anyObject(),
+                                EasyMock.<HttpContext>anyObject()))
+                .andReturn(response)
+                .times(4);
 
         EasyMock.replay(httpClient);
 
         ExecutionContext context = new ExecutionContext();
 
         Request<?> request = new DefaultRequest<Object>(null, "testsvc");
-        request.setEndpoint(java.net.URI.create(
-                "http://testsvc.region.amazonaws.com"));
+        request.setEndpoint(java.net.URI.create("http://testsvc.region.amazonaws.com"));
         request.setContent(new java.io.ByteArrayInputStream(new byte[0]));
 
         try {
 
-            client.requestExecutionBuilder().request(request).executionContext(context).execute(handler);
+            client.requestExecutionBuilder()
+                    .request(request)
+                    .executionContext(context)
+                    .execute(handler);
             Assert.fail("No exception when request repeatedly fails!");
 
         } catch (AmazonClientException e) {
@@ -182,23 +173,26 @@ public class AmazonHttpClientTest {
     @Test
     public void testUseExpectContinueTrue() throws IOException {
         Request<?> request = mockRequest(SERVER_NAME, HttpMethodName.PUT, URI_NAME, true);
-        ClientConfiguration clientConfiguration = new ClientConfiguration().withUseExpectContinue(true);
+        ClientConfiguration clientConfiguration =
+                new ClientConfiguration().withUseExpectContinue(true);
 
         HttpRequestFactory<HttpRequestBase> httpRequestFactory = new ApacheHttpRequestFactory();
-        HttpRequestBase httpRequest = httpRequestFactory.create(request, HttpClientSettings.adapt(clientConfiguration));
+        HttpRequestBase httpRequest =
+                httpRequestFactory.create(request, HttpClientSettings.adapt(clientConfiguration));
 
         Assert.assertNotNull(httpRequest);
         Assert.assertTrue(httpRequest.getConfig().isExpectContinueEnabled());
-
     }
 
     @Test
     public void testUseExpectContinueFalse() throws IOException {
         Request<?> request = mockRequest(SERVER_NAME, HttpMethodName.PUT, URI_NAME, true);
-        ClientConfiguration clientConfiguration = new ClientConfiguration().withUseExpectContinue(false);
+        ClientConfiguration clientConfiguration =
+                new ClientConfiguration().withUseExpectContinue(false);
 
         HttpRequestFactory<HttpRequestBase> httpRequestFactory = new ApacheHttpRequestFactory();
-        HttpRequestBase httpRequest = httpRequestFactory.create(request, HttpClientSettings.adapt(clientConfiguration));
+        HttpRequestBase httpRequest =
+                httpRequestFactory.create(request, HttpClientSettings.adapt(clientConfiguration));
 
         Assert.assertNotNull(httpRequest);
         Assert.assertFalse(httpRequest.getConfig().isExpectContinueEnabled());
@@ -241,9 +235,10 @@ public class AmazonHttpClientTest {
         Capture<HttpRequestBase> capturedRequest = new Capture<HttpRequestBase>();
 
         EasyMock.reset(httpClient);
-        EasyMock
-                .expect(httpClient.execute(
-                        EasyMock.capture(capturedRequest), EasyMock.<HttpContext>anyObject()))
+        EasyMock.expect(
+                        httpClient.execute(
+                                EasyMock.capture(capturedRequest),
+                                EasyMock.<HttpContext>anyObject()))
                 .andReturn(createBasicHttpResponse())
                 .once();
         EasyMock.replay(httpClient);
@@ -260,8 +255,10 @@ public class AmazonHttpClientTest {
     @Test
     public void testCredentialsSetInRequestContext() throws Exception {
         EasyMock.reset(httpClient);
-        EasyMock
-                .expect(httpClient.execute(EasyMock.<HttpRequestBase>anyObject(), EasyMock.<HttpContext>anyObject()))
+        EasyMock.expect(
+                        httpClient.execute(
+                                EasyMock.<HttpRequestBase>anyObject(),
+                                EasyMock.<HttpContext>anyObject()))
                 .andReturn(createBasicHttpResponse())
                 .once();
         EasyMock.replay(httpClient);
@@ -270,10 +267,9 @@ public class AmazonHttpClientTest {
 
         final BasicAWSCredentials credentials = new BasicAWSCredentials("foo", "bar");
 
-        AWSCredentialsProvider credentialsProvider = EasyMock.createMock(AWSCredentialsProvider.class);
-        EasyMock.expect(credentialsProvider.getCredentials())
-                .andReturn(credentials)
-                .anyTimes();
+        AWSCredentialsProvider credentialsProvider =
+                EasyMock.createMock(AWSCredentialsProvider.class);
+        EasyMock.expect(credentialsProvider.getCredentials()).andReturn(credentials).anyTimes();
         EasyMock.replay(credentialsProvider);
 
         ExecutionContext executionContext = new ExecutionContext();
@@ -297,33 +293,26 @@ public class AmazonHttpClientTest {
         BasicHttpEntity entity = new BasicHttpEntity();
         entity.setContent(content);
 
-        BasicHttpResponse response = new BasicHttpResponse(
-                new ProtocolVersion("http", 1, 1),
-                200,
-                "OK");
+        BasicHttpResponse response =
+                new BasicHttpResponse(new ProtocolVersion("http", 1, 1), 200, "OK");
         response.setEntity(entity);
         return response;
     }
 
-
-    private HttpResponseHandler<AmazonWebServiceResponse<Object>> createStubResponseHandler() throws Exception {
+    private HttpResponseHandler<AmazonWebServiceResponse<Object>> createStubResponseHandler()
+            throws Exception {
         HttpResponseHandler<AmazonWebServiceResponse<Object>> handler =
                 EasyMock.createMock(HttpResponseHandler.class);
         AmazonWebServiceResponse<Object> response = new AmazonWebServiceResponse<Object>();
-        EasyMock
-                .expect(handler.needsConnectionLeftOpen())
-                .andReturn(false)
-                .anyTimes();
+        EasyMock.expect(handler.needsConnectionLeftOpen()).andReturn(false).anyTimes();
 
-        EasyMock
-                .expect(handler.handle(EasyMock.<HttpResponse>anyObject()))
+        EasyMock.expect(handler.handle(EasyMock.<HttpResponse>anyObject()))
                 .andReturn(response)
                 .anyTimes();
         return handler;
     }
 
-    private void testRetries(Request<?> request, int contentLength)
-            throws IOException {
+    private void testRetries(Request<?> request, int contentLength) throws IOException {
 
         ExecutionContext context = new ExecutionContext();
 
@@ -340,47 +329,45 @@ public class AmazonHttpClientTest {
 
         EasyMock.reset(httpClient);
 
-        EasyMock
-            .expect(httpClient.getConnectionManager())
-            .andReturn(null)
-            .anyTimes();
+        EasyMock.expect(httpClient.getConnectionManager()).andReturn(null).anyTimes();
 
         for (int i = 0; i < 4; ++i) {
-            EasyMock
-                .expect(httpClient.execute(
-                        EasyMock.<HttpUriRequest>anyObject(),
-                        EasyMock.<HttpContext>anyObject()))
-                .andAnswer(new IAnswer<tink.org.apache.http.HttpResponse>() {
+            EasyMock.expect(
+                            httpClient.execute(
+                                    EasyMock.<HttpUriRequest>anyObject(),
+                                    EasyMock.<HttpContext>anyObject()))
+                    .andAnswer(
+                            new IAnswer<tink.org.apache.http.HttpResponse>() {
 
-                    @Override
-                    public tink.org.apache.http.HttpResponse answer()
-                            throws Throwable {
+                                @Override
+                                public tink.org.apache.http.HttpResponse answer() throws Throwable {
 
-                        HttpEntityEnclosingRequestBase request =
-                                (HttpEntityEnclosingRequestBase)
-                                        EasyMock.getCurrentArguments()[0];
+                                    HttpEntityEnclosingRequestBase request =
+                                            (HttpEntityEnclosingRequestBase)
+                                                    EasyMock.getCurrentArguments()[0];
 
-                        InputStream stream = request.getEntity().getContent();
-                        int len = 0;
-                        while (true) {
-                            int b = stream.read(new byte[1024]);
-                            if (b == -1) {
-                                break;
-                            }
-                            len += b;
-                        }
+                                    InputStream stream = request.getEntity().getContent();
+                                    int len = 0;
+                                    while (true) {
+                                        int b = stream.read(new byte[1024]);
+                                        if (b == -1) {
+                                            break;
+                                        }
+                                        len += b;
+                                    }
 
-                        assertEquals(contentLength, len);
+                                    assertEquals(contentLength, len);
 
-                        throw new IOException("BOOM");
-                    }
-                });
+                                    throw new IOException("BOOM");
+                                }
+                            });
         }
 
         EasyMock.replay(httpClient);
     }
 
-    private Request<?> mockRequest(String serverName, HttpMethodName methodName, String uri, boolean hasCL) {
+    private Request<?> mockRequest(
+            String serverName, HttpMethodName methodName, String uri, boolean hasCL) {
         Request<?> request = new DefaultRequest<Object>(null, serverName);
         request.setHttpMethod(methodName);
         request.setContent(new ByteArrayInputStream(new byte[100]));
@@ -397,13 +384,15 @@ public class AmazonHttpClientTest {
     };
 
     /**
-     * Builds up the correct sequence of RequestHandler2 callbacks that occur from the AmazonHttpClient, based
-     * on parameters that describe a simple test scenario
+     * Builds up the correct sequence of RequestHandler2 callbacks that occur from the
+     * AmazonHttpClient, based on parameters that describe a simple test scenario
+     *
      * @param mockHandler
      * @param attemptCount
      * @param outcome
      */
-    void SetupMockRequestHandler2(RequestHandler2 mockHandler, int attemptCount, MockRequestOutcome outcome) {
+    void SetupMockRequestHandler2(
+            RequestHandler2 mockHandler, int attemptCount, MockRequestOutcome outcome) {
 
         HttpResponse testResponse = EasyMock.createMock(HttpResponse.class);
 
@@ -412,14 +401,17 @@ public class AmazonHttpClientTest {
         mockHandler.beforeRequest(EasyMock.<Request<?>>anyObject());
         EasyMock.expectLastCall().once();
 
-        for(int i = 0; i < attemptCount; ++i) {
+        for (int i = 0; i < attemptCount; ++i) {
             // beforeAttempt
             mockHandler.beforeAttempt(EasyMock.<HandlerBeforeAttemptContext>anyObject());
             EasyMock.expectLastCall().once();
 
             if (outcome == MockRequestOutcome.Success && i + 1 == attemptCount) {
                 // beforeUnmarshalling, requires success-based test
-                EasyMock.expect(mockHandler.beforeUnmarshalling(EasyMock.<Request<?>>anyObject(), EasyMock.<HttpResponse>anyObject()))
+                EasyMock.expect(
+                                mockHandler.beforeUnmarshalling(
+                                        EasyMock.<Request<?>>anyObject(),
+                                        EasyMock.<HttpResponse>anyObject()))
                         .andReturn(testResponse)
                         .once();
             }
@@ -429,13 +421,17 @@ public class AmazonHttpClientTest {
             EasyMock.expectLastCall().once();
         }
 
-        if(outcome == MockRequestOutcome.Success) {
+        if (outcome == MockRequestOutcome.Success) {
             // afterResponse, requires success
-            mockHandler.afterResponse(EasyMock.<Request<?>>anyObject(), EasyMock.<Response<?>>anyObject());
+            mockHandler.afterResponse(
+                    EasyMock.<Request<?>>anyObject(), EasyMock.<Response<?>>anyObject());
             EasyMock.expectLastCall().once();
-        } else if (outcome == MockRequestOutcome.FailureWithAwsClientException){
+        } else if (outcome == MockRequestOutcome.FailureWithAwsClientException) {
             // afterError, only called if exception was an AwsClientException
-            mockHandler.afterError(EasyMock.<Request<?>>anyObject(), EasyMock.<Response<?>>anyObject(), EasyMock.<Exception>anyObject());
+            mockHandler.afterError(
+                    EasyMock.<Request<?>>anyObject(),
+                    EasyMock.<Response<?>>anyObject(),
+                    EasyMock.<Exception>anyObject());
             EasyMock.expectLastCall().once();
         }
         EasyMock.replay(mockHandler);
@@ -444,7 +440,10 @@ public class AmazonHttpClientTest {
     @Test
     public void testHandlerCallbacksOnFirstAttemptSuccess() throws IOException {
         EasyMock.reset(httpClient);
-        EasyMock.expect(httpClient.execute(EasyMock.<HttpUriRequest>anyObject(), EasyMock.<HttpContext>anyObject()))
+        EasyMock.expect(
+                        httpClient.execute(
+                                EasyMock.<HttpUriRequest>anyObject(),
+                                EasyMock.<HttpContext>anyObject()))
                 .andReturn(createBasicHttpResponse())
                 .once();
 
@@ -477,14 +476,12 @@ public class AmazonHttpClientTest {
 
         EasyMock.reset(httpClient);
 
-        EasyMock
-                .expect(httpClient.getConnectionManager())
-                .andReturn(null)
-                .anyTimes();
+        EasyMock.expect(httpClient.getConnectionManager()).andReturn(null).anyTimes();
 
-        EasyMock
-                .expect(httpClient.execute(EasyMock.<HttpUriRequest>anyObject(),
-                        EasyMock.<HttpContext>anyObject()))
+        EasyMock.expect(
+                        httpClient.execute(
+                                EasyMock.<HttpUriRequest>anyObject(),
+                                EasyMock.<HttpContext>anyObject()))
                 .andThrow(exception)
                 .times(4);
 
@@ -517,14 +514,12 @@ public class AmazonHttpClientTest {
 
         EasyMock.reset(httpClient);
 
-        EasyMock
-                .expect(httpClient.getConnectionManager())
-                .andReturn(null)
-                .anyTimes();
+        EasyMock.expect(httpClient.getConnectionManager()).andReturn(null).anyTimes();
 
-        EasyMock
-                .expect(httpClient.execute(EasyMock.<HttpUriRequest>anyObject(),
-                        EasyMock.<HttpContext>anyObject()))
+        EasyMock.expect(
+                        httpClient.execute(
+                                EasyMock.<HttpUriRequest>anyObject(),
+                                EasyMock.<HttpContext>anyObject()))
                 .andThrow(exception)
                 .times(1);
 
@@ -557,18 +552,19 @@ public class AmazonHttpClientTest {
 
         EasyMock.reset(httpClient);
 
-        EasyMock
-                .expect(httpClient.getConnectionManager())
-                .andReturn(null)
-                .anyTimes();
+        EasyMock.expect(httpClient.getConnectionManager()).andReturn(null).anyTimes();
 
-        EasyMock
-                .expect(httpClient.execute(EasyMock.<HttpUriRequest>anyObject(),
-                        EasyMock.<HttpContext>anyObject()))
+        EasyMock.expect(
+                        httpClient.execute(
+                                EasyMock.<HttpUriRequest>anyObject(),
+                                EasyMock.<HttpContext>anyObject()))
                 .andThrow(ioException)
                 .times(2);
 
-        EasyMock.expect(httpClient.execute(EasyMock.<HttpUriRequest>anyObject(), EasyMock.<HttpContext>anyObject()))
+        EasyMock.expect(
+                        httpClient.execute(
+                                EasyMock.<HttpUriRequest>anyObject(),
+                                EasyMock.<HttpContext>anyObject()))
                 .andReturn(createBasicHttpResponse())
                 .once();
 
@@ -601,25 +597,17 @@ public class AmazonHttpClientTest {
         HttpResponseHandler<AmazonWebServiceResponse<Object>> handler =
                 EasyMock.createMock(HttpResponseHandler.class);
 
-        EasyMock
-                .expect(handler.needsConnectionLeftOpen())
-                .andReturn(true)
-                .anyTimes();
+        EasyMock.expect(handler.needsConnectionLeftOpen()).andReturn(true).anyTimes();
 
         AmazonWebServiceResponse response = EasyMock.createMock(AmazonWebServiceResponse.class);
 
-        EasyMock
-                .expect(handler.handle(EasyMock.isA(HttpResponse.class)))
-                .andReturn(response);
+        EasyMock.expect(handler.handle(EasyMock.isA(HttpResponse.class))).andReturn(response);
 
         EasyMock.replay(handler);
 
         EasyMock.reset(httpClient);
 
-        EasyMock
-                .expect(httpClient.getConnectionManager())
-                .andReturn(null)
-                .anyTimes();
+        EasyMock.expect(httpClient.getConnectionManager()).andReturn(null).anyTimes();
 
         InputStream responseStream = EasyMock.createMock(InputStream.class);
 
@@ -631,35 +619,40 @@ public class AmazonHttpClientTest {
 
         BasicHttpResponse httpResponse = createBasicHttpResponse(responseStream);
 
-        EasyMock
-                .expect(httpClient.execute(EasyMock.<HttpUriRequest>anyObject(),
-                        EasyMock.<HttpContext>anyObject()))
+        EasyMock.expect(
+                        httpClient.execute(
+                                EasyMock.<HttpUriRequest>anyObject(),
+                                EasyMock.<HttpContext>anyObject()))
                 .andReturn(httpResponse)
                 .times(1);
 
         EasyMock.replay(httpClient);
 
-        InputStream requestInputStream = new ByteArrayInputStream("foo".getBytes()){
-            @Override
-            public void close() throws IOException {
-                throw expectedThrown;
-            }
-        };
+        InputStream requestInputStream =
+                new ByteArrayInputStream("foo".getBytes()) {
+                    @Override
+                    public void close() throws IOException {
+                        throw expectedThrown;
+                    }
+                };
 
         ExecutionContext context = new ExecutionContext();
 
         Request<?> request = new DefaultRequest<Object>(null, "testsvc");
-        request.setEndpoint(java.net.URI.create(
-                "http://testsvc.region.amazonaws.com"));
+        request.setEndpoint(java.net.URI.create("http://testsvc.region.amazonaws.com"));
         request.setContent(requestInputStream);
 
-        Response<AmazonWebServiceResponse<Object>> awsResponse = client.requestExecutionBuilder().request(request).executionContext(context).execute(handler);
+        Response<AmazonWebServiceResponse<Object>> awsResponse =
+                client.requestExecutionBuilder()
+                        .request(request)
+                        .executionContext(context)
+                        .execute(handler);
 
         awsResponse.getHttpResponse().getContent().close();
 
         EasyMock.verify(httpClient);
 
-        //verify that the response stream was closed
+        // verify that the response stream was closed
         EasyMock.verify(responseStream);
     }
 }

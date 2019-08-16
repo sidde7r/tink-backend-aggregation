@@ -16,21 +16,15 @@ package com.amazonaws.regions;
 
 import java.net.URI;
 
-
-/**
- * An abstract implementation of {@link RegionMetadataProvider}
- */
-
-public abstract class AbstractRegionMetadataProvider implements
-        RegionMetadataProvider {
+/** An abstract implementation of {@link RegionMetadataProvider} */
+public abstract class AbstractRegionMetadataProvider implements RegionMetadataProvider {
 
     @Override
     public Region getRegionByEndpoint(String endpoint) {
         String host = getHost(endpoint);
 
         for (Region region : getRegions()) {
-            for (String serviceEndpoint :
-                    region.getAvailableEndpoints()) {
+            for (String serviceEndpoint : region.getAvailableEndpoints()) {
 
                 if (host.equals(getHost(serviceEndpoint))) {
                     return region;
@@ -43,8 +37,7 @@ public abstract class AbstractRegionMetadataProvider implements
     }
 
     /**
-     * Parse the host portion out of an endpoint (which may or may not
-     * contain a scheme).
+     * Parse the host portion out of an endpoint (which may or may not contain a scheme).
      *
      * @param endpoint the endpoint to parse
      * @return the host portion of the endpoint

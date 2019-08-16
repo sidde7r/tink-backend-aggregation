@@ -17,10 +17,9 @@ package com.amazonaws.http.conn;
 
 import tink.org.apache.http.conn.socket.ConnectionSocketFactory;
 
-/**
- * Proxy integration tests for {@link SdkPlainSocketFactory}.
- */
-public class SdkPlainSocketFactoryProxyIntegrationTest extends AbstractConnectionSocketFactoryProxyIntegrationTestBase {
+/** Proxy integration tests for {@link SdkPlainSocketFactory}. */
+public class SdkPlainSocketFactoryProxyIntegrationTest
+        extends AbstractConnectionSocketFactoryProxyIntegrationTestBase {
     @Override
     protected ConnectionSocketFactory getFactory() {
         return new SdkPlainSocketFactory();

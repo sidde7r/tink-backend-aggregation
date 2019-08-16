@@ -24,20 +24,20 @@ import com.amazonaws.regions.AwsRegionProvider;
 /**
  * Base class for all service specific sync client builders.
  *
- * @param <Subclass>    Concrete builder type, used for better fluent methods.
+ * @param <Subclass> Concrete builder type, used for better fluent methods.
  * @param <TypeToBuild> Client interface this builder can build.
  */
 @NotThreadSafe
 @SdkProtectedApi
-public abstract class AwsSyncClientBuilder<Subclass extends AwsSyncClientBuilder, TypeToBuild> extends
-                                                                                               AwsClientBuilder<Subclass, TypeToBuild> {
+public abstract class AwsSyncClientBuilder<Subclass extends AwsSyncClientBuilder, TypeToBuild>
+        extends AwsClientBuilder<Subclass, TypeToBuild> {
     protected AwsSyncClientBuilder(ClientConfigurationFactory clientConfigFactory) {
         super(clientConfigFactory);
     }
 
     @SdkTestInternalApi
-    protected AwsSyncClientBuilder(ClientConfigurationFactory clientConfigFactory,
-                                   AwsRegionProvider regionProvider) {
+    protected AwsSyncClientBuilder(
+            ClientConfigurationFactory clientConfigFactory, AwsRegionProvider regionProvider) {
         super(clientConfigFactory, regionProvider);
     }
 
@@ -53,5 +53,4 @@ public abstract class AwsSyncClientBuilder<Subclass extends AwsSyncClientBuilder
      * @return Built client.
      */
     protected abstract TypeToBuild build(AwsSyncClientParams clientParams);
-
 }

@@ -14,15 +14,14 @@
  */
 package com.amazonaws.util;
 
+import com.amazonaws.internal.SdkFilterInputStream;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.amazonaws.internal.SdkFilterInputStream;
-
 /**
- * FilterInputStream implementation that wraps an InputStream containing an XML
- * document, and removes the XML namespace attribute from the XML document.
+ * FilterInputStream implementation that wraps an InputStream containing an XML document, and
+ * removes the XML namespace attribute from the XML document.
  */
 class NamespaceRemovingInputStream extends SdkFilterInputStream {
 
@@ -33,12 +32,9 @@ class NamespaceRemovingInputStream extends SdkFilterInputStream {
     private boolean hasRemovedNamespace = false;
 
     /**
-     * Constructs a new NamespaceRemovingInputStream wrapping the specified
-     * InputStream.
+     * Constructs a new NamespaceRemovingInputStream wrapping the specified InputStream.
      *
-     * @param in
-     *            The InputStream containing an XML document whose XML namespace
-     *            is to be removed.
+     * @param in The InputStream containing an XML document whose XML namespace is to be removed.
      */
     public NamespaceRemovingInputStream(InputStream in) {
         // Wrap our input stream in a buffered input stream to ensure
@@ -54,7 +50,7 @@ class NamespaceRemovingInputStream extends SdkFilterInputStream {
         abortIfNeeded();
         int b = in.read();
         if (b == 'x' && !hasRemovedNamespace) {
-            lookAheadData[0] = (byte)b;
+            lookAheadData[0] = (byte) b;
             in.mark(lookAheadData.length);
             int bytesRead = in.read(lookAheadData, 1, lookAheadData.length - 1);
             in.reset();
@@ -86,7 +82,7 @@ class NamespaceRemovingInputStream extends SdkFilterInputStream {
                 return i;
             }
 
-            b[i + off] = (byte)j;
+            b[i + off] = (byte) j;
         }
 
         return len;
@@ -101,14 +97,12 @@ class NamespaceRemovingInputStream extends SdkFilterInputStream {
     }
 
     /**
-     * Checks if the string starts with a complete XML namespace attribute, and
-     * if so, returns the number of characters that match.
+     * Checks if the string starts with a complete XML namespace attribute, and if so, returns the
+     * number of characters that match.
      *
-     * @param s
-     *            The string to check for an XML namespace definition.
-     *
-     * @return -1 if no XML namespace definition was found, otherwise the length
-     *         of the identified XML namespace definition.
+     * @param s The string to check for an XML namespace definition.
+     * @return -1 if no XML namespace definition was found, otherwise the length of the identified
+     *     XML namespace definition.
      */
     private int matchXmlNamespaceAttribute(String s) {
         /*
@@ -127,9 +121,7 @@ class NamespaceRemovingInputStream extends SdkFilterInputStream {
         return s.length() - stringSlicer.getString().length();
     }
 
-    /**
-     * Utility class to help test and remove specified prefixes from a string.
-     */
+    /** Utility class to help test and remove specified prefixes from a string. */
     private static final class StringPrefixSlicer {
         private String s;
 
@@ -137,10 +129,7 @@ class NamespaceRemovingInputStream extends SdkFilterInputStream {
             this.s = s;
         }
 
-        /**
-         * @return The remaining String (minus any prefixes that have been
-         *         removed).
-         */
+        /** @return The remaining String (minus any prefixes that have been removed). */
         public String getString() {
             return s;
         }
@@ -167,5 +156,4 @@ class NamespaceRemovingInputStream extends SdkFilterInputStream {
             return true;
         }
     }
-
 }

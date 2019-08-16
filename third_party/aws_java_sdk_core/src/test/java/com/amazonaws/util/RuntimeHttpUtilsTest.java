@@ -14,29 +14,23 @@
  */
 package com.amazonaws.util;
 
+import static org.junit.Assert.assertEquals;
+
 import com.amazonaws.DefaultRequest;
 import com.amazonaws.Request;
 import com.amazonaws.SdkClientException;
-
+import java.net.URI;
+import java.net.URL;
+import java.util.Arrays;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import java.net.URI;
-import java.net.URL;
-import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
-
-/**
- * Unit tests for utility methods in {@link RuntimeHttpUtils}.
- */
+/** Unit tests for utility methods in {@link RuntimeHttpUtils}. */
 @RunWith(Enclosed.class)
 public class RuntimeHttpUtilsTest {
 
-    /**
-     * Unit tests for {@link RuntimeHttpUtils#convertRequestToUrl(Request, boolean, boolean)}.
-     */
+    /** Unit tests for {@link RuntimeHttpUtils#convertRequestToUrl(Request, boolean, boolean)}. */
     public static class ConvertRequestToUrlTest {
 
         private static final URI ENDPOINT = URI.create("https://test.amazonaws.com");
@@ -45,10 +39,10 @@ public class RuntimeHttpUtilsTest {
         public void plainTextPathAndQuery_PathWithoutLeadingSlash() {
             Request<?> request = newRequest();
             request.setResourcePath("foo/bar");
-            request.withParameter("queryOne", "valOne")
-                    .withParameter("queryTwo", "valTwo");
+            request.withParameter("queryOne", "valOne").withParameter("queryTwo", "valTwo");
             URL url = RuntimeHttpUtils.convertRequestToUrl(request, false, true);
-            assertUrlEquals("https://test.amazonaws.com/foo/bar?queryOne=valOne&queryTwo=valTwo", url);
+            assertUrlEquals(
+                    "https://test.amazonaws.com/foo/bar?queryOne=valOne&queryTwo=valTwo", url);
         }
 
         @Test
@@ -106,7 +100,8 @@ public class RuntimeHttpUtilsTest {
             request.withParameter("queryOne", "val one");
             request.withParameter("queryTwo", "valTwo");
             URL url = RuntimeHttpUtils.convertRequestToUrl(request, false, false);
-            assertUrlEquals("https://test.amazonaws.com/foo/bar?queryOne=val%20one&queryTwo=valTwo", url);
+            assertUrlEquals(
+                    "https://test.amazonaws.com/foo/bar?queryOne=val%20one&queryTwo=valTwo", url);
         }
 
         @Test
@@ -116,7 +111,8 @@ public class RuntimeHttpUtilsTest {
             request.withParameter("query one", "valOne");
             request.withParameter("queryTwo", "valTwo");
             URL url = RuntimeHttpUtils.convertRequestToUrl(request, false, false);
-            assertUrlEquals("https://test.amazonaws.com/foo/bar?query%20one=valOne&queryTwo=valTwo", url);
+            assertUrlEquals(
+                    "https://test.amazonaws.com/foo/bar?query%20one=valOne&queryTwo=valTwo", url);
         }
 
         @Test
@@ -125,7 +121,9 @@ public class RuntimeHttpUtilsTest {
             request.setResourcePath("foo/bar");
             request.addParameters("queryList", Arrays.asList("foo", "bar", "baz"));
             URL url = RuntimeHttpUtils.convertRequestToUrl(request, false, false);
-            assertUrlEquals("https://test.amazonaws.com/foo/bar?queryList=foo&queryList=bar&queryList=baz", url);
+            assertUrlEquals(
+                    "https://test.amazonaws.com/foo/bar?queryList=foo&queryList=bar&queryList=baz",
+                    url);
         }
 
         @Test(expected = SdkClientException.class)
@@ -145,7 +143,5 @@ public class RuntimeHttpUtilsTest {
         private void assertUrlEquals(String expected, URL actual) {
             assertEquals(expected, actual.toExternalForm());
         }
-
     }
-
 }

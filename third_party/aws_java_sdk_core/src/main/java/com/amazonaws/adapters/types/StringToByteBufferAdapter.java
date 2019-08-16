@@ -15,10 +15,9 @@
  */
 package com.amazonaws.adapters.types;
 
-import java.nio.ByteBuffer;
-
 import com.amazonaws.annotation.SdkProtectedApi;
 import com.amazonaws.util.StringUtils;
+import java.nio.ByteBuffer;
 
 @SdkProtectedApi
 public class StringToByteBufferAdapter implements TypeAdapter<String, ByteBuffer> {
@@ -31,5 +30,4 @@ public class StringToByteBufferAdapter implements TypeAdapter<String, ByteBuffer
             return ByteBuffer.wrap(source.getBytes(StringUtils.UTF8));
         }
     }
-
 }

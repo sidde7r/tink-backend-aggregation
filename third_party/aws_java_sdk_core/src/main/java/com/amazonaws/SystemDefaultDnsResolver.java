@@ -18,8 +18,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * Default dns resolver that uses {@link java.net.InetAddress#getAllByName(String)}
- * to resolve hosts to ip addresses
+ * Default dns resolver that uses {@link java.net.InetAddress#getAllByName(String)} to resolve hosts
+ * to ip addresses
  */
 public class SystemDefaultDnsResolver implements DnsResolver {
     @Override

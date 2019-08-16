@@ -17,21 +17,18 @@ package com.amazonaws;
 /**
  * Base type for all client exceptions thrown by the SDK.
  *
- * This exception is thrown when service could not be contacted for a response,
- * or when client is unable to parse the response from service.
+ * <p>This exception is thrown when service could not be contacted for a response, or when client is
+ * unable to parse the response from service.
  *
  * @see AmazonClientException
  */
 public class SdkClientException extends AmazonClientException {
 
     /**
-     * Creates a new SdkClientException with the specified message, and root
-     * cause.
+     * Creates a new SdkClientException with the specified message, and root cause.
      *
-     * @param message
-     *            An error message describing why this exception was thrown.
-     * @param t
-     *            The underlying cause of this exception.
+     * @param message An error message describing why this exception was thrown.
+     * @param t The underlying cause of this exception.
      */
     public SdkClientException(String message, Throwable t) {
         super(message, t);
@@ -40,8 +37,7 @@ public class SdkClientException extends AmazonClientException {
     /**
      * Creates a new SdkClientException with the specified message.
      *
-     * @param message
-     *            An error message describing why this exception was thrown.
+     * @param message An error message describing why this exception was thrown.
      */
     public SdkClientException(String message) {
         super(message);
@@ -50,8 +46,7 @@ public class SdkClientException extends AmazonClientException {
     /**
      * Creates a new SdkClientException with the root cause.
      *
-     * @param t
-     *          The underlying cause of this exception.
+     * @param t The underlying cause of this exception.
      */
     public SdkClientException(Throwable t) {
         super(t);

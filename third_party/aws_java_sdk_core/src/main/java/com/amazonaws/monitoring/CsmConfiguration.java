@@ -17,9 +17,7 @@ package com.amazonaws.monitoring;
 import static com.amazonaws.SDKGlobalConfiguration.DEFAULT_AWS_CSM_CLIENT_ID;
 import static com.amazonaws.SDKGlobalConfiguration.DEFAULT_AWS_CSM_PORT;
 
-/**
- * Configuration for Client Side Monitoring.
- */
+/** Configuration for Client Side Monitoring. */
 public final class CsmConfiguration {
     private final boolean enabled;
     private final int port;
@@ -41,24 +39,17 @@ public final class CsmConfiguration {
         this.clientId = builder.clientId == null ? DEFAULT_AWS_CSM_CLIENT_ID : builder.clientId;
     }
 
-    /**
-     * {@code true} if client side monitoring is enabled, {@code false}
-     * otherwise.
-     */
+    /** {@code true} if client side monitoring is enabled, {@code false} otherwise. */
     public boolean isEnabled() {
         return enabled;
     }
 
-    /**
-     * The port of the out of process client side monitoring agent.
-     */
+    /** The port of the out of process client side monitoring agent. */
     public int getPort() {
         return port;
     }
 
-    /**
-     * The client ID to set on the monitoring events.
-     */
+    /** The client ID to set on the monitoring events. */
     public String getClientId() {
         return clientId;
     }
@@ -96,9 +87,7 @@ public final class CsmConfiguration {
         private Integer port;
         private String clientId;
 
-        private Builder() {
-
-        }
+        private Builder() {}
 
         public Builder withEnabled(Boolean enabled) {
             this.enabled = enabled;

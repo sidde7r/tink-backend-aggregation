@@ -18,11 +18,10 @@
  */
 package com.amazonaws.http;
 
-import org.junit.After;
-import org.junit.Before;
-
 import com.amazonaws.http.request.EmptyHttpRequest;
 import com.amazonaws.http.server.MockServer;
+import org.junit.After;
+import org.junit.Before;
 
 public abstract class MockServerTestBase {
 
@@ -43,8 +42,6 @@ public abstract class MockServerTestBase {
         return new EmptyHttpRequest(server.getEndpoint(), HttpMethodName.GET);
     }
 
-    /**
-     * Implemented by test subclasses to build the correct type of {@link MockServer}
-     */
+    /** Implemented by test subclasses to build the correct type of {@link MockServer} */
     protected abstract MockServer buildMockServer();
 }

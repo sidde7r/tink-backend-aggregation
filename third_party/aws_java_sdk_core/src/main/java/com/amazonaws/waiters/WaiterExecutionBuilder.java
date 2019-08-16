@@ -17,7 +17,6 @@ package com.amazonaws.waiters;
 
 import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.annotation.SdkProtectedApi;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,13 +41,14 @@ public class WaiterExecutionBuilder<Input extends AmazonWebServiceRequest, Outpu
         return this;
     }
 
-
-    public WaiterExecutionBuilder<Input, Output> withPollingStrategy(PollingStrategy pollingStrategy) {
+    public WaiterExecutionBuilder<Input, Output> withPollingStrategy(
+            PollingStrategy pollingStrategy) {
         this.pollingStrategy = pollingStrategy;
         return this;
     }
 
-    public WaiterExecutionBuilder<Input, Output> withAcceptors(List<WaiterAcceptor<Output>> acceptors) {
+    public WaiterExecutionBuilder<Input, Output> withAcceptors(
+            List<WaiterAcceptor<Output>> acceptors) {
         this.acceptors = acceptors;
         return this;
     }
@@ -72,5 +72,4 @@ public class WaiterExecutionBuilder<Input extends AmazonWebServiceRequest, Outpu
     public WaiterExecution<Input, Output> build() {
         return new WaiterExecution<Input, Output>(this);
     }
-
 }

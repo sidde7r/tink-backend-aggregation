@@ -15,8 +15,12 @@
 
 package com.amazonaws.waiters;
 
+import static org.mockito.Mockito.*;
+
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.AmazonWebServiceRequest;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,27 +28,31 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
-
 @RunWith(MockitoJUnitRunner.class)
 public class WaiterTest {
 
     @Mock
-    private PollingStrategy.RetryStrategy mockRetryStrategy = mock(PollingStrategy.RetryStrategy.class);
-    private PollingStrategy.DelayStrategy mockDelayStrategy = mock(PollingStrategy.DelayStrategy.class);
+    private PollingStrategy.RetryStrategy mockRetryStrategy =
+            mock(PollingStrategy.RetryStrategy.class);
+
+    private PollingStrategy.DelayStrategy mockDelayStrategy =
+            mock(PollingStrategy.DelayStrategy.class);
 
     WaiterExecutionBuilder waiterExecutionBuilder;
     MockDescribeRequest request = new MockDescribeRequest();
+
     @Before
-    public void setup(){
-        waiterExecutionBuilder = new WaiterExecutionBuilder<MockDescribeRequest, MockDescribeResult>()
-                .withRequest(request)
-                .withPollingStrategy(new PollingStrategy(mockRetryStrategy, mockDelayStrategy))
-                .withSdkFunction(new MockDescribeFunction());
-        when(mockRetryStrategy.shouldRetry(any(PollingStrategyContext.class))).thenReturn(true).thenReturn(true).thenReturn(false);
+    public void setup() {
+        waiterExecutionBuilder =
+                new WaiterExecutionBuilder<MockDescribeRequest, MockDescribeResult>()
+                        .withRequest(request)
+                        .withPollingStrategy(
+                                new PollingStrategy(mockRetryStrategy, mockDelayStrategy))
+                        .withSdkFunction(new MockDescribeFunction());
+        when(mockRetryStrategy.shouldRetry(any(PollingStrategyContext.class)))
+                .thenReturn(true)
+                .thenReturn(true)
+                .thenReturn(false);
     }
 
     @Test
@@ -81,40 +89,56 @@ public class WaiterTest {
     public void retryStateFailCustomPolling() throws Exception {
         List<WaiterAcceptor> acceptors = new ArrayList<WaiterAcceptor>();
         acceptors.add(new ExceptionAcceptor());
-        PollingStrategy pollingStrategy = new PollingStrategy(new PollingStrategy.RetryStrategy() {
-            int retryCount = 0;
-            @Override
-            public boolean shouldRetry(PollingStrategyContext retryStrategyParameters) {
-                if (retryStrategyParameters.getRetriesAttempted() < 4) {
-                    retryCount++;
-                    return true;
-                }
-                Assert.assertEquals("It didn't retry the expected number of times", 4, retryCount);
-                return false;
-            }
-        }, new PollingStrategy.DelayStrategy() {
-                    int retries = 0;
-                    @Override
-                    public void delayBeforeNextRetry(PollingStrategyContext pollingStrategyContext) throws InterruptedException {
-                        Assert.assertEquals("Request object is different from the expected request", request, pollingStrategyContext.getOriginalRequest());
-                        Assert.assertEquals("Number of retries is different from the expected retries", retries, pollingStrategyContext.getRetriesAttempted());
-                        retries++;
-                        if (pollingStrategyContext.getRetriesAttempted() < 4) {
-                            Thread.sleep(2000);
-                            return;
-                        }
-                        Assert.assertEquals("It didn't back off the expected number of times", 4, retries);
+        PollingStrategy pollingStrategy =
+                new PollingStrategy(
+                        new PollingStrategy.RetryStrategy() {
+                            int retryCount = 0;
 
-                    }
+                            @Override
+                            public boolean shouldRetry(
+                                    PollingStrategyContext retryStrategyParameters) {
+                                if (retryStrategyParameters.getRetriesAttempted() < 4) {
+                                    retryCount++;
+                                    return true;
+                                }
+                                Assert.assertEquals(
+                                        "It didn't retry the expected number of times",
+                                        4,
+                                        retryCount);
+                                return false;
+                            }
+                        },
+                        new PollingStrategy.DelayStrategy() {
+                            int retries = 0;
 
-                });
+                            @Override
+                            public void delayBeforeNextRetry(
+                                    PollingStrategyContext pollingStrategyContext)
+                                    throws InterruptedException {
+                                Assert.assertEquals(
+                                        "Request object is different from the expected request",
+                                        request,
+                                        pollingStrategyContext.getOriginalRequest());
+                                Assert.assertEquals(
+                                        "Number of retries is different from the expected retries",
+                                        retries,
+                                        pollingStrategyContext.getRetriesAttempted());
+                                retries++;
+                                if (pollingStrategyContext.getRetriesAttempted() < 4) {
+                                    Thread.sleep(2000);
+                                    return;
+                                }
+                                Assert.assertEquals(
+                                        "It didn't back off the expected number of times",
+                                        4,
+                                        retries);
+                            }
+                        });
 
-        waiterExecutionBuilder.withAcceptors(acceptors)
-                     .withPollingStrategy(pollingStrategy);
+        waiterExecutionBuilder.withAcceptors(acceptors).withPollingStrategy(pollingStrategy);
         WaiterExecution waiter = new WaiterExecution(waiterExecutionBuilder);
         waiter.pollResource();
     }
-
 
     class MockDescribeRequest extends AmazonWebServiceRequest {
         private String tableName;
@@ -128,7 +152,6 @@ public class WaiterTest {
         return new MockDescribeResult();
     }
 
-
     class MockDescribeFunction implements SdkFunction<MockDescribeRequest, MockDescribeResult> {
 
         private int numberOfCalls = 0;
@@ -138,9 +161,7 @@ public class WaiterTest {
             numberOfCalls++;
             return mockDescribeTable(describeTableRequest);
         }
-
     }
-
 
     class FailureStateResultAcceptor extends WaiterAcceptor<MockDescribeResult> {
 
@@ -153,21 +174,21 @@ public class WaiterTest {
         }
     }
 
-
     class SuccessStateResultAcceptor extends WaiterAcceptor<MockDescribeResult> {
 
         int retryCount = 0;
+
         public boolean matches(MockDescribeResult result) {
             return true;
         }
+
         public WaiterState getState() {
-            if(retryCount <= 1) {
+            if (retryCount <= 1) {
                 retryCount++;
                 return WaiterState.RETRY;
             }
             return WaiterState.SUCCESS;
         }
-
     }
 
     class ExceptionAcceptor extends WaiterAcceptor<MockDescribeResult> {
@@ -181,14 +202,9 @@ public class WaiterTest {
         }
     }
 
-
     class MockResourceNotFoundException extends AmazonServiceException {
         public MockResourceNotFoundException(String message) {
             super(message);
         }
     }
 }
-
-
-
-

@@ -20,19 +20,18 @@ package com.amazonaws.protocol;
 public enum Protocol {
 
     /**
-     * RPC protocol that sends all data in the payload as JSON and sends the X-Amz-Target header to indicate the
-     * operation to invoke.
+     * RPC protocol that sends all data in the payload as JSON and sends the X-Amz-Target header to
+     * indicate the operation to invoke.
      */
     AWS_JSON,
 
     /**
-     * Protocol that supports RESTful bindings. Members can be bound to the headers, query params, path, or payload. Supports
-     * binary and streaming data. Operation is identified by HTTP verb and resource path combination.
+     * Protocol that supports RESTful bindings. Members can be bound to the headers, query params,
+     * path, or payload. Supports binary and streaming data. Operation is identified by HTTP verb
+     * and resource path combination.
      */
     REST_JSON,
 
-    /**
-     * A variation of REST_JSON for externally generated, API Gateway clients.
-     */
+    /** A variation of REST_JSON for externally generated, API Gateway clients. */
     API_GATEWAY
 }

@@ -14,9 +14,7 @@
  */
 package com.amazonaws;
 
-/**
- * SDK operation aborted exception.
- */
+/** SDK operation aborted exception. */
 public class AbortedException extends SdkClientException {
     private static final long serialVersionUID = 1L;
 
@@ -36,10 +34,7 @@ public class AbortedException extends SdkClientException {
         super("");
     }
 
-    /**
-     * {@inheritDoc}
-     * An aborted exception is not intended to be retried.
-     */
+    /** {@inheritDoc} An aborted exception is not intended to be retried. */
     @Override
     public boolean isRetryable() {
         return false;

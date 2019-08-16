@@ -14,23 +14,23 @@
  */
 package com.amazonaws.auth;
 
-import com.amazonaws.SignableRequest;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
+import com.amazonaws.SignableRequest;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import org.junit.Test;
 
 public class QueryStringSignerTest {
 
     private static final QueryStringSigner signer = new QueryStringSigner();
-    private static final AWSCredentials credentials = new BasicAWSCredentials("123456789", "123456789");
+    private static final AWSCredentials credentials =
+            new BasicAWSCredentials("123456789", "123456789");
 
     private static final String EXPECTED_SIGNATURE = "VjYMhf9TWp08zAxXbKDAvUhW9GjJ56QjAuSj3LBsfjM=";
 
@@ -44,11 +44,12 @@ public class QueryStringSignerTest {
 
     @Test
     public void testRequestResourcePath() throws Exception {
-        SignableRequest<?> request = MockRequestBuilder.create()
-                .withEndpoint("http://foo.amazon.com")
-                .withParameter("foo", "bar")
-                .withPath("foo/bar")
-                .build();
+        SignableRequest<?> request =
+                MockRequestBuilder.create()
+                        .withEndpoint("http://foo.amazon.com")
+                        .withParameter("foo", "bar")
+                        .withPath("foo/bar")
+                        .build();
 
         signer.sign(request, credentials);
 
@@ -57,11 +58,12 @@ public class QueryStringSignerTest {
 
     @Test
     public void testRequestAndEndpointResourcePath() throws Exception {
-        SignableRequest<?> request = MockRequestBuilder.create()
-                .withEndpoint("http://foo.amazon.com/foo")
-                .withParameter("foo", "bar")
-                .withPath("/bar")
-                .build();
+        SignableRequest<?> request =
+                MockRequestBuilder.create()
+                        .withEndpoint("http://foo.amazon.com/foo")
+                        .withParameter("foo", "bar")
+                        .withPath("/bar")
+                        .build();
 
         signer.sign(request, credentials);
 
@@ -70,11 +72,12 @@ public class QueryStringSignerTest {
 
     @Test
     public void testRequestAndEndpointResourcePathNoSlash() throws Exception {
-        SignableRequest<?> request = MockRequestBuilder.create()
-                .withEndpoint("http://foo.amazon.com/foo")
-                .withParameter("foo", "bar")
-                .withPath("bar")
-                .build();
+        SignableRequest<?> request =
+                MockRequestBuilder.create()
+                        .withEndpoint("http://foo.amazon.com/foo")
+                        .withParameter("foo", "bar")
+                        .withPath("bar")
+                        .build();
 
         signer.sign(request, credentials);
 
@@ -83,11 +86,12 @@ public class QueryStringSignerTest {
 
     @Test
     public void testAnonymous() throws Exception {
-        SignableRequest<?> request = MockRequestBuilder.create()
-                .withEndpoint("http://foo.amazon.com")
-                .withParameter("foo", "bar")
-                .withPath("bar")
-                .build();
+        SignableRequest<?> request =
+                MockRequestBuilder.create()
+                        .withEndpoint("http://foo.amazon.com")
+                        .withParameter("foo", "bar")
+                        .withPath("bar")
+                        .build();
 
         signer.sign(request, new AnonymousAWSCredentials());
 
@@ -95,15 +99,12 @@ public class QueryStringSignerTest {
     }
 
     /**
-     * Asserts the given signature to the signature generated as part of the
-     * signing the request.
+     * Asserts the given signature to the signature generated as part of the signing the request.
      */
-    private void assertSignature(String expected,
-            Map<String, List<String>> requestParams) {
+    private void assertSignature(String expected, Map<String, List<String>> requestParams) {
         List<String> signature = requestParams.get("Signature");
         assertNotNull(signature);
         assertEquals(1, signature.size());
         assertEquals(expected, signature.iterator().next());
     }
-
 }

@@ -19,15 +19,12 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.amazonaws.util.AWSRequestMetrics;
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.net.ssl.SSLSocket;
-
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.amazonaws.util.AWSRequestMetrics;
 
 public class SdkSSLMetricsSocketTest {
 
@@ -43,5 +40,4 @@ public class SdkSSLMetricsSocketTest {
 
         Assert.assertThat(sdkSSLMetricsSocket.getMetricsInputStream(), not(nullValue()));
     }
-
 }

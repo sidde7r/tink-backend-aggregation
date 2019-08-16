@@ -14,18 +14,6 @@
  */
 package com.amazonaws.retry;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonWebServiceRequest;
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.retry.v2.RetryPolicyContext;
-import com.amazonaws.retry.v2.RetryPolicyContexts;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -35,18 +23,28 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonWebServiceRequest;
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.retry.v2.RetryPolicyContext;
+import com.amazonaws.retry.v2.RetryPolicyContexts;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
 @RunWith(MockitoJUnitRunner.class)
 public class RetryPolicyAdapterTest {
 
-    @Mock
-    private RetryPolicy.RetryCondition retryCondition;
+    @Mock private RetryPolicy.RetryCondition retryCondition;
 
-    @Mock
-    private RetryPolicy.BackoffStrategy backoffStrategy;
+    @Mock private RetryPolicy.BackoffStrategy backoffStrategy;
 
     private RetryPolicy legacyPolicy;
 
-    private ClientConfiguration clientConfiguration = new ClientConfiguration().withMaxErrorRetry(10);
+    private ClientConfiguration clientConfiguration =
+            new ClientConfiguration().withMaxErrorRetry(10);
 
     private RetryPolicyAdapter adapter;
 
@@ -76,10 +74,11 @@ public class RetryPolicyAdapterTest {
         final RetryPolicyContext context = RetryPolicyContexts.LEGACY;
         adapter.computeDelayBeforeNextRetry(context);
 
-        verify(backoffStrategy).delayBeforeNextRetry(
-                eq((AmazonWebServiceRequest) context.originalRequest()),
-                eq((AmazonClientException) context.exception()),
-                eq(context.retriesAttempted()));
+        verify(backoffStrategy)
+                .delayBeforeNextRetry(
+                        eq((AmazonWebServiceRequest) context.originalRequest()),
+                        eq((AmazonClientException) context.exception()),
+                        eq(context.retriesAttempted()));
     }
 
     @Test
@@ -89,7 +88,10 @@ public class RetryPolicyAdapterTest {
 
     @Test
     public void shouldRetry_MaxErrorInClientConfigHonored_DoesNotUseMaxErrorInPolicy() {
-        when(retryCondition.shouldRetry(any(AmazonWebServiceRequest.class), any(AmazonClientException.class), anyInt()))
+        when(retryCondition.shouldRetry(
+                        any(AmazonWebServiceRequest.class),
+                        any(AmazonClientException.class),
+                        anyInt()))
                 .thenReturn(true);
         legacyPolicy = new RetryPolicy(retryCondition, backoffStrategy, 3, true);
         adapter = new RetryPolicyAdapter(legacyPolicy, clientConfiguration);
@@ -102,10 +104,10 @@ public class RetryPolicyAdapterTest {
         final RetryPolicyContext context = RetryPolicyContexts.LEGACY;
         adapter.shouldRetry(context);
 
-        verify(retryCondition).shouldRetry(
-                eq((AmazonWebServiceRequest) context.originalRequest()),
-                eq((AmazonClientException) context.exception()),
-                eq(context.retriesAttempted()));
+        verify(retryCondition)
+                .shouldRetry(
+                        eq((AmazonWebServiceRequest) context.originalRequest()),
+                        eq((AmazonClientException) context.exception()),
+                        eq(context.retriesAttempted()));
     }
-
 }

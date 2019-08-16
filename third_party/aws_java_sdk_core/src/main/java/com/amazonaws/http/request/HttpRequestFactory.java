@@ -17,12 +17,10 @@ package com.amazonaws.http.request;
 import com.amazonaws.Request;
 import com.amazonaws.annotation.Beta;
 import com.amazonaws.http.settings.HttpClientSettings;
-
 import java.io.IOException;
 
 /**
- * An interface that can be used to create the http requests that is
- * understood by the http client.
+ * An interface that can be used to create the http requests that is understood by the http client.
  *
  * @param <T> Request class that is accepted by the underlying http client.
  */
@@ -30,13 +28,12 @@ import java.io.IOException;
 public interface HttpRequestFactory<T> {
 
     /**
-     * A factory method for creating http requests accepted by the underlying
-     * http client from the sdk request objects.
+     * A factory method for creating http requests accepted by the underlying http client from the
+     * sdk request objects.
      *
      * @param request sdk request object.
      * @param settings configuration to be set for the http request.
-     * @return an instance of request that is accepted by the underlying
-     * http client that SDK uses.
+     * @return an instance of request that is accepted by the underlying http client that SDK uses.
      */
     T create(Request<?> request, HttpClientSettings settings) throws IOException;
 }

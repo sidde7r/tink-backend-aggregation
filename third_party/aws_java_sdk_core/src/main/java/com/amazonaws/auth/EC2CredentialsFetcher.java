@@ -14,13 +14,6 @@
  */
 package com.amazonaws.auth;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Date;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.internal.CredentialsEndpointProvider;
@@ -29,11 +22,15 @@ import com.amazonaws.util.DateUtils;
 import com.amazonaws.util.json.Jackson;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Date;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
- * Helper class that contains the common behavior of the
- * CredentialsProviders that loads the credentials from a
- * local endpoint on an EC2 instance.
+ * Helper class that contains the common behavior of the CredentialsProviders that loads the
+ * credentials from a local endpoint on an EC2 instance.
  */
 @SdkInternalApi
 class EC2CredentialsFetcher {
@@ -41,24 +38,24 @@ class EC2CredentialsFetcher {
     private static final Log LOG = LogFactory.getLog(EC2CredentialsFetcher.class);
 
     /**
-     * The threshold after the last attempt to load credentials (in
-     * milliseconds) at which credentials are attempted to be refreshed.
+     * The threshold after the last attempt to load credentials (in milliseconds) at which
+     * credentials are attempted to be refreshed.
      */
     private static final int REFRESH_THRESHOLD = 1000 * 60 * 60;
 
     /**
-     * The threshold before credentials expire (in milliseconds) at which
-     * this class will attempt to load new credentials.
+     * The threshold before credentials expire (in milliseconds) at which this class will attempt to
+     * load new credentials.
      */
     private static final int EXPIRATION_THRESHOLD = 1000 * 60 * 15;
 
-    /** The name of the Json Object that contains the access key.*/
+    /** The name of the Json Object that contains the access key. */
     private static final String ACCESS_KEY_ID = "AccessKeyId";
 
-    /** The name of the Json Object that contains the secret access key.*/
+    /** The name of the Json Object that contains the secret access key. */
     private static final String SECRET_ACCESS_KEY = "SecretAccessKey";
 
-    /** The name of the Json Object that contains the token.*/
+    /** The name of the Json Object that contains the token. */
     private static final String TOKEN = "Token";
 
     /** The current instance profile credentials */
@@ -78,20 +75,18 @@ class EC2CredentialsFetcher {
     }
 
     public AWSCredentials getCredentials() {
-        if (needsToLoadCredentials())
-            fetchCredentials();
+        if (needsToLoadCredentials()) fetchCredentials();
         if (expired()) {
-            throw new SdkClientException(
-                    "The credentials received have been expired");
+            throw new SdkClientException("The credentials received have been expired");
         }
         return credentials;
     }
 
     /**
-     * Returns true if credentials are null, credentials are within expiration or
-     * if the last attempt to refresh credentials is beyond the refresh threshold.
+     * Returns true if credentials are null, credentials are within expiration or if the last
+     * attempt to refresh credentials is beyond the refresh threshold.
      */
-     protected boolean needsToLoadCredentials() {
+    protected boolean needsToLoadCredentials() {
         if (credentials == null) return true;
 
         if (credentialsExpiration != null) {
@@ -105,9 +100,7 @@ class EC2CredentialsFetcher {
         return false;
     }
 
-    /**
-     * Fetches the credentials from the endpoint.
-     */
+    /** Fetches the credentials from the endpoint. */
     private synchronized void fetchCredentials() {
         if (!needsToLoadCredentials()) return;
 
@@ -118,10 +111,12 @@ class EC2CredentialsFetcher {
         try {
             lastInstanceProfileCheck = new Date();
 
-            String credentialsResponse = EC2CredentialsUtils.getInstance().readResource(
-                credentialsEndpointProvider.getCredentialsEndpoint(),
-                credentialsEndpointProvider.getRetryPolicy(),
-                credentialsEndpointProvider.getHeaders());
+            String credentialsResponse =
+                    EC2CredentialsUtils.getInstance()
+                            .readResource(
+                                    credentialsEndpointProvider.getCredentialsEndpoint(),
+                                    credentialsEndpointProvider.getRetryPolicy(),
+                                    credentialsEndpointProvider.getHeaders());
 
             node = Jackson.jsonNodeOf(credentialsResponse);
             accessKey = node.get(ACCESS_KEY_ID);
@@ -133,11 +128,11 @@ class EC2CredentialsFetcher {
             }
 
             if (null != token) {
-                credentials = new BasicSessionCredentials(accessKey.asText(),
-                        secretKey.asText(), token.asText());
+                credentials =
+                        new BasicSessionCredentials(
+                                accessKey.asText(), secretKey.asText(), token.asText());
             } else {
-                credentials = new BasicAWSCredentials(accessKey.asText(),
-                        secretKey.asText());
+                credentials = new BasicAWSCredentials(accessKey.asText(), secretKey.asText());
             }
 
             JsonNode expirationJsonNode = node.get("Expiration");
@@ -152,8 +147,10 @@ class EC2CredentialsFetcher {
 
                 try {
                     credentialsExpiration = DateUtils.parseISO8601Date(expiration);
-                } catch(Exception ex) {
-                    handleError("Unable to parse credentials expiration date from Amazon EC2 instance", ex);
+                } catch (Exception ex) {
+                    handleError(
+                            "Unable to parse credentials expiration date from Amazon EC2 instance",
+                            ex);
                 }
             }
         } catch (JsonMappingException e) {
@@ -166,21 +163,17 @@ class EC2CredentialsFetcher {
     }
 
     /**
-     * Handles reporting or throwing an error encountered while requesting
-     * credentials from the Amazon EC2 endpoint. The Service could be
-     * briefly unavailable for a number of reasons, so
-     * we need to gracefully handle falling back to valid credentials if they're
-     * available, and only throw exceptions if we really can't recover.
+     * Handles reporting or throwing an error encountered while requesting credentials from the
+     * Amazon EC2 endpoint. The Service could be briefly unavailable for a number of reasons, so we
+     * need to gracefully handle falling back to valid credentials if they're available, and only
+     * throw exceptions if we really can't recover.
      *
-     * @param errorMessage
-     *            A human readable description of the error.
-     * @param e
-     *            The error that occurred.
+     * @param errorMessage A human readable description of the error.
+     * @param e The error that occurred.
      */
     private void handleError(String errorMessage, Exception e) {
         // If we don't have any valid credentials to fall back on, then throw an exception
-        if (credentials == null || expired())
-            throw new SdkClientException(errorMessage, e);
+        if (credentials == null || expired()) throw new SdkClientException(errorMessage, e);
 
         // Otherwise, just log the error and continuing using the current credentials
         LOG.debug(errorMessage, e);
@@ -191,20 +184,21 @@ class EC2CredentialsFetcher {
     }
 
     /**
-     * Returns true if the current credentials are within the expiration
-     * threshold, and therefore, should be refreshed.
+     * Returns true if the current credentials are within the expiration threshold, and therefore,
+     * should be refreshed.
      */
     private boolean isWithinExpirationThreshold() {
-        return (credentialsExpiration.getTime() - System.currentTimeMillis()) < EXPIRATION_THRESHOLD;
+        return (credentialsExpiration.getTime() - System.currentTimeMillis())
+                < EXPIRATION_THRESHOLD;
     }
 
     /**
-     * Returns true if the last attempt to refresh credentials is beyond the
-     * refresh threshold, and therefore the credentials should attempt to be
-     * refreshed.
+     * Returns true if the last attempt to refresh credentials is beyond the refresh threshold, and
+     * therefore the credentials should attempt to be refreshed.
      */
     private boolean isPastRefreshThreshold() {
-        return (System.currentTimeMillis() - lastInstanceProfileCheck.getTime()) > REFRESH_THRESHOLD;
+        return (System.currentTimeMillis() - lastInstanceProfileCheck.getTime())
+                > REFRESH_THRESHOLD;
     }
 
     private boolean expired() {

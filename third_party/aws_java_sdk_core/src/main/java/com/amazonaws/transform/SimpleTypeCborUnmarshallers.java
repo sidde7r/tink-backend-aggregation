@@ -13,22 +13,21 @@
  * permissions and limitations under the License.
  */
 package com.amazonaws.transform;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.util.Date;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkProtectedApi;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.util.Date;
 
 @SdkProtectedApi
 public class SimpleTypeCborUnmarshallers {
-    /**
-     * Unmarshaller for String values.
-     */
-    public static class StringCborUnmarshaller implements Unmarshaller<String, JsonUnmarshallerContext> {
+    /** Unmarshaller for String values. */
+    public static class StringCborUnmarshaller
+            implements Unmarshaller<String, JsonUnmarshallerContext> {
         public String unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return unmarshallerContext.readText();
         }
@@ -40,10 +39,9 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Double values.
-     */
-    public static class DoubleCborUnmarshaller implements Unmarshaller<Double, JsonUnmarshallerContext> {
+    /** Unmarshaller for Double values. */
+    public static class DoubleCborUnmarshaller
+            implements Unmarshaller<Double, JsonUnmarshallerContext> {
         public Double unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return unmarshallerContext.getJsonParser().getDoubleValue();
         }
@@ -55,10 +53,9 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Integer values.
-     */
-    public static class IntegerCborUnmarshaller implements Unmarshaller<Integer, JsonUnmarshallerContext> {
+    /** Unmarshaller for Integer values. */
+    public static class IntegerCborUnmarshaller
+            implements Unmarshaller<Integer, JsonUnmarshallerContext> {
         public Integer unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return unmarshallerContext.getJsonParser().getIntValue();
         }
@@ -70,7 +67,8 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    public static class BigIntegerCborUnmarshaller implements Unmarshaller<BigInteger, JsonUnmarshallerContext> {
+    public static class BigIntegerCborUnmarshaller
+            implements Unmarshaller<BigInteger, JsonUnmarshallerContext> {
         public BigInteger unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             JsonParser parser = unmarshallerContext.getJsonParser();
             JsonToken current = parser.getCurrentToken();
@@ -91,10 +89,12 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    public static class BigDecimalCborUnmarshaller implements Unmarshaller<BigDecimal, JsonUnmarshallerContext> {
+    public static class BigDecimalCborUnmarshaller
+            implements Unmarshaller<BigDecimal, JsonUnmarshallerContext> {
         public BigDecimal unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             JsonParser parser = unmarshallerContext.getJsonParser();
-            Unmarshaller<BigInteger, JsonUnmarshallerContext> bigIntegerUnmarshaller = unmarshallerContext.getUnmarshaller(BigInteger.class);
+            Unmarshaller<BigInteger, JsonUnmarshallerContext> bigIntegerUnmarshaller =
+                    unmarshallerContext.getUnmarshaller(BigInteger.class);
 
             JsonToken current = parser.getCurrentToken();
             if (current != JsonToken.START_ARRAY) {
@@ -114,10 +114,9 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Boolean values.
-     */
-    public static class BooleanCborUnmarshaller implements Unmarshaller<Boolean, JsonUnmarshallerContext> {
+    /** Unmarshaller for Boolean values. */
+    public static class BooleanCborUnmarshaller
+            implements Unmarshaller<Boolean, JsonUnmarshallerContext> {
         public Boolean unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return unmarshallerContext.getJsonParser().getBooleanValue();
         }
@@ -129,10 +128,9 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Float values.
-     */
-    public static class FloatCborUnmarshaller implements Unmarshaller<Float, JsonUnmarshallerContext> {
+    /** Unmarshaller for Float values. */
+    public static class FloatCborUnmarshaller
+            implements Unmarshaller<Float, JsonUnmarshallerContext> {
         public Float unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return unmarshallerContext.getJsonParser().getFloatValue();
         }
@@ -144,10 +142,9 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Long values.
-     */
-    public static class LongCborUnmarshaller implements Unmarshaller<Long, JsonUnmarshallerContext> {
+    /** Unmarshaller for Long values. */
+    public static class LongCborUnmarshaller
+            implements Unmarshaller<Long, JsonUnmarshallerContext> {
         public Long unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return unmarshallerContext.getJsonParser().getLongValue();
         }
@@ -159,10 +156,9 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Byte values.
-     */
-    public static class ByteCborUnmarshaller implements Unmarshaller<Byte, JsonUnmarshallerContext> {
+    /** Unmarshaller for Byte values. */
+    public static class ByteCborUnmarshaller
+            implements Unmarshaller<Byte, JsonUnmarshallerContext> {
         public Byte unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return unmarshallerContext.getJsonParser().getByteValue();
         }
@@ -174,12 +170,10 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Date values - JSON dates come in as epoch seconds.
-     */
-    public static class DateCborUnmarshaller implements Unmarshaller<Date, JsonUnmarshallerContext> {
-        public Date unmarshall(JsonUnmarshallerContext unmarshallerContext)
-                throws Exception {
+    /** Unmarshaller for Date values - JSON dates come in as epoch seconds. */
+    public static class DateCborUnmarshaller
+            implements Unmarshaller<Date, JsonUnmarshallerContext> {
+        public Date unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return new Date(unmarshallerContext.getJsonParser().getLongValue());
         }
 
@@ -190,13 +184,11 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for ByteBuffer values.
-     */
-    public static class ByteBufferCborUnmarshaller implements Unmarshaller<ByteBuffer, JsonUnmarshallerContext> {
+    /** Unmarshaller for ByteBuffer values. */
+    public static class ByteBufferCborUnmarshaller
+            implements Unmarshaller<ByteBuffer, JsonUnmarshallerContext> {
         public ByteBuffer unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return ByteBuffer.wrap(unmarshallerContext.getJsonParser().getBinaryValue());
-
         }
 
         private static final ByteBufferCborUnmarshaller instance = new ByteBufferCborUnmarshaller();
@@ -206,10 +198,9 @@ public class SimpleTypeCborUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Short values.
-     */
-    public static class ShortCborUnmarshaller implements Unmarshaller<Short, JsonUnmarshallerContext> {
+    /** Unmarshaller for Short values. */
+    public static class ShortCborUnmarshaller
+            implements Unmarshaller<Short, JsonUnmarshallerContext> {
         public Short unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return unmarshallerContext.getJsonParser().getShortValue();
         }

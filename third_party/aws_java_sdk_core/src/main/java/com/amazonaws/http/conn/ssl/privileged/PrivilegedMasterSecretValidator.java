@@ -14,18 +14,15 @@
  */
 package com.amazonaws.http.conn.ssl.privileged;
 
+import com.amazonaws.http.conn.ssl.MasterSecretValidators.MasterSecretValidator;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.amazonaws.http.conn.ssl.MasterSecretValidators.MasterSecretValidator;
 
 /**
  * Implementation of {@link MasterSecretValidator} that verifies the master secret is non null
@@ -39,19 +36,19 @@ public class PrivilegedMasterSecretValidator implements MasterSecretValidator {
 
     /**
      * Double check the master secret of an SSL session is not null
-     * 
-     * @param socket
-     *            connected socket
+     *
+     * @param socket connected socket
      * @return True if master secret is valid (i.e. non-null) or master secret cannot be validated,
-     *         false otherwise
+     *     false otherwise
      */
     public boolean isMasterSecretValid(final Socket socket) {
-        return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
-            @Override
-            public Boolean run() {
-                return privilegedIsMasterSecretValid(socket);
-            }
-        });
+        return AccessController.doPrivileged(
+                new PrivilegedAction<Boolean>() {
+                    @Override
+                    public Boolean run() {
+                        return privilegedIsMasterSecretValid(socket);
+                    }
+                });
     }
 
     /**
@@ -80,12 +77,9 @@ public class PrivilegedMasterSecretValidator implements MasterSecretValidator {
             }
         }
         return true;
-
     }
 
-    /**
-     * @return The active {@link SSLSession} for the Socket or null if there is none
-     */
+    /** @return The active {@link SSLSession} for the Socket or null if there is none */
     private SSLSession getSslSession(final Socket socket) {
         return ((SSLSocket) socket).getSession();
     }

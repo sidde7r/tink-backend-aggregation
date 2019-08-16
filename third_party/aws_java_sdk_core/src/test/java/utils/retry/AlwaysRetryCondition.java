@@ -18,15 +18,14 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.retry.RetryPolicy.RetryCondition;
 
-/**
- * {@link RetryCondition} used in tests to always retry regardless of exception
- */
+/** {@link RetryCondition} used in tests to always retry regardless of exception */
 public final class AlwaysRetryCondition implements RetryCondition {
 
     @Override
-    public boolean shouldRetry(AmazonWebServiceRequest originalRequest,
-                               AmazonClientException exception,
-                               int retriesAttempted) {
+    public boolean shouldRetry(
+            AmazonWebServiceRequest originalRequest,
+            AmazonClientException exception,
+            int retriesAttempted) {
         return true;
     }
 }

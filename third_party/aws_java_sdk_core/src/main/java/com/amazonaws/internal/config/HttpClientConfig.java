@@ -16,9 +16,7 @@ package com.amazonaws.internal.config;
 
 import com.amazonaws.annotation.Immutable;
 
-/**
- * AWS HttpClient configuration.
- */
+/** AWS HttpClient configuration. */
 @Immutable
 public class HttpClientConfig {
     // This class is not strictly necessary for the existing use cases,
@@ -28,26 +26,24 @@ public class HttpClientConfig {
     private final String regionMetadataServiceName;
 
     /**
-     * @param serviceName
-     *            The service name used for request signing. It's also used as
-     *            the service identifier when looking up the region metadata if
-     *            regionMetadataServiceName is not set.
-     * @param regionMetadataServiceName
-     *            Override value for the service name identifier when looking up
-     *            the region metadata. This config is normally needed in
-     *            scenarios when a common sigv4 service name is shared by
-     *            multiple services that have different region metadata (for
-     *            example, AmazonDynamoDBClient and AmazonDynamoDBStreamsClient
-     *            share the same service name 'dynamodb' but not the same
-     *            endpoint prefix).
+     * @param serviceName The service name used for request signing. It's also used as the service
+     *     identifier when looking up the region metadata if regionMetadataServiceName is not set.
+     * @param regionMetadataServiceName Override value for the service name identifier when looking
+     *     up the region metadata. This config is normally needed in scenarios when a common sigv4
+     *     service name is shared by multiple services that have different region metadata (for
+     *     example, AmazonDynamoDBClient and AmazonDynamoDBStreamsClient share the same service name
+     *     'dynamodb' but not the same endpoint prefix).
      */
     HttpClientConfig(String serviceName, String regionMetadataServiceName) {
         this.serviceName = serviceName;
         this.regionMetadataServiceName = regionMetadataServiceName;
     }
 
-    @Override public String toString() {
-        return "serviceName: " + serviceName + ", regionMetadataServiceName: "
+    @Override
+    public String toString() {
+        return "serviceName: "
+                + serviceName
+                + ", regionMetadataServiceName: "
                 + regionMetadataServiceName;
     }
 
@@ -58,5 +54,4 @@ public class HttpClientConfig {
     public String getRegionMetadataServiceName() {
         return regionMetadataServiceName;
     }
-
 }

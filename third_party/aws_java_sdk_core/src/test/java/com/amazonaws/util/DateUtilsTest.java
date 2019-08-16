@@ -23,23 +23,22 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.amazonaws.protocol.json.SdkJsonGenerator;
+import com.amazonaws.protocol.json.StructuredJsonGenerator;
+import com.fasterxml.jackson.core.JsonFactory;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.SimpleTimeZone;
-
-import com.amazonaws.protocol.json.SdkJsonGenerator;
-import com.amazonaws.protocol.json.StructuredJsonGenerator;
-import com.fasterxml.jackson.core.JsonFactory;
-
 import org.joda.time.DateTime;
 import org.joda.time.IllegalFieldValueException;
 import org.junit.Test;
 
 public class DateUtilsTest {
     private static final boolean DEBUG = false;
+
     @Test
     public void tt0031561767() throws ParseException {
         String input = "Fri, 16 May 2014 23:56:46 GMT";
@@ -147,16 +146,19 @@ public class DateUtilsTest {
         sdf.parse(input);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void invalidDate() throws ParseException {
         final String input = "2014-03-06T14:28:58.000Z.000Z";
         DateUtils.parseISO8601Date(input);
     }
+
     @Test
     public void test() throws ParseException {
         Date date = new Date();
         System.out.println("         formatISO8601Date: " + DateUtils.formatISO8601Date(date));
-        System.out.println("alternateIso8601DateFormat: " + DateUtils.alternateIso8601DateFormat.print(date.getTime()));
+        System.out.println(
+                "alternateIso8601DateFormat: "
+                        + DateUtils.alternateIso8601DateFormat.print(date.getTime()));
     }
 
     @Test
@@ -166,21 +168,18 @@ public class DateUtilsTest {
         sdf.setTimeZone(new SimpleTimeZone(0, "GMT"));
         final String edgeCase = "292278994-08-17T07:12:55.807Z";
         Date expected = sdf.parse(edgeCase);
-        if (DEBUG)
-            System.out.println("date: " + expected);
+        if (DEBUG) System.out.println("date: " + expected);
         String formatted = DateUtils.formatISO8601Date(expected);
-        if (DEBUG)
-            System.out.println("formatted: " + formatted);
+        if (DEBUG) System.out.println("formatted: " + formatted);
         assertEquals(edgeCase, formatted);
         Date parsed = DateUtils.parseISO8601Date(edgeCase);
-        if (DEBUG)
-            System.out.println("parsed: " + parsed);
+        if (DEBUG) System.out.println("parsed: " + parsed);
         assertEquals(expected, parsed);
         String reformatted = DateUtils.formatISO8601Date(parsed);
         assertEquals(edgeCase, reformatted);
     }
 
-    @Test(expected=IllegalFieldValueException.class)
+    @Test(expected = IllegalFieldValueException.class)
     public void testIssue233JodaTimeLimit() throws ParseException {
         // https://github.com/aws/aws-sdk-java/issues/233
         String s = DateUtils.iso8601DateFormat.print(Long.MAX_VALUE);
@@ -188,7 +187,7 @@ public class DateUtilsTest {
         try {
             DateTime dt = DateUtils.iso8601DateFormat.parseDateTime(s);
             fail("Unexpected success: " + dt);
-        } catch(IllegalFieldValueException ex) {
+        } catch (IllegalFieldValueException ex) {
             // expected
             throw ex;
         }
@@ -204,31 +203,31 @@ public class DateUtilsTest {
         Date od = sdf.parse(edgeCase);
         Date testd = sdf.parse(testCase);
         long diff = od.getTime() - testd.getTime();
-        assertTrue(diff == 365L*24*60*60*1000);
+        assertTrue(diff == 365L * 24 * 60 * 60 * 1000);
     }
 
     @Test
     public void testIssue233Overflows() throws ParseException {
         String[] cases = {
-                // 1 milli second passed the max time
-                "292278994-08-17T07:12:55.808Z",
-                // 1 year passed the max year
-                "292278995-01-17T07:12:55.807Z", };
+            // 1 milli second passed the max time
+            "292278994-08-17T07:12:55.808Z",
+            // 1 year passed the max year
+            "292278995-01-17T07:12:55.807Z",
+        };
         for (String edgeCase : cases) {
             try {
                 Date parsed = DateUtils.parseISO8601Date(edgeCase);
                 fail("Unexpected success: " + parsed);
             } catch (IllegalArgumentException ex) {
                 String msg = ex.getMessage();
-                assertTrue(msg
-                        .contains("must be in the range [-292275054,292278993]"));
+                assertTrue(msg.contains("must be in the range [-292275054,292278993]"));
             }
         }
     }
 
     /**
-     * Tests the Date marshalling and unmarshalling. Asserts that the value is
-     * same before and after marshalling/unmarshalling
+     * Tests the Date marshalling and unmarshalling. Asserts that the value is same before and after
+     * marshalling/unmarshalling
      */
     @Test
     public void testAWSFormatDateUtils() throws Exception {
@@ -238,15 +237,13 @@ public class DateUtilsTest {
     }
 
     private void testDate(long dateInMilliSeconds) {
-        String serverSpecificDateFormat = DateUtils
-                .formatServiceSpecificDate(new Date(dateInMilliSeconds));
+        String serverSpecificDateFormat =
+                DateUtils.formatServiceSpecificDate(new Date(dateInMilliSeconds));
 
-        Date parsedDate = DateUtils.parseServiceSpecificDate(String
-                .valueOf(serverSpecificDateFormat));
+        Date parsedDate =
+                DateUtils.parseServiceSpecificDate(String.valueOf(serverSpecificDateFormat));
 
-        assertEquals(Long.valueOf(dateInMilliSeconds),
-                Long.valueOf(parsedDate.getTime()));
-
+        assertEquals(Long.valueOf(dateInMilliSeconds), Long.valueOf(parsedDate.getTime()));
     }
 
     // See https://forums.aws.amazon.com/thread.jspa?threadID=158756
@@ -271,16 +268,15 @@ public class DateUtilsTest {
         // verify no ending quote for the value
         assertFalse(s, s.endsWith("\"}"));
         final int endPos = s.indexOf("}");
-        final int dotPos = s.length()-5;
+        final int dotPos = s.length() - 5;
         assertTrue(s, s.charAt(dotPos) == '.');
         // verify all numeric before '.'
         char[] a = s.toCharArray();
-        for (int i=startPos; i < dotPos; i++)
-            assertTrue(a[i] <= '9' && a[i] >= '0' );
-        int j=0;
+        for (int i = startPos; i < dotPos; i++) assertTrue(a[i] <= '9' && a[i] >= '0');
+        int j = 0;
         // verify all numeric after '.'
-        for (int i=dotPos+1; i < endPos; i++) {
-            assertTrue(a[i] <= '9' && a[i] >= '0' );
+        for (int i = dotPos + 1; i < endPos; i++) {
+            assertTrue(a[i] <= '9' && a[i] >= '0');
             j++;
         }
         // verify decimal precision of exactly 3
@@ -291,8 +287,8 @@ public class DateUtilsTest {
     public void numberOfDaysSinceEpoch() {
         final long now = System.currentTimeMillis();
         final long days = DateUtils.numberOfDaysSinceEpoch(now);
-        final int oneDayMilli = 24*60*60*1000;
-        assertTrue(now > days*oneDayMilli);
-        assertTrue((now - days*oneDayMilli) <= oneDayMilli);
+        final int oneDayMilli = 24 * 60 * 60 * 1000;
+        assertTrue(now > days * oneDayMilli);
+        assertTrue((now - days * oneDayMilli) <= oneDayMilli);
     }
 }

@@ -14,17 +14,15 @@
  */
 package com.amazonaws.internal;
 
+import com.amazonaws.annotation.ThreadSafe;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
-import com.amazonaws.annotation.ThreadSafe;
-
 /**
  * A bounded cache that has a FIFO eviction policy when the cache is full.
  *
- * @param <T>
- *            value type
+ * @param <T> value type
  */
 @ThreadSafe
 public final class FIFOCache<T> {
@@ -32,14 +30,10 @@ public final class FIFOCache<T> {
     private final ReadLock rlock;
     private final WriteLock wlock;
 
-    /**
-     * @param maxSize
-     *            the maximum number of entries of the cache
-     */
+    /** @param maxSize the maximum number of entries of the cache */
     public FIFOCache(final int maxSize) {
         if (maxSize < 1) {
-            throw new IllegalArgumentException("maxSize " + maxSize
-                    + " must be at least 1");
+            throw new IllegalArgumentException("maxSize " + maxSize + " must be at least 1");
         }
         map = new BoundedLinkedHashMap<String, T>(maxSize);
         ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -47,9 +41,7 @@ public final class FIFOCache<T> {
         wlock = lock.writeLock();
     }
 
-    /**
-     * Adds an entry to the cache, evicting the earliest entry if necessary.
-     */
+    /** Adds an entry to the cache, evicting the earliest entry if necessary. */
     public T add(String key, T value) {
         wlock.lock();
         try {
@@ -69,9 +61,7 @@ public final class FIFOCache<T> {
         }
     }
 
-    /**
-     * Returns the current size of the cache.
-     */
+    /** Returns the current size of the cache. */
     public int size() {
         rlock.lock();
         try {
@@ -81,9 +71,7 @@ public final class FIFOCache<T> {
         }
     }
 
-    /**
-     * Returns the maximum size of the cache.
-     */
+    /** Returns the maximum size of the cache. */
     public int getMaxSize() {
         return map.getMaxSize();
     }

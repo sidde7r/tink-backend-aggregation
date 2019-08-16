@@ -14,7 +14,6 @@
  */
 package com.amazonaws.auth;
 
-
 import static com.amazonaws.SDKGlobalConfiguration.ACCESS_KEY_SYSTEM_PROPERTY;
 import static com.amazonaws.SDKGlobalConfiguration.SECRET_KEY_SYSTEM_PROPERTY;
 import static com.amazonaws.SDKGlobalConfiguration.SESSION_TOKEN_SYSTEM_PROPERTY;
@@ -29,7 +28,8 @@ import org.junit.Test;
 
 public class SystemPropertiesCredentialsProviderTest {
 
-    private final SystemPropertiesCredentialsProvider provider = new SystemPropertiesCredentialsProvider();
+    private final SystemPropertiesCredentialsProvider provider =
+            new SystemPropertiesCredentialsProvider();
 
     @After
     public void tearDown() {

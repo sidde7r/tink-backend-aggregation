@@ -16,9 +16,7 @@ package com.amazonaws.retry.v2;
 
 import static com.amazonaws.util.ValidationUtils.assertIsPositive;
 
-/**
- * Simple retry condition that allows retries up to a certain max number of retries.
- */
+/** Simple retry condition that allows retries up to a certain max number of retries. */
 public class MaxNumberOfRetriesCondition implements RetryCondition {
 
     private final int maxNumberOfRetries;

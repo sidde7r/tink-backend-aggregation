@@ -14,9 +14,8 @@
  */
 package com.amazonaws.http.timers.client;
 
-import tink.org.apache.http.client.methods.HttpRequestBase;
-
 import com.amazonaws.annotation.SdkInternalApi;
+import tink.org.apache.http.client.methods.HttpRequestBase;
 
 /**
  * Implementation of {@link ClientExecutionAbortTask} that interrupts the caller thread and aborts
@@ -56,5 +55,4 @@ public class ClientExecutionAbortTaskImpl implements ClientExecutionAbortTask {
     public boolean isEnabled() {
         return true;
     }
-
 }

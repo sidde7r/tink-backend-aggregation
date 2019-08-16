@@ -18,120 +18,116 @@
 package com.amazonaws.protocol.json;
 
 import com.amazonaws.annotation.SdkProtectedApi;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Date;
 
-/**
- * Interface for generating a JSON
- */
+/** Interface for generating a JSON */
 @SdkProtectedApi
 public interface StructuredJsonGenerator {
 
-    /**
-     * No-op implementation that ignores all calls and returns empty bytes from getBytes.
-     */
-    StructuredJsonGenerator NO_OP = new StructuredJsonGenerator() {
+    /** No-op implementation that ignores all calls and returns empty bytes from getBytes. */
+    StructuredJsonGenerator NO_OP =
+            new StructuredJsonGenerator() {
 
-        private final byte[] EMPTY_BYTES = new byte[0];
+                private final byte[] EMPTY_BYTES = new byte[0];
 
-        @Override
-        public StructuredJsonGenerator writeStartArray() {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeStartArray() {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeEndArray() {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeEndArray() {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeNull() {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeNull() {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeStartObject() {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeStartObject() {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeEndObject() {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeEndObject() {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeFieldName(String fieldName) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeFieldName(String fieldName) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(String val) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(String val) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(boolean bool) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(boolean bool) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(long val) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(long val) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(double val) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(double val) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(float val) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(float val) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(short val) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(short val) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(int val) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(int val) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(ByteBuffer bytes) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(ByteBuffer bytes) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(Date date) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(Date date) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(BigDecimal value) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(BigDecimal value) {
+                    return this;
+                }
 
-        @Override
-        public StructuredJsonGenerator writeValue(BigInteger value) {
-            return this;
-        }
+                @Override
+                public StructuredJsonGenerator writeValue(BigInteger value) {
+                    return this;
+                }
 
-        @Override
-        public byte[] getBytes() {
-            return EMPTY_BYTES;
-        }
+                @Override
+                public byte[] getBytes() {
+                    return EMPTY_BYTES;
+                }
 
-        @Override
-        public String getContentType() {
-            return null;
-        }
-    };
+                @Override
+                public String getContentType() {
+                    return null;
+                }
+            };
 
     StructuredJsonGenerator writeStartArray();
 
@@ -169,9 +165,7 @@ public interface StructuredJsonGenerator {
 
     byte[] getBytes();
 
-    /**
-     * New clients use {@link SdkJsonProtocolFactory#getContentType()}.
-     */
+    /** New clients use {@link SdkJsonProtocolFactory#getContentType()}. */
     @Deprecated
     String getContentType();
 }

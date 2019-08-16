@@ -52,7 +52,8 @@ public class InternalConfigJsonHelper {
         return serviceSigners;
     }
 
-    public void setServiceSigners(JsonIndex<SignerConfigJsonHelper, SignerConfig>... serviceSigners) {
+    public void setServiceSigners(
+            JsonIndex<SignerConfigJsonHelper, SignerConfig>... serviceSigners) {
         this.serviceSigners = serviceSigners;
     }
 
@@ -68,7 +69,8 @@ public class InternalConfigJsonHelper {
         return serviceRegionSigners;
     }
 
-    public void setServiceRegionSigners(JsonIndex<SignerConfigJsonHelper, SignerConfig>... serviceRegionSigners) {
+    public void setServiceRegionSigners(
+            JsonIndex<SignerConfigJsonHelper, SignerConfig>... serviceRegionSigners) {
         this.serviceRegionSigners = serviceRegionSigners;
     }
 
@@ -76,7 +78,8 @@ public class InternalConfigJsonHelper {
         return httpClients;
     }
 
-    public void setHttpClients(JsonIndex<HttpClientConfigJsonHelper, HttpClientConfig>... httpClients) {
+    public void setHttpClients(
+            JsonIndex<HttpClientConfigJsonHelper, HttpClientConfig>... httpClients) {
         this.httpClients = httpClients;
     }
 
@@ -84,7 +87,8 @@ public class InternalConfigJsonHelper {
         return hostRegexToRegionMappings;
     }
 
-    public void setHostRegexToRegionMappings(HostRegexToRegionMappingJsonHelper[] hostRegexToRegionMappings) {
+    public void setHostRegexToRegionMappings(
+            HostRegexToRegionMappingJsonHelper[] hostRegexToRegionMappings) {
         this.hostRegexToRegionMappings = hostRegexToRegionMappings;
     }
 

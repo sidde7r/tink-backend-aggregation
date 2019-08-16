@@ -18,27 +18,25 @@ import com.amazonaws.annotation.SdkProtectedApi;
 import com.amazonaws.annotation.SdkTestInternalApi;
 import java.util.Date;
 
-/**
- * Clock interface to prevent static coupling to {@link System#currentTimeMillis()}.
- */
+/** Clock interface to prevent static coupling to {@link System#currentTimeMillis()}. */
 @SdkProtectedApi
 public interface SdkClock {
 
     /**
-     * Standard implementation that calls out to {@link System#currentTimeMillis()}. Used in production code.
+     * Standard implementation that calls out to {@link System#currentTimeMillis()}. Used in
+     * production code.
      */
-    SdkClock STANDARD = new SdkClock() {
-        @Override
-        public long currentTimeMillis() {
-            return System.currentTimeMillis();
-        }
-    };
+    SdkClock STANDARD =
+            new SdkClock() {
+                @Override
+                public long currentTimeMillis() {
+                    return System.currentTimeMillis();
+                }
+            };
 
     long currentTimeMillis();
 
-    /**
-     * Mock implementation used in tests.
-     */
+    /** Mock implementation used in tests. */
     final class MockClock implements SdkClock {
         private final long mockedTime;
 
@@ -56,9 +54,7 @@ public interface SdkClock {
         }
     }
 
-    /**
-     * Container for Singleton instance of the {@link SdkClock}.
-     */
+    /** Container for Singleton instance of the {@link SdkClock}. */
     final class Instance {
 
         private static SdkClock clock = STANDARD;
@@ -77,13 +73,10 @@ public interface SdkClock {
             clock = newClock;
         }
 
-        /**
-         * Reset the clock to {@link #STANDARD}. Should only be used by SDK tests.
-         */
+        /** Reset the clock to {@link #STANDARD}. Should only be used by SDK tests. */
         @SdkTestInternalApi
         public static void reset() {
             clock = STANDARD;
         }
-
     }
 }

@@ -14,16 +14,13 @@
  */
 package com.amazonaws.regions;
 
-
 /**
- * Abbreviations for looking up information about a specific service. Used in
- * {@link Region#getServiceEndpoint(String)} and related methods.
+ * Abbreviations for looking up information about a specific service. Used in {@link
+ * Region#getServiceEndpoint(String)} and related methods.
  *
- * @deprecated use the constant ENDPOINT_PREFIX from the specific service client
- *             interface instead for retrieving the specific service abbreviation,
- *             e.g. AmazonEC2.ENDPOINT_PREFIX.
+ * @deprecated use the constant ENDPOINT_PREFIX from the specific service client interface instead
+ *     for retrieving the specific service abbreviation, e.g. AmazonEC2.ENDPOINT_PREFIX.
  */
-
 @Deprecated
 public final class ServiceAbbreviations {
     public static final String Autoscaling = "autoscaling";

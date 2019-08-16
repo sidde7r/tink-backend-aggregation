@@ -14,11 +14,10 @@
  */
 package com.amazonaws.auth;
 
-import java.io.IOException;
-
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.retry.internal.CredentialsEndpointRetryParameters;
 import com.amazonaws.retry.internal.CredentialsEndpointRetryPolicy;
+import java.io.IOException;
 
 @SdkInternalApi
 class ContainerCredentialsRetryPolicy implements CredentialsEndpointRetryPolicy {
@@ -28,9 +27,7 @@ class ContainerCredentialsRetryPolicy implements CredentialsEndpointRetryPolicy 
 
     private static ContainerCredentialsRetryPolicy instance;
 
-    private ContainerCredentialsRetryPolicy() {
-
-    }
+    private ContainerCredentialsRetryPolicy() {}
 
     public static ContainerCredentialsRetryPolicy getInstance() {
         if (instance == null) {
@@ -40,7 +37,8 @@ class ContainerCredentialsRetryPolicy implements CredentialsEndpointRetryPolicy 
     }
 
     @Override
-    public boolean shouldRetry(int retriesAttempted, CredentialsEndpointRetryParameters retryParams) {
+    public boolean shouldRetry(
+            int retriesAttempted, CredentialsEndpointRetryParameters retryParams) {
         if (retriesAttempted >= MAX_RETRIES) {
             return false;
         }
@@ -50,11 +48,11 @@ class ContainerCredentialsRetryPolicy implements CredentialsEndpointRetryPolicy 
             return true;
         }
 
-        if (retryParams.getException() != null && retryParams.getException() instanceof IOException) {
+        if (retryParams.getException() != null
+                && retryParams.getException() instanceof IOException) {
             return true;
         }
 
         return false;
     }
-
 }

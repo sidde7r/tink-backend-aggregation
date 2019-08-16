@@ -16,30 +16,20 @@ package com.amazonaws.protocol.json;
 
 import com.amazonaws.annotation.SdkInternalApi;
 
-/**
- * Interface to compute the content type to send in requests for JSON based protocols.
- */
+/** Interface to compute the content type to send in requests for JSON based protocols. */
 @SdkInternalApi
 interface JsonContentTypeResolver {
 
-    /**
-     * Content type resolver implementation for Ion-enabled services.
-     */
+    /** Content type resolver implementation for Ion-enabled services. */
     JsonContentTypeResolver ION_BINARY = new JsonContentTypeResolverImpl("application/x-amz-ion-");
 
-    /**
-     * Content type resolver implementation for debugging Ion-enabled services.
-     */
+    /** Content type resolver implementation for debugging Ion-enabled services. */
     JsonContentTypeResolver ION_TEXT = new JsonContentTypeResolverImpl("text/x-amz-ion-");
 
-    /**
-     * Content type resolver implementation for CBOR enabled services.
-     */
+    /** Content type resolver implementation for CBOR enabled services. */
     JsonContentTypeResolver CBOR = new JsonContentTypeResolverImpl("application/x-amz-cbor-");
 
-    /**
-     * Content type resolver implementation for plain text JSON services.
-     */
+    /** Content type resolver implementation for plain text JSON services. */
     JsonContentTypeResolver JSON = new JsonContentTypeResolverImpl("application/x-amz-json-");
 
     /**

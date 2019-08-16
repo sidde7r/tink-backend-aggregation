@@ -31,7 +31,8 @@ class JsonContentTypeResolverImpl implements JsonContentTypeResolver {
 
     @Override
     public String resolveContentType(JsonClientMetadata metadata) {
-        return metadata.getContentTypeOverride() != null ? metadata.getContentTypeOverride() :
-                prefix + metadata.getProtocolVersion();
+        return metadata.getContentTypeOverride() != null
+                ? metadata.getContentTypeOverride()
+                : prefix + metadata.getProtocolVersion();
     }
 }

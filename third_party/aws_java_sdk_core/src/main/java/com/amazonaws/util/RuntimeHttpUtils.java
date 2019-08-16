@@ -19,7 +19,14 @@ import com.amazonaws.Protocol;
 import com.amazonaws.Request;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkProtectedApi;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import tink.org.apache.http.HttpHost;
 import tink.org.apache.http.HttpResponse;
 import tink.org.apache.http.auth.AuthScope;
@@ -32,22 +39,12 @@ import tink.org.apache.http.params.HttpConnectionParams;
 import tink.org.apache.http.params.HttpParams;
 import tink.org.apache.http.params.HttpProtocolParams;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
 public class RuntimeHttpUtils {
     private static final String COMMA = ", ";
     private static final String SPACE = " ";
 
     private static final String AWS_EXECUTION_ENV_PREFIX = "exec-env/";
     private static final String AWS_EXECUTION_ENV_NAME = "AWS_EXECUTION_ENV";
-
 
     /**
      * Fetches a file from the URI given and returns an input stream to it.
@@ -58,18 +55,14 @@ public class RuntimeHttpUtils {
      * @throws IOException on error
      */
     @SuppressWarnings("deprecation")
-    public static InputStream fetchFile(
-            final URI uri,
-            final ClientConfiguration config) throws IOException {
+    public static InputStream fetchFile(final URI uri, final ClientConfiguration config)
+            throws IOException {
 
         HttpParams httpClientParams = new BasicHttpParams();
-        HttpProtocolParams.setUserAgent(
-                httpClientParams, getUserAgent(config, null));
+        HttpProtocolParams.setUserAgent(httpClientParams, getUserAgent(config, null));
 
-        HttpConnectionParams.setConnectionTimeout(
-                httpClientParams, getConnectionTimeout(config));
-        HttpConnectionParams.setSoTimeout(
-                httpClientParams, getSocketTimeout(config));
+        HttpConnectionParams.setConnectionTimeout(httpClientParams, getConnectionTimeout(config));
+        HttpConnectionParams.setSoTimeout(httpClientParams, getSocketTimeout(config));
 
         DefaultHttpClient httpclient = new DefaultHttpClient(httpClientParams);
 
@@ -80,18 +73,19 @@ public class RuntimeHttpUtils {
             if (proxyHost != null && proxyPort > 0) {
 
                 HttpHost proxy = new HttpHost(proxyHost, proxyPort);
-                httpclient.getParams().setParameter(
-                        ConnRoutePNames.DEFAULT_PROXY, proxy);
+                httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 
-                if (config.getProxyUsername() != null
-                    && config.getProxyPassword() != null) {
+                if (config.getProxyUsername() != null && config.getProxyPassword() != null) {
 
-                    httpclient.getCredentialsProvider().setCredentials(
-                            new AuthScope(proxyHost, proxyPort),
-                            new NTCredentials(config.getProxyUsername(),
-                                              config.getProxyPassword(),
-                                              config.getProxyWorkstation(),
-                                              config.getProxyDomain()));
+                    httpclient
+                            .getCredentialsProvider()
+                            .setCredentials(
+                                    new AuthScope(proxyHost, proxyPort),
+                                    new NTCredentials(
+                                            config.getProxyUsername(),
+                                            config.getProxyPassword(),
+                                            config.getProxyWorkstation(),
+                                            config.getProxyDomain()));
                 }
             }
         }
@@ -99,35 +93,36 @@ public class RuntimeHttpUtils {
         HttpResponse response = httpclient.execute(new HttpGet(uri));
 
         if (response.getStatusLine().getStatusCode() != 200) {
-            throw new IOException("Error fetching file from " + uri + ": "
-                                  + response);
+            throw new IOException("Error fetching file from " + uri + ": " + response);
         }
 
-        return new HttpClientWrappingInputStream(
-                httpclient,
-                response.getEntity().getContent());
+        return new HttpClientWrappingInputStream(httpclient, response.getEntity().getContent());
     }
 
-    public static String getUserAgent(final ClientConfiguration config, final String userAgentMarker) {
+    public static String getUserAgent(
+            final ClientConfiguration config, final String userAgentMarker) {
         String userDefinedPrefix = config != null ? config.getUserAgentPrefix() : "";
         String userDefinedSuffix = config != null ? config.getUserAgentSuffix() : "";
         String awsExecutionEnvironment = getEnvironmentVariable(AWS_EXECUTION_ENV_NAME);
 
         StringBuilder userAgent = new StringBuilder(userDefinedPrefix.trim());
 
-        if(!ClientConfiguration.DEFAULT_USER_AGENT.equals(userDefinedPrefix)) {
+        if (!ClientConfiguration.DEFAULT_USER_AGENT.equals(userDefinedPrefix)) {
             userAgent.append(COMMA).append(ClientConfiguration.DEFAULT_USER_AGENT);
         }
 
-        if(StringUtils.hasValue(userDefinedSuffix)) {
+        if (StringUtils.hasValue(userDefinedSuffix)) {
             userAgent.append(COMMA).append(userDefinedSuffix.trim());
         }
 
-        if(StringUtils.hasValue(awsExecutionEnvironment)) {
-            userAgent.append(SPACE).append(AWS_EXECUTION_ENV_PREFIX).append(awsExecutionEnvironment.trim());
+        if (StringUtils.hasValue(awsExecutionEnvironment)) {
+            userAgent
+                    .append(SPACE)
+                    .append(AWS_EXECUTION_ENV_PREFIX)
+                    .append(awsExecutionEnvironment.trim());
         }
 
-        if(StringUtils.hasValue(userAgentMarker)) {
+        if (StringUtils.hasValue(userAgentMarker)) {
             userAgent.append(SPACE).append(userAgentMarker.trim());
         }
 
@@ -158,8 +153,8 @@ public class RuntimeHttpUtils {
     }
 
     /**
-     * Returns an URI for the given endpoint.
-     * Prefixes the protocol if the endpoint given does not have it.
+     * Returns an URI for the given endpoint. Prefixes the protocol if the endpoint given does not
+     * have it.
      *
      * @throws IllegalArgumentException if the inputs are null.
      */
@@ -172,8 +167,8 @@ public class RuntimeHttpUtils {
     }
 
     /**
-     * Returns an URI for the given endpoint.
-     * Prefixes the protocol if the endpoint given does not have it.
+     * Returns an URI for the given endpoint. Prefixes the protocol if the endpoint given does not
+     * have it.
      *
      * @throws IllegalArgumentException if the inputs are null.
      */
@@ -199,27 +194,26 @@ public class RuntimeHttpUtils {
     }
 
     /**
-     * Converts the specified request object into a URL, containing all the specified parameters, the specified request endpoint,
-     * etc.
+     * Converts the specified request object into a URL, containing all the specified parameters,
+     * the specified request endpoint, etc.
      *
-     * @param request                          The request to convert into a URL.
-     * @param removeLeadingSlashInResourcePath Whether the leading slash in resource-path should be removed before appending to
-     *                                         the endpoint.
-     * @param urlEncode                        True if request resource path should be URL encoded
+     * @param request The request to convert into a URL.
+     * @param removeLeadingSlashInResourcePath Whether the leading slash in resource-path should be
+     *     removed before appending to the endpoint.
+     * @param urlEncode True if request resource path should be URL encoded
      * @return A new URL representing the specified request.
      * @throws SdkClientException If the request cannot be converted to a well formed URL.
      */
     @SdkProtectedApi
-    public static URL convertRequestToUrl(Request<?> request,
-                                          boolean removeLeadingSlashInResourcePath,
-                                          boolean urlEncode) {
-        String resourcePath = urlEncode ?
-                SdkHttpUtils.urlEncode(request.getResourcePath(), true)
-                : request.getResourcePath();
+    public static URL convertRequestToUrl(
+            Request<?> request, boolean removeLeadingSlashInResourcePath, boolean urlEncode) {
+        String resourcePath =
+                urlEncode
+                        ? SdkHttpUtils.urlEncode(request.getResourcePath(), true)
+                        : request.getResourcePath();
 
         // Removed the padding "/" that was already added into the request's resource path.
-        if (removeLeadingSlashInResourcePath
-            && resourcePath.startsWith("/")) {
+        if (removeLeadingSlashInResourcePath && resourcePath.startsWith("/")) {
             resourcePath = resourcePath.substring(1);
         }
 
@@ -237,9 +231,12 @@ public class RuntimeHttpUtils {
         Map<String, List<String>> requestParams = request.getParameters();
         for (Map.Entry<String, List<String>> entry : requestParams.entrySet()) {
             for (String value : entry.getValue()) {
-                queryParams = queryParams.length() > 0 ? queryParams
-                        .append("&") : queryParams.append("?");
-                queryParams.append(SdkHttpUtils.urlEncode(entry.getKey(), false))
+                queryParams =
+                        queryParams.length() > 0
+                                ? queryParams.append("&")
+                                : queryParams.append("?");
+                queryParams
+                        .append(SdkHttpUtils.urlEncode(entry.getKey(), false))
                         .append("=")
                         .append(SdkHttpUtils.urlEncode(value, false));
             }

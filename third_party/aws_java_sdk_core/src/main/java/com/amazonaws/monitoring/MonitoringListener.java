@@ -15,15 +15,11 @@
 
 package com.amazonaws.monitoring;
 
-import com.amazonaws.monitoring.MonitoringEvent;
-
-/**
- * The abstract class for a system that consumes Monitoring Events.
- */
+/** The abstract class for a system that consumes Monitoring Events. */
 public abstract class MonitoringListener {
 
     /**
-     * Handle a {@link MonitoringEvent}
+     * Handle a {@link com.amazonaws.monitoring.MonitoringEvent}
      *
      * @param event a monitoring event
      */

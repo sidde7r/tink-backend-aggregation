@@ -16,13 +16,10 @@ package com.amazonaws.auth.profile.internal;
 
 import com.amazonaws.annotation.Immutable;
 import com.amazonaws.annotation.SdkInternalApi;
-
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * Simple wrapper around a map of profiles.
- */
+/** Simple wrapper around a map of profiles. */
 @Immutable
 @SdkInternalApi
 public class AllProfiles {

@@ -20,33 +20,27 @@ import tink.org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import tink.org.apache.http.protocol.HttpContext;
 
 /**
- * The AWS SDK for Java's implementation of the
- * {@code ConnectionKeepAliveStrategy} interface. Allows a user-configurable
- * maximum idle time for connections.
+ * The AWS SDK for Java's implementation of the {@code ConnectionKeepAliveStrategy} interface.
+ * Allows a user-configurable maximum idle time for connections.
  */
-public class SdkConnectionKeepAliveStrategy
-        implements ConnectionKeepAliveStrategy {
+public class SdkConnectionKeepAliveStrategy implements ConnectionKeepAliveStrategy {
 
     private final long maxIdleTime;
 
-    /**
-     * @param maxIdleTime the maximum time a connection may be idle
-     */
+    /** @param maxIdleTime the maximum time a connection may be idle */
     public SdkConnectionKeepAliveStrategy(long maxIdleTime) {
         this.maxIdleTime = maxIdleTime;
     }
 
     @Override
-    public long getKeepAliveDuration(
-            HttpResponse response,
-            HttpContext context) {
+    public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
 
         // If there's a Keep-Alive timeout directive in the response and it's
         // shorter than our configured max, honor that. Otherwise go with the
         // configured maximum.
 
-        long duration = DefaultConnectionKeepAliveStrategy.INSTANCE
-                .getKeepAliveDuration(response, context);
+        long duration =
+                DefaultConnectionKeepAliveStrategy.INSTANCE.getKeepAliveDuration(response, context);
 
         if (0 < duration && duration < maxIdleTime) {
             return duration;

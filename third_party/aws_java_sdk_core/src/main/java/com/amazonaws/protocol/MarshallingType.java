@@ -30,14 +30,13 @@ import java.util.Map;
 @SdkProtectedApi
 public interface MarshallingType<T> {
     /**
-     * Determine whether this marshalling type is the default marshaller for the provided class. This is used to automatically
-     * determine the marshaller to be used in the contents of lists or maps.
+     * Determine whether this marshalling type is the default marshaller for the provided class.
+     * This is used to automatically determine the marshaller to be used in the contents of lists or
+     * maps.
      */
     boolean isDefaultMarshallerForType(Class<?> type);
 
-    /**
-     * Used when a value is null (and thus type can't be determined).
-     */
+    /** Used when a value is null (and thus type can't be determined). */
     MarshallingType<Void> NULL = new DefaultMarshallingType<Void>(Void.class);
 
     MarshallingType<String> STRING = new DefaultMarshallingType<String>(String.class);
@@ -52,30 +51,32 @@ public interface MarshallingType<T> {
 
     MarshallingType<Double> DOUBLE = new DefaultMarshallingType<Double>(Double.class);
 
-    MarshallingType<BigDecimal> BIG_DECIMAL = new DefaultMarshallingType<BigDecimal>(BigDecimal.class);
+    MarshallingType<BigDecimal> BIG_DECIMAL =
+            new DefaultMarshallingType<BigDecimal>(BigDecimal.class);
 
     MarshallingType<Boolean> BOOLEAN = new DefaultMarshallingType<Boolean>(Boolean.class);
 
     MarshallingType<Date> DATE = new DefaultMarshallingType<Date>(Date.class);
 
-    MarshallingType<ByteBuffer> BYTE_BUFFER = new DefaultMarshallingType<ByteBuffer>(ByteBuffer.class);
+    MarshallingType<ByteBuffer> BYTE_BUFFER =
+            new DefaultMarshallingType<ByteBuffer>(ByteBuffer.class);
 
-    MarshallingType<InputStream> STREAM = new DefaultMarshallingType<InputStream>(InputStream.class);
+    MarshallingType<InputStream> STREAM =
+            new DefaultMarshallingType<InputStream>(InputStream.class);
 
-    MarshallingType<StructuredPojo> STRUCTURED = new DefaultMarshallingType<StructuredPojo>(StructuredPojo.class);
+    MarshallingType<StructuredPojo> STRUCTURED =
+            new DefaultMarshallingType<StructuredPojo>(StructuredPojo.class);
 
     MarshallingType<List> LIST = new DefaultMarshallingType<List>(List.class);
 
     MarshallingType<Map> MAP = new DefaultMarshallingType<Map>(Map.class);
 
-    /**
-     * A serializer for strings that should be base-64 encoded when they are sent to AWS.
-     */
-    MarshallingType<String> JSON_VALUE = new MarshallingType<String>() {
-        @Override
-        public boolean isDefaultMarshallerForType(Class<?> type) {
-            return false;
-        }
-    };
-
+    /** A serializer for strings that should be base-64 encoded when they are sent to AWS. */
+    MarshallingType<String> JSON_VALUE =
+            new MarshallingType<String>() {
+                @Override
+                public boolean isDefaultMarshallerForType(Class<?> type) {
+                    return false;
+                }
+            };
 }

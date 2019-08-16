@@ -20,13 +20,11 @@ import com.amazonaws.SdkClientException;
 public class WaiterTimedOutException extends SdkClientException {
 
     /**
-     * Constructs a new WaiterTimedOutException with the specified error
-     * message.
+     * Constructs a new WaiterTimedOutException with the specified error message.
      *
      * @param message Describes the error encountered.
      */
     public WaiterTimedOutException(String message) {
         super(message);
     }
-
 }

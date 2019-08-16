@@ -17,18 +17,15 @@ package com.amazonaws.partitions.model;
 import com.amazonaws.util.ValidationUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Metadata about a region in partition.
- */
+/** Metadata about a region in partition. */
 public class Region {
 
-    /**
-     * description of the region.
-     */
+    /** description of the region. */
     private final String description;
 
     public Region(@JsonProperty(value = "description") String description) {
-        this.description = ValidationUtils.assertNotNull(description, "Region description");;
+        this.description = ValidationUtils.assertNotNull(description, "Region description");
+        ;
     }
 
     public String getDescription() {

@@ -16,44 +16,40 @@ package com.amazonaws.internal;
 
 import static com.amazonaws.util.SdkRuntime.shouldAbort;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.commons.logging.LogFactory;
-
 import com.amazonaws.AbortedException;
 import com.amazonaws.util.IOUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.logging.LogFactory;
 
-/**
- * Base class for AWS Java SDK specific {@link InputStream}.
- */
-public abstract class SdkInputStream extends InputStream implements
-        MetricAware, Releasable {
+/** Base class for AWS Java SDK specific {@link InputStream}. */
+public abstract class SdkInputStream extends InputStream implements MetricAware, Releasable {
     /**
-     * Returns the underlying input stream, if any, from the subclass; or null
-     * if there is no underlying input stream.
+     * Returns the underlying input stream, if any, from the subclass; or null if there is no
+     * underlying input stream.
      */
-    abstract protected InputStream getWrappedInputStream();
+    protected abstract InputStream getWrappedInputStream();
 
     @Override
     public final boolean isMetricActivated() {
         InputStream in = getWrappedInputStream();
         if (in instanceof MetricAware) {
-            MetricAware metricAware = (MetricAware)in;
+            MetricAware metricAware = (MetricAware) in;
             return metricAware.isMetricActivated();
         }
         return false;
     }
 
     /**
-     * Aborts with subclass specific abortion logic executed if needed.
-     * Note the interrupted status of the thread is cleared by this method.
+     * Aborts with subclass specific abortion logic executed if needed. Note the interrupted status
+     * of the thread is cleared by this method.
+     *
      * @throws AbortedException if found necessary.
      */
     protected final void abortIfNeeded() {
         if (shouldAbort()) {
             try {
-                abort();    // execute subclass specific abortion logic
+                abort(); // execute subclass specific abortion logic
             } catch (IOException e) {
                 LogFactory.getLog(getClass()).debug("FYI", e);
             }
@@ -62,18 +58,18 @@ public abstract class SdkInputStream extends InputStream implements
     }
 
     /**
-     * Can be used to provide abortion logic prior to throwing the
-     * AbortedException. No-op by default.
+     * Can be used to provide abortion logic prior to throwing the AbortedException. No-op by
+     * default.
      */
     protected void abort() throws IOException {
         // no-op by default, but subclass such as S3ObjectInputStream may override
     }
 
     /**
-     * WARNING: Subclass that overrides this method must NOT call
-     * super.release() or else it would lead to infinite loop.
-     * <p>
-     * {@inheritDoc}
+     * WARNING: Subclass that overrides this method must NOT call super.release() or else it would
+     * lead to infinite loop.
+     *
+     * <p>{@inheritDoc}
      */
     @Override
     public void release() {
@@ -83,7 +79,7 @@ public abstract class SdkInputStream extends InputStream implements
         if (in instanceof Releasable) {
             // This allows any underlying stream that has the close operation
             // disabled to be truly released
-            Releasable r = (Releasable)in;
+            Releasable r = (Releasable) in;
             r.release();
         }
     }

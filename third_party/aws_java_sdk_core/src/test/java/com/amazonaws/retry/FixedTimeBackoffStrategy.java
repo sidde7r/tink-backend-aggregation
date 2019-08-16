@@ -22,9 +22,7 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.retry.RetryPolicy.BackoffStrategy;
 
-/**
- * Test implementation of {@link BackoffStrategy} to wait a fixed time between retries
- */
+/** Test implementation of {@link BackoffStrategy} to wait a fixed time between retries */
 public class FixedTimeBackoffStrategy implements BackoffStrategy {
 
     private final long fixedTimeDelay;
@@ -34,10 +32,10 @@ public class FixedTimeBackoffStrategy implements BackoffStrategy {
     }
 
     @Override
-    public long delayBeforeNextRetry(AmazonWebServiceRequest originalRequest,
-                                     AmazonClientException exception,
-                                     int retriesAttempted) {
+    public long delayBeforeNextRetry(
+            AmazonWebServiceRequest originalRequest,
+            AmazonClientException exception,
+            int retriesAttempted) {
         return this.fixedTimeDelay;
     }
-
 }

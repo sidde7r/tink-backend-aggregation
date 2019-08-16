@@ -20,10 +20,13 @@ package com.amazonaws.retry.v2;
 public interface BackoffStrategy {
 
     /**
-     * Compute the delay before the next retry request. This strategy is only consulted when there will be a next retry.
+     * Compute the delay before the next retry request. This strategy is only consulted when there
+     * will be a next retry.
      *
-     * @param context Context about the state of the last request and information about the number of requests made.
-     * @return Amount of time in milliseconds to wait before the next attempt. Must be non-negative (can be zero).
+     * @param context Context about the state of the last request and information about the number
+     *     of requests made.
+     * @return Amount of time in milliseconds to wait before the next attempt. Must be non-negative
+     *     (can be zero).
      */
     long computeDelayBeforeNextRetry(RetryPolicyContext context);
 }

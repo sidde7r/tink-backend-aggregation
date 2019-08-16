@@ -14,34 +14,33 @@
  */
 package com.amazonaws.metrics;
 
+import com.amazonaws.internal.MetricAware;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import tink.org.apache.http.entity.ContentType;
 import tink.org.apache.http.entity.InputStreamEntity;
 
-import com.amazonaws.internal.MetricAware;
-
 /**
  * Used to help capture the throughput metrics.
- * <p>
- * Note this class is only relevant
- * when metric is enabled. Otherwise it should not even be involved in the call
- * stack to minimize runtime overhead.
+ *
+ * <p>Note this class is only relevant when metric is enabled. Otherwise it should not even be
+ * involved in the call stack to minimize runtime overhead.
  */
 public class MetricInputStreamEntity extends InputStreamEntity {
-    private final static int BUFFER_SIZE = 2048;
+    private static final int BUFFER_SIZE = 2048;
     private final ByteThroughputHelper helper;
 
-    public MetricInputStreamEntity(ThroughputMetricType metricType,
-            InputStream instream, long length) {
+    public MetricInputStreamEntity(
+            ThroughputMetricType metricType, InputStream instream, long length) {
         super(instream, length);
         helper = new ByteThroughputHelper(metricType);
     }
 
-    public MetricInputStreamEntity(ThroughputMetricType metricType,
-            final InputStream instream, long length,
+    public MetricInputStreamEntity(
+            ThroughputMetricType metricType,
+            final InputStream instream,
+            long length,
             final ContentType contentType) {
         super(instream, length, contentType);
         helper = new ByteThroughputHelper(metricType);
@@ -53,7 +52,7 @@ public class MetricInputStreamEntity extends InputStreamEntity {
             // hchar: There is currently no implementation of output stream that
             // has metric gathering capability but there could be!
             // So the code here is for future proof purposes.
-            MetricAware aware = (MetricAware)outstream;
+            MetricAware aware = (MetricAware) outstream;
             if (aware.isMetricActivated()) {
                 // let the underlying output stream takes care of byte counting
                 super.writeTo(outstream);
@@ -64,8 +63,8 @@ public class MetricInputStreamEntity extends InputStreamEntity {
     }
 
     /**
-     * Copied from {{@link InputStreamEntity#writeTo(OutputStream)} but modified
-     * to capture metrics for the output stream.
+     * Copied from {{@link InputStreamEntity#writeTo(OutputStream)} but modified to capture metrics
+     * for the output stream.
      */
     private void writeToWithMetrics(final OutputStream outstream) throws IOException {
         if (outstream == null) {
@@ -88,7 +87,7 @@ public class MetricInputStreamEntity extends InputStreamEntity {
                 // consume no more than length
                 long remaining = length;
                 while (remaining > 0) {
-                    l = instream.read(buffer, 0, (int)Math.min(BUFFER_SIZE, remaining));
+                    l = instream.read(buffer, 0, (int) Math.min(BUFFER_SIZE, remaining));
                     if (l == -1) {
                         break;
                     }

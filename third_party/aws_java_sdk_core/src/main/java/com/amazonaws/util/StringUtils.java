@@ -24,9 +24,7 @@ import java.text.Collator;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Utilities for converting objects to strings.
- */
+/** Utilities for converting objects to strings. */
 public class StringUtils {
 
     private static final String DEFAULT_ENCODING = "UTF-8";
@@ -85,7 +83,6 @@ public class StringUtils {
         return value.toString();
     }
 
-
     public static BigInteger toBigInteger(String s) {
         return new BigInteger(s);
     }
@@ -99,12 +96,9 @@ public class StringUtils {
     }
 
     /**
-     * Converts the specified date to an ISO 8601 timestamp string and returns
-     * it.
+     * Converts the specified date to an ISO 8601 timestamp string and returns it.
      *
-     * @param value
-     *            The date to format as an ISO 8601 timestamp string.
-     *
+     * @param value The date to format as an ISO 8601 timestamp string.
      * @return An ISO 8601 timestamp string created from the specified date.
      */
     public static String fromDate(Date value) {
@@ -114,9 +108,7 @@ public class StringUtils {
     /**
      * Returns the string representation of the specified double.
      *
-     * @param d
-     *            The double to represent as a string.
-     *
+     * @param d The double to represent as a string.
      * @return The string representation of the specified double.
      */
     public static String fromDouble(Double d) {
@@ -126,9 +118,7 @@ public class StringUtils {
     /**
      * Returns the string representation of the specified Byte.
      *
-     * @param b
-     *            The Byte to represent as a string.
-     *
+     * @param b The Byte to represent as a string.
      * @return The string representation of the specified Byte.
      */
     public static String fromByte(Byte b) {
@@ -136,25 +126,21 @@ public class StringUtils {
     }
 
     /**
-     * Base64 encodes the data in the specified byte buffer (from the current
-     * position to the buffer's limit) and returns it as a base64 encoded
-     * string.
+     * Base64 encodes the data in the specified byte buffer (from the current position to the
+     * buffer's limit) and returns it as a base64 encoded string.
      *
-     * @param byteBuffer
-     *            The data to base64 encode and return as a string; must not be
-     *            null.
-     *
+     * @param byteBuffer The data to base64 encode and return as a string; must not be null.
      * @return The base64 encoded contents of the specified byte buffer.
      */
     public static String fromByteBuffer(ByteBuffer byteBuffer) {
         return Base64.encodeAsString(copyBytesFrom(byteBuffer));
     }
 
-    public static String replace( String originalString, String partToMatch, String replacement ) {
-        StringBuilder buffer = new StringBuilder( originalString.length() );
-        buffer.append( originalString );
+    public static String replace(String originalString, String partToMatch, String replacement) {
+        StringBuilder buffer = new StringBuilder(originalString.length());
+        buffer.append(originalString);
 
-        int indexOf = buffer.indexOf( partToMatch );
+        int indexOf = buffer.indexOf(partToMatch);
         while (indexOf != -1) {
             buffer = buffer.replace(indexOf, indexOf + partToMatch.length(), replacement);
             indexOf = buffer.indexOf(partToMatch, indexOf + replacement.length());
@@ -165,6 +151,7 @@ public class StringUtils {
 
     /**
      * Joins the strings in parts with joiner between each string
+     *
      * @param joiner the string to insert between the strings in parts
      * @param parts the parts to join
      */
@@ -180,8 +167,8 @@ public class StringUtils {
     }
 
     /**
-     * A null-safe trim method. If the input string is null, returns null;
-     * otherwise returns a trimmed version of the input.
+     * A null-safe trim method. If the input string is null, returns null; otherwise returns a
+     * trimmed version of the input.
      */
     public static String trim(String value) {
         if (value == null) {
@@ -190,16 +177,12 @@ public class StringUtils {
         return value.trim();
     }
 
-    /**
-     * @return true if the given value is either null or the empty string
-     */
+    /** @return true if the given value is either null or the empty string */
     public static boolean isNullOrEmpty(String value) {
         return value == null || value.isEmpty();
     }
 
-    /**
-     * @return true if the given value is non-null and non-empty
-     */
+    /** @return true if the given value is non-null and non-empty */
     public static boolean hasValue(String str) {
         return !isNullOrEmpty(str);
     }
@@ -211,7 +194,7 @@ public class StringUtils {
      * @return the lower case of string, or itself if string is null/empty
      */
     public static String lowerCase(String str) {
-        if(isNullOrEmpty(str)) {
+        if (isNullOrEmpty(str)) {
             return str;
         }
         return str.toLowerCase(LOCALE_ENGLISH);
@@ -224,24 +207,24 @@ public class StringUtils {
      * @return the upper case of string, or itself if string is null/empty
      */
     public static String upperCase(String str) {
-        if(isNullOrEmpty(str)) {
+        if (isNullOrEmpty(str)) {
             return str;
         }
         return str.toUpperCase(LOCALE_ENGLISH);
     }
 
     /**
-     * Compare two strings with Locale.ENGLISH
-     * This method is preferred over String.compareTo() method.
+     * Compare two strings with Locale.ENGLISH This method is preferred over String.compareTo()
+     * method.
+     *
      * @param str1 String 1
      * @param str2 String 2
-     * @return negative integer if str1 lexicographically precedes str2
-     * 		   positive integer if str1 lexicographically follows str2
-     * 			0 if both strings are equal
+     * @return negative integer if str1 lexicographically precedes str2 positive integer if str1
+     *     lexicographically follows str2 0 if both strings are equal
      * @throws IllegalArgumentException throws exception if both or either of the strings is null
      */
     public static int compare(String str1, String str2) {
-        if( str1 == null || str2 == null) {
+        if (str1 == null || str2 == null) {
             throw new IllegalArgumentException("Arguments cannot be null");
         }
 
@@ -250,12 +233,11 @@ public class StringUtils {
     }
 
     /**
-     * Tests a char to see if is it whitespace.
-     * This method considers the same characters to be white
-     * space as the Pattern class does when matching \s
+     * Tests a char to see if is it whitespace. This method considers the same characters to be
+     * white space as the Pattern class does when matching \s
      *
      * @param ch the character to be tested
-     * @return true if the character is white  space, false otherwise.
+     * @return true if the character is white space, false otherwise.
      */
     private static boolean isWhiteSpace(final char ch) {
         if (ch == CHAR_SPACE) return true;
@@ -268,14 +250,12 @@ public class StringUtils {
     }
 
     /**
-     * This method appends a string to a string builder and collapses contiguous
-     * white space is a single space.
+     * This method appends a string to a string builder and collapses contiguous white space is a
+     * single space.
      *
-     * This is equivalent to:
-     *      destination.append(source.replaceAll("\\s+", " "))
-     * but does not create a Pattern object that needs to compile the match
-     * string; it also prevents us from having to make a Matcher object as well.
-     *
+     * <p>This is equivalent to: destination.append(source.replaceAll("\\s+", " ")) but does not
+     * create a Pattern object that needs to compile the match string; it also prevents us from
+     * having to make a Matcher object as well.
      */
     public static void appendCompactedString(final StringBuilder destination, final String source) {
         boolean previousIsWhiteSpace = false;
@@ -297,10 +277,10 @@ public class StringUtils {
     }
 
     /**
-     * Performs a case insensitive comparison and returns true if the data
-     * begins with the given sequence. 
+     * Performs a case insensitive comparison and returns true if the data begins with the given
+     * sequence.
      */
     public static boolean beginsWithIgnoreCase(final String data, final String seq) {
-      return data.regionMatches(true, 0, seq, 0, seq.length());
+        return data.regionMatches(true, 0, seq, 0, seq.length());
     }
 }

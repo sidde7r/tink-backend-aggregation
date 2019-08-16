@@ -31,9 +31,7 @@ public class SDKGlobalConfigurationTest {
         System.clearProperty(AWS_EC2_METADATA_DISABLED_SYSTEM_PROPERTY);
     }
 
-    /**
-     * Flag specified as -Dcom.amazonaws.sdk.disableCertChecking
-     */
+    /** Flag specified as -Dcom.amazonaws.sdk.disableCertChecking */
     @Test
     public void disableCertChecking_FlagEnabled_TurnsOffCertChecking() {
         System.setProperty(DISABLE_CERT_CHECKING_SYSTEM_PROPERTY, "");

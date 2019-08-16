@@ -15,13 +15,13 @@
  */
 package com.amazonaws.util;
 
-import com.amazonaws.SdkClientException;
 import com.amazonaws.ResponseMetadata;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkInternalApi;
 
 /**
- * No-op response metadata cache used when a client instance is configured
- * without response metadata caching enabled.
+ * No-op response metadata cache used when a client instance is configured without response metadata
+ * caching enabled.
  */
 @SdkInternalApi
 public class NullResponseMetadataCache implements MetadataCache {
@@ -35,5 +35,4 @@ public class NullResponseMetadataCache implements MetadataCache {
     public ResponseMetadata get(Object obj) {
         throw new SdkClientException("Response metadata caching is not enabled");
     }
-
 }

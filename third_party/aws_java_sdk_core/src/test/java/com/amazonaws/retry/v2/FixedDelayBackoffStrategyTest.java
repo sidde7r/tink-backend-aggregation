@@ -14,9 +14,9 @@
  */
 package com.amazonaws.retry.v2;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class FixedDelayBackoffStrategyTest {
 
@@ -32,8 +32,9 @@ public class FixedDelayBackoffStrategyTest {
 
     @Test
     public void positiveBackoff_ReturnsFixedBackoffOnDelay() {
-        long delay = new FixedDelayBackoffStrategy(100).computeDelayBeforeNextRetry(RetryPolicyContexts.EMPTY);
+        long delay =
+                new FixedDelayBackoffStrategy(100)
+                        .computeDelayBeforeNextRetry(RetryPolicyContexts.EMPTY);
         assertEquals(100, delay);
     }
-
 }

@@ -21,19 +21,16 @@ package com.amazonaws.util;
 import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.RequestConfig;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.internal.StaticCredentialsProvider;
 
 public class CredentialUtils {
 
     /**
-     *  Returns the credentials provider that will be used to fetch the
-     *  credentials when signing the request. Request specific credentials
-     *  takes precedence over the credentials/credentials provider set in the
-     *  client.
+     * Returns the credentials provider that will be used to fetch the credentials when signing the
+     * request. Request specific credentials takes precedence over the credentials/credentials
+     * provider set in the client.
      */
     public static AWSCredentialsProvider getCredentialsProvider(
-            AmazonWebServiceRequest req,
-            AWSCredentialsProvider base) {
+            AmazonWebServiceRequest req, AWSCredentialsProvider base) {
 
         if (req != null && req.getRequestCredentialsProvider() != null) {
             return req.getRequestCredentialsProvider();
@@ -42,8 +39,7 @@ public class CredentialUtils {
     }
 
     public static AWSCredentialsProvider getCredentialsProvider(
-            RequestConfig requestConfig,
-            AWSCredentialsProvider base) {
+            RequestConfig requestConfig, AWSCredentialsProvider base) {
 
         if (requestConfig.getCredentialsProvider() != null) {
             return requestConfig.getCredentialsProvider();

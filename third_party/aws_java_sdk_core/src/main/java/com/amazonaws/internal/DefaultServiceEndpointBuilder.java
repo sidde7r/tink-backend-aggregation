@@ -16,15 +16,12 @@ package com.amazonaws.internal;
 
 import com.amazonaws.annotation.NotThreadSafe;
 import com.amazonaws.regions.Region;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-/**
- * Uses region metdata to construct an endpoint for a specific service
- */
+/** Uses region metdata to construct an endpoint for a specific service */
 @NotThreadSafe
 public class DefaultServiceEndpointBuilder extends ServiceEndpointBuilder {
 
@@ -53,12 +50,19 @@ public class DefaultServiceEndpointBuilder extends ServiceEndpointBuilder {
 
         if (serviceEndpoint == null) {
 
-            serviceEndpoint = String.format("%s.%s.%s", serviceName, region.getName(), region.getDomain());
+            serviceEndpoint =
+                    String.format("%s.%s.%s", serviceName, region.getName(), region.getDomain());
 
-            log.info("{" + serviceName + ", " + region.getName() + "} was not "
-                    + "found in region metadata, trying to construct an "
-                    + "endpoint using the standard pattern for this region: '" + serviceEndpoint + "'.");
-
+            log.info(
+                    "{"
+                            + serviceName
+                            + ", "
+                            + region.getName()
+                            + "} was not "
+                            + "found in region metadata, trying to construct an "
+                            + "endpoint using the standard pattern for this region: '"
+                            + serviceEndpoint
+                            + "'.");
         }
         return toURI(stripProtocol(serviceEndpoint));
     }

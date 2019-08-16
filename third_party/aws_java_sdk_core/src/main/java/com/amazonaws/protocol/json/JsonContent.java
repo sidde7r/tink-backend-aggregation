@@ -21,13 +21,10 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- * Simple struct like class to hold both the raw json string content and it's parsed JsonNode
- */
+/** Simple struct like class to hold both the raw json string content and it's parsed JsonNode */
 @SdkInternalApi
 public class JsonContent {
 
@@ -40,8 +37,8 @@ public class JsonContent {
      * Static factory method to create a JsonContent object from the contents of the HttpResponse
      * provided
      */
-    public static JsonContent createJsonContent(HttpResponse httpResponse,
-                                                JsonFactory jsonFactory) {
+    public static JsonContent createJsonContent(
+            HttpResponse httpResponse, JsonFactory jsonFactory) {
         byte[] rawJsonContent = null;
         try {
             if (httpResponse.getContent() != null) {
@@ -50,8 +47,9 @@ public class JsonContent {
         } catch (Exception e) {
             LOG.debug("Unable to read HTTP response content", e);
         }
-        return new JsonContent(rawJsonContent, new ObjectMapper(jsonFactory)
-                .configure(JsonParser.Feature.ALLOW_COMMENTS, true));
+        return new JsonContent(
+                rawJsonContent,
+                new ObjectMapper(jsonFactory).configure(JsonParser.Feature.ALLOW_COMMENTS, true));
     }
 
     public JsonContent(byte[] rawJsonContent, JsonNode jsonNode) {

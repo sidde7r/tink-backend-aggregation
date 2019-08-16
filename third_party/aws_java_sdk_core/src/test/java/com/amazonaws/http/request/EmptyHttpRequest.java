@@ -24,7 +24,6 @@ import com.amazonaws.Request;
 import com.amazonaws.handlers.HandlerContextKey;
 import com.amazonaws.http.HttpMethodName;
 import com.amazonaws.util.AWSRequestMetrics;
-
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Collections;
@@ -35,8 +34,7 @@ public class EmptyHttpRequest implements Request<Object> {
 
     private final URI endpoint;
     private final HttpMethodName httpMethod;
-    private AmazonWebServiceRequest originalRequest = new AmazonWebServiceRequest() {
-    };
+    private AmazonWebServiceRequest originalRequest = new AmazonWebServiceRequest() {};
 
     private final InputStream content;
 
@@ -44,16 +42,14 @@ public class EmptyHttpRequest implements Request<Object> {
         this(endpoint, httpMethod, null);
     }
 
-    public EmptyHttpRequest(String endpoint, HttpMethodName httpMethod,
-                            InputStream payload) {
+    public EmptyHttpRequest(String endpoint, HttpMethodName httpMethod, InputStream payload) {
         this.endpoint = URI.create(endpoint);
         this.httpMethod = httpMethod;
         this.content = payload;
     }
 
     @Override
-    public void addHeader(String name, String value) {
-    }
+    public void addHeader(String name, String value) {}
 
     @Override
     public Map<String, String> getHeaders() {
@@ -61,12 +57,10 @@ public class EmptyHttpRequest implements Request<Object> {
     }
 
     @Override
-    public void setHeaders(Map<String, String> headers) {
-    }
+    public void setHeaders(Map<String, String> headers) {}
 
     @Override
-    public void setResourcePath(String path) {
-    }
+    public void setResourcePath(String path) {}
 
     @Override
     public String getResourcePath() {
@@ -74,8 +68,7 @@ public class EmptyHttpRequest implements Request<Object> {
     }
 
     @Override
-    public void addParameter(String name, String value) {
-    }
+    public void addParameter(String name, String value) {}
 
     @Override
     public Request<Object> withParameter(String name, String value) {
@@ -83,8 +76,7 @@ public class EmptyHttpRequest implements Request<Object> {
     }
 
     @Override
-    public void addParameters(String name, List<String> values) {
-    }
+    public void addParameters(String name, List<String> values) {}
 
     @Override
     public Map<String, List<String>> getParameters() {
@@ -92,8 +84,7 @@ public class EmptyHttpRequest implements Request<Object> {
     }
 
     @Override
-    public void setParameters(Map<String, List<String>> parameters) {
-    }
+    public void setParameters(Map<String, List<String>> parameters) {}
 
     @Override
     public URI getEndpoint() {
@@ -121,8 +112,7 @@ public class EmptyHttpRequest implements Request<Object> {
     }
 
     @Override
-    public void setContent(InputStream content) {
-    }
+    public void setContent(InputStream content) {}
 
     @Override
     public String getServiceName() {
@@ -144,8 +134,7 @@ public class EmptyHttpRequest implements Request<Object> {
     }
 
     @Override
-    public void setTimeOffset(int timeOffset) {
-    }
+    public void setTimeOffset(int timeOffset) {}
 
     @Override
     public Request<Object> withTimeOffset(int timeOffset) {
@@ -158,13 +147,11 @@ public class EmptyHttpRequest implements Request<Object> {
     }
 
     @Override
-    public void setAWSRequestMetrics(AWSRequestMetrics metrics) {
-    }
+    public void setAWSRequestMetrics(AWSRequestMetrics metrics) {}
 
     @Override
     public ReadLimitInfo getReadLimitInfo() {
-        return new AmazonWebServiceRequest() {
-        };
+        return new AmazonWebServiceRequest() {};
     }
 
     @Override
@@ -174,19 +161,14 @@ public class EmptyHttpRequest implements Request<Object> {
 
     @Override
     public Object getOriginalRequestObject() {
-        return new AmazonWebServiceRequest() {
-        };
+        return new AmazonWebServiceRequest() {};
     }
-
 
     @Override
-    public <X> void addHandlerContext(HandlerContextKey<X> key, X value) {
-
-    }
+    public <X> void addHandlerContext(HandlerContextKey<X> key, X value) {}
 
     @Override
     public <X> X getHandlerContext(HandlerContextKey<X> key) {
         return null;
     }
-
 }

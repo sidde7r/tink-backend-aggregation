@@ -18,12 +18,11 @@ import com.amazonaws.annotation.Beta;
 import com.amazonaws.http.settings.HttpClientSettings;
 
 /**
- * Factory interface that can be used for create ConnectionManager used by
- * the underlying http client.
+ * Factory interface that can be used for create ConnectionManager used by the underlying http
+ * client.
  */
 @Beta
 public interface ConnectionManagerFactory<T> {
 
     T create(final HttpClientSettings settings);
-
 }

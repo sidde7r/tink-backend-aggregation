@@ -17,9 +17,7 @@ package com.amazonaws.util;
 
 import com.amazonaws.metrics.RequestMetricType;
 
-/**
- * Metrics used for generate client side monitoring events.
- */
+/** Metrics used for generate client side monitoring events. */
 public enum AwsClientSideMonitoringMetrics implements RequestMetricType {
     Latency
 }

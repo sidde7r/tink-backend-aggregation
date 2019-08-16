@@ -26,10 +26,9 @@ import java.nio.charset.Charset;
 import java.util.Date;
 
 public class SimpleTypeJsonUnmarshallers {
-    /**
-     * Unmarshaller for String values.
-     */
-    public static class StringJsonUnmarshaller implements Unmarshaller<String, JsonUnmarshallerContext> {
+    /** Unmarshaller for String values. */
+    public static class StringJsonUnmarshaller
+            implements Unmarshaller<String, JsonUnmarshallerContext> {
         public String unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             return unmarshallerContext.readText();
         }
@@ -42,27 +41,28 @@ public class SimpleTypeJsonUnmarshallers {
     }
 
     /**
-     * Unmarshaller for fields with JSON values. For headers, JSON values are base-64 encoded and are decoded here. For payloads,
-     * JSON values are treated like normal strings.
+     * Unmarshaller for fields with JSON values. For headers, JSON values are base-64 encoded and
+     * are decoded here. For payloads, JSON values are treated like normal strings.
      */
     public static class JsonValueStringUnmarshaller extends StringJsonUnmarshaller {
         public String unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String stringValue = super.unmarshall(unmarshallerContext);
             return !unmarshallerContext.isInsideResponseHeader()
-                   ? stringValue
-                   : new String(Base64.decode(stringValue), Charset.forName("utf-8"));
+                    ? stringValue
+                    : new String(Base64.decode(stringValue), Charset.forName("utf-8"));
         }
 
-        private static final JsonValueStringUnmarshaller INSTANCE = new JsonValueStringUnmarshaller();
+        private static final JsonValueStringUnmarshaller INSTANCE =
+                new JsonValueStringUnmarshaller();
+
         public static JsonValueStringUnmarshaller getInstance() {
             return INSTANCE;
         }
     }
 
-    /**
-     * Unmarshaller for Double values.
-     */
-    public static class DoubleJsonUnmarshaller implements Unmarshaller<Double, JsonUnmarshallerContext> {
+    /** Unmarshaller for Double values. */
+    public static class DoubleJsonUnmarshaller
+            implements Unmarshaller<Double, JsonUnmarshallerContext> {
         public Double unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String doubleString = unmarshallerContext.readText();
             return (doubleString == null) ? null : Double.parseDouble(doubleString);
@@ -75,10 +75,9 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Integer values.
-     */
-    public static class IntegerJsonUnmarshaller implements Unmarshaller<Integer, JsonUnmarshallerContext> {
+    /** Unmarshaller for Integer values. */
+    public static class IntegerJsonUnmarshaller
+            implements Unmarshaller<Integer, JsonUnmarshallerContext> {
         public Integer unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String intString = unmarshallerContext.readText();
             return (intString == null) ? null : Integer.parseInt(intString);
@@ -91,7 +90,8 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-    public static class BigIntegerJsonUnmarshaller implements Unmarshaller<BigInteger, JsonUnmarshallerContext> {
+    public static class BigIntegerJsonUnmarshaller
+            implements Unmarshaller<BigInteger, JsonUnmarshallerContext> {
         public BigInteger unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String intString = unmarshallerContext.readText();
             return (intString == null) ? null : new BigInteger(intString);
@@ -104,7 +104,8 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-    public static class BigDecimalJsonUnmarshaller implements Unmarshaller<BigDecimal, JsonUnmarshallerContext> {
+    public static class BigDecimalJsonUnmarshaller
+            implements Unmarshaller<BigDecimal, JsonUnmarshallerContext> {
         public BigDecimal unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String s = unmarshallerContext.readText();
             return (s == null) ? null : new BigDecimal(s);
@@ -117,10 +118,9 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Boolean values.
-     */
-    public static class BooleanJsonUnmarshaller implements Unmarshaller<Boolean, JsonUnmarshallerContext> {
+    /** Unmarshaller for Boolean values. */
+    public static class BooleanJsonUnmarshaller
+            implements Unmarshaller<Boolean, JsonUnmarshallerContext> {
         public Boolean unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String booleanString = unmarshallerContext.readText();
             return (booleanString == null) ? null : Boolean.parseBoolean(booleanString);
@@ -133,10 +133,9 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Float values.
-     */
-    public static class FloatJsonUnmarshaller implements Unmarshaller<Float, JsonUnmarshallerContext> {
+    /** Unmarshaller for Float values. */
+    public static class FloatJsonUnmarshaller
+            implements Unmarshaller<Float, JsonUnmarshallerContext> {
         public Float unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String floatString = unmarshallerContext.readText();
             return (floatString == null) ? null : Float.valueOf(floatString);
@@ -149,10 +148,9 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Long values.
-     */
-    public static class LongJsonUnmarshaller implements Unmarshaller<Long, JsonUnmarshallerContext> {
+    /** Unmarshaller for Long values. */
+    public static class LongJsonUnmarshaller
+            implements Unmarshaller<Long, JsonUnmarshallerContext> {
         public Long unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String longString = unmarshallerContext.readText();
             return (longString == null) ? null : Long.parseLong(longString);
@@ -165,10 +163,9 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Byte values.
-     */
-    public static class ByteJsonUnmarshaller implements Unmarshaller<Byte, JsonUnmarshallerContext> {
+    /** Unmarshaller for Byte values. */
+    public static class ByteJsonUnmarshaller
+            implements Unmarshaller<Byte, JsonUnmarshallerContext> {
         public Byte unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String byteString = unmarshallerContext.readText();
             return (byteString == null) ? null : Byte.valueOf(byteString);
@@ -182,12 +179,12 @@ public class SimpleTypeJsonUnmarshallers {
     }
 
     /**
-     * Unmarshaller for Date values - JSON dates come in as epoch seconds for AWS services and ISO8601 string
-     * for API Gateway fronted services..
+     * Unmarshaller for Date values - JSON dates come in as epoch seconds for AWS services and
+     * ISO8601 string for API Gateway fronted services..
      */
-    public static class DateJsonUnmarshaller implements Unmarshaller<Date, JsonUnmarshallerContext> {
-        public Date unmarshall(JsonUnmarshallerContext unmarshallerContext)
-                throws Exception {
+    public static class DateJsonUnmarshaller
+            implements Unmarshaller<Date, JsonUnmarshallerContext> {
+        public Date unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             // If value is string, assume ISO8601. Otherwise parse as epoch seconds.
             if (unmarshallerContext.getCurrentToken() == JsonToken.VALUE_STRING) {
                 return DateUtils.parseISO8601Date(unmarshallerContext.readText());
@@ -203,7 +200,8 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-    public static class DateJsonUnmarshallerFactory implements Unmarshaller<Date, JsonUnmarshallerContext> {
+    public static class DateJsonUnmarshallerFactory
+            implements Unmarshaller<Date, JsonUnmarshallerContext> {
 
         private final String dateFormatType;
 
@@ -243,11 +241,9 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-
-    /**
-     * Unmarshaller for ByteBuffer values.
-     */
-    public static class ByteBufferJsonUnmarshaller implements Unmarshaller<ByteBuffer, JsonUnmarshallerContext> {
+    /** Unmarshaller for ByteBuffer values. */
+    public static class ByteBufferJsonUnmarshaller
+            implements Unmarshaller<ByteBuffer, JsonUnmarshallerContext> {
         public ByteBuffer unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String base64EncodedString = unmarshallerContext.readText();
             if (base64EncodedString == null) {
@@ -255,7 +251,6 @@ public class SimpleTypeJsonUnmarshallers {
             }
             byte[] decodedBytes = Base64.decode(base64EncodedString);
             return ByteBuffer.wrap(decodedBytes);
-
         }
 
         private static final ByteBufferJsonUnmarshaller instance = new ByteBufferJsonUnmarshaller();
@@ -265,10 +260,9 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Character values.
-     */
-    public static class CharacterJsonUnmarshaller implements Unmarshaller<Character, JsonUnmarshallerContext> {
+    /** Unmarshaller for Character values. */
+    public static class CharacterJsonUnmarshaller
+            implements Unmarshaller<Character, JsonUnmarshallerContext> {
         public Character unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String charString = unmarshallerContext.readText();
 
@@ -276,8 +270,8 @@ public class SimpleTypeJsonUnmarshallers {
 
             charString = charString.trim();
             if (charString.isEmpty() || charString.length() > 1)
-                throw new SdkClientException("'" + charString
-                        + "' cannot be converted to Character");
+                throw new SdkClientException(
+                        "'" + charString + "' cannot be converted to Character");
             return Character.valueOf(charString.charAt(0));
         }
 
@@ -288,10 +282,9 @@ public class SimpleTypeJsonUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Short values.
-     */
-    public static class ShortJsonUnmarshaller implements Unmarshaller<Short, JsonUnmarshallerContext> {
+    /** Unmarshaller for Short values. */
+    public static class ShortJsonUnmarshaller
+            implements Unmarshaller<Short, JsonUnmarshallerContext> {
         public Short unmarshall(JsonUnmarshallerContext unmarshallerContext) throws Exception {
             String shortString = unmarshallerContext.readText();
             return (shortString == null) ? null : Short.valueOf(shortString);

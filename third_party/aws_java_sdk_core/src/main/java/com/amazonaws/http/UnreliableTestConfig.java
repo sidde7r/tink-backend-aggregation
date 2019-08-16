@@ -15,8 +15,8 @@
 package com.amazonaws.http;
 
 /**
- * Used to configure the conditions for injecting content input stream failures
- * for testing purposes.
+ * Used to configure the conditions for injecting content input stream failures for testing
+ * purposes.
  */
 class UnreliableTestConfig {
     private int maxNumErrors = 1;
@@ -45,8 +45,7 @@ class UnreliableTestConfig {
         return this;
     }
 
-    UnreliableTestConfig withBytesReadBeforeException(
-            int bytesReadBeforeException) {
+    UnreliableTestConfig withBytesReadBeforeException(int bytesReadBeforeException) {
         this.bytesReadBeforeException = bytesReadBeforeException;
         return this;
     }
@@ -57,14 +56,12 @@ class UnreliableTestConfig {
     }
 
     /**
-     * Used to control whether an exception would be thrown based on the reset
-     * recurrence; not applicable if set to zero. For example, if
-     * resetIntervalBeforeException == n, the exception can only be thrown
-     * before the n_th reset (or after the n_th minus 1 reset), 2n_th reset (or
+     * Used to control whether an exception would be thrown based on the reset recurrence; not
+     * applicable if set to zero. For example, if resetIntervalBeforeException == n, the exception
+     * can only be thrown before the n_th reset (or after the n_th minus 1 reset), 2n_th reset (or
      * after the 2n_th minus 1) reset), etc.
      */
-    UnreliableTestConfig withResetIntervalBeforeException(
-            int resetIntervalBeforeException) {
+    UnreliableTestConfig withResetIntervalBeforeException(int resetIntervalBeforeException) {
         this.resetIntervalBeforeException = resetIntervalBeforeException;
         return this;
     }

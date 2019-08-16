@@ -16,42 +16,33 @@ package com.amazonaws.util;
 
 import com.amazonaws.annotation.ThreadSafe;
 
-/**
- * A {@link TimingInfo} that is unmodifiable.
- */
+/** A {@link TimingInfo} that is unmodifiable. */
 @ThreadSafe
 final class TimingInfoUnmodifiable extends TimingInfo {
     /**
      * @see TimingInfo#unmodifiableTimingInfo(long, Long)
      * @see TimingInfo#unmodifiableTimingInfo(long, long, Long)
-     *
-     * @param startEpochTimeMilli
-     *            start time since epoch in millisecond; or null if not known
-     * @param startTimeNano
-     *            start time in nanosecond
-     * @param endTimeNano
-     *            end time in nanosecond; or null if not known
+     * @param startEpochTimeMilli start time since epoch in millisecond; or null if not known
+     * @param startTimeNano start time in nanosecond
+     * @param endTimeNano end time in nanosecond; or null if not known
      */
     TimingInfoUnmodifiable(Long startEpochTimeMilli, long startTimeNano, Long endTimeNano) {
         super(startEpochTimeMilli, startTimeNano, endTimeNano);
     }
 
-    /**
-     * Always throws {@link UnsupportedOperationException}.
-     */
-    @Override public void setEndTime(long ignored) {
+    /** Always throws {@link UnsupportedOperationException}. */
+    @Override
+    public void setEndTime(long ignored) {
         throw new UnsupportedOperationException();
     }
-    /**
-     * Always throws {@link UnsupportedOperationException}.
-     */
-    @Override public void setEndTimeNano(long ignored) {
+    /** Always throws {@link UnsupportedOperationException}. */
+    @Override
+    public void setEndTimeNano(long ignored) {
         throw new UnsupportedOperationException();
     }
-    /**
-     * Always throws {@link UnsupportedOperationException}.
-     */
-    @Override public TimingInfo endTiming() {
+    /** Always throws {@link UnsupportedOperationException}. */
+    @Override
+    public TimingInfo endTiming() {
         throw new UnsupportedOperationException();
     }
 }

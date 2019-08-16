@@ -23,24 +23,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <p>
  * {@link AWSCredentialsProvider} that loads credentials from an Amazon Container (e.g. EC2)
  *
- * Credentials are solved in the following order:
+ * <p>Credentials are solved in the following order:
+ *
  * <ol>
- *     <li>
- *         If environment variable "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" is
- *         set (typically on EC2) it is used to hit the metadata service at the following endpoint: http://169.254.170.2
- *     </li>
- *     <li>
- *         If environment variable "AWS_CONTAINER_CREDENTIALS_FULL_URI" is
- *         set it is used to hit a metadata service at that URI. <br/> Optionally an authorization token can be included
- *         in the "Authorization" header of the request by setting the "AWS_CONTAINER_AUTHORIZATION_TOKEN" environment variable.
- *     </li>
- *     <li>
- *         If neither of the above environment variables are specified credentials are attempted to be loaded from Amazon EC2
- *         Instance Metadata Service using the {@link InstanceProfileCredentialsProvider}.
- *     </li>
+ *   <li>If environment variable "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" is set (typically on EC2)
+ *       it is used to hit the metadata service at the following endpoint: http://169.254.170.2
+ *   <li>If environment variable "AWS_CONTAINER_CREDENTIALS_FULL_URI" is set it is used to hit a
+ *       metadata service at that URI. <br>
+ *       Optionally an authorization token can be included in the "Authorization" header of the
+ *       request by setting the "AWS_CONTAINER_AUTHORIZATION_TOKEN" environment variable.
+ *   <li>If neither of the above environment variables are specified credentials are attempted to be
+ *       loaded from Amazon EC2 Instance Metadata Service using the {@link
+ *       InstanceProfileCredentialsProvider}.
  * </ol>
  */
 public class EC2ContainerCredentialsProviderWrapper implements AWSCredentialsProvider {
@@ -63,9 +59,12 @@ public class EC2ContainerCredentialsProviderWrapper implements AWSCredentialsPro
             }
             return InstanceProfileCredentialsProvider.getInstance();
         } catch (SecurityException securityException) {
-            LOG.debug("Security manager did not allow access to the ECS credentials environment variable " + ECS_CONTAINER_CREDENTIALS_PATH +
-                "or the container full URI environment variable " + CONTAINER_CREDENTIALS_FULL_URI
-                        + ". Please provide access to this environment variable if you want to load credentials from ECS Container.");
+            LOG.debug(
+                    "Security manager did not allow access to the ECS credentials environment variable "
+                            + ECS_CONTAINER_CREDENTIALS_PATH
+                            + "or the container full URI environment variable "
+                            + CONTAINER_CREDENTIALS_FULL_URI
+                            + ". Please provide access to this environment variable if you want to load credentials from ECS Container.");
             return InstanceProfileCredentialsProvider.getInstance();
         }
     }
@@ -77,6 +76,6 @@ public class EC2ContainerCredentialsProviderWrapper implements AWSCredentialsPro
 
     @Override
     public void refresh() {
-       provider.refresh();
+        provider.refresh();
     }
 }

@@ -15,25 +15,19 @@
 
 package com.amazonaws.waiters;
 
-public class PollingStrategy{
+public class PollingStrategy {
 
-    /**
-     * Condition on whether polling should be retried.
-     */
+    /** Condition on whether polling should be retried. */
     private final RetryStrategy retryStrategy;
 
-    /**
-     * Delay strategy to control the sleep time between retry attempts.
-     */
+    /** Delay strategy to control the sleep time between retry attempts. */
     private final DelayStrategy delayStrategy;
 
     /**
-     * Constructs a new PollingStrategy with RetryStrategy
-     * and DelayStrategy defined
+     * Constructs a new PollingStrategy with RetryStrategy and DelayStrategy defined
      *
-     * @param retryStrategy Retry condition on whether polling should be retried.
-     *                      If null value is specified, the SDK' default retry
-     *                      condition is used.
+     * @param retryStrategy Retry condition on whether polling should be retried. If null value is
+     *     specified, the SDK' default retry condition is used.
      */
     public PollingStrategy(RetryStrategy retryStrategy, DelayStrategy delayStrategy) {
         this.retryStrategy = retryStrategy;
@@ -59,35 +53,33 @@ public class PollingStrategy{
     }
 
     /**
-     * The hook for providing custom condition on whether polling of a resource
-     * should be retried.
+     * The hook for providing custom condition on whether polling of a resource should be retried.
      */
     public interface RetryStrategy {
         /**
-         * Returns whether polling of a resource should be retried according to the
-         * given polling context.
+         * Returns whether polling of a resource should be retried according to the given polling
+         * context.
          *
-         * @param pollingStrategyContext Provides the polling context required to make the retry decision
+         * @param pollingStrategyContext Provides the polling context required to make the retry
+         *     decision
          * @return True if it should be retried.
          * @see PollingStrategyContext
          */
         boolean shouldRetry(PollingStrategyContext pollingStrategyContext);
     }
 
-    /**
-     * The hook for providing custom delay strategy to control the sleep time
-     * between retries.
-     */
+    /** The hook for providing custom delay strategy to control the sleep time between retries. */
     public interface DelayStrategy {
 
         /**
          * Defines the custom delay strategy to control the sleep time
          *
-         * @param pollingStrategyContext Provides the polling context required to define custom delay
+         * @param pollingStrategyContext Provides the polling context required to define custom
+         *     delay
          * @throws InterruptedException
          * @see PollingStrategyContext
          */
-        void delayBeforeNextRetry(PollingStrategyContext pollingStrategyContext) throws InterruptedException;
-
+        void delayBeforeNextRetry(PollingStrategyContext pollingStrategyContext)
+                throws InterruptedException;
     }
 }

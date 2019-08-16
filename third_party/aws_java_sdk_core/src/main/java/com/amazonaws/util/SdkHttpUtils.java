@@ -14,6 +14,8 @@
  */
 package com.amazonaws.util;
 
+import com.amazonaws.SignableRequest;
+import com.amazonaws.http.HttpMethodName;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -25,38 +27,33 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.amazonaws.SignableRequest;
-import com.amazonaws.http.HttpMethodName;
-
 public class SdkHttpUtils {
 
     private static final String DEFAULT_ENCODING = "UTF-8";
 
     /**
-     * Regex which matches any of the sequences that we need to fix up after
-     * URLEncoder.encode().
+     * Regex which matches any of the sequences that we need to fix up after URLEncoder.encode().
      */
     private static final Pattern ENCODED_CHARACTERS_PATTERN;
+
     static {
         StringBuilder pattern = new StringBuilder();
 
-        pattern
-            .append(Pattern.quote("+"))
-            .append("|")
-            .append(Pattern.quote("*"))
-            .append("|")
-            .append(Pattern.quote("%7E"))
-            .append("|")
-            .append(Pattern.quote("%2F"));
+        pattern.append(Pattern.quote("+"))
+                .append("|")
+                .append(Pattern.quote("*"))
+                .append("|")
+                .append(Pattern.quote("%7E"))
+                .append("|")
+                .append(Pattern.quote("%2F"));
 
         ENCODED_CHARACTERS_PATTERN = Pattern.compile(pattern.toString());
     }
 
     /**
-     * Encode a string for use in the path of a URL; uses URLEncoder.encode,
-     * (which encodes a string for use in the query portion of a URL), then
-     * applies some postfilters to fix things up per the RFC. Can optionally
-     * handle strings which are meant to encode a path (ie include '/'es
+     * Encode a string for use in the path of a URL; uses URLEncoder.encode, (which encodes a string
+     * for use in the query portion of a URL), then applies some postfilters to fix things up per
+     * the RFC. Can optionally handle strings which are meant to encode a path (ie include '/'es
      * which should NOT be escaped).
      *
      * @param value the value to encode
@@ -99,8 +96,8 @@ public class SdkHttpUtils {
     }
 
     /**
-     * Decode a string for use in the path of a URL; uses URLDecoder.decode,
-     * which decodes a string for use in the query portion of a URL.
+     * Decode a string for use in the path of a URL; uses URLDecoder.decode, which decodes a string
+     * for use in the query portion of a URL.
      *
      * @param value The value to decode
      * @return The decoded value if parameter is not null, otherwise, null is returned.
@@ -119,14 +116,11 @@ public class SdkHttpUtils {
     }
 
     /**
-     * Returns true if the specified URI is using a non-standard port (i.e. any
-     * port other than 80 for HTTP URIs or any port other than 443 for HTTPS
-     * URIs).
+     * Returns true if the specified URI is using a non-standard port (i.e. any port other than 80
+     * for HTTP URIs or any port other than 443 for HTTPS URIs).
      *
      * @param uri
-     *
-     * @return True if the specified URI is using a non-standard port, otherwise
-     *         false.
+     * @return True if the specified URI is using a non-standard port, otherwise false.
      */
     public static boolean isUsingNonDefaultPort(URI uri) {
         String scheme = StringUtils.lowerCase(uri.getScheme());
@@ -147,14 +141,11 @@ public class SdkHttpUtils {
     }
 
     /**
-     * Creates an encoded query string from all the parameters in the specified
-     * request.
+     * Creates an encoded query string from all the parameters in the specified request.
      *
-     * @param request
-     *            The request containing the parameters to encode.
-     *
-     * @return Null if no parameters were present, otherwise the encoded query
-     *         string for the parameters present in the specified request.
+     * @param request The request containing the parameters to encode.
+     * @return Null if no parameters were present, otherwise the encoded query string for the
+     *     parameters present in the specified request.
      */
     public static String encodeParameters(SignableRequest<?> request) {
 
@@ -167,8 +158,7 @@ public class SdkHttpUtils {
         for (Entry<String, List<String>> entry : requestParams.entrySet()) {
             String parameterName = entry.getKey();
             for (String value : entry.getValue()) {
-                nameValuePairs
-                    .add(new BasicNameValuePair(parameterName, value));
+                nameValuePairs.add(new BasicNameValuePair(parameterName, value));
             }
         }
 
@@ -176,8 +166,8 @@ public class SdkHttpUtils {
     }
 
     /**
-     * Append the given path to the given baseUri.
-     * By default, all slash characters in path will not be url-encoded.
+     * Append the given path to the given baseUri. By default, all slash characters in path will not
+     * be url-encoded.
      */
     public static String appendUri(String baseUri, String path) {
         return appendUri(baseUri, path, false);
@@ -187,11 +177,12 @@ public class SdkHttpUtils {
      * Append the given path to the given baseUri.
      *
      * @param baseUri The URI to append to (required, may be relative)
-     * @param path The path to append (may be null or empty).  Path should be pre-encoded.
+     * @param path The path to append (may be null or empty). Path should be pre-encoded.
      * @param escapeDoubleSlash Whether double-slash in the path should be escaped to "/%2F"
      * @return The baseUri with the path appended
      */
-    public static String appendUri(final String baseUri, String path, final boolean escapeDoubleSlash) {
+    public static String appendUri(
+            final String baseUri, String path, final boolean escapeDoubleSlash) {
         String resultUri = baseUri;
         if (path != null && path.length() > 0) {
             if (path.startsWith("/")) {

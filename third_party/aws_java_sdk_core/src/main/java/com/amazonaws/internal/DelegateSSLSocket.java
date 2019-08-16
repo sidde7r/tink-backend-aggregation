@@ -21,7 +21,6 @@ import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.channels.SocketChannel;
-
 import javax.net.ssl.HandshakeCompletedListener;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
@@ -234,8 +233,7 @@ public class DelegateSSLSocket extends SSLSocket {
     }
 
     @Override
-    public void setPerformancePreferences(int connectionTime, int latency,
-            int bandwidth) {
+    public void setPerformancePreferences(int connectionTime, int latency, int bandwidth) {
         sock.setPerformancePreferences(connectionTime, latency, bandwidth);
     }
 
@@ -275,14 +273,12 @@ public class DelegateSSLSocket extends SSLSocket {
     }
 
     @Override
-    public void addHandshakeCompletedListener(
-            HandshakeCompletedListener listener) {
+    public void addHandshakeCompletedListener(HandshakeCompletedListener listener) {
         sock.addHandshakeCompletedListener(listener);
     }
 
     @Override
-    public void removeHandshakeCompletedListener(
-            HandshakeCompletedListener listener) {
+    public void removeHandshakeCompletedListener(HandshakeCompletedListener listener) {
         sock.removeHandshakeCompletedListener(listener);
     }
 

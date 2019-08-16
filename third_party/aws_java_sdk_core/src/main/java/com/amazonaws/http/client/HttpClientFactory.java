@@ -17,14 +17,11 @@ package com.amazonaws.http.client;
 import com.amazonaws.annotation.Beta;
 import com.amazonaws.http.settings.HttpClientSettings;
 
-
 /**
- * Factory interface that can be used for creating the underlying http client
- * for request execution.
+ * Factory interface that can be used for creating the underlying http client for request execution.
  */
 @Beta
 public interface HttpClientFactory<T> {
 
     T create(HttpClientSettings settings);
-
 }

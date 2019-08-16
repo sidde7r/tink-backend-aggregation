@@ -16,8 +16,7 @@ package com.amazonaws.util;
 
 public final class NumberUtils {
 
-    private NumberUtils() {
-    }
+    private NumberUtils() {}
 
     /**
      * @param toParse
@@ -30,5 +29,4 @@ public final class NumberUtils {
             return null;
         }
     }
-
 }

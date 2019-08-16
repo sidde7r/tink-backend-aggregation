@@ -22,18 +22,17 @@ import com.amazonaws.auth.Signer;
 import com.amazonaws.handlers.RequestHandler2;
 import com.amazonaws.http.timers.client.ClientExecutionAbortTrackerTask;
 import com.amazonaws.internal.auth.NoOpSignerProvider;
-import com.amazonaws.internal.auth.SignerProviderContext;
 import com.amazonaws.internal.auth.SignerProvider;
+import com.amazonaws.internal.auth.SignerProviderContext;
 import com.amazonaws.retry.internal.AuthErrorRetryStrategy;
 import com.amazonaws.util.AWSRequestMetrics;
 import com.amazonaws.util.AWSRequestMetricsFullSupport;
-
 import java.net.URI;
 import java.util.List;
 
 /**
- * @NotThreadSafe This class should only be accessed by a single thread and be used throughout
- *                a single request lifecycle.
+ * @NotThreadSafe This class should only be accessed by a single thread and be used throughout a
+ * single request lifecycle.
  */
 @NotThreadSafe
 public class ExecutionContext {
@@ -60,7 +59,10 @@ public class ExecutionContext {
 
     /** For testing purposes. */
     public ExecutionContext(boolean isMetricEnabled) {
-        this(builder().withUseRequestMetrics(isMetricEnabled).withSignerProvider(new NoOpSignerProvider()));
+        this(
+                builder()
+                        .withUseRequestMetrics(isMetricEnabled)
+                        .withSignerProvider(new NoOpSignerProvider()));
     }
 
     /** For testing purposes. */
@@ -69,22 +71,29 @@ public class ExecutionContext {
     }
 
     @Deprecated
-    public ExecutionContext(List<RequestHandler2> requestHandler2s, boolean isMetricEnabled,
+    public ExecutionContext(
+            List<RequestHandler2> requestHandler2s,
+            boolean isMetricEnabled,
             AmazonWebServiceClient awsClient) {
         this.requestHandler2s = requestHandler2s;
-        awsRequestMetrics = isMetricEnabled ? new AWSRequestMetricsFullSupport() : new AWSRequestMetrics();
+        awsRequestMetrics =
+                isMetricEnabled ? new AWSRequestMetricsFullSupport() : new AWSRequestMetrics();
         this.awsClient = awsClient;
-        this.signerProvider = new SignerProvider() {
-            @Override
-            public Signer getSigner(SignerProviderContext context) {
-                return getSignerByURI(context.getUri());
-            }
-        };
+        this.signerProvider =
+                new SignerProvider() {
+                    @Override
+                    public Signer getSigner(SignerProviderContext context) {
+                        return getSignerByURI(context.getUri());
+                    }
+                };
     }
 
     private ExecutionContext(final Builder builder) {
         this.requestHandler2s = builder.requestHandler2s;
-        this.awsRequestMetrics = builder.useRequestMetrics ? new AWSRequestMetricsFullSupport() : new AWSRequestMetrics();
+        this.awsRequestMetrics =
+                builder.useRequestMetrics
+                        ? new AWSRequestMetricsFullSupport()
+                        : new AWSRequestMetrics();
         this.awsClient = builder.awsClient;
         this.signerProvider = builder.signerProvider;
     }
@@ -109,34 +118,35 @@ public class ExecutionContext {
      * on.
      */
     @Deprecated
-    public void setSigner(Signer signer) {
-    }
+    public void setSigner(Signer signer) {}
 
     /**
-     * Returns whether retry capacity was consumed during this request lifecycle.
-     * This can be inspected to determine whether capacity should be released if a retry succeeds.
+     * Returns whether retry capacity was consumed during this request lifecycle. This can be
+     * inspected to determine whether capacity should be released if a retry succeeds.
      *
      * @return true if retry capacity was consumed
      */
-    public boolean retryCapacityConsumed() { return retryCapacityConsumed; }
+    public boolean retryCapacityConsumed() {
+        return retryCapacityConsumed;
+    }
 
     /**
-     * Marks that a retry during this request lifecycle has consumed retry capacity.  This is inspected
-     * when determining if capacity should be released if a retry succeeds.
+     * Marks that a retry during this request lifecycle has consumed retry capacity. This is
+     * inspected when determining if capacity should be released if a retry succeeds.
      */
     public void markRetryCapacityConsumed() {
         this.retryCapacityConsumed = true;
     }
 
     /**
-     * Passes in the provided {@link SignerProviderContext} into a {@link SignerProvider} and returns
-     * a {@link Signer} instance.
+     * Passes in the provided {@link SignerProviderContext} into a {@link SignerProvider} and
+     * returns a {@link Signer} instance.
      */
-    public Signer getSigner(SignerProviderContext context) { return signerProvider.getSigner(context); }
+    public Signer getSigner(SignerProviderContext context) {
+        return signerProvider.getSigner(context);
+    }
 
-    /**
-     * Returns the signer for the given uri. Note S3 in particular overrides this method.
-     */
+    /** Returns the signer for the given uri. Note S3 in particular overrides this method. */
     @Deprecated
     public Signer getSignerByURI(URI uri) {
         return awsClient == null ? null : awsClient.getSignerByURI(uri);
@@ -147,8 +157,7 @@ public class ExecutionContext {
      * used for signing the request. If there is no credential provider, then the runtime will not
      * attempt to sign (or resign on retries) requests.
      *
-     * @param credentialsProvider
-     *            the credentials provider to fetch {@link AWSCredentials}
+     * @param credentialsProvider the credentials provider to fetch {@link AWSCredentials}
      */
     public void setCredentialsProvider(AWSCredentialsProvider credentialsProvider) {
         this.credentialsProvider = credentialsProvider;
@@ -168,8 +177,8 @@ public class ExecutionContext {
     /**
      * Returns the retry strategy for auth errors. This is currently only used by the S3 client for
      * auto-resolving sigv4-required regions.
-     * <p>
-     * Note that this will be checked BEFORE the HTTP client consults the user-specified
+     *
+     * <p>Note that this will be checked BEFORE the HTTP client consults the user-specified
      * RetryPolicy. i.e. if the configured AuthErrorRetryStrategy says the request should be
      * retried, the retry will be performed internally and the effect is transparent to the user's
      * RetryPolicy.
@@ -191,11 +200,14 @@ public class ExecutionContext {
         return clientExecutionTrackerTask;
     }
 
-    public void setClientExecutionTrackerTask(ClientExecutionAbortTrackerTask clientExecutionTrackerTask) {
+    public void setClientExecutionTrackerTask(
+            ClientExecutionAbortTrackerTask clientExecutionTrackerTask) {
         this.clientExecutionTrackerTask = clientExecutionTrackerTask;
     }
 
-    public static ExecutionContext.Builder builder() { return new ExecutionContext.Builder(); }
+    public static ExecutionContext.Builder builder() {
+        return new ExecutionContext.Builder();
+    }
 
     public static class Builder {
 
@@ -261,7 +273,5 @@ public class ExecutionContext {
         public ExecutionContext build() {
             return new ExecutionContext(this);
         }
-
     }
-
 }

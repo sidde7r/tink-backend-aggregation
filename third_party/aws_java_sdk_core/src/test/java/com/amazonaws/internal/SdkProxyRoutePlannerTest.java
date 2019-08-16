@@ -15,27 +15,27 @@
 
 package com.amazonaws.internal;
 
+import static org.junit.Assert.assertEquals;
+
 import com.amazonaws.Protocol;
 import com.amazonaws.http.apache.SdkProxyRoutePlanner;
+import org.junit.Test;
 import tink.org.apache.http.HttpException;
 import tink.org.apache.http.HttpHost;
 import tink.org.apache.http.client.methods.HttpGet;
 import tink.org.apache.http.client.protocol.HttpClientContext;
-import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
-/**
- * Unit tests for {@link SdkProxyRoutePlanner}.
- */
+/** Unit tests for {@link SdkProxyRoutePlanner}. */
 public class SdkProxyRoutePlannerTest {
-    private static final HttpHost S3_HOST = new HttpHost("s3.us-west-2.amazonaws.com", 443, "https");
+    private static final HttpHost S3_HOST =
+            new HttpHost("s3.us-west-2.amazonaws.com", 443, "https");
     private static final HttpGet S3_REQUEST = new HttpGet("/my-bucket/my-object");
     private static final HttpClientContext CONTEXT = new HttpClientContext();
 
     @Test
     public void testSetsCorrectSchemeBasedOnProcotol_HTTPS() throws HttpException {
-        SdkProxyRoutePlanner planner = new SdkProxyRoutePlanner("localhost", 1234, Protocol.HTTPS, "");
+        SdkProxyRoutePlanner planner =
+                new SdkProxyRoutePlanner("localhost", 1234, Protocol.HTTPS, "");
 
         HttpHost proxyHost = planner.determineRoute(S3_HOST, S3_REQUEST, CONTEXT).getProxyHost();
         assertEquals("localhost", proxyHost.getHostName());
@@ -44,7 +44,8 @@ public class SdkProxyRoutePlannerTest {
 
     @Test
     public void testSetsCorrectSchemeBasedOnProcotol_HTTP() throws HttpException {
-        SdkProxyRoutePlanner planner = new SdkProxyRoutePlanner("localhost", 1234, Protocol.HTTP, "");
+        SdkProxyRoutePlanner planner =
+                new SdkProxyRoutePlanner("localhost", 1234, Protocol.HTTP, "");
 
         HttpHost proxyHost = planner.determineRoute(S3_HOST, S3_REQUEST, CONTEXT).getProxyHost();
         assertEquals("localhost", proxyHost.getHostName());

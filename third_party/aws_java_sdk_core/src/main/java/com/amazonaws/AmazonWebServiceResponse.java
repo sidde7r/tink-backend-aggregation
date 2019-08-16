@@ -15,13 +15,11 @@
 package com.amazonaws;
 
 /**
- * Represents the response from an AWS service, including the result payload and
- * any response metadata. AWS response metadata consists primarily of the AWS
- * request ID, which can be used for debugging purposes when services aren't
- * acting as expected.
+ * Represents the response from an AWS service, including the result payload and any response
+ * metadata. AWS response metadata consists primarily of the AWS request ID, which can be used for
+ * debugging purposes when services aren't acting as expected.
  *
- * @param <T>
- *            The type of result contained by this response.
+ * @param <T> The type of result contained by this response.
  */
 public class AmazonWebServiceResponse<T> {
 
@@ -43,8 +41,7 @@ public class AmazonWebServiceResponse<T> {
     /**
      * Sets the result contained by this response.
      *
-     * @param result
-     *            The result contained by this response.
+     * @param result The result contained by this response.
      */
     public void setResult(T result) {
         this.result = result;
@@ -52,21 +49,19 @@ public class AmazonWebServiceResponse<T> {
 
     /**
      * Sets the response metadata associated with this response.
-     * 
-     * @param responseMetadata
-     *            The response metadata for this response.
+     *
+     * @param responseMetadata The response metadata for this response.
      */
     public void setResponseMetadata(ResponseMetadata responseMetadata) {
         this.responseMetadata = responseMetadata;
     }
 
     /**
-     * Returns the response metadata for this response. Response metadata
-     * provides additional information about a response that isn't necessarily
-     * directly part of the data the service is returning. Response metadata is
-     * primarily used for debugging issues with AWS support when a service isn't
-     * working as expected.
-     * 
+     * Returns the response metadata for this response. Response metadata provides additional
+     * information about a response that isn't necessarily directly part of the data the service is
+     * returning. Response metadata is primarily used for debugging issues with AWS support when a
+     * service isn't working as expected.
+     *
      * @return The response metadata for this response.
      */
     public ResponseMetadata getResponseMetadata() {
@@ -74,15 +69,12 @@ public class AmazonWebServiceResponse<T> {
     }
 
     /**
-     * Returns the AWS request ID from the response metadata section of an AWS
-     * response.
+     * Returns the AWS request ID from the response metadata section of an AWS response.
      *
-     * @return The AWS request ID from the response metadata section of an AWS
-     *         response.
+     * @return The AWS request ID from the response metadata section of an AWS response.
      */
     public String getRequestId() {
         if (responseMetadata == null) return null;
         return responseMetadata.getRequestId();
     }
-
 }

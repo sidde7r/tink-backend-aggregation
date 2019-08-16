@@ -1,23 +1,18 @@
 /*
  * Copyright 2011-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not
  * use this file except in compliance with the License. A copy of the License is
  * located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
 package com.amazonaws.protocol.json;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
 
 import com.amazonaws.SdkClientException;
 import com.fasterxml.jackson.core.Base64Variant;
@@ -29,7 +24,10 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.JsonTokenId;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.Version;
-
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import software.amazon.ion.IonReader;
 import software.amazon.ion.IonType;
 
@@ -89,7 +87,7 @@ final class IonParser extends JsonParser {
     }
 
     private JsonToken doNextToken() {
-        for (;;) {
+        for (; ; ) {
             switch (state) {
                 case BEFORE_VALUE:
                     IonType currentType = reader.next();
@@ -101,9 +99,7 @@ final class IonParser extends JsonParser {
                             continue;
                         } else {
                             state = State.END_OF_CONTAINER;
-                            return reader.isInStruct()
-                                    ? JsonToken.END_OBJECT
-                                    : JsonToken.END_ARRAY;
+                            return reader.isInStruct() ? JsonToken.END_OBJECT : JsonToken.END_ARRAY;
                         }
                     }
 
@@ -129,7 +125,9 @@ final class IonParser extends JsonParser {
 
                 case VALUE:
                     state = State.BEFORE_VALUE;
-                    if (IonType.isContainer(reader.getType()) && !reader.isNullValue() && !shouldSkipContainer) {
+                    if (IonType.isContainer(reader.getType())
+                            && !reader.isNullValue()
+                            && !shouldSkipContainer) {
                         reader.stepIn();
                     }
                     shouldSkipContainer = false;
@@ -141,9 +139,7 @@ final class IonParser extends JsonParser {
     @Override
     public JsonToken nextValue() throws IOException, JsonParseException {
         JsonToken token = nextToken();
-        return (token == JsonToken.FIELD_NAME)
-                ? nextToken()
-                : token;
+        return (token == JsonToken.FIELD_NAME) ? nextToken() : token;
     }
 
     @Override
@@ -151,9 +147,8 @@ final class IonParser extends JsonParser {
         IonType currentType = reader.getType();
         if (IonType.isContainer(currentType)) {
             shouldSkipContainer = true;
-            currentToken = currentType == IonType.STRUCT
-                    ? JsonToken.END_OBJECT
-                    : JsonToken.END_ARRAY;
+            currentToken =
+                    currentType == IonType.STRUCT ? JsonToken.END_OBJECT : JsonToken.END_ARRAY;
         }
         return this;
     }
@@ -170,9 +165,7 @@ final class IonParser extends JsonParser {
 
     @Override
     public int getCurrentTokenId() {
-        return currentToken == null
-                ? JsonTokenId.ID_NO_TOKEN
-                : currentToken.id();
+        return currentToken == null ? JsonTokenId.ID_NO_TOKEN : currentToken.id();
     }
 
     @Override
@@ -234,8 +227,7 @@ final class IonParser extends JsonParser {
         if (IonType.isText(reader.getType())) {
             return reader.stringValue();
         }
-        if (currentToken == null)
-        {
+        if (currentToken == null) {
             // start or end of stream
             return null;
         }
@@ -269,7 +261,10 @@ final class IonParser extends JsonParser {
     public Number getNumberValue() throws IOException {
         NumberType numberType = getNumberType();
         if (numberType == null) {
-            throw new SdkClientException(String.format("Unable to get number value for non-numeric token %s", reader.getType()));
+            throw new SdkClientException(
+                    String.format(
+                            "Unable to get number value for non-numeric token %s",
+                            reader.getType()));
         }
         switch (numberType) {
             case BIG_DECIMAL:
@@ -279,7 +274,8 @@ final class IonParser extends JsonParser {
             case DOUBLE:
                 return reader.doubleValue();
             default:
-                throw new SdkClientException(String.format("Unable to get number value for number type %s", numberType));
+                throw new SdkClientException(
+                        String.format("Unable to get number value for number type %s", numberType));
         }
     }
 
@@ -340,7 +336,9 @@ final class IonParser extends JsonParser {
             case TIMESTAMP:
                 return reader.timestampValue().dateValue();
             default:
-                throw new SdkClientException(String.format("Cannot return embedded object for Ion type %s", currentType));
+                throw new SdkClientException(
+                        String.format(
+                                "Cannot return embedded object for Ion type %s", currentType));
         }
     }
 
@@ -355,7 +353,9 @@ final class IonParser extends JsonParser {
         // return their text or the default value. To conform with the
         // CBORParser, they will get the default value here.
         if (currentToken != JsonToken.VALUE_STRING) {
-            if (currentToken == null || currentToken == JsonToken.VALUE_NULL || !currentToken.isScalarValue()) {
+            if (currentToken == null
+                    || currentToken == JsonToken.VALUE_NULL
+                    || !currentToken.isScalarValue()) {
                 return defaultValue;
             }
         }

@@ -14,16 +14,13 @@
  */
 package com.amazonaws.internal;
 
-/**
- * Similar to Predicate functional interface in Java 8
- */
+/** Similar to Predicate functional interface in Java 8 */
 public abstract class SdkPredicate<T> {
 
     /**
      * Evaluates this predicate on the given argument
-     * 
-     * @param t
-     *            The input argument
+     *
+     * @param t The input argument
      * @return true if the input argument matches the predicate, otherwise false
      */
     public abstract boolean test(T t);

@@ -14,78 +14,77 @@
  */
 package com.amazonaws.monitoring;
 
-import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.profile.ProfileResourceLoader;
-import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
-import org.junit.Test;
-
-import java.io.File;
-
 import static com.amazonaws.auth.profile.internal.AwsProfileNameLoader.AWS_PROFILE_SYSTEM_PROPERTY;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Tests for {@link ProfileCsmConfigurationProvider}.
- */
+import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.profile.ProfileResourceLoader;
+import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
+import java.io.File;
+import org.junit.Test;
+
+/** Tests for {@link ProfileCsmConfigurationProvider}. */
 public class ProfileCsmConfigurationProviderTest {
     private static final String TEST_PROFILE_NAME = "aws_csm";
     private static final String COMPLETE_CONFIG = "CompleteCsmProperties.tst";
     private static final String NO_PROPERTIES_CONFIG = "ProfileWithNoCsmProperties.tst";
     private static final String EMPTY_CONFIG_FILE = "EmptyConfigFile.tst";
     private static final String UNPARSEABLE_PORT_CONFIG = "ProfileWithUnparseableCsmPort.tst";
-    private static final String PROFILE_WITH_ONLY_ENABLED_PROPERTY = "ProfileWithOnlyCsmEnabledProperty.tst";
+    private static final String PROFILE_WITH_ONLY_ENABLED_PROPERTY =
+            "ProfileWithOnlyCsmEnabledProperty.tst";
     private static final String MULTIPLE_PROFILES_WITH_CSM_PROPERTIES_CONFIG =
-        "MultipleProfilesWithCsmProperties.tst";
+            "MultipleProfilesWithCsmProperties.tst";
 
     @Test
     public void testCorrectlyResolvesConfiguration() {
         ProfileCsmConfigurationProvider provider =
-            new ProfileCsmConfigurationProvider(TEST_PROFILE_NAME,
-                    makeConfigLocationProvider(COMPLETE_CONFIG));
+                new ProfileCsmConfigurationProvider(
+                        TEST_PROFILE_NAME, makeConfigLocationProvider(COMPLETE_CONFIG));
 
         assertEquals(new CsmConfiguration(true, 1234, "foo"), provider.getConfiguration());
     }
 
     @Test(expected = SdkClientException.class)
     public void testThrowsSdkClientExceptionWhenPropertiesNotSet() {
-        new ProfileCsmConfigurationProvider(TEST_PROFILE_NAME,
-                makeConfigLocationProvider(NO_PROPERTIES_CONFIG))
+        new ProfileCsmConfigurationProvider(
+                        TEST_PROFILE_NAME, makeConfigLocationProvider(NO_PROPERTIES_CONFIG))
                 .getConfiguration();
     }
 
     @Test(expected = SdkClientException.class)
     public void testThrowsSdkClientExceptionWhenCsmPropertiesNotPresent() {
-        new ProfileCsmConfigurationProvider(TEST_PROFILE_NAME,
-                makeConfigLocationProvider(EMPTY_CONFIG_FILE))
+        new ProfileCsmConfigurationProvider(
+                        TEST_PROFILE_NAME, makeConfigLocationProvider(EMPTY_CONFIG_FILE))
                 .getConfiguration();
     }
 
     @Test(expected = SdkClientException.class)
     public void testThrowsSdkClientExceptionWhenPortCannotBeParsed() {
-        new ProfileCsmConfigurationProvider(TEST_PROFILE_NAME,
-                makeConfigLocationProvider(UNPARSEABLE_PORT_CONFIG))
+        new ProfileCsmConfigurationProvider(
+                        TEST_PROFILE_NAME, makeConfigLocationProvider(UNPARSEABLE_PORT_CONFIG))
                 .getConfiguration();
     }
 
     @Test(expected = SdkClientException.class)
     public void testThrowsSdkClientExceptionWhenConfigNotFound() {
-        new ProfileCsmConfigurationProvider(TEST_PROFILE_NAME,
-                makeConfigLocationProvider("DoesNotExist"))
+        new ProfileCsmConfigurationProvider(
+                        TEST_PROFILE_NAME, makeConfigLocationProvider("DoesNotExist"))
                 .getConfiguration();
     }
 
     @Test(expected = SdkClientException.class)
     public void testThrowsSdkClientExceptionWhenProfileNotFound() {
         ProfileCsmConfigurationProvider provider =
-                new ProfileCsmConfigurationProvider("my_other_profile",
-                        makeConfigLocationProvider(COMPLETE_CONFIG));
+                new ProfileCsmConfigurationProvider(
+                        "my_other_profile", makeConfigLocationProvider(COMPLETE_CONFIG));
         provider.getConfiguration();
     }
 
     @Test
     public void testSourcesConfigurationFromCorrectProfile() {
         ProfileCsmConfigurationProvider provider =
-                new ProfileCsmConfigurationProvider("aws_csm_2",
+                new ProfileCsmConfigurationProvider(
+                        "aws_csm_2",
                         makeConfigLocationProvider(MULTIPLE_PROFILES_WITH_CSM_PROPERTIES_CONFIG));
 
         assertEquals(new CsmConfiguration(false, 5678, "bar"), provider.getConfiguration());
@@ -96,8 +95,8 @@ public class ProfileCsmConfigurationProviderTest {
         try {
             System.setProperty(AWS_PROFILE_SYSTEM_PROPERTY, TEST_PROFILE_NAME);
             ProfileCsmConfigurationProvider provider =
-                    new ProfileCsmConfigurationProvider(null,
-                            makeConfigLocationProvider(COMPLETE_CONFIG));
+                    new ProfileCsmConfigurationProvider(
+                            null, makeConfigLocationProvider(COMPLETE_CONFIG));
 
             assertEquals(new CsmConfiguration(true, 1234, "foo"), provider.getConfiguration());
         } finally {
@@ -110,8 +109,8 @@ public class ProfileCsmConfigurationProviderTest {
         try {
             System.setProperty(AWS_PROFILE_SYSTEM_PROPERTY, "my_other_profile");
             ProfileCsmConfigurationProvider provider =
-                    new ProfileCsmConfigurationProvider(null,
-                            makeConfigLocationProvider(COMPLETE_CONFIG));
+                    new ProfileCsmConfigurationProvider(
+                            null, makeConfigLocationProvider(COMPLETE_CONFIG));
             provider.getConfiguration();
         } finally {
             System.clearProperty(AWS_PROFILE_SYSTEM_PROPERTY);
@@ -121,10 +120,12 @@ public class ProfileCsmConfigurationProviderTest {
     @Test
     public void profileNullPortClientId_shouldUseDefaultValues() {
         ProfileCsmConfigurationProvider provider =
-            new ProfileCsmConfigurationProvider(TEST_PROFILE_NAME,
-                                                makeConfigLocationProvider(PROFILE_WITH_ONLY_ENABLED_PROPERTY));
+                new ProfileCsmConfigurationProvider(
+                        TEST_PROFILE_NAME,
+                        makeConfigLocationProvider(PROFILE_WITH_ONLY_ENABLED_PROPERTY));
 
-        assertEquals(CsmConfiguration.builder().withEnabled(true).build(), provider.getConfiguration());
+        assertEquals(
+                CsmConfiguration.builder().withEnabled(true).build(), provider.getConfiguration());
     }
 
     private AwsProfileFileLocationProvider makeConfigLocationProvider(String fileName) {

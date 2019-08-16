@@ -14,49 +14,31 @@
  */
 package com.amazonaws.partitions.model;
 
-/**
- * credential scope associated with an endpoint.
- */
+/** credential scope associated with an endpoint. */
 public class CredentialScope {
 
-    /**
-     * region string to be used when signing a request for an endpoint.
-     */
+    /** region string to be used when signing a request for an endpoint. */
     private String region;
 
-    /**
-     * service name string to be used when signing a request for an endpoint
-     */
+    /** service name string to be used when signing a request for an endpoint */
     private String service;
 
-    /**
-     * Returns the region string to be used when signing a request for an
-     * endpoint.
-     */
+    /** Returns the region string to be used when signing a request for an endpoint. */
     public String getRegion() {
         return region;
     }
 
-    /**
-     * Sets the region string to be used when signing a request for an
-     * endpoint.
-     */
+    /** Sets the region string to be used when signing a request for an endpoint. */
     public void setRegion(String region) {
         this.region = region;
     }
 
-    /**
-     * Returns the service name string to be used when signing a request for an
-     * endpoint.
-     */
+    /** Returns the service name string to be used when signing a request for an endpoint. */
     public String getService() {
         return service;
     }
 
-    /**
-     * Sets the service name string to be used when signing a request for an
-     * endpoint.
-     */
+    /** Sets the service name string to be used when signing a request for an endpoint. */
     public void setService(String service) {
         this.service = service;
     }

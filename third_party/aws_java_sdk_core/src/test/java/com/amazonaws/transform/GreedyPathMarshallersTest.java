@@ -14,9 +14,9 @@
  */
 package com.amazonaws.transform;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class GreedyPathMarshallersTest {
 
@@ -34,17 +34,23 @@ public class GreedyPathMarshallersTest {
 
     @Test
     public void nonEmptyPathValue_ReplacesPlaceholder() {
-        assertEquals("/foo/nonEmpty", marshaller.marshall("/foo/{greedyParam+}", "greedyParam", "nonEmpty"));
+        assertEquals(
+                "/foo/nonEmpty",
+                marshaller.marshall("/foo/{greedyParam+}", "greedyParam", "nonEmpty"));
     }
 
     @Test
     public void pathValueWithSlashes_NotUrlEncodedWhenReplaced() {
-        assertEquals("/foo/my/greedy/value", marshaller.marshall("/foo/{greedyParam+}", "greedyParam", "my/greedy/value"));
+        assertEquals(
+                "/foo/my/greedy/value",
+                marshaller.marshall("/foo/{greedyParam+}", "greedyParam", "my/greedy/value"));
     }
 
     @Test
     public void pathValueWithLeadingSlash_TrimmedBeforeReplaced() {
-        assertEquals("/foo/my/greedy/value", marshaller.marshall("/foo/{greedyParam+}", "greedyParam", "/my/greedy/value"));
+        assertEquals(
+                "/foo/my/greedy/value",
+                marshaller.marshall("/foo/{greedyParam+}", "greedyParam", "/my/greedy/value"));
     }
 
     @Test

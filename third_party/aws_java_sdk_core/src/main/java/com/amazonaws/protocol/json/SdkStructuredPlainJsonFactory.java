@@ -44,9 +44,7 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.Map;
 
-/**
- * Creates generators and protocol handlers for plain text JSON wire format.
- */
+/** Creates generators and protocol handlers for plain text JSON wire format. */
 @SdkProtectedApi
 public class SdkStructuredPlainJsonFactory {
 
@@ -57,35 +55,42 @@ public class SdkStructuredPlainJsonFactory {
     public static final JsonFactory JSON_FACTORY = new JsonFactory();
 
     @SdkTestInternalApi
-    public static final Map<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>> JSON_SCALAR_UNMARSHALLERS =
-            new ImmutableMapParameter.Builder<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>>()
-            .put(String.class, StringJsonUnmarshaller.getInstance())
-            .put(Double.class, DoubleJsonUnmarshaller.getInstance())
-            .put(Integer.class, IntegerJsonUnmarshaller.getInstance())
-            .put(BigInteger.class, BigIntegerJsonUnmarshaller.getInstance())
-            .put(BigDecimal.class, BigDecimalJsonUnmarshaller.getInstance())
-            .put(Boolean.class, BooleanJsonUnmarshaller.getInstance())
-            .put(Float.class, FloatJsonUnmarshaller.getInstance())
-            .put(Long.class, LongJsonUnmarshaller.getInstance())
-            .put(Byte.class, ByteJsonUnmarshaller.getInstance())
-            .put(Date.class, DateJsonUnmarshaller.getInstance())
-            .put(ByteBuffer.class, ByteBufferJsonUnmarshaller.getInstance())
-            .put(Character.class, CharacterJsonUnmarshaller.getInstance())
-            .put(Short.class, ShortJsonUnmarshaller.getInstance()).build();
+    public static final Map<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>>
+            JSON_SCALAR_UNMARSHALLERS =
+                    new ImmutableMapParameter.Builder<
+                                    Class<?>, Unmarshaller<?, JsonUnmarshallerContext>>()
+                            .put(String.class, StringJsonUnmarshaller.getInstance())
+                            .put(Double.class, DoubleJsonUnmarshaller.getInstance())
+                            .put(Integer.class, IntegerJsonUnmarshaller.getInstance())
+                            .put(BigInteger.class, BigIntegerJsonUnmarshaller.getInstance())
+                            .put(BigDecimal.class, BigDecimalJsonUnmarshaller.getInstance())
+                            .put(Boolean.class, BooleanJsonUnmarshaller.getInstance())
+                            .put(Float.class, FloatJsonUnmarshaller.getInstance())
+                            .put(Long.class, LongJsonUnmarshaller.getInstance())
+                            .put(Byte.class, ByteJsonUnmarshaller.getInstance())
+                            .put(Date.class, DateJsonUnmarshaller.getInstance())
+                            .put(ByteBuffer.class, ByteBufferJsonUnmarshaller.getInstance())
+                            .put(Character.class, CharacterJsonUnmarshaller.getInstance())
+                            .put(Short.class, ShortJsonUnmarshaller.getInstance())
+                            .build();
 
     @SdkTestInternalApi
-    public static final Map<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>> JSON_CUSTOM_TYPE_UNMARSHALLERS =
-            new ImmutableMapParameter.Builder<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>>()
-                    .put(UnmarshallerType.JSON_VALUE, JsonValueStringUnmarshaller.getInstance())
-                    .build();
+    public static final Map<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>>
+            JSON_CUSTOM_TYPE_UNMARSHALLERS =
+                    new ImmutableMapParameter.Builder<
+                                    UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>>()
+                            .put(
+                                    UnmarshallerType.JSON_VALUE,
+                                    JsonValueStringUnmarshaller.getInstance())
+                            .build();
 
-    public static final SdkStructuredJsonFactory SDK_JSON_FACTORY = new SdkStructuredJsonFactoryImpl(
-            JSON_FACTORY, JSON_SCALAR_UNMARSHALLERS, JSON_CUSTOM_TYPE_UNMARSHALLERS) {
-        @Override
-        protected StructuredJsonGenerator createWriter(JsonFactory jsonFactory,
-                                                       String contentType) {
-            return new SdkJsonGenerator(jsonFactory, contentType);
-        }
-    };
-
+    public static final SdkStructuredJsonFactory SDK_JSON_FACTORY =
+            new SdkStructuredJsonFactoryImpl(
+                    JSON_FACTORY, JSON_SCALAR_UNMARSHALLERS, JSON_CUSTOM_TYPE_UNMARSHALLERS) {
+                @Override
+                protected StructuredJsonGenerator createWriter(
+                        JsonFactory jsonFactory, String contentType) {
+                    return new SdkJsonGenerator(jsonFactory, contentType);
+                }
+            };
 }

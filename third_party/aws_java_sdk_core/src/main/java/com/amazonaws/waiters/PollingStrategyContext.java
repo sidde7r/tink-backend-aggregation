@@ -21,19 +21,15 @@ import com.amazonaws.annotation.SdkProtectedApi;
 @SdkProtectedApi
 public class PollingStrategyContext {
 
-    /**
-     * Represents the original input of the operation.
-     */
+    /** Represents the original input of the operation. */
     private final AmazonWebServiceRequest originalRequest;
 
-    /**
-     * Represents the number of retries made so far
-     */
+    /** Represents the number of retries made so far */
     private final int retriesAttempted;
 
     /**
-     * Constructs a new polling strategy context with the given
-     * request and retries attempted required for custom polling
+     * Constructs a new polling strategy context with the given request and retries attempted
+     * required for custom polling
      *
      * @param originalRequest
      * @param retriesAttempted
@@ -43,18 +39,13 @@ public class PollingStrategyContext {
         this.retriesAttempted = retriesAttempted;
     }
 
-    /**
-     * @return Original input of the operation.
-     */
+    /** @return Original input of the operation. */
     public AmazonWebServiceRequest getOriginalRequest() {
         return originalRequest;
     }
 
-    /**
-     * @return Number of retries attempted
-     */
+    /** @return Number of retries attempted */
     public int getRetriesAttempted() {
         return retriesAttempted;
     }
-
 }

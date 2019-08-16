@@ -28,8 +28,9 @@ public interface StructuredJsonMarshaller<T> {
     /**
      * Marshalls the value using the {@link StructuredJsonGenerator}.
      *
-     * @param val           Object to marshall.
-     * @param jsonGenerator {@link StructuredJsonGenerator} with methods to write various types to the JSON document.
+     * @param val Object to marshall.
+     * @param jsonGenerator {@link StructuredJsonGenerator} with methods to write various types to
+     *     the JSON document.
      */
     void marshall(T val, StructuredJsonGenerator jsonGenerator);
 }

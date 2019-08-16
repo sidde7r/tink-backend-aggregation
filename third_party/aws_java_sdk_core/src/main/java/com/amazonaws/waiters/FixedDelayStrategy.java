@@ -15,16 +15,13 @@
 
 package com.amazonaws.waiters;
 
-public class FixedDelayStrategy implements PollingStrategy.DelayStrategy{
+public class FixedDelayStrategy implements PollingStrategy.DelayStrategy {
 
-    /**
-     * Represents default delay time in seconds
-     */
+    /** Represents default delay time in seconds */
     private final int defaultDelayInSeconds;
 
     /**
-     * Constructs a new FixedDelayStrategy with the given
-     * default delay time
+     * Constructs a new FixedDelayStrategy with the given default delay time
      *
      * @param defaultDelayInSeconds
      */
@@ -33,15 +30,15 @@ public class FixedDelayStrategy implements PollingStrategy.DelayStrategy{
     }
 
     /**
-     * Defines a default way of delaying the polling bound by
-     * the default delay associated with the corresponding
-     * waiter definition
+     * Defines a default way of delaying the polling bound by the default delay associated with the
+     * corresponding waiter definition
      *
      * @param pollingStrategyContext Provides the polling context required to define custom delay
      * @throws InterruptedException
      */
     @Override
-    public void delayBeforeNextRetry(PollingStrategyContext pollingStrategyContext) throws InterruptedException {
+    public void delayBeforeNextRetry(PollingStrategyContext pollingStrategyContext)
+            throws InterruptedException {
         Thread.sleep(defaultDelayInSeconds * 1000);
     }
 }

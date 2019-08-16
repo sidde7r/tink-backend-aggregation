@@ -19,23 +19,31 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import com.amazonaws.AmazonServiceException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
+import org.junit.Test;
 
 public class JsonErrorUnmarshallerTest {
 
     private static final String ERROR_TYPE = "CustomException";
 
-    private static final JsonNode JSON = new ObjectMapper().createObjectNode().put("message", "Some error message")
-            .put("__type", "apiVersion#" + ERROR_TYPE).put("CustomField", "This is a customField").put("CustomInt", 42);
+    private static final JsonNode JSON =
+            new ObjectMapper()
+                    .createObjectNode()
+                    .put("message", "Some error message")
+                    .put("__type", "apiVersion#" + ERROR_TYPE)
+                    .put("CustomField", "This is a customField")
+                    .put("CustomInt", 42);
 
-    private static final JsonNode INVALID_CASE_JSON = new ObjectMapper().createObjectNode()
-            .put("message", "Some error message").put("__type", "apiVersion#" + ERROR_TYPE)
-            .put("customField", "This is a customField").put("customInt", 42);
+    private static final JsonNode INVALID_CASE_JSON =
+            new ObjectMapper()
+                    .createObjectNode()
+                    .put("message", "Some error message")
+                    .put("__type", "apiVersion#" + ERROR_TYPE)
+                    .put("customField", "This is a customField")
+                    .put("customInt", 42);
 
     private JsonErrorUnmarshaller unmarshaller;
 
@@ -109,6 +117,5 @@ public class JsonErrorUnmarshallerTest {
         public void setCustomInt(Integer customInt) {
             this.customInt = customInt;
         }
-
     }
 }

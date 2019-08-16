@@ -18,14 +18,11 @@ public class ComparableUtils {
 
     /**
      * Does a safe comparison of two {@link Comparable} objects accounting for nulls
-     * 
-     * @param d1
-     *            First object
-     * @param d2
-     *            Second object
+     *
+     * @param d1 First object
+     * @param d2 Second object
      * @return A positive number if the object double is larger, a negative number if the second
-     *         object is larger, or 0 if they are equal. Null is considered less than any non-null
-     *         value
+     *     object is larger, or 0 if they are equal. Null is considered less than any non-null value
      */
     public static <T> int safeCompare(Comparable<T> d1, T d2) {
         if (d1 != null && d2 != null) {
@@ -38,5 +35,4 @@ public class ComparableUtils {
             return 0;
         }
     }
-
 }

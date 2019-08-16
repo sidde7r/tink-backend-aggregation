@@ -17,18 +17,16 @@ package com.amazonaws.auth;
 /**
  * A signer that knows the endpoint prefix of the AWS service.
  *
- * For example,
- * s3 is the endpoint prefix for Amazon S3 service.
- * iot is the endpoint prefix for AWS Iot service.
+ * <p>For example, s3 is the endpoint prefix for Amazon S3 service. iot is the endpoint prefix for
+ * AWS Iot service.
  *
- * The endpoint prefix will be used to compute the region to use
- * for signing if it is not already computed.
+ * <p>The endpoint prefix will be used to compute the region to use for signing if it is not already
+ * computed.
  */
 public interface EndpointPrefixAwareSigner extends Signer {
 
     /**
-     * Configure the signer with the endpoint prefix
-     * of the service it is talking to.
+     * Configure the signer with the endpoint prefix of the service it is talking to.
      *
      * @param value The endpoint prefix of the service
      */

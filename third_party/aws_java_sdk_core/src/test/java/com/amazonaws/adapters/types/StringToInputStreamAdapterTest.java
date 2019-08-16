@@ -21,7 +21,6 @@ import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.junit.Test;
 
 public class StringToInputStreamAdapterTest {
@@ -47,5 +46,4 @@ public class StringToInputStreamAdapterTest {
         inputStream.read(bytes);
         assertArrayEquals(bytes, source.getBytes());
     }
-
 }

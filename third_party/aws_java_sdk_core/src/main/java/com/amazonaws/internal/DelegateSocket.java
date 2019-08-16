@@ -25,9 +25,8 @@ import java.net.SocketException;
 import java.nio.channels.SocketChannel;
 
 /**
- * Socket delegate class. Subclasses could extend this class, so that
- * they only need to override methods they are interested in enhancing.
- *
+ * Socket delegate class. Subclasses could extend this class, so that they only need to override
+ * methods they are interested in enhancing.
  */
 public class DelegateSocket extends Socket {
 
@@ -238,8 +237,7 @@ public class DelegateSocket extends Socket {
     }
 
     @Override
-    public void setPerformancePreferences(int connectionTime, int latency,
-            int bandwidth) {
+    public void setPerformancePreferences(int connectionTime, int latency, int bandwidth) {
         sock.setPerformancePreferences(connectionTime, latency, bandwidth);
     }
 }

@@ -15,12 +15,11 @@
 package com.amazonaws.monitoring;
 
 import com.amazonaws.SdkClientException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * A {@link CsmConfigurationProvider} that delegates to a list of other {@link
@@ -30,7 +29,7 @@ public class CsmConfigurationProviderChain implements CsmConfigurationProvider {
     private static final Log log = LogFactory.getLog(CsmConfigurationProviderChain.class);
 
     private final List<CsmConfigurationProvider> providers =
-        new ArrayList<CsmConfigurationProvider>();
+            new ArrayList<CsmConfigurationProvider>();
 
     public CsmConfigurationProviderChain(CsmConfigurationProvider... providers) {
         if (providers != null) {
@@ -49,7 +48,8 @@ public class CsmConfigurationProviderChain implements CsmConfigurationProvider {
                 }
             }
         }
-        throw new SdkClientException("Could not resolve client side monitoring configuration from"
-                + " the configured providers in the chain");
+        throw new SdkClientException(
+                "Could not resolve client side monitoring configuration from"
+                        + " the configured providers in the chain");
     }
 }

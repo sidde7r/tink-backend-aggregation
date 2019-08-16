@@ -22,7 +22,8 @@ import org.junit.Test;
 public class SdkJsonProtocolFactoryTest {
     @Test
     public void ionBinaryEnabledGeneratorWritesIonBinary() {
-        StructuredJsonGenerator generator = protocolFactory(IonEnabled.YES, IonBinaryEnabled.YES).createGenerator();
+        StructuredJsonGenerator generator =
+                protocolFactory(IonEnabled.YES, IonBinaryEnabled.YES).createGenerator();
         generator.writeValue(true);
         byte[] actual = generator.getBytes();
         byte[] expected = bytes(0xE0, 0x01, 0x00, 0xEA, 0x11);
@@ -31,7 +32,8 @@ public class SdkJsonProtocolFactoryTest {
 
     @Test
     public void ionBinaryDisabledGeneratorWritesIonText() throws Exception {
-        StructuredJsonGenerator generator = protocolFactory(IonEnabled.YES, IonBinaryEnabled.NO).createGenerator();
+        StructuredJsonGenerator generator =
+                protocolFactory(IonEnabled.YES, IonBinaryEnabled.NO).createGenerator();
         generator.writeValue(true);
         byte[] actual = generator.getBytes();
         byte[] expected = "true".getBytes("UTF-8");
@@ -40,26 +42,31 @@ public class SdkJsonProtocolFactoryTest {
 
     @Test
     public void ionBinaryEnabledUsesIonBinaryContentType() {
-        SdkJsonProtocolFactory protocolFactory = protocolFactory(IonEnabled.YES, IonBinaryEnabled.YES);
+        SdkJsonProtocolFactory protocolFactory =
+                protocolFactory(IonEnabled.YES, IonBinaryEnabled.YES);
         assertEquals("application/x-amz-ion-1.0", protocolFactory.getContentType());
     }
 
     @Test
     public void ionBinaryDisabledUsesIonTextContentType() {
-        SdkJsonProtocolFactory protocolFactory = protocolFactory(IonEnabled.YES, IonBinaryEnabled.NO);
+        SdkJsonProtocolFactory protocolFactory =
+                protocolFactory(IonEnabled.YES, IonBinaryEnabled.NO);
         assertEquals("text/x-amz-ion-1.0", protocolFactory.getContentType());
     }
 
-    private SdkJsonProtocolFactory protocolFactory(IonEnabled ionEnabled, final IonBinaryEnabled ionBinaryEnabled) {
-        JsonClientMetadata metadata = new JsonClientMetadata()
-                .withSupportsIon(ionEnabled == IonEnabled.YES)
-                .withProtocolVersion("1.0");
-        SdkJsonProtocolFactory protocolFactory = new SdkJsonProtocolFactory(metadata) {
-            @Override
-            boolean isIonBinaryEnabled() {
-                return ionBinaryEnabled == IonBinaryEnabled.YES;
-            }
-        };
+    private SdkJsonProtocolFactory protocolFactory(
+            IonEnabled ionEnabled, final IonBinaryEnabled ionBinaryEnabled) {
+        JsonClientMetadata metadata =
+                new JsonClientMetadata()
+                        .withSupportsIon(ionEnabled == IonEnabled.YES)
+                        .withProtocolVersion("1.0");
+        SdkJsonProtocolFactory protocolFactory =
+                new SdkJsonProtocolFactory(metadata) {
+                    @Override
+                    boolean isIonBinaryEnabled() {
+                        return ionBinaryEnabled == IonBinaryEnabled.YES;
+                    }
+                };
         return protocolFactory;
     }
 

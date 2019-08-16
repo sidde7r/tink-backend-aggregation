@@ -14,19 +14,17 @@
  */
 
 /**
- * Collection of AWS access control policy conditions.  The primary access policy
- * conditions are:
+ * Collection of AWS access control policy conditions. The primary access policy conditions are:
+ *
  * <ul>
- *    <li> {@link com.amazonaws.auth.policy.conditions.ArnCondition}
- *    <li> {@link com.amazonaws.auth.policy.conditions.BooleanCondition}
- *    <li> {@link com.amazonaws.auth.policy.conditions.DateCondition}
- *    <li> {@link com.amazonaws.auth.policy.conditions.IpAddressCondition}
- *    <li> {@link com.amazonaws.auth.policy.conditions.NumericCondition}
- *    <li> {@link com.amazonaws.auth.policy.conditions.StringCondition}
+ *   <li>{@link com.amazonaws.auth.policy.conditions.ArnCondition}
+ *   <li>{@link com.amazonaws.auth.policy.conditions.BooleanCondition}
+ *   <li>{@link com.amazonaws.auth.policy.conditions.DateCondition}
+ *   <li>{@link com.amazonaws.auth.policy.conditions.IpAddressCondition}
+ *   <li>{@link com.amazonaws.auth.policy.conditions.NumericCondition}
+ *   <li>{@link com.amazonaws.auth.policy.conditions.StringCondition}
  * </ul>
  *
- * <p>
- * In addition to the primary condition types, service specific functionality
- * is also provided.
+ * <p>In addition to the primary condition types, service specific functionality is also provided.
  */
 package com.amazonaws.auth.policy.conditions;

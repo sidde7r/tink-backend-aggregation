@@ -15,22 +15,20 @@
 
 package com.amazonaws.monitoring.internal;
 
-
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.annotation.SdkTestInternalApi;
-
+import com.amazonaws.monitoring.MonitoringEvent;
+import com.amazonaws.monitoring.MonitoringListener;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.DatagramChannel;
-
-import com.amazonaws.monitoring.MonitoringEvent;
-import com.amazonaws.monitoring.MonitoringListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * An implementation of the Monitoring Listener Interface that streams monitoring events to a local agent.
+ * An implementation of the Monitoring Listener Interface that streams monitoring events to a local
+ * agent.
  */
 @SdkInternalApi
 public final class AgentMonitoringListener extends MonitoringListener {
@@ -61,12 +59,16 @@ public final class AgentMonitoringListener extends MonitoringListener {
                 channel.socket().setSendBufferSize(MAX_BUFFER_SIZE);
             }
 
-            //SO_SNDBUF is just a hint and it is implementation specific if the packet is sent or discarded.
+            // SO_SNDBUF is just a hint and it is implementation specific if the packet is sent or
+            // discarded.
             maxSize = Math.min(MAX_BUFFER_SIZE, channel.socket().getSendBufferSize());
 
             if (maxSize < MAX_BUFFER_SIZE && LOG.isDebugEnabled()) {
-                LOG.debug(String.format("System socket buffer size %d is less than 8K. Any events larger than the buffer size "
-                                        + "will be dropped", maxSize));
+                LOG.debug(
+                        String.format(
+                                "System socket buffer size %d is less than 8K. Any events larger than the buffer size "
+                                        + "will be dropped",
+                                maxSize));
             }
             channel.connect(new InetSocketAddress("localhost", port));
         } catch (Exception e) {
@@ -76,7 +78,8 @@ public final class AgentMonitoringListener extends MonitoringListener {
 
     /** Used for unit test */
     @SdkTestInternalApi
-    AgentMonitoringListener(DatagramChannel channel, AsynchronousAgentDispatcher dispatcher, int maxSize) {
+    AgentMonitoringListener(
+            DatagramChannel channel, AsynchronousAgentDispatcher dispatcher, int maxSize) {
         this.channel = channel;
         this.dispatcher = dispatcher;
         this.maxSize = maxSize;

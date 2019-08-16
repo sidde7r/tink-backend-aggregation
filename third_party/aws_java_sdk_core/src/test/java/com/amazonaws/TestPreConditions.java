@@ -15,10 +15,9 @@
 
 package com.amazonaws;
 
-import org.junit.Assume;
-
 import com.amazonaws.util.JavaVersionParser;
 import com.amazonaws.util.JavaVersionParser.KnownJavaVersions;
+import org.junit.Assume;
 
 /**
  * Collection of common preconditions that must be met before a test to run. Used to conditionally
@@ -35,10 +34,9 @@ public class TestPreConditions {
         Assume.assumeFalse(isJava6());
     }
 
-    /**
-     * @return True if the current running JVM is Java6. False otherwise
-     */
+    /** @return True if the current running JVM is Java6. False otherwise */
     private static boolean isJava6() {
-        return JavaVersionParser.getCurrentJavaVersion().getKnownVersion() == KnownJavaVersions.JAVA_6;
+        return JavaVersionParser.getCurrentJavaVersion().getKnownVersion()
+                == KnownJavaVersions.JAVA_6;
     }
 }

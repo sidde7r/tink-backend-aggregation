@@ -24,14 +24,12 @@ import com.amazonaws.http.HttpResponseHandler;
 import com.amazonaws.http.SdkHttpMetadata;
 import com.amazonaws.util.AWSRequestMetrics;
 import com.amazonaws.util.MetadataCache;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * Adapts an {@link HttpResponseHandler < AmazonWebServiceResponse <T>>} to an {@link
- * HttpResponseHandler<T>} (unwrapped result) with proper handling and logging of response
- * metadata.
+ * HttpResponseHandler<T>} (unwrapped result) with proper handling and logging of response metadata.
  *
  * @param <T> Unmarshalled result type
  */
@@ -51,14 +49,15 @@ public class AwsResponseHandlerAdapter<T> implements HttpResponseHandler<T> {
     private final MetadataCache responseMetadataCache;
 
     /**
-     * @param delegate          Response handler to delegate to and unwrap
-     * @param request           Marshalled request
+     * @param delegate Response handler to delegate to and unwrap
+     * @param request Marshalled request
      * @param awsRequestMetrics Request metrics
      */
-    public AwsResponseHandlerAdapter(HttpResponseHandler<AmazonWebServiceResponse<T>> delegate,
-                                     Request<?> request,
-                                     AWSRequestMetrics awsRequestMetrics,
-                                     MetadataCache responseMetadataCache) {
+    public AwsResponseHandlerAdapter(
+            HttpResponseHandler<AmazonWebServiceResponse<T>> delegate,
+            Request<?> request,
+            AWSRequestMetrics awsRequestMetrics,
+            MetadataCache responseMetadataCache) {
         this.delegate = delegate;
         this.request = request;
         this.awsRequestMetrics = awsRequestMetrics;
@@ -70,9 +69,11 @@ public class AwsResponseHandlerAdapter<T> implements HttpResponseHandler<T> {
         final AmazonWebServiceResponse<T> awsResponse = delegate.handle(response);
 
         if (awsResponse == null) {
-            throw new RuntimeException("Unable to unmarshall response metadata. Response Code: "
-                                       + response.getStatusCode() + ", Response Text: " +
-                                       response.getStatusText());
+            throw new RuntimeException(
+                    "Unable to unmarshall response metadata. Response Code: "
+                            + response.getStatusCode()
+                            + ", Response Text: "
+                            + response.getStatusText());
         }
 
         AmazonWebServiceRequest userRequest = request.getOriginalRequest();
@@ -83,9 +84,11 @@ public class AwsResponseHandlerAdapter<T> implements HttpResponseHandler<T> {
         final String awsRequestId = awsResponse.getRequestId();
 
         if (requestLog.isDebugEnabled()) {
-            requestLog
-                    .debug("Received successful response: " + response.getStatusCode() +
-                           ", AWS Request ID: " + awsRequestId);
+            requestLog.debug(
+                    "Received successful response: "
+                            + response.getStatusCode()
+                            + ", AWS Request ID: "
+                            + awsRequestId);
         }
 
         if (!logHeaderRequestId(response)) {
@@ -98,8 +101,8 @@ public class AwsResponseHandlerAdapter<T> implements HttpResponseHandler<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T fillInResponseMetadata(AmazonWebServiceResponse<T> awsResponse,
-                                         HttpResponse httpResponse) {
+    private <T> T fillInResponseMetadata(
+            AmazonWebServiceResponse<T> awsResponse, HttpResponse httpResponse) {
         final T result = awsResponse.getResult();
         if (result instanceof AmazonWebServiceResult<?>) {
             ((AmazonWebServiceResult) result)
@@ -122,16 +125,18 @@ public class AwsResponseHandlerAdapter<T> implements HttpResponseHandler<T> {
      * "com.amazonaws.request" logger.
      *
      * @return true if the AWS request id is available from the httpClientSettings header; false
-     * otherwise.
+     *     otherwise.
      */
     private boolean logHeaderRequestId(final HttpResponse response) {
-        final String reqIdHeader = response.getHeaders()
-                .get(HttpResponseHandler.X_AMZN_REQUEST_ID_HEADER);
+        final String reqIdHeader =
+                response.getHeaders().get(HttpResponseHandler.X_AMZN_REQUEST_ID_HEADER);
         final boolean isHeaderReqIdAvail = reqIdHeader != null;
 
         if (requestIdLog.isDebugEnabled() || requestLog.isDebugEnabled()) {
-            final String msg = HttpResponseHandler.X_AMZN_REQUEST_ID_HEADER + ": "
-                               + (isHeaderReqIdAvail ? reqIdHeader : "not available");
+            final String msg =
+                    HttpResponseHandler.X_AMZN_REQUEST_ID_HEADER
+                            + ": "
+                            + (isHeaderReqIdAvail ? reqIdHeader : "not available");
             if (requestIdLog.isDebugEnabled()) {
                 requestIdLog.debug(msg);
             } else {
@@ -145,13 +150,12 @@ public class AwsResponseHandlerAdapter<T> implements HttpResponseHandler<T> {
      * Used to log the request id (extracted from the response) at DEBUG level. This method is
      * called only if there is no request id present in the httpClientSettings response header. The
      * request id is logged using the "com.amazonaws.requestId" logger if it was enabled at DEBUG
-     * level; otherwise, it is logged using at DEBUG level using the "com.amazonaws.request"
-     * logger.
+     * level; otherwise, it is logged using at DEBUG level using the "com.amazonaws.request" logger.
      */
     private void logResponseRequestId(final String awsRequestId) {
         if (requestIdLog.isDebugEnabled() || requestLog.isDebugEnabled()) {
-            final String msg = "AWS Request ID: " +
-                               (awsRequestId == null ? "not available" : awsRequestId);
+            final String msg =
+                    "AWS Request ID: " + (awsRequestId == null ? "not available" : awsRequestId);
             if (requestIdLog.isDebugEnabled()) {
                 requestIdLog.debug(msg);
             } else {

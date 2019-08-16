@@ -14,15 +14,12 @@
  */
 package com.amazonaws.auth;
 
-/**
- * A signer that needs to know which service it is talking to.
- */
+/** A signer that needs to know which service it is talking to. */
 public interface ServiceAwareSigner extends Signer {
     /**
-     * Configure this signer with the name of the service it will be used
-     * to sign requests for.
+     * Configure this signer with the name of the service it will be used to sign requests for.
      *
-     * @param value   The name of the service.
+     * @param value The name of the service.
      */
     void setServiceName(String value);
 }

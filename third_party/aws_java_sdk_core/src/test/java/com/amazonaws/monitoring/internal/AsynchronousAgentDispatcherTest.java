@@ -23,6 +23,9 @@ import static org.mockito.Mockito.when;
 
 import com.amazonaws.monitoring.ApiCallAttemptMonitoringEvent;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,17 +33,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
-
-/**
- * Tests for {@link AsynchronousAgentDispatcher}.
- */
+/** Tests for {@link AsynchronousAgentDispatcher}. */
 @RunWith(MockitoJUnitRunner.class)
 public class AsynchronousAgentDispatcherTest {
-    @Mock
-    private DatagramChannel channel;
+    @Mock private DatagramChannel channel;
 
     private AsynchronousAgentDispatcher dispatcher = AsynchronousAgentDispatcher.getInstance();
 
@@ -101,8 +97,8 @@ public class AsynchronousAgentDispatcherTest {
 
     @Test
     public void testDropsEventWhenTooLarge() throws InterruptedException, IOException {
-        ApiCallAttemptMonitoringEvent tooLarge = new ApiCallAttemptMonitoringEvent()
-                .withApi("SomeApi");
+        ApiCallAttemptMonitoringEvent tooLarge =
+                new ApiCallAttemptMonitoringEvent().withApi("SomeApi");
 
         dispatcher.addWriteTask(tooLarge, channel, 1);
 
@@ -113,8 +109,7 @@ public class AsynchronousAgentDispatcherTest {
 
     @Test
     public void testWritesEventIfUnderMaxSize() throws InterruptedException, IOException {
-        ApiCallAttemptMonitoringEvent okay = new ApiCallAttemptMonitoringEvent()
-                .withApi("SomeApi");
+        ApiCallAttemptMonitoringEvent okay = new ApiCallAttemptMonitoringEvent().withApi("SomeApi");
 
         dispatcher.addWriteTask(okay, channel, 8192);
 
@@ -122,6 +117,4 @@ public class AsynchronousAgentDispatcherTest {
 
         verify(channel, times(1)).write(any(ByteBuffer.class));
     }
-
-
 }

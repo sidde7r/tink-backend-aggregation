@@ -20,20 +20,22 @@ import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.retry.v2.RetryPolicyContext;
 
 /**
- * Adapts the legacy backoff strategy to the new v2 backoff strategy. Strategies that extend this can be used in both legacy and
- * v2 retry policies.
+ * Adapts the legacy backoff strategy to the new v2 backoff strategy. Strategies that extend this
+ * can be used in both legacy and v2 retry policies.
  */
 @SdkInternalApi
 abstract class V2CompatibleBackoffStrategyAdapter implements V2CompatibleBackoffStrategy {
 
     @Override
-    public long delayBeforeNextRetry(AmazonWebServiceRequest originalRequest,
-                                     AmazonClientException exception,
-                                     int retriesAttempted) {
-        return computeDelayBeforeNextRetry(RetryPolicyContext.builder()
-                                            .originalRequest(originalRequest)
-                                            .exception(exception)
-                                            .retriesAttempted(retriesAttempted)
-                                            .build());
+    public long delayBeforeNextRetry(
+            AmazonWebServiceRequest originalRequest,
+            AmazonClientException exception,
+            int retriesAttempted) {
+        return computeDelayBeforeNextRetry(
+                RetryPolicyContext.builder()
+                        .originalRequest(originalRequest)
+                        .exception(exception)
+                        .retriesAttempted(retriesAttempted)
+                        .build());
     }
 }

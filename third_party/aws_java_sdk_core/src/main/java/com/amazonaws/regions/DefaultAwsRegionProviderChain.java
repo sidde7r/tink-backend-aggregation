@@ -14,15 +14,14 @@
  */
 package com.amazonaws.regions;
 
-/**
- * Default region provider chain used when no explicit region is supplied to a client builder.
- */
+/** Default region provider chain used when no explicit region is supplied to a client builder. */
 public class DefaultAwsRegionProviderChain extends AwsRegionProviderChain {
 
     public DefaultAwsRegionProviderChain() {
-        super(new AwsEnvVarOverrideRegionProvider(),
-              new AwsSystemPropertyRegionProvider(),
-              new AwsProfileRegionProvider(),
-              new InstanceMetadataRegionProvider());
+        super(
+                new AwsEnvVarOverrideRegionProvider(),
+                new AwsSystemPropertyRegionProvider(),
+                new AwsProfileRegionProvider(),
+                new InstanceMetadataRegionProvider());
     }
 }

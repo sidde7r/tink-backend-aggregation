@@ -25,13 +25,9 @@ import com.amazonaws.annotation.SdkProtectedApi;
 @SdkProtectedApi
 public interface SdkJsonMarshallerFactory {
 
-    /**
-     * Returns the {@link SdkJsonGenerator} to be used for marshalling the request.
-     */
+    /** Returns the {@link SdkJsonGenerator} to be used for marshalling the request. */
     StructuredJsonGenerator createGenerator();
 
-    /**
-     * @return Content type to send in requests.
-     */
+    /** @return Content type to send in requests. */
     String getContentType();
 }

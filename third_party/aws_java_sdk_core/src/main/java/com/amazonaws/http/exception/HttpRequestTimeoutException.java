@@ -16,9 +16,7 @@ package com.amazonaws.http.exception;
 
 import java.io.IOException;
 
-/**
- * Signals that the http request could not complete within the specified timeout.
- */
+/** Signals that the http request could not complete within the specified timeout. */
 public class HttpRequestTimeoutException extends IOException {
 
     private static final long serialVersionUID = -2588353895012259837L;

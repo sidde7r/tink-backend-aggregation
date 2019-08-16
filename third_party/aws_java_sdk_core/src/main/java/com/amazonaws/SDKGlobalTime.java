@@ -15,37 +15,32 @@
 package com.amazonaws;
 
 /**
- * Used for clock skew adjustment between the client JVM where the SDK is run,
- * and the server side.
+ * Used for clock skew adjustment between the client JVM where the SDK is run, and the server side.
  */
 public class SDKGlobalTime {
     /**
-     * globalTimeOffset is a time difference in seconds between the running JVM
-     * and AWS. Used to globally adjust the client clock skew. Java SDK already
-     * provides timeOffset and accessor methods in <code>Request</code> class but
-     * those are used per request, whereas this variable will adjust clock skew
-     * globally. Java SDK detects clock skew errors and adjusts global clock
+     * globalTimeOffset is a time difference in seconds between the running JVM and AWS. Used to
+     * globally adjust the client clock skew. Java SDK already provides timeOffset and accessor
+     * methods in <code>Request</code> class but those are used per request, whereas this variable
+     * will adjust clock skew globally. Java SDK detects clock skew errors and adjusts global clock
      * skew automatically.
      */
     private static volatile int globalTimeOffset;
 
     /**
-     * Sets the global time difference in seconds between the running JVM and
-     * AWS. If this value is set then all the subsequent instantiation of an
-     * <code>AmazonHttpClient</code> will start using this
-     * value to generate timestamps.
+     * Sets the global time difference in seconds between the running JVM and AWS. If this value is
+     * set then all the subsequent instantiation of an <code>AmazonHttpClient</code> will start
+     * using this value to generate timestamps.
      *
-     * @param timeOffset
-     *            the time difference in seconds between the running JVM and AWS
+     * @param timeOffset the time difference in seconds between the running JVM and AWS
      */
-    public  static void setGlobalTimeOffset(int timeOffset) {
+    public static void setGlobalTimeOffset(int timeOffset) {
         globalTimeOffset = timeOffset;
     }
 
     /**
-     * Gets the global time difference in seconds between the running JVM and
-     * AWS. See <code>Request#getTimeOffset()</code> if global time offset is
-     * not set.
+     * Gets the global time difference in seconds between the running JVM and AWS. See <code>
+     * Request#getTimeOffset()</code> if global time offset is not set.
      */
     public static int getGlobalTimeOffset() {
         return globalTimeOffset;

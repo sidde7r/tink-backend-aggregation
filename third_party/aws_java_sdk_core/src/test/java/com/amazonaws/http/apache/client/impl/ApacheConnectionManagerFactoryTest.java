@@ -14,17 +14,14 @@
  */
 package com.amazonaws.http.apache.client.impl;
 
+import static org.junit.Assert.assertEquals;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.http.settings.HttpClientSettings;
-
-import tink.org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import tink.org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 public class ApacheConnectionManagerFactoryTest {
-
 
     private final ApacheConnectionManagerFactory factory = new ApacheConnectionManagerFactory();
 
@@ -32,8 +29,9 @@ public class ApacheConnectionManagerFactoryTest {
     public void validateAfterInactivityMillis_RespectedInConnectionManager() {
         final int validateAfterInactivity = 1234;
         final HttpClientSettings httpClientSettings =
-                HttpClientSettings.adapt(new ClientConfiguration()
-                                                 .withValidateAfterInactivityMillis(validateAfterInactivity));
+                HttpClientSettings.adapt(
+                        new ClientConfiguration()
+                                .withValidateAfterInactivityMillis(validateAfterInactivity));
 
         final PoolingHttpClientConnectionManager connectionManager =
                 (PoolingHttpClientConnectionManager) factory.create(httpClientSettings);

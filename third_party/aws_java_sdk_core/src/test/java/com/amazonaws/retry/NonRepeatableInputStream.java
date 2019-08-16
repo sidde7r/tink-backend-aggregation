@@ -18,21 +18,20 @@
  */
 package com.amazonaws.retry;
 
+import com.amazonaws.internal.SdkInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.amazonaws.internal.SdkInputStream;
 
 class NonRepeatableInputStream extends SdkInputStream {
 
     private final String nonRepeatableContent;
     private int pos;
-    
+
     public NonRepeatableInputStream(String content) {
         nonRepeatableContent = content;
         pos = 0;
     }
-    
+
     @Override
     public int read() throws IOException {
         if (pos >= nonRepeatableContent.length()) return -1;
@@ -43,5 +42,4 @@ class NonRepeatableInputStream extends SdkInputStream {
     protected InputStream getWrappedInputStream() {
         return null;
     }
-    
 }

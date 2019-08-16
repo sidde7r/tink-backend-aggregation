@@ -19,17 +19,15 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-
 import org.junit.Test;
 
-/**
- * Unit tests for {@link CredentialsEndpointRetryParameters}.
- */
+/** Unit tests for {@link CredentialsEndpointRetryParameters}. */
 public class CredentialsEndpointRetryParametersTest {
 
     @Test
     public void defaultParams() {
-        CredentialsEndpointRetryParameters params = CredentialsEndpointRetryParameters.builder().build();
+        CredentialsEndpointRetryParameters params =
+                CredentialsEndpointRetryParameters.builder().build();
         assertNull(params.getStatusCode());
         assertNull(params.getException());
     }
@@ -37,9 +35,8 @@ public class CredentialsEndpointRetryParametersTest {
     @Test
     public void defaultParams_withStatusCode() {
         Integer statusCode = new Integer(400);
-        CredentialsEndpointRetryParameters params = CredentialsEndpointRetryParameters.builder()
-                                                                .withStatusCode(statusCode)
-                                                                .build();
+        CredentialsEndpointRetryParameters params =
+                CredentialsEndpointRetryParameters.builder().withStatusCode(statusCode).build();
         assertEquals(statusCode, params.getStatusCode());
         assertNull(params.getException());
     }
@@ -47,12 +44,12 @@ public class CredentialsEndpointRetryParametersTest {
     @Test
     public void defaultParams_withStatusCodeAndException() {
         Integer statusCode = new Integer(500);
-        CredentialsEndpointRetryParameters params = CredentialsEndpointRetryParameters.builder()
-                                                                .withStatusCode(statusCode)
-                                                                .withException(new IOException())
-                                                                .build();
+        CredentialsEndpointRetryParameters params =
+                CredentialsEndpointRetryParameters.builder()
+                        .withStatusCode(statusCode)
+                        .withException(new IOException())
+                        .build();
         assertEquals(statusCode, params.getStatusCode());
         assertTrue(params.getException() instanceof IOException);
     }
-
 }

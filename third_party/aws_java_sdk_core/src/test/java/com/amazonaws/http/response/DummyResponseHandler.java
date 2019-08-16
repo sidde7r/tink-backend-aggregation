@@ -22,17 +22,14 @@ import com.amazonaws.AmazonWebServiceResponse;
 import com.amazonaws.http.HttpResponse;
 import com.amazonaws.http.HttpResponseHandler;
 
-/**
- * ResponseHandler implementation to return an empty response
- */
+/** ResponseHandler implementation to return an empty response */
 public class DummyResponseHandler implements HttpResponseHandler<AmazonWebServiceResponse<String>> {
 
     private boolean needsConnectionLeftOpen = false;
 
     @Override
     public AmazonWebServiceResponse<String> handle(HttpResponse response) throws Exception {
-        return new AmazonWebServiceResponse<String>() {
-        };
+        return new AmazonWebServiceResponse<String>() {};
     }
 
     @Override
@@ -42,6 +39,7 @@ public class DummyResponseHandler implements HttpResponseHandler<AmazonWebServic
 
     /**
      * Enable streaming
+     *
      * @return Object for method chaining
      */
     public DummyResponseHandler leaveConnectionOpen() {

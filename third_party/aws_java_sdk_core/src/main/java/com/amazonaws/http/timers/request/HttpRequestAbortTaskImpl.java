@@ -14,9 +14,8 @@
  */
 package com.amazonaws.http.timers.request;
 
-import tink.org.apache.http.client.methods.HttpRequestBase;
-
 import com.amazonaws.annotation.SdkInternalApi;
+import tink.org.apache.http.client.methods.HttpRequestBase;
 
 /**
  * Implementation of {@link HttpRequestAbortTask} that aborts the tracking {@link HttpRequestBase}
@@ -48,5 +47,4 @@ public class HttpRequestAbortTaskImpl implements HttpRequestAbortTask {
     public boolean isEnabled() {
         return true;
     }
-
 }

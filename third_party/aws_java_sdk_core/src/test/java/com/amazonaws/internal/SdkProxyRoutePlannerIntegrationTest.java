@@ -17,17 +17,6 @@ package com.amazonaws.internal;
 
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.UUID;
-
-import tink.org.apache.http.HttpResponse;
-import tink.org.apache.http.client.HttpClient;
-import tink.org.apache.http.client.methods.HttpGet;
-import tink.org.apache.http.client.methods.HttpUriRequest;
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.http.MockServerTestBase;
 import com.amazonaws.http.apache.client.impl.ApacheHttpClientFactory;
@@ -35,11 +24,20 @@ import com.amazonaws.http.apache.client.impl.ConnectionManagerAwareHttpClient;
 import com.amazonaws.http.client.HttpClientFactory;
 import com.amazonaws.http.server.MockServer;
 import com.amazonaws.http.settings.HttpClientSettings;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.UUID;
+import org.junit.Assert;
+import org.junit.Test;
+import tink.org.apache.http.HttpResponse;
+import tink.org.apache.http.client.HttpClient;
+import tink.org.apache.http.client.methods.HttpGet;
+import tink.org.apache.http.client.methods.HttpUriRequest;
 
 /**
- * This class starts a mock proxy server, and once a request is sent to this mock proxy server,
- * a 200 OK will be returned. We'll take advantage of this returned status code to test whether
- * a request to the given fake service host is passed through the proxy or not.
+ * This class starts a mock proxy server, and once a request is sent to this mock proxy server, a
+ * 200 OK will be returned. We'll take advantage of this returned status code to test whether a
+ * request to the given fake service host is passed through the proxy or not.
  */
 public class SdkProxyRoutePlannerIntegrationTest extends MockServerTestBase {
 
@@ -95,26 +93,31 @@ public class SdkProxyRoutePlannerIntegrationTest extends MockServerTestBase {
 
     @Test(expected = UnknownHostException.class)
     public void nonProxyHostsWithOrSign_fakeHostDoesMatch() throws Exception {
-        mockUnsuccessfulRequest(FOO_FAKE_SERVICE_HOST + "|" + BAR_FAKE_SERVICE_HOST, FOO_FAKE_SERVICE_HOST);
+        mockUnsuccessfulRequest(
+                FOO_FAKE_SERVICE_HOST + "|" + BAR_FAKE_SERVICE_HOST, FOO_FAKE_SERVICE_HOST);
     }
 
     @Test
     public void nonProxyHostsWithOrSign_fakeHostDoesNotMatch() throws IOException {
-        mockSuccessfulRequest(FOO_FAKE_SERVICE_HOST + "|" + BAZ_FAKE_SERVICE_HOST, BAR_FAKE_SERVICE_HOST);
+        mockSuccessfulRequest(
+                FOO_FAKE_SERVICE_HOST + "|" + BAZ_FAKE_SERVICE_HOST, BAR_FAKE_SERVICE_HOST);
     }
 
     // Create a HttpClient with the proxy set up to the local mock server.
     private HttpClient createHttpClient(String nonProxyHosts) {
-        HttpClientFactory<ConnectionManagerAwareHttpClient> httpClientFactory = new ApacheHttpClientFactory();
-        ClientConfiguration config = new ClientConfiguration()
-                .withProxyHost("localhost").withProxyPort(server.getPort())
-                .withNonProxyHosts(nonProxyHosts);
+        HttpClientFactory<ConnectionManagerAwareHttpClient> httpClientFactory =
+                new ApacheHttpClientFactory();
+        ClientConfiguration config =
+                new ClientConfiguration()
+                        .withProxyHost("localhost")
+                        .withProxyPort(server.getPort())
+                        .withNonProxyHosts(nonProxyHosts);
         return httpClientFactory.create(HttpClientSettings.adapt(config));
     }
 
     /**
-     * The fakeHost doesn't match the nonProxyHosts pattern, so that requests to this fakeHost
-     * will pass through the proxy and return successfully.
+     * The fakeHost doesn't match the nonProxyHosts pattern, so that requests to this fakeHost will
+     * pass through the proxy and return successfully.
      */
     private void mockSuccessfulRequest(String nonProxyHosts, String fakeHost) throws IOException {
         HttpClient client = createHttpClient(nonProxyHosts);
@@ -124,21 +127,19 @@ public class SdkProxyRoutePlannerIntegrationTest extends MockServerTestBase {
     }
 
     /**
-     * The fakeHost does match the nonProxyHosts pattern, so that requests to this fakeHost
-     * will bypass the proxy and throw an UnknownHostException.
+     * The fakeHost does match the nonProxyHosts pattern, so that requests to this fakeHost will
+     * bypass the proxy and throw an UnknownHostException.
      */
-    private void mockUnsuccessfulRequest(String nonProxyHosts, String fakeHost)
-            throws Exception {
+    private void mockUnsuccessfulRequest(String nonProxyHosts, String fakeHost) throws Exception {
         HttpClient client = createHttpClient(nonProxyHosts);
         HttpUriRequest uriRequest = new HttpGet("http://" + fakeHost);
         executeWithRetries(client, uriRequest);
         fail("UnknownHostException is expected!");
     }
 
-    /**
-     * Executes the http request retrying the failed requests upto 3 times.
-     */
-    private HttpResponse executeWithRetries(HttpClient client, HttpUriRequest request) throws IOException {
+    /** Executes the http request retrying the failed requests upto 3 times. */
+    private HttpResponse executeWithRetries(HttpClient client, HttpUriRequest request)
+            throws IOException {
 
         for (int attempt = 0; ; attempt++) {
             try {
@@ -150,5 +151,4 @@ public class SdkProxyRoutePlannerIntegrationTest extends MockServerTestBase {
             }
         }
     }
-
 }

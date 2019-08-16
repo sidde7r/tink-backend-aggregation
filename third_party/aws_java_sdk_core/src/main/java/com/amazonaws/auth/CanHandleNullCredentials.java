@@ -19,6 +19,7 @@ import com.amazonaws.SignableRequest;
 
 /**
  * Used to explicitly indicate that a {@link com.amazonaws.auth.Signer} can gracefully handle
- * credentials being null when calling {@link com.amazonaws.auth.Signer#sign(SignableRequest, AWSCredentials)}
+ * credentials being null when calling {@link com.amazonaws.auth.Signer#sign(SignableRequest,
+ * AWSCredentials)}
  */
 public interface CanHandleNullCredentials {}

@@ -16,9 +16,7 @@ package com.amazonaws.event.request;
 
 import com.amazonaws.annotation.ThreadSafe;
 
-/**
- * An actual implementation to represent the progress of a request/response.
- */
+/** An actual implementation to represent the progress of a request/response. */
 @ThreadSafe
 public class ProgressSupport extends Progress {
     /* Request transfer progress */
@@ -32,67 +30,51 @@ public class ProgressSupport extends Progress {
     private static final Object lock = new Object();
 
     /**
-     * Returns the number of bytes to be expected in the request, or -1 if the
-     * number is unknown (e.g. when the request is still not serialized yet, or
-     * when the request contains raw InputStream as the payload in which case
-     * the SDK cannot infer the content-length in advance).
+     * Returns the number of bytes to be expected in the request, or -1 if the number is unknown
+     * (e.g. when the request is still not serialized yet, or when the request contains raw
+     * InputStream as the payload in which case the SDK cannot infer the content-length in advance).
      */
     @Override
     public long getRequestContentLength() {
         return requestContentLength;
     }
 
-    /**
-     * Adds the number of bytes to be expected in the request.
-     */
+    /** Adds the number of bytes to be expected in the request. */
     @Override
     public void addRequestContentLength(long contentLength) {
-        if (contentLength < 0)
-            throw new IllegalArgumentException();
-        synchronized(lock) {
-            if (this.requestContentLength == -1)
-                this.requestContentLength = contentLength;
-            else
-                this.requestContentLength += contentLength;
+        if (contentLength < 0) throw new IllegalArgumentException();
+        synchronized (lock) {
+            if (this.requestContentLength == -1) this.requestContentLength = contentLength;
+            else this.requestContentLength += contentLength;
         }
     }
 
-    /**
-     * Returns the number of bytes that have been transferred in the request.
-     */
+    /** Returns the number of bytes that have been transferred in the request. */
     @Override
     public long getRequestBytesTransferred() {
         return requestBytesTransferred;
     }
 
     /**
-     * Returns the number of bytes to be expected in the response, or -1 if the
-     * number is unknown (e.g. when the client hasn't received the response
-     * yet).
+     * Returns the number of bytes to be expected in the response, or -1 if the number is unknown
+     * (e.g. when the client hasn't received the response yet).
      */
     @Override
     public long getResponseContentLength() {
         return responseContentLength;
     }
 
-    /**
-     * Adds the number of bytes to be expected in the response.
-     */
+    /** Adds the number of bytes to be expected in the response. */
     @Override
     public void addResponseContentLength(long contentLength) {
-        if (contentLength < 0)
-            throw new IllegalArgumentException();
-        synchronized(lock) {
-            if (this.responseContentLength == -1)
-                this.responseContentLength = contentLength;
-            else
-                this.responseContentLength += contentLength;
+        if (contentLength < 0) throw new IllegalArgumentException();
+        synchronized (lock) {
+            if (this.responseContentLength == -1) this.responseContentLength = contentLength;
+            else this.responseContentLength += contentLength;
         }
     }
 
-    /**
-     * Returns the number of bytes that have been transferred in the response.
-     */
+    /** Returns the number of bytes that have been transferred in the response. */
     @Override
     public long getResponseBytesTransferred() {
         return responseBytesTransferred;
@@ -107,18 +89,23 @@ public class ProgressSupport extends Progress {
 
     @Override
     public void addResponseBytesTransferred(long bytes) {
-        synchronized(lock) {
+        synchronized (lock) {
             responseBytesTransferred += bytes;
         }
     }
 
     @Override
     public String toString() {
-        return String.format("Request: %d/%d, Response: %d/%d",
-                requestBytesTransferred, requestContentLength,
-                responseBytesTransferred, responseContentLength);
+        return String.format(
+                "Request: %d/%d, Response: %d/%d",
+                requestBytesTransferred,
+                requestContentLength,
+                responseBytesTransferred,
+                responseContentLength);
     }
 
     @Override
-    public final boolean isEnabled() { return true; }
+    public final boolean isEnabled() {
+        return true;
+    }
 }

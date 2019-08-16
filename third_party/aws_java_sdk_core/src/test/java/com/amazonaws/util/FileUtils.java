@@ -20,13 +20,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Random;
-
 import org.apache.commons.io.IOUtils;
 
-/**
- * Helper class that helps in creating and writing data to temporary files.
- * 
- */
+/** Helper class that helps in creating and writing data to temporary files. */
 public class FileUtils {
     static final int ASCII_LOW = 33; // '!', skipping space for readability
     static final int ASCII_HIGH = 126;
@@ -35,46 +31,41 @@ public class FileUtils {
     private static final Random rand = new Random();
 
     /**
-     * Returns a reference to the file created with the given file name in the
-     * System's temporary directory.
-     * 
+     * Returns a reference to the file created with the given file name in the System's temporary
+     * directory.
+     *
      * @param fileName
      * @return a reference to the file
      * @throws IOException
      */
     public static File createTempFileForTesting(String fileName) throws IOException {
-        return File.createTempFile(String.valueOf(System.currentTimeMillis()),
-                fileName);
-
+        return File.createTempFile(String.valueOf(System.currentTimeMillis()), fileName);
     }
 
     /**
-     * Creates a file with the given name in the System's temporary directory.
-     * Adds the data to the given file and returns the reference to the file.
-     * 
+     * Creates a file with the given name in the System's temporary directory. Adds the data to the
+     * given file and returns the reference to the file.
+     *
      * @param fileName
      * @param data
      * @return reference to the file.
      * @throws IOException
      */
-    public static File createTempFileForTesting(String fileName, String data)
-            throws IOException {
-        return appendDataToTempFile(File.createTempFile(
-                String.valueOf(System.currentTimeMillis()), fileName), data);
-
+    public static File createTempFileForTesting(String fileName, String data) throws IOException {
+        return appendDataToTempFile(
+                File.createTempFile(String.valueOf(System.currentTimeMillis()), fileName), data);
     }
 
     /**
-     * Appends the given data to the file specified in the input and returns the
-     * reference to the file.
-     * 
+     * Appends the given data to the file specified in the input and returns the reference to the
+     * file.
+     *
      * @param file
      * @param dataToAppend
      * @return reference to the file.
      * @throws IOException
      */
-    public static File appendDataToTempFile(File file, String dataToAppend)
-            throws IOException {
+    public static File appendDataToTempFile(File file, String dataToAppend) throws IOException {
         FileWriter outputWriter = new FileWriter(file);
 
         try {
@@ -87,22 +78,19 @@ public class FileUtils {
     }
 
     /**
-     * Generate a random ASCII file of the specified number of bytes. The ASCII
-     * characters ranges over all printable ASCII from 33 to 126 inclusive and
-     * LF '\n', intentionally skipping space for readability.
+     * Generate a random ASCII file of the specified number of bytes. The ASCII characters ranges
+     * over all printable ASCII from 33 to 126 inclusive and LF '\n', intentionally skipping space
+     * for readability.
      */
-    public static File generateRandomAsciiFile(long byteSize)
-            throws IOException {
+    public static File generateRandomAsciiFile(long byteSize) throws IOException {
         return generateRandomAsciiFile(byteSize, true);
     }
 
-    public static File generateRandomAsciiFile(long byteSize,
-            boolean deleteOnExit) throws IOException {
+    public static File generateRandomAsciiFile(long byteSize, boolean deleteOnExit)
+            throws IOException {
         File file = File.createTempFile("CryptoTestUtils", ".txt");
-        System.out.println("Generating random ASCII file with size: "
-                + byteSize + " at " + file);
-        if (deleteOnExit)
-            file.deleteOnExit();
+        System.out.println("Generating random ASCII file with size: " + byteSize + " at " + file);
+        if (deleteOnExit) file.deleteOnExit();
         OutputStream out = new FileOutputStream(file);
         int BUFSIZE = 1024 * 8;
         byte[] buf = new byte[1024 * 8];
@@ -128,11 +116,9 @@ public class FileUtils {
             byte b = bytes[i];
             if (b < ASCII_LOW || b > ASCII_HIGH) {
                 byte c = (byte) (b % modulo);
-                if (c < 0)
-                    c = (byte) (c + modulo);
+                if (c < 0) c = (byte) (c + modulo);
                 bytes[i] = (byte) (c + ASCII_LOW);
-                if (bytes[i] > ASCII_HIGH)
-                    bytes[i] = (byte) '\n';
+                if (bytes[i] > ASCII_HIGH) bytes[i] = (byte) '\n';
             }
         }
         return bytes;

@@ -14,59 +14,58 @@
  */
 package com.amazonaws.http.conn;
 
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 import tink.org.apache.http.HttpClientConnection;
 import tink.org.apache.http.conn.ConnectionRequest;
 import tink.org.apache.http.conn.HttpClientConnectionManager;
 import tink.org.apache.http.conn.routing.HttpRoute;
 import tink.org.apache.http.protocol.HttpContext;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 public class ClientConnectionManagerFactoryTest {
-    HttpClientConnectionManager noop = new HttpClientConnectionManager() {
-        @Override
-        public void connect(HttpClientConnection conn, HttpRoute route, int connectTimeout, HttpContext context) throws IOException {
+    HttpClientConnectionManager noop =
+            new HttpClientConnectionManager() {
+                @Override
+                public void connect(
+                        HttpClientConnection conn,
+                        HttpRoute route,
+                        int connectTimeout,
+                        HttpContext context)
+                        throws IOException {}
 
-        }
+                @Override
+                public void upgrade(HttpClientConnection conn, HttpRoute route, HttpContext context)
+                        throws IOException {}
 
-        @Override
-        public void upgrade(HttpClientConnection conn, HttpRoute route, HttpContext context) throws IOException {
+                @Override
+                public void routeComplete(
+                        HttpClientConnection conn, HttpRoute route, HttpContext context)
+                        throws IOException {}
 
-        }
+                @Override
+                public ConnectionRequest requestConnection(HttpRoute route, Object state) {
+                    return null;
+                }
 
-        @Override
-        public void routeComplete(HttpClientConnection conn, HttpRoute route, HttpContext context) throws IOException {
+                @Override
+                public void releaseConnection(
+                        HttpClientConnection conn,
+                        Object newState,
+                        long validDuration,
+                        TimeUnit timeUnit) {}
 
-        }
+                @Override
+                public void closeIdleConnections(long idletime, TimeUnit tunit) {}
 
-        @Override
-        public ConnectionRequest requestConnection(HttpRoute route,
-                                                   Object state) {
-            return null;
-        }
+                @Override
+                public void closeExpiredConnections() {}
 
-        @Override
-        public void releaseConnection(HttpClientConnection conn,
-                                      Object newState,
-                                      long validDuration,
-                                      TimeUnit timeUnit) {
-        }
-
-        @Override
-        public void closeIdleConnections(long idletime, TimeUnit tunit) {
-        }
-
-        @Override
-        public void closeExpiredConnections() {
-        }
-
-        @Override
-        public void shutdown() {
-        }
-    };
+                @Override
+                public void shutdown() {}
+            };
 
     @Test
     public void wrapOnce() {

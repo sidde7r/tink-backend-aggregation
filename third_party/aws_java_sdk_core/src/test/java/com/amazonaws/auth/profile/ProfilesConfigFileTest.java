@@ -14,13 +14,10 @@
  */
 package com.amazonaws.auth.profile;
 
+import java.io.File;
 import org.junit.Test;
 
-import java.io.File;
-
-/**
- * Unit Tests for {@link ProfilesConfigFile}
- */
+/** Unit Tests for {@link ProfilesConfigFile} */
 public class ProfilesConfigFileTest {
 
     // https://github.com/aws/aws-sdk-java/issues/812
@@ -28,5 +25,4 @@ public class ProfilesConfigFileTest {
     public void file_is_null_throws_exception() {
         new ProfilesConfigFile((File) null);
     }
-
 }

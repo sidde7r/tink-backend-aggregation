@@ -32,9 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-/**
- * Generate an AWS policy object by parsing the given JSON string.
- */
+/** Generate an AWS policy object by parsing the given JSON string. */
 public class JsonPolicyReader {
 
     private static final String PRINCIPAL_SCHEMA_USER = "AWS";
@@ -56,19 +54,13 @@ public class JsonPolicyReader {
     /**
      * Converts the specified JSON string to an AWS policy object.
      *
-     * For more information see, @see
-     * http://docs.aws.amazon.com/AWSSdkDocsJava/latest
+     * <p>For more information see, @see http://docs.aws.amazon.com/AWSSdkDocsJava/latest
      * /DeveloperGuide/java-dg-access-control.html
      *
-     * @param jsonString
-     *            the specified JSON string representation of this AWS access
-     *            control policy.
-     *
+     * @param jsonString the specified JSON string representation of this AWS access control policy.
      * @return An AWS policy object.
-     *
-     * @throws IllegalArgumentException
-     *             If the specified JSON string is null or invalid and cannot be
-     *             converted to an AWS policy object.
+     * @throws IllegalArgumentException If the specified JSON string is null or invalid and cannot
+     *     be converted to an AWS policy object.
      */
     public Policy createPolicyFromJsonString(String jsonString) {
         if (jsonString == null) {
@@ -101,8 +93,7 @@ public class JsonPolicyReader {
             }
 
         } catch (Exception e) {
-            String message = "Unable to generate policy object fron JSON string "
-                    + e.getMessage();
+            String message = "Unable to generate policy object fron JSON string " + e.getMessage();
             throw new IllegalArgumentException(message, e);
         }
         policy.setStatements(statements);
@@ -131,9 +122,8 @@ public class JsonPolicyReader {
 
         JsonNode effectNode = jStatement.get(JsonDocumentFields.STATEMENT_EFFECT);
 
-        final Effect effect = isNotNull(effectNode)
-                                   ? Effect.valueOf(effectNode.asText())
-                                   : Effect.Deny ;
+        final Effect effect =
+                isNotNull(effectNode) ? Effect.valueOf(effectNode.asText()) : Effect.Deny;
 
         Statement statement = new Statement(effect);
 
@@ -143,20 +133,16 @@ public class JsonPolicyReader {
         }
 
         JsonNode actionNodes = jStatement.get(JsonDocumentFields.ACTION);
-        if (isNotNull(actionNodes))
-            statement.setActions(actionsOf(actionNodes));
+        if (isNotNull(actionNodes)) statement.setActions(actionsOf(actionNodes));
 
         JsonNode resourceNodes = jStatement.get(JsonDocumentFields.RESOURCE);
-        if (isNotNull(resourceNodes))
-            statement.setResources(resourcesOf(resourceNodes));
+        if (isNotNull(resourceNodes)) statement.setResources(resourcesOf(resourceNodes));
 
         JsonNode conditionNodes = jStatement.get(JsonDocumentFields.CONDITION);
-        if (isNotNull(conditionNodes))
-            statement.setConditions(conditionsOf(conditionNodes));
+        if (isNotNull(conditionNodes)) statement.setConditions(conditionsOf(conditionNodes));
 
         JsonNode principalNodes = jStatement.get(JsonDocumentFields.PRINCIPAL);
-        if (isNotNull(principalNodes))
-            statement.setPrincipals(principalOf(principalNodes));
+        if (isNotNull(principalNodes)) statement.setPrincipals(principalOf(principalNodes));
 
         return statement;
     }
@@ -164,8 +150,7 @@ public class JsonPolicyReader {
     /**
      * Generates a list of actions from the Action Json Node.
      *
-     * @param actionNodes
-     *            the action Json node to be parsed.
+     * @param actionNodes the action Json node to be parsed.
      * @return the list of actions.
      */
     private List<Action> actionsOf(JsonNode actionNodes) {
@@ -184,8 +169,7 @@ public class JsonPolicyReader {
     /**
      * Generates a list of resources from the Resource Json Node.
      *
-     * @param resourceNodes
-     *            the resource Json node to be parsed.
+     * @param resourceNodes the resource Json node to be parsed.
      * @return the list of resources.
      */
     private List<Resource> resourcesOf(JsonNode resourceNodes) {
@@ -205,8 +189,7 @@ public class JsonPolicyReader {
     /**
      * Generates a list of principals from the Principal Json Node
      *
-     * @param principalNodes
-     *            the principal Json to be parsed
+     * @param principalNodes the principal Json to be parsed
      * @return a list of principals
      */
     private List<Principal> principalOf(JsonNode principalNodes) {
@@ -217,8 +200,7 @@ public class JsonPolicyReader {
             return principals;
         }
 
-        Iterator<Map.Entry<String, JsonNode>> mapOfPrincipals = principalNodes
-                .fields();
+        Iterator<Map.Entry<String, JsonNode>> mapOfPrincipals = principalNodes.fields();
         String schema;
         JsonNode principalNode;
         Entry<String, JsonNode> principal;
@@ -244,16 +226,16 @@ public class JsonPolicyReader {
     /**
      * Creates a new principal instance for the given schema and the Json node.
      *
-     * @param schema
-     *            the schema for the principal instance being created.
-     * @param principalNode
-     *            the node indicating the AWS account that is making the
-     *            request.
+     * @param schema the schema for the principal instance being created.
+     * @param principalNode the node indicating the AWS account that is making the request.
      * @return a principal instance.
      */
     private Principal createPrincipal(String schema, JsonNode principalNode) {
         if (schema.equalsIgnoreCase(PRINCIPAL_SCHEMA_USER)) {
-            return new Principal(PRINCIPAL_SCHEMA_USER, principalNode.asText(), options.isStripAwsPrincipalIdHyphensEnabled());
+            return new Principal(
+                    PRINCIPAL_SCHEMA_USER,
+                    principalNode.asText(),
+                    options.isStripAwsPrincipalIdHyphensEnabled());
         } else if (schema.equalsIgnoreCase(PRINCIPAL_SCHEMA_SERVICE)) {
             return new Principal(schema, principalNode.asText());
         } else if (schema.equalsIgnoreCase(PRINCIPAL_SCHEMA_FEDERATED)) {
@@ -263,48 +245,41 @@ public class JsonPolicyReader {
                 return new Principal(PRINCIPAL_SCHEMA_FEDERATED, principalNode.asText());
             }
         }
-        throw new SdkClientException("Schema " + schema + " is not a valid value for the principal.");
+        throw new SdkClientException(
+                "Schema " + schema + " is not a valid value for the principal.");
     }
 
     /**
      * Generates a list of condition from the Json node.
      *
-     * @param conditionNodes
-     *            the condition Json node to be parsed.
+     * @param conditionNodes the condition Json node to be parsed.
      * @return the list of conditions.
      */
     private List<Condition> conditionsOf(JsonNode conditionNodes) {
 
         List<Condition> conditionList = new LinkedList<Condition>();
-        Iterator<Map.Entry<String, JsonNode>> mapOfConditions = conditionNodes
-                .fields();
+        Iterator<Map.Entry<String, JsonNode>> mapOfConditions = conditionNodes.fields();
 
         Entry<String, JsonNode> condition;
         while (mapOfConditions.hasNext()) {
             condition = mapOfConditions.next();
-            convertConditionRecord(conditionList, condition.getKey(),
-                    condition.getValue());
+            convertConditionRecord(conditionList, condition.getKey(), condition.getValue());
         }
 
         return conditionList;
     }
 
     /**
-     * Generates a condition instance for each condition type under the
-     * Condition Json node.
+     * Generates a condition instance for each condition type under the Condition Json node.
      *
-     * @param conditions
-     *            the complete list of conditions
-     * @param conditionType
-     *            the condition type for the condition being created.
-     * @param conditionNode
-     *            each condition node to be parsed.
+     * @param conditions the complete list of conditions
+     * @param conditionType the condition type for the condition being created.
+     * @param conditionNode each condition node to be parsed.
      */
-    private void convertConditionRecord(List<Condition> conditions,
-            String conditionType, JsonNode conditionNode) {
+    private void convertConditionRecord(
+            List<Condition> conditions, String conditionType, JsonNode conditionNode) {
 
-        Iterator<Map.Entry<String, JsonNode>> mapOfFields = conditionNode
-                .fields();
+        Iterator<Map.Entry<String, JsonNode>> mapOfFields = conditionNode.fields();
         List<String> values;
         Entry<String, JsonNode> field;
         JsonNode fieldValue;
@@ -323,14 +298,15 @@ public class JsonPolicyReader {
             } else {
                 values.add(fieldValue.asText());
             }
-            conditions.add(new Condition().withType(conditionType)
-                    .withConditionKey(field.getKey()).withValues(values));
+            conditions.add(
+                    new Condition()
+                            .withType(conditionType)
+                            .withConditionKey(field.getKey())
+                            .withValues(values));
         }
     }
 
-    /**
-     * An auxiliary class to help instantiate the action object.
-     */
+    /** An auxiliary class to help instantiate the action object. */
     private static class NamedAction implements Action {
 
         private String actionName;
@@ -342,14 +318,12 @@ public class JsonPolicyReader {
         public String getActionName() {
             return actionName;
         }
-
     }
 
     /**
      * Checks if the given object is not null.
      *
-     * @param object
-     *            the object compared to null.
+     * @param object the object compared to null.
      * @return true if the object is not null else false
      */
     private boolean isNotNull(Object object) {

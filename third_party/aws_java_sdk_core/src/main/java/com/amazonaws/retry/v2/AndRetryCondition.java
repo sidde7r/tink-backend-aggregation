@@ -14,14 +14,15 @@
  */
 package com.amazonaws.retry.v2;
 
+import static com.amazonaws.util.ValidationUtils.assertNotEmpty;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.amazonaws.util.ValidationUtils.assertNotEmpty;
-
 /**
- * Composite {@link RetryCondition} that evaluates to true when all contained retry conditions evaluate to true.
+ * Composite {@link RetryCondition} that evaluates to true when all contained retry conditions
+ * evaluate to true.
  */
 public class AndRetryCondition implements RetryCondition {
 
@@ -31,9 +32,7 @@ public class AndRetryCondition implements RetryCondition {
         Collections.addAll(this.conditions, assertNotEmpty(conditions, "conditions"));
     }
 
-    /**
-     * @return True if all conditions are true, false otherwise.
-     */
+    /** @return True if all conditions are true, false otherwise. */
     @Override
     public boolean shouldRetry(RetryPolicyContext context) {
         for (RetryCondition retryCondition : conditions) {

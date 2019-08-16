@@ -37,10 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.lang.RandomStringUtils;
-import tink.org.apache.http.conn.socket.ConnectionSocketFactory;
-import tink.org.apache.http.conn.ssl.SSLSocketFactory;
 import org.junit.Test;
 import org.mockito.Mockito;
+import tink.org.apache.http.conn.socket.ConnectionSocketFactory;
+import tink.org.apache.http.conn.ssl.SSLSocketFactory;
 
 public class ClientConfigurationTest {
 
@@ -48,9 +48,12 @@ public class ClientConfigurationTest {
 
     private static final ClientConfiguration DEFAULT_CLIENT_CONFIG = new ClientConfiguration();
 
-    private static final RetryPolicy CUSTOM_RETRY_POLICY = new RetryPolicy(
-            PredefinedRetryPolicies.SDKDefaultRetryCondition.NO_RETRY_CONDITION,
-            RetryPolicy.BackoffStrategy.NO_DELAY, 1000, false);
+    private static final RetryPolicy CUSTOM_RETRY_POLICY =
+            new RetryPolicy(
+                    PredefinedRetryPolicies.SDKDefaultRetryCondition.NO_RETRY_CONDITION,
+                    RetryPolicy.BackoffStrategy.NO_DELAY,
+                    1000,
+                    false);
 
     @Test
     public void httpClientConfiguration() throws Exception {
@@ -58,38 +61,42 @@ public class ClientConfigurationTest {
         ApacheHttpClientConfig httpclientConfig = config.getApacheHttpClientConfig();
         assertNotNull("httpclient config must never be null", httpclientConfig);
 
-        assertNull("default ssl socket factory is null",
-                httpclientConfig.getSslSocketFactory());
+        assertNull("default ssl socket factory is null", httpclientConfig.getSslSocketFactory());
 
         SSLSocketFactory customFactory = new SSLSocketFactory((KeyStore) null);
         config.getApacheHttpClientConfig().setSslSocketFactory(customFactory);
-        assertSame("custom ssl socket factory configured", customFactory,
+        assertSame(
+                "custom ssl socket factory configured",
+                customFactory,
                 config.getApacheHttpClientConfig().getSslSocketFactory());
 
         config.getApacheHttpClientConfig().setSslSocketFactory(null);
-        assertNull("no more custom ssl socket factory configured", config
-                .getApacheHttpClientConfig().getSslSocketFactory());
+        assertNull(
+                "no more custom ssl socket factory configured",
+                config.getApacheHttpClientConfig().getSslSocketFactory());
 
         config.getApacheHttpClientConfig().withSslSocketFactory(customFactory);
-        assertSame("custom ssl socket factory configured via fluent API",
+        assertSame(
+                "custom ssl socket factory configured via fluent API",
                 customFactory,
                 config.getApacheHttpClientConfig().getSslSocketFactory());
 
         ClientConfiguration config2 = new ClientConfiguration(config);
-        assertSame("custom ssl socket factory copied via ctor",
+        assertSame(
+                "custom ssl socket factory copied via ctor",
                 customFactory,
                 config2.getApacheHttpClientConfig().getSslSocketFactory());
 
         config.getApacheHttpClientConfig().setSslSocketFactory(null);
         assertNull(
-            "ssl socket factory set to null for the original httpclient config",
-            config.getApacheHttpClientConfig().getSslSocketFactory());
+                "ssl socket factory set to null for the original httpclient config",
+                config.getApacheHttpClientConfig().getSslSocketFactory());
         assertNotNull(
-            "ssl soscket of the new httpclient config should not be affected",
-            config2.getApacheHttpClientConfig().getSslSocketFactory());
+                "ssl soscket of the new httpclient config should not be affected",
+                config2.getApacheHttpClientConfig().getSslSocketFactory());
 
-        assertNotNull("Client Configuration must have a default DnsResolver",
-                config.getDnsResolver());
+        assertNotNull(
+                "Client Configuration must have a default DnsResolver", config.getDnsResolver());
 
         try {
             config.setDnsResolver(null);
@@ -97,17 +104,16 @@ public class ClientConfigurationTest {
         } catch (IllegalArgumentException expected) {
         }
 
-        DnsResolver resolver = new DnsResolver() {
-            @Override
-            public InetAddress[] resolve(String s) throws UnknownHostException {
-                return new InetAddress[0];
-            }
-        };
+        DnsResolver resolver =
+                new DnsResolver() {
+                    @Override
+                    public InetAddress[] resolve(String s) throws UnknownHostException {
+                        return new InetAddress[0];
+                    }
+                };
 
         config.setDnsResolver(resolver);
-        assertSame("custom dns resolver set via fluent API",
-                resolver,
-                config.getDnsResolver());
+        assertSame("custom dns resolver set via fluent API", resolver, config.getDnsResolver());
     }
 
     private void clearProxyProperties() {
@@ -233,7 +239,8 @@ public class ClientConfigurationTest {
         String key1 = "key1", value1 = "value1";
         String key2 = "key2", value2 = "value2";
 
-        ClientConfiguration source = new ClientConfiguration().withHeader(key1, value1).withHeader(key2, value2);
+        ClientConfiguration source =
+                new ClientConfiguration().withHeader(key1, value1).withHeader(key2, value2);
         ClientConfiguration target = new ClientConfiguration(source);
 
         assertEquals(2, target.getHeaders().size());
@@ -285,20 +292,23 @@ public class ClientConfigurationTest {
             } else if (field.getName().equals("headers")) {
                 field.set(customConfig, ImmutableMapParameter.of("foo", "bar"));
             } else if (clzz.isAssignableFrom(ApacheHttpClientConfig.class)) {
-                customConfig.getApacheHttpClientConfig()
-                            .setSslSocketFactory(Mockito.mock(ConnectionSocketFactory.class));
+                customConfig
+                        .getApacheHttpClientConfig()
+                        .setSslSocketFactory(Mockito.mock(ConnectionSocketFactory.class));
             } else if (clzz.isAssignableFrom(List.class)) {
                 field.set(customConfig, new ArrayList<Object>());
             } else {
                 throw new RuntimeException(
-                        String.format("Field %s of type %s is not supported",
-                                      field.getName(),
-                                      field.getType()));
+                        String.format(
+                                "Field %s of type %s is not supported",
+                                field.getName(), field.getType()));
             }
-            // Extra check to make sure the value differs from the default and we haven't missed something
+            // Extra check to make sure the value differs from the default and we haven't missed
+            // something
             assertNotEquals(
                     String.format("Field %s does not differ from default value", field.getName()),
-                    field.get(DEFAULT_CLIENT_CONFIG), field.get(customConfig));
+                    field.get(DEFAULT_CLIENT_CONFIG),
+                    field.get(customConfig));
         }
 
         // Do a deep comparison of the config after sending it through the copy constructor
@@ -306,19 +316,20 @@ public class ClientConfigurationTest {
     }
 
     /**
-     * Some customers extend ClientConfiguration and override the accessors. We should use the accessors
-     * in the copy constructor otherwise we will ignore those overridden methods. See TT0142110771 for
-     * more information.
+     * Some customers extend ClientConfiguration and override the accessors. We should use the
+     * accessors in the copy constructor otherwise we will ignore those overridden methods. See
+     * TT0142110771 for more information.
      */
     @Test
     public void copyConstructorUsesAccessors() {
-       ClientConfiguration config = new ClientConfiguration()  {
-           @Override
-           public int getSocketTimeout() {
-               return Integer.MAX_VALUE;
-           }
-       };
-       assertThat(new ClientConfiguration(config).getSocketTimeout(), equalTo(Integer.MAX_VALUE));
+        ClientConfiguration config =
+                new ClientConfiguration() {
+                    @Override
+                    public int getSocketTimeout() {
+                        return Integer.MAX_VALUE;
+                    }
+                };
+        assertThat(new ClientConfiguration(config).getSocketTimeout(), equalTo(Integer.MAX_VALUE));
     }
 
     private boolean isStaticField(Field field) {
@@ -332,5 +343,4 @@ public class ClientConfigurationTest {
             return new InetAddress[0];
         }
     }
-
 }

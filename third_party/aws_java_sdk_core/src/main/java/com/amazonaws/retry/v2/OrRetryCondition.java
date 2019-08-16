@@ -29,9 +29,7 @@ public class OrRetryCondition implements RetryCondition {
         Collections.addAll(this.conditions, conditions);
     }
 
-    /**
-     * @return True if any condition returns true. False otherwise.
-     */
+    /** @return True if any condition returns true. False otherwise. */
     @Override
     public boolean shouldRetry(RetryPolicyContext context) {
         for (RetryCondition retryCondition : conditions) {

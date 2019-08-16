@@ -14,19 +14,17 @@
  */
 package com.amazonaws.util;
 
-import static org.hamcrest.Matchers.comparesEqualTo;
 import static com.amazonaws.util.JavaVersionParser.JAVA_VERSION_PROPERTY;
+import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Test;
-
 import com.amazonaws.util.JavaVersionParser.JavaVersion;
 import com.amazonaws.util.JavaVersionParser.KnownJavaVersions;
-
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.Test;
 
 public class JavaVersionParserTest {
 
@@ -245,13 +243,12 @@ public class JavaVersionParserTest {
         assertEquals(expected, actual);
     }
 
-    /**
-     * Convenience factory method for a {@link JavaVersion}
-     */
-    private static JavaVersion jv(Integer majorVersionFamily,
-                                  Integer majorVersion,
-                                  Integer maintenanceNumber,
-                                  Integer updateNumber) {
+    /** Convenience factory method for a {@link JavaVersion} */
+    private static JavaVersion jv(
+            Integer majorVersionFamily,
+            Integer majorVersion,
+            Integer maintenanceNumber,
+            Integer updateNumber) {
         return new JavaVersion(majorVersionFamily, majorVersion, maintenanceNumber, updateNumber);
     }
 }

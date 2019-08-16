@@ -21,14 +21,11 @@ import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.event.ProgressListener;
 import com.amazonaws.metrics.RequestMetricCollector;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Adapts the configuration present in {@link AmazonWebServiceRequest} to {@link RequestConfig}.
- */
+/** Adapts the configuration present in {@link AmazonWebServiceRequest} to {@link RequestConfig}. */
 @SdkInternalApi
 public final class AmazonWebServiceRequestAdapter extends RequestConfig {
 
@@ -55,14 +52,16 @@ public final class AmazonWebServiceRequestAdapter extends RequestConfig {
 
     @Override
     public Map<String, String> getCustomRequestHeaders() {
-        return (request.getCustomRequestHeaders() == null) ? Collections.<String, String>emptyMap() :
-                request.getCustomRequestHeaders();
+        return (request.getCustomRequestHeaders() == null)
+                ? Collections.<String, String>emptyMap()
+                : request.getCustomRequestHeaders();
     }
 
     @Override
     public Map<String, List<String>> getCustomQueryParameters() {
-        return (request.getCustomQueryParameters() == null) ? Collections.<String, List<String>>emptyMap() :
-                request.getCustomQueryParameters();
+        return (request.getCustomQueryParameters() == null)
+                ? Collections.<String, List<String>>emptyMap()
+                : request.getCustomQueryParameters();
     }
 
     @Override

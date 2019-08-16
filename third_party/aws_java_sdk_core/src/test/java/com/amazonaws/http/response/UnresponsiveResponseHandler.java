@@ -22,10 +22,9 @@ import com.amazonaws.AmazonWebServiceResponse;
 import com.amazonaws.http.HttpResponse;
 import com.amazonaws.http.HttpResponseHandler;
 
-/**
- * Error Response Handler implementation that hangs forever
- */
-public class UnresponsiveResponseHandler implements HttpResponseHandler<AmazonWebServiceResponse<Object>> {
+/** Error Response Handler implementation that hangs forever */
+public class UnresponsiveResponseHandler
+        implements HttpResponseHandler<AmazonWebServiceResponse<Object>> {
 
     @Override
     public AmazonWebServiceResponse<Object> handle(HttpResponse response) throws Exception {

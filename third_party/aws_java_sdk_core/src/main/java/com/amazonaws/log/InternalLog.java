@@ -15,9 +15,9 @@
 package com.amazonaws.log;
 
 /**
- * Used to delegate internal logging of the signers and core classes to the
- * currently configured default logging framework of the SDK.
- * 
+ * Used to delegate internal logging of the signers and core classes to the currently configured
+ * default logging framework of the SDK.
+ *
  * @see InternalLogFactory
  */
 class InternalLog implements InternalLogApi {

@@ -16,13 +16,10 @@ package com.amazonaws.regions;
 
 import com.amazonaws.partitions.PartitionsLoader;
 
-/**
- * A factory to create {@link RegionMetadata}
- */
+/** A factory to create {@link RegionMetadata} */
 public class RegionMetadataFactory {
 
-    private RegionMetadataFactory() {
-    }
+    private RegionMetadataFactory() {}
 
     public static RegionMetadata create() {
         RegionMetadata metadata = createLegacyXmlRegionMetadata();

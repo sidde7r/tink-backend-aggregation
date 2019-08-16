@@ -18,13 +18,11 @@ import com.amazonaws.AmazonWebServiceResponse;
 import com.amazonaws.http.HttpResponse;
 import com.amazonaws.http.HttpResponseHandler;
 
-public class EmptyAWSResponseHandler implements
-        HttpResponseHandler<AmazonWebServiceResponse<Object>> {
-
+public class EmptyAWSResponseHandler
+        implements HttpResponseHandler<AmazonWebServiceResponse<Object>> {
 
     @Override
-    public AmazonWebServiceResponse<Object> handle(HttpResponse response)
-            throws Exception {
+    public AmazonWebServiceResponse<Object> handle(HttpResponse response) throws Exception {
         return new AmazonWebServiceResponse<Object>();
     }
 

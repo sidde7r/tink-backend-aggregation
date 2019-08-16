@@ -20,14 +20,11 @@ import com.amazonaws.annotation.SdkInternalApi;
 /**
  * Adapter interface to convert one type to another
  *
- * @param <Source>
- *            Source type
- * @param <Destination>
- *            Destination type
+ * @param <Source> Source type
+ * @param <Destination> Destination type
  */
 @SdkInternalApi
 public interface TypeAdapter<Source, Destination> {
 
     Destination adapt(Source source);
-
 }

@@ -14,56 +14,50 @@
  */
 package com.amazonaws.transform;
 
+import com.amazonaws.AmazonServiceException;
 import java.lang.reflect.Constructor;
 
-import com.amazonaws.AmazonServiceException;
-
-public abstract class AbstractErrorUnmarshaller<T> implements Unmarshaller<AmazonServiceException, T> {
+public abstract class AbstractErrorUnmarshaller<T>
+        implements Unmarshaller<AmazonServiceException, T> {
 
     /**
-     * The type of AmazonServiceException that will be instantiated. Subclasses
-     * specialized for a specific type of exception can control this through the
-     * protected constructor.
+     * The type of AmazonServiceException that will be instantiated. Subclasses specialized for a
+     * specific type of exception can control this through the protected constructor.
      */
     protected final Class<? extends AmazonServiceException> exceptionClass;
 
     /**
-     * Constructs a new error unmarshaller that will unmarshall error responses
-     * into AmazonServiceException objects.
+     * Constructs a new error unmarshaller that will unmarshall error responses into
+     * AmazonServiceException objects.
      */
     public AbstractErrorUnmarshaller() {
         this(AmazonServiceException.class);
     }
 
     /**
-     * Constructs a new error unmarshaller that will unmarshall error responses
-     * into objects of the specified class, extending AmazonServiceException.
-     * 
-     * @param exceptionClass
-     *            The subclass of AmazonServiceException which will be
-     *            instantiated and populated by this class.
+     * Constructs a new error unmarshaller that will unmarshall error responses into objects of the
+     * specified class, extending AmazonServiceException.
+     *
+     * @param exceptionClass The subclass of AmazonServiceException which will be instantiated and
+     *     populated by this class.
      */
     public AbstractErrorUnmarshaller(Class<? extends AmazonServiceException> exceptionClass) {
         this.exceptionClass = exceptionClass;
     }
 
     /**
-     * Constructs a new exception object of the type specified in this class's
-     * constructor and sets the specified error message.
-     * 
-     * @param message
-     *            The error message to set in the new exception object.
-     * 
-     * @return A new exception object of the type specified in this class's
-     *         constructor and sets the specified error message.
-     * 
-     * @throws Exception
-     *             If there are any problems using reflection to invoke the
-     *             exception class's constructor.
+     * Constructs a new exception object of the type specified in this class's constructor and sets
+     * the specified error message.
+     *
+     * @param message The error message to set in the new exception object.
+     * @return A new exception object of the type specified in this class's constructor and sets the
+     *     specified error message.
+     * @throws Exception If there are any problems using reflection to invoke the exception class's
+     *     constructor.
      */
     protected AmazonServiceException newException(String message) throws Exception {
-        Constructor<? extends AmazonServiceException> constructor = exceptionClass.getConstructor(String.class);
+        Constructor<? extends AmazonServiceException> constructor =
+                exceptionClass.getConstructor(String.class);
         return constructor.newInstance(message);
     }
-
 }

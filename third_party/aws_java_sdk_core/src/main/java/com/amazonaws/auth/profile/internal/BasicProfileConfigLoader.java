@@ -17,10 +17,6 @@ package com.amazonaws.auth.profile.internal;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.util.StringUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,6 +26,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Class to load a CLI style config or credentials file. Performs only basic validation on
@@ -42,8 +40,7 @@ public class BasicProfileConfigLoader {
 
     public static final BasicProfileConfigLoader INSTANCE = new BasicProfileConfigLoader();
 
-    private BasicProfileConfigLoader() {
-    }
+    private BasicProfileConfigLoader() {}
 
     public AllProfiles loadProfiles(File file) {
         if (file == null) {
@@ -53,8 +50,8 @@ public class BasicProfileConfigLoader {
 
         if (!file.exists() || !file.isFile()) {
             throw new IllegalArgumentException(
-                    "AWS credential profiles file not found in the given path: " +
-                    file.getAbsolutePath());
+                    "AWS credential profiles file not found in the given path: "
+                            + file.getAbsolutePath());
         }
 
         FileInputStream fis = null;
@@ -82,8 +79,8 @@ public class BasicProfileConfigLoader {
      */
     private AllProfiles loadProfiles(InputStream is) throws IOException {
         ProfilesConfigFileLoaderHelper helper = new ProfilesConfigFileLoaderHelper();
-        Map<String, Map<String, String>> allProfileProperties = helper
-                .parseProfileProperties(new Scanner(is, StringUtils.UTF8.name()));
+        Map<String, Map<String, String>> allProfileProperties =
+                helper.parseProfileProperties(new Scanner(is, StringUtils.UTF8.name()));
 
         // Convert the loaded property map to credential objects
         Map<String, BasicProfile> profilesByName = new LinkedHashMap<String, BasicProfile>();
@@ -94,13 +91,13 @@ public class BasicProfileConfigLoader {
 
             if (profileName.startsWith("profile ")) {
                 LOG.warn(
-                        "Your profile name includes a 'profile ' prefix. This is considered part of the profile name in the " +
-                        "Java SDK, so you will need to include this prefix in your profile name when you reference this " +
-                        "profile from your Java code.");
+                        "Your profile name includes a 'profile ' prefix. This is considered part of the profile name in the "
+                                + "Java SDK, so you will need to include this prefix in your profile name when you reference this "
+                                + "profile from your Java code.");
             }
 
-            assertParameterNotEmpty(profileName,
-                                    "Unable to load properties from profile: Profile name is empty.");
+            assertParameterNotEmpty(
+                    profileName, "Unable to load properties from profile: Profile name is empty.");
             profilesByName.put(profileName, new BasicProfile(profileName, properties));
         }
 
@@ -108,12 +105,12 @@ public class BasicProfileConfigLoader {
     }
 
     /**
-     * <p> Asserts that the specified parameter value is neither <code>empty</code> nor null, and if
-     * it is, throws a <code>SdkClientException</code> with the specified error message. </p>
+     * Asserts that the specified parameter value is neither <code>empty</code> nor null, and if it
+     * is, throws a <code>SdkClientException</code> with the specified error message.
      *
      * @param parameterValue The parameter value being checked.
-     * @param errorMessage   The error message to include in the SdkClientException if the
-     *                       specified parameter value is empty.
+     * @param errorMessage The error message to include in the SdkClientException if the specified
+     *     parameter value is empty.
      */
     private void assertParameterNotEmpty(String parameterValue, String errorMessage) {
         if (StringUtils.isNullOrEmpty(parameterValue)) {
@@ -131,11 +128,10 @@ public class BasicProfileConfigLoader {
          * Map from the parsed profile name to the map of all the property values included the
          * specific profile
          */
-        protected final Map<String, Map<String, String>> allProfileProperties = new LinkedHashMap<String, Map<String, String>>();
+        protected final Map<String, Map<String, String>> allProfileProperties =
+                new LinkedHashMap<String, Map<String, String>>();
 
-        /**
-         * Parses the input and returns a map of all the profile properties.
-         */
+        /** Parses the input and returns a map of all the profile properties. */
         public Map<String, Map<String, String>> parseProfileProperties(Scanner scanner) {
             allProfileProperties.clear();
             run(scanner);
@@ -160,9 +156,12 @@ public class BasicProfileConfigLoader {
         }
 
         @Override
-        protected void onProfileProperty(String profileName, String propertyKey,
-                                         String propertyValue, boolean isSupportedProperty,
-                                         String line) {
+        protected void onProfileProperty(
+                String profileName,
+                String propertyKey,
+                String propertyValue,
+                boolean isSupportedProperty,
+                String line) {
             Map<String, String> properties = allProfileProperties.get(profileName);
 
             if (properties.containsKey(propertyKey)) {
@@ -178,5 +177,4 @@ public class BasicProfileConfigLoader {
             // No-op
         }
     }
-
 }

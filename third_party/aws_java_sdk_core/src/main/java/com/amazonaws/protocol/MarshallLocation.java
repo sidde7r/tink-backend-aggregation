@@ -16,36 +16,27 @@ package com.amazonaws.protocol;
 
 import com.amazonaws.annotation.SdkProtectedApi;
 
-/**
- * Enum representing the various locations data can be marshalled to.
- */
+/** Enum representing the various locations data can be marshalled to. */
 @SdkProtectedApi
 public enum MarshallLocation {
 
-    /**
-     * Payload of the request (format depends on the protocol/content-type)
-     */
+    /** Payload of the request (format depends on the protocol/content-type) */
     PAYLOAD,
 
-    /**
-     * Add as a query parameter.
-     */
+    /** Add as a query parameter. */
     QUERY_PARAM,
 
-    /**
-     * HTTP header.
-     */
+    /** HTTP header. */
     HEADER,
 
-    /**
-     * Replace the placeholder in the request URI (non-greedy).
-     */
+    /** Replace the placeholder in the request URI (non-greedy). */
     PATH,
 
     /**
-     * Replace the placeholder in the request URI (greedy). This location is really the same as {@link #PATH},
-     * the only difference is whether it's URL encoded or not. Members bound to the {@link #PATH} will be URL
-     * encoded before replacing, members bound to {@link #GREEDY_PATH} will not be URL encoded.
+     * Replace the placeholder in the request URI (greedy). This location is really the same as
+     * {@link #PATH}, the only difference is whether it's URL encoded or not. Members bound to the
+     * {@link #PATH} will be URL encoded before replacing, members bound to {@link #GREEDY_PATH}
+     * will not be URL encoded.
      */
     GREEDY_PATH
 }

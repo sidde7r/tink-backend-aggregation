@@ -18,27 +18,24 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.LinkedList;
-import java.util.List;
-
-import tink.org.apache.http.client.methods.HttpRequestBase;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.DefaultRequest;
 import com.amazonaws.http.HttpResponse;
 import com.amazonaws.http.JsonErrorResponseHandler;
 import com.amazonaws.transform.JsonErrorUnmarshaller;
-
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.LinkedList;
+import java.util.List;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import software.amazon.ion.IonStruct;
 import software.amazon.ion.IonSystem;
 import software.amazon.ion.IonWriter;
 import software.amazon.ion.Timestamp;
 import software.amazon.ion.system.IonSystemBuilder;
+import tink.org.apache.http.client.methods.HttpRequestBase;
 
 public class SdkStructuredIonFactoryTest {
     private static final String ERROR_PREFIX = "aws-type:";
@@ -139,7 +136,9 @@ public class SdkStructuredIonFactoryTest {
         List<JsonErrorUnmarshaller> unmarshallers = new LinkedList<JsonErrorUnmarshaller>();
         unmarshallers.add(new JsonErrorUnmarshaller(InvalidParameterException.class, ERROR_TYPE));
 
-        JsonErrorResponseHandler handler = SdkStructuredIonFactory.SDK_ION_BINARY_FACTORY.createErrorResponseHandler(unmarshallers, NO_CUSTOM_ERROR_CODE_FIELD_NAME);
+        JsonErrorResponseHandler handler =
+                SdkStructuredIonFactory.SDK_ION_BINARY_FACTORY.createErrorResponseHandler(
+                        unmarshallers, NO_CUSTOM_ERROR_CODE_FIELD_NAME);
         return handler.handle(error);
     }
 

@@ -17,27 +17,22 @@ package com.amazonaws.transform;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.util.Base64;
 import com.amazonaws.util.DateUtils;
-
 import com.amazonaws.util.TimestampFormat;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Date;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-/**
- * Collection of StAX unmarshallers for simple data types.
- */
+/** Collection of StAX unmarshallers for simple data types. */
 public class SimpleTypeStaxUnmarshallers {
     /** Shared logger */
     private static Log log = LogFactory.getLog(SimpleTypeStaxUnmarshallers.class);
 
-    /**
-     * Unmarshaller for String values.
-     */
-    public static class StringStaxUnmarshaller implements Unmarshaller<String, StaxUnmarshallerContext> {
+    /** Unmarshaller for String values. */
+    public static class StringStaxUnmarshaller
+            implements Unmarshaller<String, StaxUnmarshallerContext> {
         public String unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             return unmarshallerContext.readText();
         }
@@ -49,9 +44,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    public static class BigDecimalStaxUnmarshaller implements Unmarshaller<BigDecimal, StaxUnmarshallerContext> {
-        public BigDecimal unmarshall(StaxUnmarshallerContext unmarshallerContext)
-                throws Exception {
+    public static class BigDecimalStaxUnmarshaller
+            implements Unmarshaller<BigDecimal, StaxUnmarshallerContext> {
+        public BigDecimal unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String s = unmarshallerContext.readText();
             return (s == null) ? null : new BigDecimal(s);
         }
@@ -63,9 +58,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    public static class BigIntegerStaxUnmarshaller implements Unmarshaller<BigInteger, StaxUnmarshallerContext> {
-        public BigInteger unmarshall(StaxUnmarshallerContext unmarshallerContext)
-                throws Exception {
+    public static class BigIntegerStaxUnmarshaller
+            implements Unmarshaller<BigInteger, StaxUnmarshallerContext> {
+        public BigInteger unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String s = unmarshallerContext.readText();
             return (s == null) ? null : new BigInteger(s);
         }
@@ -77,10 +72,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Double values.
-     */
-    public static class DoubleStaxUnmarshaller implements Unmarshaller<Double, StaxUnmarshallerContext> {
+    /** Unmarshaller for Double values. */
+    public static class DoubleStaxUnmarshaller
+            implements Unmarshaller<Double, StaxUnmarshallerContext> {
         public Double unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String doubleString = unmarshallerContext.readText();
             return (doubleString == null) ? null : Double.parseDouble(doubleString);
@@ -93,10 +87,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Integer values.
-     */
-    public static class IntegerStaxUnmarshaller implements Unmarshaller<Integer, StaxUnmarshallerContext> {
+    /** Unmarshaller for Integer values. */
+    public static class IntegerStaxUnmarshaller
+            implements Unmarshaller<Integer, StaxUnmarshallerContext> {
         public Integer unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String intString = unmarshallerContext.readText();
             return (intString == null) ? null : Integer.parseInt(intString);
@@ -109,10 +102,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Boolean values.
-     */
-    public static class BooleanStaxUnmarshaller implements Unmarshaller<Boolean, StaxUnmarshallerContext> {
+    /** Unmarshaller for Boolean values. */
+    public static class BooleanStaxUnmarshaller
+            implements Unmarshaller<Boolean, StaxUnmarshallerContext> {
         public Boolean unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String booleanString = unmarshallerContext.readText();
             return (booleanString == null) ? null : Boolean.parseBoolean(booleanString);
@@ -125,10 +117,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Float values.
-     */
-    public static class FloatStaxUnmarshaller implements Unmarshaller<Float, StaxUnmarshallerContext> {
+    /** Unmarshaller for Float values. */
+    public static class FloatStaxUnmarshaller
+            implements Unmarshaller<Float, StaxUnmarshallerContext> {
         public Float unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String floatString = unmarshallerContext.readText();
             return (floatString == null) ? null : Float.valueOf(floatString);
@@ -141,10 +132,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Long values.
-     */
-    public static class LongStaxUnmarshaller implements Unmarshaller<Long, StaxUnmarshallerContext> {
+    /** Unmarshaller for Long values. */
+    public static class LongStaxUnmarshaller
+            implements Unmarshaller<Long, StaxUnmarshallerContext> {
         public Long unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String longString = unmarshallerContext.readText();
             return (longString == null) ? null : Long.parseLong(longString);
@@ -157,10 +147,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Byte values.
-     */
-    public static class ByteStaxUnmarshaller implements Unmarshaller<Byte, StaxUnmarshallerContext> {
+    /** Unmarshaller for Byte values. */
+    public static class ByteStaxUnmarshaller
+            implements Unmarshaller<Byte, StaxUnmarshallerContext> {
         public Byte unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String byteString = unmarshallerContext.readText();
             return (byteString == null) ? null : Byte.valueOf(byteString);
@@ -173,8 +162,8 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-
-    public static class DateStaxUnmarshallerFactory implements Unmarshaller<Date, StaxUnmarshallerContext> {
+    public static class DateStaxUnmarshallerFactory
+            implements Unmarshaller<Date, StaxUnmarshallerContext> {
 
         private final String dateFormatType;
 
@@ -209,10 +198,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Date values.
-     */
-    public static class DateStaxUnmarshaller implements Unmarshaller<Date, StaxUnmarshallerContext> {
+    /** Unmarshaller for Date values. */
+    public static class DateStaxUnmarshaller
+            implements Unmarshaller<Date, StaxUnmarshallerContext> {
         public Date unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String dateString = unmarshallerContext.readText();
             if (dateString == null) return null;
@@ -232,15 +220,13 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for ByteBuffer values.
-     */
-    public static class ByteBufferStaxUnmarshaller implements Unmarshaller<ByteBuffer, StaxUnmarshallerContext> {
+    /** Unmarshaller for ByteBuffer values. */
+    public static class ByteBufferStaxUnmarshaller
+            implements Unmarshaller<ByteBuffer, StaxUnmarshallerContext> {
         public ByteBuffer unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String base64EncodedString = unmarshallerContext.readText();
             byte[] decodedBytes = Base64.decode(base64EncodedString);
             return ByteBuffer.wrap(decodedBytes);
-
         }
 
         private static final ByteBufferStaxUnmarshaller instance = new ByteBufferStaxUnmarshaller();
@@ -250,10 +236,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Character values.
-     */
-    public static class CharacterJsonUnmarshaller implements Unmarshaller<Character, StaxUnmarshallerContext> {
+    /** Unmarshaller for Character values. */
+    public static class CharacterJsonUnmarshaller
+            implements Unmarshaller<Character, StaxUnmarshallerContext> {
         public Character unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String charString = unmarshallerContext.readText();
 
@@ -261,8 +246,8 @@ public class SimpleTypeStaxUnmarshallers {
 
             charString = charString.trim();
             if (charString.isEmpty() || charString.length() > 1)
-                throw new SdkClientException("'" + charString
-                        + "' cannot be converted to Character");
+                throw new SdkClientException(
+                        "'" + charString + "' cannot be converted to Character");
             return Character.valueOf(charString.charAt(0));
         }
 
@@ -273,10 +258,9 @@ public class SimpleTypeStaxUnmarshallers {
         }
     }
 
-    /**
-     * Unmarshaller for Short values.
-     */
-    public static class ShortJsonUnmarshaller implements Unmarshaller<Short, StaxUnmarshallerContext> {
+    /** Unmarshaller for Short values. */
+    public static class ShortJsonUnmarshaller
+            implements Unmarshaller<Short, StaxUnmarshallerContext> {
         public Short unmarshall(StaxUnmarshallerContext unmarshallerContext) throws Exception {
             String shortString = unmarshallerContext.readText();
             return (shortString == null) ? null : Short.valueOf(shortString);

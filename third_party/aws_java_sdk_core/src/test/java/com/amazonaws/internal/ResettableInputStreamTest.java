@@ -29,7 +29,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.ClosedChannelException;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -69,8 +68,7 @@ public class ResettableInputStreamTest {
 
     @Test
     public void testResetFileInputStream() throws IOException {
-        ResettableInputStream is = new ResettableInputStream(
-                new FileInputStream(file));
+        ResettableInputStream is = new ResettableInputStream(new FileInputStream(file));
         assertTrue(is.markSupported());
         final String content = IOUtils.toString(is);
         is.reset();
@@ -119,7 +117,7 @@ public class ResettableInputStreamTest {
         is.release();
     }
 
-    @Test(expected=ClosedChannelException.class)
+    @Test(expected = ClosedChannelException.class)
     public void negativeTestResetWithClosedFile() throws IOException {
         ResettableInputStream is = new ResettableInputStream(file);
         is.close();
@@ -140,7 +138,7 @@ public class ResettableInputStreamTest {
         is.release();
     }
 
-    @Test(expected=ClosedChannelException.class)
+    @Test(expected = ClosedChannelException.class)
     public void testMarkAndResetClosedFileInputStream() throws IOException {
         ResettableInputStream is = new ResettableInputStream(new FileInputStream(file));
         is.close();

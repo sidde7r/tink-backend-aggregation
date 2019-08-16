@@ -22,25 +22,22 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.junit.After;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
+import org.junit.After;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class ConnectionUtilsTest {
 
-    @ClassRule
-    public static WireMockRule mockProxyServer = new WireMockRule(0);
+    @ClassRule public static WireMockRule mockProxyServer = new WireMockRule(0);
 
-    @Rule
-    public WireMockRule mockServer = new WireMockRule(0);
+    @Rule public WireMockRule mockServer = new WireMockRule(0);
 
     private final ConnectionUtils sut = ConnectionUtils.getInstance();
 
@@ -55,15 +52,26 @@ public class ConnectionUtilsTest {
 
         System.getProperties().put("http.proxyHost", "localhost");
         System.getProperties().put("http.proxyPort", String.valueOf(mockProxyServer.port()));
-        HttpURLConnection connection = sut.connectToEndpoint(URI.create("http://" + Inet4Address.getLocalHost().getHostAddress() + ":" + mockServer.port()), new HashMap<String, String>());
+        HttpURLConnection connection =
+                sut.connectToEndpoint(
+                        URI.create(
+                                "http://"
+                                        + Inet4Address.getLocalHost().getHostAddress()
+                                        + ":"
+                                        + mockServer.port()),
+                        new HashMap<String, String>());
 
         assertThat(connection.usingProxy(), is(false));
     }
 
     @Test
     public void headersArePassedAsPartOfRequest() throws IOException {
-        HttpURLConnection connection = sut.connectToEndpoint(URI.create("http://localhost:" + mockServer.port()), Collections.singletonMap("HeaderA", "ValueA"));
+        HttpURLConnection connection =
+                sut.connectToEndpoint(
+                        URI.create("http://localhost:" + mockServer.port()),
+                        Collections.singletonMap("HeaderA", "ValueA"));
         connection.getResponseCode();
-        mockServer.verify(getRequestedFor(urlMatching("/")).withHeader("HeaderA", equalTo("ValueA")));
+        mockServer.verify(
+                getRequestedFor(urlMatching("/")).withHeader("HeaderA", equalTo("ValueA")));
     }
 }

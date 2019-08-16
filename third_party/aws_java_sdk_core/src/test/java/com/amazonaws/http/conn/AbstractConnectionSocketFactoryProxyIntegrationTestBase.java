@@ -15,17 +15,11 @@
 
 package com.amazonaws.http.conn;
 
+import static org.junit.Assert.assertEquals;
+
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.http.apache.utils.ApacheUtils;
 import com.amazonaws.http.settings.HttpClientSettings;
-import tink.org.apache.http.HttpException;
-import tink.org.apache.http.conn.socket.ConnectionSocketFactory;
-import tink.org.apache.http.protocol.HttpContext;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -35,12 +29,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import tink.org.apache.http.HttpException;
+import tink.org.apache.http.conn.socket.ConnectionSocketFactory;
+import tink.org.apache.http.protocol.HttpContext;
 
-import static org.junit.Assert.assertEquals;
-
-/**
- * Integrations tests of proxy behavior of {@link ConnectionSocketFactory} implementations.
- */
+/** Integrations tests of proxy behavior of {@link ConnectionSocketFactory} implementations. */
 public abstract class AbstractConnectionSocketFactoryProxyIntegrationTestBase {
     private static final MockProxy proxy = new MockProxy();
 
@@ -67,10 +64,13 @@ public abstract class AbstractConnectionSocketFactoryProxyIntegrationTestBase {
     }
 
     @Test
-    public void testDisableProxyConfiguration_SettingTrue_DoesNotConnectToProxy() throws InterruptedException, ExecutionException, IOException, HttpException {
+    public void testDisableProxyConfiguration_SettingTrue_DoesNotConnectToProxy()
+            throws InterruptedException, ExecutionException, IOException, HttpException {
         Socket s = null;
         try {
-            HttpClientSettings settings = HttpClientSettings.adapt(new ClientConfiguration().withDisableSocketProxy(true));
+            HttpClientSettings settings =
+                    HttpClientSettings.adapt(
+                            new ClientConfiguration().withDisableSocketProxy(true));
             HttpContext ctx = ApacheUtils.newClientContext(settings, new HashMap<String, String>());
             s = getFactory().createSocket(ctx);
             s.connect(new InetSocketAddress("s3.amazonaws.com", 80));
@@ -83,16 +83,20 @@ public abstract class AbstractConnectionSocketFactoryProxyIntegrationTestBase {
     }
 
     @Test
-    public void tesDisableProxyConfiguration_SettingFalse_ConnectsToProxy() throws InterruptedException, ExecutionException, IOException, HttpException {
+    public void tesDisableProxyConfiguration_SettingFalse_ConnectsToProxy()
+            throws InterruptedException, ExecutionException, IOException, HttpException {
         Socket s = null;
         try {
-            HttpClientSettings settings = HttpClientSettings.adapt(new ClientConfiguration().withDisableSocketProxy(false));
+            HttpClientSettings settings =
+                    HttpClientSettings.adapt(
+                            new ClientConfiguration().withDisableSocketProxy(false));
             HttpContext ctx = ApacheUtils.newClientContext(settings, new HashMap<String, String>());
             s = getFactory().createSocket(ctx);
             s.connect(new InetSocketAddress("s3.amazonaws.com", 80));
         } catch (IOException ignored) {
             ignored.printStackTrace();
-            // The Socket will throw an exception when it connects because the mock doesn't implement the protocol.
+            // The Socket will throw an exception when it connects because the mock doesn't
+            // implement the protocol.
         } finally {
             if (s != null) {
                 s.close();
@@ -118,20 +122,21 @@ public abstract class AbstractConnectionSocketFactoryProxyIntegrationTestBase {
         }
 
         public void run() {
-            exec.submit(new Runnable() {
-               @Override
-               public void run() {
+            exec.submit(
+                    new Runnable() {
+                        @Override
+                        public void run() {
 
-                   while (true) {
-                       try {
-                           Socket s = ss.accept();
-                           accepts.incrementAndGet();
-                           s.close();
-                       } catch (IOException ignored) {
-                       }
-                   }
-               }
-            });
+                            while (true) {
+                                try {
+                                    Socket s = ss.accept();
+                                    accepts.incrementAndGet();
+                                    s.close();
+                                } catch (IOException ignored) {
+                                }
+                            }
+                        }
+                    });
         }
 
         public long getAcceptCount() {

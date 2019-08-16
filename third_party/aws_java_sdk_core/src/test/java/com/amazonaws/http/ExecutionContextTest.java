@@ -14,15 +14,14 @@
  */
 package com.amazonaws.http;
 
-import com.amazonaws.AmazonWebServiceClient;
-import com.amazonaws.internal.auth.SignerProviderContext;
-import org.junit.Test;
-
-import java.net.URI;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import com.amazonaws.AmazonWebServiceClient;
+import com.amazonaws.internal.auth.SignerProviderContext;
+import java.net.URI;
+import org.junit.Test;
 
 public class ExecutionContextTest {
 
@@ -34,5 +33,4 @@ public class ExecutionContextTest {
         executionContext.getSigner(SignerProviderContext.builder().withUri(testUri).build());
         verify(webServiceClient, times(1)).getSignerByURI(testUri);
     }
-
 }

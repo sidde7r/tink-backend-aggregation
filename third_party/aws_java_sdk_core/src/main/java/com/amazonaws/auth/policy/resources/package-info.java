@@ -14,9 +14,9 @@
  */
 
 /**
- * Collection of resources for AWS access control policies.  Resources describe
- * what AWS entities are being accessed or modified when an AWS access control policy
- * is evaluated for an incoming request.  Amazon SQS queues, Amazon SNS topics, and
- * Amazon S3 buckets and objects are all examples of AWS resources.
+ * Collection of resources for AWS access control policies. Resources describe what AWS entities are
+ * being accessed or modified when an AWS access control policy is evaluated for an incoming
+ * request. Amazon SQS queues, Amazon SNS topics, and Amazon S3 buckets and objects are all examples
+ * of AWS resources.
  */
 package com.amazonaws.auth.policy.resources;

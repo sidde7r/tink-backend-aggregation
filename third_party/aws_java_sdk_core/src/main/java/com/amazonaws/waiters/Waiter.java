@@ -17,37 +17,36 @@ package com.amazonaws.waiters;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.AmazonWebServiceRequest;
-
 import java.util.concurrent.Future;
 
 public interface Waiter<Input extends AmazonWebServiceRequest> {
 
     /**
-     * Polls synchronously until it is determined that the resource
-     * transitioned into the desired state or not.
+     * Polls synchronously until it is determined that the resource transitioned into the desired
+     * state or not.
      *
-     * @param waiterParameters Custom provided parameters. Includes request and
-     *                         optional custom polling strategy
-     * @throws AmazonServiceException       If the service exception thrown doesn't match any of the expected
-     *                                      exceptions, it's re-thrown.
-     * @throws WaiterUnrecoverableException If the resource transitions into a failure/unexpected state.
-     * @throws WaiterTimedOutException      If the resource doesn't transition into the desired state
-     *                                      even after a certain number of retries.
+     * @param waiterParameters Custom provided parameters. Includes request and optional custom
+     *     polling strategy
+     * @throws AmazonServiceException If the service exception thrown doesn't match any of the
+     *     expected exceptions, it's re-thrown.
+     * @throws WaiterUnrecoverableException If the resource transitions into a failure/unexpected
+     *     state.
+     * @throws WaiterTimedOutException If the resource doesn't transition into the desired state
+     *     even after a certain number of retries.
      */
     void run(WaiterParameters<Input> waiterParameters)
             throws AmazonServiceException, WaiterTimedOutException, WaiterUnrecoverableException;
 
     /**
-     * Polls asynchronously until it is determined that the resource
-     * transitioned into the desired state or not. Includes additional
-     * callback.
+     * Polls asynchronously until it is determined that the resource transitioned into the desired
+     * state or not. Includes additional callback.
      *
-     * @param waiterParameters Custom provided parameters. Includes request and
-     *                         optional custom polling strategy
-     * @param callback         Custom callback
-     * @return Future object that holds the result of an asynchronous
-     * computation of waiter
+     * @param waiterParameters Custom provided parameters. Includes request and optional custom
+     *     polling strategy
+     * @param callback Custom callback
+     * @return Future object that holds the result of an asynchronous computation of waiter
      */
-    Future<Void> runAsync(final WaiterParameters<Input> waiterParameters, final WaiterHandler callback)
+    Future<Void> runAsync(
+            final WaiterParameters<Input> waiterParameters, final WaiterHandler callback)
             throws AmazonServiceException, WaiterTimedOutException, WaiterUnrecoverableException;
 }

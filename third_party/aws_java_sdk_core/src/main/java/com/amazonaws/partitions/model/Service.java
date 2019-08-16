@@ -15,101 +15,70 @@
 package com.amazonaws.partitions.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * Endpoint configuration for a service in a partition.
- */
+/** Endpoint configuration for a service in a partition. */
 public class Service {
 
-    /**
-     * endpoint configuration for every region in a partition.
-     */
+    /** endpoint configuration for every region in a partition. */
     private final Map<String, Endpoint> endpoints;
 
-    /**
-     * default endpoint configuration for a service across all regions in the
-     * partition
-     */
+    /** default endpoint configuration for a service across all regions in the partition */
     private Endpoint defaults;
 
-    /**
-     * the region name if the service is enabled partition wide.
-     */
+    /** the region name if the service is enabled partition wide. */
     private String partitionEndpoint;
 
-    /**
-     * Returns true if the service is regionalized.
-     */
+    /** Returns true if the service is regionalized. */
     private boolean isRegionalized;
 
-    public Service(@JsonProperty(value = "endpoints") Map<String,
-            Endpoint> endpoints) {
+    public Service(@JsonProperty(value = "endpoints") Map<String, Endpoint> endpoints) {
         // Technically the endpoints member should never be null if the
         // endpoints file is properly formed, but this is currently not always
         // true. See TRE-739 for details
         this.endpoints = endpoints == null ? Collections.<String, Endpoint>emptyMap() : endpoints;
     }
 
-    /**
-     * Returns the endpoints configuration for all regions in a partition
-     * that service supports.
-     */
+    /** Returns the endpoints configuration for all regions in a partition that service supports. */
     public Map<String, Endpoint> getEndpoints() {
         return endpoints;
     }
 
-    /**
-     * returns the default endpoints configuration for all regions in a
-     * partition.
-     */
+    /** returns the default endpoints configuration for all regions in a partition. */
     public Endpoint getDefaults() {
         return defaults;
     }
 
-    /**
-     * Sets the default endpoints configuration for all regions in a
-     * partition.
-     */
+    /** Sets the default endpoints configuration for all regions in a partition. */
     public void setDefaults(Endpoint defaults) {
         this.defaults = defaults;
     }
 
-    /**
-     * returns the region name if the service is enabled partition wide.
-     */
+    /** returns the region name if the service is enabled partition wide. */
     public String getPartitionEndpoint() {
         return partitionEndpoint;
     }
 
-    /**
-     * sets the region name if the service is enabled partition wide.
-     */
+    /** sets the region name if the service is enabled partition wide. */
     @JsonProperty(value = "partitionEndpoint")
     public void setPartitionEndpoint(String partitionEndpoint) {
         this.partitionEndpoint = partitionEndpoint;
     }
 
-    /**
-     * returns true if the service is regionalized.
-     */
+    /** returns true if the service is regionalized. */
     public boolean isRegionalized() {
         return isRegionalized;
     }
 
-    /**
-     * sets the regionalized property for a service..
-     */
+    /** sets the regionalized property for a service.. */
     @JsonProperty(value = "isRegionalized")
     public void setRegionalized(boolean regionalized) {
         isRegionalized = regionalized;
     }
 
     /**
-     * A convienient method that returns true if a service has a partition
-     * wide endpoint available.
+     * A convienient method that returns true if a service has a partition wide endpoint available.
      */
     public boolean isPartitionWideEndpointAvailable() {
         return this.partitionEndpoint != null;

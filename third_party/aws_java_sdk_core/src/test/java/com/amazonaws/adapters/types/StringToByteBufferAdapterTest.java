@@ -20,7 +20,6 @@ import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
 import org.junit.Test;
 
 public class StringToByteBufferAdapterTest {
@@ -44,5 +43,4 @@ public class StringToByteBufferAdapterTest {
         ByteBuffer byteBuffer = adapter.adapt(source);
         assertEquals(new String(byteBuffer.array()), source);
     }
-
 }

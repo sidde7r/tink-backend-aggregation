@@ -38,10 +38,10 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 
-
 public class JsonUnmarshallerTest {
     private static final String SIMPLE_MAP = "{\"key1\" : \"value1\", \"key2\" : \"value2\"}";
-    private static final String MAP_TO_LIST = "{\"key1\" : [ null, \"value1\"], \"key2\" : [\"value2\"]}";
+    private static final String MAP_TO_LIST =
+            "{\"key1\" : [ null, \"value1\"], \"key2\" : [\"value2\"]}";
     private static final String BASE_64_STRING_VALUE = "{\"key1\" : \"value1\"}";
 
     private static JsonFactory jsonFactory = new JsonFactory();
@@ -51,9 +51,10 @@ public class JsonUnmarshallerTest {
     public void testSimpleMap() throws Exception {
         JsonUnmarshallerContext unmarshallerContext = setupUnmarshaller(SIMPLE_MAP, EMPTY_HEADERS);
 
-        MapUnmarshaller<String, String> unmarshaller = new MapUnmarshaller<String, String>(
-                SimpleTypeJsonUnmarshallers.StringJsonUnmarshaller.getInstance(),
-                SimpleTypeJsonUnmarshallers.StringJsonUnmarshaller.getInstance());
+        MapUnmarshaller<String, String> unmarshaller =
+                new MapUnmarshaller<String, String>(
+                        SimpleTypeJsonUnmarshallers.StringJsonUnmarshaller.getInstance(),
+                        SimpleTypeJsonUnmarshallers.StringJsonUnmarshaller.getInstance());
 
         Map<String, String> map = unmarshaller.unmarshall(unmarshallerContext);
         assertTrue(map.size() == 2);
@@ -65,9 +66,11 @@ public class JsonUnmarshallerTest {
     public void testMapToList() throws Exception {
         JsonUnmarshallerContext unmarshallerContext = setupUnmarshaller(MAP_TO_LIST, EMPTY_HEADERS);
 
-        MapUnmarshaller<String, List<String>> unmarshaller = new MapUnmarshaller<String, List<String>>(
-                SimpleTypeJsonUnmarshallers.StringJsonUnmarshaller.getInstance(),
-                new ListUnmarshaller<String>(SimpleTypeJsonUnmarshallers.StringJsonUnmarshaller.getInstance()));
+        MapUnmarshaller<String, List<String>> unmarshaller =
+                new MapUnmarshaller<String, List<String>>(
+                        SimpleTypeJsonUnmarshallers.StringJsonUnmarshaller.getInstance(),
+                        new ListUnmarshaller<String>(
+                                SimpleTypeJsonUnmarshallers.StringJsonUnmarshaller.getInstance()));
 
         Map<String, List<String>> map = unmarshaller.unmarshall(unmarshallerContext);
         assertTrue(map.size() == 2);
@@ -77,11 +80,13 @@ public class JsonUnmarshallerTest {
 
     @Test
     public void testJsonValueStringInBody() throws Exception {
-        JsonUnmarshallerContext unmarshallerContext = setupUnmarshaller(BASE_64_STRING_VALUE, EMPTY_HEADERS);
+        JsonUnmarshallerContext unmarshallerContext =
+                setupUnmarshaller(BASE_64_STRING_VALUE, EMPTY_HEADERS);
 
-        MapUnmarshaller<String, String> unmarshaller = new MapUnmarshaller<String, String>(
-                SimpleTypeJsonUnmarshallers.StringJsonUnmarshaller.getInstance(),
-                SimpleTypeJsonUnmarshallers.JsonValueStringUnmarshaller.getInstance());
+        MapUnmarshaller<String, String> unmarshaller =
+                new MapUnmarshaller<String, String>(
+                        SimpleTypeJsonUnmarshallers.StringJsonUnmarshaller.getInstance(),
+                        SimpleTypeJsonUnmarshallers.JsonValueStringUnmarshaller.getInstance());
 
         Map<String, String> map = unmarshaller.unmarshall(unmarshallerContext);
 
@@ -95,12 +100,15 @@ public class JsonUnmarshallerTest {
         JsonUnmarshallerContext context = setupUnmarshaller(BASE_64_STRING_VALUE, headers);
 
         context.setCurrentHeader("Header");
-        String value = SimpleTypeJsonUnmarshallers.JsonValueStringUnmarshaller.getInstance().unmarshall(context);
+        String value =
+                SimpleTypeJsonUnmarshallers.JsonValueStringUnmarshaller.getInstance()
+                        .unmarshall(context);
 
         assertEquals("toDecode", value);
     }
 
-    private JsonUnmarshallerContext setupUnmarshaller(String body, Map<String, String> headers) throws Exception {
+    private JsonUnmarshallerContext setupUnmarshaller(String body, Map<String, String> headers)
+            throws Exception {
         HttpResponse httpResponse = new HttpResponse(null, null);
 
         for (Map.Entry<String, String> header : headers.entrySet()) {
@@ -108,9 +116,10 @@ public class JsonUnmarshallerTest {
         }
 
         JsonParser jsonParser = jsonFactory.createParser(new ByteArrayInputStream(body.getBytes()));
-        return new JsonUnmarshallerContextImpl(jsonParser,
-                                               SdkStructuredPlainJsonFactory.JSON_SCALAR_UNMARSHALLERS,
-                                               SdkStructuredPlainJsonFactory.JSON_CUSTOM_TYPE_UNMARSHALLERS,
-                                               httpResponse);
+        return new JsonUnmarshallerContextImpl(
+                jsonParser,
+                SdkStructuredPlainJsonFactory.JSON_SCALAR_UNMARSHALLERS,
+                SdkStructuredPlainJsonFactory.JSON_CUSTOM_TYPE_UNMARSHALLERS,
+                httpResponse);
     }
 }

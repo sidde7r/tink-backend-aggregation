@@ -21,17 +21,17 @@ import static org.hamcrest.Matchers.hasEntry;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.ContainerCredentialsProvider.FullUriCredentialsEndpointProvider;
+import java.net.URISyntaxException;
+import java.util.Map;
 import org.junit.AfterClass;
 import org.junit.Test;
 import utils.EnvironmentVariableHelper;
 
-import java.net.URISyntaxException;
-import java.util.Map;
-
 public class FullUriCredentialsEndpointProviderTest {
 
     private static final EnvironmentVariableHelper helper = new EnvironmentVariableHelper();
-    private static final FullUriCredentialsEndpointProvider sut = new FullUriCredentialsEndpointProvider();
+    private static final FullUriCredentialsEndpointProvider sut =
+            new FullUriCredentialsEndpointProvider();
 
     @AfterClass
     public static void restoreOriginal() {
@@ -56,16 +56,19 @@ public class FullUriCredentialsEndpointProviderTest {
 
     @Test(expected = SdkClientException.class)
     public void onlyLocalHostAddressesAreValid() throws URISyntaxException {
-        helper.set(ContainerCredentialsProvider.CONTAINER_CREDENTIALS_FULL_URI, "https://google.com/endpoint");
+        helper.set(
+                ContainerCredentialsProvider.CONTAINER_CREDENTIALS_FULL_URI,
+                "https://google.com/endpoint");
         sut.getCredentialsEndpoint();
     }
 
     @Test
     public void authorizationHeaderIsPresentIfEnvironmentVariableSet() {
-        helper.set(ContainerCredentialsProvider.CONTAINER_AUTHORIZATION_TOKEN, "hello authorized world!");
+        helper.set(
+                ContainerCredentialsProvider.CONTAINER_AUTHORIZATION_TOKEN,
+                "hello authorized world!");
         Map<String, String> headers = sut.getHeaders();
         assertThat(headers.size(), equalTo(1));
         assertThat(headers, hasEntry("Authorization", "hello authorized world!"));
     }
-
 }

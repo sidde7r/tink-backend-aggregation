@@ -1,12 +1,12 @@
 /*
  * Copyright 2014-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
  * A copy of the License is located at
- * 
+ *
  *  http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed
  * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing
@@ -14,6 +14,7 @@
  */
 package com.amazonaws.util;
 
+import com.amazonaws.log.InternalLogFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,38 +23,33 @@ import java.util.SimpleTimeZone;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.amazonaws.log.InternalLogFactory;
-
-/**
- * Utilities for accessing joda-time.
- */
+/** Utilities for accessing joda-time. */
 public enum JodaTime {
     ;
     private static final boolean expectedBehavior = checkExpectedBehavior();
 
     /**
-     * Returns the current version of joda-time used during runtime; or null
-     * if it cannot be determined.
+     * Returns the current version of joda-time used during runtime; or null if it cannot be
+     * determined.
      */
     public static String getVersion() {
         return LazyHolder.version;
     }
 
     /**
-     * Returns true if the current version of joda-time used during runtime
-     * behaves as expected by the Java SDK; false otherwise.
+     * Returns true if the current version of joda-time used during runtime behaves as expected by
+     * the Java SDK; false otherwise.
      */
     public static boolean hasExpectedBehavior() {
         return expectedBehavior;
     }
 
     /**
-     * A lazy holder class for retrieving the version of joda-time used during
-     * runtime from the jar file discovered on the classpath.
+     * A lazy holder class for retrieving the version of joda-time used during runtime from the jar
+     * file discovered on the classpath.
      */
     private static class LazyHolder {
         static final String version = getVersion();
@@ -61,8 +57,7 @@ public enum JodaTime {
         private static String getVersion() {
             try {
                 JarFile jf = Classes.jarFileOf(DateTimeZone.class);
-                if (jf == null)
-                    return null;
+                if (jf == null) return null;
                 Manifest mf = jf.getManifest();
                 Attributes attrs = mf.getMainAttributes();
                 String name = attrs.getValue("Bundle-Name");
@@ -76,19 +71,18 @@ public enum JodaTime {
             return null;
         }
     }
-    
+
     private static boolean checkExpectedBehavior() {
         try {
-            return checkTT0031561767() 
-                && checkFormatIso8601Date() 
-                && checkFormatRfc822Date()
-                && checkAlternateIso8601DateFormat() 
-                && checkInvalidDate()
-                && checkParseCompressedIso8601Date() 
-                && checkParseIso8601Date()
-                && checkParseIso8601DateUsingAlternativeFormat()
-                && checkParseRfc822Date()
-                ;
+            return checkTT0031561767()
+                    && checkFormatIso8601Date()
+                    && checkFormatRfc822Date()
+                    && checkAlternateIso8601DateFormat()
+                    && checkInvalidDate()
+                    && checkParseCompressedIso8601Date()
+                    && checkParseIso8601Date()
+                    && checkParseIso8601DateUsingAlternativeFormat()
+                    && checkParseRfc822Date();
         } catch (Exception ignore) {
         }
         return false;
@@ -102,8 +96,7 @@ public enum JodaTime {
 
     private static boolean checkFormatIso8601Date() throws ParseException {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         sdf.setTimeZone(new SimpleTimeZone(0, "GMT"));
         String expected = sdf.format(date);
         String actual = DateUtils.iso8601DateFormat.print(date.getTime());
@@ -117,8 +110,7 @@ public enum JodaTime {
 
     private static boolean checkFormatRfc822Date() throws ParseException {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat(
-                "EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         sdf.setTimeZone(new SimpleTimeZone(0, "GMT"));
         String expected = sdf.format(date);
         String actual = DateUtils.rfc822DateFormat.print(date.getTime());
@@ -142,8 +134,7 @@ public enum JodaTime {
 
     private static boolean checkParseRfc822Date() throws ParseException {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat(
-                "EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         sdf.setTimeZone(new SimpleTimeZone(0, "GMT"));
         String formatted = sdf.format(date);
         Date expected = sdf.parse(formatted);
@@ -153,8 +144,7 @@ public enum JodaTime {
 
     private static boolean checkParseIso8601Date() throws ParseException {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         sdf.setTimeZone(new SimpleTimeZone(0, "GMT"));
         String formatted = sdf.format(date);
         String alternative = DateUtils.iso8601DateFormat.print(date.getTime());
@@ -166,14 +156,12 @@ public enum JodaTime {
         return false;
     }
 
-    private static boolean checkParseIso8601DateUsingAlternativeFormat()
-            throws ParseException {
+    private static boolean checkParseIso8601DateUsingAlternativeFormat() throws ParseException {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(new SimpleTimeZone(0, "GMT"));
         String formatted = sdf.format(date);
-        String alternative = DateUtils.alternateIso8601DateFormat.print(date
-                .getTime());
+        String alternative = DateUtils.alternateIso8601DateFormat.print(date.getTime());
         if (formatted.equals(alternative)) {
             Date expectedDate = sdf.parse(formatted);
             Date actualDate = DateUtils.parseISO8601Date(formatted);
@@ -187,12 +175,10 @@ public enum JodaTime {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(new SimpleTimeZone(0, "GMT"));
         String expected = sdf.format(date);
-        String actual = DateUtils.alternateIso8601DateFormat.print(date
-                .getTime());
+        String actual = DateUtils.alternateIso8601DateFormat.print(date.getTime());
         if (expected.equals(actual)) {
             Date expectedDate = sdf.parse(expected);
-            DateTime actualDateTime = DateUtils.alternateIso8601DateFormat
-                    .parseDateTime(actual);
+            DateTime actualDateTime = DateUtils.alternateIso8601DateFormat.parseDateTime(actual);
             return expectedDate.getTime() == actualDateTime.getMillis();
         }
         return false;

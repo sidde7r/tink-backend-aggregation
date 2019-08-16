@@ -16,12 +16,11 @@ package com.amazonaws.protocol.json;
 
 import com.amazonaws.annotation.NotThreadSafe;
 import com.amazonaws.annotation.SdkProtectedApi;
-
 import java.util.List;
 
 /**
- * Contains various metadata needed to create an appropriate {@link com.amazonaws.http.JsonErrorResponseHandler}
- * for the client.
+ * Contains various metadata needed to create an appropriate {@link
+ * com.amazonaws.http.JsonErrorResponseHandler} for the client.
  */
 @NotThreadSafe
 @SdkProtectedApi
@@ -33,9 +32,7 @@ public class JsonErrorResponseMetadata {
      */
     private String customErrorCodeFieldName;
 
-    /**
-     * Error shapes scoped to a specific operation.
-     */
+    /** Error shapes scoped to a specific operation. */
     private List<JsonErrorShapeMetadata> errorShapes;
 
     public String getCustomErrorCodeFieldName() {

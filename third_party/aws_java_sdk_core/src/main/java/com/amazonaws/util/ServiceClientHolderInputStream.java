@@ -14,26 +14,22 @@
  */
 package com.amazonaws.util;
 
-import java.io.InputStream;
-
 import com.amazonaws.AmazonWebServiceClient;
 import com.amazonaws.internal.SdkFilterInputStream;
+import java.io.InputStream;
 
 /**
- * This wrapper input stream holds a reference to the service client. This is
- * mainly done to avoid the AmazonWebServiceClient object being garbage
- * collected when the client reads data from the input stream.
- * 
+ * This wrapper input stream holds a reference to the service client. This is mainly done to avoid
+ * the AmazonWebServiceClient object being garbage collected when the client reads data from the
+ * input stream.
  */
 public class ServiceClientHolderInputStream extends SdkFilterInputStream {
 
-	
-	@SuppressWarnings("unused")
-	private AmazonWebServiceClient client;
+    @SuppressWarnings("unused")
+    private AmazonWebServiceClient client;
 
-	public ServiceClientHolderInputStream(InputStream in,
-			AmazonWebServiceClient client) {
-		super(in);
-		this.client = client;
-	}	
+    public ServiceClientHolderInputStream(InputStream in, AmazonWebServiceClient client) {
+        super(in);
+        this.client = client;
+    }
 }

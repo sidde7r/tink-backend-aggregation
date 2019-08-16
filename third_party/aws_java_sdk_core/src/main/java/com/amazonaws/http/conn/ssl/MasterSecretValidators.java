@@ -14,11 +14,10 @@
  */
 package com.amazonaws.http.conn.ssl;
 
-import java.net.Socket;
-
 import com.amazonaws.http.conn.ssl.privileged.PrivilegedMasterSecretValidator;
 import com.amazonaws.util.JavaVersionParser;
 import com.amazonaws.util.JavaVersionParser.JavaVersion;
+import java.net.Socket;
 
 public class MasterSecretValidators {
 
@@ -27,13 +26,10 @@ public class MasterSecretValidators {
     private static final JavaVersion FIXED_JAVA_7 = new JavaVersion(1, 7, 0, 51);
     private static final JavaVersion FIXED_JAVA_8 = new JavaVersion(1, 8, 0, 31);
 
-    /**
-     * Interface to validate the master secret of a SSL session
-     */
+    /** Interface to validate the master secret of a SSL session */
     public interface MasterSecretValidator {
         /**
-         * @param socket
-         *            SSLSocket containing master secret
+         * @param socket SSLSocket containing master secret
          * @return True if master secret is considered valid, false otherwise
          */
         public boolean isMasterSecretValid(final Socket socket);
@@ -43,7 +39,7 @@ public class MasterSecretValidators {
      * The implementation of {@link MasterSecretValidator} depends on the JVM version. Certain JVMs
      * are affected by a serious bug that could allow a malicious MITM to negotiate a null master
      * secret. Non-affected JVMs return a dummy implementation that always returns true
-     * 
+     *
      * @see http://www.oracle.com/technetwork/topics/security/cpujan2015-1972971.html
      * @see https://access.redhat.com/security/cve/CVE-2014-6593
      * @return The correct implementation of {@link MasterSecretValidator}
@@ -53,33 +49,30 @@ public class MasterSecretValidators {
     }
 
     /**
-     * @param javaVersion
-     *            Current Java version
+     * @param javaVersion Current Java version
      * @return An appropriate {@link MasterSecretValidator} per the Java version in use
      */
     public static MasterSecretValidator getMasterSecretValidator(JavaVersion javaVersion) {
         switch (javaVersion.getKnownVersion()) {
-        case JAVA_6:
-            if (javaVersion.compareTo(FIXED_JAVA_6) < 0) {
-                return new PrivilegedMasterSecretValidator();
-            }
-            break;
-        case JAVA_7:
-            if (javaVersion.compareTo(FIXED_JAVA_7) < 0) {
-                return new PrivilegedMasterSecretValidator();
-            }
-            break;
-        case JAVA_8:
-            if (javaVersion.compareTo(FIXED_JAVA_8) < 0) {
-                return new PrivilegedMasterSecretValidator();
-            }
-            break;
-        default:
-            break;
-
+            case JAVA_6:
+                if (javaVersion.compareTo(FIXED_JAVA_6) < 0) {
+                    return new PrivilegedMasterSecretValidator();
+                }
+                break;
+            case JAVA_7:
+                if (javaVersion.compareTo(FIXED_JAVA_7) < 0) {
+                    return new PrivilegedMasterSecretValidator();
+                }
+                break;
+            case JAVA_8:
+                if (javaVersion.compareTo(FIXED_JAVA_8) < 0) {
+                    return new PrivilegedMasterSecretValidator();
+                }
+                break;
+            default:
+                break;
         }
         return new NoOpMasterSecretValidator();
-
     }
 
     /**
@@ -92,7 +85,5 @@ public class MasterSecretValidators {
         public boolean isMasterSecretValid(Socket socket) {
             return true;
         }
-
     }
-
 }

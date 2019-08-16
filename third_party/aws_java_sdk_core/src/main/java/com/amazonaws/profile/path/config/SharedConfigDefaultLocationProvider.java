@@ -16,18 +16,13 @@ package com.amazonaws.profile.path.config;
 
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.profile.path.AwsDirectoryBasePathProvider;
-
 import java.io.File;
 
-/**
- * Checks if there is a config file present at the default location (~/.aws/config).
- */
+/** Checks if there is a config file present at the default location (~/.aws/config). */
 @SdkInternalApi
 public class SharedConfigDefaultLocationProvider extends AwsDirectoryBasePathProvider {
 
-    /**
-     * Default name of the shared AWS config file.
-     */
+    /** Default name of the shared AWS config file. */
     private static final String DEFAULT_CONFIG_FILE_NAME = "config";
 
     @Override

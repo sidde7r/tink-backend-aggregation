@@ -15,21 +15,19 @@
 package com.amazonaws.http.impl.client;
 
 import com.amazonaws.annotation.ThreadSafe;
-
 import java.io.IOException;
-
 import tink.org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import tink.org.apache.http.protocol.HttpContext;
 
 @ThreadSafe
 public class HttpRequestNoRetryHandler extends DefaultHttpRequestRetryHandler {
     public static final HttpRequestNoRetryHandler Singleton = new HttpRequestNoRetryHandler();
+
     private HttpRequestNoRetryHandler() {}
 
-    @Override public boolean retryRequest(
-            final IOException exception,
-            int executionCount,
-            final HttpContext context) {
+    @Override
+    public boolean retryRequest(
+            final IOException exception, int executionCount, final HttpContext context) {
         return false;
     }
 }

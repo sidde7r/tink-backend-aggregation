@@ -19,15 +19,10 @@ import com.amazonaws.AmazonWebServiceRequest;
 
 public final class WaiterParameters<Input extends AmazonWebServiceRequest> {
 
-    /**
-     * Represents the input of the operation.
-     */
+    /** Represents the input of the operation. */
     private final Input request;
 
-    /**
-     * Represents the custom polling strategy. Will be null
-     * if not defined
-     */
+    /** Represents the custom polling strategy. Will be null if not defined */
     private final PollingStrategy pollingStrategy;
 
     public WaiterParameters() {
@@ -41,10 +36,9 @@ public final class WaiterParameters<Input extends AmazonWebServiceRequest> {
     }
 
     /**
-     * Constructs a new WaiterParameters with the given request
-     * and polling strategy
+     * Constructs a new WaiterParameters with the given request and polling strategy
      *
-     * @param request         Input of the operation
+     * @param request Input of the operation
      * @param pollingStrategy Custom polling strategy
      * @return WaiterParameters object with custom polling strategy defined
      */
@@ -73,16 +67,12 @@ public final class WaiterParameters<Input extends AmazonWebServiceRequest> {
         return new WaiterParameters<Input>(this.request, pollingStrategy);
     }
 
-    /**
-     * @return Input of the operation
-     */
+    /** @return Input of the operation */
     public Input getRequest() {
         return this.request;
     }
 
-    /**
-     * @return Custom Polling Strategy
-     */
+    /** @return Custom Polling Strategy */
     public PollingStrategy getPollingStrategy() {
         return this.pollingStrategy;
     }

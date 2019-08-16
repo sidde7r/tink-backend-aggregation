@@ -17,38 +17,35 @@ package com.amazonaws.event.request;
 import com.amazonaws.annotation.ThreadSafe;
 
 /**
- * Base class used to represent the progress of a logical request/response,
- * which may correspond to either be a physical http request/response, or
- * multiple requests/responses as in a composite operation such as
- * multi-part uploads.
- * 
+ * Base class used to represent the progress of a logical request/response, which may correspond to
+ * either be a physical http request/response, or multiple requests/responses as in a composite
+ * operation such as multi-part uploads.
+ *
  * @see ProgressSupport
  */
 @ThreadSafe
 public class Progress {
     public static final Progress NOOP = new Progress();
     private static final String MSG = "No progress tracking configured";
+
     protected Progress() {}
 
-    /**
-     * Returns true if progress tracking is enabled; false otherwise.
-     */
-    public boolean isEnabled() { return false; }
-    /**
-     * @param bytes can be negative if it was a reset event.
-     */
+    /** Returns true if progress tracking is enabled; false otherwise. */
+    public boolean isEnabled() {
+        return false;
+    }
+    /** @param bytes can be negative if it was a reset event. */
     public void addRequestBytesTransferred(long bytes) {}
-    /**
-     * @param bytes can be negative if it was a reset event.
-     */
+    /** @param bytes can be negative if it was a reset event. */
     public void addResponseBytesTransferred(long bytes) {}
 
-    public long getRequestContentLength() { 
+    public long getRequestContentLength() {
         throw new UnsupportedOperationException(MSG);
     }
 
     public void addRequestContentLength(long contentLength) {}
-    public long getRequestBytesTransferred() { 
+
+    public long getRequestBytesTransferred() {
         throw new UnsupportedOperationException(MSG);
     }
 

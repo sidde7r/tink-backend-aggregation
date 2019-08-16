@@ -16,9 +16,7 @@ package com.amazonaws.monitoring;
 
 import com.amazonaws.util.ValidationUtils;
 
-/**
- * Provider that returns the given {@link CsmConfiguration}.
- */
+/** Provider that returns the given {@link CsmConfiguration}. */
 public class StaticCsmConfigurationProvider implements CsmConfigurationProvider {
     private final CsmConfiguration csmConfig;
 

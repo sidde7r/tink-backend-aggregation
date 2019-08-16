@@ -14,27 +14,24 @@
  */
 package com.amazonaws.util;
 
+import com.amazonaws.ResponseMetadata;
+import com.amazonaws.annotation.SdkInternalApi;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
-import com.amazonaws.ResponseMetadata;
-import com.amazonaws.annotation.SdkInternalApi;
-
 /**
- * Cache of response metadata for recently executed requests for diagnostic
- * purposes. This cache has a max size and as entries are added, the oldest
- * entry is aged out once the max size has been reached.
+ * Cache of response metadata for recently executed requests for diagnostic purposes. This cache has
+ * a max size and as entries are added, the oldest entry is aged out once the max size has been
+ * reached.
  */
 @SdkInternalApi
 public class ResponseMetadataCache implements MetadataCache {
     private final InternalCache internalCache;
 
     /**
-     * Creates a new cache that will contain, at most the specified number of
-     * entries.
+     * Creates a new cache that will contain, at most the specified number of entries.
      *
-     * @param maxEntries
-     *            The maximum size of this cache.
+     * @param maxEntries The maximum size of this cache.
      */
     public ResponseMetadataCache(int maxEntries) {
         internalCache = new InternalCache(maxEntries);
@@ -56,9 +53,8 @@ public class ResponseMetadataCache implements MetadataCache {
     }
 
     /**
-     * Simple implementation of LinkedHashMap that overrides the
-     * <code>removeEldestEntry</code> method to turn LinkedHashMap into a
-     * FIFO cache that automatically evicts old entries.
+     * Simple implementation of LinkedHashMap that overrides the <code>removeEldestEntry</code>
+     * method to turn LinkedHashMap into a FIFO cache that automatically evicts old entries.
      */
     private static final class InternalCache extends LinkedHashMap<Integer, ResponseMetadata> {
         private static final long serialVersionUID = 1L;
@@ -70,7 +66,7 @@ public class ResponseMetadataCache implements MetadataCache {
         }
 
         @Override
-        protected boolean removeEldestEntry(Entry<Integer,ResponseMetadata> eldest) {
+        protected boolean removeEldestEntry(Entry<Integer, ResponseMetadata> eldest) {
             return size() > maxSize;
         }
     }

@@ -22,9 +22,8 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.util.StringUtils;
 
 /**
- * {@link AWSCredentialsProvider} implementation that provides credentials by
- * looking at the <code>aws.accessKeyId</code> and <code>aws.secretKey</code>
- * Java system properties.
+ * {@link AWSCredentialsProvider} implementation that provides credentials by looking at the <code>
+ * aws.accessKeyId</code> and <code>aws.secretKey</code> Java system properties.
  */
 public class SystemPropertiesCredentialsProvider implements AWSCredentialsProvider {
 
@@ -37,8 +36,11 @@ public class SystemPropertiesCredentialsProvider implements AWSCredentialsProvid
         if (StringUtils.isNullOrEmpty(accessKey) || StringUtils.isNullOrEmpty(secretKey)) {
             throw new SdkClientException(
                     "Unable to load AWS credentials from Java system "
-                    + "properties (" + ACCESS_KEY_SYSTEM_PROPERTY + " and "
-                    + SECRET_KEY_SYSTEM_PROPERTY + ")");
+                            + "properties ("
+                            + ACCESS_KEY_SYSTEM_PROPERTY
+                            + " and "
+                            + SECRET_KEY_SYSTEM_PROPERTY
+                            + ")");
         }
         if (StringUtils.isNullOrEmpty(sessionToken)) {
             return new BasicAWSCredentials(accessKey, secretKey);
@@ -48,8 +50,7 @@ public class SystemPropertiesCredentialsProvider implements AWSCredentialsProvid
     }
 
     @Override
-    public void refresh() {
-    }
+    public void refresh() {}
 
     @Override
     public String toString() {

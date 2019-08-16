@@ -14,14 +14,6 @@
  */
 package com.amazonaws.internal.config;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import com.amazonaws.annotation.Immutable;
 import com.amazonaws.log.InternalLogApi;
 import com.amazonaws.log.InternalLogFactory;
@@ -32,25 +24,31 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-/**
- * Internal configuration for the AWS Java SDK.
- */
+/** Internal configuration for the AWS Java SDK. */
 @Immutable
 public class InternalConfig {
 
-    //@formatter:off
-    private static final ObjectMapper MAPPER = new ObjectMapper()
-            .disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-    //@formatter:on
+    // @formatter:off
+    private static final ObjectMapper MAPPER =
+            new ObjectMapper()
+                    .disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)
+                    .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                    .configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+    // @formatter:on
 
     private static final InternalLogApi log = InternalLogFactory.getLog(InternalConfig.class);
 
     static final String DEFAULT_CONFIG_RESOURCE_RELATIVE_PATH = "awssdk_config_default.json";
-    static final String DEFAULT_CONFIG_RESOURCE_ABSOLUTE_PATH = "/com/amazonaws/internal/config/"
-            + DEFAULT_CONFIG_RESOURCE_RELATIVE_PATH;
+    static final String DEFAULT_CONFIG_RESOURCE_ABSOLUTE_PATH =
+            "/com/amazonaws/internal/config/" + DEFAULT_CONFIG_RESOURCE_RELATIVE_PATH;
 
     static final String CONFIG_OVERRIDE_RESOURCE = "awssdk_config_override.json";
     private static final String SERVICE_REGION_DELIMITOR = "/";
@@ -68,23 +66,29 @@ public class InternalConfig {
     private final boolean endpointDiscoveryEnabled;
 
     /**
-     * @param defaults
-     *            default configuration
-     * @param override
-     *            override configuration
+     * @param defaults default configuration
+     * @param override override configuration
      */
     InternalConfig(InternalConfigJsonHelper defaults, InternalConfigJsonHelper override) {
         SignerConfigJsonHelper scb = defaults.getDefaultSigner();
         this.defaultSignerConfig = scb == null ? null : scb.build();
 
-        regionSigners = mergeSignerMap(defaults.getRegionSigners(), override.getRegionSigners(), "region");
-        serviceSigners = mergeSignerMap(defaults.getServiceSigners(), override.getServiceSigners(), "service");
-        serviceRegionSigners = mergeSignerMap(defaults.getServiceRegionSigners(), override.getServiceRegionSigners(),
-                "service" + SERVICE_REGION_DELIMITOR + "region");
+        regionSigners =
+                mergeSignerMap(defaults.getRegionSigners(), override.getRegionSigners(), "region");
+        serviceSigners =
+                mergeSignerMap(
+                        defaults.getServiceSigners(), override.getServiceSigners(), "service");
+        serviceRegionSigners =
+                mergeSignerMap(
+                        defaults.getServiceRegionSigners(),
+                        override.getServiceRegionSigners(),
+                        "service" + SERVICE_REGION_DELIMITOR + "region");
         httpClients = merge(defaults.getHttpClients(), override.getHttpClients());
 
-        hostRegexToRegionMappings = append(override.getHostRegexToRegionMappings(),
-                defaults.getHostRegexToRegionMappings());
+        hostRegexToRegionMappings =
+                append(
+                        override.getHostRegexToRegionMappings(),
+                        defaults.getHostRegexToRegionMappings());
 
         if (override.getUserAgentTemplate() != null) {
             userAgentTemplate = override.getUserAgentTemplate();
@@ -103,23 +107,22 @@ public class InternalConfig {
      * Returns an immutable map by merging the override signer configuration into the default signer
      * configuration for the given theme.
      *
-     * @param defaults
-     *            default signer configuration
-     * @param override
-     *            signer configurations overrides
-     * @param theme
-     *            used for message logging. eg region, service, region+service
+     * @param defaults default signer configuration
+     * @param override signer configurations overrides
+     * @param theme used for message logging. eg region, service, region+service
      */
-    private Map<String, SignerConfig> mergeSignerMap(JsonIndex<SignerConfigJsonHelper, SignerConfig>[] defaults,
-                                                     JsonIndex<SignerConfigJsonHelper, SignerConfig>[] overrides,
-                                                     String theme) {
+    private Map<String, SignerConfig> mergeSignerMap(
+            JsonIndex<SignerConfigJsonHelper, SignerConfig>[] defaults,
+            JsonIndex<SignerConfigJsonHelper, SignerConfig>[] overrides,
+            String theme) {
         Map<String, SignerConfig> map = buildSignerMap(defaults, theme);
         Map<String, SignerConfig> mapOverride = buildSignerMap(overrides, theme);
         map.putAll(mapOverride);
         return Collections.unmodifiableMap(map);
     }
 
-    private <C extends Builder<T>, T> Map<String, T> merge(JsonIndex<C, T>[] defaults, JsonIndex<C, T>[] overrides) {
+    private <C extends Builder<T>, T> Map<String, T> merge(
+            JsonIndex<C, T>[] defaults, JsonIndex<C, T>[] overrides) {
         Map<String, T> map = buildMap(defaults);
         Map<String, T> mapOverride = buildMap(overrides);
         map.putAll(mapOverride);
@@ -158,13 +161,11 @@ public class InternalConfig {
     /**
      * Builds and returns a signer configuration map.
      *
-     * @param signerIndexes
-     *            signer configuration entries loaded from JSON
-     * @param theme
-     *            used for message logging. eg region, service, region+service
+     * @param signerIndexes signer configuration entries loaded from JSON
+     * @param theme used for message logging. eg region, service, region+service
      */
-    private Map<String, SignerConfig> buildSignerMap(JsonIndex<SignerConfigJsonHelper, SignerConfig>[] signerIndexes,
-                                                     String theme) {
+    private Map<String, SignerConfig> buildSignerMap(
+            JsonIndex<SignerConfigJsonHelper, SignerConfig>[] signerIndexes, String theme) {
         Map<String, SignerConfig> map = new HashMap<String, SignerConfig>();
         if (signerIndexes != null) {
             for (JsonIndex<SignerConfigJsonHelper, SignerConfig> index : signerIndexes) {
@@ -178,32 +179,25 @@ public class InternalConfig {
         return map;
     }
 
-    /**
-     * Returns the signer configuration for the specified service, not specific to any region.
-     */
+    /** Returns the signer configuration for the specified service, not specific to any region. */
     public SignerConfig getSignerConfig(String serviceName) {
         return getSignerConfig(serviceName, null);
     }
 
-    /**
-     * Returns the http client configuration for the http client name.
-     */
+    /** Returns the http client configuration for the http client name. */
     public HttpClientConfig getHttpClientConfig(String httpClientName) {
         return httpClients.get(httpClientName);
     }
 
     /**
      * Returns the signer configuration for the specified service name and an optional region name.
-     * 
-     * @param serviceName
-     *            must not be null
-     * @param regionName
-     *            similar to the region name in <code>Regions</code>; can be null.
+     *
+     * @param serviceName must not be null
+     * @param regionName similar to the region name in <code>Regions</code>; can be null.
      * @return the signer
      */
     public SignerConfig getSignerConfig(String serviceName, String regionName) {
-        if (serviceName == null)
-            throw new IllegalArgumentException();
+        if (serviceName == null) throw new IllegalArgumentException();
         SignerConfig signerConfig = null;
         if (regionName != null) {
             // Service+Region signer config has the highest precedence
@@ -224,16 +218,12 @@ public class InternalConfig {
         return signerConfig == null ? defaultSignerConfig : signerConfig;
     }
 
-    /**
-     * @return all the host-name-regex to region-name mappings.
-     */
+    /** @return all the host-name-regex to region-name mappings. */
     public List<HostRegexToRegionMapping> getHostRegexToRegionMappings() {
         return Collections.unmodifiableList(hostRegexToRegionMappings);
     }
 
-    /**
-     * @return the custom user agent template, if configured
-     */
+    /** @return the custom user agent template, if configured */
     public String getUserAgentTemplate() {
         return userAgentTemplate;
     }
@@ -242,27 +232,33 @@ public class InternalConfig {
         return endpointDiscoveryEnabled;
     }
 
-    static InternalConfigJsonHelper loadfrom(URL url) throws JsonParseException, JsonMappingException, IOException {
-        if (url == null)
-            throw new IllegalArgumentException();
+    static InternalConfigJsonHelper loadfrom(URL url)
+            throws JsonParseException, JsonMappingException, IOException {
+        if (url == null) throw new IllegalArgumentException();
         InternalConfigJsonHelper target = MAPPER.readValue(url, InternalConfigJsonHelper.class);
         return target;
     }
 
-    /**
-     * Loads and returns the AWS Java SDK internal configuration from the classpath.
-     */
+    /** Loads and returns the AWS Java SDK internal configuration from the classpath. */
     static InternalConfig load() throws JsonParseException, JsonMappingException, IOException {
         // First try loading via the class by using a relative path
-        URL url = ClassLoaderHelper.getResource(DEFAULT_CONFIG_RESOURCE_RELATIVE_PATH, true, InternalConfig.class); // classesFirst=true
+        URL url =
+                ClassLoaderHelper.getResource(
+                        DEFAULT_CONFIG_RESOURCE_RELATIVE_PATH,
+                        true,
+                        InternalConfig.class); // classesFirst=true
         if (url == null) { // Then try with the absolute path
-            url = ClassLoaderHelper.getResource(DEFAULT_CONFIG_RESOURCE_ABSOLUTE_PATH, InternalConfig.class);
+            url =
+                    ClassLoaderHelper.getResource(
+                            DEFAULT_CONFIG_RESOURCE_ABSOLUTE_PATH, InternalConfig.class);
         }
         InternalConfigJsonHelper config = loadfrom(url);
         InternalConfigJsonHelper configOverride;
-        URL overrideUrl = ClassLoaderHelper.getResource("/" + CONFIG_OVERRIDE_RESOURCE, InternalConfig.class);
+        URL overrideUrl =
+                ClassLoaderHelper.getResource("/" + CONFIG_OVERRIDE_RESOURCE, InternalConfig.class);
         if (overrideUrl == null) { // Try without a leading "/"
-            overrideUrl = ClassLoaderHelper.getResource(CONFIG_OVERRIDE_RESOURCE, InternalConfig.class);
+            overrideUrl =
+                    ClassLoaderHelper.getResource(CONFIG_OVERRIDE_RESOURCE, InternalConfig.class);
         }
         if (overrideUrl == null) {
             log.debug("Configuration override " + CONFIG_OVERRIDE_RESOURCE + " not found.");
@@ -300,10 +296,22 @@ public class InternalConfig {
     }
 
     void dump() {
-        StringBuilder sb = new StringBuilder().append("defaultSignerConfig: ").append(defaultSignerConfig).append("\n")
-                .append("serviceRegionSigners: ").append(serviceRegionSigners).append("\n").append("regionSigners: ")
-                .append(regionSigners).append("\n").append("serviceSigners: ").append(serviceSigners).append("\n")
-                .append("userAgentTemplate: ").append(userAgentTemplate);
+        StringBuilder sb =
+                new StringBuilder()
+                        .append("defaultSignerConfig: ")
+                        .append(defaultSignerConfig)
+                        .append("\n")
+                        .append("serviceRegionSigners: ")
+                        .append(serviceRegionSigners)
+                        .append("\n")
+                        .append("regionSigners: ")
+                        .append(regionSigners)
+                        .append("\n")
+                        .append("serviceSigners: ")
+                        .append(serviceSigners)
+                        .append("\n")
+                        .append("userAgentTemplate: ")
+                        .append(userAgentTemplate);
         log.debug(sb.toString());
     }
 
@@ -317,14 +325,13 @@ public class InternalConfig {
             } catch (RuntimeException ex) {
                 throw ex;
             } catch (Exception ex) {
-                throw new IllegalStateException("Fatal: Failed to load the internal config for AWS Java SDK", ex);
+                throw new IllegalStateException(
+                        "Fatal: Failed to load the internal config for AWS Java SDK", ex);
             }
             SINGELTON = config;
         }
 
-        /**
-         * Returns a non-null and immutable instance of the AWS SDK internal configuration.
-         */
+        /** Returns a non-null and immutable instance of the AWS SDK internal configuration. */
         public static InternalConfig getInternalConfig() {
             return SINGELTON;
         }

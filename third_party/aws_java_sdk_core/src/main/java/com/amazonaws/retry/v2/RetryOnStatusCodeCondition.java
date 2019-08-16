@@ -14,27 +14,30 @@
  */
 package com.amazonaws.retry.v2;
 
+import static com.amazonaws.util.ValidationUtils.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.amazonaws.util.ValidationUtils.assertNotNull;
-
 /**
- * Retry condition implementation that retries if the HTTP status code matches one of the provided status codes.
+ * Retry condition implementation that retries if the HTTP status code matches one of the provided
+ * status codes.
  */
 public class RetryOnStatusCodeCondition implements RetryCondition {
 
     private final List<Integer> statusCodesToRetryOn;
 
     public RetryOnStatusCodeCondition(List<Integer> statusCodesToRetryOn) {
-        this.statusCodesToRetryOn = new ArrayList<Integer>(
-                assertNotNull(statusCodesToRetryOn, "statusCodesToRetryOn"));
+        this.statusCodesToRetryOn =
+                new ArrayList<Integer>(assertNotNull(statusCodesToRetryOn, "statusCodesToRetryOn"));
     }
 
     /**
-     * @param context Context about the state of the last request and information about the number of requests made.
-     * @return True if the HTTP status code matches one of the provided status codes. False if it doesn't match or the request
-     * failed for reasons other than an exceptional HTTP response (i.e. IOException).
+     * @param context Context about the state of the last request and information about the number
+     *     of requests made.
+     * @return True if the HTTP status code matches one of the provided status codes. False if it
+     *     doesn't match or the request failed for reasons other than an exceptional HTTP response
+     *     (i.e. IOException).
      */
     @Override
     public boolean shouldRetry(RetryPolicyContext context) {

@@ -17,11 +17,10 @@ package com.amazonaws.http;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.util.AWSRequestMetrics;
-import java.util.Arrays;
-import java.util.List;
 
 /**
- * Wrapper around protocol specific error handler to deal with some default scenarios and fill in common information.
+ * Wrapper around protocol specific error handler to deal with some default scenarios and fill in
+ * common information.
  */
 @SdkInternalApi
 class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceException> {
@@ -29,9 +28,9 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
     private final HttpResponseHandler<AmazonServiceException> delegate;
     private final AWSRequestMetrics awsRequestMetrics;
 
-
-    AwsErrorResponseHandler(HttpResponseHandler<AmazonServiceException> errorResponseHandler,
-                            AWSRequestMetrics awsRequestMetrics) {
+    AwsErrorResponseHandler(
+            HttpResponseHandler<AmazonServiceException> errorResponseHandler,
+            AWSRequestMetrics awsRequestMetrics) {
         this.delegate = errorResponseHandler;
         this.awsRequestMetrics = awsRequestMetrics;
     }
@@ -41,7 +40,8 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
         final AmazonServiceException ase = handleAse(response);
         ase.setStatusCode(response.getStatusCode());
         ase.setServiceName(response.getRequest().getServiceName());
-        awsRequestMetrics.addPropertyWith(AWSRequestMetrics.Field.AWSRequestID, ase.getRequestId())
+        awsRequestMetrics
+                .addPropertyWith(AWSRequestMetrics.Field.AWSRequestID, ase.getRequestId())
                 .addPropertyWith(AWSRequestMetrics.Field.AWSErrorCode, ase.getErrorCode())
                 .addPropertyWith(AWSRequestMetrics.Field.StatusCode, ase.getStatusCode());
         return ase;
@@ -51,19 +51,22 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
         final int statusCode = response.getStatusCode();
         try {
             return delegate.handle(response);
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             throw e;
         } catch (Exception e) {
-            // If the errorResponseHandler doesn't work, then check for error responses that don't have any content
+            // If the errorResponseHandler doesn't work, then check for error responses that don't
+            // have any content
             if (statusCode == 413) {
-                AmazonServiceException exception = new AmazonServiceException("Request entity too large");
+                AmazonServiceException exception =
+                        new AmazonServiceException("Request entity too large");
                 exception.setServiceName(response.getRequest().getServiceName());
                 exception.setStatusCode(statusCode);
                 exception.setErrorType(AmazonServiceException.ErrorType.Client);
                 exception.setErrorCode("Request entity too large");
                 return exception;
             } else if (statusCode >= 500 && statusCode < 600) {
-                AmazonServiceException exception = new AmazonServiceException(response.getStatusText());
+                AmazonServiceException exception =
+                        new AmazonServiceException(response.getStatusText());
                 exception.setServiceName(response.getRequest().getServiceName());
                 exception.setStatusCode(statusCode);
                 exception.setErrorType(AmazonServiceException.ErrorType.Service);
@@ -79,5 +82,4 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
     public boolean needsConnectionLeftOpen() {
         return delegate.needsConnectionLeftOpen();
     }
-
 }

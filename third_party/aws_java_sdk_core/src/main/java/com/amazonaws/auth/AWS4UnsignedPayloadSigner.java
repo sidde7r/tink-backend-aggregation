@@ -14,20 +14,18 @@
  */
 package com.amazonaws.auth;
 
-import com.amazonaws.SignableRequest;
-import com.amazonaws.annotation.SdkTestInternalApi;
-import com.amazonaws.util.BinaryUtils;
-
 import static com.amazonaws.auth.internal.SignerConstants.X_AMZ_CONTENT_SHA256;
 
+import com.amazonaws.SignableRequest;
+import com.amazonaws.annotation.SdkTestInternalApi;
+
 /**
- * Exactly the same as {@link AWS4Signer} except if the request is being sent
- * over HTTPS, then it returns the string <code>UNSIGNED-PAYLOAD</code> as the
- * content SHA-256 so services that support it can avoid needing to calculate
- * the value when authorizing the request.
- * <p>
- * Payloads are still signed for requests over HTTP to preserve the request
- * integrity over a non-secure transport.
+ * Exactly the same as {@link AWS4Signer} except if the request is being sent over HTTPS, then it
+ * returns the string <code>UNSIGNED-PAYLOAD</code> as the content SHA-256 so services that support
+ * it can avoid needing to calculate the value when authorizing the request.
+ *
+ * <p>Payloads are still signed for requests over HTTP to preserve the request integrity over a
+ * non-secure transport.
  */
 public class AWS4UnsignedPayloadSigner extends AWS4Signer {
     public AWS4UnsignedPayloadSigner() {

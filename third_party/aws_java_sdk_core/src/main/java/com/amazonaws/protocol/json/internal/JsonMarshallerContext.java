@@ -16,13 +16,11 @@ package com.amazonaws.protocol.json.internal;
 
 import com.amazonaws.Request;
 import com.amazonaws.annotation.SdkInternalApi;
-import com.amazonaws.protocol.json.StructuredJsonGenerator;
 import com.amazonaws.protocol.MarshallLocation;
 import com.amazonaws.protocol.ProtocolMarshaller;
+import com.amazonaws.protocol.json.StructuredJsonGenerator;
 
-/**
- * Dependencies needed by implemenatations of {@link JsonMarshaller}.
- */
+/** Dependencies needed by implemenatations of {@link JsonMarshaller}. */
 @SdkInternalApi
 public class JsonMarshallerContext {
 
@@ -38,67 +36,64 @@ public class JsonMarshallerContext {
         this.request = builder.request;
     }
 
-    /**
-     * @return StructuredJsonGenerator used to produce the JSON document for a request.
-     */
+    /** @return StructuredJsonGenerator used to produce the JSON document for a request. */
     public StructuredJsonGenerator jsonGenerator() {
         return jsonGenerator;
     }
 
     /**
-     * @return Implementation of {@link ProtocolMarshaller} that can be used to call back out to marshall structured data (i.e.
-     * lists of objects).
+     * @return Implementation of {@link ProtocolMarshaller} that can be used to call back out to
+     *     marshall structured data (i.e. lists of objects).
      */
     public ProtocolMarshaller protocolHandler() {
         return protocolHandler;
     }
 
     /**
-     * @return Marshaller registry to obtain marshaller implementations for nested types (i.e. lists of objects or maps of string
-     * to string).
+     * @return Marshaller registry to obtain marshaller implementations for nested types (i.e. lists
+     *     of objects or maps of string to string).
      */
     public MarshallerRegistry marshallerRegistry() {
         return marshallerRegistry;
     }
 
     /**
-     * @return Mutable {@link Request} object that can be used to add headers, query params, modify request URI, etc.
+     * @return Mutable {@link Request} object that can be used to add headers, query params, modify
+     *     request URI, etc.
      */
     public Request<?> request() {
         return request;
     }
 
     /**
-     * Convenience method to marshall a nested object (may be simple or structured) at the given location.
+     * Convenience method to marshall a nested object (may be simple or structured) at the given
+     * location.
      *
      * @param marshallLocation Current {@link MarshallLocation}
-     * @param val              Value to marshall.
+     * @param val Value to marshall.
      */
     public void marshall(MarshallLocation marshallLocation, Object val) {
         marshallerRegistry().getMarshaller(marshallLocation, val).marshall(val, this, null);
     }
 
     /**
-     * Convenience method to marshall a nested object (may be simple or structured) at the given location.
+     * Convenience method to marshall a nested object (may be simple or structured) at the given
+     * location.
      *
      * @param marshallLocation Current {@link MarshallLocation}
-     * @param val              Value to marshall.
-     * @param paramName        Name of parameter to marshall.
+     * @param val Value to marshall.
+     * @param paramName Name of parameter to marshall.
      */
     public void marshall(MarshallLocation marshallLocation, Object val, String paramName) {
         marshallerRegistry().getMarshaller(marshallLocation, val).marshall(val, this, paramName);
     }
 
-    /**
-     * @return Builder instance to construct a {@link JsonMarshallerContext}.
-     */
+    /** @return Builder instance to construct a {@link JsonMarshallerContext}. */
     public static Builder builder() {
         return new Builder();
     }
 
-    /**
-     * Builder for a {@link JsonMarshallerContext}.
-     */
+    /** Builder for a {@link JsonMarshallerContext}. */
     public static final class Builder {
 
         private StructuredJsonGenerator jsonGenerator;
@@ -106,8 +101,7 @@ public class JsonMarshallerContext {
         private MarshallerRegistry marshallerRegistry;
         private Request<?> request;
 
-        private Builder() {
-        }
+        private Builder() {}
 
         public Builder jsonGenerator(StructuredJsonGenerator jsonGenerator) {
             this.jsonGenerator = jsonGenerator;
@@ -129,9 +123,7 @@ public class JsonMarshallerContext {
             return this;
         }
 
-        /**
-         * @return An immutable {@link JsonMarshallerContext} object.
-         */
+        /** @return An immutable {@link JsonMarshallerContext} object. */
         public JsonMarshallerContext build() {
             return new JsonMarshallerContext(this);
         }

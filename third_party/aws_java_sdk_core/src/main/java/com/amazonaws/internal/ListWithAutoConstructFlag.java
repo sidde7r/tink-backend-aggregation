@@ -13,19 +13,16 @@
  * permissions and limitations under the License.
  */
 package com.amazonaws.internal;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * List with auto construct flag to indicate whether it is auto constructed by Java SDK.
- */
+/** List with auto construct flag to indicate whether it is auto constructed by Java SDK. */
 public class ListWithAutoConstructFlag<T> extends ArrayList<T> {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Auto construct flag to indicate whether the list is auto constructed by Java SDK.
-     */
+    /** Auto construct flag to indicate whether the list is auto constructed by Java SDK. */
     private boolean autoConstruct;
 
     public ListWithAutoConstructFlag() {
@@ -33,10 +30,10 @@ public class ListWithAutoConstructFlag<T> extends ArrayList<T> {
     }
 
     public ListWithAutoConstructFlag(Collection<? extends T> c) {
-          super(c);
+        super(c);
     }
 
-    public  ListWithAutoConstructFlag(int initialCapacity) {
+    public ListWithAutoConstructFlag(int initialCapacity) {
         super(initialCapacity);
     }
 
@@ -44,11 +41,8 @@ public class ListWithAutoConstructFlag<T> extends ArrayList<T> {
         this.autoConstruct = autoConstruct;
     }
 
-    /**
-     * Return true if the list is auto constructed by Java SDK
-     */
+    /** Return true if the list is auto constructed by Java SDK */
     public boolean isAutoConstruct() {
         return autoConstruct;
     }
-
 }

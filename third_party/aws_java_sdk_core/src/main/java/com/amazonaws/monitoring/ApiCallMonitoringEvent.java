@@ -15,9 +15,7 @@
 
 package com.amazonaws.monitoring;
 
-/**
- * A Monitoring Event that describes the results of an Api Call.
- */
+/** A Monitoring Event that describes the results of an Api Call. */
 public class ApiCallMonitoringEvent extends ApiMonitoringEvent {
 
     public static final String API_CALL_MONITORING_EVENT_TYPE = "ApiCall";
@@ -52,8 +50,7 @@ public class ApiCallMonitoringEvent extends ApiMonitoringEvent {
     /**
      * {@inheritDoc}
      *
-     * <p>
-     * This is when the request is first seen by the service client.
+     * <p>This is when the request is first seen by the service client.
      */
     public ApiCallMonitoringEvent withTimestamp(Long timestamp) {
         this.timestamp = timestamp;
@@ -61,8 +58,8 @@ public class ApiCallMonitoringEvent extends ApiMonitoringEvent {
     }
 
     /**
-     * @return The total number of attempts that were made by the service client to fulfill this request before succeeding or
-     * failing.
+     * @return The total number of attempts that were made by the service client to fulfill this
+     *     request before succeeding or failing.
      */
     public Integer getAttemptCount() {
         return attemptCount;
@@ -80,8 +77,8 @@ public class ApiCallMonitoringEvent extends ApiMonitoringEvent {
     }
 
     /**
-     * @return The elapsed time, in milliseconds, between when the Api Call was begun and when a final response or error is
-     * manifested to the caller.
+     * @return The elapsed time, in milliseconds, between when the Api Call was begun and when a
+     *     final response or error is manifested to the caller.
      */
     public Long getLatency() {
         return latency;

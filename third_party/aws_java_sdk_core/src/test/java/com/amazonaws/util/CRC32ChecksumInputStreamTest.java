@@ -23,12 +23,9 @@ import static org.junit.Assert.assertEquals;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.zip.CRC32;
-
 import org.junit.Test;
 
-/**
- * Test CRC32ChecksumInputStream can calculate CRC32 checksum correctly.
- */
+/** Test CRC32ChecksumInputStream can calculate CRC32 checksum correctly. */
 public class CRC32ChecksumInputStreamTest {
 
     private final String TEST_DARA = "Jason, Yifei, Zach";
@@ -38,9 +35,10 @@ public class CRC32ChecksumInputStreamTest {
         CRC32 crc32 = new CRC32();
         crc32.update(TEST_DARA.getBytes());
         long expectedCRC32Checksum = crc32.getValue();
-        CRC32ChecksumCalculatingInputStream crc32InputStream = new CRC32ChecksumCalculatingInputStream(new ByteArrayInputStream(TEST_DARA.getBytes()));
-        while(crc32InputStream.read() != -1);
+        CRC32ChecksumCalculatingInputStream crc32InputStream =
+                new CRC32ChecksumCalculatingInputStream(
+                        new ByteArrayInputStream(TEST_DARA.getBytes()));
+        while (crc32InputStream.read() != -1) ;
         assertEquals(expectedCRC32Checksum, crc32InputStream.getCRC32Checksum());
     }
-
 }

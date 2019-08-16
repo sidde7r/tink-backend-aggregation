@@ -14,7 +14,6 @@
  */
 package com.amazonaws.regions;
 
-
 import static com.amazonaws.SDKGlobalConfiguration.AWS_REGION_SYSTEM_PROPERTY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

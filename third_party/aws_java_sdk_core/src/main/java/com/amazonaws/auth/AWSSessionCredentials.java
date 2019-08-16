@@ -14,13 +14,9 @@
  */
 package com.amazonaws.auth;
 
-/**
- * AWS session credentials object.
- */
+/** AWS session credentials object. */
 public interface AWSSessionCredentials extends AWSCredentials {
 
-    /**
-     * Returns the session token for this session.
-     */
+    /** Returns the session token for this session. */
     public String getSessionToken();
 }

@@ -15,7 +15,6 @@
 package com.amazonaws.client;
 
 import com.amazonaws.annotation.SdkProtectedApi;
-
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -26,5 +25,4 @@ import java.util.concurrent.ExecutorService;
 public abstract class AwsAsyncClientParams extends AwsSyncClientParams {
 
     public abstract ExecutorService getExecutor();
-
 }

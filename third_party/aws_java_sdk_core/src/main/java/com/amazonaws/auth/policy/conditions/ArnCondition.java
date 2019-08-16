@@ -14,50 +14,46 @@
  */
 package com.amazonaws.auth.policy.conditions;
 
+import com.amazonaws.auth.policy.Condition;
 import java.util.Arrays;
 
-import com.amazonaws.auth.policy.Condition;
-
 /**
- * AWS access control policy condition that allows an access control statement
- * to be conditionally applied based on the comparison of an Amazon Resource
- * Name (ARN).
- * <p>
- * An Amazon Resource Name (ARN) takes the following format:
+ * AWS access control policy condition that allows an access control statement to be conditionally
+ * applied based on the comparison of an Amazon Resource Name (ARN).
+ *
+ * <p>An Amazon Resource Name (ARN) takes the following format:
  * <b>arn:aws:&lt;vendor>:&lt;region>:&lt;namespace>:&lt;relative-id></b>
+ *
  * <p>
+ *
  * <ul>
- * <li>vendor identifies the AWS product (e.g., sns)</li>
- * <li>region is the AWS Region the resource resides in (e.g., us-east-1), if
- * any
- * <li>namespace is the AWS account ID with no hyphens (e.g., 123456789012)
- * <li>relative-id is the service specific portion that identifies the specific
- * resource
+ *   <li>vendor identifies the AWS product (e.g., sns)
+ *   <li>region is the AWS Region the resource resides in (e.g., us-east-1), if any
+ *   <li>namespace is the AWS account ID with no hyphens (e.g., 123456789012)
+ *   <li>relative-id is the service specific portion that identifies the specific resource
  * </ul>
- * <p>
- * For example, an Amazon SQS queue might be addressed with the following ARN:
+ *
+ * <p>For example, an Amazon SQS queue might be addressed with the following ARN:
  * <b>arn:aws:sqs:us-east-1:987654321000:MyQueue</b>
+ *
  * <p>
- * <p>
- * Currently the only valid condition key to use in an ARN condition is
- * {@link ConditionFactory#SOURCE_ARN_CONDITION_KEY}, which indicates the
- * source resource that is modifying another resource, for example, an SNS topic
- * is the source ARN when publishing messages from the topic to an SQS queue.
+ *
+ * <p>Currently the only valid condition key to use in an ARN condition is {@link
+ * ConditionFactory#SOURCE_ARN_CONDITION_KEY}, which indicates the source resource that is modifying
+ * another resource, for example, an SNS topic is the source ARN when publishing messages from the
+ * topic to an SQS queue.
  */
 public class ArnCondition extends Condition {
 
-    /**
-     * Enumeration of the supported ways an ARN comparison can be evaluated.
-     */
+    /** Enumeration of the supported ways an ARN comparison can be evaluated. */
     public static enum ArnComparisonType {
         /** Exact matching */
         ArnEquals,
 
         /**
-         * Loose case-insensitive matching of the ARN. Each of the six
-         * colon-delimited components of the ARN is checked separately and each
-         * can include a multi-character match wildcard (*) or a
-         * single-character match wildcard (?).
+         * Loose case-insensitive matching of the ARN. Each of the six colon-delimited components of
+         * the ARN is checked separately and each can include a multi-character match wildcard (*)
+         * or a single-character match wildcard (?).
          */
         ArnLike,
 
@@ -69,26 +65,18 @@ public class ArnCondition extends Condition {
     };
 
     /**
-     * Constructs a new access control policy condition that compares ARNs
-     * (Amazon Resource Names).
+     * Constructs a new access control policy condition that compares ARNs (Amazon Resource Names).
      *
-     * @param type
-     *            The type of comparison to perform.
-     * @param key
-     *            The access policy condition key specifying where to get the
-     *            first ARN for the comparison (ex:
-     *            {@link ConditionFactory#SOURCE_ARN_CONDITION_KEY}).
-     * @param value
-     *            The second ARN to compare against. When using
-     *            {@link ArnComparisonType#ArnLike} or
-     *            {@link ArnComparisonType#ArnNotLike} this may contain the
-     *            multi-character wildcard (*) or the single-character wildcard
-     *            (?).
+     * @param type The type of comparison to perform.
+     * @param key The access policy condition key specifying where to get the first ARN for the
+     *     comparison (ex: {@link ConditionFactory#SOURCE_ARN_CONDITION_KEY}).
+     * @param value The second ARN to compare against. When using {@link ArnComparisonType#ArnLike}
+     *     or {@link ArnComparisonType#ArnNotLike} this may contain the multi-character wildcard (*)
+     *     or the single-character wildcard (?).
      */
     public ArnCondition(ArnComparisonType type, String key, String value) {
         super.type = type.toString();
         super.conditionKey = key;
         super.values = Arrays.asList(new String[] {value});
     }
-
 }

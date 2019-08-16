@@ -14,11 +14,6 @@
  */
 package com.amazonaws.monitoring;
 
-import com.amazonaws.SdkClientException;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_CLIENT_ID_SYSTEM_PROPERTY;
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_ENABLED_SYSTEM_PROPERTY;
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_PORT_SYSTEM_PROPERTY;
@@ -26,12 +21,15 @@ import static com.amazonaws.SDKGlobalConfiguration.DEFAULT_AWS_CSM_CLIENT_ID;
 import static com.amazonaws.SDKGlobalConfiguration.DEFAULT_AWS_CSM_PORT;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Tests for {@link SystemPropertyCsmConfigurationProvider}.
- */
+import com.amazonaws.SdkClientException;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+
+/** Tests for {@link SystemPropertyCsmConfigurationProvider}. */
 public class SystemPropertyCsmConfigurationProviderTest {
     private final SystemPropertyCsmConfigurationProvider provider =
-        new SystemPropertyCsmConfigurationProvider();
+            new SystemPropertyCsmConfigurationProvider();
 
     @Before
     public void testSetup() {

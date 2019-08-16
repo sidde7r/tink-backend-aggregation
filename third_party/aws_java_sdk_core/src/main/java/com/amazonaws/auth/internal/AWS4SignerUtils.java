@@ -18,33 +18,32 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 /**
- * Utility methods that is used by the different AWS Signer implementations.
- * This class is strictly internal and is subjected to change.
+ * Utility methods that is used by the different AWS Signer implementations. This class is strictly
+ * internal and is subjected to change.
  */
 public final class AWS4SignerUtils {
 
-    private static final DateTimeFormatter dateFormatter = DateTimeFormat
-            .forPattern("yyyyMMdd").withZoneUTC();
+    private static final DateTimeFormatter dateFormatter =
+            DateTimeFormat.forPattern("yyyyMMdd").withZoneUTC();
 
-    private static final DateTimeFormatter timeFormatter = DateTimeFormat
-            .forPattern("yyyyMMdd'T'HHmmss'Z'").withZoneUTC();
+    private static final DateTimeFormatter timeFormatter =
+            DateTimeFormat.forPattern("yyyyMMdd'T'HHmmss'Z'").withZoneUTC();
 
     /**
-     * Returns a string representation of the given date time in yyyyMMdd
-     * format. The date returned is in the UTC zone.
+     * Returns a string representation of the given date time in yyyyMMdd format. The date returned
+     * is in the UTC zone.
      *
-     * For example, given a time "1416863450581", this method returns "20141124"
+     * <p>For example, given a time "1416863450581", this method returns "20141124"
      */
     public static String formatDateStamp(long timeMilli) {
         return dateFormatter.print(timeMilli);
     }
 
     /**
-     * Returns a string representation of the given date time in
-     * yyyyMMdd'T'HHmmss'Z' format. The date returned is in the UTC zone.
+     * Returns a string representation of the given date time in yyyyMMdd'T'HHmmss'Z' format. The
+     * date returned is in the UTC zone.
      *
-     * For example, given a time "1416863450581", this method returns
-     * "20141124T211050Z"
+     * <p>For example, given a time "1416863450581", this method returns "20141124T211050Z"
      */
     public static String formatTimestamp(long timeMilli) {
         return timeFormatter.print(timeMilli);

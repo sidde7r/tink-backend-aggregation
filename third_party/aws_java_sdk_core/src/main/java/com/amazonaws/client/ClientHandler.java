@@ -14,12 +14,9 @@
  */
 package com.amazonaws.client;
 
-import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.annotation.SdkProtectedApi;
 
-/**
- * Client interface to invoke an API.
- */
+/** Client interface to invoke an API. */
 @SdkProtectedApi
 public abstract class ClientHandler {
 
@@ -28,15 +25,13 @@ public abstract class ClientHandler {
      * underlying HTTP call(s).
      *
      * @param executionParams Parameters specific to this invocation of an API.
-     * @param <Input>         Input POJO type
-     * @param <Output>        Output POJO type
+     * @param <Input> Input POJO type
+     * @param <Output> Output POJO type
      * @return Unmarshalled output POJO type.
      */
     public abstract <Input, Output> Output execute(
             ClientExecutionParams<Input, Output> executionParams);
 
-    /**
-     * Shutdown and release any underlying resources.
-     */
+    /** Shutdown and release any underlying resources. */
     public abstract void shutdown();
 }

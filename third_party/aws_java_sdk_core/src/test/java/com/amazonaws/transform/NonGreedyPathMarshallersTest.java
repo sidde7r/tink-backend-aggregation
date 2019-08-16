@@ -14,9 +14,9 @@
  */
 package com.amazonaws.transform;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class NonGreedyPathMarshallersTest {
 
@@ -34,12 +34,15 @@ public class NonGreedyPathMarshallersTest {
 
     @Test
     public void nonEmptyPathValue_ReplacesPlaceholder() {
-        assertEquals("/foo/nonEmpty", marshaller.marshall("/foo/{pathParam}", "pathParam", "nonEmpty"));
+        assertEquals(
+                "/foo/nonEmpty", marshaller.marshall("/foo/{pathParam}", "pathParam", "nonEmpty"));
     }
 
     @Test
     public void pathValueWithSlashes_UrlEncodedWhenReplaced() {
-        assertEquals("/foo/has%2Fslash", marshaller.marshall("/foo/{pathParam}", "pathParam", "has/slash"));
+        assertEquals(
+                "/foo/has%2Fslash",
+                marshaller.marshall("/foo/{pathParam}", "pathParam", "has/slash"));
     }
 
     @Test

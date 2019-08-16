@@ -15,8 +15,8 @@
 
 package com.amazonaws.monitoring.internal;
 
-import static com.amazonaws.monitoring.ApiCallMonitoringEvent.API_CALL_MONITORING_EVENT_TYPE;
 import static com.amazonaws.http.HttpResponseHandler.X_AMZN_REQUEST_ID_HEADER;
+import static com.amazonaws.monitoring.ApiCallMonitoringEvent.API_CALL_MONITORING_EVENT_TYPE;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -77,11 +77,9 @@ public class ClientSideMonitoringRequestHandlerTest {
 
     private ClientSideMonitoringRequestHandler requestHandler;
 
-    @Mock
-    private MonitoringListener agentMonitoringListener;
+    @Mock private MonitoringListener agentMonitoringListener;
 
-    @Mock
-    private MonitoringListener customMonitoringListener;
+    @Mock private MonitoringListener customMonitoringListener;
 
     @Before
     public void setup() {
@@ -97,10 +95,12 @@ public class ClientSideMonitoringRequestHandlerTest {
         requestHandler.afterAttempt(context);
 
         ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor =
-            ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
+                ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
 
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
-        verify(customMonitoringListener, times(1)).handleEvent(any(ApiCallAttemptMonitoringEvent.class));
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
+        verify(customMonitoringListener, times(1))
+                .handleEvent(any(ApiCallAttemptMonitoringEvent.class));
         ApiCallAttemptMonitoringEvent event = monitoringEventArgumentCaptor.getValue();
         verifyRequiredEntries(event);
         verifySuccessfulAttemptEvent(event);
@@ -119,9 +119,11 @@ public class ClientSideMonitoringRequestHandlerTest {
         requestHandler.afterAttempt(getContext(metrics, exception));
 
         ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor =
-            ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
-        verify(customMonitoringListener, times(1)).handleEvent(any(ApiCallAttemptMonitoringEvent.class));
+                ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
+        verify(customMonitoringListener, times(1))
+                .handleEvent(any(ApiCallAttemptMonitoringEvent.class));
         ApiCallAttemptMonitoringEvent event = monitoringEventArgumentCaptor.getValue();
         verifyRequiredEntries(event);
         verifyConditionalEntries(event, exception);
@@ -129,14 +131,16 @@ public class ClientSideMonitoringRequestHandlerTest {
 
     @Test
     public void afterAttempt_AwsExceptionWithOverSizeMessage_ShouldTrim() {
-        AmazonServiceException exception = new AmazonServiceException(RandomStringUtils.randomAlphanumeric(1000));
+        AmazonServiceException exception =
+                new AmazonServiceException(RandomStringUtils.randomAlphanumeric(1000));
         exception.setStatusCode(400);
         AWSRequestMetrics metrics = getMetrics(1);
         requestHandler.afterAttempt(getContext(metrics, exception));
 
-        ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor = ArgumentCaptor.forClass
-            (ApiCallAttemptMonitoringEvent.class);
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
+        ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor =
+                ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
         ApiCallAttemptMonitoringEvent event = monitoringEventArgumentCaptor.getValue();
         verifyExceptionMessageSize(event.getAwsExceptionMessage());
     }
@@ -149,9 +153,11 @@ public class ClientSideMonitoringRequestHandlerTest {
         requestHandler.afterAttempt(getContext(metrics, ioException));
 
         ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor =
-            ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
-        verify(customMonitoringListener, times(1)).handleEvent(any(ApiCallAttemptMonitoringEvent.class));
+                ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
+        verify(customMonitoringListener, times(1))
+                .handleEvent(any(ApiCallAttemptMonitoringEvent.class));
         ApiCallAttemptMonitoringEvent event = monitoringEventArgumentCaptor.getValue();
         verifyRequiredEntries(event);
         verifyConditionalEntries(event, ioException);
@@ -159,13 +165,15 @@ public class ClientSideMonitoringRequestHandlerTest {
 
     @Test
     public void afterAttempt_sdkExceptionWithOverSizeMessage_ShouldTrim() {
-        SdkClientException ioException = new SdkClientException(new IOException(RandomStringUtils.randomAlphanumeric(1200)));
+        SdkClientException ioException =
+                new SdkClientException(new IOException(RandomStringUtils.randomAlphanumeric(1200)));
         AWSRequestMetrics metrics = getMetrics(1);
         requestHandler.afterAttempt(getContext(metrics, ioException));
 
         ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor =
-            ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
+                ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
         ApiCallAttemptMonitoringEvent event = monitoringEventArgumentCaptor.getValue();
         verifyExceptionSize(event.getSdkException());
         verifyExceptionMessageSize(event.getSdkExceptionMessage());
@@ -179,9 +187,11 @@ public class ClientSideMonitoringRequestHandlerTest {
         requestHandler.afterAttempt(getContext(metrics, runtimeException));
 
         ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor =
-            ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
-        verify(customMonitoringListener, times(1)).handleEvent(any(ApiCallAttemptMonitoringEvent.class));
+                ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
+        verify(customMonitoringListener, times(1))
+                .handleEvent(any(ApiCallAttemptMonitoringEvent.class));
         ApiCallAttemptMonitoringEvent event = monitoringEventArgumentCaptor.getValue();
         verifyRequiredEntries(event);
         verifyConditionalEntries(event, runtimeException);
@@ -201,8 +211,10 @@ public class ClientSideMonitoringRequestHandlerTest {
         ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor =
                 ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
 
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
-        verify(customMonitoringListener, times(1)).handleEvent(any(ApiCallAttemptMonitoringEvent.class));
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
+        verify(customMonitoringListener, times(1))
+                .handleEvent(any(ApiCallAttemptMonitoringEvent.class));
         ApiCallAttemptMonitoringEvent event = monitoringEventArgumentCaptor.getValue();
         verifyRequiredEntries(event);
         verifySuccessfulAttemptEvent(event);
@@ -222,8 +234,10 @@ public class ClientSideMonitoringRequestHandlerTest {
         ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor =
                 ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
 
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
-        verify(customMonitoringListener, times(1)).handleEvent(any(ApiCallAttemptMonitoringEvent.class));
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
+        verify(customMonitoringListener, times(1))
+                .handleEvent(any(ApiCallAttemptMonitoringEvent.class));
         ApiCallAttemptMonitoringEvent event = monitoringEventArgumentCaptor.getValue();
         verifyRequiredEntries(event);
         verifySuccessfulAttemptEvent(event);
@@ -233,7 +247,9 @@ public class ClientSideMonitoringRequestHandlerTest {
     public void afterAttempt_agentMonitoringListenerThrowException_shouldNotAffectCustomListener() {
         Request<?> request = getRequest();
         Response<?> response = getResponse(request);
-        doThrow(new RuntimeException("Oops")).when(agentMonitoringListener).handleEvent(any(ApiMonitoringEvent.class));
+        doThrow(new RuntimeException("Oops"))
+                .when(agentMonitoringListener)
+                .handleEvent(any(ApiMonitoringEvent.class));
         requestHandler.afterAttempt(getContext(response));
         verify(agentMonitoringListener, times(1)).handleEvent(any(ApiMonitoringEvent.class));
         verify(customMonitoringListener, times(1)).handleEvent(any(ApiMonitoringEvent.class));
@@ -245,8 +261,9 @@ public class ClientSideMonitoringRequestHandlerTest {
         request.setAWSRequestMetrics(getMetrics(1));
         requestHandler.afterAttempt(getContext(getResponse(request)));
         ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor =
-            ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
+                ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
         ApiCallAttemptMonitoringEvent monitoringEvent = monitoringEventArgumentCaptor.getValue();
         assertThat(monitoringEvent.getClientId().length(), is(lessThanOrEqualTo(255)));
     }
@@ -254,12 +271,15 @@ public class ClientSideMonitoringRequestHandlerTest {
     @Test
     public void afterAttempt_overSizeUserAgent_shouldTrim() {
         Request<?> request = getRequest();
-        request.getOriginalRequest().getRequestClientOptions().appendUserAgent(RandomStringUtils.randomAlphanumeric(345));
+        request.getOriginalRequest()
+                .getRequestClientOptions()
+                .appendUserAgent(RandomStringUtils.randomAlphanumeric(345));
         request.setAWSRequestMetrics(getMetrics(1));
         requestHandler.afterAttempt(getContext(getResponse(request)));
         ArgumentCaptor<ApiCallAttemptMonitoringEvent> monitoringEventArgumentCaptor =
-            ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
+                ArgumentCaptor.forClass(ApiCallAttemptMonitoringEvent.class);
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
         ApiCallAttemptMonitoringEvent monitoringEvent = monitoringEventArgumentCaptor.getValue();
         assertThat(monitoringEvent.getUserAgent().length(), is(lessThanOrEqualTo(256)));
     }
@@ -272,9 +292,10 @@ public class ClientSideMonitoringRequestHandlerTest {
         requestHandler.afterResponse(request, getResponse(request));
 
         ArgumentCaptor<ApiCallMonitoringEvent> monitoringEventArgumentCaptor =
-            ArgumentCaptor.forClass(ApiCallMonitoringEvent.class);
+                ArgumentCaptor.forClass(ApiCallMonitoringEvent.class);
 
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
         verify(customMonitoringListener, times(1)).handleEvent(any(ApiCallMonitoringEvent.class));
         ApiCallMonitoringEvent event = monitoringEventArgumentCaptor.getValue();
         verifyApiCallMonitoringEvent(3, event);
@@ -288,19 +309,23 @@ public class ClientSideMonitoringRequestHandlerTest {
         requestHandler.afterError(request, getResponse(request), new IOException(""));
 
         ArgumentCaptor<ApiCallMonitoringEvent> monitoringEventArgumentCaptor =
-            ArgumentCaptor.forClass(ApiCallMonitoringEvent.class);
+                ArgumentCaptor.forClass(ApiCallMonitoringEvent.class);
 
-        verify(agentMonitoringListener, times(1)).handleEvent(monitoringEventArgumentCaptor.capture());
+        verify(agentMonitoringListener, times(1))
+                .handleEvent(monitoringEventArgumentCaptor.capture());
         verify(customMonitoringListener, times(1)).handleEvent(any(ApiCallMonitoringEvent.class));
         ApiCallMonitoringEvent event = monitoringEventArgumentCaptor.getValue();
         verifyApiCallMonitoringEvent(1, event);
     }
 
     @Test
-    public void afterResponse_customMonitoringListenerThrowException_shouldNotAffectAgentListener() {
+    public void
+            afterResponse_customMonitoringListenerThrowException_shouldNotAffectAgentListener() {
         Request<?> request = getRequest();
         Response<?> response = getResponse(request);
-        doThrow(new RuntimeException("Oops")).when(customMonitoringListener).handleEvent(any(ApiMonitoringEvent.class));
+        doThrow(new RuntimeException("Oops"))
+                .when(customMonitoringListener)
+                .handleEvent(any(ApiMonitoringEvent.class));
         requestHandler.afterResponse(request, response);
         verify(agentMonitoringListener, times(1)).handleEvent(any(ApiMonitoringEvent.class));
         verify(customMonitoringListener, times(1)).handleEvent(any(ApiMonitoringEvent.class));
@@ -310,18 +335,17 @@ public class ClientSideMonitoringRequestHandlerTest {
     public void afterError_customMonitoringListenerThrowException_shouldNotAffectAgentListener() {
         Request<?> request = getRequest();
         Response<?> response = getResponse(request);
-        doThrow(new RuntimeException("Oops")).when(customMonitoringListener).handleEvent(any(ApiMonitoringEvent.class));
+        doThrow(new RuntimeException("Oops"))
+                .when(customMonitoringListener)
+                .handleEvent(any(ApiMonitoringEvent.class));
         requestHandler.afterError(request, response, new AmazonServiceException("test"));
         verify(agentMonitoringListener, times(1)).handleEvent(any(ApiMonitoringEvent.class));
         verify(customMonitoringListener, times(1)).handleEvent(any(ApiMonitoringEvent.class));
     }
 
-    /**
-     * Generate metrics.
-     */
+    /** Generate metrics. */
     private AWSRequestMetrics getMetrics(int requestCount) {
-        AWSRequestMetricsFullSupport metrics =
-            new AWSRequestMetricsFullSupport();
+        AWSRequestMetricsFullSupport metrics = new AWSRequestMetricsFullSupport();
         metrics.addProperty(AWSRequestMetrics.Field.ServiceName, SERVICE_NAME);
         metrics.startEvent(AwsClientSideMonitoringMetrics.Latency);
 
@@ -339,10 +363,9 @@ public class ClientSideMonitoringRequestHandlerTest {
         return metrics;
     }
 
-    /**
-     * Verify ApiCallMonitoringEvent
-     */
-    private void verifyApiCallMonitoringEvent(int requestCount, ApiCallMonitoringEvent monitoringEvent) {
+    /** Verify ApiCallMonitoringEvent */
+    private void verifyApiCallMonitoringEvent(
+            int requestCount, ApiCallMonitoringEvent monitoringEvent) {
         verifyCommonFields(monitoringEvent);
         assertEquals(API_CALL_MONITORING_EVENT_TYPE, monitoringEvent.getType());
         assertEquals(requestCount, monitoringEvent.getAttemptCount().intValue());
@@ -357,27 +380,28 @@ public class ClientSideMonitoringRequestHandlerTest {
         assertNotNull(event.getRequestLatency());
     }
 
-    /**
-     * Verify ApiCallAttemptMonitoringEvent
-     */
+    /** Verify ApiCallAttemptMonitoringEvent */
     private void verifyRequiredEntries(ApiCallAttemptMonitoringEvent monitoringEvent) {
         verifyCommonFields(monitoringEvent);
         assertEquals("ApiCallAttempt", monitoringEvent.getType());
         assertNotNull("fqdn should not be null", monitoringEvent.getFqdn());
-        assertNotNull("attempt latency should not be null", monitoringEvent
-            .getAttemptLatency());
+        assertNotNull("attempt latency should not be null", monitoringEvent.getAttemptLatency());
         assertEquals("wow.service", monitoringEvent.getFqdn());
         assertEquals(REGION, monitoringEvent.getRegion());
         assertEquals(SECURITY_TOKENS, monitoringEvent.getSessionToken());
         assertNotNull(monitoringEvent.getUserAgent());
     }
 
-    private void verifyConditionalEntries(ApiCallAttemptMonitoringEvent event, Exception exception) {
+    private void verifyConditionalEntries(
+            ApiCallAttemptMonitoringEvent event, Exception exception) {
         if (exception instanceof AmazonServiceException) {
             assertEquals(event.getHttpStatusCode(), event.getHttpStatusCode());
             assertNotNull("requestId cannot be null", event.getxAmznRequestId());
-            assertEquals(((AmazonServiceException) exception).getErrorCode(), event.getAwsException());
-            assertEquals(((AmazonServiceException) exception).getErrorMessage(), event.getAwsExceptionMessage());
+            assertEquals(
+                    ((AmazonServiceException) exception).getErrorCode(), event.getAwsException());
+            assertEquals(
+                    ((AmazonServiceException) exception).getErrorMessage(),
+                    event.getAwsExceptionMessage());
             verifyExceptionMessageSize(event.getAwsExceptionMessage());
             verifyExceptionSize(event.getAwsException());
             assertNotNull(event.getRequestLatency());
@@ -392,8 +416,11 @@ public class ClientSideMonitoringRequestHandlerTest {
             verifyExceptionMessageSize(event.getSdkExceptionMessage());
             verifyExceptionSize(event.getSdkException());
 
-            assertEquals(exception.getMessage() == null ? Throwables.getRootCause(exception).getMessage() : exception
-                .getMessage(), event.getSdkExceptionMessage());
+            assertEquals(
+                    exception.getMessage() == null
+                            ? Throwables.getRootCause(exception).getMessage()
+                            : exception.getMessage(),
+                    event.getSdkExceptionMessage());
             assertEquals(exception.getClass().getName(), event.getSdkException());
         }
     }
@@ -415,7 +442,9 @@ public class ClientSideMonitoringRequestHandlerTest {
     }
 
     private boolean containsRequestId(ApiCallAttemptMonitoringEvent event) {
-        return event.getxAmznRequestId() != null || event.getxAmzId2() != null || event.getxAmzRequestId() != null;
+        return event.getxAmznRequestId() != null
+                || event.getxAmzId2() != null
+                || event.getxAmzRequestId() != null;
     }
 
     private void verifyCommonFields(ApiMonitoringEvent monitoringEvent) {
@@ -437,18 +466,18 @@ public class ClientSideMonitoringRequestHandlerTest {
 
     private HandlerAfterAttemptContext getContext(Response<?> response) {
         return HandlerAfterAttemptContext.builder()
-                                         .withRequest(getRequest())
-                                         .withResponse(response)
-                                         .build();
+                .withRequest(getRequest())
+                .withResponse(response)
+                .build();
     }
 
     private HandlerAfterAttemptContext getContext(AWSRequestMetrics metrics, Exception exception) {
         Request<?> request = getRequest();
         request.setAWSRequestMetrics(metrics);
         return HandlerAfterAttemptContext.builder()
-                                         .withRequest(request)
-                                         .withException(exception)
-                                         .build();
+                .withRequest(request)
+                .withException(exception)
+                .build();
     }
 
     private HandlerAfterAttemptContext getContext(AWSRequestMetrics metrics) {
@@ -456,28 +485,29 @@ public class ClientSideMonitoringRequestHandlerTest {
         request.setAWSRequestMetrics(metrics);
 
         return HandlerAfterAttemptContext.builder()
-                                         .withRequest(request)
-                                         .withResponse(getResponse(request))
-                                         .build();
+                .withRequest(request)
+                .withResponse(getResponse(request))
+                .build();
     }
 
     private HandlerAfterAttemptContext getContext(Request<?> request) {
         return HandlerAfterAttemptContext.builder()
-                                         .withRequest(request)
-                                         .withResponse(getResponse(request))
-                                         .build();
+                .withRequest(request)
+                .withResponse(getResponse(request))
+                .build();
     }
 
     private static Request<?> getRequest() {
-        DefaultRequest<?> request = new DefaultRequest(
-            new EmptyAmazonWebServiceRequest(), SERVICE_NAME);
+        DefaultRequest<?> request =
+                new DefaultRequest(new EmptyAmazonWebServiceRequest(), SERVICE_NAME);
         request.setEndpoint(URI.create("http://wow.service"));
         try {
             request.addHandlerContext(HandlerContextKey.SERVICE_ID, SERVICE_ID);
             request.addHandlerContext(HandlerContextKey.SIGNING_REGION, REGION);
             request.addHandlerContext(HandlerContextKey.OPERATION_NAME, API_NAME);
             request.addHeader("x-amz-security-token", SECURITY_TOKENS);
-            request.setContent(new StringInputStream("Some content that could be read for multiple times."));
+            request.setContent(
+                    new StringInputStream("Some content that could be read for multiple times."));
         } catch (UnsupportedEncodingException e) {
             Assert.fail("Unable to set up the request content");
         }

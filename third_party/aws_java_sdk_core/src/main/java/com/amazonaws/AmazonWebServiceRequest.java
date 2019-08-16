@@ -28,18 +28,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Base class for all user facing web service requests.
- */
+/** Base class for all user facing web service requests. */
 @NotThreadSafe
-public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInfo, HandlerContextAware {
+public abstract class AmazonWebServiceRequest
+        implements Cloneable, ReadLimitInfo, HandlerContextAware {
 
-    public static final AmazonWebServiceRequest NOOP = new AmazonWebServiceRequest() {
-    };
+    public static final AmazonWebServiceRequest NOOP = new AmazonWebServiceRequest() {};
 
-    /**
-     * The optional progress listener for receiving updates about the progress of the request.
-     */
+    /** The optional progress listener for receiving updates about the progress of the request. */
     private ProgressListener progressListener = ProgressListener.NOOP;
 
     /**
@@ -61,24 +57,17 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
      */
     private AWSCredentialsProvider credentialsProvider;
 
-    /**
-     * A map of custom header names to header values.
-     */
+    /** A map of custom header names to header values. */
     private Map<String, String> customRequestHeaders;
 
-    /**
-     * Custom query parameters for the request.
-     */
+    /** Custom query parameters for the request. */
     private Map<String, List<String>> customQueryParameters;
 
-    /**
-     * User-defined context for the request.
-     */
-    private transient Map<HandlerContextKey<?>, Object> handlerContext = new HashMap<HandlerContextKey<?>, Object>();
+    /** User-defined context for the request. */
+    private transient Map<HandlerContextKey<?>, Object> handlerContext =
+            new HashMap<HandlerContextKey<?>, Object>();
 
-    /**
-     * The source object from which the current object was cloned; or null if there isn't one.
-     */
+    /** The source object from which the current object was cloned; or null if there isn't one. */
     private AmazonWebServiceRequest cloneSource;
 
     private Integer sdkRequestTimeout = null;
@@ -86,16 +75,19 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
     private Integer sdkClientExecutionTimeout = null;
 
     /**
-     * Sets the optional credentials to use for this request, overriding the default credentials set at the client level.
+     * Sets the optional credentials to use for this request, overriding the default credentials set
+     * at the client level.
      *
-     * @param credentials The optional AWS security credentials to use for this request, overriding the default credentials set at
-     *                    the client level.
-     * @deprecated by {@link #setRequestCredentialsProvider(AWSCredentialsProvider)}. If you must use {@link AWSCredentials} you
-     * can wrap it with a {@link com.amazonaws.auth.AWSStaticCredentialsProvider}.
+     * @param credentials The optional AWS security credentials to use for this request, overriding
+     *     the default credentials set at the client level.
+     * @deprecated by {@link #setRequestCredentialsProvider(AWSCredentialsProvider)}. If you must
+     *     use {@link AWSCredentials} you can wrap it with a {@link
+     *     com.amazonaws.auth.AWSStaticCredentialsProvider}.
      */
     @Deprecated
     public void setRequestCredentials(AWSCredentials credentials) {
-        this.credentialsProvider = credentials == null ? null : new StaticCredentialsProvider(credentials);
+        this.credentialsProvider =
+                credentials == null ? null : new StaticCredentialsProvider(credentials);
     }
 
     /**
@@ -103,8 +95,7 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
      * credentials set at the client level.
      *
      * @return The optional credentials to use to sign this request, overriding the default
-     *         credentials set at the client level.
-     *
+     *     credentials set at the client level.
      * @deprecated by {@link #getRequestCredentialsProvider()}
      */
     @Deprecated
@@ -113,12 +104,11 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
     }
 
     /**
-     * Sets the optional credentials provider to use for this request, overriding the default credentials
-     * provider at the client level.
+     * Sets the optional credentials provider to use for this request, overriding the default
+     * credentials provider at the client level.
      *
-     * @param credentialsProvider
-     *            The optional AWS security credentials provider to use for this request, overriding the
-     *            default credentials provider at the client level.
+     * @param credentialsProvider The optional AWS security credentials provider to use for this
+     *     request, overriding the default credentials provider at the client level.
      */
     public void setRequestCredentialsProvider(AWSCredentialsProvider credentialsProvider) {
         this.credentialsProvider = credentialsProvider;
@@ -129,38 +119,34 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
      * credentials provider at the client level.
      *
      * @return The optional credentials provider to use to sign this request, overriding the default
-     *         credentials provider at the client level.
+     *     credentials provider at the client level.
      */
     public AWSCredentialsProvider getRequestCredentialsProvider() {
         return credentialsProvider;
     }
 
     /**
-     * Sets the optional credentials provider to use for this request, overriding the default credentials
-     * provider at the client level.
+     * Sets the optional credentials provider to use for this request, overriding the default
+     * credentials provider at the client level.
      *
-     * @param credentialsProvider
-     *            The optional AWS security credentials provider to use for this request, overriding the
-     *            default credentials provider at the client level.
+     * @param credentialsProvider The optional AWS security credentials provider to use for this
+     *     request, overriding the default credentials provider at the client level.
      * @return A reference to this updated object so that method calls can be chained together.
      */
-    public <T extends AmazonWebServiceRequest> T withRequestCredentialsProvider(final AWSCredentialsProvider credentialsProvider) {
+    public <T extends AmazonWebServiceRequest> T withRequestCredentialsProvider(
+            final AWSCredentialsProvider credentialsProvider) {
         setRequestCredentialsProvider(credentialsProvider);
         @SuppressWarnings("unchecked")
         T t = (T) this;
         return t;
     }
 
-    /**
-     * Gets the options stored with this request object. Intended for internal use only.
-     */
+    /** Gets the options stored with this request object. Intended for internal use only. */
     public RequestClientOptions getRequestClientOptions() {
         return requestClientOptions;
     }
 
-    /**
-     * Returns a request level metric collector; or null if not specified.
-     */
+    /** Returns a request level metric collector; or null if not specified. */
     public RequestMetricCollector getRequestMetricCollector() {
         return requestMetricCollector;
     }
@@ -177,7 +163,8 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
      * Specifies a request level metric collector which takes precedence over the ones at the http
      * client level and AWS SDK level.
      */
-    public <T extends AmazonWebServiceRequest> T withRequestMetricCollector(RequestMetricCollector metricCollector) {
+    public <T extends AmazonWebServiceRequest> T withRequestMetricCollector(
+            RequestMetricCollector metricCollector) {
         setRequestMetricCollector(metricCollector);
         @SuppressWarnings("unchecked")
         T t = (T) this;
@@ -187,8 +174,7 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
     /**
      * Sets the optional progress listener for receiving updates about the progress of the request.
      *
-     * @param progressListener
-     *            The new progress listener.
+     * @param progressListener The new progress listener.
      */
     public void setGeneralProgressListener(ProgressListener progressListener) {
         this.progressListener = progressListener == null ? ProgressListener.NOOP : progressListener;
@@ -199,7 +185,7 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
      * request.
      *
      * @return the optional progress listener for receiving updates about the progress of the
-     *         request.
+     *     request.
      */
     public ProgressListener getGeneralProgressListener() {
         return progressListener;
@@ -209,11 +195,11 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
      * Sets the optional progress listener for receiving updates about the progress of the request,
      * and returns a reference to this object so that method calls can be chained together.
      *
-     * @param progressListener
-     *            The new progress listener.
+     * @param progressListener The new progress listener.
      * @return A reference to this updated object so that method calls can be chained together.
      */
-    public <T extends AmazonWebServiceRequest> T withGeneralProgressListener(ProgressListener progressListener) {
+    public <T extends AmazonWebServiceRequest> T withGeneralProgressListener(
+            ProgressListener progressListener) {
         setGeneralProgressListener(progressListener);
         @SuppressWarnings("unchecked")
         T t = (T) this;
@@ -235,17 +221,15 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
     /**
      * Put a new custom header to the map of custom header names to custom header values, and return
      * the previous value if the header has already been set in this map.
-     * <p>
-     * Any custom headers that are defined are used in the HTTP request to the AWS service. These
-     * headers will be silently ignored in the event that AWS does not recognize them.
-     * <p>
-     * NOTE: Custom header values set via this method will overwrite any conflicting values coming
-     * from the request parameters.
      *
-     * @param name
-     *            The name of the header to add
-     * @param value
-     *            The value of the header to add
+     * <p>Any custom headers that are defined are used in the HTTP request to the AWS service. These
+     * headers will be silently ignored in the event that AWS does not recognize them.
+     *
+     * <p>NOTE: Custom header values set via this method will overwrite any conflicting values
+     * coming from the request parameters.
+     *
+     * @param name The name of the header to add
+     * @param value The value of the header to add
      * @return the previous value for the name if it was set, null otherwise
      */
     public String putCustomRequestHeader(String name, String value) {
@@ -257,7 +241,7 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
 
     /**
      * @return the immutable map of custom query parameters. The parameter value is modeled as a
-     *         list of strings because multiple values can be specified for the same parameter name.
+     *     list of strings because multiple values can be specified for the same parameter name.
      */
     public Map<String, List<String>> getCustomQueryParameters() {
         if (customQueryParameters == null) {
@@ -269,16 +253,15 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
     /**
      * Add a custom query parameter for the request. Since multiple values are allowed for the same
      * query parameter, this method does NOT overwrite any existing parameter values in the request.
-     * <p>
-     * Any custom query parameters that are defined are used in the HTTP request to the AWS service.
      *
-     * @param name
-     *            The name of the query parameter
-     * @param value
-     *            The value of the query parameter. Only the parameter name will be added in the URI
-     *            if the value is set to null. For example, putCustomQueryParameter("param", null)
-     *            will be serialized to "?param", while putCustomQueryParameter("param", "") will be
-     *            serialized to "?param=".
+     * <p>Any custom query parameters that are defined are used in the HTTP request to the AWS
+     * service.
+     *
+     * @param name The name of the query parameter
+     * @param value The value of the query parameter. Only the parameter name will be added in the
+     *     URI if the value is set to null. For example, putCustomQueryParameter("param", null) will
+     *     be serialized to "?param", while putCustomQueryParameter("param", "") will be serialized
+     *     to "?param=".
      */
     public void putCustomQueryParameter(String name, String value) {
         if (customQueryParameters == null) {
@@ -352,26 +335,25 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
     /**
      * Returns the amount of time to wait (in milliseconds) for the request to complete before
      * giving up and timing out. A non-positive value disables this feature.
+     *
+     * <p>This feature requires buffering the entire response (for non-streaming APIs) into memory
+     * to enforce a hard timeout when reading the response. For APIs that return large responses
+     * this could be expensive.
+     *
      * <p>
-     * This feature requires buffering the entire response (for non-streaming APIs) into memory to
-     * enforce a hard timeout when reading the response. For APIs that return large responses this
-     * could be expensive.
-     * <p>
-     * <p>
-     * The request timeout feature doesn't have strict guarantees on how quickly a request is
+     *
+     * <p>The request timeout feature doesn't have strict guarantees on how quickly a request is
      * aborted when the timeout is breached. The typical case aborts the request within a few
      * milliseconds but there may occasionally be requests that don't get aborted until several
      * seconds after the timer has been breached. Because of this the request timeout feature should
      * not be used when absolute precision is needed.
-     * </p>
-     * <p>
-     * <b>Note:</b> This feature is not compatible with Java 1.6.
-     * </p>
+     *
+     * <p><b>Note:</b> This feature is not compatible with Java 1.6.
      *
      * @return The amount of time to wait (in milliseconds) for the request to complete before
-     *         giving up and timing out. A non-positive value disables the timeout for this request.
+     *     giving up and timing out. A non-positive value disables the timeout for this request.
      * @see {@link AmazonWebServiceRequest#setSdkClientExecutionTimeout(int)} to enforce a timeout
-     *      across all retries
+     *     across all retries
      */
     public Integer getSdkRequestTimeout() {
         return sdkRequestTimeout;
@@ -380,28 +362,26 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
     /**
      * Sets the amount of time to wait (in milliseconds) for the request to complete before giving
      * up and timing out. A non-positive value disables this feature.
+     *
+     * <p>This feature requires buffering the entire response (for non-streaming APIs) into memory
+     * to enforce a hard timeout when reading the response. For APIs that return large responses
+     * this could be expensive.
+     *
      * <p>
-     * This feature requires buffering the entire response (for non-streaming APIs) into memory to
-     * enforce a hard timeout when reading the response. For APIs that return large responses this
-     * could be expensive.
-     * <p>
-     * <p>
-     * The request timeout feature doesn't have strict guarantees on how quickly a request is
+     *
+     * <p>The request timeout feature doesn't have strict guarantees on how quickly a request is
      * aborted when the timeout is breached. The typical case aborts the request within a few
      * milliseconds but there may occasionally be requests that don't get aborted until several
      * seconds after the timer has been breached. Because of this the request timeout feature should
      * not be used when absolute precision is needed.
-     * </p>
-     * <p>
-     * <b>Note:</b> This feature is not compatible with Java 1.6.
-     * </p>
      *
-     * @param sdkRequestTimeout
-     *            The amount of time to wait (in milliseconds) for the request to complete before
-     *            giving up and timing out. A non-positive value disables the timeout for this
-     *            request.
+     * <p><b>Note:</b> This feature is not compatible with Java 1.6.
+     *
+     * @param sdkRequestTimeout The amount of time to wait (in milliseconds) for the request to
+     *     complete before giving up and timing out. A non-positive value disables the timeout for
+     *     this request.
      * @see {@link AmazonWebServiceRequest#setSdkClientExecutionTimeout(int)} to enforce a timeout
-     *      across all retries
+     *     across all retries
      */
     public void setSdkRequestTimeout(int sdkRequestTimeout) {
         this.sdkRequestTimeout = sdkRequestTimeout;
@@ -411,29 +391,27 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
      * Sets the amount of time to wait (in milliseconds) for the request to complete before giving
      * up and timing out. A non-positive value disables this feature. Returns the updated
      * AmazonWebServiceRequest object so that additional method calls may be chained together.
+     *
+     * <p>This feature requires buffering the entire response (for non-streaming APIs) into memory
+     * to enforce a hard timeout when reading the response. For APIs that return large responses
+     * this could be expensive.
+     *
      * <p>
-     * This feature requires buffering the entire response (for non-streaming APIs) into memory to
-     * enforce a hard timeout when reading the response. For APIs that return large responses this
-     * could be expensive.
-     * <p>
-     * <p>
-     * The request timeout feature doesn't have strict guarantees on how quickly a request is
+     *
+     * <p>The request timeout feature doesn't have strict guarantees on how quickly a request is
      * aborted when the timeout is breached. The typical case aborts the request within a few
      * milliseconds but there may occasionally be requests that don't get aborted until several
      * seconds after the timer has been breached. Because of this the request timeout feature should
      * not be used when absolute precision is needed.
-     * </p>
-     * <p>
-     * <b>Note:</b> This feature is not compatible with Java 1.6.
-     * </p>
      *
-     * @param sdkRequestTimeout
-     *            The amount of time to wait (in milliseconds) for the request to complete before
-     *            giving up and timing out. A non-positive value disables the timeout for this
-     *            request.
+     * <p><b>Note:</b> This feature is not compatible with Java 1.6.
+     *
+     * @param sdkRequestTimeout The amount of time to wait (in milliseconds) for the request to
+     *     complete before giving up and timing out. A non-positive value disables the timeout for
+     *     this request.
      * @return The updated {@link AmazonWebServiceRequest} object.
      * @see {@link AmazonWebServiceRequest#setSdkClientExecutionTimeout(int)} to enforce a timeout
-     *      across all retries
+     *     across all retries
      */
     public <T extends AmazonWebServiceRequest> T withSdkRequestTimeout(int sdkRequestTimeout) {
         setSdkRequestTimeout(sdkRequestTimeout);
@@ -446,107 +424,102 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
      * Returns the amount of time (in milliseconds) to allow the client to complete the execution of
      * an API call. This timeout covers the entire client execution except for marshalling. This
      * includes request handler execution, all HTTP request including retries, unmarshalling, etc.
+     *
+     * <p>This feature requires buffering the entire response (for non-streaming APIs) into memory
+     * to enforce a hard timeout when reading the response. For APIs that return large responses
+     * this could be expensive.
+     *
      * <p>
-     * This feature requires buffering the entire response (for non-streaming APIs) into memory to
-     * enforce a hard timeout when reading the response. For APIs that return large responses this
-     * could be expensive.
-     * <p>
-     * <p>
-     * The client execution timeout feature doesn't have strict guarantees on how quickly a request
-     * is aborted when the timeout is breached. The typical case aborts the request within a few
-     * milliseconds but there may occasionally be requests that don't get aborted until several
+     *
+     * <p>The client execution timeout feature doesn't have strict guarantees on how quickly a
+     * request is aborted when the timeout is breached. The typical case aborts the request within a
+     * few milliseconds but there may occasionally be requests that don't get aborted until several
      * seconds after the timer has been breached. Because of this the client execution timeout
      * feature should not be used when absolute precision is needed.
-     * </p>
-     * <p>
-     * This may be used together with {@link AmazonWebServiceRequest#setSdkRequestTimeout(int)} to
-     * enforce both a timeout on each individual HTTP request (i.e. each retry) and the total time
-     * spent on all requests across retries (i.e. the 'client execution' time). A non-positive value
-     * disables this feature.
-     * </p>
-     * <p>
-     * <b>Note:</b> This feature is not compatible with Java 1.6.
-     * </p>
+     *
+     * <p>This may be used together with {@link AmazonWebServiceRequest#setSdkRequestTimeout(int)}
+     * to enforce both a timeout on each individual HTTP request (i.e. each retry) and the total
+     * time spent on all requests across retries (i.e. the 'client execution' time). A non-positive
+     * value disables this feature.
+     *
+     * <p><b>Note:</b> This feature is not compatible with Java 1.6.
      *
      * @return The amount of time (in milliseconds) to allow the client to complete the execution of
-     *         an API call. A non-positive value disables the timeout for this request.
+     *     an API call. A non-positive value disables the timeout for this request.
      * @see {@link AmazonWebServiceRequest#setSdkRequestTimeout(int)} to enforce a timeout per HTTP
-     *      request
+     *     request
      */
     public Integer getSdkClientExecutionTimeout() {
         return this.sdkClientExecutionTimeout;
     }
 
     /**
-     * Sets the amount of time (in milliseconds) to allow the client to complete the execution of
-     * an API call. This timeout covers the entire client execution except for marshalling. This
+     * Sets the amount of time (in milliseconds) to allow the client to complete the execution of an
+     * API call. This timeout covers the entire client execution except for marshalling. This
      * includes request handler execution, all HTTP request including retries, unmarshalling, etc.
+     *
+     * <p>This feature requires buffering the entire response (for non-streaming APIs) into memory
+     * to enforce a hard timeout when reading the response. For APIs that return large responses
+     * this could be expensive.
+     *
      * <p>
-     * This feature requires buffering the entire response (for non-streaming APIs) into memory to
-     * enforce a hard timeout when reading the response. For APIs that return large responses this
-     * could be expensive.
-     * <p>
-     * <p>
-     * The client execution timeout feature doesn't have strict guarantees on how quickly a request
-     * is aborted when the timeout is breached. The typical case aborts the request within a few
-     * milliseconds but there may occasionally be requests that don't get aborted until several
+     *
+     * <p>The client execution timeout feature doesn't have strict guarantees on how quickly a
+     * request is aborted when the timeout is breached. The typical case aborts the request within a
+     * few milliseconds but there may occasionally be requests that don't get aborted until several
      * seconds after the timer has been breached. Because of this the client execution timeout
      * feature should not be used when absolute precision is needed.
-     * </p>
-     * <p>
-     * This may be used together with {@link AmazonWebServiceRequest#setSdkRequestTimeout(int)} to
-     * enforce both a timeout on each individual HTTP request (i.e. each retry) and the total time
-     * spent on all requests across retries (i.e. the 'client execution' time). A non-positive value
-     * disables this feature.
-     * </p>
-     * <p>
-     * <b>Note:</b> This feature is not compatible with Java 1.6.
-     * </p>
      *
-     * @param sdkClientExecutionTimeout
-     *            The amount of time (in milliseconds) to allow the client to complete the execution
-     *            of an API call. A non-positive value disables the timeout for this request.
+     * <p>This may be used together with {@link AmazonWebServiceRequest#setSdkRequestTimeout(int)}
+     * to enforce both a timeout on each individual HTTP request (i.e. each retry) and the total
+     * time spent on all requests across retries (i.e. the 'client execution' time). A non-positive
+     * value disables this feature.
+     *
+     * <p><b>Note:</b> This feature is not compatible with Java 1.6.
+     *
+     * @param sdkClientExecutionTimeout The amount of time (in milliseconds) to allow the client to
+     *     complete the execution of an API call. A non-positive value disables the timeout for this
+     *     request.
      * @see {@link AmazonWebServiceRequest#setSdkRequestTimeout(int)} to enforce a timeout per HTTP
-     *      request
+     *     request
      */
     public void setSdkClientExecutionTimeout(int sdkClientExecutionTimeout) {
         this.sdkClientExecutionTimeout = sdkClientExecutionTimeout;
     }
 
     /**
-     * Sets the amount of time (in milliseconds) to allow the client to complete the execution of
-     * an API call. This timeout covers the entire client execution except for marshalling. This
+     * Sets the amount of time (in milliseconds) to allow the client to complete the execution of an
+     * API call. This timeout covers the entire client execution except for marshalling. This
      * includes request handler execution, all HTTP request including retries, unmarshalling, etc.
+     *
+     * <p>This feature requires buffering the entire response (for non-streaming APIs) into memory
+     * to enforce a hard timeout when reading the response. For APIs that return large responses
+     * this could be expensive.
+     *
      * <p>
-     * This feature requires buffering the entire response (for non-streaming APIs) into memory to
-     * enforce a hard timeout when reading the response. For APIs that return large responses this
-     * could be expensive.
-     * <p>
-     * <p>
-     * The client execution timeout feature doesn't have strict guarantees on how quickly a request
-     * is aborted when the timeout is breached. The typical case aborts the request within a few
-     * milliseconds but there may occasionally be requests that don't get aborted until several
+     *
+     * <p>The client execution timeout feature doesn't have strict guarantees on how quickly a
+     * request is aborted when the timeout is breached. The typical case aborts the request within a
+     * few milliseconds but there may occasionally be requests that don't get aborted until several
      * seconds after the timer has been breached. Because of this the client execution timeout
      * feature should not be used when absolute precision is needed.
-     * </p>
-     * <p>
-     * This may be used together with {@link AmazonWebServiceRequest#setSdkRequestTimeout(int)} to
-     * enforce both a timeout on each individual HTTP request (i.e. each retry) and the total time
-     * spent on all requests across retries (i.e. the 'client execution' time). A non-positive value
-     * disables this feature.
-     * </p>
-     * <p>
-     * <b>Note:</b> This feature is not compatible with Java 1.6.
-     * </p>
      *
-     * @param sdkClientExecutionTimeout
-     *            The amount of time (in milliseconds) to allow the client to complete the execution
-     *            of an API call. A non-positive value disables the timeout for this request.
+     * <p>This may be used together with {@link AmazonWebServiceRequest#setSdkRequestTimeout(int)}
+     * to enforce both a timeout on each individual HTTP request (i.e. each retry) and the total
+     * time spent on all requests across retries (i.e. the 'client execution' time). A non-positive
+     * value disables this feature.
+     *
+     * <p><b>Note:</b> This feature is not compatible with Java 1.6.
+     *
+     * @param sdkClientExecutionTimeout The amount of time (in milliseconds) to allow the client to
+     *     complete the execution of an API call. A non-positive value disables the timeout for this
+     *     request.
      * @return The updated AmazonWebServiceRequest object for method chaining
      * @see {@link AmazonWebServiceRequest#setSdkRequestTimeout(int)} to enforce a timeout per HTTP
-     *      request
+     *     request
      */
-    public <T extends AmazonWebServiceRequest> T withSdkClientExecutionTimeout(int sdkClientExecutionTimeout) {
+    public <T extends AmazonWebServiceRequest> T withSdkClientExecutionTimeout(
+            int sdkClientExecutionTimeout) {
         setSdkClientExecutionTimeout(sdkClientExecutionTimeout);
         @SuppressWarnings("unchecked")
         T t = (T) this;
@@ -565,11 +538,11 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
     }
 
     /**
-     * Retrieve an unmodifiable collection of all handler context objects. This allows a {@link Request} derived from a
-     * {@link AmazonWebServiceRequest} to inherit its context. This does not protect the objects within the map from being
-     * modified.
+     * Retrieve an unmodifiable collection of all handler context objects. This allows a {@link
+     * Request} derived from a {@link AmazonWebServiceRequest} to inherit its context. This does not
+     * protect the objects within the map from being modified.
      *
-     * <p>This should not be used by customers.</p>
+     * <p>This should not be used by customers.
      */
     @SdkInternalApi
     Map<HandlerContextKey<?>, Object> getHandlerContext() {
@@ -577,8 +550,8 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
     }
 
     /**
-     * Creates a shallow clone of this object for all fields except the handler context. Explicitly does <em>not</em> clone the
-     * deep structure of the other fields in the message.
+     * Creates a shallow clone of this object for all fields except the handler context. Explicitly
+     * does <em>not</em> clone the deep structure of the other fields in the message.
      *
      * @see Object#clone()
      */
@@ -588,14 +561,18 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
             AmazonWebServiceRequest cloned = (AmazonWebServiceRequest) super.clone();
             cloned.setCloneSource(this);
 
-            // Deep-copy context to ensure modifications made by the handlers do not leak back to the caller or other uses of the
+            // Deep-copy context to ensure modifications made by the handlers do not leak back to
+            // the caller or other uses of the
             // same request.
-            cloned.handlerContext = new HashMap<HandlerContextKey<?>, Object>(cloned.handlerContext);
+            cloned.handlerContext =
+                    new HashMap<HandlerContextKey<?>, Object>(cloned.handlerContext);
 
             return cloned;
         } catch (CloneNotSupportedException e) {
             throw new IllegalStateException(
-                    "Got a CloneNotSupportedException from Object.clone() " + "even though we're Cloneable!", e);
+                    "Got a CloneNotSupportedException from Object.clone() "
+                            + "even though we're Cloneable!",
+                    e);
         }
     }
 }

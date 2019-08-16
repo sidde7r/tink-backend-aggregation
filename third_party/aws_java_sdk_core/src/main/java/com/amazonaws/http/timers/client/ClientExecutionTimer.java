@@ -14,15 +14,14 @@
  */
 package com.amazonaws.http.timers.client;
 
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.annotation.SdkTestInternalApi;
 import com.amazonaws.annotation.ThreadSafe;
 import com.amazonaws.http.AmazonHttpClient;
 import com.amazonaws.http.timers.TimeoutThreadPoolBuilder;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a timer to enforce a timeout on the total client execution time. That is the time
@@ -43,12 +42,11 @@ public class ClientExecutionTimer {
     /**
      * Start the timer with the specified timeout and return a object that can be used to track the
      * state of the timer and cancel it if need be.
-     * 
-     * @param clientExecutionTimeoutMillis
-     *            A positive value here enables the timer, a non-positive value disables it and
-     *            returns a dummy tracker task
+     *
+     * @param clientExecutionTimeoutMillis A positive value here enables the timer, a non-positive
+     *     value disables it and returns a dummy tracker task
      * @return Implementation of {@link ClientExecutionAbortTrackerTaskImpl} to query the state of
-     *         the task, provide it with up to date context, and cancel it if appropriate
+     *     the task, provide it with up to date context, and cancel it if appropriate
      */
     public ClientExecutionAbortTrackerTask startTimer(int clientExecutionTimeoutMillis) {
         if (isTimeoutDisabled(clientExecutionTimeoutMillis)) {
@@ -59,9 +57,7 @@ public class ClientExecutionTimer {
         return scheduleTimerTask(clientExecutionTimeoutMillis);
     }
 
-    /**
-     * Executor is lazily initialized as it's not compatible with Java 6
-     */
+    /** Executor is lazily initialized as it's not compatible with Java 6 */
     private synchronized void initializeExecutor() {
         if (executor == null) {
             executor = TimeoutThreadPoolBuilder.buildDefaultTimeoutThreadPool(threadNamePrefix);
@@ -70,7 +66,7 @@ public class ClientExecutionTimer {
 
     /**
      * This method is current exposed for testing purposes
-     * 
+     *
      * @return The underlying {@link ScheduledThreadPoolExecutor}
      */
     @SdkTestInternalApi
@@ -79,8 +75,8 @@ public class ClientExecutionTimer {
     }
 
     /**
-     * Shutdown the underlying {@link ScheduledThreadPoolExecutor}. Should be invoked when
-     * {@link AmazonHttpClient} is shutdown
+     * Shutdown the underlying {@link ScheduledThreadPoolExecutor}. Should be invoked when {@link
+     * AmazonHttpClient} is shutdown
      */
     public synchronized void shutdown() {
         if (executor != null) {
@@ -89,14 +85,14 @@ public class ClientExecutionTimer {
     }
 
     private ClientExecutionAbortTrackerTask scheduleTimerTask(int clientExecutionTimeoutMillis) {
-        ClientExecutionAbortTask timerTask = new ClientExecutionAbortTaskImpl(Thread.currentThread());
-        ScheduledFuture<?> timerTaskFuture = executor.schedule(timerTask, clientExecutionTimeoutMillis,
-                TimeUnit.MILLISECONDS);
+        ClientExecutionAbortTask timerTask =
+                new ClientExecutionAbortTaskImpl(Thread.currentThread());
+        ScheduledFuture<?> timerTaskFuture =
+                executor.schedule(timerTask, clientExecutionTimeoutMillis, TimeUnit.MILLISECONDS);
         return new ClientExecutionAbortTrackerTaskImpl(timerTask, timerTaskFuture);
     }
 
     private boolean isTimeoutDisabled(int clientExecutionTimeoutMillis) {
         return clientExecutionTimeoutMillis <= 0;
     }
-
 }

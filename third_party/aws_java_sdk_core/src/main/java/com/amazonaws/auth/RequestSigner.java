@@ -16,22 +16,19 @@
 
 package com.amazonaws.auth;
 
-
 import com.amazonaws.SignableRequest;
 
 /**
- * A strategy for applying cryptographic signatures to a request, proving
- * that the request was made by someone in posession of the given set of
- * credentials without transmitting the secret key over the wire.
+ * A strategy for applying cryptographic signatures to a request, proving that the request was made
+ * by someone in posession of the given set of credentials without transmitting the secret key over
+ * the wire.
  */
-
 public interface RequestSigner {
 
     /**
-     * Sign the given request - modifies the
-     * passed-in request to apply the signature.
+     * Sign the given request - modifies the passed-in request to apply the signature.
      *
-     * @param request      The request to sign.
+     * @param request The request to sign.
      */
     void sign(SignableRequest<?> request);
 }

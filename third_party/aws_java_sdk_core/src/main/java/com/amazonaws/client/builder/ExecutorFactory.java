@@ -16,13 +16,9 @@ package com.amazonaws.client.builder;
 
 import java.util.concurrent.ExecutorService;
 
-/**
- * Factory to create instances of {@link ExecutorService}.
- */
+/** Factory to create instances of {@link ExecutorService}. */
 public interface ExecutorFactory {
 
-    /**
-     * @return New {@link ExecutorService}
-     */
+    /** @return New {@link ExecutorService} */
     ExecutorService newExecutor();
 }

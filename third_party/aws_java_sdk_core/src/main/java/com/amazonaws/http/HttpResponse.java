@@ -16,19 +16,14 @@ package com.amazonaws.http;
 
 import com.amazonaws.Request;
 import com.amazonaws.util.CRC32ChecksumCalculatingInputStream;
-
-import tink.org.apache.http.client.methods.HttpRequestBase;
-import tink.org.apache.http.protocol.HttpContext;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.TreeMap;
+import tink.org.apache.http.client.methods.HttpRequestBase;
+import tink.org.apache.http.protocol.HttpContext;
 
-/**
- * Represents an HTTP response returned by an AWS service in response to a
- * service request.
- */
+/** Represents an HTTP response returned by an AWS service in response to a service request. */
 public class HttpResponse {
 
     private final Request<?> request;
@@ -37,16 +32,15 @@ public class HttpResponse {
     private String statusText;
     private int statusCode;
     private InputStream content;
-    private Map<String, String> headers = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+    private Map<String, String> headers =
+            new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
     private HttpContext context;
 
     /**
      * Constructs a new HttpResponse associated with the specified request.
      *
-     * @param request
-     *            The associated request that generated this response.
-     * @param httpRequest
-     *            The underlying http request that generated this response.
+     * @param request The associated request that generated this response.
+     * @param httpRequest The underlying http request that generated this response.
      * @throws IOException
      */
     public HttpResponse(Request<?> request, HttpRequestBase httpRequest) {
@@ -99,10 +93,8 @@ public class HttpResponse {
     /**
      * Adds an HTTP header to the set associated with this response.
      *
-     * @param name
-     *            The name of the HTTP header.
-     * @param value
-     *            The value of the HTTP header.
+     * @param name The name of the HTTP header.
+     * @param value The value of the HTTP header.
      */
     public void addHeader(String name, String value) {
         headers.put(name, value);
@@ -111,8 +103,7 @@ public class HttpResponse {
     /**
      * Sets the input stream containing the response content.
      *
-     * @param content
-     *            The input stream containing the response content.
+     * @param content The input stream containing the response content.
      */
     public void setContent(InputStream content) {
         this.content = content;
@@ -130,9 +121,7 @@ public class HttpResponse {
     /**
      * Sets the HTTP status text returned with this response.
      *
-     * @param statusText
-     *            The HTTP status text (ex: "Not found") returned with this
-     *            response.
+     * @param statusText The HTTP status text (ex: "Not found") returned with this response.
      */
     public void setStatusText(String statusText) {
         this.statusText = statusText;
@@ -150,17 +139,14 @@ public class HttpResponse {
     /**
      * Sets the HTTP status code that was returned with this response.
      *
-     * @param statusCode
-     *            The HTTP status code (ex: 200, 404, etc) associated with this
-     *            response.
+     * @param statusCode The HTTP status code (ex: 200, 404, etc) associated with this response.
      */
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
     }
 
     /**
-     * Returns the HTTP status code (ex: 200, 404, etc) associated with this
-     * response.
+     * Returns the HTTP status code (ex: 200, 404, etc) associated with this response.
      *
      * @return The HTTP status code associated with this response.
      */
@@ -178,8 +164,8 @@ public class HttpResponse {
             return 0L;
         }
         CRC32ChecksumCalculatingInputStream crc32ChecksumInputStream =
-                (CRC32ChecksumCalculatingInputStream)context.getAttribute(CRC32ChecksumCalculatingInputStream.class.getName());
+                (CRC32ChecksumCalculatingInputStream)
+                        context.getAttribute(CRC32ChecksumCalculatingInputStream.class.getName());
         return crc32ChecksumInputStream == null ? 0L : crc32ChecksumInputStream.getCRC32Checksum();
     }
-
 }

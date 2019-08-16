@@ -16,9 +16,7 @@ package com.amazonaws.auth;
 
 import com.amazonaws.util.ValidationUtils;
 
-/**
- * Simple implementation of AWSCredentialsProvider that just wraps static AWSCredentials.
- */
+/** Simple implementation of AWSCredentialsProvider that just wraps static AWSCredentials. */
 public class AWSStaticCredentialsProvider implements AWSCredentialsProvider {
 
     private final AWSCredentials credentials;
@@ -31,7 +29,5 @@ public class AWSStaticCredentialsProvider implements AWSCredentialsProvider {
         return credentials;
     }
 
-    public void refresh() {
-    }
-
+    public void refresh() {}
 }

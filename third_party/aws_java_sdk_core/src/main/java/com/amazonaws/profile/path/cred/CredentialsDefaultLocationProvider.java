@@ -16,12 +16,9 @@ package com.amazonaws.profile.path.cred;
 
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.profile.path.AwsDirectoryBasePathProvider;
-
 import java.io.File;
 
-/**
- * Load shared credentials file from the default location (~/.aws/credentials).
- */
+/** Load shared credentials file from the default location (~/.aws/credentials). */
 @SdkInternalApi
 public class CredentialsDefaultLocationProvider extends AwsDirectoryBasePathProvider {
 

@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Factory to generate the various JSON protocol handlers and generators depending on the wire protocol to be used for
- * communicating with the AWS service.
+ * Factory to generate the various JSON protocol handlers and generators depending on the wire
+ * protocol to be used for communicating with the AWS service.
  */
 @ThreadSafe
 @SdkProtectedApi
@@ -42,7 +42,8 @@ public class SdkJsonProtocolFactory implements SdkJsonMarshallerFactory {
 
     private final JsonClientMetadata metadata;
 
-    private final List<JsonErrorUnmarshaller> errorUnmarshallers = new ArrayList<JsonErrorUnmarshaller>();
+    private final List<JsonErrorUnmarshaller> errorUnmarshallers =
+            new ArrayList<JsonErrorUnmarshaller>();
 
     public SdkJsonProtocolFactory(JsonClientMetadata metadata) {
         this.metadata = metadata;
@@ -59,7 +60,8 @@ public class SdkJsonProtocolFactory implements SdkJsonMarshallerFactory {
         return getContentTypeResolver().resolveContentType(metadata);
     }
 
-    public <T> ProtocolRequestMarshaller<T> createProtocolMarshaller(OperationInfo operationInfo, T origRequest) {
+    public <T> ProtocolRequestMarshaller<T> createProtocolMarshaller(
+            OperationInfo operationInfo, T origRequest) {
         return JsonProtocolMarshallerBuilder.<T>standard()
                 .jsonGenerator(createGenerator(operationInfo))
                 .contentType(getContentType())
@@ -80,7 +82,8 @@ public class SdkJsonProtocolFactory implements SdkJsonMarshallerFactory {
     /**
      * Returns the response handler to be used for handling a successful response.
      *
-     * @param operationMetadata Additional context information about an operation to create the appropriate response handler.
+     * @param operationMetadata Additional context information about an operation to create the
+     *     appropriate response handler.
      */
     public <T> HttpResponseHandler<AmazonWebServiceResponse<T>> createResponseHandler(
             JsonOperationMetadata operationMetadata,
@@ -88,31 +91,31 @@ public class SdkJsonProtocolFactory implements SdkJsonMarshallerFactory {
         return getSdkFactory().createResponseHandler(operationMetadata, responseUnmarshaller);
     }
 
-    /**
-     * Creates a response handler for handling a error response (non 2xx response).
-     */
+    /** Creates a response handler for handling a error response (non 2xx response). */
     public HttpResponseHandler<AmazonServiceException> createErrorResponseHandler(
             JsonErrorResponseMetadata errorResponsMetadata) {
-        return getSdkFactory().createErrorResponseHandler(errorUnmarshallers, errorResponsMetadata
-                .getCustomErrorCodeFieldName());
+        return getSdkFactory()
+                .createErrorResponseHandler(
+                        errorUnmarshallers, errorResponsMetadata.getCustomErrorCodeFieldName());
     }
 
     @SuppressWarnings("unchecked")
     private void createErrorUnmarshallers() {
         for (JsonErrorShapeMetadata errorMetadata : metadata.getErrorShapeMetadata()) {
-            errorUnmarshallers.add(new JsonErrorUnmarshaller(
-                    (Class<? extends AmazonServiceException>) errorMetadata.getModeledClass(),
-                    errorMetadata.getErrorCode()));
-
+            errorUnmarshallers.add(
+                    new JsonErrorUnmarshaller(
+                            (Class<? extends AmazonServiceException>)
+                                    errorMetadata.getModeledClass(),
+                            errorMetadata.getErrorCode()));
         }
-        errorUnmarshallers.add(new JsonErrorUnmarshaller(
-                (Class<? extends AmazonServiceException>) metadata.getBaseServiceExceptionClass(),
-                null));
+        errorUnmarshallers.add(
+                new JsonErrorUnmarshaller(
+                        (Class<? extends AmazonServiceException>)
+                                metadata.getBaseServiceExceptionClass(),
+                        null));
     }
 
-    /**
-     * @return Instance of {@link SdkStructuredJsonFactory} to use in creating handlers.
-     */
+    /** @return Instance of {@link SdkStructuredJsonFactory} to use in creating handlers. */
     private SdkStructuredJsonFactory getSdkFactory() {
         if (isCborEnabled()) {
             return SdkStructuredCborFactory.SDK_CBOR_FACTORY;
@@ -125,9 +128,7 @@ public class SdkJsonProtocolFactory implements SdkJsonMarshallerFactory {
         }
     }
 
-    /**
-     * @return Content type resolver implementation to use.
-     */
+    /** @return Content type resolver implementation to use. */
     private JsonContentTypeResolver getContentTypeResolver() {
         if (isCborEnabled()) {
             return JsonContentTypeResolver.CBOR;

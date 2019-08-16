@@ -19,6 +19,7 @@
 package com.amazonaws.internal;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 public class FIFOCacheTest {
@@ -43,12 +44,12 @@ public class FIFOCacheTest {
         assertNull(cache.get("k1"));
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testZeroSize() {
         new FIFOCache<Object>(0);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testIllegalArgument() {
         new FIFOCache<Object>(-1);
     }

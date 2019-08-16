@@ -20,49 +20,50 @@ import com.amazonaws.util.AWSRequestMetrics;
 import com.amazonaws.util.TimingInfo;
 
 /**
- * Internal class used to adapt a request handler that implements the
- * deprecated {@link RequestHandler} interface to the deprecating
- * {@link RequestHandler2} interface.
+ * Internal class used to adapt a request handler that implements the deprecated {@link
+ * RequestHandler} interface to the deprecating {@link RequestHandler2} interface.
  */
 final class RequestHandler2Adaptor extends RequestHandler2 {
     @SuppressWarnings("deprecation")
     private final RequestHandler old;
+
     RequestHandler2Adaptor(@SuppressWarnings("deprecation") RequestHandler old) {
-        if (old == null)
-            throw new IllegalArgumentException();
+        if (old == null) throw new IllegalArgumentException();
         this.old = old;
     }
+
     @SuppressWarnings("deprecation")
-    @Override public void beforeRequest(Request<?> request) {
+    @Override
+    public void beforeRequest(Request<?> request) {
         old.beforeRequest(request);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void afterResponse(Request<?> request, Response<?> response) {
-        AWSRequestMetrics awsRequestMetrics = request == null ? null : request
-                .getAWSRequestMetrics();
-        Object awsResponse = response == null ? null : response
-                .getAwsResponse();
-        TimingInfo timingInfo = awsRequestMetrics == null ? null
-                : awsRequestMetrics.getTimingInfo();
+        AWSRequestMetrics awsRequestMetrics =
+                request == null ? null : request.getAWSRequestMetrics();
+        Object awsResponse = response == null ? null : response.getAwsResponse();
+        TimingInfo timingInfo =
+                awsRequestMetrics == null ? null : awsRequestMetrics.getTimingInfo();
         old.afterResponse(request, awsResponse, timingInfo);
     }
 
     @SuppressWarnings("deprecation")
-    @Override public void afterError(Request<?> request, Response<?> response,
-            Exception e) {
+    @Override
+    public void afterError(Request<?> request, Response<?> response, Exception e) {
         old.afterError(request, e);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return old.hashCode();
     }
 
-    @Override public boolean equals(Object o) {
-        if (!(o instanceof RequestHandler2Adaptor))
-            return false;
-        RequestHandler2Adaptor that = (RequestHandler2Adaptor)o;
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof RequestHandler2Adaptor)) return false;
+        RequestHandler2Adaptor that = (RequestHandler2Adaptor) o;
         return this.old.equals(that.old);
     }
 }

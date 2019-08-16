@@ -14,13 +14,13 @@
  */
 package com.amazonaws.regions;
 
-import com.amazonaws.SdkClientException;
-
 import static com.amazonaws.SDKGlobalConfiguration.AWS_REGION_ENV_VAR;
 
+import com.amazonaws.SdkClientException;
+
 /**
- * Loads region information from the '{@value com.amazonaws.SDKGlobalConfiguration#AWS_REGION_ENV_VAR}'
- * environment variable.
+ * Loads region information from the '{@value
+ * com.amazonaws.SDKGlobalConfiguration#AWS_REGION_ENV_VAR}' environment variable.
  */
 public class AwsEnvVarOverrideRegionProvider extends AwsRegionProvider {
 

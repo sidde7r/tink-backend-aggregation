@@ -21,18 +21,16 @@ package com.amazonaws.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.util.HashMap;
-import java.util.Random;
-
-import org.junit.Test;
-
 import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.ResponseMetadata;
+import java.util.HashMap;
+import java.util.Random;
+import org.junit.Test;
 
 /** Tests for the response metadata cache class. */
 public class ResponseMetadataCacheTest {
 
-    /** Tests that the cache correctly evicts the oldest entries.  */
+    /** Tests that the cache correctly evicts the oldest entries. */
     @Test
     public void testEviction() {
         ResponseMetadataCache cache = new ResponseMetadataCache(3);
@@ -64,7 +62,7 @@ public class ResponseMetadataCacheTest {
         assertEquals(metadata4, cache.get(key4));
     }
 
-    /** Tests that the cache works correctly with size=0  */
+    /** Tests that the cache works correctly with size=0 */
     @Test
     public void TestEmpty() {
         ResponseMetadataCache cache = new ResponseMetadataCache(0);

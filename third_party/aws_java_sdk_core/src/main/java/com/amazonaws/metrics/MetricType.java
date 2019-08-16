@@ -14,14 +14,11 @@
  */
 package com.amazonaws.metrics;
 
-/**
- * Metric type.
- */
+/** Metric type. */
 public interface MetricType {
     /**
-     * Non-null name of the metric type. Used to uniquely identify the metric
-     * type. Therefore, the name returned must be globally unique across all
-     * metric types that implement this interface.
+     * Non-null name of the metric type. Used to uniquely identify the metric type. Therefore, the
+     * name returned must be globally unique across all metric types that implement this interface.
      */
     public String name();
 }

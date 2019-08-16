@@ -14,11 +14,9 @@
  */
 package com.amazonaws.internal.http;
 
-import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.annotation.SdkProtectedApi;
 import com.amazonaws.http.HttpResponse;
 import com.fasterxml.jackson.databind.JsonNode;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,12 +24,12 @@ import java.util.List;
 @SdkProtectedApi
 public class JsonErrorMessageParser {
 
-    private static final List<String> DEFAULT_ERROR_MESSAGE_LOCATIONS = Arrays
-            .asList("message", "Message", "errorMessage");
+    private static final List<String> DEFAULT_ERROR_MESSAGE_LOCATIONS =
+            Arrays.asList("message", "Message", "errorMessage");
 
     /**
-     * x-amzn-error-message may be returned by RESTFUL services that do not send a response
-     * payload (like in a HEAD request).
+     * x-amzn-error-message may be returned by RESTFUL services that do not send a response payload
+     * (like in a HEAD request).
      */
     public static final String X_AMZN_ERROR_MESSAGE = "x-amzn-error-message";
 
@@ -39,8 +37,8 @@ public class JsonErrorMessageParser {
      * Standard JSON Error Message Parser that checks for JSON fields in this order: 'message',
      * 'Message', 'errorMessage'
      */
-    public static final JsonErrorMessageParser DEFAULT_ERROR_MESSAGE_PARSER = new JsonErrorMessageParser(
-            DEFAULT_ERROR_MESSAGE_LOCATIONS);
+    public static final JsonErrorMessageParser DEFAULT_ERROR_MESSAGE_PARSER =
+            new JsonErrorMessageParser(DEFAULT_ERROR_MESSAGE_LOCATIONS);
 
     private static final HttpResponse EMPTY_HTTP_RESPONSE = new HttpResponse(null, null);
 
@@ -48,15 +46,13 @@ public class JsonErrorMessageParser {
 
     /**
      * @param errorMessageJsonLocations JSON field locations where the parser will attempt to
-     *                                  extract the error message from.
+     *     extract the error message from.
      */
     public JsonErrorMessageParser(List<String> errorMessageJsonLocations) {
         this.errorMessageJsonLocations = new LinkedList<String>(errorMessageJsonLocations);
     }
 
-    /**
-     * @deprecated By {@link #parseErrorMessage(HttpResponse, JsonNode)}
-     */
+    /** @deprecated By {@link #parseErrorMessage(HttpResponse, JsonNode)} */
     @Deprecated
     public String parseErrorMessage(JsonNode jsonNode) {
         return parseErrorMessage(EMPTY_HTTP_RESPONSE, jsonNode);
@@ -81,5 +77,4 @@ public class JsonErrorMessageParser {
         }
         return null;
     }
-
 }

@@ -26,23 +26,23 @@ import javax.net.ssl.SSLContext;
 import org.junit.Test;
 
 public class SdkTLSSocketFactoryTest {
-    /**
-     * Test when the edge case when the both supported and enabled protocols are null.
-     */
+    /** Test when the edge case when the both supported and enabled protocols are null. */
     @Test
     public void preparedSocket_NullProtocols() throws NoSuchAlgorithmException {
         SdkTLSSocketFactory f = new SdkTLSSocketFactory(SSLContext.getDefault(), null);
 
-        TestSSLSocket socket = new TestSSLSocket() {
-            @Override
-            public String[] getSupportedProtocols() {
-                return null;
-            }
-            @Override
-            public String[] getEnabledProtocols() {
-                return null;
-            }
-        };
+        TestSSLSocket socket =
+                new TestSSLSocket() {
+                    @Override
+                    public String[] getSupportedProtocols() {
+                        return null;
+                    }
+
+                    @Override
+                    public String[] getEnabledProtocols() {
+                        return null;
+                    }
+                };
         f.prepareSocket(socket);
         assertFalse(socket.wereProtocolsEnabled());
     }
@@ -50,58 +50,67 @@ public class SdkTLSSocketFactoryTest {
     @Test
     public void typical() throws NoSuchAlgorithmException {
         SdkTLSSocketFactory f = new SdkTLSSocketFactory(SSLContext.getDefault(), null);
-        TestSSLSocket socket = new TestSSLSocket() {
-            @Override
-            public String[] getSupportedProtocols() {
-                return shuffle(new String[]{"SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"});
-            }
-            @Override
-            public String[] getEnabledProtocols() {
-                return shuffle(new String[]{"SSLv3", "TLSv1"});
-            }
-        };
+        TestSSLSocket socket =
+                new TestSSLSocket() {
+                    @Override
+                    public String[] getSupportedProtocols() {
+                        return shuffle(
+                                new String[] {
+                                    "SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
+                                });
+                    }
+
+                    @Override
+                    public String[] getEnabledProtocols() {
+                        return shuffle(new String[] {"SSLv3", "TLSv1"});
+                    }
+                };
         f.prepareSocket(socket);
 
-        assertArrayEquals(new String[] {"TLSv1.2", "TLSv1.1", "TLSv1", "SSLv3" },
-                          socket.getCapturedProtocols());
+        assertArrayEquals(
+                new String[] {"TLSv1.2", "TLSv1.1", "TLSv1", "SSLv3"},
+                socket.getCapturedProtocols());
     }
 
     @Test
     public void noTLS() throws NoSuchAlgorithmException {
         SdkTLSSocketFactory f = new SdkTLSSocketFactory(SSLContext.getDefault(), null);
-        TestSSLSocket socket =  new TestSSLSocket() {
-            @Override
-            public String[] getSupportedProtocols() {
-                return shuffle(new String[]{"SSLv2Hello", "SSLv3" });
-            }
-            @Override
-            public String[] getEnabledProtocols() {
-                return new String[]{"SSLv3"};
-            }
-        };
+        TestSSLSocket socket =
+                new TestSSLSocket() {
+                    @Override
+                    public String[] getSupportedProtocols() {
+                        return shuffle(new String[] {"SSLv2Hello", "SSLv3"});
+                    }
+
+                    @Override
+                    public String[] getEnabledProtocols() {
+                        return new String[] {"SSLv3"};
+                    }
+                };
         f.prepareSocket(socket);
 
         // For backward compatibility
-        assertArrayEquals(new String[] {"SSLv3"},
-                          socket.getCapturedProtocols());
+        assertArrayEquals(new String[] {"SSLv3"}, socket.getCapturedProtocols());
     }
 
     @Test
     public void notIdeal() throws NoSuchAlgorithmException {
         SdkTLSSocketFactory f = new SdkTLSSocketFactory(SSLContext.getDefault(), null);
-        TestSSLSocket socket = new TestSSLSocket() {
-            @Override
-            public String[] getSupportedProtocols() {
-                return shuffle(new String[]{"SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1"});
-            }
-            @Override
-            public String[] getEnabledProtocols() {
-                return shuffle(new String[]{"SSLv3", "TLSv1"});
-            }
-        };
+        TestSSLSocket socket =
+                new TestSSLSocket() {
+                    @Override
+                    public String[] getSupportedProtocols() {
+                        return shuffle(new String[] {"SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1"});
+                    }
+
+                    @Override
+                    public String[] getEnabledProtocols() {
+                        return shuffle(new String[] {"SSLv3", "TLSv1"});
+                    }
+                };
         f.prepareSocket(socket);
-        assertArrayEquals(new String[]{"TLSv1.1", "TLSv1", "SSLv3"},
-                          socket.getCapturedProtocols());
+        assertArrayEquals(
+                new String[] {"TLSv1.1", "TLSv1", "SSLv3"}, socket.getCapturedProtocols());
     }
 
     private String[] shuffle(String[] in) {

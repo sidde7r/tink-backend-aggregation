@@ -14,17 +14,6 @@
  */
 package com.amazonaws.http;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.SDKGlobalTime;
-import com.amazonaws.retry.PredefinedRetryPolicies;
-import com.amazonaws.util.DateUtils;
-import org.junit.Before;
-import org.junit.Test;
-import utils.http.WireMockTestBase;
-
-import java.util.Date;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -36,6 +25,16 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.SDKGlobalTime;
+import com.amazonaws.retry.PredefinedRetryPolicies;
+import com.amazonaws.util.DateUtils;
+import java.util.Date;
+import org.junit.Before;
+import org.junit.Test;
+import utils.http.WireMockTestBase;
+
 public class AmazonHttpClientClockSkewErrorTest extends WireMockTestBase {
 
     private static final String RESOURCE_PATH = "/transaction-id/";
@@ -45,26 +44,30 @@ public class AmazonHttpClientClockSkewErrorTest extends WireMockTestBase {
         long hour = 3600 * 1000;
         Date skewedDate = new Date(System.currentTimeMillis() - hour);
 
-        stubFor(get(urlEqualTo(RESOURCE_PATH))
-                .willReturn(aResponse()
-                            .withStatus(500)
-                            .withHeader("Date", DateUtils.formatRFC822Date(skewedDate))));
+        stubFor(
+                get(urlEqualTo(RESOURCE_PATH))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(500)
+                                        .withHeader(
+                                                "Date", DateUtils.formatRFC822Date(skewedDate))));
     }
 
     @Test
-    public void globalTimeOffset_IsAdjusted_WhenClockSkewErrorHappens_And_RequestIsNotRetried() throws Exception {
+    public void globalTimeOffset_IsAdjusted_WhenClockSkewErrorHappens_And_RequestIsNotRetried()
+            throws Exception {
         ClientConfiguration config = new ClientConfiguration();
         config.setRetryPolicy(PredefinedRetryPolicies.NO_RETRY_POLICY);
 
         executeRequest(config);
-
 
         // Asserts global time offset is adjusted by atleast an hour
         assertTrue(SDKGlobalTime.getGlobalTimeOffset() >= 3600);
     }
 
     @Test
-    public void globalTimeOffset_IsAdjusted_WhenClockSkewErrorHappens_And_RequestIsRetried() throws Exception {
+    public void globalTimeOffset_IsAdjusted_WhenClockSkewErrorHappens_And_RequestIsRetried()
+            throws Exception {
         ClientConfiguration config = new ClientConfiguration();
 
         executeRequest(config);
@@ -76,7 +79,9 @@ public class AmazonHttpClientClockSkewErrorTest extends WireMockTestBase {
     private void executeRequest(ClientConfiguration clientConfiguration) throws Exception {
         AmazonHttpClient httpClient = new AmazonHttpClient(clientConfiguration);
         try {
-            httpClient.requestExecutionBuilder().request(newGetRequest(RESOURCE_PATH))
+            httpClient
+                    .requestExecutionBuilder()
+                    .request(newGetRequest(RESOURCE_PATH))
                     .errorResponseHandler(stubErrorHandler())
                     .execute();
             fail("Expected exception");
@@ -87,7 +92,8 @@ public class AmazonHttpClientClockSkewErrorTest extends WireMockTestBase {
 
     @Override
     protected HttpResponseHandler<AmazonServiceException> stubErrorHandler() throws Exception {
-        HttpResponseHandler<AmazonServiceException> errorHandler = mock(JsonErrorResponseHandler.class);
+        HttpResponseHandler<AmazonServiceException> errorHandler =
+                mock(JsonErrorResponseHandler.class);
         when(errorHandler.handle(any(HttpResponse.class))).thenReturn(createClockSkewException());
         return errorHandler;
     }

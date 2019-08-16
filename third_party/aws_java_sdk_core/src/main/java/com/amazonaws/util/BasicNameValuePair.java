@@ -27,9 +27,8 @@
 
 package com.amazonaws.util;
 
-import java.io.Serializable;
-
 import com.amazonaws.annotation.Immutable;
+import java.io.Serializable;
 
 /**
  * Basic implementation of {@link NameValuePair}.
@@ -52,8 +51,7 @@ class BasicNameValuePair implements NameValuePair, Cloneable, Serializable {
      * @param value The value.
      */
     BasicNameValuePair(final String name, final String value) {
-        if (name == null)
-            throw new IllegalArgumentException("Name must not be null");
+        if (name == null) throw new IllegalArgumentException("Name must not be null");
         this.name = name;
         this.value = value;
     }
@@ -90,8 +88,7 @@ class BasicNameValuePair implements NameValuePair, Cloneable, Serializable {
         }
         if (object instanceof NameValuePair) {
             final BasicNameValuePair that = (BasicNameValuePair) object;
-            return this.name.equals(that.name)
-                  && equals(this.value, that.value);
+            return this.name.equals(that.name) && equals(this.value, that.value);
         }
         return false;
     }

@@ -21,7 +21,6 @@ import com.amazonaws.http.JsonResponseHandler;
 import com.amazonaws.transform.JsonErrorUnmarshaller;
 import com.amazonaws.transform.JsonUnmarshallerContext;
 import com.amazonaws.transform.Unmarshaller;
-
 import java.util.List;
 
 /**
@@ -43,10 +42,11 @@ public interface SdkStructuredJsonFactory {
      * Returns the response handler to be used for handling a successfull response.
      *
      * @param operationMetadata Additional context information about an operation to create the
-     *                          appropriate response handler.
+     *     appropriate response handler.
      */
-    <T> JsonResponseHandler<T> createResponseHandler(JsonOperationMetadata operationMetadata,
-                                                     Unmarshaller<T, JsonUnmarshallerContext> responseUnmarshaller);
+    <T> JsonResponseHandler<T> createResponseHandler(
+            JsonOperationMetadata operationMetadata,
+            Unmarshaller<T, JsonUnmarshallerContext> responseUnmarshaller);
 
     /**
      * Returns the error response handler for handling a error response.
@@ -55,5 +55,4 @@ public interface SdkStructuredJsonFactory {
      */
     JsonErrorResponseHandler createErrorResponseHandler(
             List<JsonErrorUnmarshaller> errorUnmarshallers, String customErrorCodeFieldName);
-
 }

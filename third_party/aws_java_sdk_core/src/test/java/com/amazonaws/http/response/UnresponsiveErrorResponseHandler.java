@@ -22,10 +22,9 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.http.HttpResponse;
 import com.amazonaws.http.HttpResponseHandler;
 
-/**
- * Response Handler implementation that hangs forever
- */
-public class UnresponsiveErrorResponseHandler implements HttpResponseHandler<AmazonServiceException> {
+/** Response Handler implementation that hangs forever */
+public class UnresponsiveErrorResponseHandler
+        implements HttpResponseHandler<AmazonServiceException> {
 
     @Override
     public AmazonServiceException handle(HttpResponse response) throws Exception {
@@ -37,5 +36,4 @@ public class UnresponsiveErrorResponseHandler implements HttpResponseHandler<Ama
     public boolean needsConnectionLeftOpen() {
         return false;
     }
-
 }

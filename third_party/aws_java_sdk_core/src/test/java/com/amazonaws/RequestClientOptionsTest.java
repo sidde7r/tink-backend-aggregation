@@ -20,9 +20,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.amazonaws.RequestClientOptions.Marker;
+import org.junit.Test;
 
 public class RequestClientOptionsTest {
     @Test
@@ -62,8 +61,8 @@ public class RequestClientOptionsTest {
 
         // After copy
         from.copyTo(to);
-        assertEquals(from.getClientMarker(Marker.USER_AGENT),
-                to.getClientMarker(Marker.USER_AGENT));
+        assertEquals(
+                from.getClientMarker(Marker.USER_AGENT), to.getClientMarker(Marker.USER_AGENT));
         assertTrue(1234 == to.getReadLimit());
     }
 }

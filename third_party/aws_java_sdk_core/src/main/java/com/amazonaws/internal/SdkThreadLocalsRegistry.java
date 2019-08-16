@@ -28,11 +28,11 @@ public final class SdkThreadLocalsRegistry {
     }
 
     /**
-     * Registers {@link ThreadLocal} objects in use by the AWS SDK so that their values can 
-     * be removed via the {@link #remove()} method.
+     * Registers {@link ThreadLocal} objects in use by the AWS SDK so that their values can be
+     * removed via the {@link #remove()} method.
      *
-     * <p>To avoid memory leaks and reduce contention this method should only be called when 
-     * setting static final locations (for example finals in enums or static final fields).
+     * <p>To avoid memory leaks and reduce contention this method should only be called when setting
+     * static final locations (for example finals in enums or static final fields).
      *
      * @param threadLocal ThreadLocal to register
      * @return the input ThreadLocal
@@ -42,10 +42,9 @@ public final class SdkThreadLocalsRegistry {
         return threadLocal;
     }
 
-    public synchronized static void remove() {
-        for (ThreadLocal<?> t: threadLocals) {
+    public static synchronized void remove() {
+        for (ThreadLocal<?> t : threadLocals) {
             t.remove();
         }
     }
-
 }

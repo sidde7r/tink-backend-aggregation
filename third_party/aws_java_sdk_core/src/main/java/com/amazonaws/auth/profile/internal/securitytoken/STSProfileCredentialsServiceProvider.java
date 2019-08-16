@@ -21,7 +21,8 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 
 @ThreadSafe
 public class STSProfileCredentialsServiceProvider implements AWSCredentialsProvider {
-    private static final String CLASS_NAME = "com.amazonaws.services.securitytoken.internal.STSProfileCredentialsService";
+    private static final String CLASS_NAME =
+            "com.amazonaws.services.securitytoken.internal.STSProfileCredentialsService";
     private static volatile ProfileCredentialsService STS_CREDENTIALS_SERVICE;
 
     private final RoleInfo roleInfo;
@@ -35,8 +36,9 @@ public class STSProfileCredentialsServiceProvider implements AWSCredentialsProvi
         if (this.profileCredentialsProvider == null) {
             synchronized (STSProfileCredentialsServiceProvider.class) {
                 if (this.profileCredentialsProvider == null) {
-                    this.profileCredentialsProvider = getProfileCredentialService()
-                            .getAssumeRoleCredentialsProvider(roleInfo);
+                    this.profileCredentialsProvider =
+                            getProfileCredentialService()
+                                    .getAssumeRoleCredentialsProvider(roleInfo);
                 }
             }
         }
@@ -50,8 +52,8 @@ public class STSProfileCredentialsServiceProvider implements AWSCredentialsProvi
     private static synchronized ProfileCredentialsService getProfileCredentialService() {
         if (STS_CREDENTIALS_SERVICE == null) {
             try {
-                STS_CREDENTIALS_SERVICE = (ProfileCredentialsService) Class.forName(CLASS_NAME)
-                        .newInstance();
+                STS_CREDENTIALS_SERVICE =
+                        (ProfileCredentialsService) Class.forName(CLASS_NAME).newInstance();
             } catch (ClassNotFoundException ex) {
                 throw new SdkClientException(
                         "To use assume role profiles the aws-java-sdk-sts module must be on the class path.",
@@ -64,7 +66,6 @@ public class STSProfileCredentialsServiceProvider implements AWSCredentialsProvi
         }
         return STS_CREDENTIALS_SERVICE;
     }
-
 
     @Override
     public AWSCredentials getCredentials() {

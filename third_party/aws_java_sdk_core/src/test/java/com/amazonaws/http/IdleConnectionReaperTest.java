@@ -18,10 +18,6 @@
  */
 package com.amazonaws.http;
 
-import tink.org.apache.http.HttpClientConnection;
-import tink.org.apache.http.conn.ConnectionRequest;
-import tink.org.apache.http.conn.HttpClientConnectionManager;
-import tink.org.apache.http.protocol.HttpContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -32,14 +28,13 @@ import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
-import tink.org.apache.http.conn.ClientConnectionManager;
-import tink.org.apache.http.conn.ClientConnectionRequest;
-import tink.org.apache.http.conn.ManagedClientConnection;
-import tink.org.apache.http.conn.routing.HttpRoute;
-import tink.org.apache.http.conn.scheme.SchemeRegistry;
 import org.junit.Before;
 import org.junit.Test;
+import tink.org.apache.http.HttpClientConnection;
+import tink.org.apache.http.conn.ConnectionRequest;
+import tink.org.apache.http.conn.HttpClientConnectionManager;
+import tink.org.apache.http.conn.routing.HttpRoute;
+import tink.org.apache.http.protocol.HttpContext;
 
 public class IdleConnectionReaperTest {
     @Before
@@ -51,7 +46,9 @@ public class IdleConnectionReaperTest {
     public void forceShutdown() throws Exception {
         assertEquals(0, IdleConnectionReaper.size());
         for (int i = 0; i < 3; i++) {
-            assertTrue(IdleConnectionReaper.registerConnectionManager(new TestClientConnectionManager()));
+            assertTrue(
+                    IdleConnectionReaper.registerConnectionManager(
+                            new TestClientConnectionManager()));
             assertEquals(1, IdleConnectionReaper.size());
             assertTrue(IdleConnectionReaper.shutdown());
             assertEquals(0, IdleConnectionReaper.size());
@@ -82,21 +79,39 @@ public class IdleConnectionReaperTest {
         HttpClientConnectionManager connectionManager = mock(HttpClientConnectionManager.class);
         final long idleTime = 10 * 1000;
         IdleConnectionReaper.registerConnectionManager(connectionManager, idleTime);
-        verify(connectionManager, timeout(90 * 1000)).closeIdleConnections(eq(idleTime), eq(TimeUnit.MILLISECONDS));
-
+        verify(connectionManager, timeout(90 * 1000))
+                .closeIdleConnections(eq(idleTime), eq(TimeUnit.MILLISECONDS));
     }
+
     private static class TestClientConnectionManager implements HttpClientConnectionManager {
         @Override
-        public void releaseConnection(HttpClientConnection conn, Object newState, long validDuration, TimeUnit timeUnit) {}
+        public void releaseConnection(
+                HttpClientConnection conn,
+                Object newState,
+                long validDuration,
+                TimeUnit timeUnit) {}
+
         @Override
-        public void connect(HttpClientConnection conn, HttpRoute route, int connectTimeout, HttpContext context) throws IOException {}
+        public void connect(
+                HttpClientConnection conn, HttpRoute route, int connectTimeout, HttpContext context)
+                throws IOException {}
+
         @Override
-        public void upgrade(HttpClientConnection conn, HttpRoute route, HttpContext context) throws IOException {}
+        public void upgrade(HttpClientConnection conn, HttpRoute route, HttpContext context)
+                throws IOException {}
+
         @Override
-        public void routeComplete(HttpClientConnection conn, HttpRoute route, HttpContext context) throws IOException {}
-        @Override public void shutdown() {}
-        @Override public void closeIdleConnections(long idletime, TimeUnit tunit) {}
-        @Override public void closeExpiredConnections() { }
+        public void routeComplete(HttpClientConnection conn, HttpRoute route, HttpContext context)
+                throws IOException {}
+
+        @Override
+        public void shutdown() {}
+
+        @Override
+        public void closeIdleConnections(long idletime, TimeUnit tunit) {}
+
+        @Override
+        public void closeExpiredConnections() {}
 
         @Override
         public ConnectionRequest requestConnection(HttpRoute route, Object state) {

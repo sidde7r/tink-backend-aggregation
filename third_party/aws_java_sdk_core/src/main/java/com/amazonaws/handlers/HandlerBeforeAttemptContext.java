@@ -17,55 +17,40 @@ package com.amazonaws.handlers;
 
 import com.amazonaws.Request;
 
-/**
- * Contextual data for the RequestHandler2 beforeAttempt callback
- */
+/** Contextual data for the RequestHandler2 beforeAttempt callback */
 public final class HandlerBeforeAttemptContext {
 
-    /**
-     * The request being attempted
-     */
+    /** The request being attempted */
     private final Request<?> request;
 
-    /**
-     * Default constructor for the HandlerBeforeAttemptContext object
-     */
+    /** Default constructor for the HandlerBeforeAttemptContext object */
     private HandlerBeforeAttemptContext(Request<?> request) {
         this.request = request;
     }
 
-    /**
-     * @return the request that is about to be attempted
-     */
+    /** @return the request that is about to be attempted */
     public Request<?> getRequest() {
         return request;
     }
 
-
-    /**
-     * @return a new builder for a HandlerBeforeAttemptContext instance
-     */
+    /** @return a new builder for a HandlerBeforeAttemptContext instance */
     public static HandlerBeforeAttemptContextBuilder builder() {
         return new HandlerBeforeAttemptContextBuilder();
     }
 
-    /**
-     * Builder class for HandlerBeforeAttemptContext
-     */
+    /** Builder class for HandlerBeforeAttemptContext */
     public static class HandlerBeforeAttemptContextBuilder {
 
-        /**
-         * The request being attempted
-         */
+        /** The request being attempted */
         private Request<?> request;
 
-        /**
-         * Default constructor
-         */
+        /** Default constructor */
         private HandlerBeforeAttemptContextBuilder() {}
 
         /**
-         * Fluent set for what the request should be on the eventual HandlerBeforeAttemptContext instance
+         * Fluent set for what the request should be on the eventual HandlerBeforeAttemptContext
+         * instance
+         *
          * @param request the request that is to be attempted
          * @return the modified builder
          */
@@ -75,9 +60,7 @@ public final class HandlerBeforeAttemptContext {
             return this;
         }
 
-        /**
-         * @return a new HandlerBeforeAttemptContext object
-         */
+        /** @return a new HandlerBeforeAttemptContext object */
         public HandlerBeforeAttemptContext build() {
             return new HandlerBeforeAttemptContext(request);
         }

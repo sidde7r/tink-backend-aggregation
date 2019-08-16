@@ -14,16 +14,13 @@
  */
 package com.amazonaws.util;
 
+import com.amazonaws.internal.SdkFilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import tink.org.apache.http.client.HttpClient;
 
-import com.amazonaws.internal.SdkFilterInputStream;
-
 /**
- * An {@code InputStream} that closes the associated {@code HttpClient}
- * when the stream is closed.
+ * An {@code InputStream} that closes the associated {@code HttpClient} when the stream is closed.
  */
 class HttpClientWrappingInputStream extends SdkFilterInputStream {
 
@@ -33,9 +30,7 @@ class HttpClientWrappingInputStream extends SdkFilterInputStream {
      * @param client the {@code HttpClient} to wrap
      * @param stream the {@code InputStream} to wrap
      */
-    public HttpClientWrappingInputStream(
-            final HttpClient client,
-            final InputStream stream) {
+    public HttpClientWrappingInputStream(final HttpClient client, final InputStream stream) {
 
         super(stream);
         this.client = client;

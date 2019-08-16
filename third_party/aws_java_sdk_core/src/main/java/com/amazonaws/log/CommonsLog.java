@@ -16,10 +16,7 @@ package com.amazonaws.log;
 
 import org.apache.commons.logging.Log;
 
-/**
- * Used to delegate internal logging of the signers and core classes to Jakarta
- * Commons Logging.
- */
+/** Used to delegate internal logging of the signers and core classes to Jakarta Commons Logging. */
 public class CommonsLog implements com.amazonaws.log.InternalLogApi {
 
     private final org.apache.commons.logging.Log log;

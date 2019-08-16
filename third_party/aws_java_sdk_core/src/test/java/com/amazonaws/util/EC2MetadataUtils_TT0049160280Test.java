@@ -18,29 +18,28 @@
  */
 package com.amazonaws.util;
 
+import com.amazonaws.util.EC2MetadataUtils.InstanceInfo;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.amazonaws.util.EC2MetadataUtils.InstanceInfo;
-
 public class EC2MetadataUtils_TT0049160280Test {
-    private static final String JSON = "{"
-            + "  \"privateIp\" : \"172.31.56.174\","
-            + "  \"devpayProductCodes\" : null,"
-            + "  \"availabilityZone\" : \"us-east-1b\","
-            + "  \"version\" : \"2010-08-31\","
-            + "  \"accountId\" : \"123456789012\","
-            + "  \"instanceId\" : \"i-b32c0064\","
-            + "  \"billingProducts\" : [\"bp-6ba54002\" ],"
-            + "  \"imageId\" : \"ami-ac3a1cc4\","
-            + "  \"instanceType\" : \"t2.small\","
-            + "  \"kernelId\" : null,"
-            + "  \"ramdiskId\" : null,"
-            + "  \"pendingTime\" : \"2015-04-13T19:57:24Z\","
-            + "  \"architecture\" : \"x86_64\","
-            + "  \"region\" : \"us-east-1\""
-            + "}"
-            ;
+    private static final String JSON =
+            "{"
+                    + "  \"privateIp\" : \"172.31.56.174\","
+                    + "  \"devpayProductCodes\" : null,"
+                    + "  \"availabilityZone\" : \"us-east-1b\","
+                    + "  \"version\" : \"2010-08-31\","
+                    + "  \"accountId\" : \"123456789012\","
+                    + "  \"instanceId\" : \"i-b32c0064\","
+                    + "  \"billingProducts\" : [\"bp-6ba54002\" ],"
+                    + "  \"imageId\" : \"ami-ac3a1cc4\","
+                    + "  \"instanceType\" : \"t2.small\","
+                    + "  \"kernelId\" : null,"
+                    + "  \"ramdiskId\" : null,"
+                    + "  \"pendingTime\" : \"2015-04-13T19:57:24Z\","
+                    + "  \"architecture\" : \"x86_64\","
+                    + "  \"region\" : \"us-east-1\""
+                    + "}";
 
     @Test
     public void getRegionIntern() throws Exception {
@@ -58,23 +57,23 @@ public class EC2MetadataUtils_TT0049160280Test {
 
     @Test
     public void devProductCodes() {
-        final String JSON = "{"
-                + "  \"privateIp\" : \"172.31.56.174\","
-                + "  \"devpayProductCodes\" : [\"foo\", \"bar\"],"
-                + "  \"availabilityZone\" : \"us-east-1b\","
-                + "  \"version\" : \"2010-08-31\","
-                + "  \"accountId\" : \"123456789012\","
-                + "  \"instanceId\" : \"i-b32c0064\","
-                + "  \"billingProducts\" : [\"bp-6ba54002\" ],"
-                + "  \"imageId\" : \"ami-ac3a1cc4\","
-                + "  \"instanceType\" : \"t2.small\","
-                + "  \"kernelId\" : null,"
-                + "  \"ramdiskId\" : null,"
-                + "  \"pendingTime\" : \"2015-04-13T19:57:24Z\","
-                + "  \"architecture\" : \"x86_64\","
-                + "  \"region\" : \"us-east-1\""
-                + "}"
-                ;
+        final String JSON =
+                "{"
+                        + "  \"privateIp\" : \"172.31.56.174\","
+                        + "  \"devpayProductCodes\" : [\"foo\", \"bar\"],"
+                        + "  \"availabilityZone\" : \"us-east-1b\","
+                        + "  \"version\" : \"2010-08-31\","
+                        + "  \"accountId\" : \"123456789012\","
+                        + "  \"instanceId\" : \"i-b32c0064\","
+                        + "  \"billingProducts\" : [\"bp-6ba54002\" ],"
+                        + "  \"imageId\" : \"ami-ac3a1cc4\","
+                        + "  \"instanceType\" : \"t2.small\","
+                        + "  \"kernelId\" : null,"
+                        + "  \"ramdiskId\" : null,"
+                        + "  \"pendingTime\" : \"2015-04-13T19:57:24Z\","
+                        + "  \"architecture\" : \"x86_64\","
+                        + "  \"region\" : \"us-east-1\""
+                        + "}";
         InstanceInfo info = EC2MetadataUtils.doGetInstanceInfo(JSON);
         String[] devpayProductCodes = info.getDevpayProductCodes();
         Assert.assertTrue(devpayProductCodes.length == 2);

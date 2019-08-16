@@ -13,14 +13,13 @@
  * permissions and limitations under the License.
  */
 package com.amazonaws.event;
+
 import static com.amazonaws.event.SDKProgressPublisher.publishResponseBytesTransferred;
 import static com.amazonaws.event.SDKProgressPublisher.publishResponseReset;
 
 import java.io.InputStream;
 
-/**
- * Used for response input stream progress tracking purposes.
- */
+/** Used for response input stream progress tracking purposes. */
 class ResponseProgressInputStream extends ProgressInputStream {
     ResponseProgressInputStream(InputStream is, ProgressListener listener) {
         super(is, listener);

@@ -14,6 +14,14 @@
  */
 package com.amazonaws.http;
 
+import static org.hamcrest.Matchers.hasEntry;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.AmazonServiceException.ErrorType;
 import com.amazonaws.DefaultRequest;
@@ -25,23 +33,13 @@ import com.amazonaws.util.StringInputStream;
 import com.amazonaws.util.StringUtils;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
-
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static org.hamcrest.Matchers.hasEntry;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
 
 public class JsonErrorResponseHandlerTest {
 
@@ -50,34 +48,36 @@ public class JsonErrorResponseHandlerTest {
     private JsonErrorResponseHandler responseHandler;
     private HttpResponse httpResponse;
 
-    @Mock
-    private JsonErrorUnmarshaller unmarshaller;
+    @Mock private JsonErrorUnmarshaller unmarshaller;
 
-    @Mock
-    private JsonErrorCodeParser errorCodeParser;
+    @Mock private JsonErrorCodeParser errorCodeParser;
 
     @Before
     public void setup() throws UnsupportedEncodingException {
         MockitoAnnotations.initMocks(this);
-        when(errorCodeParser
-                     .parseErrorCode((HttpResponse) anyObject(), (JsonContent) anyObject()))
+        when(errorCodeParser.parseErrorCode((HttpResponse) anyObject(), (JsonContent) anyObject()))
                 .thenReturn(ERROR_CODE);
 
         httpResponse = new HttpResponse(new DefaultRequest<String>(SERVICE_NAME), null);
         httpResponse.setContent(new StringInputStream("{}"));
 
-        responseHandler = new JsonErrorResponseHandler(Arrays.asList(unmarshaller), errorCodeParser,
-                                                       JsonErrorMessageParser.DEFAULT_ERROR_MESSAGE_PARSER,
-                                                       new JsonFactory());
+        responseHandler =
+                new JsonErrorResponseHandler(
+                        Arrays.asList(unmarshaller),
+                        errorCodeParser,
+                        JsonErrorMessageParser.DEFAULT_ERROR_MESSAGE_PARSER,
+                        new JsonFactory());
     }
 
     @Test
-    public void handle_NoUnmarshallersAdded_ReturnsGenericAmazonServiceException() throws
-                                                                                   Exception {
-        responseHandler = new JsonErrorResponseHandler(new ArrayList<JsonErrorUnmarshaller>(),
-                                                       new JsonErrorCodeParser(),
-                                                       JsonErrorMessageParser.DEFAULT_ERROR_MESSAGE_PARSER,
-                                                       new JsonFactory());
+    public void handle_NoUnmarshallersAdded_ReturnsGenericAmazonServiceException()
+            throws Exception {
+        responseHandler =
+                new JsonErrorResponseHandler(
+                        new ArrayList<JsonErrorUnmarshaller>(),
+                        new JsonErrorCodeParser(),
+                        JsonErrorMessageParser.DEFAULT_ERROR_MESSAGE_PARSER,
+                        new JsonFactory());
 
         AmazonServiceException ase = responseHandler.handle(httpResponse);
 
@@ -85,8 +85,8 @@ public class JsonErrorResponseHandlerTest {
     }
 
     @Test
-    public void handle_NoMatchingUnmarshallers_ReturnsGenericAmazonServiceException() throws
-                                                                                      Exception {
+    public void handle_NoMatchingUnmarshallers_ReturnsGenericAmazonServiceException()
+            throws Exception {
         expectUnmarshallerDoesNotMatch();
 
         AmazonServiceException ase = responseHandler.handle(httpResponse);
@@ -120,8 +120,8 @@ public class JsonErrorResponseHandlerTest {
     }
 
     @Test
-    public void handle_UnmarshallerReturnsNull_ReturnsGenericAmazonServiceException() throws
-                                                                                      Exception {
+    public void handle_UnmarshallerReturnsNull_ReturnsGenericAmazonServiceException()
+            throws Exception {
         expectUnmarshallerMatches();
 
         AmazonServiceException ase = responseHandler.handle(httpResponse);
@@ -131,8 +131,8 @@ public class JsonErrorResponseHandlerTest {
     }
 
     @Test
-    public void handle_UnmarshallerThrowsException_ReturnsGenericAmazonServiceException() throws
-                                                                                          Exception {
+    public void handle_UnmarshallerThrowsException_ReturnsGenericAmazonServiceException()
+            throws Exception {
         expectUnmarshallerMatches();
         when(unmarshaller.unmarshall((JsonNode) anyObject())).thenThrow(new RuntimeException());
 
@@ -182,15 +182,13 @@ public class JsonErrorResponseHandlerTest {
         assertEquals("1234", ase.getRequestId());
     }
 
-    /**
-     * Headers are case insensitive so the request id should still be parsed in this test
-     */
+    /** Headers are case insensitive so the request id should still be parsed in this test */
     @Test
-    public void handle_UnmarshallerReturnsException_WithCaseInsensitiveRequestId() throws
-                                                                                   Exception {
+    public void handle_UnmarshallerReturnsException_WithCaseInsensitiveRequestId()
+            throws Exception {
         httpResponse.setStatusCode(500);
-        httpResponse.addHeader(StringUtils.upperCase(HttpResponseHandler.X_AMZN_REQUEST_ID_HEADER),
-                               "1234");
+        httpResponse.addHeader(
+                StringUtils.upperCase(HttpResponseHandler.X_AMZN_REQUEST_ID_HEADER), "1234");
         expectUnmarshallerMatches();
         when(unmarshaller.unmarshall((JsonNode) anyObject()))
                 .thenReturn(new CustomException("error"));
@@ -215,8 +213,9 @@ public class JsonErrorResponseHandlerTest {
 
         AmazonServiceException ase = responseHandler.handle(httpResponse);
         assertThat(ase.getHttpHeaders(), hasEntry("FooHeader", "FooValue"));
-        assertThat(ase.getHttpHeaders(),
-                   hasEntry(HttpResponseHandler.X_AMZN_REQUEST_ID_HEADER, "1234"));
+        assertThat(
+                ase.getHttpHeaders(),
+                hasEntry(HttpResponseHandler.X_AMZN_REQUEST_ID_HEADER, "1234"));
     }
 
     private void expectUnmarshallerMatches() throws Exception {

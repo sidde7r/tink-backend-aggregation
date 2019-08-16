@@ -14,12 +14,11 @@
  */
 package com.amazonaws.endpointdiscovery;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class EndpointDiscoveryProviderChain implements EndpointDiscoveryProvider {
 
@@ -44,8 +43,11 @@ public class EndpointDiscoveryProviderChain implements EndpointDiscoveryProvider
                 }
             } catch (Exception e) {
                 // Ignore any exceptions and move onto the next provider
-                LOG.debug("Unable to discover endpoint discovery setting " + provider.toString() +
-                          ": " + e.getMessage());
+                LOG.debug(
+                        "Unable to discover endpoint discovery setting "
+                                + provider.toString()
+                                + ": "
+                                + e.getMessage());
             }
         }
         return endpointDiscoveryEnabled;

@@ -18,9 +18,7 @@ import com.amazonaws.handlers.HandlerContextKey;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Unit tests for context in a DefaultRequest class.
- */
+/** Unit tests for context in a DefaultRequest class. */
 public class DefaultRequestTest {
 
     @Test
@@ -30,13 +28,12 @@ public class DefaultRequestTest {
 
         Integer intValue = new Integer(10);
 
-        HandlerContextKey<Integer> integerContextKey = new HandlerContextKey<Integer>
-                ("integer-context-key");
+        HandlerContextKey<Integer> integerContextKey =
+                new HandlerContextKey<Integer>("integer-context-key");
 
         request.addHandlerContext(integerContextKey, intValue);
 
-        Assert.assertEquals(intValue, request.getHandlerContext
-                (integerContextKey));
+        Assert.assertEquals(intValue, request.getHandlerContext(integerContextKey));
     }
 
     @Test

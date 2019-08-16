@@ -14,10 +14,9 @@
  */
 package com.amazonaws.internal.config;
 
+import com.amazonaws.annotation.Immutable;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
-import com.amazonaws.annotation.Immutable;
 
 @Immutable
 public class HostRegexToRegionMapping {
@@ -25,25 +24,24 @@ public class HostRegexToRegionMapping {
     private final String regionName;
     private final Pattern hostNameRegexPattern;
 
-    public HostRegexToRegionMapping(
-            String hostNameRegex, String regionName) {
+    public HostRegexToRegionMapping(String hostNameRegex, String regionName) {
         if (hostNameRegex == null || hostNameRegex.isEmpty()) {
             throw new IllegalArgumentException(
-                    "Invalid HostRegexToRegionMapping configuration: " +
-                    "hostNameRegex must be non-empty");
+                    "Invalid HostRegexToRegionMapping configuration: "
+                            + "hostNameRegex must be non-empty");
         }
         try {
             this.hostNameRegexPattern = Pattern.compile(hostNameRegex);
         } catch (PatternSyntaxException e) {
             throw new IllegalArgumentException(
-                    "Invalid HostRegexToRegionMapping configuration: " +
-                    "hostNameRegex is not a valid regex",
+                    "Invalid HostRegexToRegionMapping configuration: "
+                            + "hostNameRegex is not a valid regex",
                     e);
         }
         if (regionName == null || regionName.isEmpty()) {
             throw new IllegalArgumentException(
-                    "Invalid HostRegexToRegionMapping configuration: " +
-                    "regionName must be non-empty");
+                    "Invalid HostRegexToRegionMapping configuration: "
+                            + "regionName must be non-empty");
         }
         this.regionName = regionName;
     }
@@ -51,8 +49,8 @@ public class HostRegexToRegionMapping {
     public String getRegionName() {
         return regionName;
     }
-    
+
     public boolean isHostNameMatching(String hostname) {
-    	return hostNameRegexPattern.matcher(hostname).matches();
+        return hostNameRegexPattern.matcher(hostname).matches();
     }
 }

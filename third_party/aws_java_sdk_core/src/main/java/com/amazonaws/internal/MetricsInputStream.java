@@ -15,11 +15,10 @@
 
 package com.amazonaws.internal;
 
+import com.amazonaws.util.AWSRequestMetrics;
+import com.amazonaws.util.AWSRequestMetrics.Field;
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.amazonaws.util.AWSRequestMetrics.Field;
-import com.amazonaws.util.AWSRequestMetrics;
 
 /**
  * Record input stream read time into {@link AWSRequestMetrics} under metric type
@@ -37,10 +36,7 @@ public class MetricsInputStream extends DelegateInputStream {
         this.metrics = metrics;
     }
 
-    /**
-     * {@inheritDoc}
-     * Record the read time into the metrics.
-     */
+    /** {@inheritDoc} Record the read time into the metrics. */
     @Override
     public int read() throws IOException {
         if (metrics != null) {
@@ -58,7 +54,7 @@ public class MetricsInputStream extends DelegateInputStream {
     /**
      * {@inheritDoc}
      *
-     * Record the read time into the metrics.
+     * <p>Record the read time into the metrics.
      */
     @Override
     public int read(byte b[]) throws IOException {
@@ -77,7 +73,7 @@ public class MetricsInputStream extends DelegateInputStream {
     /**
      * {@inheritDoc}
      *
-     * Record the read time into the metrics.
+     * <p>Record the read time into the metrics.
      */
     @Override
     public int read(byte b[], int off, int len) throws IOException {

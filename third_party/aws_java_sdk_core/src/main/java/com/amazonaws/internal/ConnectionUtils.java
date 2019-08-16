@@ -14,22 +14,19 @@
  */
 package com.amazonaws.internal;
 
+import com.amazonaws.annotation.SdkInternalApi;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URI;
 import java.util.Map;
 
-import com.amazonaws.annotation.SdkInternalApi;
-
 @SdkInternalApi
 public class ConnectionUtils {
 
     private static ConnectionUtils instance;
 
-    private ConnectionUtils() {
-
-    }
+    private ConnectionUtils() {}
 
     public static ConnectionUtils getInstance() {
         if (instance == null) {
@@ -38,8 +35,10 @@ public class ConnectionUtils {
         return instance;
     }
 
-    public HttpURLConnection connectToEndpoint(URI endpoint, Map<String, String> headers) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) endpoint.toURL().openConnection(Proxy.NO_PROXY);
+    public HttpURLConnection connectToEndpoint(URI endpoint, Map<String, String> headers)
+            throws IOException {
+        HttpURLConnection connection =
+                (HttpURLConnection) endpoint.toURL().openConnection(Proxy.NO_PROXY);
         connection.setConnectTimeout(1000 * 2);
         connection.setReadTimeout(1000 * 5);
         connection.setRequestMethod("GET");
@@ -55,5 +54,4 @@ public class ConnectionUtils {
 
         return connection;
     }
-
 }

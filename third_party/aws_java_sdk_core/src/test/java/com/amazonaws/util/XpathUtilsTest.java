@@ -45,10 +45,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.SimpleTimeZone;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -65,29 +63,28 @@ public class XpathUtilsTest {
 
     /** Test data for all tests to share */
     private static final String DOCUMENT =
-        "<Foo>" +
-        "    <Title>Boo</Title>" +
-        "    <Count Foo='Bar'>1</Count>" +
-        "    <Enabled>true</Enabled>" +
-        "    <Usage>0.0000071759</Usage>" +
-        "    <Since>2008-10-07T11:51:50.000Z</Since>" +
-        "    <Item>A</Item>" +
-        "    <Item>B</Item>" +
-        "    <Item>C</Item>" +
-        "    <Empty></Empty>" +
-        "    <Blob>aGVsbG8gd29ybGQ=</Blob>" +
-        "    <PositiveByte>123</PositiveByte>" +
-        "    <NegativeByte>-99</NegativeByte>" +
-        "</Foo>";
+            "<Foo>"
+                    + "    <Title>Boo</Title>"
+                    + "    <Count Foo='Bar'>1</Count>"
+                    + "    <Enabled>true</Enabled>"
+                    + "    <Usage>0.0000071759</Usage>"
+                    + "    <Since>2008-10-07T11:51:50.000Z</Since>"
+                    + "    <Item>A</Item>"
+                    + "    <Item>B</Item>"
+                    + "    <Item>C</Item>"
+                    + "    <Empty></Empty>"
+                    + "    <Blob>aGVsbG8gd29ybGQ=</Blob>"
+                    + "    <PositiveByte>123</PositiveByte>"
+                    + "    <NegativeByte>-99</NegativeByte>"
+                    + "</Foo>";
 
     /** Test XML document with a namespace */
     private static final String DOCUMENT_WITH_NAMESPACE =
-        "<?xml version=\"1.0\"?> \n" +
-        "<AllocateAddressResponse xmlns=\"http://ec2.amazonaws.com/doc/2009-04-04/\"> \n" +
-        "    <requestId>a074658d-7624-433e-b4e9-9271f6f5264b</requestId> \n" +
-        "    <publicIp>174.129.242.223</publicIp> \n" +
-        "</AllocateAddressResponse> \n";
-
+            "<?xml version=\"1.0\"?> \n"
+                    + "<AllocateAddressResponse xmlns=\"http://ec2.amazonaws.com/doc/2009-04-04/\"> \n"
+                    + "    <requestId>a074658d-7624-433e-b4e9-9271f6f5264b</requestId> \n"
+                    + "    <publicIp>174.129.242.223</publicIp> \n"
+                    + "</AllocateAddressResponse> \n";
 
     @Test
     public void testXmlDocumentWithNamespace() throws Exception {
@@ -113,7 +110,7 @@ public class XpathUtilsTest {
     public void testAsInteger() throws Exception {
         Document document = documentFrom(DOCUMENT);
         XPath xpath = xpath();
-        assertEquals((Integer)1, (Integer)asInteger("Foo/Count", document, xpath));
+        assertEquals((Integer) 1, (Integer) asInteger("Foo/Count", document, xpath));
         assertEquals(null, asInteger("Foo/Empty", document, xpath));
     }
 
@@ -129,25 +126,21 @@ public class XpathUtilsTest {
     public void testAsFloat() throws Exception {
         Document document = XpathUtils.documentFrom(DOCUMENT);
         XPath xpath = xpath();
-        assertEquals((Float)0.0000071759f, (Float)asFloat("Foo/Usage", document, xpath));
+        assertEquals((Float) 0.0000071759f, (Float) asFloat("Foo/Usage", document, xpath));
         assertEquals(null, asFloat("Foo/Empty", document, xpath));
     }
 
-    /**
-     * Tests that we can correctly pull a Byte out of an XML document.
-     */
+    /** Tests that we can correctly pull a Byte out of an XML document. */
     @Test
     public void testAsByte() throws Exception {
         Document document = XpathUtils.documentFrom(DOCUMENT);
         XPath xpath = xpath();
-        assertEquals(new Byte((byte)123), asByte("Foo/PositiveByte", document, xpath));
-        assertEquals(new Byte((byte)-99), asByte("Foo/NegativeByte", document, xpath));
+        assertEquals(new Byte((byte) 123), asByte("Foo/PositiveByte", document, xpath));
+        assertEquals(new Byte((byte) -99), asByte("Foo/NegativeByte", document, xpath));
         assertEquals(null, XpathUtils.asByte("Foo/Empty", document));
     }
 
-    /**
-     * Tests that we can correctly parse out a Date from an XML document.
-     */
+    /** Tests that we can correctly parse out a Date from an XML document. */
     @Test
     public void testAsDate() throws Exception {
         /*
@@ -198,9 +191,8 @@ public class XpathUtilsTest {
     }
 
     /**
-     * Tests that we return null when a specified expression doesn't
-     * evaluate anything (instead of passing that null/empty value to
-     * a parser and getting an error in the parser).
+     * Tests that we return null when a specified expression doesn't evaluate anything (instead of
+     * passing that null/empty value to a parser and getting an error in the parser).
      */
     @Test
     public void testMissingNodes() throws Exception {
@@ -215,8 +207,8 @@ public class XpathUtilsTest {
     }
 
     /**
-     * Tests that {@link XpathUtils#asByteBuffer(String, Node)} correctly base64
-     * decodes the XML text data and transforms it into a ByteBuffer.
+     * Tests that {@link XpathUtils#asByteBuffer(String, Node)} correctly base64 decodes the XML
+     * text data and transforms it into a ByteBuffer.
      */
     @Test
     public void testAsByteBuffer() throws Exception {
@@ -234,7 +226,8 @@ public class XpathUtilsTest {
     }
 
     @Test
-    public void testFromDocumentDoesNotWriteToStderrWhenXmlInvalid() throws SAXException, IOException, ParserConfigurationException {
+    public void testFromDocumentDoesNotWriteToStderrWhenXmlInvalid()
+            throws SAXException, IOException, ParserConfigurationException {
         PrintStream err = System.err;
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         try {
@@ -244,11 +237,10 @@ public class XpathUtilsTest {
             XpathUtils.documentFrom("a");
             Assert.fail();
         } catch (SAXParseException e) {
-            //ensure nothing written to stderr
+            // ensure nothing written to stderr
             assertEquals(0, bytes.toByteArray().length);
         } finally {
             System.setErr(err);
         }
     }
-
 }

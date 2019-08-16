@@ -34,21 +34,23 @@ public class MarshallerRegistry {
     private MarshallerRegistry(Builder builder) {
         this.marshallers = builder.marshallers;
         this.marshallingTypes = builder.marshallingTypes;
-        this.marshallingTypeCache = new HashMap<Class<?>, MarshallingType<?>>(marshallingTypes.size());
-
+        this.marshallingTypeCache =
+                new HashMap<Class<?>, MarshallingType<?>>(marshallingTypes.size());
     }
 
     public <T> JsonMarshaller<T> getMarshaller(MarshallLocation marshallLocation, T val) {
         return getMarshaller(marshallLocation, toMarshallingType(val));
     }
 
-    public <T> JsonMarshaller<T> getMarshaller(MarshallLocation marshallLocation, MarshallingType<T> marshallingType, T val) {
-        return getMarshaller(marshallLocation,
-                             val == null ? MarshallingType.NULL : marshallingType);
+    public <T> JsonMarshaller<T> getMarshaller(
+            MarshallLocation marshallLocation, MarshallingType<T> marshallingType, T val) {
+        return getMarshaller(
+                marshallLocation, val == null ? MarshallingType.NULL : marshallingType);
     }
 
     @SuppressWarnings("unchecked")
-    private <T> JsonMarshaller<T> getMarshaller(MarshallLocation marshallLocation, MarshallingType<?> marshallingType) {
+    private <T> JsonMarshaller<T> getMarshaller(
+            MarshallLocation marshallLocation, MarshallingType<?> marshallingType) {
         return (JsonMarshaller<T>) marshallers.get(marshallLocation).get(marshallingType);
     }
 
@@ -81,15 +83,16 @@ public class MarshallerRegistry {
     }
 
     /**
-     * Merge the given overrides with 'this' registry. Overrides are higher precedence than 'this' registry. Both 'this'
-     * registry and the override registry are immutable so a new registry object is returned. If the marshallerRegistryOverrides
-     * are null then this method just returns the current registry since there is nothing to merge.
+     * Merge the given overrides with 'this' registry. Overrides are higher precedence than 'this'
+     * registry. Both 'this' registry and the override registry are immutable so a new registry
+     * object is returned. If the marshallerRegistryOverrides are null then this method just returns
+     * the current registry since there is nothing to merge.
      *
      * @param marshallerRegistryOverrides Override registry.
      * @return New {@link MarshallerRegistry} with marshallers merged.
      */
     public MarshallerRegistry merge(MarshallerRegistry.Builder marshallerRegistryOverrides) {
-        if(marshallerRegistryOverrides == null) {
+        if (marshallerRegistryOverrides == null) {
             return this;
         }
         Builder merged = MarshallerRegistry.builder();
@@ -98,82 +101,78 @@ public class MarshallerRegistry {
         return merged.build();
     }
 
-    /**
-     * @return Builder instance to construct a {@link MarshallerRegistry}.
-     */
+    /** @return Builder instance to construct a {@link MarshallerRegistry}. */
     public static Builder builder() {
         return new Builder();
     }
 
-    /**
-     * Builder for a {@link MarshallerRegistry}.
-     */
+    /** Builder for a {@link MarshallerRegistry}. */
     public static final class Builder {
 
-        private final Map<MarshallLocation, Map<MarshallingType, JsonMarshaller<?>>> marshallers
-                = new HashMap<MarshallLocation, Map<MarshallingType, JsonMarshaller<?>>>();
-        private final Set<MarshallingType<?>> marshallingTypes
-                = new HashSet<MarshallingType<?>>();
+        private final Map<MarshallLocation, Map<MarshallingType, JsonMarshaller<?>>> marshallers =
+                new HashMap<MarshallLocation, Map<MarshallingType, JsonMarshaller<?>>>();
+        private final Set<MarshallingType<?>> marshallingTypes = new HashSet<MarshallingType<?>>();
 
-        private Builder() {
-        }
+        private Builder() {}
 
-        public <T> Builder payloadMarshaller(MarshallingType<T> marshallingType,
-                                             JsonMarshaller<T> marshaller) {
+        public <T> Builder payloadMarshaller(
+                MarshallingType<T> marshallingType, JsonMarshaller<T> marshaller) {
             return addMarshaller(MarshallLocation.PAYLOAD, marshallingType, marshaller);
         }
 
-        public <T> Builder headerMarshaller(MarshallingType<T> marshallingType,
-                                            JsonMarshaller<T> marshaller) {
+        public <T> Builder headerMarshaller(
+                MarshallingType<T> marshallingType, JsonMarshaller<T> marshaller) {
             return addMarshaller(MarshallLocation.HEADER, marshallingType, marshaller);
         }
 
-        public <T> Builder queryParamMarshaller(MarshallingType<T> marshallingType,
-                                                JsonMarshaller<T> marshaller) {
+        public <T> Builder queryParamMarshaller(
+                MarshallingType<T> marshallingType, JsonMarshaller<T> marshaller) {
             return addMarshaller(MarshallLocation.QUERY_PARAM, marshallingType, marshaller);
         }
 
-        public <T> Builder pathParamMarshaller(MarshallingType<T> marshallingType,
-                                               JsonMarshaller<T> marshaller) {
+        public <T> Builder pathParamMarshaller(
+                MarshallingType<T> marshallingType, JsonMarshaller<T> marshaller) {
             return addMarshaller(MarshallLocation.PATH, marshallingType, marshaller);
         }
 
-        public <T> Builder greedyPathParamMarshaller(MarshallingType<T> marshallingType,
-                                                     JsonMarshaller<T> marshaller) {
+        public <T> Builder greedyPathParamMarshaller(
+                MarshallingType<T> marshallingType, JsonMarshaller<T> marshaller) {
             return addMarshaller(MarshallLocation.GREEDY_PATH, marshallingType, marshaller);
         }
 
-        public <T> Builder addMarshaller(MarshallLocation marshallLocation,
-                                         MarshallingType<T> marshallingType,
-                                         JsonMarshaller<T> marshaller) {
+        public <T> Builder addMarshaller(
+                MarshallLocation marshallLocation,
+                MarshallingType<T> marshallingType,
+                JsonMarshaller<T> marshaller) {
             marshallingTypes.add(marshallingType);
             if (!marshallers.containsKey(marshallLocation)) {
-                marshallers.put(marshallLocation, new HashMap<MarshallingType, JsonMarshaller<?>>());
+                marshallers.put(
+                        marshallLocation, new HashMap<MarshallingType, JsonMarshaller<?>>());
             }
             marshallers.get(marshallLocation).put(marshallingType, marshaller);
             return this;
         }
 
-        /**
-         * @return An immutable {@link MarshallerRegistry} object.
-         */
+        /** @return An immutable {@link MarshallerRegistry} object. */
         public MarshallerRegistry build() {
             return new MarshallerRegistry(this);
         }
 
         /**
-         * Fill this builder with marshallers from the source {@link MarshallerRegistry}. Will overwrite anything that is
-         * registered with the same location and type.
+         * Fill this builder with marshallers from the source {@link MarshallerRegistry}. Will
+         * overwrite anything that is registered with the same location and type.
          *
          * @param sourceMarshallers Marshallers to copy in.
          */
         private void copyMarshallersFromRegistry(
                 Map<MarshallLocation, Map<MarshallingType, JsonMarshaller<?>>> sourceMarshallers) {
 
-            for (Map.Entry<MarshallLocation, Map<MarshallingType, JsonMarshaller<?>>> byLocationEntry :
-                    sourceMarshallers.entrySet()) {
-                for (Map.Entry<MarshallingType, JsonMarshaller<?>> byTypeEntry : byLocationEntry.getValue().entrySet()) {
-                    this.addMarshaller(byLocationEntry.getKey(), byTypeEntry.getKey(), byTypeEntry.getValue());
+            for (Map.Entry<MarshallLocation, Map<MarshallingType, JsonMarshaller<?>>>
+                    byLocationEntry : sourceMarshallers.entrySet()) {
+                for (Map.Entry<MarshallingType, JsonMarshaller<?>> byTypeEntry :
+                        byLocationEntry.getValue().entrySet()) {
+                    this.addMarshaller(
+                            byLocationEntry.getKey(), byTypeEntry.getKey(), byTypeEntry.getValue());
                 }
             }
         }

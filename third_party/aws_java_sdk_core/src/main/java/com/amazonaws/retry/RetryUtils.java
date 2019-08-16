@@ -53,9 +53,7 @@ public class RetryUtils {
         RETRYABLE_STATUS_CODES.add(HttpStatus.SC_GATEWAY_TIMEOUT);
     }
 
-    /**
-     * @deprecated By {@link RetryUtils#isRetryableServiceException(SdkBaseException)}
-     */
+    /** @deprecated By {@link RetryUtils#isRetryableServiceException(SdkBaseException)} */
     @Deprecated
     public static boolean isRetryableServiceException(AmazonServiceException exception) {
         return isRetryableServiceException((SdkBaseException) exception);
@@ -72,12 +70,11 @@ public class RetryUtils {
             return false;
         }
         AmazonServiceException ase = toAse(exception);
-        return RETRYABLE_STATUS_CODES.contains(ase.getStatusCode()) || RETRYABLE_ERROR_CODES.contains(ase.getErrorCode());
+        return RETRYABLE_STATUS_CODES.contains(ase.getStatusCode())
+                || RETRYABLE_ERROR_CODES.contains(ase.getErrorCode());
     }
 
-    /**
-     * @deprecated In favor of {@link RetryUtils#isThrottlingException(SdkBaseException)}
-     */
+    /** @deprecated In favor of {@link RetryUtils#isThrottlingException(SdkBaseException)} */
     @Deprecated
     public static boolean isThrottlingException(AmazonServiceException exception) {
         return isThrottlingException((SdkBaseException) exception);
@@ -87,7 +84,8 @@ public class RetryUtils {
      * Returns true if the specified exception is a throttling error.
      *
      * @param exception The exception to test.
-     * @return True if the exception resulted from a throttling error message from a service, otherwise false.
+     * @return True if the exception resulted from a throttling error message from a service,
+     *     otherwise false.
      */
     public static boolean isThrottlingException(SdkBaseException exception) {
         if (!isAse(exception)) {
@@ -97,9 +95,7 @@ public class RetryUtils {
         return THROTTLING_ERROR_CODES.contains(ase.getErrorCode()) || ase.getStatusCode() == 429;
     }
 
-    /**
-     * @deprecated By {@link RetryUtils#isRequestEntityTooLargeException(SdkBaseException)}
-     */
+    /** @deprecated By {@link RetryUtils#isRequestEntityTooLargeException(SdkBaseException)} */
     @Deprecated
     public static boolean isRequestEntityTooLargeException(AmazonServiceException exception) {
         return isRequestEntityTooLargeException((SdkBaseException) exception);
@@ -109,15 +105,15 @@ public class RetryUtils {
      * Returns true if the specified exception is a request entity too large error.
      *
      * @param exception The exception to test.
-     * @return True if the exception resulted from a request entity too large error message from a service, otherwise false.
+     * @return True if the exception resulted from a request entity too large error message from a
+     *     service, otherwise false.
      */
     public static boolean isRequestEntityTooLargeException(SdkBaseException exception) {
-        return isAse(exception) && toAse(exception).getStatusCode() == HttpStatus.SC_REQUEST_TOO_LONG;
+        return isAse(exception)
+                && toAse(exception).getStatusCode() == HttpStatus.SC_REQUEST_TOO_LONG;
     }
 
-    /**
-     * @deprecated By {@link RetryUtils#isClockSkewError(SdkBaseException)}
-     */
+    /** @deprecated By {@link RetryUtils#isClockSkewError(SdkBaseException)} */
     @Deprecated
     public static boolean isClockSkewError(AmazonServiceException exception) {
         return isClockSkewError((SdkBaseException) exception);
@@ -127,7 +123,8 @@ public class RetryUtils {
      * Returns true if the specified exception is a clock skew error.
      *
      * @param exception The exception to test.
-     * @return True if the exception resulted from a clock skews error message from a service, otherwise false.
+     * @return True if the exception resulted from a clock skews error message from a service,
+     *     otherwise false.
      */
     public static boolean isClockSkewError(SdkBaseException exception) {
         return isAse(exception) && CLOCK_SKEW_ERROR_CODES.contains(toAse(exception).getErrorCode());
@@ -140,5 +137,4 @@ public class RetryUtils {
     private static AmazonServiceException toAse(SdkBaseException e) {
         return (AmazonServiceException) e;
     }
-
 }

@@ -15,8 +15,8 @@
 package com.amazonaws.auth;
 
 /**
- * Shared parameter structure to contain information required for signing by
- * various signer implementations.
+ * Shared parameter structure to contain information required for signing by various signer
+ * implementations.
  */
 public class SignerParams {
     private String serviceName;

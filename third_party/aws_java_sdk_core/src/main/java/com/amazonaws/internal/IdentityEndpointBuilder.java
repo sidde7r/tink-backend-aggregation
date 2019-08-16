@@ -14,13 +14,10 @@
  */
 package com.amazonaws.internal;
 
+import com.amazonaws.regions.Region;
 import java.net.URI;
 
-import com.amazonaws.regions.Region;
-
-/**
- * More of a No-Op endpoint builder that just returns the same endpoint it was constructed with
- */
+/** More of a No-Op endpoint builder that just returns the same endpoint it was constructed with */
 public class IdentityEndpointBuilder extends ServiceEndpointBuilder {
 
     private final URI endpoint;

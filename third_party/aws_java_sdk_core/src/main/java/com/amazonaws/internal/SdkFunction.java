@@ -17,11 +17,10 @@ package com.amazonaws.internal;
 /**
  * Similar to the Function functional interface in Java 8.
  *
- * @param <Input>  Input type
+ * @param <Input> Input type
  * @param <Output> Output type
  */
 public interface SdkFunction<Input, Output> {
 
     Output apply(Input input);
-
 }

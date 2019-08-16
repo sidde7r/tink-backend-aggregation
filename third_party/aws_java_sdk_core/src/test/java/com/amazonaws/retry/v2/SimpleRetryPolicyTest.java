@@ -14,21 +14,19 @@
  */
 package com.amazonaws.retry.v2;
 
+import static org.mockito.Mockito.verify;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.verify;
-
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleRetryPolicyTest {
 
-    @Mock
-    private RetryCondition retryCondition;
+    @Mock private RetryCondition retryCondition;
 
-    @Mock
-    private BackoffStrategy backoffStrategy;
+    @Mock private BackoffStrategy backoffStrategy;
 
     @Test(expected = IllegalArgumentException.class)
     public void nullRetryCondition_ThrowsException() {
@@ -54,7 +52,5 @@ public class SimpleRetryPolicyTest {
         policy.computeDelayBeforeNextRetry(RetryPolicyContexts.EMPTY);
 
         verify(backoffStrategy).computeDelayBeforeNextRetry(RetryPolicyContexts.EMPTY);
-
     }
-
 }

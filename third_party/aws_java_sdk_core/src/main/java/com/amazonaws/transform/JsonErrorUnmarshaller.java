@@ -22,27 +22,29 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy.PascalCaseStrategy;
 
-/**
- * Unmarshaller for JSON error responses from AWS services.
- */
+/** Unmarshaller for JSON error responses from AWS services. */
 @SdkInternalApi
 @ThreadSafe
 public class JsonErrorUnmarshaller extends AbstractErrorUnmarshaller<JsonNode> {
 
-    public static final JsonErrorUnmarshaller DEFAULT_UNMARSHALLER = new JsonErrorUnmarshaller(
-            AmazonServiceException.class, null);
+    public static final JsonErrorUnmarshaller DEFAULT_UNMARSHALLER =
+            new JsonErrorUnmarshaller(AmazonServiceException.class, null);
 
-    private static final ObjectMapper MAPPER = new ObjectMapper().configure(
-            DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).setPropertyNamingStrategy(
-            new PascalCaseStrategy());
+    private static final ObjectMapper MAPPER =
+            new ObjectMapper()
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    .setPropertyNamingStrategy(new PascalCaseStrategy());
 
     private final String handledErrorCode;
 
     /**
-     * @param exceptionClass   Exception class this unmarshaller will attempt to deserialize error response into
-     * @param handledErrorCode AWS error code that this unmarshaller handles. Pass null to handle all exceptions
+     * @param exceptionClass Exception class this unmarshaller will attempt to deserialize error
+     *     response into
+     * @param handledErrorCode AWS error code that this unmarshaller handles. Pass null to handle
+     *     all exceptions
      */
-    public JsonErrorUnmarshaller(Class<? extends AmazonServiceException> exceptionClass, String handledErrorCode) {
+    public JsonErrorUnmarshaller(
+            Class<? extends AmazonServiceException> exceptionClass, String handledErrorCode) {
         super(exceptionClass);
         this.handledErrorCode = handledErrorCode;
     }
@@ -62,5 +64,4 @@ public class JsonErrorUnmarshaller extends AbstractErrorUnmarshaller<JsonNode> {
         }
         return handledErrorCode.equals(actualErrorCode);
     }
-
 }

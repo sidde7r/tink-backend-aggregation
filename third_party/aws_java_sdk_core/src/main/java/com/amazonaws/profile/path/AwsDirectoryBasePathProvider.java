@@ -16,18 +16,13 @@ package com.amazonaws.profile.path;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkInternalApi;
-
 import java.io.File;
 
-/**
- * Base provider for all location providers that source a file from the ~/.aws directory.
- */
+/** Base provider for all location providers that source a file from the ~/.aws directory. */
 @SdkInternalApi
 public abstract class AwsDirectoryBasePathProvider implements AwsProfileFileLocationProvider {
 
-    /**
-     * @return File of ~/.aws directory.
-     */
+    /** @return File of ~/.aws directory. */
     protected final File getAwsDirectory() {
         return new File(getHomeDirectory(), ".aws");
     }

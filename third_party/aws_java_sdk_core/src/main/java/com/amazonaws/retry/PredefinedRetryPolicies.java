@@ -21,21 +21,21 @@ import com.amazonaws.ClientConfiguration;
 import java.io.IOException;
 
 /**
- * This class includes a set of pre-defined retry policies, including default
- * policies used by SDK.
+ * This class includes a set of pre-defined retry policies, including default policies used by SDK.
  */
 public class PredefinedRetryPolicies {
 
-    /** No retry policy **/
-    public static final RetryPolicy NO_RETRY_POLICY = new RetryPolicy(
-            RetryPolicy.RetryCondition.NO_RETRY_CONDITION,
-            RetryPolicy.BackoffStrategy.NO_DELAY,
-            0,      // maxErrorRetry
-            false); // honorMaxErrorRetryInClientConfig
+    /** No retry policy * */
+    public static final RetryPolicy NO_RETRY_POLICY =
+            new RetryPolicy(
+                    RetryPolicy.RetryCondition.NO_RETRY_CONDITION,
+                    RetryPolicy.BackoffStrategy.NO_DELAY,
+                    0, // maxErrorRetry
+                    false); // honorMaxErrorRetryInClientConfig
 
     /* SDK default */
 
-    /** SDK default max retry count **/
+    /** SDK default max retry count * */
     public static final int DEFAULT_MAX_ERROR_RETRY = 3;
 
     /**
@@ -46,50 +46,51 @@ public class PredefinedRetryPolicies {
 
     /* Default for DynamoDB client */
 
-    /** Default max retry count for DynamoDB client **/
+    /** Default max retry count for DynamoDB client * */
     public static final int DYNAMODB_DEFAULT_MAX_ERROR_RETRY = 10;
 
-    /** Default policy for DynamoDB client **/
+    /** Default policy for DynamoDB client * */
     public static final RetryPolicy DYNAMODB_DEFAULT;
 
     /* Reusable retry policy components */
 
     /**
-     * The SDK default retry condition, which checks for various conditions in
-     * the following order:
+     * The SDK default retry condition, which checks for various conditions in the following order:
+     *
      * <ul>
      *   <li>Never retry on requests with non-repeatable content;
      *   <li>Retry on client exceptions caused by IOException;
-     *   <li>Retry on service exceptions that are either 500 internal server
-     *       errors, 503 service unavailable errors, service throttling errors or
-     *       clock skew errors.
+     *   <li>Retry on service exceptions that are either 500 internal server errors, 503 service
+     *       unavailable errors, service throttling errors or clock skew errors.
      * </ul>
      */
-    public static final RetryPolicy.RetryCondition DEFAULT_RETRY_CONDITION = new SDKDefaultRetryCondition();
+    public static final RetryPolicy.RetryCondition DEFAULT_RETRY_CONDITION =
+            new SDKDefaultRetryCondition();
 
     /**
-     * The SDK default back-off strategy, which increases exponentially up to a max amount of delay. It also applies a larger
-     * scale factor upon service throttling exception.
+     * The SDK default back-off strategy, which increases exponentially up to a max amount of delay.
+     * It also applies a larger scale factor upon service throttling exception.
      */
     public static final RetryPolicy.BackoffStrategy DEFAULT_BACKOFF_STRATEGY =
             new PredefinedBackoffStrategies.SDKDefaultBackoffStrategy();
 
     /**
-     * The SDK default back-off strategy, which increases exponentially up to a max amount of delay. It also applies a larger
-     * scale factor upon service throttling exception.
+     * The SDK default back-off strategy, which increases exponentially up to a max amount of delay.
+     * It also applies a larger scale factor upon service throttling exception.
      */
     public static final V2CompatibleBackoffStrategy DEFAULT_BACKOFF_STRATEGY_V2 =
             new PredefinedBackoffStrategies.SDKDefaultBackoffStrategy();
 
     /**
-     * The default back-off strategy for DynamoDB client, which increases
-     * exponentially up to a max amount of delay. Compared to the SDK default
-     * back-off strategy, it applies a smaller scale factor.
+     * The default back-off strategy for DynamoDB client, which increases exponentially up to a max
+     * amount of delay. Compared to the SDK default back-off strategy, it applies a smaller scale
+     * factor.
      */
     public static final RetryPolicy.BackoffStrategy DYNAMODB_DEFAULT_BACKOFF_STRATEGY =
-            new PredefinedBackoffStrategies.SDKDefaultBackoffStrategy(PredefinedBackoffStrategies.DYNAMODB_DEFAULT_BASE_DELAY,
-                                                                      PredefinedBackoffStrategies.SDK_DEFAULT_THROTTLED_BASE_DELAY,
-                                                                      PredefinedBackoffStrategies.SDK_DEFAULT_MAX_BACKOFF_IN_MILLISECONDS);
+            new PredefinedBackoffStrategies.SDKDefaultBackoffStrategy(
+                    PredefinedBackoffStrategies.DYNAMODB_DEFAULT_BASE_DELAY,
+                    PredefinedBackoffStrategies.SDK_DEFAULT_THROTTLED_BASE_DELAY,
+                    PredefinedBackoffStrategies.SDK_DEFAULT_MAX_BACKOFF_IN_MILLISECONDS);
 
     static {
         DEFAULT = getDefaultRetryPolicy();
@@ -97,76 +98,66 @@ public class PredefinedRetryPolicies {
     }
 
     /**
-     * Returns the SDK default retry policy. This policy will honor the
-     * maxErrorRetry set in ClientConfiguration.
+     * Returns the SDK default retry policy. This policy will honor the maxErrorRetry set in
+     * ClientConfiguration.
      *
      * @see ClientConfiguration#setMaxErrorRetry(int)
      */
     public static RetryPolicy getDefaultRetryPolicy() {
-        return new RetryPolicy(DEFAULT_RETRY_CONDITION,
-                               DEFAULT_BACKOFF_STRATEGY,
-                               DEFAULT_MAX_ERROR_RETRY,
-                               true);
+        return new RetryPolicy(
+                DEFAULT_RETRY_CONDITION, DEFAULT_BACKOFF_STRATEGY, DEFAULT_MAX_ERROR_RETRY, true);
     }
 
     /**
-     * Returns the default retry policy for DynamoDB client. This policy will
-     * honor the maxErrorRetry set in ClientConfiguration.
+     * Returns the default retry policy for DynamoDB client. This policy will honor the
+     * maxErrorRetry set in ClientConfiguration.
      *
      * @see ClientConfiguration#setMaxErrorRetry(int)
      */
     public static RetryPolicy getDynamoDBDefaultRetryPolicy() {
-        return new RetryPolicy(DEFAULT_RETRY_CONDITION,
-                               DYNAMODB_DEFAULT_BACKOFF_STRATEGY,
-                               DYNAMODB_DEFAULT_MAX_ERROR_RETRY,
-                               true);
+        return new RetryPolicy(
+                DEFAULT_RETRY_CONDITION,
+                DYNAMODB_DEFAULT_BACKOFF_STRATEGY,
+                DYNAMODB_DEFAULT_MAX_ERROR_RETRY,
+                true);
     }
 
-    /**
-     * Returns the SDK default retry policy with the specified max retry count.
-     */
+    /** Returns the SDK default retry policy with the specified max retry count. */
     public static RetryPolicy getDefaultRetryPolicyWithCustomMaxRetries(int maxErrorRetry) {
-        return new RetryPolicy(DEFAULT_RETRY_CONDITION,
-                               DEFAULT_BACKOFF_STRATEGY,
-                               maxErrorRetry,
-                               false);
+        return new RetryPolicy(
+                DEFAULT_RETRY_CONDITION, DEFAULT_BACKOFF_STRATEGY, maxErrorRetry, false);
     }
 
-    /**
-     * Returns the default retry policy for DynamoDB client with the specified
-     * max retry count.
-     */
+    /** Returns the default retry policy for DynamoDB client with the specified max retry count. */
     public static RetryPolicy getDynamoDBDefaultRetryPolicyWithCustomMaxRetries(int maxErrorRetry) {
-        return new RetryPolicy(DEFAULT_RETRY_CONDITION,
-                               DYNAMODB_DEFAULT_BACKOFF_STRATEGY,
-                               maxErrorRetry,
-                               false);
+        return new RetryPolicy(
+                DEFAULT_RETRY_CONDITION, DYNAMODB_DEFAULT_BACKOFF_STRATEGY, maxErrorRetry, false);
     }
 
     /**
-     * The default implementation of RetryCondition used by the SDK. User could
-     * extend this class to provide additional custom conditions.
-     * The default implementation checks for various conditions in
-     * the following order:
+     * The default implementation of RetryCondition used by the SDK. User could extend this class to
+     * provide additional custom conditions. The default implementation checks for various
+     * conditions in the following order:
+     *
      * <ul>
      *   <li>Retry on client exceptions caused by IOException;
-     *   <li>Retry on service exceptions that are either 500 internal server
-     *       errors, 503 service unavailable errors, service throttling errors or
-     *       clock skew errors.
+     *   <li>Retry on service exceptions that are either 500 internal server errors, 503 service
+     *       unavailable errors, service throttling errors or clock skew errors.
      * </ul>
      */
     public static class SDKDefaultRetryCondition implements RetryPolicy.RetryCondition {
 
         @Override
-        public boolean shouldRetry(AmazonWebServiceRequest originalRequest,
-                                   AmazonClientException exception,
-                                   int retriesAttempted) {
+        public boolean shouldRetry(
+                AmazonWebServiceRequest originalRequest,
+                AmazonClientException exception,
+                int retriesAttempted) {
             // Always retry on client exceptions caused by IOException
             if (exception.getCause() instanceof IOException) return true;
 
             // Only retry on a subset of service exceptions
             if (exception instanceof AmazonServiceException) {
-                AmazonServiceException ase = (AmazonServiceException)exception;
+                AmazonServiceException ase = (AmazonServiceException) exception;
 
                 /*
                  * For 500 internal server errors and 503 service
@@ -194,6 +185,5 @@ public class PredefinedRetryPolicies {
 
             return false;
         }
-
     }
 }

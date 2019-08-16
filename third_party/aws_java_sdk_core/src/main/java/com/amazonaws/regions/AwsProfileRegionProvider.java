@@ -14,7 +14,6 @@
  */
 package com.amazonaws.regions;
 
-
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkTestInternalApi;
 import com.amazonaws.auth.profile.internal.AllProfiles;
@@ -23,7 +22,6 @@ import com.amazonaws.auth.profile.internal.BasicProfile;
 import com.amazonaws.auth.profile.internal.BasicProfileConfigLoader;
 import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
 import com.amazonaws.util.StringUtils;
-
 import java.io.File;
 
 /**
@@ -41,13 +39,17 @@ public class AwsProfileRegionProvider extends AwsRegionProvider {
     }
 
     public AwsProfileRegionProvider(String profileName) {
-        this(profileName, AwsProfileFileLocationProvider.DEFAULT_CONFIG_LOCATION_PROVIDER,
-             BasicProfileConfigLoader.INSTANCE);
+        this(
+                profileName,
+                AwsProfileFileLocationProvider.DEFAULT_CONFIG_LOCATION_PROVIDER,
+                BasicProfileConfigLoader.INSTANCE);
     }
 
     @SdkTestInternalApi
-    AwsProfileRegionProvider(String profileName, AwsProfileFileLocationProvider locationProvider,
-                             BasicProfileConfigLoader configLoader) {
+    AwsProfileRegionProvider(
+            String profileName,
+            AwsProfileFileLocationProvider locationProvider,
+            BasicProfileConfigLoader configLoader) {
         this.profileName = profileName;
         this.locationProvider = locationProvider;
         this.profileConfigLoader = configLoader;
@@ -69,5 +71,4 @@ public class AwsProfileRegionProvider extends AwsRegionProvider {
         final AllProfiles allProfiles = profileConfigLoader.loadProfiles(configFile);
         return allProfiles.getProfile(profileName);
     }
-
 }

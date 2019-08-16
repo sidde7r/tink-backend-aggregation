@@ -14,9 +14,7 @@
  */
 package com.amazonaws;
 
-/**
- * Stream reset failure.
- */
+/** Stream reset failure. */
 public class ResetException extends SdkClientException {
     private static final long serialVersionUID = 1L;
     private String extraInfo;
@@ -37,10 +35,7 @@ public class ResetException extends SdkClientException {
         super("");
     }
 
-    /**
-     * {@inheritDoc}
-     * A stream reset exception cannot be retried.
-     */
+    /** {@inheritDoc} A stream reset exception cannot be retried. */
     @Override
     public boolean isRetryable() {
         return false;

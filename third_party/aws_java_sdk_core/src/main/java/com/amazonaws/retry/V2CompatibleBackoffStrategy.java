@@ -17,7 +17,7 @@ package com.amazonaws.retry;
 import com.amazonaws.retry.v2.BackoffStrategy;
 
 /**
- * Adapter interface for backoff strategies that can be used in both legacy RetryPolicies and the new V2 retry policy.
+ * Adapter interface for backoff strategies that can be used in both legacy RetryPolicies and the
+ * new V2 retry policy.
  */
-public interface V2CompatibleBackoffStrategy extends RetryPolicy.BackoffStrategy, BackoffStrategy {
-}
+public interface V2CompatibleBackoffStrategy extends RetryPolicy.BackoffStrategy, BackoffStrategy {}

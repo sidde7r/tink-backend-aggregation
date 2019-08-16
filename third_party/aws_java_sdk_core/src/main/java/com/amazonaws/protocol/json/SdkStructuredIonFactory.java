@@ -53,31 +53,40 @@ class SdkStructuredIonFactory extends SdkStructuredJsonFactoryImpl {
     private static final JsonFactory JSON_FACTORY = new IonFactory(ION_SYSTEM);
     private static final Map<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>> UNMARSHALLERS =
             new ImmutableMapParameter.Builder<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>>()
-            .put(BigDecimal.class, BigDecimalIonUnmarshaller.getInstance())
-            .put(BigInteger.class, BigIntegerIonUnmarshaller.getInstance())
-            .put(Boolean.class, BooleanIonUnmarshaller.getInstance())
-            .put(ByteBuffer.class, ByteBufferIonUnmarshaller.getInstance())
-            .put(Byte.class, ByteIonUnmarshaller.getInstance())
-            .put(Date.class, DateIonUnmarshaller.getInstance())
-            .put(Double.class, DoubleIonUnmarshaller.getInstance())
-            .put(Float.class, FloatIonUnmarshaller.getInstance())
-            .put(Integer.class, IntegerIonUnmarshaller.getInstance())
-            .put(Long.class, LongIonUnmarshaller.getInstance())
-            .put(Short.class, ShortIonUnmarshaller.getInstance())
-            .put(String.class, StringIonUnmarshaller.getInstance())
-            .build();
+                    .put(BigDecimal.class, BigDecimalIonUnmarshaller.getInstance())
+                    .put(BigInteger.class, BigIntegerIonUnmarshaller.getInstance())
+                    .put(Boolean.class, BooleanIonUnmarshaller.getInstance())
+                    .put(ByteBuffer.class, ByteBufferIonUnmarshaller.getInstance())
+                    .put(Byte.class, ByteIonUnmarshaller.getInstance())
+                    .put(Date.class, DateIonUnmarshaller.getInstance())
+                    .put(Double.class, DoubleIonUnmarshaller.getInstance())
+                    .put(Float.class, FloatIonUnmarshaller.getInstance())
+                    .put(Integer.class, IntegerIonUnmarshaller.getInstance())
+                    .put(Long.class, LongIonUnmarshaller.getInstance())
+                    .put(Short.class, ShortIonUnmarshaller.getInstance())
+                    .put(String.class, StringIonUnmarshaller.getInstance())
+                    .build();
 
-    private static final IonBinaryWriterBuilder BINARY_WRITER_BUILDER = IonBinaryWriterBuilder.standard().immutable();
-    private static final IonTextWriterBuilder TEXT_WRITER_BUILDER = IonTextWriterBuilder.standard().immutable();
+    private static final IonBinaryWriterBuilder BINARY_WRITER_BUILDER =
+            IonBinaryWriterBuilder.standard().immutable();
+    private static final IonTextWriterBuilder TEXT_WRITER_BUILDER =
+            IonTextWriterBuilder.standard().immutable();
 
-    public static final SdkStructuredIonFactory SDK_ION_BINARY_FACTORY = new SdkStructuredIonFactory(BINARY_WRITER_BUILDER);
-    public static final SdkStructuredIonFactory SDK_ION_TEXT_FACTORY = new SdkStructuredIonFactory(TEXT_WRITER_BUILDER);
+    public static final SdkStructuredIonFactory SDK_ION_BINARY_FACTORY =
+            new SdkStructuredIonFactory(BINARY_WRITER_BUILDER);
+    public static final SdkStructuredIonFactory SDK_ION_TEXT_FACTORY =
+            new SdkStructuredIonFactory(TEXT_WRITER_BUILDER);
 
     private final IonWriterBuilder builder;
 
     private SdkStructuredIonFactory(IonWriterBuilder builder) {
-        super(JSON_FACTORY, UNMARSHALLERS,
-              Collections.<JsonUnmarshallerContext.UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>>emptyMap());
+        super(
+                JSON_FACTORY,
+                UNMARSHALLERS,
+                Collections
+                        .<JsonUnmarshallerContext.UnmarshallerType,
+                                Unmarshaller<?, JsonUnmarshallerContext>>
+                                emptyMap());
         this.builder = builder;
     }
 

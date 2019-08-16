@@ -14,18 +14,16 @@
  */
 package com.amazonaws.jmx;
 
-import org.apache.commons.logging.LogFactory;
-
 import com.amazonaws.jmx.spi.SdkMBeanRegistry;
 import com.amazonaws.metrics.MetricAdmin;
+import org.apache.commons.logging.LogFactory;
 
-public class SdkMBeanRegistrySupport implements SdkMBeanRegistry {
-    ;
+public class SdkMBeanRegistrySupport implements SdkMBeanRegistry {;
     @Override
     public boolean registerMetricAdminMBean(String objectName) {
         try {
             return MBeans.registerMBean(objectName, new MetricAdmin());
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             LogFactory.getLog(SdkMBeanRegistrySupport.class).warn("", ex);
         }
         return false;
@@ -35,7 +33,7 @@ public class SdkMBeanRegistrySupport implements SdkMBeanRegistry {
     public boolean unregisterMBean(String objectName) {
         try {
             return MBeans.unregisterMBean(objectName);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             LogFactory.getLog(SdkMBeanRegistrySupport.class).warn("", ex);
         }
         return false;

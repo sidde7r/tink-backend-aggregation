@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -28,12 +27,11 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
 
 /**
- * Contains the unmarshalling state for the parsing of an XML response. The
- * unmarshallers are stateless so that they can be reused, so this class holds
- * the state while different unmarshallers work together to parse an XML
- * response. It also tracks the current position and element depth of the
- * document being parsed and provides utilties for accessing the next XML event
- * from the parser, reading element text, handling attribute XML events, etc.
+ * Contains the unmarshalling state for the parsing of an XML response. The unmarshallers are
+ * stateless so that they can be reused, so this class holds the state while different unmarshallers
+ * work together to parse an XML response. It also tracks the current position and element depth of
+ * the document being parsed and provides utilties for accessing the next XML event from the parser,
+ * reading element text, handling attribute XML events, etc.
  */
 public class StaxUnmarshallerContext {
 
@@ -62,22 +60,18 @@ public class StaxUnmarshallerContext {
     /**
      * Constructs a new unmarshaller context using the specified source of XML events.
      *
-     * @param eventReader
-     *            The source of XML events for this unmarshalling context.
+     * @param eventReader The source of XML events for this unmarshalling context.
      */
     public StaxUnmarshallerContext(XMLEventReader eventReader) {
         this(eventReader, null);
     }
 
     /**
-     * Constructs a new unmarshaller context using the specified source of XML
-     * events, and a set of response headers.
+     * Constructs a new unmarshaller context using the specified source of XML events, and a set of
+     * response headers.
      *
-     * @param eventReader
-     *            The source of XML events for this unmarshalling context.
-     * @param headers
-     *            The set of response headers associated with this unmarshaller
-     *            context.
+     * @param eventReader The source of XML events for this unmarshalling context.
+     * @param headers The set of response headers associated with this unmarshaller context.
      */
     public StaxUnmarshallerContext(XMLEventReader eventReader, Map<String, String> headers) {
         this.eventReader = eventReader;
@@ -85,14 +79,12 @@ public class StaxUnmarshallerContext {
     }
 
     /**
-     * Returns the value of the header with the specified name from the
-     * response, or null if not present.
+     * Returns the value of the header with the specified name from the response, or null if not
+     * present.
      *
-     * @param header
-     *            The name of the header to lookup.
-     *
-     * @return The value of the header with the specified name from the
-     *         response, or null if not present.
+     * @param header The name of the header to lookup.
+     * @return The value of the header with the specified name from the response, or null if not
+     *     present.
      */
     public String getHeader(String header) {
         if (headers == null) return null;
@@ -111,7 +103,7 @@ public class StaxUnmarshallerContext {
             return getHeader(currentHeader);
         }
         if (currentEvent.isAttribute()) {
-            Attribute attribute = (Attribute)currentEvent;
+            Attribute attribute = (Attribute) currentEvent;
             return attribute.getValue();
         }
 
@@ -130,24 +122,19 @@ public class StaxUnmarshallerContext {
     }
 
     /**
-     * Returns the element depth of the parser's current position in the XML
-     * document being parsed.
+     * Returns the element depth of the parser's current position in the XML document being parsed.
      *
-     * @return The element depth of the parser's current position in the XML
-     *         document being parsed.
+     * @return The element depth of the parser's current position in the XML document being parsed.
      */
     public int getCurrentDepth() {
         return stack.size();
     }
 
     /**
-     * Tests the specified expression against the current position in the XML
-     * document being parsed.
+     * Tests the specified expression against the current position in the XML document being parsed.
      *
-     * @param expression
-     *            The psuedo-xpath expression to test.
-     * @return True if the expression matches the current document position,
-     *         otherwise false.
+     * @param expression The psuedo-xpath expression to test.
+     * @return True if the expression matches the current document position, otherwise false.
      */
     public boolean testExpression(String expression) {
         if (expression.equals(".")) return true;
@@ -155,18 +142,14 @@ public class StaxUnmarshallerContext {
     }
 
     /**
-     * Tests the specified expression against the current position in the XML
-     * document being parsed, and restricts the expression to matching at the
-     * specified stack depth.
+     * Tests the specified expression against the current position in the XML document being parsed,
+     * and restricts the expression to matching at the specified stack depth.
      *
-     * @param expression
-     *            The psuedo-xpath expression to test.
-     * @param startingStackDepth
-     *            The depth in the stack representing where the expression must
-     *            start matching in order for this method to return true.
-     *
-     * @return True if the specified expression matches the current position in
-     *         the XML document, starting from the specified depth.
+     * @param expression The psuedo-xpath expression to test.
+     * @param startingStackDepth The depth in the stack representing where the expression must start
+     *     matching in order for this method to return true.
+     * @return True if the specified expression matches the current position in the XML document,
+     *     starting from the specified depth.
      */
     public boolean testExpression(String expression, int startingStackDepth) {
         if (expression.equals(".")) return true;
@@ -179,18 +162,15 @@ public class StaxUnmarshallerContext {
             }
         }
 
-
-        return (startingStackDepth == getCurrentDepth()
-                && stackString.endsWith("/" + expression));
+        return (startingStackDepth == getCurrentDepth() && stackString.endsWith("/" + expression));
     }
 
     /**
-     * Returns true if this unmarshaller context is at the very beginning of a
-     * source document (i.e. no data has been parsed from the document yet).
+     * Returns true if this unmarshaller context is at the very beginning of a source document (i.e.
+     * no data has been parsed from the document yet).
      *
-     * @return true if this unmarshaller context is at the very beginning of a
-     *         source document (i.e. no data has been parsed from the document
-     *         yet).
+     * @return true if this unmarshaller context is at the very beginning of a source document (i.e.
+     *     no data has been parsed from the document yet).
      */
     public boolean isStartOfDocument() throws XMLStreamException {
         return eventReader.peek().isStartDocument();
@@ -200,12 +180,11 @@ public class StaxUnmarshallerContext {
      * Returns the next XML event for the document being parsed.
      *
      * @return The next XML event for the document being parsed.
-     *
      * @throws XMLStreamException
      */
     public XMLEvent nextEvent() throws XMLStreamException {
         if (attributeIterator != null && attributeIterator.hasNext()) {
-            currentEvent = (XMLEvent)attributeIterator.next();
+            currentEvent = (XMLEvent) attributeIterator.next();
         } else {
             currentEvent = eventReader.nextEvent();
         }
@@ -220,7 +199,8 @@ public class StaxUnmarshallerContext {
             XMLEvent nextEvent = eventReader.peek();
             if (nextEvent != null && nextEvent.isCharacters()) {
                 for (MetadataExpression metadataExpression : metadataExpressions) {
-                    if (testExpression(metadataExpression.expression, metadataExpression.targetDepth)) {
+                    if (testExpression(
+                            metadataExpression.expression, metadataExpression.targetDepth)) {
                         metadata.put(metadataExpression.key, nextEvent.asCharacters().getData());
                     }
                 }
@@ -231,42 +211,36 @@ public class StaxUnmarshallerContext {
     }
 
     /**
-     * Returns any metadata collected through metadata expressions while this
-     * context was reading the XML events from the XML document.
+     * Returns any metadata collected through metadata expressions while this context was reading
+     * the XML events from the XML document.
      *
-     * @return A map of any metadata collected through metadata expressions
-     *         while this context was reading the XML document.
+     * @return A map of any metadata collected through metadata expressions while this context was
+     *     reading the XML document.
      */
     public Map<String, String> getMetadata() {
         return metadata;
     }
 
     /**
-     * Registers an expression, which if matched, will cause the data for the
-     * matching element to be stored in the metadata map under the specified
-     * key.
+     * Registers an expression, which if matched, will cause the data for the matching element to be
+     * stored in the metadata map under the specified key.
      *
-     * @param expression
-     *            The expression an element must match in order for it's data to
-     *            be pulled out and stored in the metadata map.
-     * @param targetDepth
-     *            The depth in the XML document where the expression match must
-     *            start.
-     * @param storageKey
-     *            The key under which to store the matching element's data.
+     * @param expression The expression an element must match in order for it's data to be pulled
+     *     out and stored in the metadata map.
+     * @param targetDepth The depth in the XML document where the expression match must start.
+     * @param storageKey The key under which to store the matching element's data.
      */
     public void registerMetadataExpression(String expression, int targetDepth, String storageKey) {
         metadataExpressions.add(new MetadataExpression(expression, targetDepth, storageKey));
     }
-
 
     /*
      * Private Interface
      */
 
     /**
-     * Simple container for the details of a metadata expression this
-     * unmarshaller context is looking for.
+     * Simple container for the details of a metadata expression this unmarshaller context is
+     * looking for.
      */
     private static class MetadataExpression {
         public String expression;
@@ -293,7 +267,7 @@ public class StaxUnmarshallerContext {
             stack.push(event.asStartElement().getName().getLocalPart());
             stackString += "/" + event.asStartElement().getName().getLocalPart();
         } else if (event.isAttribute()) {
-            Attribute attribute = (Attribute)event;
+            Attribute attribute = (Attribute) event;
             stackString = "";
             for (String s : stack) {
                 stackString += "/" + s;
@@ -301,5 +275,4 @@ public class StaxUnmarshallerContext {
             stackString += "/@" + attribute.getName().getLocalPart();
         }
     }
-
 }

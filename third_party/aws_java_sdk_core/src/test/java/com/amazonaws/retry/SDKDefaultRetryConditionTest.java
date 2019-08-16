@@ -20,11 +20,10 @@ package com.amazonaws.retry;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.Random;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class SDKDefaultRetryConditionTest {
 

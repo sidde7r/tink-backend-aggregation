@@ -15,19 +15,16 @@
 package com.amazonaws.util;
 
 import com.amazonaws.auth.policy.Resource;
-
 import java.util.List;
 
-/**
- * Utility methods related to IAM policies
- */
+/** Utility methods related to IAM policies */
 public class PolicyUtils {
-    private static final String INVALID_RESOURCE = "Cannot have both a NotResource and a Resource in " +
-            "the same statement";
+    private static final String INVALID_RESOURCE =
+            "Cannot have both a NotResource and a Resource in " + "the same statement";
 
     /**
-     * Determines if a list of Resource objects is valid, containing either all NotResource elements or all Resource
-     * elements
+     * Determines if a list of Resource objects is valid, containing either all NotResource elements
+     * or all Resource elements
      *
      * @param resourceList the list of Resource objects
      * @throws IllegalArgumentException if the resource list is invalid

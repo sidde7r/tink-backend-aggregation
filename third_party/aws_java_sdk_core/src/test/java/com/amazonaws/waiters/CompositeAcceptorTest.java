@@ -16,11 +16,10 @@
 package com.amazonaws.waiters;
 
 import com.amazonaws.AmazonServiceException;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class CompositeAcceptorTest {
 
@@ -41,7 +40,10 @@ public class CompositeAcceptorTest {
         waiterAcceptorsList.add(new TestExceptionAcceptor());
         waiterAcceptorsList.add(new TestResultAcceptor());
         CompositeAcceptor compositeAcceptor = new CompositeAcceptor(waiterAcceptorsList);
-        Assert.assertEquals("Response output doesn't match expected output.", WaiterState.SUCCESS, compositeAcceptor.accepts(new DescribeTableResult()));
+        Assert.assertEquals(
+                "Response output doesn't match expected output.",
+                WaiterState.SUCCESS,
+                compositeAcceptor.accepts(new DescribeTableResult()));
     }
 
     @Test
@@ -49,15 +51,21 @@ public class CompositeAcceptorTest {
         List<WaiterAcceptor> waiterAcceptorsList = new ArrayList<WaiterAcceptor>();
         waiterAcceptorsList.add(new TestExceptionAcceptor());
         CompositeAcceptor compositeAcceptor = new CompositeAcceptor(waiterAcceptorsList);
-        Assert.assertEquals("Response output doesn't match expected output.", WaiterState.RETRY, compositeAcceptor.accepts(new DescribeTableResult()));
+        Assert.assertEquals(
+                "Response output doesn't match expected output.",
+                WaiterState.RETRY,
+                compositeAcceptor.accepts(new DescribeTableResult()));
     }
 
-    @Test (expected = AmazonServiceException.class)
+    @Test(expected = AmazonServiceException.class)
     public void exceptionNotMatchExpected() throws Exception {
         List<WaiterAcceptor> waiterAcceptorsList = new ArrayList<WaiterAcceptor>();
         waiterAcceptorsList.add(new TestResultAcceptor());
         CompositeAcceptor compositeAcceptor = new CompositeAcceptor(waiterAcceptorsList);
-        Assert.assertEquals("Exception thrown doesn't match expected exception.", WaiterState.RETRY, compositeAcceptor.accepts(new AmazonServiceException("")));
+        Assert.assertEquals(
+                "Exception thrown doesn't match expected exception.",
+                WaiterState.RETRY,
+                compositeAcceptor.accepts(new AmazonServiceException("")));
     }
 
     @Test
@@ -66,7 +74,10 @@ public class CompositeAcceptorTest {
         waiterAcceptorsList.add(new TestResultAcceptor());
         waiterAcceptorsList.add(new TestExceptionAcceptor());
         CompositeAcceptor compositeAcceptor = new CompositeAcceptor(waiterAcceptorsList);
-        Assert.assertEquals("Exception thrown doesn't match expected exception.", WaiterState.RETRY, compositeAcceptor.accepts(new ResourceNotFoundException("")));
+        Assert.assertEquals(
+                "Exception thrown doesn't match expected exception.",
+                WaiterState.RETRY,
+                compositeAcceptor.accepts(new ResourceNotFoundException("")));
     }
 
     class DescribeTableResult {
@@ -78,10 +89,10 @@ public class CompositeAcceptorTest {
         public boolean matches(DescribeTableResult result) {
             return true;
         }
+
         public WaiterState getState() {
             return WaiterState.SUCCESS;
         }
-
     }
 
     class TestExceptionAcceptor extends WaiterAcceptor<DescribeTableResult> {

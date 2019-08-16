@@ -14,15 +14,13 @@
  */
 package com.amazonaws.auth;
 
-/**
- * Simple session credentials with keys and session token.
- */
+/** Simple session credentials with keys and session token. */
 public class BasicSessionCredentials implements AWSSessionCredentials {
 
     private final String awsAccessKey;
     private final String awsSecretKey;
     private final String sessionToken;
-    
+
     public BasicSessionCredentials(String awsAccessKey, String awsSecretKey, String sessionToken) {
         this.awsAccessKey = awsAccessKey;
         this.awsSecretKey = awsSecretKey;
@@ -40,5 +38,4 @@ public class BasicSessionCredentials implements AWSSessionCredentials {
     public String getSessionToken() {
         return sessionToken;
     }
-
 }

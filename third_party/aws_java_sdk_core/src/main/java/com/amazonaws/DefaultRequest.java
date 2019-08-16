@@ -30,9 +30,9 @@ import java.util.Map;
 
 /**
  * Default implementation of the {@linkplain com.amazonaws.Request} interface.
- * <p>
- * This class is only intended for internal use inside the AWS client libraries.
- * Callers shouldn't ever interact directly with objects of this class.
+ *
+ * <p>This class is only intended for internal use inside the AWS client libraries. Callers
+ * shouldn't ever interact directly with objects of this class.
  */
 @NotThreadSafe
 public class DefaultRequest<T> implements Request<T> {
@@ -42,13 +42,12 @@ public class DefaultRequest<T> implements Request<T> {
 
     /**
      * Map of the parameters being sent as part of this request.
-     * <p>
-     * Note that a LinkedHashMap is used, since we want to preserve the
-     * insertion order so that members of a list parameter will still be ordered
-     * by their indices when they are marshalled into the query string.
      *
-     * Lists values in this Map must use an implementation that allows
-     * null values to be present.
+     * <p>Note that a LinkedHashMap is used, since we want to preserve the insertion order so that
+     * members of a list parameter will still be ordered by their indices when they are marshalled
+     * into the query string.
+     *
+     * <p>Lists values in this Map must use an implementation that allows null values to be present.
      */
     private Map<String, List<String>> parameters = new LinkedHashMap<String, List<String>>();
 
@@ -62,8 +61,7 @@ public class DefaultRequest<T> implements Request<T> {
     private String serviceName;
 
     /**
-     * The original, user facing request object which this internal request
-     * object is representing
+     * The original, user facing request object which this internal request object is representing
      */
     private final AmazonWebServiceRequest originalRequest;
 
@@ -80,84 +78,69 @@ public class DefaultRequest<T> implements Request<T> {
     private AWSRequestMetrics metrics;
 
     /**
-     * Context associated with a request. Mainly used to transfer
-     * information between different {@link com.amazonaws.handlers.RequestHandler2}
+     * Context associated with a request. Mainly used to transfer information between different
+     * {@link com.amazonaws.handlers.RequestHandler2}
      */
-    private final Map<HandlerContextKey<?>, Object> handlerContext = new
-            HashMap<HandlerContextKey<?>, Object>();
+    private final Map<HandlerContextKey<?>, Object> handlerContext =
+            new HashMap<HandlerContextKey<?>, Object>();
 
     /**
-     * Constructs a new DefaultRequest with the specified service name and the
-     * original, user facing request object.
+     * Constructs a new DefaultRequest with the specified service name and the original, user facing
+     * request object.
      *
-     * @param serviceName
-     *            The name of the service to which this request is being sent.
-     * @param originalRequest
-     *            The original, user facing, AWS request being represented by
-     *            this internal request object.
+     * @param serviceName The name of the service to which this request is being sent.
+     * @param originalRequest The original, user facing, AWS request being represented by this
+     *     internal request object.
      */
     public DefaultRequest(AmazonWebServiceRequest originalRequest, String serviceName) {
         this.serviceName = serviceName;
 
-        this.originalRequest = originalRequest == null ? AmazonWebServiceRequest.NOOP
-                                                       : originalRequest;
+        this.originalRequest =
+                originalRequest == null ? AmazonWebServiceRequest.NOOP : originalRequest;
         this.handlerContext.putAll(this.originalRequest.getHandlerContext());
     }
 
     /**
-     * Constructs a new DefaultRequest with the specified service name and no
-     * specified original, user facing request object.
+     * Constructs a new DefaultRequest with the specified service name and no specified original,
+     * user facing request object.
      *
-     * @param serviceName
-     *            The name of the service to which this request is being sent.
+     * @param serviceName The name of the service to which this request is being sent.
      */
     public DefaultRequest(String serviceName) {
         this(null, serviceName);
     }
 
-
     /**
-     * Returns the original, user facing request object which this internal
-     * request object is representing.
+     * Returns the original, user facing request object which this internal request object is
+     * representing.
      *
-     * @return The original, user facing request object which this request
-     *         object is representing.
+     * @return The original, user facing request object which this request object is representing.
      */
     public AmazonWebServiceRequest getOriginalRequest() {
         return originalRequest;
     }
 
-    /**
-     * @see com.amazonaws.Request#addHeader(java.lang.String, java.lang.String)
-     */
+    /** @see com.amazonaws.Request#addHeader(java.lang.String, java.lang.String) */
     public void addHeader(String name, String value) {
         headers.put(name, value);
     }
 
-    /**
-     * @see com.amazonaws.Request#getHeaders()
-     */
+    /** @see com.amazonaws.Request#getHeaders() */
     public Map<String, String> getHeaders() {
         return headers;
     }
 
-    /**
-     * @see com.amazonaws.Request#setResourcePath(java.lang.String)
-     */
+    /** @see com.amazonaws.Request#setResourcePath(java.lang.String) */
     public void setResourcePath(String resourcePath) {
         this.resourcePath = resourcePath;
     }
 
-    /**
-     * @see com.amazonaws.Request#getResourcePath()
-     */
+    /** @see com.amazonaws.Request#getResourcePath() */
     public String getResourcePath() {
         return resourcePath;
     }
 
-    /**
-     * @see com.amazonaws.Request#addParameter(java.lang.String, java.lang.String)
-     */
+    /** @see com.amazonaws.Request#addParameter(java.lang.String, java.lang.String) */
     public void addParameter(String name, String value) {
         List<String> paramList = parameters.get(name);
         if (paramList == null) {
@@ -167,10 +150,7 @@ public class DefaultRequest<T> implements Request<T> {
         paramList.add(value);
     }
 
-    /**
-     *
-     * @see com.amazonaws.Request#addParameters(java.lang.String, java.util.List)
-     */
+    /** @see com.amazonaws.Request#addParameters(java.lang.String, java.util.List) */
     public void addParameters(String name, List<String> values) {
         if (values == null) return;
         for (String value : values) {
@@ -178,103 +158,75 @@ public class DefaultRequest<T> implements Request<T> {
         }
     }
 
-    /**
-     * @see com.amazonaws.Request#getParameters()
-     */
+    /** @see com.amazonaws.Request#getParameters() */
     public Map<String, List<String>> getParameters() {
         return parameters;
     }
 
-    /**
-     * @see com.amazonaws.Request#withParameter(java.lang.String, java.lang.String)
-     */
+    /** @see com.amazonaws.Request#withParameter(java.lang.String, java.lang.String) */
     public Request<T> withParameter(String name, String value) {
         addParameter(name, value);
         return this;
     }
 
-    /**
-     * @see com.amazonaws.Request#getHttpMethod()
-     */
+    /** @see com.amazonaws.Request#getHttpMethod() */
     public HttpMethodName getHttpMethod() {
         return httpMethod;
     }
 
-    /**
-     * @see com.amazonaws.Request#setHttpMethod(com.amazonaws.http.HttpMethodName)
-     */
+    /** @see com.amazonaws.Request#setHttpMethod(com.amazonaws.http.HttpMethodName) */
     public void setHttpMethod(HttpMethodName httpMethod) {
         this.httpMethod = httpMethod;
     }
 
-    /**
-     * @see com.amazonaws.Request#setEndpoint(java.net.URI)
-     */
+    /** @see com.amazonaws.Request#setEndpoint(java.net.URI) */
     public void setEndpoint(URI endpoint) {
         this.endpoint = endpoint;
     }
 
-    /**
-     * @see com.amazonaws.Request#getEndpoint()
-     */
+    /** @see com.amazonaws.Request#getEndpoint() */
     public URI getEndpoint() {
         return endpoint;
     }
 
-    /**
-     * @see com.amazonaws.Request#getServiceName()
-     */
+    /** @see com.amazonaws.Request#getServiceName() */
     public String getServiceName() {
         return serviceName;
     }
 
-    /**
-     * @see com.amazonaws.Request#getContent()
-     */
+    /** @see com.amazonaws.Request#getContent() */
     public InputStream getContent() {
         return content;
     }
 
-    /**
-     * @see com.amazonaws.Request#setContent(java.io.InputStream)
-     */
+    /** @see com.amazonaws.Request#setContent(java.io.InputStream) */
     public void setContent(InputStream content) {
         this.content = content;
     }
 
-    /**
-     * @see com.amazonaws.Request#setHeaders(java.util.Map)
-     */
+    /** @see com.amazonaws.Request#setHeaders(java.util.Map) */
     public void setHeaders(Map<String, String> headers) {
         this.headers.clear();
         this.headers.putAll(headers);
     }
 
-    /**
-     * @see com.amazonaws.Request#setParameters(java.util.Map)
-     */
+    /** @see com.amazonaws.Request#setParameters(java.util.Map) */
     public void setParameters(Map<String, List<String>> parameters) {
         this.parameters.clear();
         this.parameters.putAll(parameters);
     }
 
-    /**
-     * @see com.amazonaws.Request#getTimeOffset
-     */
+    /** @see com.amazonaws.Request#getTimeOffset */
     public int getTimeOffset() {
         return timeOffset;
     }
 
-    /**
-     * @see Request#setTimeOffset(int)
-     */
+    /** @see Request#setTimeOffset(int) */
     public void setTimeOffset(int timeOffset) {
         this.timeOffset = timeOffset;
     }
 
-    /**
-     * @see Request#setTimeOffset(int)
-     */
+    /** @see Request#setTimeOffset(int) */
     public Request<T> withTimeOffset(int timeOffset) {
         setTimeOffset(timeOffset);
         return this;
@@ -289,8 +241,7 @@ public class DefaultRequest<T> implements Request<T> {
 
         if (resourcePath == null) {
             builder.append("/");
-        }
-        else {
+        } else {
             if (!resourcePath.startsWith("/")) {
                 builder.append("/");
             }
@@ -298,8 +249,7 @@ public class DefaultRequest<T> implements Request<T> {
         }
         builder.append(" ");
         if (!getParameters().isEmpty()) {
-            builder.append("Parameters: (")
-                   .append(Jackson.toJsonString(parameters));
+            builder.append("Parameters: (").append(Jackson.toJsonString(parameters));
         }
 
         if (!getHeaders().isEmpty()) {
@@ -324,7 +274,8 @@ public class DefaultRequest<T> implements Request<T> {
         if (this.metrics == null) {
             this.metrics = metrics;
         } else {
-            throw new IllegalStateException("AWSRequestMetrics has already been set on this request");
+            throw new IllegalStateException(
+                    "AWSRequestMetrics has already been set on this request");
         }
     }
 
@@ -342,12 +293,11 @@ public class DefaultRequest<T> implements Request<T> {
     @Override
     public InputStream getContentUnwrapped() {
         InputStream is = getContent();
-        if (is == null)
-            return null;
+        if (is == null) return null;
         // We want to disable the progress reporting when the stream is
         // consumed for signing purpose.
         while (is instanceof ProgressInputStream) {
-            ProgressInputStream pris = (ProgressInputStream)is;
+            ProgressInputStream pris = (ProgressInputStream) is;
             is = pris.getWrappedInputStream();
         }
         return is;

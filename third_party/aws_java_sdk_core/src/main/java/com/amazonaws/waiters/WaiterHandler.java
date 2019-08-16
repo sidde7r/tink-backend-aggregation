@@ -18,8 +18,8 @@ package com.amazonaws.waiters;
 import com.amazonaws.AmazonWebServiceRequest;
 
 /**
- * Callbacks are executed synchronously. That is the same thread the waiter
- * completes on and it's not submitted back to the executor.
+ * Callbacks are executed synchronously. That is the same thread the waiter completes on and it's
+ * not submitted back to the executor.
  */
 public abstract class WaiterHandler<Input extends AmazonWebServiceRequest> {
 
@@ -27,4 +27,3 @@ public abstract class WaiterHandler<Input extends AmazonWebServiceRequest> {
 
     public abstract void onWaitFailure(Exception e);
 }
-

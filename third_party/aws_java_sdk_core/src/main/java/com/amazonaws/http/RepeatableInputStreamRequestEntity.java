@@ -19,25 +19,22 @@ import com.amazonaws.metrics.MetricInputStreamEntity;
 import com.amazonaws.metrics.ServiceMetricType;
 import com.amazonaws.metrics.ThroughputMetricType;
 import com.amazonaws.metrics.internal.ServiceMetricTypeGuesser;
-
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import tink.org.apache.http.entity.BasicHttpEntity;
 import tink.org.apache.http.entity.InputStreamEntity;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 /**
- * Custom implementation of {@link RequestEntity} that delegates to an
- * {@link RepeatableInputStreamRequestEntity}, with the one notable difference, that if
- * the underlying InputStream supports being reset, this RequestEntity will
- * report that it is repeatable and will reset the stream on all subsequent
- * attempts to write out the request.
+ * Custom implementation of {@link RequestEntity} that delegates to an {@link
+ * RepeatableInputStreamRequestEntity}, with the one notable difference, that if the underlying
+ * InputStream supports being reset, this RequestEntity will report that it is repeatable and will
+ * reset the stream on all subsequent attempts to write out the request.
  *
- * TODO : Move this to apache specific package.
+ * <p>TODO : Move this to apache specific package.
  */
 public class RepeatableInputStreamRequestEntity extends BasicHttpEntity {
 
@@ -50,27 +47,22 @@ public class RepeatableInputStreamRequestEntity extends BasicHttpEntity {
     /** The InputStream containing the content to write out */
     private InputStream content;
 
-    private static final Log log = LogFactory
-            .getLog(RepeatableInputStreamRequestEntity.class);
+    private static final Log log = LogFactory.getLog(RepeatableInputStreamRequestEntity.class);
 
     /**
-     * Record the original exception if we do attempt a retry, so that if the
-     * retry fails, we can report the original exception. Otherwise, we're most
-     * likely masking the real exception with an error about not being able to
-     * reset far enough back in the input stream.
+     * Record the original exception if we do attempt a retry, so that if the retry fails, we can
+     * report the original exception. Otherwise, we're most likely masking the real exception with
+     * an error about not being able to reset far enough back in the input stream.
      */
     private IOException originalException;
 
-
     /**
-     * Creates a new RepeatableInputStreamRequestEntity using the information
-     * from the specified request. If the input stream containing the request's
-     * contents is repeatable, then this RequestEntity will report as being
-     * repeatable.
+     * Creates a new RepeatableInputStreamRequestEntity using the information from the specified
+     * request. If the input stream containing the request's contents is repeatable, then this
+     * RequestEntity will report as being repeatable.
      *
-     * @param request
-     *            The details of the request being written out (content type,
-     *            content length, and content).
+     * @param request The details of the request being written out (content type, content length,
+     *     and content).
      */
     public RepeatableInputStreamRequestEntity(final Request<?> request) {
         setChunked(false);
@@ -92,19 +84,23 @@ public class RepeatableInputStreamRequestEntity extends BasicHttpEntity {
                 contentLength = Long.parseLong(contentLengthString);
             }
         } catch (NumberFormatException nfe) {
-            log.warn("Unable to parse content length from request.  " +
-                    "Buffering contents in memory.");
+            log.warn(
+                    "Unable to parse content length from request.  "
+                            + "Buffering contents in memory.");
         }
 
         String contentType = request.getHeaders().get("Content-Type");
-        ThroughputMetricType type = ServiceMetricTypeGuesser
-                .guessThroughputMetricType(request,
+        ThroughputMetricType type =
+                ServiceMetricTypeGuesser.guessThroughputMetricType(
+                        request,
                         ServiceMetricType.UPLOAD_THROUGHPUT_NAME_SUFFIX,
                         ServiceMetricType.UPLOAD_BYTE_COUNT_NAME_SUFFIX);
 
         content = getContent(request);
-        inputStreamRequestEntity = (type == null) ? new InputStreamEntity(content, contentLength) :
-                new MetricInputStreamEntity(type, content, contentLength);
+        inputStreamRequestEntity =
+                (type == null)
+                        ? new InputStreamEntity(content, contentLength)
+                        : new MetricInputStreamEntity(type, content, contentLength);
         inputStreamRequestEntity.setContentType(contentType);
 
         setContent(content);
@@ -112,12 +108,11 @@ public class RepeatableInputStreamRequestEntity extends BasicHttpEntity {
         setContentLength(contentLength);
     }
 
-    /**
-     * @return The request content input stream or an empty input stream if there is no content.
-     */
+    /** @return The request content input stream or an empty input stream if there is no content. */
     private InputStream getContent(Request<?> request) {
-        return (request.getContent() == null) ? new ByteArrayInputStream(new byte[0]) :
-                request.getContent();
+        return (request.getContent() == null)
+                ? new ByteArrayInputStream(new byte[0])
+                : request.getContent();
     }
 
     @Override
@@ -126,11 +121,10 @@ public class RepeatableInputStreamRequestEntity extends BasicHttpEntity {
     }
 
     /**
-     * Returns true if the underlying InputStream supports marking/reseting or
-     * if the underlying InputStreamRequestEntity is repeatable (i.e. its
-     * content length has been set to
-     * {@link InputStreamRequestEntity#CONTENT_LENGTH_AUTO} and therefore its
-     * entire contents will be buffered in memory and can be repeated).
+     * Returns true if the underlying InputStream supports marking/reseting or if the underlying
+     * InputStreamRequestEntity is repeatable (i.e. its content length has been set to {@link
+     * InputStreamRequestEntity#CONTENT_LENGTH_AUTO} and therefore its entire contents will be
+     * buffered in memory and can be repeated).
      *
      * @see org.apache.commons.httpclient.methods.RequestEntity#isRepeatable()
      */
@@ -140,14 +134,12 @@ public class RepeatableInputStreamRequestEntity extends BasicHttpEntity {
     }
 
     /**
-     * Resets the underlying InputStream if this isn't the first attempt to
-     * write out the request, otherwise simply delegates to
-     * InputStreamRequestEntity to write out the data.
-     * <p>
-     * If an error is encountered the first time we try to write the request
-     * entity, we remember the original exception, and report that as the root
-     * cause if we continue to encounter errors, rather than masking the
-     * original error.
+     * Resets the underlying InputStream if this isn't the first attempt to write out the request,
+     * otherwise simply delegates to InputStreamRequestEntity to write out the data.
+     *
+     * <p>If an error is encountered the first time we try to write the request entity, we remember
+     * the original exception, and report that as the root cause if we continue to encounter errors,
+     * rather than masking the original error.
      *
      * @see org.apache.commons.httpclient.methods.RequestEntity#writeRequest(java.io.OutputStream)
      */
@@ -163,5 +155,4 @@ public class RepeatableInputStreamRequestEntity extends BasicHttpEntity {
             throw originalException;
         }
     }
-
 }

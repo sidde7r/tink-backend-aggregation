@@ -14,17 +14,17 @@
  */
 package com.amazonaws.monitoring;
 
-import com.amazonaws.SdkClientException;
-import com.amazonaws.annotation.ThreadSafe;
-
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_CLIENT_ID_SYSTEM_PROPERTY;
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_ENABLED_SYSTEM_PROPERTY;
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_PORT_SYSTEM_PROPERTY;
 import static com.amazonaws.SDKGlobalConfiguration.DEFAULT_AWS_CSM_PORT;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.annotation.ThreadSafe;
+
 /**
- * Configuration provider that sources the client side monitoring
- * configuration parameters from system properties.
+ * Configuration provider that sources the client side monitoring configuration parameters from
+ * system properties.
  *
  * @see com.amazonaws.SDKGlobalConfiguration#AWS_CSM_CLIENT_ID_SYSTEM_PROPERTY
  * @see com.amazonaws.SDKGlobalConfiguration#AWS_CSM_ENABLED_SYSTEM_PROPERTY
@@ -32,24 +32,27 @@ import static com.amazonaws.SDKGlobalConfiguration.DEFAULT_AWS_CSM_PORT;
  */
 @ThreadSafe
 public final class SystemPropertyCsmConfigurationProvider implements CsmConfigurationProvider {
-   @Override
+    @Override
     public CsmConfiguration getConfiguration() throws SdkClientException {
         String enabled = System.getProperty(AWS_CSM_ENABLED_SYSTEM_PROPERTY);
 
         if (enabled == null) {
-            throw new SdkClientException("Unable to load Client Side Monitoring configurations from"
-                    + " system properties variables!");
+            throw new SdkClientException(
+                    "Unable to load Client Side Monitoring configurations from"
+                            + " system properties variables!");
         }
 
-       String port = System.getProperty(AWS_CSM_PORT_SYSTEM_PROPERTY);
-       String clientId = System.getProperty(AWS_CSM_CLIENT_ID_SYSTEM_PROPERTY, "");
+        String port = System.getProperty(AWS_CSM_PORT_SYSTEM_PROPERTY);
+        String clientId = System.getProperty(AWS_CSM_CLIENT_ID_SYSTEM_PROPERTY, "");
 
         try {
             int portNumber = port == null ? DEFAULT_AWS_CSM_PORT : Integer.parseInt(port);
             return new CsmConfiguration(Boolean.parseBoolean(enabled), portNumber, clientId);
         } catch (Exception e) {
-            throw new SdkClientException("Unable to load Client Side Monitoring configurations from"
-                    + " system properties variables!", e);
+            throw new SdkClientException(
+                    "Unable to load Client Side Monitoring configurations from"
+                            + " system properties variables!",
+                    e);
         }
     }
 }

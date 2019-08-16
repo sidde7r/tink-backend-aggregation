@@ -29,21 +29,19 @@ import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-
-import com.amazonaws.http.apache.client.impl.ConnectionManagerAwareHttpClient;
-import com.amazonaws.http.response.ErrorDuringUnmarshallingResponseHandler;
-import tink.org.apache.http.client.methods.HttpRequestBase;
-import tink.org.apache.http.protocol.HttpContext;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.TestPreConditions;
 import com.amazonaws.http.AmazonHttpClient;
+import com.amazonaws.http.apache.client.impl.ConnectionManagerAwareHttpClient;
+import com.amazonaws.http.response.ErrorDuringUnmarshallingResponseHandler;
 import com.amazonaws.http.response.HttpResponseProxy;
 import com.amazonaws.http.response.NullResponseHandler;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import tink.org.apache.http.client.methods.HttpRequestBase;
+import tink.org.apache.http.protocol.HttpContext;
 
 /**
  * These tests don't actually start up a mock server. They use a partially mocked Apache HTTP client
@@ -59,14 +57,19 @@ public class MockedClientTests {
     }
 
     @Test
-    public void clientExecutionTimeoutEnabled_RequestCompletesWithinTimeout_TaskCanceledAndEntityBuffered()
-            throws Exception {
-        ClientConfiguration config = new ClientConfiguration().withClientExecutionTimeout(CLIENT_EXECUTION_TIMEOUT)
-                .withMaxErrorRetry(0);
+    public void
+            clientExecutionTimeoutEnabled_RequestCompletesWithinTimeout_TaskCanceledAndEntityBuffered()
+                    throws Exception {
+        ClientConfiguration config =
+                new ClientConfiguration()
+                        .withClientExecutionTimeout(CLIENT_EXECUTION_TIMEOUT)
+                        .withMaxErrorRetry(0);
         ConnectionManagerAwareHttpClient rawHttpClient = createRawHttpClientSpy(config);
 
         HttpResponseProxy responseProxy = createHttpResponseProxySpy();
-        doReturn(responseProxy).when(rawHttpClient).execute(any(HttpRequestBase.class), any(HttpContext.class));
+        doReturn(responseProxy)
+                .when(rawHttpClient)
+                .execute(any(HttpRequestBase.class), any(HttpContext.class));
 
         httpClient = new AmazonHttpClient(config, rawHttpClient, null);
 
@@ -78,7 +81,8 @@ public class MockedClientTests {
         }
 
         assertResponseIsBuffered(responseProxy);
-        ScheduledThreadPoolExecutor requestTimerExecutor = httpClient.getClientExecutionTimer().getExecutor();
+        ScheduledThreadPoolExecutor requestTimerExecutor =
+                httpClient.getClientExecutionTimer().getExecutor();
         assertTimerNeverTriggered(requestTimerExecutor);
         assertCanceledTasksRemoved(requestTimerExecutor);
         // Core threads should be spun up on demand. Since only one task was submitted only one
@@ -88,12 +92,15 @@ public class MockedClientTests {
     }
 
     @Test
-    public void clientExecutionTimeoutDisabled_RequestCompletesWithinTimeout_EntityNotBuffered() throws Exception {
+    public void clientExecutionTimeoutDisabled_RequestCompletesWithinTimeout_EntityNotBuffered()
+            throws Exception {
         ClientConfiguration config = new ClientConfiguration().withClientExecutionTimeout(0);
         ConnectionManagerAwareHttpClient rawHttpClient = createRawHttpClientSpy(config);
 
         HttpResponseProxy responseProxy = createHttpResponseProxySpy();
-        doReturn(responseProxy).when(rawHttpClient).execute(any(HttpRequestBase.class), any(HttpContext.class));
+        doReturn(responseProxy)
+                .when(rawHttpClient)
+                .execute(any(HttpRequestBase.class), any(HttpContext.class));
 
         httpClient = new AmazonHttpClient(config, rawHttpClient, null);
 
@@ -107,23 +114,29 @@ public class MockedClientTests {
     }
 
     @Test
-    public void clientExecutionTimeoutEnabled_RequestCompletesWithinTimeout_EntityNotBufferedForStreamedResponse()
-            throws Exception {
-        ClientConfiguration config = new ClientConfiguration().withClientExecutionTimeout(CLIENT_EXECUTION_TIMEOUT);
+    public void
+            clientExecutionTimeoutEnabled_RequestCompletesWithinTimeout_EntityNotBufferedForStreamedResponse()
+                    throws Exception {
+        ClientConfiguration config =
+                new ClientConfiguration().withClientExecutionTimeout(CLIENT_EXECUTION_TIMEOUT);
         ConnectionManagerAwareHttpClient rawHttpClient = createRawHttpClientSpy(config);
 
         HttpResponseProxy responseProxy = createHttpResponseProxySpy();
-        doReturn(responseProxy).when(rawHttpClient).execute(any(HttpRequestBase.class), any(HttpContext.class));
+        doReturn(responseProxy)
+                .when(rawHttpClient)
+                .execute(any(HttpRequestBase.class), any(HttpContext.class));
 
         httpClient = new AmazonHttpClient(config, rawHttpClient, null);
 
         try {
-            httpClient.requestExecutionBuilder().request(createMockGetRequest()).execute(new ErrorDuringUnmarshallingResponseHandler().leaveConnectionOpen());
+            httpClient
+                    .requestExecutionBuilder()
+                    .request(createMockGetRequest())
+                    .execute(new ErrorDuringUnmarshallingResponseHandler().leaveConnectionOpen());
             fail("Exception expected");
         } catch (AmazonClientException e) {
         }
 
         assertResponseWasNotBuffered(responseProxy);
     }
-
 }

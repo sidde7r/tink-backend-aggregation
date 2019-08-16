@@ -17,8 +17,8 @@ package com.amazonaws.handlers;
 import com.amazonaws.auth.AWSCredentials;
 
 /**
- * A type safe key used for setting and retrieving context in a {@link
- * com.amazonaws.Request} object.
+ * A type safe key used for setting and retrieving context in a {@link com.amazonaws.Request}
+ * object.
  *
  * <pre class="brush: java">
  *     final HandlerContextKey<String> METRICS_KEY = new HandlerContextKey("METRICS_KEY");
@@ -44,25 +44,21 @@ import com.amazonaws.auth.AWSCredentials;
  */
 public class HandlerContextKey<T> {
 
-    /**
-     * The key under which the request credentials are set.
-     **/
-    public static final HandlerContextKey<AWSCredentials> AWS_CREDENTIALS = new HandlerContextKey<AWSCredentials>("AWSCredentials");
+    /** The key under which the request credentials are set. */
+    public static final HandlerContextKey<AWSCredentials> AWS_CREDENTIALS =
+            new HandlerContextKey<AWSCredentials>("AWSCredentials");
 
-    /**
-     * The region used to sign the request.
-     */
-    public static final HandlerContextKey<String> SIGNING_REGION = new HandlerContextKey<String>("SigningRegion");
+    /** The region used to sign the request. */
+    public static final HandlerContextKey<String> SIGNING_REGION =
+            new HandlerContextKey<String>("SigningRegion");
 
-    /**
-     * The name of the operation for the request.
-     */
-    public static final HandlerContextKey<String> OPERATION_NAME = new HandlerContextKey<String>("OperationName");
+    /** The name of the operation for the request. */
+    public static final HandlerContextKey<String> OPERATION_NAME =
+            new HandlerContextKey<String>("OperationName");
 
-    /**
-     * The unique identifier for a service to which the request is being sent.
-     */
-    public static final HandlerContextKey<String> SERVICE_ID = new HandlerContextKey<String>("ServiceId");
+    /** The unique identifier for a service to which the request is being sent. */
+    public static final HandlerContextKey<String> SERVICE_ID =
+            new HandlerContextKey<String>("ServiceId");
 
     private final String name;
 
@@ -81,7 +77,6 @@ public class HandlerContextKey<T> {
         HandlerContextKey<?> key = (HandlerContextKey<?>) o;
 
         return name.equals(key.getName());
-
     }
 
     public String getName() {

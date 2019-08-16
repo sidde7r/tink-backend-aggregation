@@ -14,15 +14,12 @@
  */
 package com.amazonaws.auth;
 
-/**
- * A signer that needs to know which region it is talking to.
- */
+/** A signer that needs to know which region it is talking to. */
 public interface RegionAwareSigner extends Signer {
     /**
-     * Configure this signer with the name of the region it will be used
-     * to sign requests for.
+     * Configure this signer with the name of the region it will be used to sign requests for.
      *
-     * @param value   The name of the region.
+     * @param value The name of the region.
      */
     void setRegionName(String value);
 }

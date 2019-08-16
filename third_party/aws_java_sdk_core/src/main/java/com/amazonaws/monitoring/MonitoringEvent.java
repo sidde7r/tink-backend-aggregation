@@ -16,7 +16,7 @@
 package com.amazonaws.monitoring;
 
 /**
- * A collection of key-value pair data, built by the SDK, that describes an event of interest occurring during SDK code execution.
+ * A collection of key-value pair data, built by the SDK, that describes an event of interest
+ * occurring during SDK code execution.
  */
-public interface MonitoringEvent {
-}
+public interface MonitoringEvent {}

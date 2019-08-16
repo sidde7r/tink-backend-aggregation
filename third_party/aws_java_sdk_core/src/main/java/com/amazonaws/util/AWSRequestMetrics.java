@@ -18,132 +18,99 @@ package com.amazonaws.util;
 import com.amazonaws.annotation.NotThreadSafe;
 import com.amazonaws.metrics.MetricType;
 import com.amazonaws.metrics.RequestMetricType;
-
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Used as both a base class and a minimal support of AWS SDK request metrics.
- * The base class of supporting AWS SDK request metrics.
- * <p>
- * In contrast to {@link AWSRequestMetricsFullSupport}, which is intended to be
- * a full support of AWS SDK request metrics, this class only provides access to
- * a {@link TimingInfo} instance that only has minimal support for start and end
- * time (ie with no-ops for sub-event measurements) for backward compatibility
- * reason. The other methods related to properties and counters in this class
+ * Used as both a base class and a minimal support of AWS SDK request metrics. The base class of
+ * supporting AWS SDK request metrics.
+ *
+ * <p>In contrast to {@link AWSRequestMetricsFullSupport}, which is intended to be a full support of
+ * AWS SDK request metrics, this class only provides access to a {@link TimingInfo} instance that
+ * only has minimal support for start and end time (ie with no-ops for sub-event measurements) for
+ * backward compatibility reason. The other methods related to properties and counters in this class
  * are effectively no-ops.
- * <p>
- * This class is instantiated instead of {@link AWSRequestMetricsFullSupport}
- * when request metric collection is not required during a particular service
- * request/response cycle.
+ *
+ * <p>This class is instantiated instead of {@link AWSRequestMetricsFullSupport} when request metric
+ * collection is not required during a particular service request/response cycle.
  */
 @NotThreadSafe
 public class AWSRequestMetrics {
     /**
-     *  If the class name is required for logging and metrics we should use this
-     *  constant version instead of the expensive function call.
+     * If the class name is required for logging and metrics we should use this constant version
+     * instead of the expensive function call.
      */
     public static final String SIMPLE_NAME = AWSRequestMetrics.class.getSimpleName();
 
     /**
-     * Predefined AWS SDK metric types general across all AWS clients. Client
-     * specific predefined metrics like S3 or DynamoDB are defined in the client
-     * specific packages.
+     * Predefined AWS SDK metric types general across all AWS clients. Client specific predefined
+     * metrics like S3 or DynamoDB are defined in the client specific packages.
      */
     public enum Field implements RequestMetricType {
         AWSErrorCode,
         AWSRequestID,
-        /**
-         * The specific request subtype, such as PutItemRequest, PutObjectRequest, etc.
-         */
+        /** The specific request subtype, such as PutItemRequest, PutObjectRequest, etc. */
         RequestType,
         BytesProcessed,
         /**
-         * Total number of milliseconds taken for a request/response including
-         * the time taken to execute the request handlers, round trip to AWS,
-         * and the time taken to execute the response handlers.
+         * Total number of milliseconds taken for a request/response including the time taken to
+         * execute the request handlers, round trip to AWS, and the time taken to execute the
+         * response handlers.
          */
         ClientExecuteTime,
         CredentialsRequestTime,
 
         Exception,
-        /**
-         * Used to count and preserve the throttle related exceptions.
-         */
+        /** Used to count and preserve the throttle related exceptions. */
         ThrottleException,
-        /**
-         * Number of milliseconds taken for a request/response round trip to AWS.
-         */
+        /** Number of milliseconds taken for a request/response round trip to AWS. */
         HttpRequestTime,
         RedirectLocation,
         RequestMarshallTime,
-        /**
-         * Number of milliseconds taken to sign a request.
-         */
+        /** Number of milliseconds taken to sign a request. */
         RequestSigningTime,
-        /**
-         * Number of milliseconds taken to execute the response handler for a response from AWS.
-         */
+        /** Number of milliseconds taken to execute the response handler for a response from AWS. */
         ResponseProcessingTime,
-        /**
-         * Number of requests to AWS.
-         */
+        /** Number of requests to AWS. */
         RequestCount,
-        /**
-         * Number of retries of AWS SDK sending a request to AWS.
-         */
+        /** Number of retries of AWS SDK sending a request to AWS. */
         RetryCount, // captured via the RequestCount since (RetryCount = RequestCount - 1)
-        /**
-         * Snapshot of currently consumed retry capacity.
-         */
+        /** Snapshot of currently consumed retry capacity. */
         RetryCapacityConsumed,
-        /**
-         * Number of retries that were not attempted due to retry throttling.
-         */
+        /** Number of retries that were not attempted due to retry throttling. */
         ThrottledRetryCount,
-        /**
-         * Number of retries of the underlying http client library in sending a
-         * request to AWS.
-         */
+        /** Number of retries of the underlying http client library in sending a request to AWS. */
         HttpClientRetryCount,
-        /**
-         * Time taken to send a request to AWS by the http client library,
-         * excluding any retry.
-         */
+        /** Time taken to send a request to AWS by the http client library, excluding any retry. */
         HttpClientSendRequestTime,
         /**
-         * Time taken to receive a response from AWS by the http client library,
-         * excluding any retry.
+         * Time taken to receive a response from AWS by the http client library, excluding any
+         * retry.
          */
         HttpClientReceiveResponseTime,
 
-        /**
-         * Time taken for socket to read.
-         */
+        /** Time taken for socket to read. */
         HttpSocketReadTime,
 
         /**
          * The number of idle persistent connections.
-         * <p>
-         * Reference: https://hc.apache
-         * .org/httpcomponents-core-ga/httpcore/apidocs/org/apache
+         *
+         * <p>Reference: https://hc.apache .org/httpcomponents-core-ga/httpcore/apidocs/org/apache
          * /http/pool/PoolStats.html
          */
         HttpClientPoolAvailableCount,
         /**
-         * The number of persistent connections tracked by the connection
-         * manager currently being used to execute requests.
-         * <p>
-         * Reference: https://hc
-         * .apache.org/httpcomponents-core-ga/httpcore/apidocs/org/apache
+         * The number of persistent connections tracked by the connection manager currently being
+         * used to execute requests.
+         *
+         * <p>Reference: https://hc .apache.org/httpcomponents-core-ga/httpcore/apidocs/org/apache
          * /http/pool/PoolStats.html
          */
         HttpClientPoolLeasedCount,
         /**
-         * The number of connection requests being blocked awaiting a free
-         * connection.
-         * <p>
-         * Reference: https://hc.apache.org/httpcomponents-core-ga/httpcore
+         * The number of connection requests being blocked awaiting a free connection.
+         *
+         * <p>Reference: https://hc.apache.org/httpcomponents-core-ga/httpcore
          * /apidocs/tink.org.apache.http/pool/PoolStats.html
          */
         HttpClientPoolPendingCount,
@@ -157,9 +124,8 @@ public class AWSRequestMetrics {
     protected final TimingInfo timingInfo;
 
     /**
-     * This constructor should be used only in the case when AWS SDK metrics
-     * collector is disabled, when minimal timing info is supported for backward
-     * compatibility reasons.
+     * This constructor should be used only in the case when AWS SDK metrics collector is disabled,
+     * when minimal timing info is supported for backward compatibility reasons.
      *
      * @see AWSRequestMetricsFullSupport
      */
@@ -174,20 +140,21 @@ public class AWSRequestMetrics {
     public final TimingInfo getTimingInfo() {
         return timingInfo;
     }
-    /**
-     * Returns true if this metrics is enabled; false otherwise.
-     * Returns false by default.
-     * */
+    /** Returns true if this metrics is enabled; false otherwise. Returns false by default. */
     public boolean isEnabled() {
         return false;
     }
 
     public void startEvent(String eventName) {}
+
     public void startEvent(MetricType f) {}
+
     public void endEvent(String eventName) {}
+
     public void endEvent(MetricType f) {}
 
     public void incrementCounter(String event) {}
+
     public void incrementCounter(MetricType f) {}
     /** Fluent API of {@link #incrementCounter(String)} */
     public final AWSRequestMetrics incrementCounterWith(String event) {
@@ -201,6 +168,7 @@ public class AWSRequestMetrics {
     }
 
     public void setCounter(String counterName, long count) {}
+
     public void setCounter(MetricType f, long count) {}
     /** Fluent API of {@link #setCounter(String, long)} */
     public final AWSRequestMetrics withCounter(String counterName, long count) {
@@ -214,6 +182,7 @@ public class AWSRequestMetrics {
     }
 
     public void addProperty(String propertyName, Object value) {}
+
     public void addProperty(MetricType f, Object value) {}
     /** Fluent API of {@link #addProperty(String, Object)} */
     public final AWSRequestMetrics addPropertyWith(String propertyName, Object value) {
@@ -227,6 +196,12 @@ public class AWSRequestMetrics {
     }
 
     public void log() {}
-    public List<Object> getProperty(String propertyName){ return Collections.emptyList(); }
-    public List<Object> getProperty(MetricType f) { return Collections.emptyList(); }
+
+    public List<Object> getProperty(String propertyName) {
+        return Collections.emptyList();
+    }
+
+    public List<Object> getProperty(MetricType f) {
+        return Collections.emptyList();
+    }
 }

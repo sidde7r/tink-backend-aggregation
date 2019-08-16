@@ -18,16 +18,14 @@ import com.amazonaws.annotation.SdkProtectedApi;
 
 /**
  * Interface to provide a default value for a null member during marshalling. Currently used for
- * members that have the idempotency trait applied and for Glacier's account ID member (which defaults to '-' indicating
- * the current account).
+ * members that have the idempotency trait applied and for Glacier's account ID member (which
+ * defaults to '-' indicating the current account).
  *
  * @param <T> Type of the member to provide the default value for.
  */
 @SdkProtectedApi
 public interface DefaultValueSupplier<T> {
 
-    /**
-     * @return The default value to use if the value is null.
-     */
+    /** @return The default value to use if the value is null. */
     T get();
 }

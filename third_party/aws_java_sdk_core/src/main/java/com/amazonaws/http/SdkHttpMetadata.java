@@ -15,13 +15,10 @@
 package com.amazonaws.http;
 
 import com.amazonaws.annotation.Immutable;
-
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * Metadata about the HTTP response.
- */
+/** Metadata about the HTTP response. */
 @Immutable
 public class SdkHttpMetadata {
 
@@ -34,16 +31,12 @@ public class SdkHttpMetadata {
         this.httpStatusCode = httpStatusCode;
     }
 
-    /**
-     * @return All HTTP headers in response.
-     */
+    /** @return All HTTP headers in response. */
     public Map<String, String> getHttpHeaders() {
         return httpHeaders;
     }
 
-    /**
-     * @return HTTP status code of response.
-     */
+    /** @return HTTP status code of response. */
     public int getHttpStatusCode() {
         return httpStatusCode;
     }
@@ -55,5 +48,4 @@ public class SdkHttpMetadata {
     public static SdkHttpMetadata from(HttpResponse httpResponse) {
         return new SdkHttpMetadata(httpResponse.getHeaders(), httpResponse.getStatusCode());
     }
-
 }

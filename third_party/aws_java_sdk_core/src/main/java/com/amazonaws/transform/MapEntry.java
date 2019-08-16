@@ -19,10 +19,8 @@ import java.util.Map;
 /**
  * Simple implementation of the Map.Entry interface.
  *
- * @param <K>
- *            The type of the key held in this map entry.
- * @param <V>
- *            The type of the value held in this map entry.
+ * @param <K> The type of the key held in this map entry.
+ * @param <V> The type of the value held in this map entry.
  */
 public class MapEntry<K, V> implements Map.Entry<K, V> {
     private K key;
@@ -54,5 +52,4 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
         this.key = key;
         return this.key;
     }
-
 }

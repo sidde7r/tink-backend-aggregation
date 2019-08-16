@@ -21,13 +21,16 @@ public class SystemPropertyEndpointDiscoveryProvider implements EndpointDiscover
     public Boolean endpointDiscoveryEnabled() {
         Boolean endpointDiscoveryEnabled = null;
 
-        String endpointDiscoveryEnabledString = System.getProperty(ENDPOINT_DISCOVERY_SYSTEM_PROPERTY);
+        String endpointDiscoveryEnabledString =
+                System.getProperty(ENDPOINT_DISCOVERY_SYSTEM_PROPERTY);
 
         if (endpointDiscoveryEnabledString != null) {
             try {
                 endpointDiscoveryEnabled = Boolean.parseBoolean(endpointDiscoveryEnabledString);
             } catch (Exception e) {
-                throw new RuntimeException("Unable to parse environment variable " + ENDPOINT_DISCOVERY_SYSTEM_PROPERTY);
+                throw new RuntimeException(
+                        "Unable to parse environment variable "
+                                + ENDPOINT_DISCOVERY_SYSTEM_PROPERTY);
             }
         }
 

@@ -25,12 +25,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import org.junit.Test;
-
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-
+import org.junit.Test;
 import utils.http.WireMockTestBase;
 
 public class SdkTransactionIdInHeaderTest extends WireMockTestBase {
@@ -61,10 +59,13 @@ public class SdkTransactionIdInHeaderTest extends WireMockTestBase {
     private void executeRequest() throws Exception {
         AmazonHttpClient httpClient = new AmazonHttpClient(new ClientConfiguration());
         try {
-            httpClient.requestExecutionBuilder().request(newGetRequest(RESOURCE_PATH)).errorResponseHandler(stubErrorHandler()).execute();
+            httpClient
+                    .requestExecutionBuilder()
+                    .request(newGetRequest(RESOURCE_PATH))
+                    .errorResponseHandler(stubErrorHandler())
+                    .execute();
             fail("Expected exception");
         } catch (AmazonServiceException expected) {
         }
     }
-
 }

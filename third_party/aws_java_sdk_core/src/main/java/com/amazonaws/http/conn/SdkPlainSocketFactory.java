@@ -16,16 +16,13 @@
 package com.amazonaws.http.conn;
 
 import com.amazonaws.http.apache.utils.HttpContextUtils;
-import tink.org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import tink.org.apache.http.protocol.HttpContext;
-
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.Socket;
+import tink.org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import tink.org.apache.http.protocol.HttpContext;
 
-/**
- * Socket factory for creating plain (non TLS) connections.
- */
+/** Socket factory for creating plain (non TLS) connections. */
 public class SdkPlainSocketFactory extends PlainConnectionSocketFactory {
     @Override
     public Socket createSocket(HttpContext ctx) throws IOException {

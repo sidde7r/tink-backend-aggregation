@@ -13,14 +13,15 @@
  * permissions and limitations under the License.
  */
 package com.amazonaws.util;
+
 import static com.amazonaws.util.StringUtils.UTF8;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Simple wrapper for ByteArrayInputStream that will automatically encode the
- * string as UTF-8 data, and still allows access to the original string.
+ * Simple wrapper for ByteArrayInputStream that will automatically encode the string as UTF-8 data,
+ * and still allows access to the original string.
  */
 public class StringInputStream extends ByteArrayInputStream {
 
@@ -32,11 +33,9 @@ public class StringInputStream extends ByteArrayInputStream {
     }
 
     /**
-     * Returns the original string specified when this input stream was
-     * constructed.
+     * Returns the original string specified when this input stream was constructed.
      *
-     * @return The original string specified when this input stream was
-     *         constructed.
+     * @return The original string specified when this input stream was constructed.
      */
     public String getString() {
         return string;

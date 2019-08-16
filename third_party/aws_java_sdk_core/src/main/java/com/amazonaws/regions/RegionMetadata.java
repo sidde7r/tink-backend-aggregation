@@ -17,8 +17,7 @@ package com.amazonaws.regions;
 import java.util.List;
 
 /**
- * A collection of metadata about a set of regions and the services they
- * contain.
+ * A collection of metadata about a set of regions and the services they contain.
  *
  * @see RegionUtils
  */
@@ -40,8 +39,8 @@ public class RegionMetadata {
     }
 
     /**
-     * Returns an immutable list of all regions known to this region metadata
-     * object, in no particular order.
+     * Returns an immutable list of all regions known to this region metadata object, in no
+     * particular order.
      *
      * @return an immutable list of all regions
      */
@@ -50,8 +49,7 @@ public class RegionMetadata {
     }
 
     /**
-     * Returns the region with the name given, if it exists. Otherwise, returns
-     * null.
+     * Returns the region with the name given, if it exists. Otherwise, returns null.
      *
      * @param name the name of the region to search for
      * @return the corresponding region, if it exists
@@ -63,10 +61,8 @@ public class RegionMetadata {
     /**
      * Returns a list of the regions that support the service given.
      *
-     * @param service
-     *         The service endpoint prefix which can be retrieved from the
-     *         constant ENDPOINT_PREFIX of the specific service client interface,
-     *         e.g. AmazonEC2.ENDPOINT_PREFIX.
+     * @param service The service endpoint prefix which can be retrieved from the constant
+     *     ENDPOINT_PREFIX of the specific service client interface, e.g. AmazonEC2.ENDPOINT_PREFIX.
      * @return the list of regions with support for the given service
      */
     public List<Region> getRegionsForService(final String service) {
@@ -74,18 +70,17 @@ public class RegionMetadata {
     }
 
     /**
-     * Searches through all known regions to find one with any service at the
-     * specified endpoint. If no region is found with a service at that
-     * endpoint, an exception is thrown.
+     * Searches through all known regions to find one with any service at the specified endpoint. If
+     * no region is found with a service at that endpoint, an exception is thrown.
      *
      * @param endpoint The endpoint for any service residing in the desired region.
-     * @return The region containing any service running at the specified
-     * endpoint, otherwise an exception is thrown if no region is found
-     * with a service at the specified endpoint.
+     * @return The region containing any service running at the specified endpoint, otherwise an
+     *     exception is thrown if no region is found with a service at the specified endpoint.
      * @throws IllegalArgumentException If the given URL is malformed, or if the one of the service
-     *                                  URLs on record is malformed.
-     * @deprecated sdk no longer holds the complete endpoint for every service in the region.
-     * It now uses the partition metadata to compute the endpoints dynamically for new regions and services.
+     *     URLs on record is malformed.
+     * @deprecated sdk no longer holds the complete endpoint for every service in the region. It now
+     *     uses the partition metadata to compute the endpoints dynamically for new regions and
+     *     services.
      */
     @Deprecated
     public Region getRegionByEndpoint(final String endpoint) {

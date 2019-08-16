@@ -14,6 +14,15 @@
  */
 package com.amazonaws.http.timers.client;
 
+import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.interruptCurrentThreadAfterDelay;
+import static com.amazonaws.http.timers.TimeoutTestConstants.CLIENT_EXECUTION_TIMEOUT;
+import static com.amazonaws.http.timers.TimeoutTestConstants.SLOW_REQUEST_HANDLER_TIMEOUT;
+import static com.amazonaws.http.timers.TimeoutTestConstants.TEST_TIMEOUT;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.TestPreConditions;
@@ -30,21 +39,11 @@ import com.amazonaws.http.response.DummyResponseHandler;
 import com.amazonaws.http.response.UnresponsiveResponseHandler;
 import com.amazonaws.http.server.MockServer;
 import com.amazonaws.http.settings.HttpClientSettings;
-import tink.org.apache.http.pool.ConnPoolControl;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.List;
-
-import static com.amazonaws.http.timers.ClientExecutionAndRequestTimerTestUtils.interruptCurrentThreadAfterDelay;
-import static com.amazonaws.http.timers.TimeoutTestConstants.CLIENT_EXECUTION_TIMEOUT;
-import static com.amazonaws.http.timers.TimeoutTestConstants.SLOW_REQUEST_HANDLER_TIMEOUT;
-import static com.amazonaws.http.timers.TimeoutTestConstants.TEST_TIMEOUT;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import tink.org.apache.http.pool.ConnPoolControl;
 
 public class DummySuccessfulResponseServerIntegrationTests extends MockServerTestBase {
 
@@ -59,74 +58,101 @@ public class DummySuccessfulResponseServerIntegrationTests extends MockServerTes
 
     @Override
     protected MockServer buildMockServer() {
-        return new MockServer(MockServer.DummyResponseServerBehavior.build(STATUS_CODE, "OK", "Hi"));
+        return new MockServer(
+                MockServer.DummyResponseServerBehavior.build(STATUS_CODE, "OK", "Hi"));
     }
 
     @Test(timeout = TEST_TIMEOUT, expected = ClientExecutionTimeoutException.class)
-    public void clientExecutionTimeoutEnabled_SlowResponseHandler_ThrowsClientExecutionTimeoutException()
-            throws Exception {
-        httpClient = new AmazonHttpClient(
-                new ClientConfiguration().withClientExecutionTimeout(CLIENT_EXECUTION_TIMEOUT));
+    public void
+            clientExecutionTimeoutEnabled_SlowResponseHandler_ThrowsClientExecutionTimeoutException()
+                    throws Exception {
+        httpClient =
+                new AmazonHttpClient(
+                        new ClientConfiguration()
+                                .withClientExecutionTimeout(CLIENT_EXECUTION_TIMEOUT));
 
         requestBuilder().execute(new UnresponsiveResponseHandler());
     }
 
     @Test(timeout = TEST_TIMEOUT, expected = ClientExecutionTimeoutException.class)
-    public void clientExecutionTimeoutEnabled_SlowAfterResponseRequestHandler_ThrowsClientExecutionTimeoutException()
-            throws Exception {
-        httpClient = new AmazonHttpClient(
-                new ClientConfiguration().withClientExecutionTimeout(CLIENT_EXECUTION_TIMEOUT));
+    public void
+            clientExecutionTimeoutEnabled_SlowAfterResponseRequestHandler_ThrowsClientExecutionTimeoutException()
+                    throws Exception {
+        httpClient =
+                new AmazonHttpClient(
+                        new ClientConfiguration()
+                                .withClientExecutionTimeout(CLIENT_EXECUTION_TIMEOUT));
 
-        List<RequestHandler2> requestHandlers = RequestHandlerTestUtils.buildRequestHandlerList(
-                new SlowRequestHandler().withAfterResponseWaitInSeconds(SLOW_REQUEST_HANDLER_TIMEOUT));
+        List<RequestHandler2> requestHandlers =
+                RequestHandlerTestUtils.buildRequestHandlerList(
+                        new SlowRequestHandler()
+                                .withAfterResponseWaitInSeconds(SLOW_REQUEST_HANDLER_TIMEOUT));
 
-        requestBuilder().executionContext(withHandlers(requestHandlers)).execute(new DummyResponseHandler());
+        requestBuilder()
+                .executionContext(withHandlers(requestHandlers))
+                .execute(new DummyResponseHandler());
     }
 
     @Test(timeout = TEST_TIMEOUT, expected = ClientExecutionTimeoutException.class)
-    public void clientExecutionTimeoutEnabled_SlowBeforeRequestRequestHandler_ThrowsClientExecutionTimeoutException()
-            throws Exception {
-        httpClient = new AmazonHttpClient(
-                new ClientConfiguration().withClientExecutionTimeout(CLIENT_EXECUTION_TIMEOUT));
+    public void
+            clientExecutionTimeoutEnabled_SlowBeforeRequestRequestHandler_ThrowsClientExecutionTimeoutException()
+                    throws Exception {
+        httpClient =
+                new AmazonHttpClient(
+                        new ClientConfiguration()
+                                .withClientExecutionTimeout(CLIENT_EXECUTION_TIMEOUT));
 
-        List<RequestHandler2> requestHandlers = RequestHandlerTestUtils.buildRequestHandlerList(
-                new SlowRequestHandler().withBeforeRequestWaitInSeconds(SLOW_REQUEST_HANDLER_TIMEOUT));
+        List<RequestHandler2> requestHandlers =
+                RequestHandlerTestUtils.buildRequestHandlerList(
+                        new SlowRequestHandler()
+                                .withBeforeRequestWaitInSeconds(SLOW_REQUEST_HANDLER_TIMEOUT));
 
-        requestBuilder().executionContext(withHandlers(requestHandlers)).execute(new DummyResponseHandler());
+        requestBuilder()
+                .executionContext(withHandlers(requestHandlers))
+                .execute(new DummyResponseHandler());
     }
 
     /**
-     * Tests that a streaming operation has it's request properly cleaned up if the client is interrupted after the
-     * response is received.
+     * Tests that a streaming operation has it's request properly cleaned up if the client is
+     * interrupted after the response is received.
      *
      * @see TT0070103230
      */
     @Test
     public void clientInterruptedDuringResponseHandlers_DoesNotLeakConnection() throws IOException {
         ClientConfiguration config = new ClientConfiguration();
-        ConnectionManagerAwareHttpClient rawHttpClient = new ApacheHttpClientFactory().create(HttpClientSettings.adapt(config));
+        ConnectionManagerAwareHttpClient rawHttpClient =
+                new ApacheHttpClientFactory().create(HttpClientSettings.adapt(config));
 
         httpClient = new AmazonHttpClient(config, rawHttpClient, null);
 
         interruptCurrentThreadAfterDelay(1000);
-        List<RequestHandler2> requestHandlers = RequestHandlerTestUtils
-                .buildRequestHandlerList(new SlowRequestHandler().withAfterResponseWaitInSeconds(10));
+        List<RequestHandler2> requestHandlers =
+                RequestHandlerTestUtils.buildRequestHandlerList(
+                        new SlowRequestHandler().withAfterResponseWaitInSeconds(10));
         try {
-            requestBuilder().executionContext(withHandlers(requestHandlers)).execute(new DummyResponseHandler().leaveConnectionOpen());
+            requestBuilder()
+                    .executionContext(withHandlers(requestHandlers))
+                    .execute(new DummyResponseHandler().leaveConnectionOpen());
             fail("Expected exception");
         } catch (AmazonClientException e) {
             assertThat(e.getCause(), instanceOf(InterruptedException.class));
         }
 
         @SuppressWarnings("deprecation")
-        int leasedConnections = ((ConnPoolControl<?>) ((SdkHttpClient)rawHttpClient).getHttpClientConnectionManager()).getTotalStats().getLeased();
+        int leasedConnections =
+                ((ConnPoolControl<?>)
+                                ((SdkHttpClient) rawHttpClient).getHttpClientConnectionManager())
+                        .getTotalStats()
+                        .getLeased();
         assertEquals(0, leasedConnections);
     }
 
-    private AmazonHttpClient.RequestExecutionBuilder requestBuilder() { return httpClient.requestExecutionBuilder().request(newGetRequest()); }
+    private AmazonHttpClient.RequestExecutionBuilder requestBuilder() {
+        return httpClient.requestExecutionBuilder().request(newGetRequest());
+    }
 
     private ExecutionContext withHandlers(List<RequestHandler2> requestHandlers) {
         return ExecutionContext.builder().withRequestHandler2s(requestHandlers).build();
     }
-
 }

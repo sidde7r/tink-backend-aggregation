@@ -18,17 +18,15 @@ import com.amazonaws.SdkClientException;
 
 /**
  * Listener interface for transfer progress events.
- * <p>
- * This class could be used for both Amazon S3 and Amazon Glacier clients. The
- * legacy Amazon S3 progress listener
- * com.amazonaws.services.s3.model.ProgressListener has been deprecated in favor
+ *
+ * <p>This class could be used for both Amazon S3 and Amazon Glacier clients. The legacy Amazon S3
+ * progress listener com.amazonaws.services.s3.model.ProgressListener has been deprecated in favor
  * of this new class.
- * </p>
  *
  * @see ProgressEvent
  */
 public interface ProgressListener {
-	public static final ProgressListener NOOP = new NoOpProgressListener();
+    public static final ProgressListener NOOP = new NoOpProgressListener();
 
     static class NoOpProgressListener implements ProgressListener, DeliveryMode {
 
@@ -38,36 +36,31 @@ public interface ProgressListener {
         }
 
         @Override
-        public void progressChanged(ProgressEvent progressEvent) {
-        }
+        public void progressChanged(ProgressEvent progressEvent) {}
     }
 
     /**
-     * Called when progress has changed, such as additional bytes transferred,
-     * transfer failed, etc. The execution of the callback of this listener is managed
-     * by {@link SDKProgressPublisher}.  Implementation of this interface
-     * should never block.
-     * <p>
-     * If the implementation follows the best practice and doesn't block, it
-     * should then extends from {@link SyncProgressListener}.
-     * <p>
-     * Note any exception thrown by the listener will get ignored.
-     * Should there be need to capture any such exception, you may consider
-     * wrapping the listener with {@link ExceptionReporter#wrap(ProgressListener)}.
+     * Called when progress has changed, such as additional bytes transferred, transfer failed, etc.
+     * The execution of the callback of this listener is managed by {@link SDKProgressPublisher}.
+     * Implementation of this interface should never block.
      *
-     * @param progressEvent
-     *            The event describing the progress change.
+     * <p>If the implementation follows the best practice and doesn't block, it should then extends
+     * from {@link SyncProgressListener}.
      *
+     * <p>Note any exception thrown by the listener will get ignored. Should there be need to
+     * capture any such exception, you may consider wrapping the listener with {@link
+     * ExceptionReporter#wrap(ProgressListener)}.
+     *
+     * @param progressEvent The event describing the progress change.
      * @see SDKProgressPublisher
      * @see ExceptionReporter
      */
     public void progressChanged(ProgressEvent progressEvent);
 
     /**
-     * A utility class for capturing and reporting the first exception thrown by
-     * a given progress listener. Note once an exception is thrown by the
-     * underlying listener, all subsequent events will no longer be notified to
-     * the listener.
+     * A utility class for capturing and reporting the first exception thrown by a given progress
+     * listener. Note once an exception is thrown by the underlying listener, all subsequent events
+     * will no longer be notified to the listener.
      */
     public static class ExceptionReporter implements ProgressListener, DeliveryMode {
         private final ProgressListener listener;
@@ -75,56 +68,51 @@ public interface ProgressListener {
         private volatile Throwable cause;
 
         public ExceptionReporter(ProgressListener listener) {
-            if (listener == null)
-                throw new IllegalArgumentException();
+            if (listener == null) throw new IllegalArgumentException();
             this.listener = listener;
             if (listener instanceof DeliveryMode) {
                 DeliveryMode cs = (DeliveryMode) listener;
                 syncCallSafe = cs.isSyncCallSafe();
-            } else
-                syncCallSafe = false;
+            } else syncCallSafe = false;
         }
 
         /**
-         * Delivers the progress event to the underlying listener but only if
-         * there has not been an exception previously thrown by the listener.
-         * <p>
-         * {@inheritDoc}
+         * Delivers the progress event to the underlying listener but only if there has not been an
+         * exception previously thrown by the listener.
+         *
+         * <p>{@inheritDoc}
          */
-        @Override public void progressChanged(ProgressEvent progressEvent) {
-            if (cause != null)
-                return;
+        @Override
+        public void progressChanged(ProgressEvent progressEvent) {
+            if (cause != null) return;
             try {
                 this.listener.progressChanged(progressEvent);
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 cause = t;
             }
         }
 
         /**
-         * Throws the underlying exception, if any, as an
-         * {@link SdkClientException}; or do nothing otherwise.
+         * Throws the underlying exception, if any, as an {@link SdkClientException}; or do nothing
+         * otherwise.
          */
         public void throwExceptionIfAny() {
-            if (cause != null)
-                throw new SdkClientException(cause);
+            if (cause != null) throw new SdkClientException(cause);
         }
 
-        /**
-         * Returns the underlying exception, if any; or null otherwise.
-         */
+        /** Returns the underlying exception, if any; or null otherwise. */
         public Throwable getCause() {
             return cause;
         }
 
-        /**
-         * Returns a wrapper for the given listener to capture the first
-         * exception thrown.
-         */
+        /** Returns a wrapper for the given listener to capture the first exception thrown. */
         public static ExceptionReporter wrap(ProgressListener listener) {
             return new ExceptionReporter(listener);
         }
 
-        @Override public boolean isSyncCallSafe() { return syncCallSafe; }
+        @Override
+        public boolean isSyncCallSafe() {
+            return syncCallSafe;
+        }
     }
 }

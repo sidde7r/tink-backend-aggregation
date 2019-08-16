@@ -16,7 +16,6 @@ package com.amazonaws.auth.profile.internal;
 
 import com.amazonaws.annotation.Immutable;
 import com.amazonaws.annotation.SdkInternalApi;
-
 import java.util.Collections;
 import java.util.Map;
 
@@ -28,19 +27,15 @@ import java.util.Map;
 @SdkInternalApi
 public class BasicProfile {
 
-
     private final String profileName;
     private final Map<String, String> properties;
 
-    public BasicProfile(String profileName,
-                        Map<String, String> properties) {
+    public BasicProfile(String profileName, Map<String, String> properties) {
         this.profileName = profileName;
         this.properties = properties;
     }
 
-    /**
-     * @return The name of this profile.
-     */
+    /** @return The name of this profile. */
     public String getProfileName() {
         return profileName;
     }

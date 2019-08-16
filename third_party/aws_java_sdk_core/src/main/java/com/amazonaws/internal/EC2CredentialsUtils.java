@@ -14,25 +14,23 @@
  */
 package com.amazonaws.internal;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.annotation.SdkInternalApi;
+import com.amazonaws.retry.internal.CredentialsEndpointRetryParameters;
+import com.amazonaws.retry.internal.CredentialsEndpointRetryPolicy;
+import com.amazonaws.util.IOUtils;
+import com.amazonaws.util.VersionInfoUtils;
+import com.amazonaws.util.json.Jackson;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.amazonaws.SdkClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.annotation.SdkInternalApi;
-import com.amazonaws.retry.internal.CredentialsEndpointRetryParameters;
-import com.amazonaws.retry.internal.CredentialsEndpointRetryPolicy;
-import com.amazonaws.util.IOUtils;
-import com.amazonaws.util.json.Jackson;
-import com.amazonaws.util.VersionInfoUtils;
-import com.fasterxml.jackson.databind.JsonNode;
 
 @SdkInternalApi
 public final class EC2CredentialsUtils {
@@ -43,7 +41,8 @@ public final class EC2CredentialsUtils {
 
     private final ConnectionUtils connectionUtils;
 
-    private static final String USER_AGENT = String.format("aws-sdk-java/%s", VersionInfoUtils.getVersion());
+    private static final String USER_AGENT =
+            String.format("aws-sdk-java/%s", VersionInfoUtils.getVersion());
 
     private EC2CredentialsUtils() {
         this(ConnectionUtils.getInstance());
@@ -61,48 +60,36 @@ public final class EC2CredentialsUtils {
     }
 
     /**
-     * Connects to the given endpoint to read the resource
-     * and returns the text contents.
+     * Connects to the given endpoint to read the resource and returns the text contents.
      *
-     * If the connection fails, the request will not be retried.
+     * <p>If the connection fails, the request will not be retried.
      *
-     * @param endpoint
-     *            The service endpoint to connect to.
-     *
-     * @return The text payload returned from the Amazon EC2 endpoint
-     *         service for the specified resource path.
-     *
-     * @throws IOException
-     *             If any problems were encountered while connecting to the
-     *             service for the requested resource path.
-     * @throws SdkClientException
-     *             If the requested service is not found.
+     * @param endpoint The service endpoint to connect to.
+     * @return The text payload returned from the Amazon EC2 endpoint service for the specified
+     *     resource path.
+     * @throws IOException If any problems were encountered while connecting to the service for the
+     *     requested resource path.
+     * @throws SdkClientException If the requested service is not found.
      */
     public String readResource(URI endpoint) throws IOException {
         return readResource(endpoint, CredentialsEndpointRetryPolicy.NO_RETRY, null);
     }
 
     /**
-     * Connects to the given endpoint to read the resource
-     * and returns the text contents.
+     * Connects to the given endpoint to read the resource and returns the text contents.
      *
-     * @param endpoint
-     *            The service endpoint to connect to.
-     *
-     * @param retryPolicy
-     *            The custom retry policy that determines whether a
-     *            failed request should be retried or not.
-     *
-     * @return The text payload returned from the Amazon EC2 endpoint
-     *         service for the specified resource path.
-     *
-     * @throws IOException
-     *             If any problems were encountered while connecting to the
-     *             service for the requested resource path.
-     * @throws SdkClientException
-     *             If the requested service is not found.
+     * @param endpoint The service endpoint to connect to.
+     * @param retryPolicy The custom retry policy that determines whether a failed request should be
+     *     retried or not.
+     * @return The text payload returned from the Amazon EC2 endpoint service for the specified
+     *     resource path.
+     * @throws IOException If any problems were encountered while connecting to the service for the
+     *     requested resource path.
+     * @throws SdkClientException If the requested service is not found.
      */
-    public String readResource(URI endpoint, CredentialsEndpointRetryPolicy retryPolicy, Map<String, String> headers) throws IOException {
+    public String readResource(
+            URI endpoint, CredentialsEndpointRetryPolicy retryPolicy, Map<String, String> headers)
+            throws IOException {
         int retriesAttempted = 0;
         InputStream inputStream = null;
 
@@ -119,48 +106,61 @@ public final class EC2CredentialsUtils {
                     return IOUtils.toString(inputStream);
                 } else if (statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
                     // This is to preserve existing behavior of EC2 Instance metadata service.
-                    throw new SdkClientException("The requested metadata is not found at " + connection.getURL());
+                    throw new SdkClientException(
+                            "The requested metadata is not found at " + connection.getURL());
                 } else {
-                    if (!retryPolicy.shouldRetry(retriesAttempted++, CredentialsEndpointRetryParameters.builder().withStatusCode(statusCode).build())) {
+                    if (!retryPolicy.shouldRetry(
+                            retriesAttempted++,
+                            CredentialsEndpointRetryParameters.builder()
+                                    .withStatusCode(statusCode)
+                                    .build())) {
                         inputStream = connection.getErrorStream();
-                        handleErrorResponse(inputStream, statusCode, connection.getResponseMessage());
+                        handleErrorResponse(
+                                inputStream, statusCode, connection.getResponseMessage());
                     }
                 }
             } catch (IOException ioException) {
-                if (!retryPolicy.shouldRetry(retriesAttempted++, CredentialsEndpointRetryParameters.builder().withException(ioException).build())) {
+                if (!retryPolicy.shouldRetry(
+                        retriesAttempted++,
+                        CredentialsEndpointRetryParameters.builder()
+                                .withException(ioException)
+                                .build())) {
                     throw ioException;
                 }
-                LOG.debug("An IOException occured when connecting to service endpoint: " + endpoint  + "\n Retrying to connect again.");
+                LOG.debug(
+                        "An IOException occured when connecting to service endpoint: "
+                                + endpoint
+                                + "\n Retrying to connect again.");
             } finally {
                 IOUtils.closeQuietly(inputStream, LOG);
             }
         }
-
     }
 
-    private Map<String,String> addDefaultHeaders(Map<String,String> headers) {
+    private Map<String, String> addDefaultHeaders(Map<String, String> headers) {
         HashMap<String, String> map = new HashMap<String, String>();
         if (headers != null) {
             map.putAll(headers);
         }
 
-        putIfAbsent(map,"User-Agent", USER_AGENT);
-        putIfAbsent(map,"Accept", "*/*");
-        putIfAbsent(map,"Connection", "keep-alive");
+        putIfAbsent(map, "User-Agent", USER_AGENT);
+        putIfAbsent(map, "Accept", "*/*");
+        putIfAbsent(map, "Connection", "keep-alive");
         return map;
     }
 
-    private <K,V> void putIfAbsent(Map<K,V> map, K key, V value) {
+    private <K, V> void putIfAbsent(Map<K, V> map, K key, V value) {
         if (map.get(key) == null) {
             map.put(key, value);
         }
     }
 
-    private void handleErrorResponse(InputStream errorStream, int statusCode, String responseMessage) throws IOException {
+    private void handleErrorResponse(
+            InputStream errorStream, int statusCode, String responseMessage) throws IOException {
         String errorCode = null;
 
         // Parse the error stream returned from the service.
-        if(errorStream != null) {
+        if (errorStream != null) {
             String errorResponse = IOUtils.toString(errorStream);
 
             try {

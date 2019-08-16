@@ -33,6 +33,10 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.StringContains;
+import org.junit.Assert;
+import org.junit.Test;
 import tink.org.apache.http.Header;
 import tink.org.apache.http.HttpEntity;
 import tink.org.apache.http.HttpHeaders;
@@ -42,10 +46,6 @@ import tink.org.apache.http.client.methods.HttpHead;
 import tink.org.apache.http.client.methods.HttpPatch;
 import tink.org.apache.http.client.methods.HttpPost;
 import tink.org.apache.http.client.methods.HttpRequestBase;
-import org.hamcrest.Matchers;
-import org.hamcrest.core.StringContains;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class ApacheDefaultHttpRequestFactoryTest {
 
@@ -86,14 +86,12 @@ public class ApacheDefaultHttpRequestFactoryTest {
     }
 
     @Test
-    public void query_parameters_moved_to_payload_for_post_request_with_no_payload
-            () throws IOException, URISyntaxException {
+    public void query_parameters_moved_to_payload_for_post_request_with_no_payload()
+            throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.POST);
-        request.withParameter("foo", "bar")
-                .withParameter("alpha", "beta");
+        request.withParameter("foo", "bar").withParameter("alpha", "beta");
         HttpRequestBase requestBase = requestFactory.create(request, settings);
-        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost
-                .class));
+        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost.class));
         HttpPost post = (HttpPost) requestBase;
         HttpEntity entity = post.getEntity();
         byte[] actualContents = drainInputStream(entity.getContent());
@@ -101,7 +99,8 @@ public class ApacheDefaultHttpRequestFactoryTest {
     }
 
     @Test
-    public void query_parameters_in_uri_for_all_non_post_requests() throws IOException, URISyntaxException {
+    public void query_parameters_in_uri_for_all_non_post_requests()
+            throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.GET);
         request.withParameter("foo", "bar");
         HttpRequestBase requestBase = requestFactory.create(request, settings);
@@ -109,123 +108,140 @@ public class ApacheDefaultHttpRequestFactoryTest {
     }
 
     @Test
-    public void query_params_in_uri_for_post_request_with_payload() throws IOException, URISyntaxException {
+    public void query_params_in_uri_for_post_request_with_payload()
+            throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.POST);
         request.withParameter("foo", "bar");
         final String payload = "dummy string stream";
         request.setContent(new StringInputStream(payload));
         HttpRequestBase requestBase = requestFactory.create(request, settings);
-        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost
-                .class));
+        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost.class));
         Assert.assertEquals("foo=bar", requestBase.getURI().getQuery());
-        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost
-                .class));
-        Assert.assertEquals(payload, IOUtils.toString(((HttpPost)requestBase).getEntity().getContent()));
+        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost.class));
+        Assert.assertEquals(
+                payload, IOUtils.toString(((HttpPost) requestBase).getEntity().getContent()));
     }
 
     @Test
-    public void get_request_returns_correct_apache_requests() throws IOException, URISyntaxException {
+    public void get_request_returns_correct_apache_requests()
+            throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.GET);
-        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpGetWithBody.class));
+        Assert.assertThat(
+                requestFactory.create(request, settings),
+                Matchers.instanceOf(HttpGetWithBody.class));
     }
 
     @Test
-    public void patch_request_returns_correct_apache_requests() throws IOException, URISyntaxException {
+    public void patch_request_returns_correct_apache_requests()
+            throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.PATCH);
-        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpPatch
-                .class));
+        Assert.assertThat(
+                requestFactory.create(request, settings), Matchers.instanceOf(HttpPatch.class));
     }
 
     @Test
-    public void delete_request_returns_correct_apache_requests() throws IOException, URISyntaxException {
+    public void delete_request_returns_correct_apache_requests()
+            throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.DELETE);
-        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpDelete
-                .class));
-    }
-    @Test
-    public void head_request_returns_correct_apache_requests() throws IOException, URISyntaxException {
-        final Request<Object> request = newDefaultRequest(HttpMethodName.HEAD);
-        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpHead
-                .class));
+        Assert.assertThat(
+                requestFactory.create(request, settings), Matchers.instanceOf(HttpDelete.class));
     }
 
     @Test
-    public void request_has_default_content_type_set_when_not_explicitly_set() throws IOException,
-            URISyntaxException {
+    public void head_request_returns_correct_apache_requests()
+            throws IOException, URISyntaxException {
+        final Request<Object> request = newDefaultRequest(HttpMethodName.HEAD);
+        Assert.assertThat(
+                requestFactory.create(request, settings), Matchers.instanceOf(HttpHead.class));
+    }
+
+    @Test
+    public void request_has_default_content_type_set_when_not_explicitly_set()
+            throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.POST);
         request.setContent(new StringInputStream("dummy string stream"));
         HttpRequestBase requestBase = requestFactory.create(request, settings);
-        assertContentTypeContains("application/x-www-form-urlencoded",
-                requestBase.getHeaders(CONTENT_TYPE));
+        assertContentTypeContains(
+                "application/x-www-form-urlencoded", requestBase.getHeaders(CONTENT_TYPE));
     }
 
     @Test
-    public void apache_request_has_content_type_set_when_not_explicitly_set() throws IOException,
-            URISyntaxException {
+    public void apache_request_has_content_type_set_when_not_explicitly_set()
+            throws IOException, URISyntaxException {
 
         final Request<Object> request = newDefaultRequest(HttpMethodName.POST);
         final String testContentype = "testContentType";
         request.addHeader(HttpHeaders.CONTENT_TYPE, testContentype);
         request.setContent(new StringInputStream("dummy string stream"));
         HttpRequestBase requestBase = requestFactory.create(request, settings);
-        assertContentTypeContains(testContentype,
-                requestBase.getHeaders(CONTENT_TYPE));
-
+        assertContentTypeContains(testContentype, requestBase.getHeaders(CONTENT_TYPE));
     }
 
     @Test
     public void request_has_no_proxy_config_when_proxy_disabled() throws Exception {
-        HttpRequestBase requestBase = requestFactory.create(newDefaultRequest(HttpMethodName.POST), settings);
-        Assert.assertThat(requestBase.getConfig().getProxyPreferredAuthSchemes(), Matchers.nullValue());
+        HttpRequestBase requestBase =
+                requestFactory.create(newDefaultRequest(HttpMethodName.POST), settings);
+        Assert.assertThat(
+                requestBase.getConfig().getProxyPreferredAuthSchemes(), Matchers.nullValue());
     }
 
     @Test
     public void request_has_no_proxy_config_when_proxy_auth_disabled() throws Exception {
-        List<ProxyAuthenticationMethod> authMethods = Collections.singletonList(ProxyAuthenticationMethod.BASIC);
-        ClientConfiguration configuration = new ClientConfiguration().withProxyHost("localhost")
-                                                                     .withProxyPort(80)
-                                                                     .withProxyAuthenticationMethods(authMethods);
+        List<ProxyAuthenticationMethod> authMethods =
+                Collections.singletonList(ProxyAuthenticationMethod.BASIC);
+        ClientConfiguration configuration =
+                new ClientConfiguration()
+                        .withProxyHost("localhost")
+                        .withProxyPort(80)
+                        .withProxyAuthenticationMethods(authMethods);
         HttpClientSettings settings = HttpClientSettings.adapt(configuration);
-        HttpRequestBase requestBase = requestFactory.create(newDefaultRequest(HttpMethodName.POST), settings);
-        Assert.assertThat(requestBase.getConfig().getProxyPreferredAuthSchemes(), Matchers.nullValue());
+        HttpRequestBase requestBase =
+                requestFactory.create(newDefaultRequest(HttpMethodName.POST), settings);
+        Assert.assertThat(
+                requestBase.getConfig().getProxyPreferredAuthSchemes(), Matchers.nullValue());
     }
 
     @Test
     public void request_has_proxy_config_when_proxy_auth_enabled() throws Exception {
-        List<ProxyAuthenticationMethod> authMethods = Arrays.asList(ProxyAuthenticationMethod.BASIC,
-                                                                    ProxyAuthenticationMethod.DIGEST,
-                                                                    ProxyAuthenticationMethod.KERBEROS,
-                                                                    ProxyAuthenticationMethod.NTLM,
-                                                                    ProxyAuthenticationMethod.SPNEGO);
-        List<String> expectedAuthMethods = Arrays.asList(AuthSchemes.BASIC,
-                                                         AuthSchemes.DIGEST,
-                                                         AuthSchemes.KERBEROS,
-                                                         AuthSchemes.NTLM,
-                                                         AuthSchemes.SPNEGO);
+        List<ProxyAuthenticationMethod> authMethods =
+                Arrays.asList(
+                        ProxyAuthenticationMethod.BASIC,
+                        ProxyAuthenticationMethod.DIGEST,
+                        ProxyAuthenticationMethod.KERBEROS,
+                        ProxyAuthenticationMethod.NTLM,
+                        ProxyAuthenticationMethod.SPNEGO);
+        List<String> expectedAuthMethods =
+                Arrays.asList(
+                        AuthSchemes.BASIC,
+                        AuthSchemes.DIGEST,
+                        AuthSchemes.KERBEROS,
+                        AuthSchemes.NTLM,
+                        AuthSchemes.SPNEGO);
 
-        ClientConfiguration configuration = new ClientConfiguration().withProxyHost("localhost")
-                                                                     .withProxyPort(80)
-                                                                     .withProxyUsername("user")
-                                                                     .withProxyPassword("password")
-                                                                     .withProxyAuthenticationMethods(authMethods);
+        ClientConfiguration configuration =
+                new ClientConfiguration()
+                        .withProxyHost("localhost")
+                        .withProxyPort(80)
+                        .withProxyUsername("user")
+                        .withProxyPassword("password")
+                        .withProxyAuthenticationMethods(authMethods);
         HttpClientSettings settings = HttpClientSettings.adapt(configuration);
-        HttpRequestBase requestBase = requestFactory.create(newDefaultRequest(HttpMethodName.POST), settings);
-        Assert.assertEquals(expectedAuthMethods, requestBase.getConfig().getProxyPreferredAuthSchemes());
+        HttpRequestBase requestBase =
+                requestFactory.create(newDefaultRequest(HttpMethodName.POST), settings);
+        Assert.assertEquals(
+                expectedAuthMethods, requestBase.getConfig().getProxyPreferredAuthSchemes());
     }
 
-    private void assertContentTypeContains(String expected, Header[]
-            contentTypes) {
+    private void assertContentTypeContains(String expected, Header[] contentTypes) {
         Assert.assertTrue(contentTypes.length == 1);
         Header contentTypeHeader = contentTypes[0];
-        Assert.assertThat(contentTypeHeader.getValue(), StringContains
-                .containsString(expected));
+        Assert.assertThat(contentTypeHeader.getValue(), StringContains.containsString(expected));
     }
 
-    private DefaultRequest<Object> newDefaultRequest(HttpMethodName httpMethod) throws
-            URISyntaxException {
+    private DefaultRequest<Object> newDefaultRequest(HttpMethodName httpMethod)
+            throws URISyntaxException {
 
-        final DefaultRequest<Object> request = new DefaultRequest<Object>
-                (null, SERVICE_NAME);
+        final DefaultRequest<Object> request = new DefaultRequest<Object>(null, SERVICE_NAME);
         request.setEndpoint(new URI(ENDPOINT));
         request.setHttpMethod(httpMethod);
         return request;

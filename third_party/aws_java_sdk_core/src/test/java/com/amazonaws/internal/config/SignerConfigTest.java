@@ -16,9 +16,8 @@ package com.amazonaws.internal.config;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.amazonaws.util.json.Jackson;
+import org.junit.Test;
 
 public class SignerConfigTest {
 
@@ -26,7 +25,8 @@ public class SignerConfigTest {
     public void test() throws Exception {
         p(Jackson.toJsonPrettyString(new SignerConfig("AWS3SignerType")));
         String json = Jackson.toJsonPrettyString(new SignerConfig("AWS3SignerType"));
-        SignerConfig copy = Jackson.getObjectMapper().readValue(json, SignerConfigJsonHelper.class).build();
+        SignerConfig copy =
+                Jackson.getObjectMapper().readValue(json, SignerConfigJsonHelper.class).build();
         String json2 = Jackson.toJsonPrettyString(copy);
         assertEquals(json, json2);
     }

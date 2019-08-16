@@ -14,25 +14,22 @@
  */
 package com.amazonaws.auth;
 
+import com.amazonaws.SignableRequest;
 import java.util.Date;
 
-import com.amazonaws.SignableRequest;
-
 /**
- * A request signer that has special-case logic to presign requests, generating
- * a URL which embeds the signature suitable for hyperlinking.
+ * A request signer that has special-case logic to presign requests, generating a URL which embeds
+ * the signature suitable for hyperlinking.
  */
 public interface Presigner {
     /**
-     * Signs the request by adding the signature to the URL rather than as a
-     * header. This method is expected to modify the passed-in request to
-     * add the signature.
+     * Signs the request by adding the signature to the URL rather than as a header. This method is
+     * expected to modify the passed-in request to add the signature.
      *
-     * @param request      The request to sign.
-     * @param credentials  The credentials to sign it with.
-     * @param expiration   The time when this presigned URL will expire.
+     * @param request The request to sign.
+     * @param credentials The credentials to sign it with.
+     * @param expiration The time when this presigned URL will expire.
      */
-    public void presignRequest(SignableRequest<?> request,
-                               AWSCredentials credentials,
-                               Date expiration);
+    public void presignRequest(
+            SignableRequest<?> request, AWSCredentials credentials, Date expiration);
 }

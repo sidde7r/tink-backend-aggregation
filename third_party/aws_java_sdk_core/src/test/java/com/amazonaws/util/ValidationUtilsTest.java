@@ -14,14 +14,13 @@
  */
 package com.amazonaws.util;
 
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class ValidationUtilsTest {
 
@@ -102,7 +101,7 @@ public class ValidationUtilsTest {
 
     @Test
     public void assertNotEmpty_NonNullArray_ReturnsSameObject() {
-        String[] array = new String[]{"foo", "bar"};
+        String[] array = new String[] {"foo", "bar"};
         assertArrayEquals(array, ValidationUtils.assertNotEmpty(array, "array"));
     }
 
@@ -115,5 +114,4 @@ public class ValidationUtilsTest {
     public void assertNotEmpty_EmptyArray_ThrowsException() {
         ValidationUtils.assertNotEmpty(new String[0], "array");
     }
-
 }

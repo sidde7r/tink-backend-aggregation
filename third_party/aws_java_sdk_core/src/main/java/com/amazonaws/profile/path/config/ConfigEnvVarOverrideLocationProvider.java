@@ -17,12 +17,11 @@ package com.amazonaws.profile.path.config;
 import com.amazonaws.SDKGlobalConfiguration;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
-
 import java.io.File;
 
 /**
- * If the {@value SDKGlobalConfiguration#AWS_CONFIG_FILE_ENV_VAR} environment variable is set then we source
- * the config file from the location specified.
+ * If the {@value SDKGlobalConfiguration#AWS_CONFIG_FILE_ENV_VAR} environment variable is set then
+ * we source the config file from the location specified.
  */
 @SdkInternalApi
 public class ConfigEnvVarOverrideLocationProvider implements AwsProfileFileLocationProvider {

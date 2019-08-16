@@ -14,15 +14,14 @@
  */
 package com.amazonaws.retry.internal;
 
-import java.net.URI;
-
 import com.amazonaws.annotation.Immutable;
 import com.amazonaws.auth.Signer;
+import java.net.URI;
 
 /**
  * Signer and endpoint parameters that are to be used for the next retry.
- * <p>
- * For internal use only.
+ *
+ * <p>For internal use only.
  */
 @Immutable
 public class AuthRetryParameters {
@@ -31,10 +30,8 @@ public class AuthRetryParameters {
     private final URI endpointForRetry;
 
     public AuthRetryParameters(Signer signer, URI endpoint) {
-        if (signer == null)
-            throw new NullPointerException("signer");
-        if (endpoint == null)
-            throw new NullPointerException("endpoint");
+        if (signer == null) throw new NullPointerException("signer");
+        if (endpoint == null) throw new NullPointerException("endpoint");
 
         this.signerForRetry = signer;
         this.endpointForRetry = endpoint;
@@ -47,5 +44,4 @@ public class AuthRetryParameters {
     public URI getEndpointForRetry() {
         return endpointForRetry;
     }
-
 }

@@ -14,19 +14,17 @@
  */
 package com.amazonaws.retry.v2;
 
-import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.Collections;
+import org.junit.Test;
+
 public class RetryOnStatusCodeConditionTest {
 
-    private final RetryCondition condition = new RetryOnStatusCodeCondition(Arrays.asList(
-            404, 500, 513
-    ));
+    private final RetryCondition condition =
+            new RetryOnStatusCodeCondition(Arrays.asList(404, 500, 513));
 
     @Test
     public void retryableStatusCode_ReturnsTrue() {
@@ -45,7 +43,8 @@ public class RetryOnStatusCodeConditionTest {
 
     @Test
     public void noStatusCodesInList_ReturnsFalse() {
-        final RetryCondition noStatusCodes = new RetryOnStatusCodeCondition(Collections.<Integer>emptyList());
+        final RetryCondition noStatusCodes =
+                new RetryOnStatusCodeCondition(Collections.<Integer>emptyList());
         assertFalse(noStatusCodes.shouldRetry(RetryPolicyContexts.withStatusCode(404)));
     }
 
@@ -53,5 +52,4 @@ public class RetryOnStatusCodeConditionTest {
     public void nullListOfStatusCodes_ThrowsException() {
         new RetryOnStatusCodeCondition(null);
     }
-
 }

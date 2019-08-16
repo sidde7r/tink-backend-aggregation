@@ -23,7 +23,7 @@ import com.amazonaws.http.HttpResponse;
 import com.amazonaws.http.HttpResponseHandler;
 
 public class NullErrorResponseHandler implements HttpResponseHandler<AmazonServiceException> {
-    
+
     @Override
     public AmazonServiceException handle(HttpResponse response) throws Exception {
         return new AmazonServiceException(null);
@@ -33,5 +33,4 @@ public class NullErrorResponseHandler implements HttpResponseHandler<AmazonServi
     public boolean needsConnectionLeftOpen() {
         return false;
     }
-    
 }

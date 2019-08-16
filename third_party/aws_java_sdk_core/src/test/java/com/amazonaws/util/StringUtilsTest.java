@@ -24,24 +24,17 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.nio.ByteBuffer;
-import java.util.Locale;
 import java.util.Random;
-
 import org.hamcrest.Matchers;
-import org.hamcrest.core.IsEqual;
-import org.hamcrest.text.IsEmptyString;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Unit tests for the StringUtils class.
- */
+/** Unit tests for the StringUtils class. */
 public class StringUtilsTest {
 
     /**
-     * Tests that {@link StringUtils#fromByteBuffer(ByteBuffer)} correctly
-     * base64 encodes the contents in a ByteBuffer and returns the correct
-     * result.
+     * Tests that {@link StringUtils#fromByteBuffer(ByteBuffer)} correctly base64 encodes the
+     * contents in a ByteBuffer and returns the correct result.
      */
     @Test
     public void testFromByteBuffer() {
@@ -54,9 +47,7 @@ public class StringUtilsTest {
         assertEquals(expectedEncodedData, encodedData);
     }
 
-    /**
-     * Tests that we can correctly convert Bytes to strings.
-     */
+    /** Tests that we can correctly convert Bytes to strings. */
     @Test
     public void testFromByte() {
         assertEquals("123", StringUtils.fromByte(new Byte("123")));
@@ -68,9 +59,7 @@ public class StringUtilsTest {
         assertEquals(UTF8.displayName(), "UTF-8");
     }
 
-    /**
-     * @see https://github.com/aws/aws-sdk-java/pull/517
-     */
+    /** @see https://github.com/aws/aws-sdk-java/pull/517 */
     @Test(timeout = 10 * 1000)
     public void replace_ReplacementStringContainsMatchString_DoesNotCauseInfiniteLoop() {
         assertEquals("aabc", StringUtils.replace("abc", "a", "aa"));
@@ -129,14 +118,14 @@ public class StringUtilsTest {
         assertTrue(StringUtils.compare(" ", "") > 0);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCompare_String1Null() {
         String str1 = null;
         String str2 = "test";
         int result = StringUtils.compare(str1, str2);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCompare_String2Null() {
         String str1 = "test";
         String str2 = null;
@@ -145,21 +134,21 @@ public class StringUtilsTest {
 
     @Test
     public void testAppendAndCompact() {
-        String[] pieces = { " ", "\t", "\n", "\u000b", "\r", "\f", "word", "foo", "bar", "baq"};
+        String[] pieces = {" ", "\t", "\n", "\u000b", "\r", "\f", "word", "foo", "bar", "baq"};
         int ITERATIONS = 10000;
         Random rng = new Random();
 
-        for(int i=0; i<ITERATIONS; i++) {
+        for (int i = 0; i < ITERATIONS; i++) {
             int parts = rng.nextInt(10);
             String s = "";
-            for(int j=0; j<parts; j++ ) {
-               s = s + pieces[rng.nextInt(pieces.length)];
+            for (int j = 0; j < parts; j++) {
+                s = s + pieces[rng.nextInt(pieces.length)];
             }
 
             StringBuilder sb = new StringBuilder();
             StringUtils.appendCompactedString(sb, s);
-            String compacted = s.replaceAll("\\s+",  " ");
-            assertEquals('['+compacted+']', sb.toString(), compacted);
+            String compacted = s.replaceAll("\\s+", " ");
+            assertEquals('[' + compacted + ']', sb.toString(), compacted);
         }
     }
 

@@ -31,7 +31,6 @@ public class JsonErrorShapeMetadata {
 
     private Class<? extends RuntimeException> modeledClass;
 
-
     public String getErrorCode() {
         return errorCode;
     }

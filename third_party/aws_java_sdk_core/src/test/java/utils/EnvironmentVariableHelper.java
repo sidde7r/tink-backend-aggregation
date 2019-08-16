@@ -19,8 +19,8 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
- * A utility that can temporarily forcibly set environment variables and
- * then allows resetting them to the original values.
+ * A utility that can temporarily forcibly set environment variables and then allows resetting them
+ * to the original values.
  */
 public class EnvironmentVariableHelper {
 

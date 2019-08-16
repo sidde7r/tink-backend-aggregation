@@ -14,18 +14,15 @@
  */
 package com.amazonaws.jmx;
 
+import com.amazonaws.jmx.spi.JmxInfoProvider;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.List;
-
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-
 import org.apache.commons.logging.LogFactory;
-
-import com.amazonaws.jmx.spi.JmxInfoProvider;
 
 public class JmxInfoProviderSupport implements JmxInfoProvider {
     @Override
@@ -33,25 +30,26 @@ public class JmxInfoProviderSupport implements JmxInfoProvider {
         MBeanServer mbsc = MBeans.getMBeanServer();
         AttributeList attributes;
         try {
-            attributes = mbsc.getAttributes(
-                new ObjectName("java.lang:type=OperatingSystem"), 
-                new String[]{"OpenFileDescriptorCount", "MaxFileDescriptorCount"});
+            attributes =
+                    mbsc.getAttributes(
+                            new ObjectName("java.lang:type=OperatingSystem"),
+                            new String[] {"OpenFileDescriptorCount", "MaxFileDescriptorCount"});
             List<Attribute> attrList = attributes.asList();
-            long openFdCount = (Long)attrList.get(0).getValue();
-            long maxFdCount = (Long)attrList.get(1).getValue();
-            long[] fdCounts = { openFdCount, maxFdCount};
+            long openFdCount = (Long) attrList.get(0).getValue();
+            long maxFdCount = (Long) attrList.get(1).getValue();
+            long[] fdCounts = {openFdCount, maxFdCount};
             return fdCounts;
         } catch (Exception e) {
-            LogFactory.getLog(SdkMBeanRegistrySupport.class).debug(
-                    "Failed to retrieve file descriptor info", e);
+            LogFactory.getLog(SdkMBeanRegistrySupport.class)
+                    .debug("Failed to retrieve file descriptor info", e);
         }
         return null;
     }
 
     @Override
     public int getThreadCount() {
-      ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-      return threadMXBean.getThreadCount();
+        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+        return threadMXBean.getThreadCount();
     }
 
     @Override

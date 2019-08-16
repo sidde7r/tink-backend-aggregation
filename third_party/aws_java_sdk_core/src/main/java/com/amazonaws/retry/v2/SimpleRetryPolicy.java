@@ -17,7 +17,8 @@ package com.amazonaws.retry.v2;
 import static com.amazonaws.util.ValidationUtils.assertNotNull;
 
 /**
- * Implementation of {@link RetryPolicy} that combines an individual {@link RetryCondition} and {@link BackoffStrategy}.
+ * Implementation of {@link RetryPolicy} that combines an individual {@link RetryCondition} and
+ * {@link BackoffStrategy}.
  */
 public class SimpleRetryPolicy implements RetryPolicy {
 

@@ -14,54 +14,48 @@
  */
 package com.amazonaws.http.conn;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import tink.org.apache.http.conn.ConnectionRequest;
 import tink.org.apache.http.conn.HttpClientConnectionManager;
 import tink.org.apache.http.pool.ConnPoolControl;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-
 public class ClientConnectionManagerFactory {
     private static final Log log = LogFactory.getLog(ClientConnectionManagerFactory.class);
 
     /**
-     * Returns a wrapped instance of {@link HttpClientConnectionManager}
-     * to capture the necessary performance metrics.
+     * Returns a wrapped instance of {@link HttpClientConnectionManager} to capture the necessary
+     * performance metrics.
      *
      * @param orig the target instance to be wrapped
      */
-    public static HttpClientConnectionManager wrap
-    (HttpClientConnectionManager orig) {
-        if (orig instanceof Wrapped)
-            throw new IllegalArgumentException();
+    public static HttpClientConnectionManager wrap(HttpClientConnectionManager orig) {
+        if (orig instanceof Wrapped) throw new IllegalArgumentException();
         final Class<?>[] interfaces;
         if (orig instanceof ConnPoolControl) {
-            interfaces = new Class<?>[]{
-                    HttpClientConnectionManager.class,
-                    ConnPoolControl.class,
-                    Wrapped.class
-            };
+            interfaces =
+                    new Class<?>[] {
+                        HttpClientConnectionManager.class, ConnPoolControl.class, Wrapped.class
+                    };
         } else {
-            interfaces = new Class<?>[]{
-                    HttpClientConnectionManager.class,
-                    Wrapped.class
-            };
+            interfaces = new Class<?>[] {HttpClientConnectionManager.class, Wrapped.class};
         }
-        return (HttpClientConnectionManager) Proxy.newProxyInstance(
-                // https://github.com/aws/aws-sdk-java/pull/48#issuecomment-29454423
-                ClientConnectionManagerFactory.class.getClassLoader(),
-                interfaces,
-                new Handler(orig));
+        return (HttpClientConnectionManager)
+                Proxy.newProxyInstance(
+                        // https://github.com/aws/aws-sdk-java/pull/48#issuecomment-29454423
+                        ClientConnectionManagerFactory.class.getClassLoader(),
+                        interfaces,
+                        new Handler(orig));
     }
 
     /**
-     * The handler behind the dynamic proxy for {@link HttpClientConnectionManager}
-     * so that the any returned instance of {@link ConnectionRequest} can
-     * further wrapped for capturing performance metrics.
+     * The handler behind the dynamic proxy for {@link HttpClientConnectionManager} so that the any
+     * returned instance of {@link ConnectionRequest} can further wrapped for capturing performance
+     * metrics.
      */
     private static class Handler implements InvocationHandler {
         private final HttpClientConnectionManager orig;
@@ -76,8 +70,7 @@ public class ClientConnectionManagerFactory {
                 Object ret = method.invoke(orig, args);
                 return ret instanceof ConnectionRequest
                         ? ClientConnectionRequestFactory.wrap((ConnectionRequest) ret)
-                        : ret
-                        ;
+                        : ret;
             } catch (InvocationTargetException e) {
                 log.debug("", e);
                 throw e.getCause();

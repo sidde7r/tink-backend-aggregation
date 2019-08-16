@@ -15,6 +15,9 @@
 package com.amazonaws.http.apache;
 
 import com.amazonaws.Protocol;
+import com.amazonaws.annotation.SdkInternalApi;
+import com.amazonaws.http.apache.client.impl.ApacheHttpClientFactory;
+import com.amazonaws.util.StringUtils;
 import tink.org.apache.http.HttpException;
 import tink.org.apache.http.HttpHost;
 import tink.org.apache.http.HttpRequest;
@@ -22,14 +25,10 @@ import tink.org.apache.http.impl.conn.DefaultRoutePlanner;
 import tink.org.apache.http.impl.conn.DefaultSchemePortResolver;
 import tink.org.apache.http.protocol.HttpContext;
 
-import com.amazonaws.annotation.SdkInternalApi;
-import com.amazonaws.http.apache.client.impl.ApacheHttpClientFactory;
-import com.amazonaws.util.StringUtils;
-
 /**
- * SdkProxyRoutePlanner delegates a Proxy Route Planner from the settings instead of the
- * system properties. It will use the proxy created from proxyHost, proxyPort, and proxyProtocol and
- * filter the hosts who matches nonProxyHosts pattern.
+ * SdkProxyRoutePlanner delegates a Proxy Route Planner from the settings instead of the system
+ * properties. It will use the proxy created from proxyHost, proxyPort, and proxyProtocol and filter
+ * the hosts who matches nonProxyHosts pattern.
  *
  * @see ApacheHttpClientFactory#create(com.amazonaws.http.settings.HttpClientSettings)
  */
@@ -38,7 +37,8 @@ public class SdkProxyRoutePlanner extends DefaultRoutePlanner {
     private HttpHost proxy;
     private String[] hostPatterns;
 
-    public SdkProxyRoutePlanner(String proxyHost, int proxyPort, Protocol proxyProtocol, String nonProxyHosts) {
+    public SdkProxyRoutePlanner(
+            String proxyHost, int proxyPort, Protocol proxyProtocol, String nonProxyHosts) {
         super(DefaultSchemePortResolver.INSTANCE);
         proxy = new HttpHost(proxyHost, proxyPort, proxyProtocol.toString());
         parseNonProxyHosts(nonProxyHosts);
@@ -67,9 +67,8 @@ public class SdkProxyRoutePlanner extends DefaultRoutePlanner {
 
     @Override
     protected HttpHost determineProxy(
-        final HttpHost target,
-        final HttpRequest request,
-        final HttpContext context) throws HttpException {
+            final HttpHost target, final HttpRequest request, final HttpContext context)
+            throws HttpException {
 
         return doesTargetMatchNonProxyHosts(target) ? null : proxy;
     }

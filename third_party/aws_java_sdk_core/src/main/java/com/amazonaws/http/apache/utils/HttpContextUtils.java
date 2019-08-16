@@ -21,8 +21,8 @@ import tink.org.apache.http.protocol.HttpContext;
 @SdkInternalApi
 public final class HttpContextUtils {
     public static final String DISABLE_SOCKET_PROXY_PROPERTY = "com.amazonaws.disableSocketProxy";
-    private HttpContextUtils() {
-    }
+
+    private HttpContextUtils() {}
 
     public static boolean disableSocketProxy(HttpContext ctx) {
         Object v = ctx.getAttribute(DISABLE_SOCKET_PROXY_PROPERTY);

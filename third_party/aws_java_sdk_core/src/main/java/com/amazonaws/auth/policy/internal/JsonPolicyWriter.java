@@ -14,6 +14,17 @@
  */
 package com.amazonaws.auth.policy.internal;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.policy.Action;
+import com.amazonaws.auth.policy.Condition;
+import com.amazonaws.auth.policy.Policy;
+import com.amazonaws.auth.policy.Principal;
+import com.amazonaws.auth.policy.Resource;
+import com.amazonaws.auth.policy.Statement;
+import com.amazonaws.util.PolicyUtils;
+import com.amazonaws.util.json.Jackson;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonGenerator;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -22,89 +33,64 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.amazonaws.util.PolicyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.policy.Action;
-import com.amazonaws.auth.policy.Condition;
-import com.amazonaws.auth.policy.Policy;
-import com.amazonaws.auth.policy.Principal;
-import com.amazonaws.auth.policy.Resource;
-import com.amazonaws.auth.policy.Statement;
-import com.amazonaws.util.json.Jackson;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonGenerator;
-
-/**
- * Serializes an AWS policy object to a JSON string, suitable for sending to an
- * AWS service.
- */
+/** Serializes an AWS policy object to a JSON string, suitable for sending to an AWS service. */
 public class JsonPolicyWriter {
 
-    /** The JSON Generator to generator a JSON string.*/
+    /** The JSON Generator to generator a JSON string. */
     private JsonGenerator generator = null;
 
-    /** The output writer to which the JSON String is written.*/
+    /** The output writer to which the JSON String is written. */
     private Writer writer;
 
-    /** Logger used to log exceptions that occurs while writing the Json policy.*/
+    /** Logger used to log exceptions that occurs while writing the Json policy. */
     private static final Log log = LogFactory.getLog("com.amazonaws.auth.policy");
 
-    /**
-     * Constructs a new instance of JSONPolicyWriter.
-     */
+    /** Constructs a new instance of JSONPolicyWriter. */
     public JsonPolicyWriter() {
         writer = new StringWriter();
         try {
             generator = Jackson.jsonGeneratorOf(writer);
         } catch (IOException ioe) {
-            throw new SdkClientException(
-                    "Unable to instantiate JsonGenerator.", ioe);
+            throw new SdkClientException("Unable to instantiate JsonGenerator.", ioe);
         }
-
     }
 
     /**
-     * Converts the specified AWS policy object to a JSON string, suitable for
-     * passing to an AWS service.
+     * Converts the specified AWS policy object to a JSON string, suitable for passing to an AWS
+     * service.
      *
-     * @param policy
-     *            The AWS policy object to convert to a JSON string.
-     *
+     * @param policy The AWS policy object to convert to a JSON string.
      * @return The JSON string representation of the specified policy object.
-     *
-     * @throws IllegalArgumentException
-     *             If the specified policy is null or invalid and cannot be
-     *             serialized to a JSON string.
+     * @throws IllegalArgumentException If the specified policy is null or invalid and cannot be
+     *     serialized to a JSON string.
      */
     public String writePolicyToString(Policy policy) {
 
-        if(!isNotNull(policy))
-            throw new IllegalArgumentException("Policy cannot be null");
+        if (!isNotNull(policy)) throw new IllegalArgumentException("Policy cannot be null");
 
         try {
             return jsonStringOf(policy);
         } catch (Exception e) {
-            String message = "Unable to serialize policy to JSON string: "
-                    + e.getMessage();
+            String message = "Unable to serialize policy to JSON string: " + e.getMessage();
             throw new IllegalArgumentException(message, e);
         } finally {
-            try { writer.close(); } catch (Exception e) { }
+            try {
+                writer.close();
+            } catch (Exception e) {
+            }
         }
     }
 
     /**
      * Converts the given <code>Policy</code> into a JSON String.
      *
-     * @param policy
-     *            the policy to be converted.
+     * @param policy the policy to be converted.
      * @return a JSON String of the specified policy object.
      */
-    private String jsonStringOf(Policy policy) throws JsonGenerationException,
-            IOException {
+    private String jsonStringOf(Policy policy) throws JsonGenerationException, IOException {
         generator.writeStartObject();
 
         writeJsonKeyValue(JsonDocumentFields.VERSION, policy.getVersion());
@@ -120,24 +106,20 @@ public class JsonPolicyWriter {
             if (isNotNull(statement.getId())) {
                 writeJsonKeyValue(JsonDocumentFields.STATEMENT_ID, statement.getId());
             }
-            writeJsonKeyValue(JsonDocumentFields.STATEMENT_EFFECT, statement
-                    .getEffect().toString());
+            writeJsonKeyValue(
+                    JsonDocumentFields.STATEMENT_EFFECT, statement.getEffect().toString());
 
             List<Principal> principals = statement.getPrincipals();
-            if (isNotNull(principals) && !principals.isEmpty())
-                writePrincipals(principals);
+            if (isNotNull(principals) && !principals.isEmpty()) writePrincipals(principals);
 
             List<Action> actions = statement.getActions();
-            if (isNotNull(actions) && !actions.isEmpty())
-                writeActions(actions);
+            if (isNotNull(actions) && !actions.isEmpty()) writeActions(actions);
 
             List<Resource> resources = statement.getResources();
-            if (isNotNull(resources) && !resources.isEmpty())
-                writeResources(resources);
+            if (isNotNull(resources) && !resources.isEmpty()) writeResources(resources);
 
             List<Condition> conditions = statement.getConditions();
-            if (isNotNull(conditions) && !conditions.isEmpty())
-                writeConditions(conditions);
+            if (isNotNull(conditions) && !conditions.isEmpty()) writeConditions(conditions);
 
             generator.writeEndObject();
         }
@@ -149,14 +131,12 @@ public class JsonPolicyWriter {
         generator.flush();
 
         return writer.toString();
-
     }
 
     /**
      * Writes the list of conditions to the JSONGenerator.
      *
-     * @param conditions
-     *            the conditions to be written.
+     * @param conditions the conditions to be written.
      */
     private void writeConditions(List<Condition> conditions)
             throws JsonGenerationException, IOException {
@@ -165,8 +145,7 @@ public class JsonPolicyWriter {
         writeJsonObjectStart(JsonDocumentFields.CONDITION);
 
         ConditionsByKey conditionsByKey;
-        for (Map.Entry<String, ConditionsByKey> entry : conditionsByType
-                .entrySet()) {
+        for (Map.Entry<String, ConditionsByKey> entry : conditionsByType.entrySet()) {
             conditionsByKey = conditionsByType.get(entry.getKey());
 
             writeJsonObjectStart(entry.getKey());
@@ -181,8 +160,7 @@ public class JsonPolicyWriter {
     /**
      * Writes the list of <code>Resource</code>s to the JSONGenerator.
      *
-     * @param resources
-     *            the list of resources to be written.
+     * @param resources the list of resources to be written.
      */
     private void writeResources(List<Resource> resources)
             throws JsonGenerationException, IOException {
@@ -194,7 +172,8 @@ public class JsonPolicyWriter {
             resourceStrings.add(resource.getId());
         }
 
-        // all resources are validated to be of the same type, so it is safe to take the type of the first one
+        // all resources are validated to be of the same type, so it is safe to take the type of the
+        // first one
         if (resources.get(0).isNotType()) {
             writeJsonArray(JsonDocumentFields.NOT_RESOURCE, resourceStrings);
         } else {
@@ -205,11 +184,9 @@ public class JsonPolicyWriter {
     /**
      * Writes the list of <code>Action</code>s to the JSONGenerator.
      *
-     * @param actions
-     *            the list of the actions to be written.
+     * @param actions the list of the actions to be written.
      */
-    private void writeActions(List<Action> actions)
-            throws JsonGenerationException, IOException {
+    private void writeActions(List<Action> actions) throws JsonGenerationException, IOException {
         List<String> actionStrings = new ArrayList<String>();
 
         for (Action action : actions) {
@@ -221,8 +198,7 @@ public class JsonPolicyWriter {
     /**
      * Writes the list of <code>Principal</code>s to the JSONGenerator.
      *
-     * @param principals
-     *            the list of principals to be written.
+     * @param principals the list of principals to be written.
      */
     private void writePrincipals(List<Principal> principals)
             throws JsonGenerationException, IOException {
@@ -242,7 +218,6 @@ public class JsonPolicyWriter {
                 } else {
                     writeJsonArray(entry.getKey(), principalValues);
                 }
-
             }
             writeJsonObjectEnd();
         }
@@ -251,12 +226,10 @@ public class JsonPolicyWriter {
     /**
      * Groups the list of <code>Principal</code>s by the Scheme.
      *
-     * @param principals
-     *            the list of <code>Principal</code>s
+     * @param principals the list of <code>Principal</code>s
      * @return a map grouped by scheme of the principal.
      */
-    private Map<String, List<String>> groupPrincipalByScheme(
-            List<Principal> principals) {
+    private Map<String, List<String>> groupPrincipalByScheme(List<Principal> principals) {
         Map<String, List<String>> principalsByScheme = new LinkedHashMap<String, List<String>>();
 
         String provider;
@@ -273,57 +246,51 @@ public class JsonPolicyWriter {
         return principalsByScheme;
     }
 
-    /**
-     * Inner class to hold condition values for each key under a condition type.
-     */
+    /** Inner class to hold condition values for each key under a condition type. */
     static class ConditionsByKey {
-        private Map<String,List<String>> conditionsByKey;
+        private Map<String, List<String>> conditionsByKey;
 
-        public ConditionsByKey(){
-            conditionsByKey = new LinkedHashMap<String,List<String>>();
+        public ConditionsByKey() {
+            conditionsByKey = new LinkedHashMap<String, List<String>>();
         }
 
-        public Map<String,List<String>> getConditionsByKey() {
+        public Map<String, List<String>> getConditionsByKey() {
             return conditionsByKey;
         }
 
-        public void setConditionsByKey(Map<String,List<String>> conditionsByKey) {
+        public void setConditionsByKey(Map<String, List<String>> conditionsByKey) {
             this.conditionsByKey = conditionsByKey;
         }
 
-        public boolean containsKey(String key){
+        public boolean containsKey(String key) {
             return conditionsByKey.containsKey(key);
         }
 
-        public List<String> getConditionsByKey(String key){
+        public List<String> getConditionsByKey(String key) {
             return conditionsByKey.get(key);
         }
 
-        public Set<String> keySet(){
+        public Set<String> keySet() {
             return conditionsByKey.keySet();
         }
 
         public void addValuesToKey(String key, List<String> values) {
 
             List<String> conditionValues = getConditionsByKey(key);
-            if (conditionValues == null)
-                conditionsByKey.put(key, new ArrayList<String>(values));
-            else
-                conditionValues.addAll(values);
+            if (conditionValues == null) conditionsByKey.put(key, new ArrayList<String>(values));
+            else conditionValues.addAll(values);
         }
     }
 
     /**
-     * Groups the list of <code>Condition</code>s by the condition type and
-     * condition key.
+     * Groups the list of <code>Condition</code>s by the condition type and condition key.
      *
-     * @param conditions
-     *            the list of conditions to be grouped
+     * @param conditions the list of conditions to be grouped
      * @return a map of conditions grouped by type and then key.
      */
-    private Map<String, ConditionsByKey> groupConditionsByTypeAndKey(
-            List<Condition> conditions) {
-        Map<String, ConditionsByKey> conditionsByType = new LinkedHashMap<String, ConditionsByKey>();
+    private Map<String, ConditionsByKey> groupConditionsByTypeAndKey(List<Condition> conditions) {
+        Map<String, ConditionsByKey> conditionsByType =
+                new LinkedHashMap<String, ConditionsByKey>();
 
         String type;
         String key;
@@ -345,53 +312,41 @@ public class JsonPolicyWriter {
     /**
      * Writes an array along with its values to the JSONGenerator.
      *
-     * @param arrayName
-     *            name of the JSON array.
-     * @param values
-     *            values of the JSON array.
+     * @param arrayName name of the JSON array.
+     * @param values values of the JSON array.
      */
     private void writeJsonArray(String arrayName, List<String> values)
             throws JsonGenerationException, IOException {
         writeJsonArrayStart(arrayName);
-        for (String value : values)
-            generator.writeString(value);
+        for (String value : values) generator.writeString(value);
         writeJsonArrayEnd();
     }
 
     /**
-     * Writes the Start of Object String to the JSONGenerator along with Object
-     * Name.
+     * Writes the Start of Object String to the JSONGenerator along with Object Name.
      *
-     * @param fieldName
-     *            name of the JSON Object.
+     * @param fieldName name of the JSON Object.
      */
     private void writeJsonObjectStart(String fieldName)
             throws JsonGenerationException, IOException {
         generator.writeObjectFieldStart(fieldName);
     }
 
-    /**
-     * Writes the End of Object String to the JSONGenerator.
-     */
+    /** Writes the End of Object String to the JSONGenerator. */
     private void writeJsonObjectEnd() throws JsonGenerationException, IOException {
         generator.writeEndObject();
     }
 
     /**
-     * Writes the Start of Array String to the JSONGenerator along with Array
-     * Name.
+     * Writes the Start of Array String to the JSONGenerator along with Array Name.
      *
-     * @param fieldName
-     *            name of the JSON array
+     * @param fieldName name of the JSON array
      */
-    private void writeJsonArrayStart(String fieldName)
-            throws JsonGenerationException, IOException {
+    private void writeJsonArrayStart(String fieldName) throws JsonGenerationException, IOException {
         generator.writeArrayFieldStart(fieldName);
     }
 
-    /**
-     * Writes the End of Array String to the JSONGenerator.
-     */
+    /** Writes the End of Array String to the JSONGenerator. */
     private void writeJsonArrayEnd() throws JsonGenerationException, IOException {
         generator.writeEndArray();
     }
@@ -399,10 +354,8 @@ public class JsonPolicyWriter {
     /**
      * Writes the given field and the value to the JsonGenerator
      *
-     * @param fieldName
-     *            the JSON field name
-     * @param value
-     *            value for the field
+     * @param fieldName the JSON field name
+     * @param value value for the field
      */
     private void writeJsonKeyValue(String fieldName, String value)
             throws JsonGenerationException, IOException {
@@ -412,8 +365,7 @@ public class JsonPolicyWriter {
     /**
      * Checks if the given object is not null.
      *
-     * @param object
-     *            the object compared to null.
+     * @param object the object compared to null.
      * @return true if the object is not null else false
      */
     private boolean isNotNull(Object object) {

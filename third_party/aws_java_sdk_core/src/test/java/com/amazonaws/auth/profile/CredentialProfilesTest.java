@@ -14,33 +14,27 @@
  */
 package com.amazonaws.auth.profile;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSSessionCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.profile.internal.Profile;
-
-import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSSessionCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.profile.internal.Profile;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import org.junit.Test;
+
 public class CredentialProfilesTest {
 
-    /**
-     * Name of the default profile used in the configuration file.
-     */
+    /** Name of the default profile used in the configuration file. */
     private static final String DEFAULT_PROFILE_NAME = "default";
 
-    /**
-     * Name of the sample test profile used during testing.
-     */
+    /** Name of the sample test profile used during testing. */
     private static final String PROFILE_NAME_TEST = "test";
 
     @Test(expected = IllegalArgumentException.class)
@@ -55,8 +49,9 @@ public class CredentialProfilesTest {
      */
     @Test
     public void testTwoProfileWithSameName() throws URISyntaxException {
-        ProfilesConfigFile profile = new ProfilesConfigFile(
-                ProfileResourceLoader.profilesWithSameProfileName().asFile());
+        ProfilesConfigFile profile =
+                new ProfilesConfigFile(
+                        ProfileResourceLoader.profilesWithSameProfileName().asFile());
 
         AWSCredentials defaultCred = profile.getCredentials(DEFAULT_PROFILE_NAME);
         assertNotNull(defaultCred);
@@ -69,7 +64,6 @@ public class CredentialProfilesTest {
         assertEquals(testSessionCred.getAWSAccessKeyId(), "testProfile2");
         assertEquals(testSessionCred.getAWSSecretKey(), "testProfile2");
         assertEquals(testSessionCred.getSessionToken(), "testProfile2");
-
     }
 
     /**
@@ -78,9 +72,10 @@ public class CredentialProfilesTest {
      */
     @Test
     public void testProfileNameWithJustSpaces() {
-        checkExpectedException(ProfileResourceLoader.profileNameWithSpaces(),
-                               AmazonClientException.class,
-                               "Should throw an exception as there is a profile mentioned with no profile name.");
+        checkExpectedException(
+                ProfileResourceLoader.profileNameWithSpaces(),
+                AmazonClientException.class,
+                "Should throw an exception as there is a profile mentioned with no profile name.");
     }
 
     /**
@@ -89,9 +84,10 @@ public class CredentialProfilesTest {
      */
     @Test
     public void testProfileWithNoProfileNameGiven() {
-        checkExpectedException(ProfileResourceLoader.profilesWithNoProfileName(),
-                               AmazonClientException.class,
-                               "Should throw an exception as there is a profile mentioned with only spaces.");
+        checkExpectedException(
+                ProfileResourceLoader.profilesWithNoProfileName(),
+                AmazonClientException.class,
+                "Should throw an exception as there is a profile mentioned with only spaces.");
     }
 
     /**
@@ -100,17 +96,20 @@ public class CredentialProfilesTest {
      */
     @Test
     public void testProfileWithProfileNameNotHavingOpeningOrClosingBraces() {
-        checkExpectedException(ProfileResourceLoader.profileNameWithNoClosingBraces(),
-                               IllegalArgumentException.class,
-                               "Should throw an exception as there is a profile name mentioned with no closing braces.");
+        checkExpectedException(
+                ProfileResourceLoader.profileNameWithNoClosingBraces(),
+                IllegalArgumentException.class,
+                "Should throw an exception as there is a profile name mentioned with no closing braces.");
 
-        checkExpectedException(ProfileResourceLoader.profileNameWithNoOpeningBraces(),
-                               IllegalArgumentException.class,
-                               "Should throw an exception as there is a profile name mentioned with no opening braces.");
+        checkExpectedException(
+                ProfileResourceLoader.profileNameWithNoOpeningBraces(),
+                IllegalArgumentException.class,
+                "Should throw an exception as there is a profile name mentioned with no opening braces.");
 
-        checkExpectedException(ProfileResourceLoader.profileNameWithNoBraces(),
-                               IllegalArgumentException.class,
-                               "Should throw an exception as there is a profile name mentioned with no braces.");
+        checkExpectedException(
+                ProfileResourceLoader.profileNameWithNoBraces(),
+                IllegalArgumentException.class,
+                "Should throw an exception as there is a profile name mentioned with no braces.");
     }
 
     /**
@@ -119,16 +118,20 @@ public class CredentialProfilesTest {
      */
     @Test
     public void testProfileWithAccessKeyNotSpecified() throws URISyntaxException {
-        checkDeferredException(ProfileResourceLoader.accessKeyNotSpecified(),
-                               AmazonClientException.class, "test2",
-                               "Should throw an exception as there is a profile with AWS Access Key ID not specified.");
+        checkDeferredException(
+                ProfileResourceLoader.accessKeyNotSpecified(),
+                AmazonClientException.class,
+                "test2",
+                "Should throw an exception as there is a profile with AWS Access Key ID not specified.");
     }
 
     @Test
     public void testProfileWithEmptyAccessKey() throws URISyntaxException {
-        checkDeferredException(ProfileResourceLoader.profileWithEmptyAccessKey(),
-                               AmazonClientException.class, "test",
-                               "Should throw an exception as there is a profile with an empty AWS Access Key ID");
+        checkDeferredException(
+                ProfileResourceLoader.profileWithEmptyAccessKey(),
+                AmazonClientException.class,
+                "test",
+                "Should throw an exception as there is a profile with an empty AWS Access Key ID");
     }
 
     /**
@@ -137,16 +140,20 @@ public class CredentialProfilesTest {
      */
     @Test
     public void testProfileWithSecretAccessKeyNotSpecified() throws Exception {
-        checkDeferredException(ProfileResourceLoader.profilesWithSecretAccessKeyNotSpecified(),
-                               AmazonClientException.class, "profile test2",
-                               "Should throw an exception as there is a profile with AWS Secret Access Key not specified.");
+        checkDeferredException(
+                ProfileResourceLoader.profilesWithSecretAccessKeyNotSpecified(),
+                AmazonClientException.class,
+                "profile test2",
+                "Should throw an exception as there is a profile with AWS Secret Access Key not specified.");
     }
 
     @Test
     public void testProfileWithEmptySecretAccessKey() throws URISyntaxException {
-        checkDeferredException(ProfileResourceLoader.profileWithEmptySecretKey(),
-                               AmazonClientException.class, "test",
-                               "Should throw an exception as there is a profile with an empty AWS Secret Access Key.");
+        checkDeferredException(
+                ProfileResourceLoader.profileWithEmptySecretKey(),
+                AmazonClientException.class,
+                "test",
+                "Should throw an exception as there is a profile with an empty AWS Secret Access Key.");
     }
 
     /**
@@ -155,9 +162,10 @@ public class CredentialProfilesTest {
      */
     @Test
     public void testProfileWithMultipleAccessOrSecretKeysUnderSameProfile() {
-        checkExpectedException(ProfileResourceLoader.profilesWithTwoAccessKeyUnderSameProfile(),
-                               IllegalArgumentException.class,
-                               "Should throw an exception as there is a profile with two AWS Access Key ID's.");
+        checkExpectedException(
+                ProfileResourceLoader.profilesWithTwoAccessKeyUnderSameProfile(),
+                IllegalArgumentException.class,
+                "Should throw an exception as there is a profile with two AWS Access Key ID's.");
     }
 
     /**
@@ -166,8 +174,9 @@ public class CredentialProfilesTest {
      */
     @Test
     public void testProfileWithOtherConfigurations() throws URISyntaxException {
-        ProfilesConfigFile profile = new ProfilesConfigFile(
-                ProfileResourceLoader.profilesContainingOtherConfiguration().asFile());
+        ProfilesConfigFile profile =
+                new ProfilesConfigFile(
+                        ProfileResourceLoader.profilesContainingOtherConfiguration().asFile());
 
         assertNotNull(profile.getCredentials(DEFAULT_PROFILE_NAME));
 
@@ -178,30 +187,30 @@ public class CredentialProfilesTest {
         assertEquals(profile.getCredentials(PROFILE_NAME_TEST).getAWSSecretKey(), "test key");
     }
 
-    /**
-     * Test verifying we pick up a change to a file.
-     */
+    /** Test verifying we pick up a change to a file. */
     @Test
     public void testReadUpdatedProfile() throws URISyntaxException, IOException {
-        ProfilesConfigFile fixture = new ProfilesConfigFile(
-                ProfileResourceLoader.basicProfile().asFile());
+        ProfilesConfigFile fixture =
+                new ProfilesConfigFile(ProfileResourceLoader.basicProfile().asFile());
         File modifiable = File.createTempFile("UpdatableProfile", ".tst");
-        ProfilesConfigFileWriter.dumpToFile(modifiable, true, fixture.getAllProfiles().values()
-                .toArray(new Profile[1]));
+        ProfilesConfigFileWriter.dumpToFile(
+                modifiable, true, fixture.getAllProfiles().values().toArray(new Profile[1]));
 
         ProfilesConfigFile test = new ProfilesConfigFile(modifiable);
         AWSCredentials orig = test.getCredentials(DEFAULT_PROFILE_NAME);
         assertEquals("defaultAccessKey", orig.getAWSAccessKeyId());
         assertEquals("defaultSecretAccessKey", orig.getAWSSecretKey());
-        //Sleep to ensure that the timestamp on the file (when we modify it) is
-        //distinguishably later from the original write.
+        // Sleep to ensure that the timestamp on the file (when we modify it) is
+        // distinguishably later from the original write.
         try {
             Thread.sleep(2000);
         } catch (Exception e) {
         }
 
-        Profile newProfile = new Profile(DEFAULT_PROFILE_NAME,
-                                         new BasicAWSCredentials("newAccessKey", "newSecretKey"));
+        Profile newProfile =
+                new Profile(
+                        DEFAULT_PROFILE_NAME,
+                        new BasicAWSCredentials("newAccessKey", "newSecretKey"));
         ProfilesConfigFileWriter.modifyOneProfile(modifiable, DEFAULT_PROFILE_NAME, newProfile);
 
         test.refresh();
@@ -210,56 +219,57 @@ public class CredentialProfilesTest {
         assertEquals("newSecretKey", updated.getAWSSecretKey());
     }
 
-    /**
-     * Tests loading a profile that assumes a role, but the source profile does not exist.
-     */
+    /** Tests loading a profile that assumes a role, but the source profile does not exist. */
     @Test
     public void testRoleProfileWithNoSourceName() throws URISyntaxException {
-        checkDeferredException(ProfileResourceLoader.roleProfileWithNoSourceName(),
-                               AmazonClientException.class, "test",
-                               "Should throw an exception as there is a role profile with a missing source role");
+        checkDeferredException(
+                ProfileResourceLoader.roleProfileWithNoSourceName(),
+                AmazonClientException.class,
+                "test",
+                "Should throw an exception as there is a role profile with a missing source role");
     }
 
-    /**
-     * Tests loading a profile that assumes a role, but the source profile does not exist.
-     */
+    /** Tests loading a profile that assumes a role, but the source profile does not exist. */
     @Test
     public void testRoleProfileWithEmptySourceName() throws URISyntaxException {
-        checkDeferredException(ProfileResourceLoader.roleProfileWithEmptySourceName(),
-                               AmazonClientException.class, "test",
-                               "Should throw an exception as there is a role profile with an empty source role");
+        checkDeferredException(
+                ProfileResourceLoader.roleProfileWithEmptySourceName(),
+                AmazonClientException.class,
+                "test",
+                "Should throw an exception as there is a role profile with an empty source role");
     }
 
-    /**
-     * Tests loading a profile that assumes a role, but the source profile does not exist.
-     */
+    /** Tests loading a profile that assumes a role, but the source profile does not exist. */
     @Test
     public void testRoleProfileMissingSource() throws URISyntaxException {
-        checkDeferredException(ProfileResourceLoader.roleProfileMissingSource(),
-                               AmazonClientException.class, "test",
-                               "Should throw an exception as there is a role profile without a source specified");
+        checkDeferredException(
+                ProfileResourceLoader.roleProfileMissingSource(),
+                AmazonClientException.class,
+                "test",
+                "Should throw an exception as there is a role profile without a source specified");
     }
 
-    /**
-     * Tests loading a profile that assumes a role, but the source profile does not exist.
-     */
+    /** Tests loading a profile that assumes a role, but the source profile does not exist. */
     @Test
     public void testRoleProfileWithRoleSource() throws URISyntaxException {
-        checkDeferredException(ProfileResourceLoader.roleProfileWithRoleSource(),
-                               AmazonClientException.class, "test",
-                               "Should throw an exception as a role profile can not use a role profile as its source");
+        checkDeferredException(
+                ProfileResourceLoader.roleProfileWithRoleSource(),
+                AmazonClientException.class,
+                "test",
+                "Should throw an exception as a role profile can not use a role profile as its source");
     }
 
     /**
      * Configures the Profile with the data returned from the file. Throws an error if the
      * configuration is success as the file contains data not in the correct format.
      *
-     * @param resource       Resource object to source profiles from.
+     * @param resource Resource object to source profiles from.
      * @param failureMessage failure message to be displayed if the file configuration is success
      */
-    private void checkExpectedException(ProfileResourceLoader resource,
-                                        Class<? extends Exception> expectedExceptionClass,
-                                        String failureMessage) {
+    private void checkExpectedException(
+            ProfileResourceLoader resource,
+            Class<? extends Exception> expectedExceptionClass,
+            String failureMessage) {
         try {
             new ProfilesConfigFile(resource.asFile());
             fail(failureMessage);
@@ -270,10 +280,12 @@ public class CredentialProfilesTest {
         }
     }
 
-    private void checkDeferredException(ProfileResourceLoader resource,
-                                        Class<? extends Exception> expectedExceptionClass,
-                                        String profileName, String failureMessage) throws
-                                                                                   URISyntaxException {
+    private void checkDeferredException(
+            ProfileResourceLoader resource,
+            Class<? extends Exception> expectedExceptionClass,
+            String profileName,
+            String failureMessage)
+            throws URISyntaxException {
         ProfilesConfigFile configFile = new ProfilesConfigFile(resource.asFile());
         try {
             configFile.getCredentials(profileName);
@@ -284,5 +296,4 @@ public class CredentialProfilesTest {
             }
         }
     }
-
 }

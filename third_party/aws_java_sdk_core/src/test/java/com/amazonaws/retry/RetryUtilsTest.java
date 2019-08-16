@@ -27,14 +27,18 @@ public class RetryUtilsTest {
     public void isThrottlingException_TrueWhenErrorCodeMatchesKnownCodes() throws Exception {
         AmazonServiceException ase = new AmazonServiceException("msg");
         ase.setErrorCode("ThrottlingException");
-        assertTrue("ThrottlingException error code should be true", RetryUtils.isThrottlingException(ase));
+        assertTrue(
+                "ThrottlingException error code should be true",
+                RetryUtils.isThrottlingException(ase));
     }
 
     @Test
     public void isThrottlingException_TrueWhenStatusCodeIs429() throws Exception {
         AmazonServiceException ase = new AmazonServiceException("msg");
         ase.setStatusCode(429);
-        assertTrue("ThrottlingException error code should be true", RetryUtils.isThrottlingException(ase));
+        assertTrue(
+                "ThrottlingException error code should be true",
+                RetryUtils.isThrottlingException(ase));
     }
 
     @Test
@@ -42,7 +46,9 @@ public class RetryUtilsTest {
         AmazonServiceException ase = new AmazonServiceException("msg");
         ase.setStatusCode(500);
         ase.setErrorCode("InternalFailure");
-        assertFalse("InternalFailure error code should be false", RetryUtils.isThrottlingException(ase));
+        assertFalse(
+                "InternalFailure error code should be false",
+                RetryUtils.isThrottlingException(ase));
     }
 
     @Test
@@ -50,8 +56,8 @@ public class RetryUtilsTest {
         AmazonServiceException ase = new AmazonServiceException("msg");
         ase.setStatusCode(500);
         ase.setErrorCode("PriorRequestNotComplete");
-        assertTrue("PriorRequestNotComplete should be retried", RetryUtils.isRetryableServiceException(ase));
-
+        assertTrue(
+                "PriorRequestNotComplete should be retried",
+                RetryUtils.isRetryableServiceException(ase));
     }
-
 }

@@ -16,18 +16,15 @@ package com.amazonaws.internal;
 
 import static com.amazonaws.util.SdkRuntime.shouldAbort;
 
+import com.amazonaws.AbortedException;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.amazonaws.AbortedException;
-
 /**
- * A buffered input stream that is both SDK metric aware, and can be aborted
- * via thread interrupt.
+ * A buffered input stream that is both SDK metric aware, and can be aborted via thread interrupt.
  */
-public class SdkBufferedInputStream extends BufferedInputStream implements
-        MetricAware {
+public class SdkBufferedInputStream extends BufferedInputStream implements MetricAware {
     public SdkBufferedInputStream(InputStream in) {
         super(in);
     }
@@ -39,30 +36,30 @@ public class SdkBufferedInputStream extends BufferedInputStream implements
     @Override
     public boolean isMetricActivated() {
         if (in instanceof MetricAware) {
-            MetricAware metricAware = (MetricAware)in;
+            MetricAware metricAware = (MetricAware) in;
             return metricAware.isMetricActivated();
         }
         return false;
     }
 
     /**
-     * Aborts with subclass specific abortion logic executed if needed.
-     * Note the interrupted status of the thread is cleared by this method.
+     * Aborts with subclass specific abortion logic executed if needed. Note the interrupted status
+     * of the thread is cleared by this method.
+     *
      * @throws AbortedException if found necessary.
      */
     protected final void abortIfNeeded() {
         if (shouldAbort()) {
-            abort();    // execute subclass specific abortion logic
+            abort(); // execute subclass specific abortion logic
             throw new AbortedException();
         }
     }
 
     /**
-     * Can be used to provide abortion logic prior to throwing the
-     * AbortedException. No-op by default.
+     * Can be used to provide abortion logic prior to throwing the AbortedException. No-op by
+     * default.
      */
-    protected void abort() {
-    }
+    protected void abort() {}
 
     @Override
     public int read() throws IOException {

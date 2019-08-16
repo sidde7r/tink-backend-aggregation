@@ -14,20 +14,16 @@
  */
 package com.amazonaws.auth.profile.internal;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.amazonaws.annotation.Immutable;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSSessionCredentials;
 import com.amazonaws.auth.profile.internal.securitytoken.RoleInfo;
 import com.amazonaws.internal.StaticCredentialsProvider;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/**
- * Contains the information stored in an AWS profile, such as AWS security
- * credentials.
- */
+/** Contains the information stored in an AWS profile, such as AWS security credentials. */
 @Immutable
 @Deprecated
 public class Profile {
@@ -47,7 +43,7 @@ public class Profile {
         properties.put(ProfileKeyConstants.AWS_SECRET_ACCESS_KEY, awsCredentials.getAWSSecretKey());
 
         if (awsCredentials instanceof AWSSessionCredentials) {
-            AWSSessionCredentials sessionCred = (AWSSessionCredentials)awsCredentials;
+            AWSSessionCredentials sessionCred = (AWSSessionCredentials) awsCredentials;
             properties.put(ProfileKeyConstants.AWS_SESSION_TOKEN, sessionCred.getSessionToken());
         }
 
@@ -56,7 +52,11 @@ public class Profile {
         this.awsCredentials = new StaticCredentialsProvider(awsCredentials);
     }
 
-    public Profile(String profileName, String sourceProfile, AWSCredentialsProvider awsCredentials, RoleInfo roleInfo) {
+    public Profile(
+            String profileName,
+            String sourceProfile,
+            AWSCredentialsProvider awsCredentials,
+            RoleInfo roleInfo) {
         Map<String, String> properties = new LinkedHashMap<String, String>();
         properties.put(ProfileKeyConstants.SOURCE_PROFILE, sourceProfile);
         properties.put(ProfileKeyConstants.ROLE_ARN, roleInfo.getRoleArn());
@@ -74,8 +74,10 @@ public class Profile {
         this.awsCredentials = awsCredentials;
     }
 
-    public Profile(String profileName, Map<String, String> properties,
-                    AWSCredentialsProvider awsCredentials) {
+    public Profile(
+            String profileName,
+            Map<String, String> properties,
+            AWSCredentialsProvider awsCredentials) {
         this.profileName = profileName;
         this.properties = properties;
         this.awsCredentials = awsCredentials;
@@ -90,11 +92,10 @@ public class Profile {
     }
 
     /**
-     * Returns a map of profile properties included in this Profile instance.
-     * The returned properties corresponds to how this profile is described in
-     * the credential profiles file, i.e., profiles with basic credentials
-     * consist of two properties {"aws_access_key_id", "aws_secret_access_key"}
-     * and profiles with session credentials have three properties, with an
+     * Returns a map of profile properties included in this Profile instance. The returned
+     * properties corresponds to how this profile is described in the credential profiles file,
+     * i.e., profiles with basic credentials consist of two properties {"aws_access_key_id",
+     * "aws_secret_access_key"} and profiles with session credentials have three properties, with an
      * additional "aws_session_token" property.
      */
     public Map<String, String> getProperties() {
@@ -103,6 +104,7 @@ public class Profile {
 
     /**
      * Returns the value of a specific property that is included in this Profile instance.
+     *
      * @see Profile#getProperties()
      */
     public String getPropertyValue(String propertyName) {

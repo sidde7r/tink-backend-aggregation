@@ -20,26 +20,29 @@ import java.util.Date;
 @SdkInternalApi
 public class HeaderMarshallers {
 
-    public static final JsonMarshaller<String> STRING = new SimpleHeaderMarshaller<String>(
-            ValueToStringConverters.FROM_STRING);
+    public static final JsonMarshaller<String> STRING =
+            new SimpleHeaderMarshaller<String>(ValueToStringConverters.FROM_STRING);
 
-    public static final JsonMarshaller<String> JSON_VALUE = new SimpleHeaderMarshaller<String>(
-            ValueToStringConverters.FROM_JSON_VALUE_HEADER);
+    public static final JsonMarshaller<String> JSON_VALUE =
+            new SimpleHeaderMarshaller<String>(ValueToStringConverters.FROM_JSON_VALUE_HEADER);
 
-    public static final JsonMarshaller<Integer> INTEGER = new SimpleHeaderMarshaller<Integer>(
-            ValueToStringConverters.FROM_INTEGER);
+    public static final JsonMarshaller<Integer> INTEGER =
+            new SimpleHeaderMarshaller<Integer>(ValueToStringConverters.FROM_INTEGER);
 
-    public static final JsonMarshaller<Long> LONG = new SimpleHeaderMarshaller<Long>(ValueToStringConverters.FROM_LONG);
+    public static final JsonMarshaller<Long> LONG =
+            new SimpleHeaderMarshaller<Long>(ValueToStringConverters.FROM_LONG);
 
-    public static final JsonMarshaller<Double> DOUBLE = new SimpleHeaderMarshaller<Double>(
-            ValueToStringConverters.FROM_DOUBLE);
+    public static final JsonMarshaller<Double> DOUBLE =
+            new SimpleHeaderMarshaller<Double>(ValueToStringConverters.FROM_DOUBLE);
 
-    public static final JsonMarshaller<Float> FLOAT = new SimpleHeaderMarshaller<Float>(ValueToStringConverters.FROM_FLOAT);
+    public static final JsonMarshaller<Float> FLOAT =
+            new SimpleHeaderMarshaller<Float>(ValueToStringConverters.FROM_FLOAT);
 
-    public static final JsonMarshaller<Boolean> BOOLEAN = new SimpleHeaderMarshaller<Boolean>(
-            ValueToStringConverters.FROM_BOOLEAN);
+    public static final JsonMarshaller<Boolean> BOOLEAN =
+            new SimpleHeaderMarshaller<Boolean>(ValueToStringConverters.FROM_BOOLEAN);
 
-    public static final JsonMarshaller<Date> DATE = new SimpleHeaderMarshaller<Date>(ValueToStringConverters.FROM_DATE);
+    public static final JsonMarshaller<Date> DATE =
+            new SimpleHeaderMarshaller<Date>(ValueToStringConverters.FROM_DATE);
 
     private static class SimpleHeaderMarshaller<T> implements JsonMarshaller<T> {
 
@@ -54,5 +57,4 @@ public class HeaderMarshallers {
             context.request().addHeader(paramName, converter.convert(val));
         }
     }
-
 }

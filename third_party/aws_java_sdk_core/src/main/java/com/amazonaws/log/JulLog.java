@@ -17,9 +17,7 @@ package com.amazonaws.log;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Used to delegate internal logging of the signers and core classes to JUL.
- */
+/** Used to delegate internal logging of the signers and core classes to JUL. */
 final class JulLog implements InternalLogApi {
 
     private final Logger log;

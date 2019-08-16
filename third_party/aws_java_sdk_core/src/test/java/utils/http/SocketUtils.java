@@ -19,9 +19,7 @@ import java.net.ServerSocket;
 
 public class SocketUtils {
 
-    /**
-     * Returns an unused port in the localhost.
-     */
+    /** Returns an unused port in the localhost. */
     public static int getUnusedPort() throws IOException {
         ServerSocket socket = new ServerSocket(0);
         socket.setReuseAddress(true);

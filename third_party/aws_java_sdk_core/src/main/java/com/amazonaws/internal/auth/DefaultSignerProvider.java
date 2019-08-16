@@ -18,12 +18,11 @@ package com.amazonaws.internal.auth;
 import com.amazonaws.AmazonWebServiceClient;
 import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.Request;
-import com.amazonaws.auth.SignerFactory;
-import com.amazonaws.auth.SignerTypeAware;
 import com.amazonaws.auth.Signer;
+import com.amazonaws.auth.SignerFactory;
 import com.amazonaws.auth.SignerParams;
+import com.amazonaws.auth.SignerTypeAware;
 import com.amazonaws.util.AwsHostNameUtils;
-
 import java.net.URI;
 
 public class DefaultSignerProvider extends SignerProvider {
@@ -31,15 +30,15 @@ public class DefaultSignerProvider extends SignerProvider {
     private final AmazonWebServiceClient awsClient;
     private final Signer defaultSigner;
 
-    public DefaultSignerProvider(final AmazonWebServiceClient awsClient,
-                                 final Signer defaultSigner) {
+    public DefaultSignerProvider(
+            final AmazonWebServiceClient awsClient, final Signer defaultSigner) {
         this.awsClient = awsClient;
         this.defaultSigner = defaultSigner;
     }
 
     @Override
     public Signer getSigner(SignerProviderContext context) {
-    Request<?> request = context.getRequest();
+        Request<?> request = context.getRequest();
         if (request == null || shouldUseDefaultSigner(request.getOriginalRequest())) {
             if (context.isRedirect()) {
                 return awsClient.getSignerByURI(context.getUri());
@@ -48,7 +47,10 @@ public class DefaultSignerProvider extends SignerProvider {
         }
 
         SignerTypeAware signerTypeAware = (SignerTypeAware) request.getOriginalRequest();
-        SignerParams params = new SignerParams(awsClient.getServiceName(), getSigningRegionForRequestURI(request.getEndpoint()));
+        SignerParams params =
+                new SignerParams(
+                        awsClient.getServiceName(),
+                        getSigningRegionForRequestURI(request.getEndpoint()));
         return SignerFactory.createSigner(signerTypeAware.getSignerType(), params);
     }
 

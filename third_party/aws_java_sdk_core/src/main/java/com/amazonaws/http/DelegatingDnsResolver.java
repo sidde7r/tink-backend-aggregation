@@ -16,14 +16,12 @@ package com.amazonaws.http;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
 import tink.org.apache.http.conn.DnsResolver;
 
 /**
- * Implements the {@link tink.org.apache.http.conn.DnsResolver} interface,
- * taking in a {@link com.amazonaws.DnsResolver} implementation and executing its
- * {@link com.amazonaws.DnsResolver#resolve(String)} method to perform the
- * actual DNS resolution.
+ * Implements the {@link tink.org.apache.http.conn.DnsResolver} interface, taking in a {@link
+ * com.amazonaws.DnsResolver} implementation and executing its {@link
+ * com.amazonaws.DnsResolver#resolve(String)} method to perform the actual DNS resolution.
  */
 public class DelegatingDnsResolver implements DnsResolver {
 

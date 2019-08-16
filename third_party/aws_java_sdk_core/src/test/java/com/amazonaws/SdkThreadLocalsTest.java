@@ -46,5 +46,4 @@ public class SdkThreadLocalsTest {
         assertNull(t1.get());
         assertNull(t2.get());
     }
-
 }

@@ -16,6 +16,13 @@ package com.amazonaws.auth;
 
 import static com.amazonaws.util.StringUtils.UTF8;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.SignableRequest;
+import com.amazonaws.log.InternalLogApi;
+import com.amazonaws.log.InternalLogFactory;
+import com.amazonaws.util.DateUtils;
+import com.amazonaws.util.SdkHttpUtils;
+import com.amazonaws.util.StringUtils;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,17 +33,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.UUID;
 
-import com.amazonaws.SdkClientException;
-import com.amazonaws.SignableRequest;
-import com.amazonaws.log.InternalLogApi;
-import com.amazonaws.log.InternalLogFactory;
-import com.amazonaws.util.DateUtils;
-import com.amazonaws.util.SdkHttpUtils;
-import com.amazonaws.util.StringUtils;
-
-/**
- * Signer implementation that signs requests with the AWS3 signing protocol.
- */
+/** Signer implementation that signs requests with the AWS3 signing protocol. */
 public class AWS3Signer extends AbstractAWSSigner {
     private static final String AUTHORIZATION_HEADER = "X-Amzn-Authorization";
     private static final String NONCE_HEADER = "x-amz-nonce";
@@ -46,23 +43,21 @@ public class AWS3Signer extends AbstractAWSSigner {
     /** For internal testing only - allows the request's date to be overridden for testing. */
     private String overriddenDate;
 
-    @Deprecated
-    protected static final DateUtils dateUtils = new DateUtils();
+    @Deprecated protected static final DateUtils dateUtils = new DateUtils();
     private static final InternalLogApi log = InternalLogFactory.getLog(AWS3Signer.class);
 
-
     /**
-     * Signs the specified request with the AWS3 signing protocol by using the
-     * AWS account credentials specified when this object was constructed and
-     * adding the required AWS3 headers to the request.
+     * Signs the specified request with the AWS3 signing protocol by using the AWS account
+     * credentials specified when this object was constructed and adding the required AWS3 headers
+     * to the request.
      *
-     * @param request
-     *            The request to sign.
+     * @param request The request to sign.
      */
     @Override
-    public void sign(SignableRequest<?> request, AWSCredentials credentials) throws SdkClientException {
+    public void sign(SignableRequest<?> request, AWSCredentials credentials)
+            throws SdkClientException {
         // annonymous credentials, don't sign
-        if ( credentials instanceof AnonymousAWSCredentials ) {
+        if (credentials instanceof AnonymousAWSCredentials) {
             return;
         }
 
@@ -88,7 +83,7 @@ public class AWS3Signer extends AbstractAWSSigner {
         }
         request.addHeader("Host", hostHeader);
 
-        if ( sanitizedCredentials instanceof AWSSessionCredentials ) {
+        if (sanitizedCredentials instanceof AWSSessionCredentials) {
             addSessionCredentials(request, (AWSSessionCredentials) sanitizedCredentials);
         }
         byte[] bytesToSign;
@@ -98,7 +93,9 @@ public class AWS3Signer extends AbstractAWSSigner {
             stringToSign = date + nonce;
             bytesToSign = stringToSign.getBytes(UTF8);
         } else {
-            String path = SdkHttpUtils.appendUri(request.getEndpoint().getPath(), request.getResourcePath());
+            String path =
+                    SdkHttpUtils.appendUri(
+                            request.getEndpoint().getPath(), request.getResourcePath());
 
             /*
              * AWS3 requires all query params to be listed on the third line of
@@ -106,18 +103,22 @@ public class AWS3Signer extends AbstractAWSSigner {
              * the request body and not as a query string. POST formatted query
              * params should *NOT* be included in the request payload.
              */
-            stringToSign = request.getHttpMethod().toString() + "\n"
-                    + getCanonicalizedResourcePath(path) + "\n"
-                    + getCanonicalizedQueryString(request.getParameters()) + "\n"
-                    + getCanonicalizedHeadersForStringToSign(request) + "\n"
-                    + getRequestPayloadWithoutQueryParams(request);
+            stringToSign =
+                    request.getHttpMethod().toString()
+                            + "\n"
+                            + getCanonicalizedResourcePath(path)
+                            + "\n"
+                            + getCanonicalizedQueryString(request.getParameters())
+                            + "\n"
+                            + getCanonicalizedHeadersForStringToSign(request)
+                            + "\n"
+                            + getRequestPayloadWithoutQueryParams(request);
             bytesToSign = hash(stringToSign);
         }
-        if (log.isDebugEnabled())
-            log.debug("Calculated StringToSign: " + stringToSign);
+        if (log.isDebugEnabled()) log.debug("Calculated StringToSign: " + stringToSign);
 
-        String signature = signAndBase64Encode(bytesToSign,
-                sanitizedCredentials.getAWSSecretKey(), algorithm);
+        String signature =
+                signAndBase64Encode(bytesToSign, sanitizedCredentials.getAWSSecretKey(), algorithm);
 
         StringBuilder builder = new StringBuilder();
         builder.append(isHttps ? HTTPS_SCHEME : HTTP_SCHEME).append(" ");
@@ -149,8 +150,7 @@ public class AWS3Signer extends AbstractAWSSigner {
         for (Map.Entry<String, String> entry : request.getHeaders().entrySet()) {
             String key = entry.getKey();
             String lowerCaseKey = StringUtils.lowerCase(key);
-            if (lowerCaseKey.startsWith("x-amz")
-                    || lowerCaseKey.equals("host")) {
+            if (lowerCaseKey.startsWith("x-amz") || lowerCaseKey.equals("host")) {
                 headersToSign.add(key);
             }
         }
@@ -160,11 +160,9 @@ public class AWS3Signer extends AbstractAWSSigner {
     }
 
     /**
-     * For internal testing only - allows the date to be overridden for internal
-     * tests.
+     * For internal testing only - allows the date to be overridden for internal tests.
      *
-     * @param date
-     *            The RFC822 date string to use when signing requests.
+     * @param date The RFC822 date string to use when signing requests.
      */
     void overrideDate(String date) {
         this.overriddenDate = date;
@@ -186,8 +184,10 @@ public class AWS3Signer extends AbstractAWSSigner {
 
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<String, String> entry : sortedHeaderMap.entrySet()) {
-            builder.append(StringUtils.lowerCase(entry.getKey())).append(":")
-            .append(entry.getValue()).append("\n");
+            builder.append(StringUtils.lowerCase(entry.getKey()))
+                    .append(":")
+                    .append(entry.getValue())
+                    .append("\n");
         }
 
         return builder.toString();
@@ -201,8 +201,10 @@ public class AWS3Signer extends AbstractAWSSigner {
             } else if (protocol.equals("https")) {
                 return true;
             } else {
-                throw new SdkClientException("Unknown request endpoint protocol " +
-                        "encountered while signing request: " + protocol);
+                throw new SdkClientException(
+                        "Unknown request endpoint protocol "
+                                + "encountered while signing request: "
+                                + protocol);
             }
         } catch (MalformedURLException e) {
             throw new SdkClientException("Unable to parse request endpoint during signing", e);
@@ -210,8 +212,8 @@ public class AWS3Signer extends AbstractAWSSigner {
     }
 
     @Override
-    protected void addSessionCredentials(SignableRequest<?> request, AWSSessionCredentials credentials) {
+    protected void addSessionCredentials(
+            SignableRequest<?> request, AWSSessionCredentials credentials) {
         request.addHeader("x-amz-security-token", credentials.getSessionToken());
     }
-
 }

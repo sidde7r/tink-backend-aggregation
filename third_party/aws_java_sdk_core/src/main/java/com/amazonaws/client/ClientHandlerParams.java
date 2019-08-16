@@ -17,9 +17,7 @@ package com.amazonaws.client;
 import com.amazonaws.annotation.NotThreadSafe;
 import com.amazonaws.annotation.SdkProtectedApi;
 
-/**
- * Client level parameters for the {@link ClientHandler} implementation.
- */
+/** Client level parameters for the {@link ClientHandler} implementation. */
 @SdkProtectedApi
 @NotThreadSafe
 public class ClientHandlerParams {
@@ -44,7 +42,6 @@ public class ClientHandlerParams {
     public boolean isDisableStrictHostnameVerification() {
         return disableStrictHostnameVerification;
     }
-
 
     public ClientHandlerParams withDisableStrictHostnameVerification(
             boolean disableStrictHostnameVerification) {

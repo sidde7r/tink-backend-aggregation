@@ -15,7 +15,6 @@
 package com.amazonaws.regions;
 
 import com.amazonaws.util.ValidationUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,9 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * An implementation of {@link RegionImpl} that holds all information in memory.
- */
+/** An implementation of {@link RegionImpl} that holds all information in memory. */
 public class InMemoryRegionImpl implements RegionImpl {
 
     private static final String DEFAULT_DOMAIN = "amazonaws.com";
@@ -34,8 +31,7 @@ public class InMemoryRegionImpl implements RegionImpl {
 
     private final String domain;
 
-    private final Map<String, String> endpoints = new HashMap<String,
-            String>();
+    private final Map<String, String> endpoints = new HashMap<String, String>();
 
     private final List<String> https = new ArrayList<String>();
 
@@ -77,7 +73,8 @@ public class InMemoryRegionImpl implements RegionImpl {
 
     @Override
     public String getPartition() {
-        throw new UnsupportedOperationException("Partition is not available in the in memory implementation");
+        throw new UnsupportedOperationException(
+                "Partition is not available in the in memory implementation");
     }
 
     @Override

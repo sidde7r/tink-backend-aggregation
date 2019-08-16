@@ -18,26 +18,27 @@ import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
 
 /**
  * The default chain of {@link CsmConfigurationProvider}s.
- * <p />
- * This chain attempts to load the client side monitoring configuration by
- * delegating to the following providers in order, and returning the first
- * result:
+ *
+ * <p>This chain attempts to load the client side monitoring configuration by delegating to the
+ * following providers in order, and returning the first result:
+ *
  * <ul>
- *     <li>{@link EnvironmentVariableCsmConfigurationProvider}</li>
- *     <li>{@link SystemPropertyCsmConfigurationProvider}</li>
- *     <li>{@link ProfileCsmConfigurationProvider}, using {@link
- *     AwsProfileFileLocationProvider#DEFAULT_CONFIG_LOCATION_PROVIDER} to
- *     locate the configuration file</li>
+ *   <li>{@link EnvironmentVariableCsmConfigurationProvider}
+ *   <li>{@link SystemPropertyCsmConfigurationProvider}
+ *   <li>{@link ProfileCsmConfigurationProvider}, using {@link
+ *       AwsProfileFileLocationProvider#DEFAULT_CONFIG_LOCATION_PROVIDER} to locate the
+ *       configuration file
  * </ul>
  */
 public final class DefaultCsmConfigurationProviderChain extends CsmConfigurationProviderChain {
     private static final DefaultCsmConfigurationProviderChain INSTANCE =
-        new DefaultCsmConfigurationProviderChain();
+            new DefaultCsmConfigurationProviderChain();
 
     private DefaultCsmConfigurationProviderChain() {
-        super(new EnvironmentVariableCsmConfigurationProvider(),
-              new SystemPropertyCsmConfigurationProvider(),
-              new ProfileCsmConfigurationProvider());
+        super(
+                new EnvironmentVariableCsmConfigurationProvider(),
+                new SystemPropertyCsmConfigurationProvider(),
+                new ProfileCsmConfigurationProvider());
     }
 
     public static DefaultCsmConfigurationProviderChain getInstance() {

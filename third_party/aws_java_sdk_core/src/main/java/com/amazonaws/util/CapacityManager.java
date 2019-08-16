@@ -14,10 +14,7 @@
  */
 package com.amazonaws.util;
 
-/**
- * Manages capacity of a finite resource.  Capacity can be acquired and
- * released.
- */
+/** Manages capacity of a finite resource. Capacity can be acquired and released. */
 public class CapacityManager {
 
     private volatile int availableCapacity;
@@ -28,10 +25,9 @@ public class CapacityManager {
     /**
      * Creates a CapacityManager.
      *
-     * @param maxCapacity maximum capacity of this resource.
-     *                    available capacity will initially be set to this value.
-     *                    if a negative value is provided the capacity manager will operate in a no-op
-     *                    passthrough mode in which all acquire calls will return true.
+     * @param maxCapacity maximum capacity of this resource. available capacity will initially be
+     *     set to this value. if a negative value is provided the capacity manager will operate in a
+     *     no-op passthrough mode in which all acquire calls will return true.
      */
     public CapacityManager(final int maxCapacity) {
         this.maxCapacity = maxCapacity;
@@ -39,9 +35,9 @@ public class CapacityManager {
     }
 
     /**
-     * Attempts to acquire a single capacity unit.
-     * If acquired, capacity will be consumed from the available pool.
-
+     * Attempts to acquire a single capacity unit. If acquired, capacity will be consumed from the
+     * available pool.
+     *
      * @return true if capacity can be acquired, false if not
      */
     public boolean acquire() {
@@ -49,8 +45,8 @@ public class CapacityManager {
     }
 
     /**
-     * Attempts to acquire a given amount of capacity.
-     * If acquired, capacity will be consumed from the available pool.
+     * Attempts to acquire a given amount of capacity. If acquired, capacity will be consumed from
+     * the available pool.
      *
      * @param capacity capacity to acquire
      * @return true if capacity can be acquired, false if not
@@ -75,17 +71,13 @@ public class CapacityManager {
         }
     }
 
-    /**
-     * Releases a single unit of capacity back to the pool, making it available
-     * to consumers.
-     */
+    /** Releases a single unit of capacity back to the pool, making it available to consumers. */
     public void release() {
         release(1);
     }
 
     /**
-     * Releases a given amount of capacity back to the pool, making it available
-     * to consumers.
+     * Releases a given amount of capacity back to the pool, making it available to consumers.
      *
      * @param capacity capacity to release
      * @throws IllegalArgumentException if given capacity is negative

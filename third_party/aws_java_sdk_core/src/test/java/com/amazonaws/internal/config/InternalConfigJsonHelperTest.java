@@ -16,9 +16,8 @@ package com.amazonaws.internal.config;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.amazonaws.util.json.Jackson;
+import org.junit.Test;
 
 public class InternalConfigJsonHelperTest {
 
@@ -28,32 +27,34 @@ public class InternalConfigJsonHelperTest {
         InternalConfigJsonHelper b = new InternalConfigJsonHelper();
         b.setDefaultSigner(new SignerConfigJsonHelper("AWS4SignerType"));
         b.setServiceSigners(
-            new JsonIndex<SignerConfigJsonHelper, SignerConfig>("cloudfront",
-                new SignerConfigJsonHelper("CloudFrontSignerType")),
-            new JsonIndex<SignerConfigJsonHelper, SignerConfig>("ec2",
-                    new SignerConfigJsonHelper("QueryStringSignerType")),
-            new JsonIndex<SignerConfigJsonHelper, SignerConfig>("s3",
-                    new SignerConfigJsonHelper("S3SignerType"))
-        );
+                new JsonIndex<SignerConfigJsonHelper, SignerConfig>(
+                        "cloudfront", new SignerConfigJsonHelper("CloudFrontSignerType")),
+                new JsonIndex<SignerConfigJsonHelper, SignerConfig>(
+                        "ec2", new SignerConfigJsonHelper("QueryStringSignerType")),
+                new JsonIndex<SignerConfigJsonHelper, SignerConfig>(
+                        "s3", new SignerConfigJsonHelper("S3SignerType")));
         b.setRegionSigners(
-                new JsonIndex<SignerConfigJsonHelper, SignerConfig>("cn-north-1",
-                    new SignerConfigJsonHelper("AWS4SignerType")));
+                new JsonIndex<SignerConfigJsonHelper, SignerConfig>(
+                        "cn-north-1", new SignerConfigJsonHelper("AWS4SignerType")));
         b.setServiceRegionSigners(
-                new JsonIndex<SignerConfigJsonHelper, SignerConfig>("ec2/cn-north-1",
-                    new SignerConfigJsonHelper("AWS4SignerType")));
+                new JsonIndex<SignerConfigJsonHelper, SignerConfig>(
+                        "ec2/cn-north-1", new SignerConfigJsonHelper("AWS4SignerType")));
         b.setServiceRegionSigners(
-                new JsonIndex<SignerConfigJsonHelper, SignerConfig>("cloudfront/cn-north-1",
-                    new SignerConfigJsonHelper("AWS4SignerType")));
+                new JsonIndex<SignerConfigJsonHelper, SignerConfig>(
+                        "cloudfront/cn-north-1", new SignerConfigJsonHelper("AWS4SignerType")));
         b.setHttpClients(
-            new JsonIndex<HttpClientConfigJsonHelper, HttpClientConfig>(
-                "AmazonMobiusClient",
-                    new HttpClientConfigJsonHelper("mobius-transform", "mobius-transform-endpoint")),
-            new JsonIndex<HttpClientConfigJsonHelper, HttpClientConfig>(
-                "AmazonAffineJavaClient",
-                    new HttpClientConfigJsonHelper("affine-transform", "affine-transform-endpoint")));
+                new JsonIndex<HttpClientConfigJsonHelper, HttpClientConfig>(
+                        "AmazonMobiusClient",
+                        new HttpClientConfigJsonHelper(
+                                "mobius-transform", "mobius-transform-endpoint")),
+                new JsonIndex<HttpClientConfigJsonHelper, HttpClientConfig>(
+                        "AmazonAffineJavaClient",
+                        new HttpClientConfigJsonHelper(
+                                "affine-transform", "affine-transform-endpoint")));
         String json = Jackson.toJsonPrettyString(b);
         p(json);
-        InternalConfigJsonHelper b2 = Jackson.getObjectMapper().readValue(json, InternalConfigJsonHelper.class);
+        InternalConfigJsonHelper b2 =
+                Jackson.getObjectMapper().readValue(json, InternalConfigJsonHelper.class);
         String json2 = Jackson.toJsonPrettyString(b2);
         assertEquals(json, json2);
     }

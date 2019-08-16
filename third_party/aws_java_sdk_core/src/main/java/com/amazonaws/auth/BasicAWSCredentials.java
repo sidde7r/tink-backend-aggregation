@@ -15,8 +15,8 @@
 package com.amazonaws.auth;
 
 /**
- * Basic implementation of the AWSCredentials interface that allows callers to
- * pass in the AWS access key and secret access in the constructor.
+ * Basic implementation of the AWSCredentials interface that allows callers to pass in the AWS
+ * access key and secret access in the constructor.
  */
 public class BasicAWSCredentials implements AWSCredentials {
 
@@ -24,13 +24,11 @@ public class BasicAWSCredentials implements AWSCredentials {
     private final String secretKey;
 
     /**
-     * Constructs a new BasicAWSCredentials object, with the specified AWS
-     * access key and AWS secret key.
+     * Constructs a new BasicAWSCredentials object, with the specified AWS access key and AWS secret
+     * key.
      *
-     * @param accessKey
-     *            The AWS access key.
-     * @param secretKey
-     *            The AWS secret access key.
+     * @param accessKey The AWS access key.
+     * @param secretKey The AWS secret access key.
      */
     public BasicAWSCredentials(String accessKey, String secretKey) {
         if (accessKey == null) {
@@ -57,5 +55,4 @@ public class BasicAWSCredentials implements AWSCredentials {
     public String getAWSSecretKey() {
         return secretKey;
     }
-
 }

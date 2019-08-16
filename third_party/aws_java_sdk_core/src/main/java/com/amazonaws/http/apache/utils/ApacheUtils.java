@@ -19,6 +19,9 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.http.HttpResponse;
 import com.amazonaws.http.settings.HttpClientSettings;
 import com.amazonaws.util.FakeIOException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import tink.org.apache.http.Header;
 import tink.org.apache.http.HttpEntity;
 import tink.org.apache.http.HttpHost;
@@ -35,10 +38,6 @@ import tink.org.apache.http.entity.StringEntity;
 import tink.org.apache.http.impl.auth.BasicScheme;
 import tink.org.apache.http.impl.client.BasicAuthCache;
 import tink.org.apache.http.impl.client.BasicCredentialsProvider;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
 import tink.org.apache.http.protocol.HttpContext;
 
 public class ApacheUtils {
@@ -59,17 +58,19 @@ public class ApacheUtils {
      * handler object.
      *
      * @param request Marshalled request object.
-     * @param method  The HTTP method that was invoked to get the response.
+     * @param method The HTTP method that was invoked to get the response.
      * @param context The HTTP context associated with the request and response.
      * @return The new, initialized HttpResponse object ready to be passed to an HTTP response
-     * handler object.
+     *     handler object.
      * @throws IOException If there were any problems getting any response information from the
-     *                     HttpClient method object.
+     *     HttpClient method object.
      */
-    public static HttpResponse createResponse(Request<?> request,
-                                        HttpRequestBase method,
-                                        tink.org.apache.http.HttpResponse apacheHttpResponse,
-                                        HttpContext context) throws IOException {
+    public static HttpResponse createResponse(
+            Request<?> request,
+            HttpRequestBase method,
+            tink.org.apache.http.HttpResponse apacheHttpResponse,
+            HttpContext context)
+            throws IOException {
         HttpResponse httpResponse = new HttpResponse(request, method, context);
 
         if (apacheHttpResponse.getEntity() != null) {
@@ -86,8 +87,8 @@ public class ApacheUtils {
     }
 
     /**
-     * Utility function for creating a new StringEntity and wrapping any errors
-     * as a SdkClientException.
+     * Utility function for creating a new StringEntity and wrapping any errors as a
+     * SdkClientException.
      *
      * @param s The string contents of the returned HTTP entity.
      * @return A new StringEntity with the specified contents.
@@ -101,15 +102,14 @@ public class ApacheUtils {
     }
 
     /**
-     * Utility function for creating a new BufferedEntity and wrapping any errors
-     * as a SdkClientException.
+     * Utility function for creating a new BufferedEntity and wrapping any errors as a
+     * SdkClientException.
      *
      * @param entity The HTTP entity to wrap with a buffered HTTP entity.
      * @return A new BufferedHttpEntity wrapping the specified entity.
      * @throws FakeIOException only for test simulation
      */
-    public static HttpEntity newBufferedHttpEntity(HttpEntity entity) throws
-            FakeIOException {
+    public static HttpEntity newBufferedHttpEntity(HttpEntity entity) throws FakeIOException {
         try {
             return new BufferedHttpEntity(entity);
         } catch (FakeIOException e) {
@@ -120,12 +120,9 @@ public class ApacheUtils {
         }
     }
 
-    /**
-     * Returns a new HttpClientContext used for request execution.
-     */
-    public static HttpClientContext newClientContext(HttpClientSettings settings,
-                                                     Map<String, ? extends Object>
-                                                             attributes) {
+    /** Returns a new HttpClientContext used for request execution. */
+    public static HttpClientContext newClientContext(
+            HttpClientSettings settings, Map<String, ? extends Object> attributes) {
         final HttpClientContext clientContext = new HttpClientContext();
 
         if (attributes != null && !attributes.isEmpty()) {
@@ -136,44 +133,37 @@ public class ApacheUtils {
 
         addPreemptiveAuthenticationProxy(clientContext, settings);
 
-        clientContext.setAttribute(HttpContextUtils.DISABLE_SOCKET_PROXY_PROPERTY, settings.disableSocketProxy());
+        clientContext.setAttribute(
+                HttpContextUtils.DISABLE_SOCKET_PROXY_PROPERTY, settings.disableSocketProxy());
         return clientContext;
-
     }
 
-    /**
-     * Returns a new Credentials Provider for use with proxy authentication.
-     */
-    public static CredentialsProvider newProxyCredentialsProvider
-    (HttpClientSettings settings) {
+    /** Returns a new Credentials Provider for use with proxy authentication. */
+    public static CredentialsProvider newProxyCredentialsProvider(HttpClientSettings settings) {
         final CredentialsProvider provider = new BasicCredentialsProvider();
         provider.setCredentials(newAuthScope(settings), newNTCredentials(settings));
         return provider;
     }
 
-    /**
-     * Returns a new instance of NTCredentials used for proxy authentication.
-     */
+    /** Returns a new instance of NTCredentials used for proxy authentication. */
     private static Credentials newNTCredentials(HttpClientSettings settings) {
-        return new NTCredentials(settings.getProxyUsername(),
+        return new NTCredentials(
+                settings.getProxyUsername(),
                 settings.getProxyPassword(),
                 settings.getProxyWorkstation(),
                 settings.getProxyDomain());
     }
 
-    /**
-     * Returns a new instance of AuthScope used for proxy authentication.
-     */
+    /** Returns a new instance of AuthScope used for proxy authentication. */
     private static AuthScope newAuthScope(HttpClientSettings settings) {
         return new AuthScope(settings.getProxyHost(), settings.getProxyPort());
     }
 
-    private static void addPreemptiveAuthenticationProxy(HttpClientContext clientContext,
-                                                         HttpClientSettings settings) {
+    private static void addPreemptiveAuthenticationProxy(
+            HttpClientContext clientContext, HttpClientSettings settings) {
 
         if (settings.isPreemptiveBasicProxyAuth()) {
-            HttpHost targetHost = new HttpHost(settings.getProxyHost(), settings
-                    .getProxyPort());
+            HttpHost targetHost = new HttpHost(settings.getProxyHost(), settings.getProxyPort());
             final CredentialsProvider credsProvider = newProxyCredentialsProvider(settings);
             // Create AuthCache instance
             AuthCache authCache = new BasicAuthCache();

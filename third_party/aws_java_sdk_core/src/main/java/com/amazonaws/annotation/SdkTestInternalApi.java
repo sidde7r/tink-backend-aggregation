@@ -20,10 +20,9 @@ import java.lang.annotation.Target;
  * with this method should not be accessed in production code. This annotation should be used
  * sparingly as it's a code smell to need access to internal data/functionality to properly unit
  * test a class. Typically there is a better way to test a class.
- * <p>
- * TODO: Write a linter that makes sure only test code depends on methods or constructors annotated
- * with this method
+ *
+ * <p>TODO: Write a linter that makes sure only test code depends on methods or constructors
+ * annotated with this method
  */
-@Target({ ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD })
-public @interface SdkTestInternalApi {
-}
+@Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
+public @interface SdkTestInternalApi {}

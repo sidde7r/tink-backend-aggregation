@@ -14,15 +14,14 @@
  */
 package com.amazonaws.retry.v2;
 
-/**
- * Super interface for {@link RetryPolicy} used to define when a request should be retried.
- */
+/** Super interface for {@link RetryPolicy} used to define when a request should be retried. */
 public interface RetryCondition {
 
     /**
      * Determine whether a request should or should not be retried.
      *
-     * @param context Context about the state of the last request and information about the number of requests made.
+     * @param context Context about the state of the last request and information about the number
+     *     of requests made.
      * @return True if the request should be retried, false if not.
      */
     boolean shouldRetry(RetryPolicyContext context);

@@ -17,8 +17,8 @@ package com.amazonaws.auth.internal;
 import com.amazonaws.annotation.Immutable;
 
 /**
- * Holds the signing key and the number of days since epoch for the date for
- * which the signing key was generated.
+ * Holds the signing key and the number of days since epoch for the date for which the signing key
+ * was generated.
  */
 @Immutable
 public final class SignerKey {
@@ -40,17 +40,12 @@ public final class SignerKey {
         this.signingKey = signingKey.clone();
     }
 
-    /**
-     * Returns the number of days since epoch for the date used for generating
-     * signing key.
-     */
+    /** Returns the number of days since epoch for the date used for generating signing key. */
     public long getNumberOfDaysSinceEpoch() {
         return numberOfDaysSinceEpoch;
     }
 
-    /**
-     * Returns a copy of the signing key.
-     */
+    /** Returns a copy of the signing key. */
     public byte[] getSigningKey() {
         return signingKey.clone();
     }

@@ -24,7 +24,6 @@ import com.amazonaws.transform.JsonUnmarshallerContext;
 import com.amazonaws.transform.JsonUnmarshallerContext.UnmarshallerType;
 import com.amazonaws.transform.Unmarshaller;
 import com.fasterxml.jackson.core.JsonFactory;
-
 import java.util.List;
 import java.util.Map;
 
@@ -37,11 +36,13 @@ public abstract class SdkStructuredJsonFactoryImpl implements SdkStructuredJsonF
 
     private final JsonFactory jsonFactory;
     private final Map<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>> unmarshallers;
-    private final Map<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>> customTypeMarshallers;
+    private final Map<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>>
+            customTypeMarshallers;
 
-    public SdkStructuredJsonFactoryImpl(JsonFactory jsonFactory,
-                                        Map<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>> unmarshallers,
-                                        Map<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>> customTypeMarshallers) {
+    public SdkStructuredJsonFactoryImpl(
+            JsonFactory jsonFactory,
+            Map<Class<?>, Unmarshaller<?, JsonUnmarshallerContext>> unmarshallers,
+            Map<UnmarshallerType, Unmarshaller<?, JsonUnmarshallerContext>> customTypeMarshallers) {
         this.jsonFactory = jsonFactory;
         this.unmarshallers = unmarshallers;
         this.customTypeMarshallers = customTypeMarshallers;
@@ -52,28 +53,33 @@ public abstract class SdkStructuredJsonFactoryImpl implements SdkStructuredJsonF
         return createWriter(jsonFactory, contentType);
     }
 
-    protected abstract StructuredJsonGenerator createWriter(JsonFactory jsonFactory,
-                                                            String contentType);
+    protected abstract StructuredJsonGenerator createWriter(
+            JsonFactory jsonFactory, String contentType);
 
     @Override
-    public <T> JsonResponseHandler<T> createResponseHandler(JsonOperationMetadata operationMetadata,
-                                                            Unmarshaller<T, JsonUnmarshallerContext> responseUnmarshaller) {
-        return new JsonResponseHandler(responseUnmarshaller, unmarshallers, customTypeMarshallers, jsonFactory,
-                                       operationMetadata.isHasStreamingSuccessResponse(),
-                                       operationMetadata.isPayloadJson());
+    public <T> JsonResponseHandler<T> createResponseHandler(
+            JsonOperationMetadata operationMetadata,
+            Unmarshaller<T, JsonUnmarshallerContext> responseUnmarshaller) {
+        return new JsonResponseHandler(
+                responseUnmarshaller,
+                unmarshallers,
+                customTypeMarshallers,
+                jsonFactory,
+                operationMetadata.isHasStreamingSuccessResponse(),
+                operationMetadata.isPayloadJson());
     }
 
     @Override
     public JsonErrorResponseHandler createErrorResponseHandler(
             final List<JsonErrorUnmarshaller> errorUnmarshallers, String customErrorCodeFieldName) {
-        return new JsonErrorResponseHandler(errorUnmarshallers,
-                                            getErrorCodeParser(customErrorCodeFieldName),
-                                            JsonErrorMessageParser.DEFAULT_ERROR_MESSAGE_PARSER,
-                                            jsonFactory);
+        return new JsonErrorResponseHandler(
+                errorUnmarshallers,
+                getErrorCodeParser(customErrorCodeFieldName),
+                JsonErrorMessageParser.DEFAULT_ERROR_MESSAGE_PARSER,
+                jsonFactory);
     }
 
     protected ErrorCodeParser getErrorCodeParser(String customErrorCodeFieldName) {
         return new JsonErrorCodeParser(customErrorCodeFieldName);
     }
-
 }

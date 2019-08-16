@@ -27,12 +27,11 @@
 
 package com.amazonaws.util;
 
+import com.amazonaws.annotation.Immutable;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.BitSet;
 import java.util.List;
-
-import com.amazonaws.annotation.Immutable;
 
 // Copied and extracted from httpcomponents-client-4.3.6.
 /**
@@ -49,13 +48,12 @@ class URLEncodedUtils {
      * Returns a String that is suitable for use as an {@code application/x-www-form-urlencoded}
      * list of parameters in an HTTP PUT or HTTP POST.
      *
-     * @param parameters  The parameters to include.
+     * @param parameters The parameters to include.
      * @param charset The encoding to use.
      * @return An {@code application/x-www-form-urlencoded} string
      */
     public static String format(
-            final List <? extends NameValuePair> parameters,
-            final String charset) {
+            final List<? extends NameValuePair> parameters, final String charset) {
         return format(parameters, QP_SEP_A, charset);
     }
 
@@ -63,15 +61,14 @@ class URLEncodedUtils {
      * Returns a String that is suitable for use as an {@code application/x-www-form-urlencoded}
      * list of parameters in an HTTP PUT or HTTP POST.
      *
-     * @param parameters  The parameters to include.
+     * @param parameters The parameters to include.
      * @param parameterSeparator The parameter separator, by convention, {@code '&'} or {@code ';'}.
      * @param charset The encoding to use.
      * @return An {@code application/x-www-form-urlencoded} string
-     *
      * @since 4.3
      */
     public static String format(
-            final List <? extends NameValuePair> parameters,
+            final List<? extends NameValuePair> parameters,
             final char parameterSeparator,
             final String charset) {
         final StringBuilder result = new StringBuilder();
@@ -94,15 +91,13 @@ class URLEncodedUtils {
      * Returns a String that is suitable for use as an {@code application/x-www-form-urlencoded}
      * list of parameters in an HTTP PUT or HTTP POST.
      *
-     * @param parameters  The parameters to include.
+     * @param parameters The parameters to include.
      * @param charset The encoding to use.
      * @return An {@code application/x-www-form-urlencoded} string
-     *
      * @since 4.2
      */
     public static String format(
-            final Iterable<? extends NameValuePair> parameters,
-            final Charset charset) {
+            final Iterable<? extends NameValuePair> parameters, final Charset charset) {
         return format(parameters, QP_SEP_A, charset);
     }
 
@@ -110,11 +105,10 @@ class URLEncodedUtils {
      * Returns a String that is suitable for use as an {@code application/x-www-form-urlencoded}
      * list of parameters in an HTTP PUT or HTTP POST.
      *
-     * @param parameters  The parameters to include.
+     * @param parameters The parameters to include.
      * @param parameterSeparator The parameter separator, by convention, {@code '&'} or {@code ';'}.
      * @param charset The encoding to use.
      * @return An {@code application/x-www-form-urlencoded} string
-     *
      * @since 4.3
      */
     public static String format(
@@ -139,43 +133,47 @@ class URLEncodedUtils {
 
     /**
      * Unreserved characters, i.e. alphanumeric, plus: {@code _ - ! . ~ ' ( ) *}
-     * <p>
-     *  This list is the same as the {@code unreserved} list in
-     *  <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396</a>
+     *
+     * <p>This list is the same as the {@code unreserved} list in <a
+     * href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396</a>
      */
-    private static final BitSet UNRESERVED   = new BitSet(256);
+    private static final BitSet UNRESERVED = new BitSet(256);
     /**
      * Punctuation characters: , ; : $ & + =
-     * <p>
-     * These are the additional characters allowed by userinfo.
+     *
+     * <p>These are the additional characters allowed by userinfo.
      */
-    private static final BitSet PUNCT        = new BitSet(256);
-    /** Characters which are safe to use in userinfo,
-     * i.e. {@link #UNRESERVED} plus {@link #PUNCT}uation */
-    private static final BitSet USERINFO     = new BitSet(256);
-    /** Characters which are safe to use in a path,
-     * i.e. {@link #UNRESERVED} plus {@link #PUNCT}uation plus / @ */
-    private static final BitSet PATHSAFE     = new BitSet(256);
-    /** Characters which are safe to use in a query or a fragment,
-     * i.e. {@link #RESERVED} plus {@link #UNRESERVED} */
-    private static final BitSet URIC     = new BitSet(256);
+    private static final BitSet PUNCT = new BitSet(256);
+    /**
+     * Characters which are safe to use in userinfo, i.e. {@link #UNRESERVED} plus {@link
+     * #PUNCT}uation
+     */
+    private static final BitSet USERINFO = new BitSet(256);
+    /**
+     * Characters which are safe to use in a path, i.e. {@link #UNRESERVED} plus {@link
+     * #PUNCT}uation plus / @
+     */
+    private static final BitSet PATHSAFE = new BitSet(256);
+    /**
+     * Characters which are safe to use in a query or a fragment, i.e. {@link #RESERVED} plus {@link
+     * #UNRESERVED}
+     */
+    private static final BitSet URIC = new BitSet(256);
 
     /**
      * Reserved characters, i.e. {@code ;/?:@&=+$,[]}
-     * <p>
-     *  This list is the same as the {@code reserved} list in
-     *  <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396</a>
-     *  as augmented by
-     *  <a href="http://www.ietf.org/rfc/rfc2732.txt">RFC 2732</a>
+     *
+     * <p>This list is the same as the {@code reserved} list in <a
+     * href="http://www.ietf.org/rfc/rfc2396.txt">RFC 2396</a> as augmented by <a
+     * href="http://www.ietf.org/rfc/rfc2732.txt">RFC 2732</a>
      */
-    private static final BitSet RESERVED     = new BitSet(256);
-
+    private static final BitSet RESERVED = new BitSet(256);
 
     /**
-     * Safe characters for x-www-form-urlencoded data, as per java.net.URLEncoder and browser behaviour,
-     * i.e. alphanumeric plus {@code "-", "_", ".", "*"}
+     * Safe characters for x-www-form-urlencoded data, as per java.net.URLEncoder and browser
+     * behaviour, i.e. alphanumeric plus {@code "-", "_", ".", "*"}
      */
-    private static final BitSet URLENCODER   = new BitSet(256);
+    private static final BitSet URLENCODER = new BitSet(256);
 
     static {
         // unreserved chars
@@ -272,10 +270,9 @@ class URLEncodedUtils {
 
     /**
      * Encode/escape www-url-form-encoded content.
-     * <p>
-     * Uses the {@link #URLENCODER} set of characters, rather than
-     * the {@link #UNRSERVED} set; this is for compatibilty with previous
-     * releases, URLEncoder.encode() and most browsers.
+     *
+     * <p>Uses the {@link #URLENCODER} set of characters, rather than the {@link #UNRSERVED} set;
+     * this is for compatibilty with previous releases, URLEncoder.encode() and most browsers.
      *
      * @param content the content to encode, will convert space to '+'
      * @param charset the charset to use
@@ -285,21 +282,24 @@ class URLEncodedUtils {
         if (content == null) {
             return null;
         }
-        return urlEncode(content, charset != null ? Charset.forName(charset) : StringUtils.UTF8, URLENCODER, true);
+        return urlEncode(
+                content,
+                charset != null ? Charset.forName(charset) : StringUtils.UTF8,
+                URLENCODER,
+                true);
     }
 
     /**
      * Encode/escape www-url-form-encoded content.
-     * <p>
-     * Uses the {@link #URLENCODER} set of characters, rather than
-     * the {@link #UNRSERVED} set; this is for compatibilty with previous
-     * releases, URLEncoder.encode() and most browsers.
+     *
+     * <p>Uses the {@link #URLENCODER} set of characters, rather than the {@link #UNRSERVED} set;
+     * this is for compatibilty with previous releases, URLEncoder.encode() and most browsers.
      *
      * @param content the content to encode, will convert space to '+'
      * @param charset the charset to use
      * @return encoded string
      */
-    private static String encodeFormFields (final String content, final Charset charset) {
+    private static String encodeFormFields(final String content, final Charset charset) {
         if (content == null) {
             return null;
         }
@@ -308,8 +308,8 @@ class URLEncodedUtils {
 
     /**
      * Encode a String using the {@link #USERINFO} set of characters.
-     * <p>
-     * Used by URIBuilder to encode the userinfo segment.
+     *
+     * <p>Used by URIBuilder to encode the userinfo segment.
      *
      * @param content the string to encode, does not convert space to '+'
      * @param charset the charset to use
@@ -321,8 +321,8 @@ class URLEncodedUtils {
 
     /**
      * Encode a String using the {@link #URIC} set of characters.
-     * <p>
-     * Used by URIBuilder to encode the query and fragment segments.
+     *
+     * <p>Used by URIBuilder to encode the query and fragment segments.
      *
      * @param content the string to encode, does not convert space to '+'
      * @param charset the charset to use
@@ -334,8 +334,8 @@ class URLEncodedUtils {
 
     /**
      * Encode a String using the {@link #PATHSAFE} set of characters.
-     * <p>
-     * Used by URIBuilder to encode path segments.
+     *
+     * <p>Used by URIBuilder to encode path segments.
      *
      * @param content the string to encode, does not convert space to '+'
      * @param charset the charset to use

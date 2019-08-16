@@ -16,21 +16,16 @@ package com.amazonaws.util;
 
 import java.util.Collection;
 
-/**
- * Useful utilities to validate dependencies
- */
+/** Useful utilities to validate dependencies */
 public class ValidationUtils {
 
     /**
      * Asserts that the given object is non-null and returns it.
      *
-     * @param object
-     *         Object to assert on
-     * @param fieldName
-     *         Field name to display in exception message if null
+     * @param object Object to assert on
+     * @param fieldName Field name to display in exception message if null
      * @return Object if non null
-     * @throws IllegalArgumentException
-     *         If object was null
+     * @throws IllegalArgumentException If object was null
      */
     public static <T> T assertNotNull(T object, String fieldName) throws IllegalArgumentException {
         if (object == null) {
@@ -42,10 +37,10 @@ public class ValidationUtils {
     /**
      * Asserts that all of the objects are null.
      *
-     * @throws IllegalArgumentException
-     *         if any object provided was NOT null.
+     * @throws IllegalArgumentException if any object provided was NOT null.
      */
-    public static void assertAllAreNull(String messageIfNull, Object... objects) throws IllegalArgumentException {
+    public static void assertAllAreNull(String messageIfNull, Object... objects)
+            throws IllegalArgumentException {
         for (Object object : objects) {
             if (object != null) {
                 throw new IllegalArgumentException(messageIfNull);
@@ -56,7 +51,7 @@ public class ValidationUtils {
     /**
      * Asserts that the given number is positive (non-negative and non-zero).
      *
-     * @param num       Number to validate
+     * @param num Number to validate
      * @param fieldName Field name to display in exception message if not positive.
      * @return Number if positive.
      */
@@ -67,7 +62,8 @@ public class ValidationUtils {
         return num;
     }
 
-    public static <T extends Collection<?>> T assertNotEmpty(T collection, String fieldName) throws IllegalArgumentException{
+    public static <T extends Collection<?>> T assertNotEmpty(T collection, String fieldName)
+            throws IllegalArgumentException {
         assertNotNull(collection, fieldName);
         if (collection.isEmpty()) {
             throw new IllegalArgumentException(String.format("%s cannot be empty", fieldName));
@@ -75,7 +71,8 @@ public class ValidationUtils {
         return collection;
     }
 
-    public static <T> T[] assertNotEmpty(T[] array, String fieldName) throws IllegalArgumentException {
+    public static <T> T[] assertNotEmpty(T[] array, String fieldName)
+            throws IllegalArgumentException {
         assertNotNull(array, fieldName);
         if (array.length == 0) {
             throw new IllegalArgumentException(String.format("%s cannot be empty", fieldName));
@@ -83,7 +80,8 @@ public class ValidationUtils {
         return array;
     }
 
-    public static String assertStringNotEmpty(String string, String fieldName) throws IllegalArgumentException {
+    public static String assertStringNotEmpty(String string, String fieldName)
+            throws IllegalArgumentException {
         assertNotNull(string, fieldName);
         if (string.isEmpty()) {
             throw new IllegalArgumentException(String.format("%s cannot be empty", fieldName));

@@ -14,9 +14,6 @@
  */
 package com.amazonaws.partitions;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.partitions.model.Partitions;
@@ -26,37 +23,29 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.InputStream;
 
-/**
- * Loads all the partition files into memory.
- */
+/** Loads all the partition files into memory. */
 @SdkInternalApi
 public class PartitionsLoader {
 
-    /**
-     * class path from where all partition files are loaded.
-     */
-    public static final String PARTITIONS_RESOURCE_PATH =
-            "com/amazonaws/partitions/endpoints.json";
+    /** class path from where all partition files are loaded. */
+    public static final String PARTITIONS_RESOURCE_PATH = "com/amazonaws/partitions/endpoints.json";
 
-    /**
-     * override class path from where all partition files are loaded.
-     */
+    /** override class path from where all partition files are loaded. */
     public static final String PARTITIONS_OVERRIDE_RESOURCE_PATH =
             "com/amazonaws/partitions/override/endpoints.json";
 
-    /**
-     * Jackson object mapper that is used for parsing the partition files.
-     */
-    private static final ObjectMapper mapper = new ObjectMapper()
-            .disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)
-            .disable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
-            .enable(JsonParser.Feature.ALLOW_COMMENTS)
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    /** Jackson object mapper that is used for parsing the partition files. */
+    private static final ObjectMapper mapper =
+            new ObjectMapper()
+                    .disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)
+                    .disable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
+                    .enable(JsonParser.Feature.ALLOW_COMMENTS)
+                    .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-    /**
-     * classloader to to be used for loading the partitions.
-     */
+    /** classloader to to be used for loading the partitions. */
     private final ClassLoader classLoader;
 
     public PartitionsLoader() {
@@ -64,24 +53,27 @@ public class PartitionsLoader {
     }
 
     /**
-     * Loads the partition files from the {@link #PARTITIONS_OVERRIDE_RESOURCE_PATH}. If no files are present, then
-     * loads the partition files from the {@link #PARTITIONS_RESOURCE_PATH}
-     * <p/>
-     * Builds the {@link RegionMetadata} from the partition files.
+     * Loads the partition files from the {@link #PARTITIONS_OVERRIDE_RESOURCE_PATH}. If no files
+     * are present, then loads the partition files from the {@link #PARTITIONS_RESOURCE_PATH}
+     *
+     * <p>Builds the {@link RegionMetadata} from the partition files.
      */
     public PartitionMetadataProvider build() {
 
-        InputStream stream = classLoader
-                .getResourceAsStream(PARTITIONS_OVERRIDE_RESOURCE_PATH);
+        InputStream stream = classLoader.getResourceAsStream(PARTITIONS_OVERRIDE_RESOURCE_PATH);
 
         if (stream != null) {
-            return new PartitionMetadataProvider(loadPartitionFromStream(stream, PARTITIONS_OVERRIDE_RESOURCE_PATH).getPartitions());
+            return new PartitionMetadataProvider(
+                    loadPartitionFromStream(stream, PARTITIONS_OVERRIDE_RESOURCE_PATH)
+                            .getPartitions());
         } else {
             stream = classLoader.getResourceAsStream(PARTITIONS_RESOURCE_PATH);
             if (stream == null) {
-                throw new SdkClientException("Unable to load partition metadata from " + PARTITIONS_RESOURCE_PATH);
+                throw new SdkClientException(
+                        "Unable to load partition metadata from " + PARTITIONS_RESOURCE_PATH);
             }
-            return new PartitionMetadataProvider(loadPartitionFromStream(stream, PARTITIONS_RESOURCE_PATH).getPartitions());
+            return new PartitionMetadataProvider(
+                    loadPartitionFromStream(stream, PARTITIONS_RESOURCE_PATH).getPartitions());
         }
     }
 
@@ -92,8 +84,8 @@ public class PartitionsLoader {
             return mapper.readValue(stream, Partitions.class);
 
         } catch (IOException e) {
-            throw new SdkClientException("Error while loading partitions " +
-                    "file from " + location, e);
+            throw new SdkClientException(
+                    "Error while loading partitions " + "file from " + location, e);
         } finally {
             IOUtils.closeQuietly(stream, null);
         }

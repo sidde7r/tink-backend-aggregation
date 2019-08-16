@@ -14,25 +14,23 @@
  */
 package com.amazonaws.retry.v2;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class AndRetryConditionTest {
 
-    @Mock
-    private RetryCondition conditionOne;
+    @Mock private RetryCondition conditionOne;
 
-    @Mock
-    private RetryCondition conditionTwo;
+    @Mock private RetryCondition conditionTwo;
 
     private RetryCondition andCondition;
 
@@ -48,30 +46,26 @@ public class AndRetryConditionTest {
 
     @Test
     public void onlyFirstConditionIsTrue_ReturnsFalse() {
-        when(conditionOne.shouldRetry(any(RetryPolicyContext.class)))
-                .thenReturn(true);
+        when(conditionOne.shouldRetry(any(RetryPolicyContext.class))).thenReturn(true);
         assertFalse(andCondition.shouldRetry(RetryPolicyContexts.EMPTY));
     }
 
     @Test
     public void onlySecondConditionIsTrue_ReturnsFalse() {
-        when(conditionTwo.shouldRetry(any(RetryPolicyContext.class)))
-                .thenReturn(true);
+        when(conditionTwo.shouldRetry(any(RetryPolicyContext.class))).thenReturn(true);
         assertFalse(andCondition.shouldRetry(RetryPolicyContexts.EMPTY));
     }
 
     @Test
     public void bothConditionsAreTrue_ReturnsTrue() {
-        when(conditionOne.shouldRetry(any(RetryPolicyContext.class)))
-                .thenReturn(true);
-        when(conditionTwo.shouldRetry(any(RetryPolicyContext.class)))
-                .thenReturn(true);
+        when(conditionOne.shouldRetry(any(RetryPolicyContext.class))).thenReturn(true);
+        when(conditionTwo.shouldRetry(any(RetryPolicyContext.class))).thenReturn(true);
         assertTrue(andCondition.shouldRetry(RetryPolicyContexts.EMPTY));
     }
 
     /**
-     * The expected result for an AND condition with no conditions is a little unclear so we disallow it until there is a use
-     * case.
+     * The expected result for an AND condition with no conditions is a little unclear so we
+     * disallow it until there is a use case.
      */
     @Test(expected = IllegalArgumentException.class)
     public void noConditions_ThrowsException() {
@@ -80,16 +74,13 @@ public class AndRetryConditionTest {
 
     @Test
     public void singleConditionThatReturnsTrue_ReturnsTrue() {
-        when(conditionOne.shouldRetry(RetryPolicyContexts.EMPTY))
-                .thenReturn(true);
+        when(conditionOne.shouldRetry(RetryPolicyContexts.EMPTY)).thenReturn(true);
         assertTrue(new AndRetryCondition(conditionOne).shouldRetry(RetryPolicyContexts.EMPTY));
     }
 
     @Test
     public void singleConditionThatReturnsFalse_ReturnsFalse() {
-        when(conditionOne.shouldRetry(RetryPolicyContexts.EMPTY))
-                .thenReturn(false);
+        when(conditionOne.shouldRetry(RetryPolicyContexts.EMPTY)).thenReturn(false);
         assertFalse(new AndRetryCondition(conditionOne).shouldRetry(RetryPolicyContexts.EMPTY));
     }
-
 }

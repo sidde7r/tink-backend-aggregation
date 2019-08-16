@@ -32,5 +32,4 @@ public class NoOpSignerProvider extends SignerProvider {
     public Signer getSigner(SignerProviderContext context) {
         return signer;
     }
-
 }

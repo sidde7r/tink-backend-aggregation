@@ -15,18 +15,13 @@
 
 package com.amazonaws.internal;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.net.ssl.SSLSocket;
-
-import com.amazonaws.annotation.SdkInternalApi;
 import com.amazonaws.annotation.SdkTestInternalApi;
 import com.amazonaws.util.AWSRequestMetrics;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.net.ssl.SSLSocket;
 
-/**
- * A wrapper to SSLSocket with metric feature to record socket read time.
- */
+/** A wrapper to SSLSocket with metric feature to record socket read time. */
 public class SdkSSLMetricsSocket extends DelegateSSLSocket {
 
     private MetricsInputStream metricsIS;

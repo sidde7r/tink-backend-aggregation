@@ -14,10 +14,7 @@
  */
 package com.amazonaws.internal.config;
 
-/**
- * Builder class for HostRegexToRegionMapping which exposes its property
- * setters.
- */
+/** Builder class for HostRegexToRegionMapping which exposes its property setters. */
 public class HostRegexToRegionMappingJsonHelper implements Builder<HostRegexToRegionMapping> {
 
     private String hostNameRegex;
@@ -45,5 +42,4 @@ public class HostRegexToRegionMappingJsonHelper implements Builder<HostRegexToRe
     public HostRegexToRegionMapping build() {
         return new HostRegexToRegionMapping(hostNameRegex, regionName);
     }
-
 }

@@ -20,7 +20,6 @@ import com.amazonaws.util.BinaryUtils;
 import com.amazonaws.util.DateUtils;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -28,9 +27,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Date;
 
-/**
- * Thin wrapper around Jackson's JSON generator.
- */
+/** Thin wrapper around Jackson's JSON generator. */
 @SdkInternalApi
 public class SdkJsonGenerator implements StructuredJsonGenerator {
 
@@ -40,9 +37,7 @@ public class SdkJsonGenerator implements StructuredJsonGenerator {
      */
     private static final int DEFAULT_BUFFER_SIZE = 1024;
 
-    /**
-     * Indicates an issue writing JSON content.
-     */
+    /** Indicates an issue writing JSON content. */
     public static class JsonGenerationException extends SdkClientException {
 
         public JsonGenerationException(Throwable t) {
@@ -58,10 +53,7 @@ public class SdkJsonGenerator implements StructuredJsonGenerator {
 
     public SdkJsonGenerator(JsonFactory factory, String contentType) {
         try {
-            /**
-             * A {@link JsonGenerator} created is by default enabled with
-             * UTF-8 encoding
-             */
+            /** A {@link JsonGenerator} created is by default enabled with UTF-8 encoding */
             this.generator = factory.createGenerator(baos);
             this.contentType = contentType;
         } catch (IOException e) {
@@ -223,8 +215,8 @@ public class SdkJsonGenerator implements StructuredJsonGenerator {
     public StructuredJsonGenerator writeValue(BigDecimal value) {
         try {
             /**
-             * Note that this is not how the backend represents BigDecimal types. On the wire
-             * it's normally a JSON number but this causes problems with certain JSON implementations
+             * Note that this is not how the backend represents BigDecimal types. On the wire it's
+             * normally a JSON number but this causes problems with certain JSON implementations
              * that parse JSON numbers as floating points automatically. (See API-433)
              */
             generator.writeString(value.toString());
@@ -245,8 +237,7 @@ public class SdkJsonGenerator implements StructuredJsonGenerator {
     }
 
     /**
-     * Closes the generator and flushes to write. Must be called when finished writing JSON
-     * content.
+     * Closes the generator and flushes to write. Must be called when finished writing JSON content.
      */
     private void close() {
         try {

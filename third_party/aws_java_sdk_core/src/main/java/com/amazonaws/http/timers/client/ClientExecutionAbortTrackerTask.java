@@ -14,31 +14,27 @@
  */
 package com.amazonaws.http.timers.client;
 
-import tink.org.apache.http.client.methods.HttpRequestBase;
-
 import com.amazonaws.annotation.SdkInternalApi;
+import tink.org.apache.http.client.methods.HttpRequestBase;
 
 @SdkInternalApi
 public interface ClientExecutionAbortTrackerTask {
 
     /**
      * Client execution timer task needs to abort the current running HTTP request when executed.
-     * 
+     *
      * @param newRequest
      */
     void setCurrentHttpRequest(HttpRequestBase newRequest);
 
-    /**
-     * @return True if client execution has been aborted by the timer task. False otherwise
-     */
+    /** @return True if client execution has been aborted by the timer task. False otherwise */
     boolean hasTimeoutExpired();
 
     /**
      * @return True if the timer task has been scheduled. False if the client execution timeout is
-     *         disabled for this request
+     *     disabled for this request
      */
     boolean isEnabled();
 
     void cancelTask();
-
 }

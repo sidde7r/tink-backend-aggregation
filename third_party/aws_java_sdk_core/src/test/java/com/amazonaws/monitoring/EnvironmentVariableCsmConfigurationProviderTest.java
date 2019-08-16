@@ -14,26 +14,24 @@
  */
 package com.amazonaws.monitoring;
 
-import com.amazonaws.SdkClientException;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-import utils.EnvironmentVariableHelper;
-
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_CLIENT_ID_ENV_VAR;
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_ENABLED_ENV_VAR;
 import static com.amazonaws.SDKGlobalConfiguration.AWS_CSM_PORT_ENV_VAR;
 import static com.amazonaws.SDKGlobalConfiguration.DEFAULT_AWS_CSM_PORT;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Tests for {@link EnvironmentVariableCsmConfigurationProvider}.
- */
+import com.amazonaws.SdkClientException;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+import utils.EnvironmentVariableHelper;
+
+/** Tests for {@link EnvironmentVariableCsmConfigurationProvider}. */
 public class EnvironmentVariableCsmConfigurationProviderTest {
     private static final EnvironmentVariableHelper environmentVariableHelper =
-        new EnvironmentVariableHelper();
+            new EnvironmentVariableHelper();
     private final EnvironmentVariableCsmConfigurationProvider provider =
-        new EnvironmentVariableCsmConfigurationProvider();
+            new EnvironmentVariableCsmConfigurationProvider();
 
     @Before
     public void testSetup() {

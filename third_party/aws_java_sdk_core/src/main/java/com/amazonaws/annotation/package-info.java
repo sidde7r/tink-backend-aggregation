@@ -13,7 +13,5 @@
  * limitations under the License.
  */
 
-/**
- * AWS Java SDK annotations.
- */
+/** AWS Java SDK annotations. */
 package com.amazonaws.annotation;

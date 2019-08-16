@@ -14,16 +14,14 @@
  */
 package com.amazonaws.monitoring;
 
-import com.amazonaws.SdkClientException;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Tests for {@link CsmConfigurationProviderChain}.
- */
+import com.amazonaws.SdkClientException;
+import org.junit.Test;
+
+/** Tests for {@link CsmConfigurationProviderChain}. */
 public class CsmConfigurationProviderChainTest {
 
     @Test(expected = SdkClientException.class)
@@ -48,8 +46,8 @@ public class CsmConfigurationProviderChainTest {
         when(provider1.getConfiguration()).thenReturn(cfg1);
         when(provider2.getConfiguration()).thenReturn(cfg2);
 
-        CsmConfigurationProviderChain chain = new CsmConfigurationProviderChain(provider1,
-                provider2);
+        CsmConfigurationProviderChain chain =
+                new CsmConfigurationProviderChain(provider1, provider2);
 
         assertEquals(cfg1, chain.getConfiguration());
     }
@@ -66,10 +64,9 @@ public class CsmConfigurationProviderChainTest {
         when(provider2.getConfiguration()).thenThrow(new SdkClientException(""));
         when(provider3.getConfiguration()).thenReturn(cfg);
 
-        CsmConfigurationProviderChain chain = new CsmConfigurationProviderChain(provider1,
-                provider2, provider3);
+        CsmConfigurationProviderChain chain =
+                new CsmConfigurationProviderChain(provider1, provider2, provider3);
 
         assertEquals(cfg, chain.getConfiguration());
-
     }
 }

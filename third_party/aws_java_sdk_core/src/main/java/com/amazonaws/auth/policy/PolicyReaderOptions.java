@@ -16,37 +16,39 @@
 package com.amazonaws.auth.policy;
 
 /**
- * Options that affect the way in which {@link Policy#fromJson(String, PolicyReaderOptions)} will generate a Policy.
+ * Options that affect the way in which {@link Policy#fromJson(String, PolicyReaderOptions)} will
+ * generate a Policy.
  */
 public class PolicyReaderOptions {
     private boolean stripAwsPrincipalIdHyphensEnabled = true;
 
-    /**
-     * Whether AWS account IDs should have hyphens removed in their name.
-     */
+    /** Whether AWS account IDs should have hyphens removed in their name. */
     public boolean isStripAwsPrincipalIdHyphensEnabled() {
         return stripAwsPrincipalIdHyphensEnabled;
     }
 
     /**
-     * Configure whether hyphens should be stripped from the AWS principal IDs that are read from the JSON-formatted
-     * policy document. This is useful because AWS account IDs must be specified without hyphens, but the user may not be
-     * aware that hyphens should not be used when configuring their policy.
+     * Configure whether hyphens should be stripped from the AWS principal IDs that are read from
+     * the JSON-formatted policy document. This is useful because AWS account IDs must be specified
+     * without hyphens, but the user may not be aware that hyphens should not be used when
+     * configuring their policy.
      *
-     * This behavior may be undesirable when using IAM AWS principal IDs, which may contain hyphens. In that case, this
-     * option may be explicitly disabled. If this is set to false, you must remove hyphens from your AWS principal IDs
-     * manually.
+     * <p>This behavior may be undesirable when using IAM AWS principal IDs, which may contain
+     * hyphens. In that case, this option may be explicitly disabled. If this is set to false, you
+     * must remove hyphens from your AWS principal IDs manually.
      *
-     * By default, this is enabled (true).
+     * <p>By default, this is enabled (true).
      */
     public void setStripAwsPrincipalIdHyphensEnabled(boolean stripAwsPrincipalIdHyphensEnabled) {
         this.stripAwsPrincipalIdHyphensEnabled = stripAwsPrincipalIdHyphensEnabled;
     }
 
     /**
-     * Fluent-style setter for {@link #setStripAwsPrincipalIdHyphensEnabled(boolean)} that returns "this" for chaining.
+     * Fluent-style setter for {@link #setStripAwsPrincipalIdHyphensEnabled(boolean)} that returns
+     * "this" for chaining.
      */
-    public PolicyReaderOptions withStripAwsPrincipalIdHyphensEnabled(boolean stripAwsPrincipalIdHyphensEnabled) {
+    public PolicyReaderOptions withStripAwsPrincipalIdHyphensEnabled(
+            boolean stripAwsPrincipalIdHyphensEnabled) {
         setStripAwsPrincipalIdHyphensEnabled(stripAwsPrincipalIdHyphensEnabled);
         return this;
     }

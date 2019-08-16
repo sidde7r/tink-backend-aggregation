@@ -18,11 +18,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Documenting annotation to indicate a class is immutable.
- */
+/** Documenting annotation to indicate a class is immutable. */
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
-public @interface Immutable {
-}
+public @interface Immutable {}

@@ -18,15 +18,13 @@
  */
 package com.amazonaws.util;
 
+import com.amazonaws.SDKGlobalConfiguration;
 import java.io.IOException;
 import java.util.Map;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.amazonaws.SDKGlobalConfiguration;
 
 public class EC2MetadataUtilsIntegrationTest {
 
@@ -34,7 +32,6 @@ public class EC2MetadataUtilsIntegrationTest {
 
     @BeforeClass
     public static void setUp() throws IOException {
-
 
         SERVER = new EC2MetadataUtilsServer("localhost", 0);
         SERVER.start();
@@ -55,8 +52,7 @@ public class EC2MetadataUtilsIntegrationTest {
 
     @Test
     public void testIamInfo() {
-        EC2MetadataUtils.IAMInfo info = EC2MetadataUtils
-                .getIAMInstanceProfileInfo();
+        EC2MetadataUtils.IAMInfo info = EC2MetadataUtils.getIAMInstanceProfileInfo();
 
         Assert.assertEquals("Success", info.code);
         Assert.assertNull(info.message);
@@ -67,13 +63,12 @@ public class EC2MetadataUtilsIntegrationTest {
 
     @Test
     public void testIamCredentials() {
-        Map<String, EC2MetadataUtils.IAMSecurityCredential> map = EC2MetadataUtils
-                .getIAMSecurityCredentials();
+        Map<String, EC2MetadataUtils.IAMSecurityCredential> map =
+                EC2MetadataUtils.getIAMSecurityCredentials();
 
         Assert.assertEquals(2, map.size());
 
-        for (Map.Entry<String, EC2MetadataUtils.IAMSecurityCredential> entry : map
-                .entrySet()) {
+        for (Map.Entry<String, EC2MetadataUtils.IAMSecurityCredential> entry : map.entrySet()) {
 
             Assert.assertNotNull(entry.getKey());
             Assert.assertNotNull(entry.getValue().code);

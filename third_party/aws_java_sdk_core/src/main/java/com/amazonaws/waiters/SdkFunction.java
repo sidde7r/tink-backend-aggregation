@@ -21,13 +21,11 @@ import com.amazonaws.annotation.SdkProtectedApi;
 public interface SdkFunction<Input, Output> {
 
     /**
-     * Abstract method that makes a call to the operation
-     * specified by the waiter by taking the corresponding
-     * input and returns the corresponding output
+     * Abstract method that makes a call to the operation specified by the waiter by taking the
+     * corresponding input and returns the corresponding output
      *
      * @param input Corresponding request for the operation
      * @return Corresponding result of the operation
      */
     Output apply(Input input);
 }
-

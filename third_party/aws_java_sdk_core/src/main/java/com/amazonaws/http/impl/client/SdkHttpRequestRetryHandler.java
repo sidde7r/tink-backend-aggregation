@@ -14,28 +14,26 @@
  */
 package com.amazonaws.http.impl.client;
 
-import java.io.IOException;
-
-import tink.org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
-import tink.org.apache.http.protocol.HttpContext;
-
 import com.amazonaws.annotation.ThreadSafe;
 import com.amazonaws.util.AWSRequestMetrics;
 import com.amazonaws.util.AWSRequestMetrics.Field;
+import java.io.IOException;
+import tink.org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
+import tink.org.apache.http.protocol.HttpContext;
 
 @ThreadSafe
 public class SdkHttpRequestRetryHandler extends DefaultHttpRequestRetryHandler {
     public static final SdkHttpRequestRetryHandler Singleton = new SdkHttpRequestRetryHandler();
+
     private SdkHttpRequestRetryHandler() {}
 
-    @Override public boolean retryRequest(
-            final IOException exception,
-            int executionCount,
-            final HttpContext context) {
+    @Override
+    public boolean retryRequest(
+            final IOException exception, int executionCount, final HttpContext context) {
         boolean retry = super.retryRequest(exception, executionCount, context);
         if (retry) {
-            AWSRequestMetrics awsRequestMetrics = (AWSRequestMetrics) context
-                    .getAttribute(AWSRequestMetrics.SIMPLE_NAME);
+            AWSRequestMetrics awsRequestMetrics =
+                    (AWSRequestMetrics) context.getAttribute(AWSRequestMetrics.SIMPLE_NAME);
             if (awsRequestMetrics != null) {
                 awsRequestMetrics.incrementCounter(Field.HttpClientRetryCount);
             }

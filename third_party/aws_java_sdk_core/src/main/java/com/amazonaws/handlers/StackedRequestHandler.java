@@ -29,27 +29,24 @@ import java.util.List;
  * Composite {@link RequestHandler2} to execute a chain of {@link RequestHandler2} implementations
  * in stack order. That is if you have request handlers R1, R2, R3 the order of execution is as
  * follows
- * 
- * <pre>
- *    
- * {@code   
- * R1.beforeMarshalling   
- * R2.beforeMarshalling   
- * R3.beforeMarshalling   
- *    
- * R1.beforeRequest   
- * R2.beforeRequest   
- * R3.beforeRequest   
- *    
+ *
+ * <pre>{@code
+ * R1.beforeMarshalling
+ * R2.beforeMarshalling
+ * R3.beforeMarshalling
+ *
+ * R1.beforeRequest
+ * R2.beforeRequest
+ * R3.beforeRequest
+ *
  * R3.beforeUnmarshalling
  * R2.beforeUnmarshalling
  * R1.beforeUnmarshalling
- * 
- * R3.after(Response|Error)   
- * R2.after(Response|Error)   
- * R1.after(Response|Error)   
- * }
- * </pre>
+ *
+ * R3.after(Response|Error)
+ * R2.after(Response|Error)
+ * R1.after(Response|Error)
+ * }</pre>
  */
 @ThreadSafe
 public class StackedRequestHandler implements IRequestHandler2 {
@@ -57,12 +54,13 @@ public class StackedRequestHandler implements IRequestHandler2 {
     private final List<RequestHandler2> inOrderRequestHandlers;
     private final List<RequestHandler2> reverseOrderRequestHandlers;
 
-    public StackedRequestHandler(RequestHandler2...requestHandlers) {
-       this(Arrays.asList(ValidationUtils.assertNotNull(requestHandlers, "requestHandlers")));
+    public StackedRequestHandler(RequestHandler2... requestHandlers) {
+        this(Arrays.asList(ValidationUtils.assertNotNull(requestHandlers, "requestHandlers")));
     }
 
     public StackedRequestHandler(List<RequestHandler2> requestHandlers) {
-        this.inOrderRequestHandlers = ValidationUtils.assertNotNull(requestHandlers, "requestHandlers");
+        this.inOrderRequestHandlers =
+                ValidationUtils.assertNotNull(requestHandlers, "requestHandlers");
         this.reverseOrderRequestHandlers = new ArrayList<RequestHandler2>(requestHandlers);
         Collections.reverse(reverseOrderRequestHandlers);
     }
@@ -102,7 +100,7 @@ public class StackedRequestHandler implements IRequestHandler2 {
     @Override
     public HttpResponse beforeUnmarshalling(Request<?> request, HttpResponse origHttpResponse) {
         HttpResponse toReturn = origHttpResponse;
-        for(RequestHandler2 handler : reverseOrderRequestHandlers) {
+        for (RequestHandler2 handler : reverseOrderRequestHandlers) {
             toReturn = handler.beforeUnmarshalling(request, toReturn);
         }
         return toReturn;
@@ -110,21 +108,21 @@ public class StackedRequestHandler implements IRequestHandler2 {
 
     @Override
     public void afterAttempt(HandlerAfterAttemptContext context) {
-        for(RequestHandler2 handler : reverseOrderRequestHandlers) {
+        for (RequestHandler2 handler : reverseOrderRequestHandlers) {
             handler.afterAttempt(context);
         }
     }
 
     @Override
     public void afterResponse(Request<?> request, Response<?> response) {
-        for(RequestHandler2 handler : reverseOrderRequestHandlers) {
+        for (RequestHandler2 handler : reverseOrderRequestHandlers) {
             handler.afterResponse(request, response);
         }
     }
 
     @Override
     public void afterError(Request<?> request, Response<?> response, Exception e) {
-        for(RequestHandler2 handler : reverseOrderRequestHandlers) {
+        for (RequestHandler2 handler : reverseOrderRequestHandlers) {
             handler.afterError(request, response, e);
         }
     }

@@ -24,9 +24,7 @@ public class CollectionUtils {
         return collection == null || collection.isEmpty();
     }
 
-    /**
-     * Returns a new list containing the second list appended to the first list.
-     */
+    /** Returns a new list containing the second list appended to the first list. */
     public static <T> List<T> mergeLists(List<T> list1, List<T> list2) {
         List<T> merged = new LinkedList<T>();
         if (list1 != null) {
@@ -41,9 +39,10 @@ public class CollectionUtils {
     /**
      * Joins a collection of strings with the given separator into a single string.
      *
-     * @param toJoin    Collection containing items to join.
+     * @param toJoin Collection containing items to join.
      * @param separator String to join items with.
-     * @return Empty string if collection is null or empty. Otherwise joins all strings in the collection with the separator.
+     * @return Empty string if collection is null or empty. Otherwise joins all strings in the
+     *     collection with the separator.
      */
     public static String join(Collection<String> toJoin, String separator) {
         if (isNullOrEmpty(toJoin)) {
@@ -53,7 +52,7 @@ public class CollectionUtils {
         StringBuilder joinedString = new StringBuilder();
         int currentIndex = 0;
         for (String s : toJoin) {
-            if(s != null) {
+            if (s != null) {
                 joinedString.append(s);
             }
             if (currentIndex++ != toJoin.size() - 1) {

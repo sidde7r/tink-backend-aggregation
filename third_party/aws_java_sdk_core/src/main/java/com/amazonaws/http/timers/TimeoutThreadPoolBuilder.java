@@ -14,13 +14,12 @@
  */
 package com.amazonaws.http.timers;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.annotation.SdkInternalApi;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-
-import com.amazonaws.SdkClientException;
-import com.amazonaws.annotation.SdkInternalApi;
 
 /**
  * Utility class to build the {@link ScheduledThreadPoolExecutor} for the request timeout and client
@@ -28,7 +27,7 @@ import com.amazonaws.annotation.SdkInternalApi;
  */
 @SdkInternalApi
 public class TimeoutThreadPoolBuilder {
-    
+
     /**
      * Creates a {@link ScheduledThreadPoolExecutor} with custom name for the threads.
      *
@@ -36,7 +35,8 @@ public class TimeoutThreadPoolBuilder {
      * @return The default thread pool for request timeout and client execution timeout features.
      */
     public static ScheduledThreadPoolExecutor buildDefaultTimeoutThreadPool(final String name) {
-        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(5, getThreadFactory(name));
+        ScheduledThreadPoolExecutor executor =
+                new ScheduledThreadPoolExecutor(5, getThreadFactory(name));
         safeSetRemoveOnCancel(executor);
         executor.setKeepAliveTime(5, TimeUnit.SECONDS);
         executor.allowCoreThreadTimeOut(true);
@@ -62,12 +62,14 @@ public class TimeoutThreadPoolBuilder {
     /**
      * {@link ScheduledThreadPoolExecutor#setRemoveOnCancelPolicy(boolean)} is not available in Java
      * 6 so we invoke it with reflection to be able to compile against Java 6.
-     * 
+     *
      * @param executor
      */
     private static void safeSetRemoveOnCancel(ScheduledThreadPoolExecutor executor) {
         try {
-            executor.getClass().getMethod("setRemoveOnCancelPolicy", boolean.class).invoke(executor, Boolean.TRUE);
+            executor.getClass()
+                    .getMethod("setRemoveOnCancelPolicy", boolean.class)
+                    .invoke(executor, Boolean.TRUE);
         } catch (IllegalAccessException e) {
             throwSetRemoveOnCancelException(e);
         } catch (IllegalArgumentException e) {
@@ -75,19 +77,21 @@ public class TimeoutThreadPoolBuilder {
         } catch (InvocationTargetException e) {
             throwSetRemoveOnCancelException(e.getCause());
         } catch (NoSuchMethodException e) {
-            throw new SdkClientException("The request timeout feature is only available for Java 1.7 and above.");
+            throw new SdkClientException(
+                    "The request timeout feature is only available for Java 1.7 and above.");
         } catch (SecurityException e) {
-            throw new SdkClientException("The request timeout feature needs additional permissions to function.", e);
+            throw new SdkClientException(
+                    "The request timeout feature needs additional permissions to function.", e);
         }
     }
 
     /**
      * Wrap exception caused by calling setRemoveOnCancel in a {@link SdkClientException}.
-     * 
-     * @param cause
-     *            Root cause of exception
+     *
+     * @param cause Root cause of exception
      */
     private static void throwSetRemoveOnCancelException(Throwable cause) {
-        throw new SdkClientException("Unable to setRemoveOnCancelPolicy for request timeout thread pool", cause);
+        throw new SdkClientException(
+                "Unable to setRemoveOnCancelPolicy for request timeout thread pool", cause);
     }
 }

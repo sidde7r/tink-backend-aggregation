@@ -22,9 +22,6 @@ import com.amazonaws.SdkClientException;
  */
 public abstract class AwsRegionProvider {
 
-    /**
-     * @return Region name to use or null if region information is not available.
-     */
+    /** @return Region name to use or null if region information is not available. */
     public abstract String getRegion() throws SdkClientException;
-
 }

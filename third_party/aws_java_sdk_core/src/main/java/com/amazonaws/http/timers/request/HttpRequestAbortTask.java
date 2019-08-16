@@ -16,9 +16,7 @@ package com.amazonaws.http.timers.request;
 
 import com.amazonaws.annotation.SdkInternalApi;
 
-/**
- * Task to be scheduled by {@link HttpRequestTimer}
- */
+/** Task to be scheduled by {@link HttpRequestTimer} */
 @SdkInternalApi
 public interface HttpRequestAbortTask extends Runnable {
 

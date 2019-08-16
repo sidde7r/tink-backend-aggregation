@@ -14,7 +14,6 @@
  */
 package com.amazonaws.client;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.Request;
 import com.amazonaws.RequestConfig;
 import com.amazonaws.SdkBaseException;
@@ -26,7 +25,7 @@ import com.amazonaws.transform.Marshaller;
 /**
  * Encapsulates parameters needed for a particular API call. Captures input and output pojo types.
  *
- * @param <Input>  Input POJO type.
+ * @param <Input> Input POJO type.
  * @param <Output> Output POJO type.
  */
 @SdkProtectedApi

@@ -18,19 +18,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.amazonaws.auth.AWS4Signer;
 import com.amazonaws.auth.QueryStringSigner;
 import com.amazonaws.http.IdleConnectionReaper;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class AmazonWebServiceClientTest {
 
     @Test
     public void emptyClient() {
-        AmazonWebServiceClient client =
-            new AmazonWebServiceClient(new ClientConfiguration()) { };
+        AmazonWebServiceClient client = new AmazonWebServiceClient(new ClientConfiguration()) {};
 
         try {
             client.getServiceName();
@@ -93,11 +91,11 @@ public class AmazonWebServiceClientTest {
      */
     @Test
     public void connectionManagersAreUnregisteredFromIdleConnectionReaper() {
-        // Clears out the IdleConnectionReaper. This is helpful when there are open registered connections from previous tests.
+        // Clears out the IdleConnectionReaper. This is helpful when there are open registered
+        // connections from previous tests.
         IdleConnectionReaper.shutdown();
         for (int count = 0; count < 100; count++) {
-            new AmazonWebServiceClient(new ClientConfiguration()) {
-            }.shutdown();
+            new AmazonWebServiceClient(new ClientConfiguration()) {}.shutdown();
         }
         assertEquals(0, IdleConnectionReaper.getRegisteredConnectionManagers().size());
     }

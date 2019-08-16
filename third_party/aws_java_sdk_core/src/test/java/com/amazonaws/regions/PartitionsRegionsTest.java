@@ -19,9 +19,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Test cases for partition based region implementation and endpoint guessing.
- */
+/** Test cases for partition based region implementation and endpoint guessing. */
 public class PartitionsRegionsTest {
 
     private static final String KeyManagementService = "kms";
@@ -50,8 +48,7 @@ public class PartitionsRegionsTest {
 
     @Test
     public void endpoint_information_for_completely_new_service_returns_null() {
-        final Region region = RegionUtils.getRegion(Regions.AP_NORTHEAST_1
-                .getName());
+        final Region region = RegionUtils.getRegion(Regions.AP_NORTHEAST_1.getName());
         final String serviceName = "unknown-service";
         Assert.assertNull(region.getServiceEndpoint(serviceName));
         Assert.assertFalse(region.hasHttpEndpoint(serviceName));

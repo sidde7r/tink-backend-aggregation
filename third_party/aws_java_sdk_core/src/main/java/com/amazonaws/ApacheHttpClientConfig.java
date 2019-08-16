@@ -15,12 +15,9 @@
 package com.amazonaws;
 
 import com.amazonaws.annotation.NotThreadSafe;
-
 import tink.org.apache.http.conn.socket.ConnectionSocketFactory;
 
-/**
- * Used for Apache HTTP client specific custom configurations.
- */
+/** Used for Apache HTTP client specific custom configurations. */
 @NotThreadSafe
 public final class ApacheHttpClientConfig {
     private ConnectionSocketFactory sslSocketFactory;
@@ -32,8 +29,7 @@ public final class ApacheHttpClientConfig {
     }
 
     /**
-     * Returns a custom Apache HTTP client specific SSL socket factory; 
-     * or null if there is none.
+     * Returns a custom Apache HTTP client specific SSL socket factory; or null if there is none.
      */
     public ConnectionSocketFactory getSslSocketFactory() {
         return sslSocketFactory;
@@ -41,23 +37,21 @@ public final class ApacheHttpClientConfig {
 
     /**
      * Sets a custom Apache HTTP client specific SSL socket factory.
-     * 
-     * @param sslSocketFactory a custom Apache HTTP client specific SSL socket 
-     * factory; or null if there is none.
+     *
+     * @param sslSocketFactory a custom Apache HTTP client specific SSL socket factory; or null if
+     *     there is none.
      */
     public void setSslSocketFactory(ConnectionSocketFactory sslSocketFactory) {
         this.sslSocketFactory = sslSocketFactory;
     }
 
     /**
-     * Fluent API for setting a custom Apache HTTP client specific SSL socket
-     * factory.
-     * 
-     * @param sslSocketFactory a custom Apache HTTP client specific SSL socket 
-     * factory; or null if there is none.
+     * Fluent API for setting a custom Apache HTTP client specific SSL socket factory.
+     *
+     * @param sslSocketFactory a custom Apache HTTP client specific SSL socket factory; or null if
+     *     there is none.
      */
-    public ApacheHttpClientConfig withSslSocketFactory(
-            ConnectionSocketFactory sslSocketFactory) {
+    public ApacheHttpClientConfig withSslSocketFactory(ConnectionSocketFactory sslSocketFactory) {
         this.sslSocketFactory = sslSocketFactory;
         return this;
     }

@@ -14,15 +14,12 @@
  */
 package com.amazonaws.internal;
 
+import com.amazonaws.log.InternalLogApi;
+import com.amazonaws.log.InternalLogFactory;
 import java.io.Closeable;
 import java.io.IOException;
 
-import com.amazonaws.log.InternalLogApi;
-import com.amazonaws.log.InternalLogFactory;
-
-/**
- * Utilities for IO operations.
- */
+/** Utilities for IO operations. */
 enum SdkIOUtils {
     ;
     private static final InternalLogApi defaultLog = InternalLogFactory.getLog(SdkIOUtils.class);
@@ -32,6 +29,7 @@ enum SdkIOUtils {
     }
     /**
      * Closes the given Closeable quietly.
+     *
      * @param is the given closeable
      * @param log logger used to log any failure should the close fail
      */

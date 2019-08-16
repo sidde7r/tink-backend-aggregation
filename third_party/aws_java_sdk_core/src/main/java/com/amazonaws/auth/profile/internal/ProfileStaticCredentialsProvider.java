@@ -52,30 +52,33 @@ public class ProfileStaticCredentialsProvider implements AWSCredentialsProvider 
 
     private AWSCredentials fromStaticCredentials() {
         if (StringUtils.isNullOrEmpty(profile.getAwsAccessIdKey())) {
-            throw new SdkClientException(String.format(
-                    "Unable to load credentials into profile [%s]: AWS Access Key ID is not specified.",
-                    profile.getProfileName()));
+            throw new SdkClientException(
+                    String.format(
+                            "Unable to load credentials into profile [%s]: AWS Access Key ID is not specified.",
+                            profile.getProfileName()));
         }
         if (StringUtils.isNullOrEmpty(profile.getAwsSecretAccessKey())) {
-            throw new SdkClientException(String.format(
-                    "Unable to load credentials into profile [%s]: AWS Secret Access Key is not specified.",
-                    profile.getAwsSecretAccessKey()));
+            throw new SdkClientException(
+                    String.format(
+                            "Unable to load credentials into profile [%s]: AWS Secret Access Key is not specified.",
+                            profile.getAwsSecretAccessKey()));
         }
 
         if (profile.getAwsSessionToken() == null) {
-            return new BasicAWSCredentials(profile.getAwsAccessIdKey(),
-                                           profile.getAwsSecretAccessKey());
+            return new BasicAWSCredentials(
+                    profile.getAwsAccessIdKey(), profile.getAwsSecretAccessKey());
         } else {
             if (profile.getAwsSessionToken().isEmpty()) {
-                throw new SdkClientException(String.format(
-                        "Unable to load credentials into profile [%s]: AWS Session Token is empty.",
-                        profile.getProfileName()));
+                throw new SdkClientException(
+                        String.format(
+                                "Unable to load credentials into profile [%s]: AWS Session Token is empty.",
+                                profile.getProfileName()));
             }
 
-            return new BasicSessionCredentials(profile.getAwsAccessIdKey(),
-                                               profile.getAwsSecretAccessKey(),
-                                               profile.getAwsSessionToken());
+            return new BasicSessionCredentials(
+                    profile.getAwsAccessIdKey(),
+                    profile.getAwsSecretAccessKey(),
+                    profile.getAwsSessionToken());
         }
     }
-
 }

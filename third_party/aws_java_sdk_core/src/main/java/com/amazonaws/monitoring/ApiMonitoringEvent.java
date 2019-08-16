@@ -15,11 +15,9 @@
 
 package com.amazonaws.monitoring;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
- * Base class contains a collection of data that describes a specific Api Call event that occurs during the execution of SDK logic
+ * Base class contains a collection of data that describes a specific Api Call event that occurs
+ * during the execution of SDK logic
  */
 public abstract class ApiMonitoringEvent implements MonitoringEvent {
 
@@ -29,16 +27,12 @@ public abstract class ApiMonitoringEvent implements MonitoringEvent {
     protected Long timestamp;
     protected Integer version;
 
-    /**
-     * @return the operation name for the api call being made.
-     */
+    /** @return the operation name for the api call being made. */
     public String getApi() {
         return api;
     }
 
-    /**
-     * @return The service against which the call is being made.
-     */
+    /** @return The service against which the call is being made. */
     public String getService() {
         return service;
     }
@@ -52,7 +46,8 @@ public abstract class ApiMonitoringEvent implements MonitoringEvent {
     public abstract ApiMonitoringEvent withService(String service);
 
     /**
-     * @return The "ClientId" configuration value as obtained from an application configuration provider chain
+     * @return The "ClientId" configuration value as obtained from an application configuration
+     *     provider chain
      */
     public String getClientId() {
         return clientId;
@@ -67,15 +62,16 @@ public abstract class ApiMonitoringEvent implements MonitoringEvent {
     public abstract ApiMonitoringEvent withClientId(String clientId);
 
     /**
-     * @return Contains the elapsed time, in milliseconds, since January 1st, 1970, for the time point at which the event
-     * occurred.
+     * @return Contains the elapsed time, in milliseconds, since January 1st, 1970, for the time
+     *     point at which the event occurred.
      */
     public Long getTimestamp() {
         return timestamp;
     }
 
     /**
-     * Sets the timestamp, in milliseconds, since January 1st, 1970, for the time point at which the event.
+     * Sets the timestamp, in milliseconds, since January 1st, 1970, for the time point at which the
+     * event.
      *
      * @param timestamp The new timestamp value.
      * @return This object for method chaining.
@@ -90,9 +86,7 @@ public abstract class ApiMonitoringEvent implements MonitoringEvent {
      */
     public abstract ApiMonitoringEvent withApi(String api);
 
-    /**
-     * @return the version.
-     */
+    /** @return the version. */
     public Integer getVersion() {
         return version;
     }
@@ -105,8 +99,6 @@ public abstract class ApiMonitoringEvent implements MonitoringEvent {
      */
     public abstract ApiMonitoringEvent withVersion(Integer version);
 
-    /**
-     * @return the type of the event
-     */
+    /** @return the type of the event */
     public abstract String getType();
 }

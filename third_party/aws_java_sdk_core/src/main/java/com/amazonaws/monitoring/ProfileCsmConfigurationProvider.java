@@ -25,11 +25,11 @@ import com.amazonaws.auth.profile.internal.BasicProfile;
 import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
 
 /**
- * Configuration provider that sources the client side monitoring configuration
- * parameters from the configured profile in the shared AWS config file.
- * <p />
- * If no profile name is given, {@link AwsProfileNameLoader} will be used to
- * find the profile to load the configuration from.
+ * Configuration provider that sources the client side monitoring configuration parameters from the
+ * configured profile in the shared AWS config file.
+ *
+ * <p>If no profile name is given, {@link AwsProfileNameLoader} will be used to find the profile to
+ * load the configuration from.
  */
 @ThreadSafe
 public final class ProfileCsmConfigurationProvider implements CsmConfigurationProvider {
@@ -45,21 +45,20 @@ public final class ProfileCsmConfigurationProvider implements CsmConfigurationPr
 
     /**
      * No-arg constructor.
-     * <p />
-     * {@link AwsProfileNameLoader} and {@link
-     * AwsProfileFileLocationProvider#DEFAULT_CONFIG_LOCATION_PROVIDER} will be
-     * used to find locate the profile name and config file respectively.
+     *
+     * <p>{@link AwsProfileNameLoader} and {@link
+     * AwsProfileFileLocationProvider#DEFAULT_CONFIG_LOCATION_PROVIDER} will be used to find locate
+     * the profile name and config file respectively.
      */
     public ProfileCsmConfigurationProvider() {
         this(null, AwsProfileFileLocationProvider.DEFAULT_CONFIG_LOCATION_PROVIDER);
     }
 
     /**
-     * Create an instance that loads the configuration from the given profile
-     * name.
-     * <p />
-     * {@link AwsProfileFileLocationProvider#DEFAULT_CONFIG_LOCATION_PROVIDER}
-     * will be used to find locate the config file.
+     * Create an instance that loads the configuration from the given profile name.
+     *
+     * <p>{@link AwsProfileFileLocationProvider#DEFAULT_CONFIG_LOCATION_PROVIDER} will be used to
+     * find locate the config file.
      *
      * @param profileName The name of the profile.
      */
@@ -68,15 +67,14 @@ public final class ProfileCsmConfigurationProvider implements CsmConfigurationPr
     }
 
     /**
-     * Create an instance that loads the configuration from the given profile
-     * name and config file location.
+     * Create an instance that loads the configuration from the given profile name and config file
+     * location.
      *
      * @param profileName The name of the profile.
-     * @param configFileLocationProvider The provider to use to locate the
-     * config file.
+     * @param configFileLocationProvider The provider to use to locate the config file.
      */
-    public ProfileCsmConfigurationProvider(String profileName,
-            AwsProfileFileLocationProvider configFileLocationProvider) {
+    public ProfileCsmConfigurationProvider(
+            String profileName, AwsProfileFileLocationProvider configFileLocationProvider) {
         this.profileName = profileName;
         this.configFileLocationProvider = configFileLocationProvider;
     }
@@ -87,15 +85,17 @@ public final class ProfileCsmConfigurationProvider implements CsmConfigurationPr
 
         BasicProfile profile = getProfile(profileName);
         if (profile == null) {
-            throw new SdkClientException(String.format("Could not find the '%s' profile!",
-                        profileName));
+            throw new SdkClientException(
+                    String.format("Could not find the '%s' profile!", profileName));
         }
 
         String enabled = profile.getPropertyValue(CSM_ENABLED_PROPERTY);
 
         if (enabled == null) {
-            throw new SdkClientException(String.format("The '%s' profile does not define all the"
-                                                       + " required properties!", profileName));
+            throw new SdkClientException(
+                    String.format(
+                            "The '%s' profile does not define all the" + " required properties!",
+                            profileName));
         }
 
         String port = profile.getPropertyValue(CSM_PORT_PROPERTY);
@@ -105,11 +105,13 @@ public final class ProfileCsmConfigurationProvider implements CsmConfigurationPr
         try {
             int portNumber = port == null ? DEFAULT_AWS_CSM_PORT : Integer.parseInt(port);
 
-            return new CsmConfiguration(Boolean.parseBoolean(enabled), portNumber,
-                    clientId);
+            return new CsmConfiguration(Boolean.parseBoolean(enabled), portNumber, clientId);
         } catch (Exception e) {
-            throw new SdkClientException(String.format("Unable to load configuration from the '%s'"
-                        + " profile!", profileName), e);
+            throw new SdkClientException(
+                    String.format(
+                            "Unable to load configuration from the '%s'" + " profile!",
+                            profileName),
+                    e);
         }
     }
 
@@ -134,7 +136,8 @@ public final class ProfileCsmConfigurationProvider implements CsmConfigurationPr
             synchronized (this) {
                 if (configFile == null) {
                     try {
-                        configFile = new ProfilesConfigFile(configFileLocationProvider.getLocation());
+                        configFile =
+                                new ProfilesConfigFile(configFileLocationProvider.getLocation());
                     } catch (Exception e) {
                         throw new SdkClientException("Unable to load config file", e);
                     }

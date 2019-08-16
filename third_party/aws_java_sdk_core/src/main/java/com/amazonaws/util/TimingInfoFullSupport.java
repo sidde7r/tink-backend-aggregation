@@ -15,36 +15,33 @@
 package com.amazonaws.util;
 
 import com.amazonaws.annotation.NotThreadSafe;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.logging.LogFactory;
 
 /**
- * In contrast to {@link TimingInfo}, which is intended to be a minimal support
- * of the timing info, this class is the full support of timing info including
- * features related to sub-measurements and counters.
- * <p>
- * This class is instantiated instead of {@link TimingInfo} when
- * request metric collection is required during a particular service
- * request/response cycle.
+ * In contrast to {@link TimingInfo}, which is intended to be a minimal support of the timing info,
+ * this class is the full support of timing info including features related to sub-measurements and
+ * counters.
+ *
+ * <p>This class is instantiated instead of {@link TimingInfo} when request metric collection is
+ * required during a particular service request/response cycle.
  */
 @NotThreadSafe
 class TimingInfoFullSupport extends TimingInfo {
-    private final Map<String, List<TimingInfo>> subMeasurementsByName = new HashMap<String, List<TimingInfo>>();
+    private final Map<String, List<TimingInfo>> subMeasurementsByName =
+            new HashMap<String, List<TimingInfo>>();
     private final Map<String, Number> countersByName = new HashMap<String, Number>();
 
     /**
-     * A private ctor to facilitate the deprecation of using millisecond and
-     * migration to using nanosecond for timing measurement.
-     * 
+     * A private ctor to facilitate the deprecation of using millisecond and migration to using
+     * nanosecond for timing measurement.
+     *
      * @param startEpochTimeMilli start time since epoch in millisecond
      * @param startTimeNano start time in nanosecond
      * @param endTimeNano end time in nanosecond; or null if not known
-     * 
      * @see TimingInfo#startTimingFullSupport()
      * @see TimingInfo#startTimingFullSupport(long)
      * @see TimingInfo#newTimingInfoFullSupport(long, long)
@@ -64,9 +61,10 @@ class TimingInfoFullSupport extends TimingInfo {
         if (ti.isEndTimeKnown()) {
             timings.add(ti);
         } else {
-            LogFactory.getLog(getClass()).debug(
-                "Skip submeasurement timing info with no end time for "
-                + subMeasurementName);
+            LogFactory.getLog(getClass())
+                    .debug(
+                            "Skip submeasurement timing info with no end time for "
+                                    + subMeasurementName);
         }
     }
 
@@ -79,8 +77,7 @@ class TimingInfoFullSupport extends TimingInfo {
     public TimingInfo getSubMeasurement(String subMesurementName, int index) {
 
         List<TimingInfo> timings = subMeasurementsByName.get(subMesurementName);
-        if (index < 0 || timings == null || timings.size() == 0
-                || index >= timings.size()) {
+        if (index < 0 || timings == null || timings.size() == 0 || index >= timings.size()) {
             return null;
         }
 

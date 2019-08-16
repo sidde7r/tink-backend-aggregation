@@ -15,9 +15,7 @@
 
 package com.amazonaws.http.timers;
 
-/**
- * Constants relevant for request timeout and client execution timeout tests
- */
+/** Constants relevant for request timeout and client execution timeout tests */
 public class TimeoutTestConstants {
 
     public static final int TEST_TIMEOUT = 25 * 1000;

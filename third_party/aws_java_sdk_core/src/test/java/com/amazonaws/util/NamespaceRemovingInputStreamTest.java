@@ -22,55 +22,51 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-
-/**
- * Test for filtering out XML namespace attributes when reading XML.
- */
+/** Test for filtering out XML namespace attributes when reading XML. */
 public class NamespaceRemovingInputStreamTest {
 
     private static final String SAMPLE_RESPONSE_1 =
-        "<DomainMetadataResponse xmlns=\"http://sdb.amazonaws.com/doc/2009-04-15/\">\n" +
-        "  <DomainMetadataResult>\n" +
-        "    <ItemCount>195078</ItemCount>\n" +
-        "  </DomainMetadataResult>\n" +
-        "  <ResponseMetadata>\n" +
-        "        <RequestId>b1e8f1f7-42e9-494c-ad09-2674e557526d</RequestId>\n" +
-        "  </ResponseMetadata>\n" +
-        "</DomainMetadataResponse>";
+            "<DomainMetadataResponse xmlns=\"http://sdb.amazonaws.com/doc/2009-04-15/\">\n"
+                    + "  <DomainMetadataResult>\n"
+                    + "    <ItemCount>195078</ItemCount>\n"
+                    + "  </DomainMetadataResult>\n"
+                    + "  <ResponseMetadata>\n"
+                    + "        <RequestId>b1e8f1f7-42e9-494c-ad09-2674e557526d</RequestId>\n"
+                    + "  </ResponseMetadata>\n"
+                    + "</DomainMetadataResponse>";
 
     private static final String SAMPLE_RESPONSE_2 =
-        "<DomainMetadataResponse xmlns = \"http://sdb.amazonaws.com/doc/2009-04-15/\">\n" +
-        "  <DomainMetadataResult>\n" +
-        "    <ItemCount>195078</ItemCount>\n" +
-        "  </DomainMetadataResult>\n" +
-        "  <ResponseMetadata>\n" +
-        "        <RequestId>b1e8f1f7-42e9-494c-ad09-2674e557526d</RequestId>\n" +
-        "  </ResponseMetadata>\n" +
-        "</DomainMetadataResponse>";
+            "<DomainMetadataResponse xmlns = \"http://sdb.amazonaws.com/doc/2009-04-15/\">\n"
+                    + "  <DomainMetadataResult>\n"
+                    + "    <ItemCount>195078</ItemCount>\n"
+                    + "  </DomainMetadataResult>\n"
+                    + "  <ResponseMetadata>\n"
+                    + "        <RequestId>b1e8f1f7-42e9-494c-ad09-2674e557526d</RequestId>\n"
+                    + "  </ResponseMetadata>\n"
+                    + "</DomainMetadataResponse>";
 
     private static final String SAMPLE_RESPONSE_3 =
-        "<DomainMetadataResponse xmlns=  \"http://sdb.amazonaws.com/doc/2009-04-15/\">\n" +
-        "  <DomainMetadataResult>\n" +
-        "    <ItemCount>195078</ItemCount>\n" +
-        "  </DomainMetadataResult>\n" +
-        "  <ResponseMetadata>\n" +
-        "        <RequestId>b1e8f1f7-42e9-494c-ad09-2674e557526d</RequestId>\n" +
-        "  </ResponseMetadata>\n" +
-        "</DomainMetadataResponse>";
+            "<DomainMetadataResponse xmlns=  \"http://sdb.amazonaws.com/doc/2009-04-15/\">\n"
+                    + "  <DomainMetadataResult>\n"
+                    + "    <ItemCount>195078</ItemCount>\n"
+                    + "  </DomainMetadataResult>\n"
+                    + "  <ResponseMetadata>\n"
+                    + "        <RequestId>b1e8f1f7-42e9-494c-ad09-2674e557526d</RequestId>\n"
+                    + "  </ResponseMetadata>\n"
+                    + "</DomainMetadataResponse>";
 
     private static final String EXPECTED_RESULT =
-        "<DomainMetadataResponse >\n" +
-        "  <DomainMetadataResult>\n" +
-        "    <ItemCount>195078</ItemCount>\n" +
-        "  </DomainMetadataResult>\n" +
-        "  <ResponseMetadata>\n" +
-        "        <RequestId>b1e8f1f7-42e9-494c-ad09-2674e557526d</RequestId>\n" +
-        "  </ResponseMetadata>\n" +
-        "</DomainMetadataResponse>";
+            "<DomainMetadataResponse >\n"
+                    + "  <DomainMetadataResult>\n"
+                    + "    <ItemCount>195078</ItemCount>\n"
+                    + "  </DomainMetadataResult>\n"
+                    + "  <ResponseMetadata>\n"
+                    + "        <RequestId>b1e8f1f7-42e9-494c-ad09-2674e557526d</RequestId>\n"
+                    + "  </ResponseMetadata>\n"
+                    + "</DomainMetadataResponse>";
 
     @Test
     public void testNamespaceRemoval() throws Exception {
@@ -80,7 +76,8 @@ public class NamespaceRemovingInputStreamTest {
     }
 
     private String removeNamespace(String xml) throws Exception {
-        NamespaceRemovingInputStream inputStream = new NamespaceRemovingInputStream(new ByteArrayInputStream(xml.getBytes()));
+        NamespaceRemovingInputStream inputStream =
+                new NamespaceRemovingInputStream(new ByteArrayInputStream(xml.getBytes()));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         IOUtils.copy(inputStream, outputStream);
 

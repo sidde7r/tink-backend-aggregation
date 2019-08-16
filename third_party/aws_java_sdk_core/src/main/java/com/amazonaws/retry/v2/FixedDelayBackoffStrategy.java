@@ -16,9 +16,7 @@ package com.amazonaws.retry.v2;
 
 import static com.amazonaws.util.ValidationUtils.assertIsPositive;
 
-/**
- * Simple backoff strategy that always uses a fixed delay.
- */
+/** Simple backoff strategy that always uses a fixed delay. */
 public class FixedDelayBackoffStrategy implements BackoffStrategy {
 
     private final int fixedBackoff;

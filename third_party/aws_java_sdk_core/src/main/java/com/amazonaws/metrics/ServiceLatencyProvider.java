@@ -14,50 +14,50 @@
  */
 package com.amazonaws.metrics;
 
-import org.apache.commons.logging.LogFactory;
-
 import com.amazonaws.annotation.NotThreadSafe;
 import com.amazonaws.util.TimingInfo;
+import org.apache.commons.logging.LogFactory;
 
-/**
- * Latency metric information provider.
- */
+/** Latency metric information provider. */
 @NotThreadSafe
 public class ServiceLatencyProvider {
     private final long startNano = System.nanoTime();
     private long endNano = startNano;
     private final ServiceMetricType serviceMetricType;
 
-    public ServiceLatencyProvider(ServiceMetricType type) { 
+    public ServiceLatencyProvider(ServiceMetricType type) {
         this.serviceMetricType = type;
     }
-    public ServiceMetricType getServiceMetricType() { return serviceMetricType; }
 
-    /**
-     * Ends the timing.  Must not be called more than once.
-     */
+    public ServiceMetricType getServiceMetricType() {
+        return serviceMetricType;
+    }
+
+    /** Ends the timing. Must not be called more than once. */
     public ServiceLatencyProvider endTiming() {
         if (endNano != startNano) {
             throw new IllegalStateException();
         }
         endNano = System.nanoTime();
-        return this; 
+        return this;
     }
 
     public double getDurationMilli() {
         if (endNano == startNano) {
-            LogFactory.getLog(getClass()).debug(
-                    "Likely to be a missing invocation of endTiming().");
+            LogFactory.getLog(getClass())
+                    .debug("Likely to be a missing invocation of endTiming().");
         }
-        return TimingInfo.durationMilliOf(startNano, endNano); 
+        return TimingInfo.durationMilliOf(startNano, endNano);
     }
-    
-    public String getProviderId() { return super.toString(); }
+
+    public String getProviderId() {
+        return super.toString();
+    }
 
     @Override
     public String toString() {
         return String.format(
-                "providerId=%s, serviceMetricType=%s, startNano=%d, endNano=%d", 
+                "providerId=%s, serviceMetricType=%s, startNano=%d, endNano=%d",
                 getProviderId(), serviceMetricType, startNano, endNano);
     }
 }

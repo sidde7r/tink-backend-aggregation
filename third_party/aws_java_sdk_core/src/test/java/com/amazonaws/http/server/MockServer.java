@@ -18,13 +18,14 @@
  */
 package com.amazonaws.http.server;
 
+import com.amazonaws.util.IOUtils;
+import com.amazonaws.util.StringInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-
 import tink.org.apache.http.Header;
 import tink.org.apache.http.HttpResponse;
 import tink.org.apache.http.ProtocolVersion;
@@ -32,12 +33,7 @@ import tink.org.apache.http.entity.BasicHttpEntity;
 import tink.org.apache.http.message.BasicHttpResponse;
 import tink.org.apache.http.message.BasicStatusLine;
 
-import com.amazonaws.util.IOUtils;
-import com.amazonaws.util.StringInputStream;
-
-/**
- * MockServer implementation with several different configurable behaviors
- */
+/** MockServer implementation with several different configurable behaviors */
 public class MockServer {
 
     public enum ServerBehavior {
@@ -53,15 +49,14 @@ public class MockServer {
             case OVERLOADED:
                 return new MockServer(new OverloadedServerBehavior());
             default:
-                throw new IllegalArgumentException("Unsupported implementation for server issue: " + serverBehavior);
+                throw new IllegalArgumentException(
+                        "Unsupported implementation for server issue: " + serverBehavior);
         }
     }
 
     private final ServerBehaviorStrategy serverBehaviorStrategy;
 
-    /**
-     * The server socket which the test service will listen to.
-     */
+    /** The server socket which the test service will listen to. */
     private ServerSocket serverSocket;
 
     private Thread listenerThread;
@@ -88,7 +83,8 @@ public class MockServer {
         try {
             listenerThread.join(10 * 1000);
         } catch (InterruptedException e1) {
-            System.err.println("The listener thread didn't terminate " + "after waiting for 10 seconds.");
+            System.err.println(
+                    "The listener thread didn't terminate " + "after waiting for 10 seconds.");
         }
 
         if (serverSocket != null) {
@@ -115,9 +111,11 @@ public class MockServer {
     private static class MockServerListenerThread extends Thread {
         /** The server socket which this thread listens and responds to */
         private final ServerSocket serverSocket;
+
         private final ServerBehaviorStrategy behaviorStrategy;
 
-        public MockServerListenerThread(ServerSocket serverSocket, ServerBehaviorStrategy behaviorStrategy) {
+        public MockServerListenerThread(
+                ServerSocket serverSocket, ServerBehaviorStrategy behaviorStrategy) {
             super(behaviorStrategy.getClass().getName());
             this.serverSocket = serverSocket;
             this.behaviorStrategy = behaviorStrategy;
@@ -198,9 +196,12 @@ public class MockServer {
         private final HttpResponse response;
         private String content;
 
-        public static DummyResponseServerBehavior build(int statusCode, String statusMessage, String content) {
-            HttpResponse response = new BasicHttpResponse(
-                    new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), statusCode, statusMessage));
+        public static DummyResponseServerBehavior build(
+                int statusCode, String statusMessage, String content) {
+            HttpResponse response =
+                    new BasicHttpResponse(
+                            new BasicStatusLine(
+                                    new ProtocolVersion("HTTP", 1, 1), statusCode, statusMessage));
             setEntity(response, content);
             response.addHeader("Content-Length", String.valueOf(content.getBytes().length));
             response.addHeader("Connection", "close");
@@ -248,7 +249,5 @@ public class MockServer {
                 throw new RuntimeException("Error when waiting for new socket connection.", e);
             }
         }
-
     }
-
 }
