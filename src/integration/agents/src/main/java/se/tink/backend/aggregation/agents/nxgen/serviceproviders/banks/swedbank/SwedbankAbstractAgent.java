@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.SwedbankDefaultBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.SwedbankTokenGeneratorAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.einvoice.SwedbankDefaultApproveEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.SwedbankDefaultPaymentExecutor;
@@ -38,6 +40,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
@@ -73,6 +77,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final boolean isBankId;
 
     public SwedbankAbstractAgent(
             CredentialsRequest request,
@@ -95,6 +100,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
             SwedbankApiClientProvider apiClientProvider) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
+        this.isBankId =
+                request.getProvider().getCredentialsType().equals(CredentialsTypes.MOBILE_BANKID);
         this.configuration = configuration;
         this.apiClient =
                 apiClientProvider.getApiAgent(client, configuration, credentials, sessionStorage);
@@ -130,11 +137,19 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(
-                supplementalRequester,
-                new SwedbankDefaultBankIdAuthenticator(apiClient),
-                persistentStorage,
-                credentials);
+        return new TypedAuthenticationController(constructAuthenticators());
+    }
+
+    protected TypedAuthenticator[] constructAuthenticators() {
+        return new TypedAuthenticator[] {
+            new SwedbankTokenGeneratorAuthenticationController(
+                    apiClient, supplementalInformationController, catalog),
+            new BankIdAuthenticationController<>(
+                    supplementalRequester,
+                    new SwedbankDefaultBankIdAuthenticator(apiClient),
+                    persistentStorage,
+                    credentials)
+        };
     }
 
     @Override
@@ -240,7 +255,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     protected Optional<TransferController> constructTransferController() {
         SwedbankTransferHelper transferHelper =
                 new SwedbankTransferHelper(
-                        context, catalog, supplementalInformationHelper, apiClient);
+                        context, catalog, supplementalInformationHelper, apiClient, isBankId);
         SwedbankDefaultBankTransferExecutor transferExecutor =
                 new SwedbankDefaultBankTransferExecutor(catalog, apiClient, transferHelper);
         SwedbankDefaultPaymentExecutor paymentExecutor =

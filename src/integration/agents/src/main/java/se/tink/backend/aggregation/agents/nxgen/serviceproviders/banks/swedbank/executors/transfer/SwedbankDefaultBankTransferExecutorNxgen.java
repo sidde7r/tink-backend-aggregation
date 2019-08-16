@@ -109,7 +109,7 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
         // Sign the transfer if needed.
         if (!confirmTransferLink.isPresent()) {
             InitiateSignTransferResponse initiateSignTransfer =
-                    apiClient.signExternalTransfer(links.getSignOrThrow());
+                    apiClient.signExternalTransferBankId(links.getSignOrThrow());
             links = transferHelper.collectBankId(initiateSignTransfer);
 
             confirmTransferLink = Optional.ofNullable(links.getNext());
