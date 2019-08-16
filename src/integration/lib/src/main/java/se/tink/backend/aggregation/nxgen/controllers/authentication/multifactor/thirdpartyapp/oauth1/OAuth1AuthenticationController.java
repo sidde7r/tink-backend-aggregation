@@ -76,6 +76,11 @@ public class OAuth1AuthenticationController
         iOsPayload.setDeepLinkUrl(authorizeUrl.get());
         payload.setIos(iOsPayload);
 
+        ThirdPartyAppAuthenticationPayload.Desktop desktop =
+                new ThirdPartyAppAuthenticationPayload.Desktop();
+        desktop.setUrl(authorizeUrl.get());
+        payload.setDesktop(desktop);
+
         return payload;
     }
 
