@@ -4,7 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum RefreshableItem {
+    /** @deprecated Use a {@link java.util.Set} of specific {@link RefreshableItem}s instead */
+    @Deprecated
     ACCOUNTS,
+    /** @deprecated Use a {@link java.util.Set} of specific {@link RefreshableItem}s instead */
+    @Deprecated
     TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
     EINVOICES,
     TRANSFER_DESTINATIONS,
