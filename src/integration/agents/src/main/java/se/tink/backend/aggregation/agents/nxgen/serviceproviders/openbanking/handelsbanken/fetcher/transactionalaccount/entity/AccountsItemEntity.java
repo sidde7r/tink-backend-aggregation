@@ -52,10 +52,11 @@ public class AccountsItemEntity {
         return accountType;
     }
 
-    public TransactionalAccount toTinkAccount(
+    public Optional<TransactionalAccount> toTinkAccount(
             TransactionalAccountType type, BalancesItemEntity balance) {
         return TransactionalAccount.nxBuilder()
                 .withType(type)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getAmount(balance)))
                 .withId(
                         IdModule.builder()

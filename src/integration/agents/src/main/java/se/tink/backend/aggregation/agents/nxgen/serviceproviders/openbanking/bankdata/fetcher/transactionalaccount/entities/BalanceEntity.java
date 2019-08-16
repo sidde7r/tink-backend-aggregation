@@ -2,20 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.Accounts;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceEntity {
 
     private BalanceAmountEntity balanceAmount;
     private String balanceType;
-
-    public BalanceEntity() {}
-
-    BalanceEntity(final BalanceAmountEntity balanceAmount, final String balanceType) {
-        this.balanceAmount = balanceAmount;
-        this.balanceType = balanceType;
-    }
 
     public boolean isForwardAvailable() {
         return balanceType.equalsIgnoreCase(Accounts.BALANCE_FORWARD_AVAILABLE);
@@ -25,15 +18,7 @@ public class BalanceEntity {
         return balanceAmount.getCurrency().equalsIgnoreCase(currency);
     }
 
-    public Amount toAmount() {
+    public ExactCurrencyAmount toAmount() {
         return balanceAmount.toAmount();
-    }
-
-    public BalanceAmountEntity getBalanceAmount() {
-        return balanceAmount;
-    }
-
-    public String getBalanceType() {
-        return balanceType;
     }
 }

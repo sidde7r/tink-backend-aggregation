@@ -19,6 +19,8 @@ public class AccountResponse implements BerlinGroupAccountResponse {
     public Collection<TransactionalAccount> toTinkAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .map(AccountsItemEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

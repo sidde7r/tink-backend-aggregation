@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountLinksEntity;
@@ -32,16 +31,27 @@ public class AccountEntity {
     @JsonProperty("_links")
     private AccountLinksEntity links;
 
-    public TransactionalAccount toTinkAccount() {
-        return BerlinGroupConstants.ACCOUNT_TYPE_MAPPER
-                .translate(cashAccountType)
-                .filter(this::isCheckingType)
-                .map(accountType -> toCheckingAccount())
-                .orElse(toSavingsAccount());
-    }
-
-    private boolean isCheckingType(final AccountTypes accountType) {
-        return accountType == AccountTypes.CHECKING;
+    public Optional<TransactionalAccount> toTinkAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(
+                        BerlinGroupConstants.ACCOUNT_TYPE_MAPPER,
+                        cashAccountType,
+                        TransactionalAccountType.OTHER)
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(name)
+                                .addIdentifier(
+                                        new IbanIdentifier(iban.substring(iban.length() - 18)))
+                                .build())
+                .putInTemporaryStorage(SantanderConstants.StorageKeys.ACCOUNT_ID, iban)
+                .setApiIdentifier(resourceId)
+                .setBankIdentifier(resourceId)
+                .putInTemporaryStorage(
+                        SantanderConstants.StorageKeys.TRANSACTIONS_URL, getTransactionLink())
+                .build();
     }
 
     private ExactCurrencyAmount getBalance() {
@@ -62,41 +72,5 @@ public class AccountEntity {
 
     private String getTransactionLink() {
         return Optional.ofNullable(links).map(AccountLinksEntity::getTransactionLink).orElse("");
-    }
-
-    public boolean isCheckingOrSavingsType() {
-        return BerlinGroupConstants.ACCOUNT_TYPE_MAPPER.translate(cashAccountType).isPresent();
-    }
-
-    public void setBalances(final List<BalanceBaseEntity> balances) {
-        this.balances = balances;
-    }
-
-    private TransactionalAccount toCheckingAccount() {
-        return toTransactionalAccount(TransactionalAccountType.CHECKING);
-    }
-
-    private TransactionalAccount toSavingsAccount() {
-        return toTransactionalAccount(TransactionalAccountType.SAVINGS);
-    }
-
-    private TransactionalAccount toTransactionalAccount(TransactionalAccountType type) {
-        return TransactionalAccount.nxBuilder()
-                .withType(type)
-                .withBalance(BalanceModule.of(getBalance()))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(iban)
-                                .withAccountName(name)
-                                .addIdentifier(
-                                        new IbanIdentifier(iban.substring(iban.length() - 18)))
-                                .build())
-                .putInTemporaryStorage(SantanderConstants.StorageKeys.ACCOUNT_ID, iban)
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(resourceId)
-                .putInTemporaryStorage(
-                        SantanderConstants.StorageKeys.TRANSACTIONS_URL, getTransactionLink())
-                .build();
     }
 }

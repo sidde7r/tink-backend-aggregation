@@ -29,9 +29,10 @@ public class AccountEntity {
     @JsonProperty("_links")
     private LinksEntity links;
 
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()

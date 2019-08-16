@@ -31,45 +31,26 @@ public class AccountEntity {
     private AccountLinksEntity links;
 
     public Optional<TransactionalAccount> toTinkAccount() {
-        TransactionalAccountType type = getAccountType();
-        switch (type) {
-            case SAVINGS:
-                return toSavingsAccount();
-            case CHECKING:
-                return toCheckingAccount();
-            default:
-                return Optional.empty();
-        }
-    }
-
-    private Optional<TransactionalAccount> toSavingsAccount() {
-        return toAccount(TransactionalAccountType.SAVINGS);
-    }
-
-    private Optional<TransactionalAccount> toCheckingAccount() {
-        return toAccount(TransactionalAccountType.CHECKING);
-    }
-
-    private Optional<TransactionalAccount> toAccount(TransactionalAccountType type) {
-        return Optional.of(
-                TransactionalAccount.nxBuilder()
-                        .withType(type)
-                        .withBalance(BalanceModule.of(getBalance()))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier(getUniqueIdentifier())
-                                        .withAccountNumber(getAccountNumber())
-                                        .withAccountName(Optional.ofNullable(name).orElse(""))
-                                        .addIdentifier(getIdentifier())
-                                        .addIdentifier(AccountIdentifier.create(Type.NO, bban))
-                                        .build())
-                        .setApiIdentifier(resourceId)
-                        .setBankIdentifier(resourceId)
-                        .addHolderName(Optional.ofNullable(name).orElse(""))
-                        .putInTemporaryStorage(
-                                SparebankConstants.StorageKeys.TRANSACTIONS_URL,
-                                getTransactionLink())
-                        .build());
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(
+                        SparebankConstants.ACCOUNT_TYPE_MAPPER,
+                        Optional.ofNullable(cashAccountType).orElse(product),
+                        TransactionalAccountType.OTHER)
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getUniqueIdentifier())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(Optional.ofNullable(name).orElse(""))
+                                .addIdentifier(getIdentifier())
+                                .addIdentifier(AccountIdentifier.create(Type.NO, bban))
+                                .build())
+                .setApiIdentifier(resourceId)
+                .setBankIdentifier(resourceId)
+                .addHolderName(Optional.ofNullable(name).orElse(""))
+                .putInTemporaryStorage(
+                        SparebankConstants.StorageKeys.TRANSACTIONS_URL, getTransactionLink())
+                .build();
     }
 
     protected ExactCurrencyAmount getBalance() {
@@ -98,11 +79,5 @@ public class AccountEntity {
 
     protected String getTransactionLink() {
         return Optional.ofNullable(links).map(AccountLinksEntity::getTransactionLink).orElse("");
-    }
-
-    private TransactionalAccountType getAccountType() {
-        return SparebankConstants.ACCOUNT_TYPE_MAPPER
-                .translate(Optional.ofNullable(cashAccountType).orElse(product))
-                .orElse(TransactionalAccountType.CHECKING);
     }
 }

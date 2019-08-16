@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
@@ -23,10 +24,12 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
 
         return apiClient.fetchAccounts().getAccountList().stream()
                 .map(toTinkAccountWithBalance())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private Function<AccountEntity, TransactionalAccount> toTinkAccountWithBalance() {
+    private Function<AccountEntity, Optional<TransactionalAccount>> toTinkAccountWithBalance() {
         return account -> {
             AccountBalanceResponse accountBalanceResponse =
                     apiClient.getAccountBalance(account.getResourceId());

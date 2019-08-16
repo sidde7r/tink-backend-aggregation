@@ -31,31 +31,28 @@ public class AccountEntity {
     private List<BalanceEntity> balances;
 
     public Optional<TransactionalAccount> toTinkAccount(BalancesItemEntity balancesItemEntity) {
-        TransactionalAccountType type = getAccountType();
         balancesItemEntity.setCurrencyIfNull(currency);
         ExactCurrencyAmount balance = balancesItemEntity.getBalanceAmount();
-        return toAccount(type, balance);
-    }
 
-    private Optional<TransactionalAccount> toAccount(
-            TransactionalAccountType type, ExactCurrencyAmount balance) {
-        return Optional.of(
-                TransactionalAccount.nxBuilder()
-                        .withType(type)
-                        .withBalance(BalanceModule.of(balance))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier(getUniqueIdentifier())
-                                        .withAccountNumber(getAccountNumber())
-                                        .withAccountName(Optional.ofNullable(name).orElse(product))
-                                        .addIdentifier(getIdentifier())
-                                        .addIdentifier(AccountIdentifier.create(Type.DK, bban))
-                                        .build())
-                        .setApiIdentifier(resourceId)
-                        .setBankIdentifier(resourceId)
-                        .addHolderName(Optional.ofNullable(name).orElse(""))
-                        .putInTemporaryStorage(BecConstants.StorageKeys.ACCOUNT_ID, resourceId)
-                        .build());
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(
+                        BecConstants.ACCOUNT_TYPE_MAPPER,
+                        Optional.ofNullable(cashAccountType).orElse(product),
+                        TransactionalAccountType.OTHER)
+                .withBalance(BalanceModule.of(balance))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getUniqueIdentifier())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(Optional.ofNullable(name).orElse(product))
+                                .addIdentifier(getIdentifier())
+                                .addIdentifier(AccountIdentifier.create(Type.DK, bban))
+                                .build())
+                .setApiIdentifier(resourceId)
+                .setBankIdentifier(resourceId)
+                .addHolderName(Optional.ofNullable(name).orElse(""))
+                .putInTemporaryStorage(BecConstants.StorageKeys.ACCOUNT_ID, resourceId)
+                .build();
     }
 
     private String getUniqueIdentifier() {
@@ -68,13 +65,6 @@ public class AccountEntity {
 
     private AccountIdentifier getIdentifier() {
         return new IbanIdentifier(iban);
-    }
-
-    private TransactionalAccountType getAccountType() {
-
-        return BecConstants.ACCOUNT_TYPE_MAPPER
-                .translate(Optional.ofNullable(cashAccountType).orElse(product))
-                .orElse(TransactionalAccountType.OTHER);
     }
 
     public String getResourceId() {

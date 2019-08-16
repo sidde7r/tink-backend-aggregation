@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
@@ -35,10 +36,12 @@ public class RedsysTransactionalAccountFetcher
         ListAccountsResponse accountsResponse = apiClient.fetchAccounts(consentId);
         return accountsResponse.getAccounts().stream()
                 .map(this::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private TransactionalAccount toTinkAccount(AccountEntity account) {
+    private Optional<TransactionalAccount> toTinkAccount(AccountEntity account) {
         final List<BalanceEntity> accountBalances;
         if (account.hasBalances()) {
             accountBalances = account.getBalances();

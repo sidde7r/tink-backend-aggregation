@@ -33,11 +33,12 @@ public class AccountEntity {
     private List<BalanceEntity> balances;
     private String linkedAccount;
 
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         String iban = accountId.getIban();
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()

@@ -4,7 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
+import io.vavr.control.Option;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -42,16 +41,7 @@ public class AccountEntity {
     private Map<String, LinkEntity> links;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(List<BalanceEntity> accountBalances) {
-        TransactionalAccountType accountType =
-                ACCOUNT_TYPE_MAPPER
-                        .translate(cashAccountType)
-                        .orElse(TransactionalAccountType.OTHER);
-        if (cashAccountType == null) {
-            // field is optional
-            accountType = TransactionalAccountType.CHECKING;
-        }
-
+    public Optional<TransactionalAccount> toTinkAccount(List<BalanceEntity> accountBalances) {
         final ExactCurrencyAmount balance =
                 BalanceEntity.getBalanceOfType(
                         accountBalances,
@@ -63,25 +53,26 @@ public class AccountEntity {
             throw new IllegalStateException("Did not find balance for account.");
         }
 
-        final IdBuildStep idBuilder =
+        final IdModule idModule =
                 IdModule.builder()
                         .withUniqueIdentifier(iban)
                         .withAccountNumber(iban)
-                        .withAccountName(Strings.nullToEmpty(name))
-                        .addIdentifier(AccountIdentifier.create(Type.IBAN, iban));
-
-        if (!Strings.isNullOrEmpty(product)) {
-            idBuilder.setProductName(product);
-        } else if (!Strings.isNullOrEmpty(details)) {
-            idBuilder.setProductName(details);
-        }
+                        .withAccountName(
+                                Option.of(name).orElse(Option.of(product)).getOrElse(details))
+                        .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                        .setProductName(Option.of(product).getOrElse(details))
+                        .build();
 
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
-                        .withType(accountType)
+                        .withTypeAndFlagsFrom(
+                                ACCOUNT_TYPE_MAPPER,
+                                cashAccountType,
+                                TransactionalAccountType.CHECKING)
                         .withBalance(BalanceModule.of(balance))
-                        .withId(idBuilder.build())
+                        .withId(idModule)
                         .setApiIdentifier(resourceId);
+
         if (links != null) {
             links.forEach((key, link) -> builder.putInTemporaryStorage(key, link.getHref()));
         }

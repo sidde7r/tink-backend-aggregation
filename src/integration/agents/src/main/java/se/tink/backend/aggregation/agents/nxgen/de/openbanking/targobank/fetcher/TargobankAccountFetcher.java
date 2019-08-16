@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher.entities.AccountEntity;
@@ -19,6 +20,8 @@ public class TargobankAccountFetcher implements AccountFetcher<TransactionalAcco
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().getAccounts().stream()
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

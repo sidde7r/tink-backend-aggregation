@@ -21,6 +21,8 @@ public class HandelsbankenAccountConverter implements HandelsbankenBaseAccountCo
             AccountsItemEntity accountEntity, BalancesItemEntity balance) {
         return accountTypes
                 .translate(accountEntity.getAccountType())
-                .map(type -> accountEntity.toTinkAccount(type, balance));
+                .map(type -> accountEntity.toTinkAccount(type, balance))
+                .filter(Optional::isPresent)
+                .map(Optional::get);
     }
 }

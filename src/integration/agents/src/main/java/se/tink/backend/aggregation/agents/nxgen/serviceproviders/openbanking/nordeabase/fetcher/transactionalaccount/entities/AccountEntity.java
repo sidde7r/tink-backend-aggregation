@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities;
 
-import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
@@ -9,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -66,26 +63,14 @@ public class AccountEntity {
     @JsonProperty("value_dated_balance")
     private String valueDatedBalance;
 
-    public TransactionalAccount toTinkAccount() {
-        final AccountTypes type =
-                NordeaBaseConstants.ACCOUNT_TYPE_MAPPER.translate(accountType).orElse(OTHER);
-
-        switch (type) {
-            case CHECKING:
-                return parseAccount(TransactionalAccountType.CHECKING);
-            case SAVINGS:
-                return parseAccount(TransactionalAccountType.SAVINGS);
-            case OTHER:
-            default:
-                throw new IllegalStateException("Unknown account type.");
-        }
-    }
-
-    private TransactionalAccount parseAccount(TransactionalAccountType accountType) {
+    public Optional<TransactionalAccount> toTinkAccount() {
         AccountIdentifier identifier = generalGetAccountIdentifier();
 
         return TransactionalAccount.nxBuilder()
-                .withType(accountType)
+                .withTypeAndFlagsFrom(
+                        NordeaBaseConstants.ACCOUNT_TYPE_MAPPER,
+                        accountType,
+                        TransactionalAccountType.OTHER)
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()

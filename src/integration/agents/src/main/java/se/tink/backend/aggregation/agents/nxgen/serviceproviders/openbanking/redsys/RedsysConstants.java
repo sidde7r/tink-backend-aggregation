@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public final class RedsysConstants {
@@ -13,8 +13,8 @@ public final class RedsysConstants {
     }
 
     // partial ISO 20022 ExternalCashAccountType1Code
-    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<TransactionalAccountType>builder()
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
                     .put(TransactionalAccountType.CHECKING, "CACC", "TRAN")
                     .put(TransactionalAccountType.SAVINGS, "SVGS")
                     .build();

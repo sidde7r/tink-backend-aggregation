@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -64,10 +65,12 @@ public class AccountEntity {
         return resourceId;
     }
 
-    public TransactionalAccount toTinkAccount(AccountBalanceResponse accountBalanceResponse) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            AccountBalanceResponse accountBalanceResponse) {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance(currency)))
                 .withId(
                         IdModule.builder()

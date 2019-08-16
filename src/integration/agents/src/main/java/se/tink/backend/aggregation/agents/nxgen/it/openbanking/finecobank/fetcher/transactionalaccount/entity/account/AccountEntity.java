@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
@@ -31,22 +30,26 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount() {
-
         final String nameTrimmed = name.substring(0, name.length() - 4);
 
-        final AccountTypes type =
-                FinecoBankConstants.ACCOUNT_TYPE_MAPPER
-                        .translate(nameTrimmed)
-                        .orElse(AccountTypes.OTHER);
-
-        switch (type) {
-            case CHECKING:
-                return Optional.ofNullable(toTypeAccount(TransactionalAccountType.CHECKING));
-            case SAVINGS:
-                return Optional.ofNullable(toTypeAccount(TransactionalAccountType.SAVINGS));
-            default:
-                return Optional.empty();
-        }
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(
+                        FinecoBankConstants.ACCOUNT_TYPE_MAPPER,
+                        nameTrimmed,
+                        TransactionalAccountType.OTHER)
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(name)
+                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                .build())
+                .addHolderName(name)
+                .setApiIdentifier(resourceId)
+                .setBankIdentifier(iban)
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
+                .build();
     }
 
     @JsonIgnore
@@ -65,24 +68,5 @@ public class AccountEntity {
                 .findAny()
                 .map(balanceEntity -> balanceEntity.getBalanceAmount().toTinkAmount())
                 .orElse(new ExactCurrencyAmount(BigDecimal.ZERO, Formats.CURRENCY));
-    }
-
-    @JsonIgnore
-    public TransactionalAccount toTypeAccount(TransactionalAccountType transactionalAccountType) {
-        return TransactionalAccount.nxBuilder()
-                .withType(transactionalAccountType)
-                .withBalance(BalanceModule.of(getBalance()))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(iban)
-                                .withAccountName(name)
-                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
-                                .build())
-                .addHolderName(name)
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(iban)
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
-                .build();
     }
 }

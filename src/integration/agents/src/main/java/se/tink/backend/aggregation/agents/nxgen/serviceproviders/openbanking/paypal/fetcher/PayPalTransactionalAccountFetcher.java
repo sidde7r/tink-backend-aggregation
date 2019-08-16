@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.entities.account.AccountEntity;
@@ -19,10 +20,12 @@ public class PayPalTransactionalAccountFetcher implements AccountFetcher<Transac
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccount().getAccountList().stream()
                 .map(this::toTinkAccountWithBalance)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private TransactionalAccount toTinkAccountWithBalance(AccountEntity account) {
+    private Optional<TransactionalAccount> toTinkAccountWithBalance(AccountEntity account) {
         AccountBalanceResponse accountBalanceResponse = apiClient.getAccountBalance();
         return account.toTinkAccount(accountBalanceResponse);
     }

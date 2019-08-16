@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetche
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupApiClient;
@@ -34,6 +35,8 @@ public class BpceGroupTransactionalAccountFetcher implements AccountFetcher<Tran
                 .filter(AccountEntity::isTransactionalAccount)
                 .filter(BpceGroupTransactionalAccountFetcher::sandboxFilter) // TODO remove for prod
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
