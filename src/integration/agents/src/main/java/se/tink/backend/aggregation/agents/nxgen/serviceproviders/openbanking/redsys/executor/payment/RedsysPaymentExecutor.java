@@ -17,9 +17,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtStateUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.controllers.utils.sca.ScaRedirectCallbackHandler;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
@@ -47,20 +46,16 @@ import se.tink.libraries.payment.rpc.Reference;
 public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private static final Logger LOG = LoggerFactory.getLogger(RedsysPaymentExecutor.class);
     private final RedsysApiClient apiClient;
-    private final ScaRedirectCallbackHandler scaRedirectHandler;
-    private final String appUriId;
-    private final CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair;
+    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public RedsysPaymentExecutor(
             RedsysApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
-            CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair,
-            String appUriId) {
+            StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
-        this.scaRedirectHandler =
-                new ScaRedirectCallbackHandler(supplementalInformationHelper, 10, TimeUnit.MINUTES);
-        this.callbackJwtSignatureKeyPair = callbackJwtSignatureKeyPair;
-        this.appUriId = appUriId;
+        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     private PaymentProduct paymentProductForPayment(Payment payment) throws PaymentException {
@@ -100,13 +95,12 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         }
 
         final CreatePaymentRequest request = requestBuilder.build();
-        final String pseudoId = JwtStateUtils.generatePseudoId(appUriId);
-        final String state =
-                JwtStateUtils.tryCreateJwtState(callbackJwtSignatureKeyPair, pseudoId, appUriId);
-        final CreatePaymentResponse response = apiClient.createPayment(request, product, state);
+        final CreatePaymentResponse response =
+                apiClient.createPayment(request, product, strongAuthenticationState.getState());
 
         Storage paymentStorage = new Storage();
-        paymentStorage.put(StorageKeys.SCA_STATE, pseudoId);
+        paymentStorage.put(
+                StorageKeys.SCA_SUPPLEMENTAL_KEY, strongAuthenticationState.getSupplementalKey());
         final Optional<LinkEntity> scaRedirectLink = response.getLink(Links.SCA_REDIRECT);
         if (scaRedirectLink.isPresent()) {
             paymentStorage.put(StorageKeys.SCA_REDIRECT, scaRedirectLink.get().getHref());
@@ -171,11 +165,12 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                 .equalsIgnoreCase(AuthenticationStepConstants.STEP_INIT)) {
             final Storage paymentStorage = paymentMultiStepRequest.getStorage();
             final String scaRedirectUrl = paymentStorage.get(StorageKeys.SCA_REDIRECT);
-            final String pseudoId = paymentStorage.get(StorageKeys.SCA_STATE);
+            final String supplementalKey = paymentStorage.get(StorageKeys.SCA_SUPPLEMENTAL_KEY);
 
-            if (!scaRedirectHandler.handleRedirect(new URL(scaRedirectUrl), pseudoId).isPresent()) {
-                throw new PaymentException("SCA timed out.");
-            }
+            supplementalInformationHelper.openThirdPartyApp(
+                    ThirdPartyAppAuthenticationPayload.of(new URL(scaRedirectUrl)));
+            supplementalInformationHelper.waitForSupplementalInformation(
+                    supplementalKey, 10, TimeUnit.MINUTES);
 
             final RedsysTransactionStatus transactionStatus =
                     apiClient.fetchPaymentStatus(paymentId, paymentProduct).getTransactionStatus();
