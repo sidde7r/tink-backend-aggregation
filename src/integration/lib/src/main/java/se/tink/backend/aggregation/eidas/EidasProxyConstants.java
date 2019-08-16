@@ -4,8 +4,9 @@ public final class EidasProxyConstants {
 
     public enum Algorithm {
         EIDAS_RSA_SHA256("sign-rsa-sha256/"),
+        EIDAS_RSA_PSS256("sign-rsa-pss256/"),
         EIDAS_JWS_EC256("sign-jws-ec256/"),
-        EIDAS_PSS_SHA256("sign-pss-sha256/");
+        EIDAS_JWS_PS256("sign-jws-ps256/");
 
         private final String signingType;
 
