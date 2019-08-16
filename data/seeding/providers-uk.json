@@ -35,7 +35,7 @@
             ],
             "className": "nxgen.uk.openbanking.firsttrust.FirstTrustV31Agent",
             "credentialsType": "PASSWORD",
-            "displayName": "FirstTrust",
+            "displayName": "First Trust",
             "fields": [
                 {
                     "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
