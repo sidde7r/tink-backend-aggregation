@@ -161,10 +161,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         RedsysPaymentExecutor redsysPaymentExecutor =
                 new RedsysPaymentExecutor(
-                        apiClient,
-                        supplementalInformationHelper,
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request.getAppUriId());
+                        apiClient, supplementalInformationHelper, strongAuthenticationState);
 
         return Optional.of(new PaymentController(redsysPaymentExecutor, redsysPaymentExecutor));
     }

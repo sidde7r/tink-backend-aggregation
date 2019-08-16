@@ -47,7 +47,7 @@ public final class RedsysConstants {
         public static final String CONSENT_ID = "consentId";
         public static final String CONSENT_VALID_FROM = "consentValidFrom";
         public static final String SCA_REDIRECT = "scaRedirect";
-        public static final String SCA_STATE = "scaState";
+        public static final String SCA_SUPPLEMENTAL_KEY = "scaSupplementalKey";
         public static final String TRANSACTIONS_URL = "transactionsUrl";
         public static final String BALANCES_URL = "balancesUrl";
         public static final String ACCOUNT_REQUEST_ID = "requestId:";
