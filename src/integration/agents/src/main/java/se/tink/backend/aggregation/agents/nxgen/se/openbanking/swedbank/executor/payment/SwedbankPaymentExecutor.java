@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.util.AccountTypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -31,12 +31,16 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     private final SwedbankApiClient apiClient;
     private final SwedbankPaymentAuthenticator paymentAuthenticator;
     private final List<PaymentResponse> createdPaymentsList;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public SwedbankPaymentExecutor(
-            SwedbankApiClient apiClient, SwedbankPaymentAuthenticator paymentAuthenticator) {
+            SwedbankApiClient apiClient,
+            SwedbankPaymentAuthenticator paymentAuthenticator,
+            StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.paymentAuthenticator = paymentAuthenticator;
         this.createdPaymentsList = new ArrayList<>();
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
@@ -79,7 +83,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
 
-        String state = OAuthUtils.generateNonce();
+        String state = strongAuthenticationState.getSupplementalKey();
 
         PaymentAuthorisationResponse paymentAuthorisationResponse =
                 apiClient.startPaymentAuthorisation(payment.getUniqueId(), state);
