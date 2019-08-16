@@ -777,8 +777,8 @@ data:
         {{- if $agentsConfig.handelsbanken }}
         handelsbanken:
           tink:
-            appId: "HANDELSBANKEN_APP_ID_TAG"
-            clientId: "HANDELSBANKEN_APP_ID_TAG"
+            tppId: "HANDELSBANKEN_TPP_ID_TAG"
+            clientId: "HANDELSBANKEN_CLIENT_ID_TAG"
             psuIpAddress: "0.0.0.0"
             redirectUrl: "{{ $agentsConfig.handelsbanken.tink.redirectUrl }}"
             appName: "Tink"
