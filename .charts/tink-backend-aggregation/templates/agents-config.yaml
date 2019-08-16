@@ -764,6 +764,7 @@ data:
             keyId: "CMCIC_KEY_ID_TAG"
             certificateId: "{{ $agentsConfig.cmcic.tink.certificateId }}"
         {{- end }}
+
         {{- if $agentsConfig.comdirect }}
         comdirect:
           tink:
@@ -771,6 +772,18 @@ data:
             clientId: "COMDIRECT_CLIENT_ID_TAG"
             certificateId: "{{ $agentsConfig.comdirect.tink.certificateId }}"
             redirectUrl: "{{ $agentsConfig.comdirect.tink.redirectUrl }}"
+        {{- end }}
+
+        {{- if $agentsConfig.handelsbanken }}
+        handelsbanken:
+          tink:
+            tppId: "HANDELSBANKEN_TPP_ID_TAG"
+            clientId: "HANDELSBANKEN_CLIENT_ID_TAG"
+            psuIpAddress: "0.0.0.0"
+            redirectUrl: "{{ $agentsConfig.handelsbanken.tink.redirectUrl }}"
+            appName: "Tink"
+            appDesc: "Tink app"
+            certificateId: "{{ $agentsConfig.handelsbanken.tink.certificateId }}"
         {{- end }}
 
       abnAmro:
