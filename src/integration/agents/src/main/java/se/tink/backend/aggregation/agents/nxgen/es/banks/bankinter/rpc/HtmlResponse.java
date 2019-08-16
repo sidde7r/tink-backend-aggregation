@@ -23,9 +23,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class HtmlResponse {
     protected final String body;
@@ -62,7 +63,7 @@ public class HtmlResponse {
         this.document = parseHTML(this.body);
     }
 
-    protected Amount parseAmount(String amountString) {
+    protected ExactCurrencyAmount parseAmount(String amountString) {
         // amount uses "." as thousands separator and "," as decimal separator
         if (!amountString.endsWith("€")) {
             throw new IllegalStateException("Unknown account currency for " + amountString);
@@ -70,9 +71,12 @@ public class HtmlResponse {
 
         try {
             if (amountString.startsWith("+")) {
-                return Amount.inEUR(amountFormat.parse(amountString.substring(1)));
+                return ExactCurrencyAmount.of(
+                        amountFormat.parse(amountString.substring(1)),
+                        BankinterConstants.DEFAULT_CURRENCY);
             } else {
-                return Amount.inEUR(amountFormat.parse(amountString));
+                return ExactCurrencyAmount.of(
+                        amountFormat.parse(amountString), BankinterConstants.DEFAULT_CURRENCY);
             }
         } catch (ParseException e) {
             throw new IllegalStateException("Could not parse amount " + amountString, e);

@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class AccountResponse extends HtmlResponse {
     private static final Logger LOG = LoggerFactory.getLogger(AccountResponse.class);
@@ -47,7 +47,7 @@ public class AccountResponse extends HtmlResponse {
         return identifier;
     }
 
-    protected Amount getBalance() {
+    protected ExactCurrencyAmount getBalance() {
         final String balanceString =
                 evaluateXPath("//div[@class='saldoMov']//p[contains(@class,'cifra')]", String.class)
                         .replaceAll("\\s", "");

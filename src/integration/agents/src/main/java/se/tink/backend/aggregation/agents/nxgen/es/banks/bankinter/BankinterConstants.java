@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter;
 public final class BankinterConstants {
 
     public static final String INTEGRATION_NAME = "bankinter";
+    public static final String DEFAULT_CURRENCY = "EUR";
 
     private BankinterConstants() {
         throw new AssertionError();
