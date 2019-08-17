@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveA
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -119,7 +119,7 @@ public class VolksbankAgent extends NextGenerationAgent
                         credentials,
                         strongAuthenticationState);
         progressiveAuthenticator =
-                new AutoAuthenticationController(
+                new AutoAuthenticationProgressiveController(
                         request,
                         context,
                         new ThirdPartyAppAuthenticationController<>(
