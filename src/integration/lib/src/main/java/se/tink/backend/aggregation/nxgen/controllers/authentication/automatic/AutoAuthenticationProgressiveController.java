@@ -13,12 +13,11 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
-public class AutoAuthenticationProgressiveController implements TypedAuthenticator, ProgressiveAuthenticator {
+public class AutoAuthenticationProgressiveController implements ProgressiveAuthenticator {
     private final CredentialsRequest request;
     private final SystemUpdater systemUpdater;
     private final MultiFactorAuthenticator manualAuthenticator;
@@ -56,35 +55,6 @@ public class AutoAuthenticationProgressiveController implements TypedAuthenticat
             }
         } finally {
             // TODO auth: move it up layer
-            systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
-        }
-    }
-
-    @Override
-    // TODO: Change to new MultiFactor credential type when available.
-    public CredentialsTypes getType() {
-        return CredentialsTypes.PASSWORD;
-    }
-
-    // TODO auth: remove the legacy authenticate and extension.
-    @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        try {
-            if (!forceAutoAuthentication()
-                            && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
-                                    || (request.isUpdate()
-                                            && !Objects.equals(
-                                                    request.getType(),
-                                                    CredentialsRequestType.TRANSFER)))
-                    || credentials.forceManualAuthentication()) {
-                manual(credentials);
-            } else {
-                Preconditions.checkState(
-                        !Objects.equals(request.getType(), CredentialsRequestType.CREATE));
-                auto(credentials);
-            }
-        } finally {
             systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
