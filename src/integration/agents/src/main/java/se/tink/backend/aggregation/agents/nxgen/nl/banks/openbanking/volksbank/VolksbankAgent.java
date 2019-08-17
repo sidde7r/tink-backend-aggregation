@@ -39,11 +39,6 @@ public class VolksbankAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
 
-    private final VolksbankApiClient volksbankApiClient;
-    private final VolksbankUrlFactory urlFactory;
-    private final VolksbankConfiguration volksbankConfiguration;
-    private final ConsentFetcher consentFetcher;
-
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final ProgressiveAuthenticator progressiveAuthenticator;
 
@@ -60,9 +55,9 @@ public class VolksbankAgent extends NextGenerationAgent
 
         final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
-        this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
+        final VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
-        volksbankConfiguration =
+        final VolksbankConfiguration volksbankConfiguration =
                 agentsServiceConfiguration
                         .getIntegrations()
                         .getClientConfiguration(
@@ -74,12 +69,12 @@ public class VolksbankAgent extends NextGenerationAgent
                                         new IllegalStateException(
                                                 "Volksbank configuration missing."));
 
-        volksbankApiClient = new VolksbankApiClient(client, urlFactory);
+        final VolksbankApiClient volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
         final URL redirectUrl = new URL(volksbankConfiguration.getRedirectUrl());
         final String clientId = volksbankConfiguration.getAisConfiguration().getClientId();
 
-        consentFetcher =
+        final ConsentFetcher consentFetcher =
                 new ConsentFetcher(
                         volksbankApiClient, persistentStorage, isSandbox, redirectUrl, clientId);
 
@@ -139,7 +134,7 @@ public class VolksbankAgent extends NextGenerationAgent
     }
 
     @Override
-    public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
+    public SteppableAuthenticationResponse login(final SteppableAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         progressiveAuthenticator.authenticate(credentials);
         return SteppableAuthenticationResponse.finalResponse(
