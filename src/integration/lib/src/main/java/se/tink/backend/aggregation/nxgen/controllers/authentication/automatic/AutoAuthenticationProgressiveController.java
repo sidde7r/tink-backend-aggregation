@@ -13,20 +13,20 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public class AutoAuthenticationProgressiveController implements ProgressiveAuthenticator {
     private final CredentialsRequest request;
     private final SystemUpdater systemUpdater;
-    private final MultiFactorAuthenticator manualAuthenticator;
+    private final ProgressiveTypedAuthenticator manualAuthenticator;
     private final AutoAuthenticator autoAuthenticator;
 
     public AutoAuthenticationProgressiveController(
             CredentialsRequest request,
             SystemUpdater systemUpdater,
-            MultiFactorAuthenticator manualAuthenticator,
+            ProgressiveTypedAuthenticator manualAuthenticator,
             AutoAuthenticator autoAuthenticator) {
         this.request = Preconditions.checkNotNull(request);
         this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
@@ -74,26 +74,10 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
             credentials.setType(manualAuthenticator.getType());
         }
         try {
-            // TODO auth: remove the cast
-            return ((ProgressiveAuthenticator) manualAuthenticator)
-                    .authenticationSteps(credentials);
+            return manualAuthenticator.authenticationSteps(credentials);
         } finally {
             credentials.setType(CredentialsTypes.PASSWORD);
         }
-    }
-
-    private void manual(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        if (!request.isManual()) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-
-        if (!Objects.equals(manualAuthenticator.getType(), credentials.getType())) {
-            credentials.setType(manualAuthenticator.getType());
-        }
-
-        manualAuthenticator.authenticate(credentials);
-        credentials.setType(CredentialsTypes.PASSWORD);
     }
 
     private Iterable<? extends AuthenticationStep> auto(Credentials credentials)
@@ -110,7 +94,7 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
             }
 
             try {
-                manual(credentials);
+                manualProgressive(credentials);
                 return Collections.singletonList(
                         request -> new AuthenticationResponse(Collections.emptyList()));
             } catch (AuthenticationException | AuthorizationException manualException) {
