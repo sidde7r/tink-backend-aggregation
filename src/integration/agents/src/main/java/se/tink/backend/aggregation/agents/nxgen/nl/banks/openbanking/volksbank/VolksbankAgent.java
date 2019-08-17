@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
-import java.util.Collections;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -18,8 +17,8 @@ import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
@@ -136,9 +135,7 @@ public class VolksbankAgent extends NextGenerationAgent
     @Override
     public SteppableAuthenticationResponse login(final SteppableAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        progressiveAuthenticator.authenticate(credentials);
-        return SteppableAuthenticationResponse.finalResponse(
-                new AuthenticationResponse(Collections.emptyList()));
+        return ProgressiveAuthController.of(progressiveAuthenticator, credentials).login(request);
     }
 
     @Override
