@@ -49,9 +49,7 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
             } else {
                 Preconditions.checkState(
                         !Objects.equals(request.getType(), CredentialsRequestType.CREATE));
-                auto(credentials);
-                return Collections.singletonList(
-                        request -> new AuthenticationResponse(Collections.emptyList()));
+                return auto(credentials);
             }
         } finally {
             // TODO auth: move it up layer
@@ -98,10 +96,12 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
         credentials.setType(CredentialsTypes.PASSWORD);
     }
 
-    private void auto(Credentials credentials)
+    private Iterable<? extends AuthenticationStep> auto(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         try {
             autoAuthenticator.autoAuthenticate();
+            return Collections.singletonList(
+                    request -> new AuthenticationResponse(Collections.emptyList()));
         } catch (SessionException autoException) {
             if (!request.isManual()) {
                 credentials.setType(manualAuthenticator.getType());
@@ -111,6 +111,8 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
 
             try {
                 manual(credentials);
+                return Collections.singletonList(
+                        request -> new AuthenticationResponse(Collections.emptyList()));
             } catch (AuthenticationException | AuthorizationException manualException) {
                 credentials.setType(manualAuthenticator.getType());
 
