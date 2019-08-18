@@ -123,7 +123,7 @@ public class VolksbankAgent extends NextGenerationAgent
                         request,
                         context,
                         new ThirdPartyAppAuthenticationProgressiveController<>(
-                                oAuth2AuthenticationController, supplementalInformationHelper),
+                                oAuth2AuthenticationController),
                         oAuth2AuthenticationController);
     }
 

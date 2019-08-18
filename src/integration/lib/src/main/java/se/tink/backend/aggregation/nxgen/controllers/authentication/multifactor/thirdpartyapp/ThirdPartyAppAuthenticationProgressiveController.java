@@ -16,32 +16,26 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class ThirdPartyAppAuthenticationProgressiveController<T>
         implements ProgressiveTypedAuthenticator {
 
     private final ThirdPartyAppAuthenticator<T> authenticator;
-    private final SupplementalInformationHelper supplementalInformationHelper;
     private final int maxPollAttempts;
 
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
     private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            ThirdPartyAppAuthenticator<T> authenticator,
-            SupplementalInformationHelper supplementalInformationHelper) {
-        this(authenticator, supplementalInformationHelper, DEFAULT_MAX_ATTEMPTS);
+            ThirdPartyAppAuthenticator<T> authenticator) {
+        this(authenticator, DEFAULT_MAX_ATTEMPTS);
     }
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            ThirdPartyAppAuthenticator<T> authenticator,
-            SupplementalInformationHelper supplementalInformationHelper,
-            int maxPollAttempts) {
+            ThirdPartyAppAuthenticator<T> authenticator, int maxPollAttempts) {
         Preconditions.checkArgument(maxPollAttempts > 0);
         this.authenticator = authenticator;
-        this.supplementalInformationHelper = supplementalInformationHelper;
         this.maxPollAttempts = maxPollAttempts;
     }
 
