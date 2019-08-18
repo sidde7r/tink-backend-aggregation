@@ -94,9 +94,7 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
             }
 
             try {
-                manualProgressive(credentials);
-                return Collections.singletonList(
-                        request -> new AuthenticationResponse(Collections.emptyList()));
+                return manualProgressive(credentials);
             } catch (AuthenticationException | AuthorizationException manualException) {
                 credentials.setType(manualAuthenticator.getType());
 

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -49,13 +50,6 @@ public class ThirdPartyAppAuthenticationProgressiveController<T>
         return CredentialsTypes.THIRD_PARTY_APP;
     }
 
-    private void openThirdPartyApp() {
-        ThirdPartyAppAuthenticationPayload payload = authenticator.getAppPayload();
-        Preconditions.checkNotNull(payload);
-
-        supplementalInformationHelper.openThirdPartyApp(payload);
-    }
-
     private ThirdPartyAppException decorateException(
             ThirdPartyAppStatus status, ThirdPartyAppError error) {
         Optional<LocalizableKey> authenticatorMessage =
@@ -86,18 +80,24 @@ public class ThirdPartyAppAuthenticationProgressiveController<T>
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps(final Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        ThirdPartyAppResponse<T> response = authenticator.init();
+    public Iterable<? extends AuthenticationStep> authenticationSteps(
+            final Credentials credentials) {
+        return Arrays.asList(
+                request -> {
+                    ThirdPartyAppAuthenticationPayload payload = authenticator.getAppPayload();
+                    Preconditions.checkNotNull(payload);
 
-        openThirdPartyApp();
+                    return AuthenticationResponse.openThirdPartyApp(payload);
+                },
+                request -> {
+                    ThirdPartyAppResponse<T> response = authenticator.init();
 
-        handleStatus(response.getStatus());
+                    handleStatus(response.getStatus());
 
-        poll(response);
+                    poll(response);
 
-        return Collections.singletonList(
-                request -> new AuthenticationResponse(Collections.emptyList()));
+                    return new AuthenticationResponse(Collections.emptyList());
+                });
     }
 
     private void poll(ThirdPartyAppResponse<T> response)
