@@ -30,7 +30,7 @@ public final class ProgressiveLoginExecutor {
     private SteppableAuthenticationRequest handleResponse(
             final SteppableAuthenticationResponse response) throws Exception {
 
-        final List<Field> fields = response.getFields();
+        final List<Field> fields = response.getPayload().getFields();
         final Map<String, String> map =
                 supplementalInformationController.askSupplementalInformation(
                         fields.toArray(new Field[fields.size()]));
