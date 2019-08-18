@@ -23,19 +23,20 @@ public final class ProgressiveLoginExecutor {
         SteppableAuthenticationResponse response =
                 agent.login(SteppableAuthenticationRequest.initialRequest());
         while (response.getStep().isPresent()) {
-            response = agent.login(handleResponse(response));
+            response = agent.login(handleResponse(response.getStep().get(), response.getPayload()));
         }
     }
 
     private SteppableAuthenticationRequest handleResponse(
-            final SteppableAuthenticationResponse response) throws Exception {
+            final Class<? extends AuthenticationStep> step, final AuthenticationResponse payload)
+            throws Exception {
 
-        final List<Field> fields = response.getPayload().getFields();
+        final List<Field> fields = payload.getFields();
         final Map<String, String> map =
                 supplementalInformationController.askSupplementalInformation(
                         fields.toArray(new Field[fields.size()]));
 
         return SteppableAuthenticationRequest.subsequentRequest(
-                response.getStep().get(), new ArrayList<>(map.values()));
+                step, new ArrayList<>(map.values()));
     }
 }
