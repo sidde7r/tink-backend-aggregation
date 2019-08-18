@@ -2,14 +2,12 @@ package se.tink.backend.aggregation.workers.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.PersistentLogin;
@@ -21,8 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -202,24 +199,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         return true;
     }
 
-    private void progressiveLogin() throws Exception {
-        final ProgressiveAuthAgent progressiveAgent = (ProgressiveAuthAgent) agent;
-        SteppableAuthenticationResponse response =
-                progressiveAgent.login(SteppableAuthenticationRequest.initialRequest());
-        while (response.getStep().isPresent()) {
-            // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
-            // etc.
-            final List<Field> fields = response.getFields();
-            final Map<String, String> map =
-                    supplementalInformationController.askSupplementalInformation(
-                            fields.toArray(new Field[fields.size()]));
-            response =
-                    progressiveAgent.login(
-                            SteppableAuthenticationRequest.subsequentRequest(
-                                    response.getStep().get(), new ArrayList<>(map.values())));
-        }
-    }
-
     private boolean isManualAuthentication(Credentials credentials) {
         if (agent instanceof ManualOrAutoAuth) {
             ManualOrAutoAuth manualOrAutoAuth = (ManualOrAutoAuth) agent;
@@ -244,7 +223,10 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             // TODO auth: temporarily use the annotation to filter agents that are migrated to use
             // new Auth flow
             if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
-                progressiveLogin();
+                final ProgressiveLoginExecutor executor =
+                        new ProgressiveLoginExecutor(
+                                supplementalInformationController, (ProgressiveAuthAgent) agent);
+                executor.login();
                 action.completed();
                 actionLoginType.completed();
                 return AgentWorkerCommandResult.CONTINUE;
