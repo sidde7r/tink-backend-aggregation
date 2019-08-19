@@ -6,5 +6,6 @@ public enum ThirdPartyAppStatus {
     CANCELLED,
     TIMED_OUT,
     ALREADY_IN_PROGRESS,
+    AUTHENTICATION_ERROR,
     UNKNOWN
 }

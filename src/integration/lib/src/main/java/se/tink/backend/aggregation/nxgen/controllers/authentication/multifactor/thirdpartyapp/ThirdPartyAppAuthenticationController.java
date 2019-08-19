@@ -75,6 +75,8 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
                 throw decorateException(status, ThirdPartyAppError.TIMED_OUT);
             case ALREADY_IN_PROGRESS:
                 throw decorateException(status, ThirdPartyAppError.ALREADY_IN_PROGRESS);
+            case AUTHENTICATION_ERROR:
+                throw decorateException(status, ThirdPartyAppError.AUTHENTICATION_ERROR);
             default:
                 throw new IllegalStateException(
                         String.format("Unknown status: %s", status.toString()));

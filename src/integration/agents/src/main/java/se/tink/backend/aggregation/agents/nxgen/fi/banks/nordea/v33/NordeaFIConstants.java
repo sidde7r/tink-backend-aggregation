@@ -59,7 +59,8 @@ public class NordeaFIConstants {
                             "external_authentication_required",
                             "external_authentication_pending")
                     .put(ThirdPartyAppStatus.CANCELLED, "authentication_cancelled")
-                    .put(ThirdPartyAppStatus.TIMED_OUT, "authentication_failed", "invalid_request")
+                    .put(ThirdPartyAppStatus.TIMED_OUT, "authentication_failed")
+                    .put(ThirdPartyAppStatus.AUTHENTICATION_ERROR, "invalid_request")
                     .put(ThirdPartyAppStatus.ALREADY_IN_PROGRESS, "authentication_collision")
                     .build();
 
