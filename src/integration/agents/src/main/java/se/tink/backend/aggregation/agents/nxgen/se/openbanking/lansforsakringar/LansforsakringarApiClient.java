@@ -6,6 +6,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.IdTags;
@@ -31,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -97,11 +100,20 @@ public final class LansforsakringarApiClient {
         return createRequestInSession(new URL(url));
     }
 
-    public OAuth2Token getToken(AuthenticateForm form) {
+    public OAuth2Token postToken(AuthenticateForm form) {
+
+        final Form params =
+            Form.builder()
+                .put(FormKeys.CLIENT_ID, configuration.getClientId())
+                .put(FormKeys.CLIENT_SECRET, configuration.getClientSecret())
+                .put(FormKeys.GRANT_TYPE, FormValues.CLIENT_CREDENTIALS)
+                .build();
+
         return client.request(Urls.TOKEN)
                 .header(LansforsakringarConstants.HeaderKeys.X_TINK_DEBUG, LansforsakringarConstants.HeaderValues.TRUST_ALL)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .header(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .body(params.toString())
                 .post(AuthenticateResponse.class)
                 .toTinkToken();
     }
