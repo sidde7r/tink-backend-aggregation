@@ -74,7 +74,7 @@ public final class BalanceModule {
             Preconditions.checkNotNull(availableCredit, "Available Credit must not be null.");
             this.exactAvailableCredit =
                     ExactCurrencyAmount.of(
-                            availableCredit.getValue(), availableCredit.getCurrency());
+                            availableCredit.toBigDecimal(), availableCredit.getCurrency());
             return this;
         }
 
@@ -90,7 +90,7 @@ public final class BalanceModule {
         public BalanceBuilderStep withBalance(@Nonnull Amount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
             this.exactBalance =
-                    ExactCurrencyAmount.of(balance.doubleValue(), balance.getCurrency());
+                    ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency());
             return this;
         }
 

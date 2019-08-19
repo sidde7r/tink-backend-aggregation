@@ -53,7 +53,8 @@ public class CreditCardAccount extends Account {
     public static Builder<?, ?> builder(
             String uniqueIdentifier, Amount balance, Amount availableCredit) {
         return builder(uniqueIdentifier)
-                .setExactBalance(ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency()))
+                .setExactBalance(
+                        ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency()))
                 .setAvailableCredit(availableCredit);
     }
 

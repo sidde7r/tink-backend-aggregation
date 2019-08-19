@@ -95,9 +95,7 @@ public abstract class Account {
     protected Account(StepBuilder<? extends Account, ?> builder) {
         this.accountNumber = builder.getAccountNumber();
         this.apiIdentifier = builder.getApiIdentifier();
-        this.exactBalance =
-                ExactCurrencyAmount.of(
-                        builder.getBalance().doubleValue(), builder.getBalance().getCurrency());
+        this.exactBalance = builder.getExactBalance();
         this.identifiers = ImmutableSet.copyOf(builder.getIdentifiers());
         this.uniqueIdentifier = builder.getUniqueIdentifier();
         this.temporaryStorage = builder.getTemporaryStorage();
@@ -325,7 +323,8 @@ public abstract class Account {
         protected final void applyBalance(@Nonnull Amount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
 
-            this.exactBalance = ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency());
+            this.exactBalance =
+                    ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency());
         }
 
         protected final void applyBalance(@Nonnull ExactCurrencyAmount balance) {
@@ -485,7 +484,7 @@ public abstract class Account {
         @Deprecated
         public T setBalance(Amount balance) {
             thisObj.exactBalance =
-                    ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency());
+                    ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency());
             return self();
         }
 
@@ -507,7 +506,7 @@ public abstract class Account {
         public T setAvailableCredit(Amount availableCredit) {
             this.exactAvailableCredit =
                     ExactCurrencyAmount.of(
-                            availableCredit.getValue(), availableCredit.getCurrency());
+                            availableCredit.toBigDecimal(), availableCredit.getCurrency());
             return self();
         }
 

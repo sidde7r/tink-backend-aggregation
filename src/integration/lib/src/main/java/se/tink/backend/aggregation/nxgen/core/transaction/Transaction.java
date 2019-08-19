@@ -19,7 +19,7 @@ public class Transaction extends AggregationTransaction {
     @Deprecated
     protected Transaction(Amount amount, Date date, String description, boolean pending) {
         this(
-                ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency()),
+                ExactCurrencyAmount.of(amount.toBigDecimal(), amount.getCurrency()),
                 date,
                 description,
                 pending,

@@ -19,15 +19,15 @@ public class ExactCurrencyAmountTest {
 
     @Test
     public void reflexiveEquality() {
-        ExactCurrencyAmount a = ExactCurrencyAmount.of(3, "SEK");
+        ExactCurrencyAmount a = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "SEK");
 
         assertTrue(a.equals(a));
     }
 
     @Test
     public void symmetricEquality() {
-        ExactCurrencyAmount a = ExactCurrencyAmount.of(3, "SEK");
-        ExactCurrencyAmount b = ExactCurrencyAmount.of(3, "SEK");
+        ExactCurrencyAmount a = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "SEK");
+        ExactCurrencyAmount b = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "SEK");
 
         assertTrue(a.equals(b));
         assertTrue(b.equals(a));
@@ -35,9 +35,9 @@ public class ExactCurrencyAmountTest {
 
     @Test
     public void transitiveEquality() {
-        ExactCurrencyAmount a = ExactCurrencyAmount.of(3, "SEK");
-        ExactCurrencyAmount b = ExactCurrencyAmount.of(3.0, "SEK");
-        ExactCurrencyAmount c = ExactCurrencyAmount.of(3.00, "SEK");
+        ExactCurrencyAmount a = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "SEK");
+        ExactCurrencyAmount b = ExactCurrencyAmount.of(BigDecimal.valueOf(3.0), "SEK");
+        ExactCurrencyAmount c = ExactCurrencyAmount.of(BigDecimal.valueOf(3.00), "SEK");
 
         // a == b & b == c => a = c
         assertEquals(a, b);
@@ -46,8 +46,8 @@ public class ExactCurrencyAmountTest {
 
     @Test
     public void consistentEquality() {
-        ExactCurrencyAmount a = ExactCurrencyAmount.of(3, "SEK");
-        ExactCurrencyAmount b = ExactCurrencyAmount.of(3, "SEK");
+        ExactCurrencyAmount a = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "SEK");
+        ExactCurrencyAmount b = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "SEK");
 
         assertTrue(a.equals(b));
         assertTrue(a.equals(b));
@@ -55,38 +55,38 @@ public class ExactCurrencyAmountTest {
 
     @Test
     public void equalsReturnTrueForEqualAmountsWithBothCurrencyCodeNull() {
-        ExactCurrencyAmount a = ExactCurrencyAmount.of(3, null);
-        ExactCurrencyAmount b = ExactCurrencyAmount.of(3, null);
+        ExactCurrencyAmount a = ExactCurrencyAmount.of(BigDecimal.valueOf(3), null);
+        ExactCurrencyAmount b = ExactCurrencyAmount.of(BigDecimal.valueOf(3), null);
         assertTrue(a.equals(b));
     }
 
     @Test
     public void equalsReturnFalseComparing3SekWith3Null() {
-        ExactCurrencyAmount a = ExactCurrencyAmount.of(3, "SEK");
-        ExactCurrencyAmount b = ExactCurrencyAmount.of(3, null);
+        ExactCurrencyAmount a = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "SEK");
+        ExactCurrencyAmount b = ExactCurrencyAmount.of(BigDecimal.valueOf(3), null);
         assertFalse(a.equals(b));
         assertFalse(b.equals(a));
     }
 
     @Test
     public void nullEquality() {
-        ExactCurrencyAmount a = ExactCurrencyAmount.of(3, "SEK");
+        ExactCurrencyAmount a = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "SEK");
 
         assertFalse(a.equals(null));
     }
 
     @Test
     public void differentCurrency() {
-        ExactCurrencyAmount a = ExactCurrencyAmount.of(3, "SEK");
-        ExactCurrencyAmount b = ExactCurrencyAmount.of(3, "NOK");
+        ExactCurrencyAmount a = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "SEK");
+        ExactCurrencyAmount b = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "NOK");
 
         assertFalse(a.equals(b));
     }
 
     @Test
     public void differentAmount() {
-        ExactCurrencyAmount a = ExactCurrencyAmount.of(3, "SEK");
-        ExactCurrencyAmount b = ExactCurrencyAmount.of(45, "SEK");
+        ExactCurrencyAmount a = ExactCurrencyAmount.of(BigDecimal.valueOf(3), "SEK");
+        ExactCurrencyAmount b = ExactCurrencyAmount.of(BigDecimal.valueOf(45), "SEK");
 
         assertFalse(a.equals(b));
     }

@@ -257,7 +257,8 @@ public class LoanDetails {
 
         @Deprecated
         public Builder setAmortized(Amount amortized) {
-            this.amortized = ExactCurrencyAmount.of(amortized.getValue(), amortized.getCurrency());
+            this.amortized =
+                    ExactCurrencyAmount.of(amortized.toBigDecimal(), amortized.getCurrency());
             return this;
         }
 
@@ -285,7 +286,7 @@ public class LoanDetails {
         public Builder setMonthlyAmortization(Amount monthlyAmortization) {
             this.monthlyAmortization =
                     ExactCurrencyAmount.of(
-                            monthlyAmortization.getValue(), monthlyAmortization.getCurrency());
+                            monthlyAmortization.toBigDecimal(), monthlyAmortization.getCurrency());
             return this;
         }
 
@@ -312,7 +313,8 @@ public class LoanDetails {
         @Deprecated
         public Builder setInitialBalance(Amount initialBalance) {
             this.initialBalance =
-                    ExactCurrencyAmount.of(initialBalance.getValue(), initialBalance.getCurrency());
+                    ExactCurrencyAmount.of(
+                            initialBalance.toBigDecimal(), initialBalance.getCurrency());
             return this;
         }
 

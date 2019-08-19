@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -72,11 +73,12 @@ public class HtmlResponse {
         try {
             if (amountString.startsWith("+")) {
                 return ExactCurrencyAmount.of(
-                        amountFormat.parse(amountString.substring(1)),
+                        new BigDecimal(amountFormat.parse(amountString.substring(1)).toString()),
                         BankinterConstants.DEFAULT_CURRENCY);
             } else {
                 return ExactCurrencyAmount.of(
-                        amountFormat.parse(amountString), BankinterConstants.DEFAULT_CURRENCY);
+                        new BigDecimal(amountFormat.parse(amountString).toString()),
+                        BankinterConstants.DEFAULT_CURRENCY);
             }
         } catch (ParseException e) {
             throw new IllegalStateException("Could not parse amount " + amountString, e);

@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instru
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
@@ -74,7 +76,9 @@ public class InstrumentModuleTest {
         assertSame(INSTRUMENT_ID_MODULE, instrumentModule.getInstrumentIdModule());
         assertEquals(5, instrumentModule.getPrice(), 0);
         assertEquals(20, instrumentModule.getMarketValue(), 0);
-        assertEquals(7, instrumentModule.getAverageAcquisitionPrice(), 0);
+        assertTrue(
+                instrumentModule.getAverageAcquisitionPrice().compareTo(BigDecimal.valueOf(7))
+                        == 0);
         assertEquals("SEK", instrumentModule.getCurrency());
         assertEquals(20, instrumentModule.getQuantity(), 0);
         assertEquals(100, instrumentModule.getProfit(), 0);
@@ -101,7 +105,9 @@ public class InstrumentModuleTest {
         assertSame(INSTRUMENT_ID_MODULE, instrumentModule.getInstrumentIdModule());
         assertEquals(5, instrumentModule.getPrice(), 0);
         assertEquals(20, instrumentModule.getMarketValue(), 0);
-        assertEquals(7, instrumentModule.getAverageAcquisitionPrice(), 0);
+        assertTrue(
+                instrumentModule.getAverageAcquisitionPrice().compareTo(BigDecimal.valueOf(7))
+                        == 0);
         assertEquals("SEK", instrumentModule.getCurrency());
         assertEquals(20, instrumentModule.getQuantity(), 0);
         assertEquals(100, instrumentModule.getProfit(), 0);
@@ -129,7 +135,9 @@ public class InstrumentModuleTest {
         assertSame(INSTRUMENT_ID_MODULE, instrumentModule.getInstrumentIdModule());
         assertEquals(5, instrumentModule.getPrice(), 0);
         assertEquals(20, instrumentModule.getMarketValue(), 0);
-        assertEquals(7, instrumentModule.getAverageAcquisitionPrice(), 0);
+        assertTrue(
+                instrumentModule.getAverageAcquisitionPrice().compareTo(BigDecimal.valueOf(7))
+                        == 0);
         assertEquals("SEK", instrumentModule.getCurrency());
         assertEquals(20, instrumentModule.getQuantity(), 0);
         assertEquals(100, instrumentModule.getProfit(), 0);
@@ -171,10 +179,13 @@ public class InstrumentModuleTest {
                 systemInstrument.getMarketPlace());
         assertEquals(instrumentModule.getPrice(), systemInstrument.getPrice(), 0);
         assertEquals(instrumentModule.getMarketValue(), systemInstrument.getMarketValue(), 0);
-        assertEquals(
-                instrumentModule.getAverageAcquisitionPrice(),
-                systemInstrument.getAverageAcquisitionPrice(),
-                0);
+        assertTrue(
+                instrumentModule
+                                .getAverageAcquisitionPrice()
+                                .compareTo(
+                                        BigDecimal.valueOf(
+                                                systemInstrument.getAverageAcquisitionPrice()))
+                        == 0);
         assertEquals(instrumentModule.getCurrency(), systemInstrument.getCurrency());
         assertEquals(instrumentModule.getQuantity(), systemInstrument.getQuantity(), 0);
         assertEquals(instrumentModule.getProfit(), systemInstrument.getProfit(), 0);
