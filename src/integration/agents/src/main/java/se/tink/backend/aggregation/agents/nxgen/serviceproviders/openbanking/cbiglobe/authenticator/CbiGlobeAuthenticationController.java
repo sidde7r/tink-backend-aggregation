@@ -24,7 +24,7 @@ public class CbiGlobeAuthenticationController
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CbiGlobeAuthenticator authenticator;
-    private final StrongAuthenticationState strongAuthenticationState;
+    private StrongAuthenticationState strongAuthenticationState;
 
     public CbiGlobeAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
@@ -86,6 +86,8 @@ public class CbiGlobeAuthenticationController
     }
 
     public void openThirdPartyApp(GetAccountsResponse getAccountsResponse) {
+        // Due to 2 consent flow, new state is needed, so new StrongAuthenticationState creation
+        this.strongAuthenticationState = new StrongAuthenticationState("");
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
                         this.strongAuthenticationState.getState(),
