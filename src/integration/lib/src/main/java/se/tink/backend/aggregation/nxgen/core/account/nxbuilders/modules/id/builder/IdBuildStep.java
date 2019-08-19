@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
 
@@ -28,7 +29,7 @@ public interface IdBuildStep {
      * @param productName The name of the product.
      * @return The next step of the builder.
      */
-    IdBuildStep setProductName(@Nonnull String productName);
+    IdBuildStep setProductName(@Nullable String productName);
 
     IdModule build();
 }
