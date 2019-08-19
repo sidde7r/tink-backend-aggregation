@@ -180,14 +180,14 @@ agentsServiceConfiguration:
         aisConfiguration:
           clientId: "dummyId"
           clientSecret: "dummyClient"
-          redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
           certificateId: "Tink"
+        redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
       tink-sandbox:
         aisConfiguration:
           clientId: "dummyId"
           clientSecret: "dummyClient"
-          redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
           certificateId: "Tink"
+        redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
     bunq:
       tink:
         clientId: ""

@@ -63,7 +63,7 @@ public class VolksbankAgent extends NextGenerationAgent
 
         volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
-        final URL redirectUrl = volksbankConfiguration.getAisConfiguration().getRedirectUrl();
+        final URL redirectUrl = new URL(volksbankConfiguration.getRedirectUrl());
         final String clientId = volksbankConfiguration.getAisConfiguration().getClientId();
 
         consentFetcher =
@@ -95,7 +95,7 @@ public class VolksbankAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final URL redirectUrl = volksbankConfiguration.getAisConfiguration().getRedirectUrl();
+        final URL redirectUrl = new URL(volksbankConfiguration.getRedirectUrl());
         final String clientId = volksbankConfiguration.getAisConfiguration().getClientId();
         final String clientSecret = volksbankConfiguration.getAisConfiguration().getClientSecret();
 
