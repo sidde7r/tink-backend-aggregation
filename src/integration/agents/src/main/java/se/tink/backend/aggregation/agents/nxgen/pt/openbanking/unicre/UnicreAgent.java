@@ -7,17 +7,13 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class UnicreAgent extends SibsBaseAgent {
 
-  public UnicreAgent (
-      CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-    super(request, context, signatureKeyPair);
-  }
+    public UnicreAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
+    }
 
-  @Override
-  protected String getIntegrationName() {
-    return UnicreConstants.INTEGRATION_NAME;
-  }
-
+    @Override
+    protected String getIntegrationName() {
+        return UnicreConstants.INTEGRATION_NAME;
+    }
 }
-
-
-
