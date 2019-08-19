@@ -39,8 +39,8 @@ public final class SibsConstants {
     }
 
     public static class AppPayload {
-        public static final String ANDROID_DEEPLINK_REDIRECT = "cgd.pt.caixadirectaparticulares";
-        public static final String IOS_DEEPLINK_REDIRECT = "caixadirectaparticulares://app";
+        public static final String ANDROID_PACKAGE_NAME = "cgd.pt.caixadirectaparticulares";
+        public static final String CAIXADIRECTA_DEEPLINK = "caixadirectaparticulares://app";
         public static final String APP_STORE_URL =
                 "https://apps.apple.com/pt/app/caixadirecta/id1369089471";
         public static final LocalizableKey DOWNLOAD_TITLE =
