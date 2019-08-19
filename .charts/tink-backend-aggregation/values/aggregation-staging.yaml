@@ -82,6 +82,13 @@ agents:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
       eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
       certificateId: abnamro-QSEALC
+  redsys:
+    tink:
+      baseAuthUrl: https://hubpsd2.redsys.es/api-oauth-xs2a/services/rest
+      baseAPIUrl: https://psd2.redsys.es/api-entrada-xs2a/services
+      certificateId: Tink
+      tppIpAddress: 127.0.0.1
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   sibs:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback

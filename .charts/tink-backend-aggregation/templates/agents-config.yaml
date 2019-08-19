@@ -281,6 +281,18 @@ data:
             certificateId: "{{ $agentsConfig.rabobank.abn.certificateId }}"
         {{- end }}
 
+        {{- if $agentsConfig.redsys }}
+        redsys:
+          tink:
+            baseAuthUrl: "{{ $agentsConfig.redsys.tink.baseAuthUrl }}"
+            baseAPIUrl: "{{ $agentsConfig.redsys.tink.baseAPIUrl }}"
+            clientId: "REDSYS_CLIENT_ID_TAG"
+            clientSigningCertificate: "REDSYS_QSEALC_TAG"
+            certificateId: "{{ $agentsConfig.redsys.tink.certificateId }}"
+            tppIpAddress: "{{ $agentsConfig.redsys.tink.tppIpAddress }}"
+            redirectUrl: "{{ $agentsConfig.redsys.tink.redirectUrl }}"
+        {{- end }}
+
         {{- if $agentsConfig.sibs }}
         activobank:
           tink:
