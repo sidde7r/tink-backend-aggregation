@@ -32,15 +32,14 @@ public class AccountEntity {
     private String resourceId;
     private String usage;
 
-    public TransactionalAccount toTinkAccount() {
-        final TransactionalAccountType transactionalAccountType =
-                CreditAgricoleConstants.ACCOUNT_TYPE_MAPPER
-                        .translate(cashAccountType)
-                        .orElse(TransactionalAccountType.OTHER);
+    public Optional<TransactionalAccount> toTinkAccount() {
         final String iban = Optional.ofNullable(accountId.getIban()).orElse(resourceId);
 
         return TransactionalAccount.nxBuilder()
-                .withType(transactionalAccountType)
+                .withTypeAndFlagsFrom(
+                        CreditAgricoleConstants.ACCOUNT_TYPE_MAPPER,
+                        cashAccountType,
+                        TransactionalAccountType.OTHER)
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()

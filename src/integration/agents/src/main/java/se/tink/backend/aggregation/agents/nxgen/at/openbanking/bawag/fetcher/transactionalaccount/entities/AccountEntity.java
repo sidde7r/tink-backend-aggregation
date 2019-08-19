@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -29,9 +29,10 @@ public class AccountEntity {
     @JsonProperty("_links")
     private LinksEntity links;
 
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.from(AccountTypes.CHECKING))
+                .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()
@@ -63,7 +64,7 @@ public class AccountEntity {
     }
 
     private ExactCurrencyAmount getDefaultAmount() {
-        return ExactCurrencyAmount.of(0, currency);
+        return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
     }
 
     public String getIban() {

@@ -19,10 +19,12 @@ public class GetConsentResponse {
     @JsonProperty("_links")
     private Map<String, LinkEntity> links;
 
+    @JsonIgnore
     public String getConsentId() {
         return consentId;
     }
 
+    @JsonIgnore
     public Map<String, LinkEntity> getLinks() {
         return links;
     }

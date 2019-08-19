@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;

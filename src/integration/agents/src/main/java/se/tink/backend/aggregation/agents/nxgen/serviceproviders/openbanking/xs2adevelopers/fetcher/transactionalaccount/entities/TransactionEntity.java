@@ -2,7 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
-import org.assertj.core.util.Strings;
+import java.util.Objects;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -19,6 +20,7 @@ public class TransactionEntity {
     private String debtorName;
     private AccountEntity debtorAccount;
     private String endToEndId;
+    private String purposeCode;
 
     @JsonIgnore
     public Transaction toBookedTinkTransaction() {
@@ -41,14 +43,9 @@ public class TransactionEntity {
     }
 
     private String getDescription() {
-
-        if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
-            return remittanceInformationUnstructured;
-        } else if (!Strings.isNullOrEmpty(debtorName)) {
-            return debtorName;
-        } else if (!Strings.isNullOrEmpty(creditorName)) {
-            return creditorName;
-        }
-        return transactionId;
+        return Stream.of(debtorName, creditorName, remittanceInformationUnstructured, purposeCode)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
     }
 }

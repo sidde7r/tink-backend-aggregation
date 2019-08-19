@@ -33,6 +33,7 @@ public abstract class BerlinGroupAgent<
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+
         clientId = request.getProvider().getPayload();
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();

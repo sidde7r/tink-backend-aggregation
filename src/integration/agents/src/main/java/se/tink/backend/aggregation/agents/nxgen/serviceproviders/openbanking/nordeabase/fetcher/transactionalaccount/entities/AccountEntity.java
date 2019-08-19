@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities;
 
-import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -64,40 +63,50 @@ public class AccountEntity {
     @JsonProperty("value_dated_balance")
     private String valueDatedBalance;
 
-    public TransactionalAccount toTinkAccount() {
-        final AccountTypes type =
-                NordeaBaseConstants.ACCOUNT_TYPE_MAPPER.translate(accountType).orElse(OTHER);
+    public Optional<TransactionalAccount> toTinkAccount() {
+        AccountIdentifier identifier = generalGetAccountIdentifier();
 
-        switch (type) {
-            case CHECKING:
-                return parseAccount(TransactionalAccountType.CHECKING);
-            case SAVINGS:
-                return parseAccount(TransactionalAccountType.SAVINGS);
-            case OTHER:
-            default:
-                throw new IllegalStateException("Unknown account type.");
-        }
-    }
-
-    private TransactionalAccount parseAccount(TransactionalAccountType accountType) {
         return TransactionalAccount.nxBuilder()
-                .withType(accountType)
+                .withTypeAndFlagsFrom(
+                        NordeaBaseConstants.ACCOUNT_TYPE_MAPPER,
+                        accountType,
+                        TransactionalAccountType.OTHER)
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getLast4Bban())
-                                .withAccountNumber(getBban())
+                                .withAccountNumber(identifier.getIdentifier())
                                 .withAccountName(product)
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 AccountIdentifier.Type.IBAN, getIban()))
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.SE, getBban()))
+                                .addIdentifier(identifier)
                                 .build())
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
                 .setApiIdentifier(id)
                 .build();
+    }
+
+    @JsonIgnore
+    public AccountIdentifier generalGetAccountIdentifier() {
+        AccountIdentifier identifier = getAccountIdentifier();
+        if (identifier.is(AccountIdentifier.Type.SE_NDA_SSN)) {
+            return identifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
+        } else {
+            return identifier;
+        }
+    }
+
+    @JsonIgnore
+    public AccountIdentifier getAccountIdentifier() {
+        if (NordeaBaseConstants.TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(product)) {
+            AccountIdentifier ssnIdentifier =
+                    AccountIdentifier.create(AccountIdentifier.Type.SE_NDA_SSN, getBban());
+            if (ssnIdentifier.isValid()) {
+                return ssnIdentifier;
+            }
+        }
+        return AccountIdentifier.create(AccountIdentifier.Type.SE, getBban());
     }
 
     private ExactCurrencyAmount getAvailableBalance() {

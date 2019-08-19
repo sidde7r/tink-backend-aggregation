@@ -1,17 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.time.LocalDate;
-import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.AccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.entities.AddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.serializers.LocalDateSerializer;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonInclude(Include.NON_NULL)
 public class CreatePaymentRequest {
@@ -34,6 +35,7 @@ public class CreatePaymentRequest {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate requestedExecutionDate;
 
+    @JsonIgnore
     private CreatePaymentRequest(Builder builder) {
         this.instructedAmount = AmountEntity.withAmount(builder.amount);
         this.debtorAccount = builder.debtorAccount;
@@ -47,7 +49,7 @@ public class CreatePaymentRequest {
     }
 
     public static class Builder {
-        private Amount amount;
+        private ExactCurrencyAmount amount;
         private AccountReferenceEntity debtorAccount;
         private String creditorName;
         private AccountReferenceEntity creditorAccount;
@@ -57,7 +59,7 @@ public class CreatePaymentRequest {
         private String chargeBearer;
         private LocalDate requestedExecutionDate;
 
-        public Builder withAmount(Amount amount) {
+        public Builder withAmount(ExactCurrencyAmount amount) {
             this.amount = amount;
             return this;
         }

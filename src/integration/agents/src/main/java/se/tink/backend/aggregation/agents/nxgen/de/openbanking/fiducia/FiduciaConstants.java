@@ -1,11 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class FiduciaConstants {
 
     public static final String INTEGRATION_NAME = "fiducia";
+    public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
+            TypeMapper.<PaymentStatus>builder()
+                    .put(PaymentStatus.PENDING, "PNDG", "RCVD")
+                    .put(PaymentStatus.CANCELLED, "CANC")
+                    .put(PaymentStatus.REJECTED, "RJCT")
+                    .put(PaymentStatus.SIGNED, "ACCP")
+                    .build();
 
     private FiduciaConstants() {
         throw new AssertionError();
@@ -16,6 +25,7 @@ public final class FiduciaConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String XML_MARSHAL_EXCEPTION = "Object can't be serialized to XML";
     }
 
     public static class Urls {
@@ -27,6 +37,10 @@ public final class FiduciaConstants {
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiServices.GET_ACCOUNTS);
         public static final URL GET_BALANCES = new URL(BASE_URL + ApiServices.GET_BALANCES);
         public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiServices.GET_TRANSACTIONS);
+        public static final URL CREATE_PAYMENT = new URL(BASE_URL + ApiServices.CREATE_PAYMENT);
+        public static final URL AUTHORIZE_PAYMENT =
+                new URL(BASE_URL + ApiServices.AUTHORIZE_PAYMENT);
+        public static final URL GET_PAYMENT = new URL(BASE_URL + ApiServices.GET_PAYMENT);
     }
 
     public static class ApiServices {
@@ -35,6 +49,11 @@ public final class FiduciaConstants {
         public static final String GET_ACCOUNTS = "/v1/accounts";
         public static final String GET_BALANCES = "/v1/accounts/{accountId}/balances";
         public static final String GET_TRANSACTIONS = "/v1/accounts/{accountId}/transactions";
+        public static final String CREATE_PAYMENT = "/v1/payments/pain.001-sepa-credit-transfers";
+        public static final String AUTHORIZE_PAYMENT =
+                "/v1/payments/pain.001-sepa-credit-transfers/{paymentId}/authorisations";
+        public static final String GET_PAYMENT =
+                "/v1/payments/pain.001-sepa-credit-transfers/{paymentId}";
     }
 
     public static class StorageKeys {
@@ -58,10 +77,12 @@ public final class FiduciaConstants {
         public static final String DIGEST = "Digest";
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String PSU_ID = "PSU-ID";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class HeaderValues {
         public static final String CONSENT_VALID = "CONSENTVALID";
+        public static final Object PSU_IP_ADDRESS = "192.168.8.78";
     }
 
     public static class FormValues {
@@ -70,6 +91,17 @@ public final class FiduciaConstants {
         public static final String VALID_UNTIL = "2019-11-11";
         public static final String FALSE = "false";
         public static final String DATE_FORMAT = "dd MM yyyy";
+        public static final String OTHER_ID = "123";
+        public static final String SCHEME_NAME = "PISP";
+        public static final String PAYMENT_INITIATOR = "PaymentInitiator";
+        public static final String NUMBER_OF_TRANSACTIONS = "1";
+        public static final String MESSAGE_ID = "MIPI-123456789RI-123456789";
+        public static final String PAYMENT_ID = "RI-123456789";
+        public static final String RMT_INF = "Ref Number Merchant-123456";
+        public static final String PAYMENT_TYPE = "SEPA";
+        public static final String CHRG_BR = "SLEV";
+        public static final String PAYMENT_INFORMATION_ID = "BIPI-123456789RI-123456789";
+        public static final String PAYMENT_METHOD = "TRF";
     }
 
     public static class SignatureKeys {
@@ -99,6 +131,7 @@ public final class FiduciaConstants {
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String CONSENT_ID = "consentId";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class CredentialKeys {

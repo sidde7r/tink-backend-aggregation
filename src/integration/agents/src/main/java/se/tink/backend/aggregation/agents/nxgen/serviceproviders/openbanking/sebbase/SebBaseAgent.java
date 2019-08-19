@@ -58,7 +58,8 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,
-                        credentials);
+                        credentials,
+                        strongAuthenticationState);
         return new AutoAuthenticationController(
                 request,
                 context,

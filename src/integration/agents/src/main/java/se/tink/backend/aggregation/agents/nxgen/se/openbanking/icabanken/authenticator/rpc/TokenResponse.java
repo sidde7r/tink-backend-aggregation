@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -42,5 +43,14 @@ public class TokenResponse {
                 getAccessToken(),
                 getRefreshToken(),
                 getExpiresIn());
+    }
+
+    // Used only for sandbox
+    @JsonProperty("token_type")
+    private String tokenType;
+
+    @JsonIgnore
+    public OAuth2Token toTinkToken() {
+        return OAuth2Token.create(tokenType, accessToken, "", Long.parseLong(expiresIn));
     }
 }

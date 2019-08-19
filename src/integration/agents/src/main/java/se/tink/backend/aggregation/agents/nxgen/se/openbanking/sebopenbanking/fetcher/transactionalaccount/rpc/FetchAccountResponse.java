@@ -20,6 +20,8 @@ public class FetchAccountResponse {
                 .orElse(Stream.empty())
                 .filter(AccountsEntity::isEnabled)
                 .map(AccountsEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

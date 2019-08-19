@@ -1,22 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entity.consent.ConsentAccessEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ConsentRequest {
+public class ConsentRequest<T> {
     private Boolean recurringIndicator;
     private String validUntil;
     private Integer frequencyPerDay;
     private Boolean combinedServiceIndicator;
-    private ConsentAccessEntity access;
+    private T access;
 
     public ConsentRequest(
             Boolean recurringIndicator,
             String validUntil,
             Integer frequencyPerDay,
             Boolean combinedServiceIndicator,
-            ConsentAccessEntity access) {
+            T access) {
         this.recurringIndicator = recurringIndicator;
         this.validUntil = validUntil;
         this.frequencyPerDay = frequencyPerDay;

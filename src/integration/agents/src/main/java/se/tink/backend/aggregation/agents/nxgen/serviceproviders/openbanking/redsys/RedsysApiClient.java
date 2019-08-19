@@ -1,32 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.PrivateKey;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
-import org.assertj.core.util.Strings;
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
-import org.bouncycastle.openssl.PEMKeyPair;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.bouncycastle.openssl.jcajce.JceOpenSSLPKCS8DecryptorProviderBuilder;
-import org.bouncycastle.operator.InputDecryptorProvider;
-import org.bouncycastle.operator.OperatorCreationException;
-import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
-import org.bouncycastle.pkcs.PKCSException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
@@ -35,13 +21,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryValues.BookingStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentResponse;
@@ -51,16 +39,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.PaymentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.AccountBalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -69,17 +59,29 @@ public final class RedsysApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
+    private final String appId;
+    private final String clusterId;
     private RedsysConfiguration configuration;
-    private RedsysConsentController consentController;
+    private EidasProxyConfiguration eidasProxyConfiguration;
+    private X509Certificate clientSigningCertificate;
+    private AspspConfiguration aspspConfiguration;
+    private ConsentStatus cachedConsentStatus = ConsentStatus.UNKNOWN;
+    private String psuIpAddress = null;
 
     public RedsysApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            SupplementalInformationHelper supplementalInformationHelper) {
+            PersistentStorage persistentStorage,
+            AspspConfiguration aspspConfiguration,
+            String appId,
+            String clusterId) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.consentController =
-                new RedsysConsentController(this, sessionStorage, supplementalInformationHelper);
+        this.persistentStorage = persistentStorage;
+        this.aspspConfiguration = aspspConfiguration;
+        this.appId = appId;
+        this.clusterId = clusterId;
     }
 
     private RedsysConfiguration getConfiguration() {
@@ -87,20 +89,16 @@ public final class RedsysApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(RedsysConfiguration configuration) {
+    protected void setConfiguration(
+            RedsysConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
-    }
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+        this.clientSigningCertificate =
+                RedsysUtils.parseCertificate(configuration.getClientSigningCertificate());
 
-    private RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
-    }
-
-    private RequestBuilder createRequestInSession(URL url) {
-        final OAuth2Token authToken = getTokenFromStorage();
-
-        return createRequest(url).addBearerToken(authToken);
+        if (eidasProxyConfiguration != null && configuration.getCertificateId() != null) {
+            client.setEidasProxy(eidasProxyConfiguration, configuration.getCertificateId());
+        }
     }
 
     private OAuth2Token getTokenFromStorage() {
@@ -122,20 +120,23 @@ public final class RedsysApiClient {
         assert path.startsWith("/");
         return String.format(
                 "%s/%s%s",
-                getConfiguration().getBaseAuthUrl(), getConfiguration().getAspsp(), path);
+                getConfiguration().getBaseAuthUrl(), aspspConfiguration.getAspspCode(), path);
     }
 
     private String makeApiUrl(String path, Object... args) {
-        assert path.startsWith("/");
+        if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
         if (args.length > 0) {
             path = String.format(path, args);
         }
         return String.format(
-                "%s/%s%s", getConfiguration().getBaseAPIUrl(), getConfiguration().getAspsp(), path);
+                "%s/%s%s",
+                getConfiguration().getBaseAPIUrl(), aspspConfiguration.getAspspCode(), path);
     }
 
     public URL getAuthorizeUrl(String state, String codeChallenge) {
-        final String clientId = getConfiguration().getAuthClientId();
+        final String clientId = getAuthClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
 
         return client.request(makeAuthUrl(RedsysConstants.Urls.OAUTH))
@@ -150,7 +151,7 @@ public final class RedsysApiClient {
     }
 
     public OAuth2Token getToken(String code, String codeVerifier) {
-        final String clientId = getConfiguration().getAuthClientId();
+        final String clientId = getAuthClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
 
         final String payload =
@@ -173,17 +174,17 @@ public final class RedsysApiClient {
 
     public Pair<String, URL> requestConsent(String scaState) {
         final String url = makeApiUrl(Urls.CONSENTS);
+        final LocalDate consentValidUntil = LocalDate.now().plusDays(90);
         final GetConsentRequest getConsentRequest =
                 new GetConsentRequest(
-                        new AccessEntity(null, null, null, null, FormValues.ALL_ACCOUNTS),
+                        AccessEntity.ALL_PSD2,
                         FormValues.TRUE,
-                        FormValues.VALID_UNTIL,
+                        consentValidUntil,
                         FormValues.FREQUENCY_PER_DAY,
                         FormValues.FALSE);
 
         final GetConsentResponse getConsentResponse =
-                createSignedRequest(url, getConsentRequest)
-                        .headers(getTppRedirectHeaders(scaState))
+                createSignedRequest(url, getConsentRequest, getTppRedirectHeaders(scaState))
                         .post(GetConsentResponse.class);
         final String consentId = getConsentResponse.getConsentId();
         final String consentRedirectUrl =
@@ -194,21 +195,22 @@ public final class RedsysApiClient {
         return new Pair<>(consentId, new URL(consentRedirectUrl));
     }
 
-    private String getConsentId() {
-        return sessionStorage.get(StorageKeys.CONSENT_ID);
-    }
-
-    public String fetchConsentStatus(String consentId) {
+    public ConsentStatus fetchConsentStatus(String consentId) {
+        // If valid, cache it for the session
+        if (cachedConsentStatus == ConsentStatus.VALID) {
+            return cachedConsentStatus;
+        }
         final String url = makeApiUrl(Urls.CONSENT_STATUS, consentId);
         final ConsentStatusResponse consentStatusResponse =
                 createSignedRequest(url).get(ConsentStatusResponse.class);
-        return consentStatusResponse.getConsentStatus();
+        cachedConsentStatus = consentStatusResponse.getConsentStatus();
+        return cachedConsentStatus;
     }
 
     public OAuth2Token refreshToken(final String refreshToken) {
-        final String url = getConfiguration().getBaseAuthUrl() + "/" + Urls.REFRESH;
-        final String aspsp = getConfiguration().getAspsp();
-        final String clientId = getConfiguration().getAuthClientId();
+        final String url = makeAuthUrl(Urls.REFRESH);
+        final String aspsp = aspspConfiguration.getAspspCode();
+        final String clientId = getAuthClientId();
 
         final String payload =
                 Form.builder()
@@ -225,96 +227,8 @@ public final class RedsysApiClient {
                 .toTinkToken();
     }
 
-    private X509Certificate getCertificate() {
-        try {
-            InputStream in =
-                    new FileInputStream(getConfiguration().getClientSigningCertificatePath());
-            CertificateFactory factory = CertificateFactory.getInstance("X.509");
-            X509Certificate cert = (X509Certificate) factory.generateCertificate(in);
-            return cert;
-        } catch (IOException | CertificateException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
-    private String getKeyID(X509Certificate cert) {
-        return String.format(
-                Locale.ENGLISH,
-                Signature.KEY_ID_FORMAT,
-                cert.getSerialNumber(),
-                cert.getIssuerX500Principal().getName());
-    }
-
-    private PrivateKeyInfo decryptPrivateKey(PKCS8EncryptedPrivateKeyInfo encryptedKeyInfo)
-            throws OperatorCreationException, PKCSException {
-        final InputDecryptorProvider decryptorProvider =
-                new JceOpenSSLPKCS8DecryptorProviderBuilder()
-                        .build(getConfiguration().getClientSigningKeyPassword().toCharArray());
-        return encryptedKeyInfo.decryptPrivateKeyInfo(decryptorProvider);
-    }
-
-    private PrivateKey readPrivateKey() throws IOException {
-        final String keyPath = getConfiguration().getClientSigningKeyPath();
-        final PEMParser parser = new PEMParser(new InputStreamReader(new FileInputStream(keyPath)));
-        final Object readKeyInfo = parser.readObject();
-        final PrivateKeyInfo keyInfo;
-        if (readKeyInfo instanceof PKCS8EncryptedPrivateKeyInfo) {
-            try {
-                keyInfo = decryptPrivateKey((PKCS8EncryptedPrivateKeyInfo) readKeyInfo);
-            } catch (OperatorCreationException | PKCSException e) {
-                throw new IllegalStateException("Unable to decrypt private key", e);
-            }
-        } else if (readKeyInfo instanceof PEMKeyPair) {
-            keyInfo = ((PEMKeyPair) readKeyInfo).getPrivateKeyInfo();
-        } else {
-            throw new IllegalStateException(
-                    "Unexpected key class: " + readKeyInfo.getClass().getCanonicalName());
-        }
-
-        final JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-        return converter.getPrivateKey(keyInfo);
-    }
-
-    private String generateRequestSignature(
-            String digest, String requestID, String tppRedirectUri) {
-        String payloadToSign =
-                String.format(
-                        "%s: %s\n%s: %s",
-                        HeaderKeys.DIGEST.toLowerCase(Locale.ENGLISH),
-                        digest,
-                        HeaderKeys.REQUEST_ID.toLowerCase(Locale.ENGLISH),
-                        requestID);
-        String headers = HeaderKeys.DIGEST + " " + HeaderKeys.REQUEST_ID;
-        if (!Strings.isNullOrEmpty(tppRedirectUri)) {
-            headers += " " + HeaderKeys.TPP_REDIRECT_URI;
-            payloadToSign +=
-                    String.format(
-                            "\n%s: %s",
-                            HeaderKeys.TPP_REDIRECT_URI.toLowerCase(Locale.ENGLISH),
-                            tppRedirectUri);
-        }
-
-        final PrivateKey privateKey;
-        try {
-            privateKey = readPrivateKey();
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-        final String signature =
-                Base64.getEncoder()
-                        .encodeToString(RSA.signSha256(privateKey, payloadToSign.getBytes()));
-        final String keyID = getKeyID(getCertificate());
-
-        return String.format(
-                Signature.FORMAT, keyID, headers.toLowerCase(Locale.ENGLISH), signature);
-    }
-
-    private RequestBuilder createSignedRequest(String url, @Nullable Object payload) {
-        return createSignedRequest(url, payload, getTokenFromStorage());
-    }
-
-    private RequestBuilder createSignedRequest(String url) {
-        return createSignedRequest(url, null, getTokenFromStorage());
+    private String getAuthClientId() {
+        return RedsysUtils.getAuthClientId(clientSigningCertificate);
     }
 
     private Map<String, Object> getTppRedirectHeaders(String state) {
@@ -332,30 +246,55 @@ public final class RedsysApiClient {
     }
 
     private RequestBuilder createSignedRequest(
-            String url, @Nullable Object payload, OAuth2Token token) {
+            String url, @Nullable Object payload, Map<String, Object> headers) {
+        return createSignedRequest(url, payload, getTokenFromStorage(), headers);
+    }
+
+    private RequestBuilder createSignedRequest(String url) {
+        return createSignedRequest(url, null, getTokenFromStorage(), Maps.newHashMap());
+    }
+
+    private RequestBuilder createSignedRequest(
+            String url, @Nullable Object payload, OAuth2Token token, Map<String, Object> headers) {
         String serializedPayload = "";
         if (payload != null) {
             serializedPayload = SerializationUtils.serializeToString(payload);
         }
+
+        // construct headers
+        final Map<String, Object> allHeaders = Maps.newHashMap(headers);
+        allHeaders.put(HeaderKeys.IBM_CLIENT_ID, getConfiguration().getClientId());
         final String digest =
                 Signature.DIGEST_PREFIX
                         + Base64.getEncoder().encodeToString(Hash.sha256(serializedPayload));
-        final String requestID = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
-        final String signature = generateRequestSignature(digest, requestID, null);
-        final String encodedCertificate;
-        try {
-            encodedCertificate = Base64.getEncoder().encodeToString(getCertificate().getEncoded());
-        } catch (CertificateEncodingException e) {
-            throw new IllegalStateException(e.getMessage(), e);
+        allHeaders.put(HeaderKeys.DIGEST, digest);
+        if (!allHeaders.containsKey(HeaderKeys.REQUEST_ID)) {
+            final String requestID = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
+            allHeaders.put(HeaderKeys.REQUEST_ID, requestID);
         }
+
+        if (!Strings.isNullOrEmpty(psuIpAddress)) {
+            allHeaders.put(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
+        }
+
+        final String signature =
+                RedsysUtils.generateRequestSignature(
+                        configuration,
+                        eidasProxyConfiguration,
+                        clientSigningCertificate,
+                        appId,
+                        clusterId,
+                        allHeaders);
+        allHeaders.put(HeaderKeys.SIGNATURE, signature);
+        allHeaders.put(
+                HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
+                RedsysUtils.getEncodedSigningCertificate(clientSigningCertificate));
+
         RequestBuilder request =
                 client.request(url)
                         .addBearerToken(token)
-                        .header(HeaderKeys.IBM_CLIENT_ID, getConfiguration().getClientId())
-                        .header(HeaderKeys.DIGEST, digest)
-                        .header(HeaderKeys.REQUEST_ID, requestID)
-                        .header(HeaderKeys.SIGNATURE, signature)
-                        .header(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, encodedCertificate);
+                        .headers(allHeaders)
+                        .accept(MediaType.APPLICATION_JSON);
 
         if (payload != null) {
             request = request.body(serializedPayload, MediaType.APPLICATION_JSON);
@@ -364,35 +303,130 @@ public final class RedsysApiClient {
         return request;
     }
 
-    public ListAccountsResponse fetchAccounts() {
-        consentController.askForConsentIfNeeded();
-        final String consentId = getConsentId();
-        return createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
-                .get(ListAccountsResponse.class);
+    private String requestIdForAccount(String accountId) {
+        String requestId = sessionStorage.get(StorageKeys.ACCOUNT_REQUEST_ID + accountId);
+        if (Strings.isNullOrEmpty(requestId)) {
+            requestId = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
+            sessionStorage.put(StorageKeys.ACCOUNT_REQUEST_ID + accountId, requestId);
+        }
+        return requestId;
     }
 
-    public TransactionsResponse fetchTransactions(String accountId, @Nullable String link) {
-        consentController.askForConsentIfNeeded();
-        final String consentId = getConsentId();
-        final String path =
-                Optional.ofNullable(link).orElse(String.format(Urls.TRANSACTIONS, accountId));
-        RequestBuilder request =
-                createSignedRequest(makeApiUrl(path))
-                        .header(HeaderKeys.CONSENT_ID, consentId)
-                        .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
-                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOTH);
+    private void clearRequestIdForAccount(String accountId) {
+        sessionStorage.remove(StorageKeys.ACCOUNT_REQUEST_ID + accountId);
+    }
 
-        return request.get(TransactionsResponse.class);
+    public ListAccountsResponse fetchAccounts(String consentId) {
+        RequestBuilder builder =
+                createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
+                        .header(HeaderKeys.CONSENT_ID, consentId);
+        if (aspspConfiguration.shouldRequestAccountsWithBalance()) {
+            builder = builder.queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE);
+        }
+        return builder.get(ListAccountsResponse.class);
+    }
+
+    public AccountBalancesResponse fetchAccountBalances(String accountId, String consentId) {
+        final Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
+
+        return createSignedRequest(makeApiUrl(Urls.BALANCES, accountId), null, headers)
+                .get(AccountBalancesResponse.class);
+    }
+
+    private LocalDate transactionsFromDate(String accountId) {
+        final Optional<LocalDate> fetchedDate = fetchedTransactionsUntil(accountId);
+        return fetchedDate
+                .map(localDate -> localDate.minusDays(7))
+                .orElseGet(() -> aspspConfiguration.oldestTransactionDate());
+    }
+
+    private Optional<LocalDate> fetchedTransactionsUntil(String accountId) {
+        final String dateString =
+                persistentStorage.get(StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId);
+        if (Objects.isNull(dateString)) {
+            return Optional.empty();
+        }
+        return Optional.of(LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE));
+    }
+
+    private void setFetchingTransactionsUntil(String accountId, LocalDate date) {
+        final String fetchedUntilDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        sessionStorage.put(StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
+    }
+
+    private void persistFetchedTransactionsUntil(String accountId) {
+        final String key = StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId;
+        final String value = sessionStorage.remove(key);
+        persistentStorage.put(key, value);
+    }
+
+    private BaseTransactionsResponse fetchTransactions(String accountId, RequestBuilder request) {
+        try {
+            final BaseTransactionsResponse response =
+                    request.get(aspspConfiguration.getTransactionsResponseClass());
+            if (response.isLastPage()) {
+                persistFetchedTransactionsUntil(accountId);
+                clearRequestIdForAccount(accountId);
+            }
+            return response;
+        } catch (HttpResponseException hre) {
+            clearRequestIdForAccount(accountId);
+            throw hre;
+        }
+    }
+
+    public BaseTransactionsResponse fetchTransactions(
+            String accountId, String consentId, LocalDate fromDate, LocalDate toDate) {
+        final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+
+        final Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
+        setFetchingTransactionsUntil(accountId, toDate);
+
+        final RequestBuilder request =
+                createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
+                        .queryParam(QueryKeys.DATE_FROM, formatter.format(fromDate))
+                        .queryParam(QueryKeys.DATE_TO, formatter.format(toDate))
+                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
+        return fetchTransactions(accountId, request);
+    }
+
+    public BaseTransactionsResponse fetchPendingTransactions(String accountId, String consentId) {
+        final Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
+
+        final RequestBuilder request =
+                createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
+                        .queryParam(QueryKeys.BOOKING_STATUS, BookingStatus.PENDING);
+        return fetchTransactions(accountId, request);
+    }
+
+    public BaseTransactionsResponse fetchTransactions(
+            String accountId, String consentId, @Nullable String path) {
+        if (path == null) {
+            // Initial transactions request
+            final LocalDate toDate = LocalDate.now();
+            final LocalDate fromDate = transactionsFromDate(accountId);
+            return fetchTransactions(accountId, consentId, fromDate, toDate);
+        }
+
+        final Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.CONSENT_ID, consentId);
+        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
+
+        final RequestBuilder request = createSignedRequest(makeApiUrl(path), null, headers);
+        return fetchTransactions(accountId, request);
     }
 
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest request, PaymentProduct paymentProduct, String scaToken) {
         final String url = makeApiUrl(Urls.CREATE_PAYMENT, paymentProduct.getProductName());
-        return createSignedRequest(url, request)
+        return createSignedRequest(url, request, getTppRedirectHeaders(scaToken))
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .headers(getTppRedirectHeaders(scaToken))
                 .post(CreatePaymentResponse.class);
     }
 
@@ -416,5 +450,9 @@ public final class RedsysApiClient {
         final String url =
                 makeApiUrl(Urls.PAYMENT_CANCEL, paymentProduct.getProductName(), paymentId);
         createSignedRequest(url).delete();
+    }
+
+    public void setPsuIpAddress(String psuIpAddress) {
+        this.psuIpAddress = psuIpAddress;
     }
 }

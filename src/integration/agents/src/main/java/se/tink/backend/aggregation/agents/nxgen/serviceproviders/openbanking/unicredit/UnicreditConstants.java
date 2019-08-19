@@ -64,17 +64,20 @@ public final class UnicreditConstants {
         public static final String PSU_ID = "PSU-ID";
         public static final String STATE = "state";
         public static final String CODE = "code";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class HeaderValues {
 
         public static final String CODE = "code";
+        public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class FormValues {
 
         public static final String ALL_ACCOUNTS = "allAccounts";
         public static final int FREQUENCY_PER_DAY = 4;
+        public static final int CONSENT_VALIDATION_PERIOD_IN_DAYS = 90;
     }
 
     public class Formats {

@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -49,37 +49,16 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
     }
 
     @Override
-    public boolean isCheckingOrSavingsType() {
-        return BerlinGroupConstants.ACCOUNT_TYPE_MAPPER.translate(cashAccountType).isPresent();
-    }
-
-    @Override
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return BerlinGroupConstants.ACCOUNT_TYPE_MAPPER
                 .translate(cashAccountType)
-                .filter(this::isCheckingType)
-                .map(accountType -> toCheckingAccount())
-                .orElse(toSavingsAccount());
+                .flatMap(this::toTransactionalAccount);
     }
 
-    @Override
-    public boolean isCheckingType(final AccountTypes accountType) {
-        return accountType == AccountTypes.CHECKING;
-    }
-
-    @Override
-    public TransactionalAccount toCheckingAccount() {
-        return toTransactionalAccount(TransactionalAccountType.CHECKING);
-    }
-
-    @Override
-    public TransactionalAccount toSavingsAccount() {
-        return toTransactionalAccount(TransactionalAccountType.SAVINGS);
-    }
-
-    private TransactionalAccount toTransactionalAccount(TransactionalAccountType type) {
+    private Optional<TransactionalAccount> toTransactionalAccount(TransactionalAccountType type) {
         return TransactionalAccount.nxBuilder()
                 .withType(type)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()
@@ -112,7 +91,7 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
 
     @Override
     public ExactCurrencyAmount getDefaultAmount() {
-        return ExactCurrencyAmount.of(0, currency);
+        return ExactCurrencyAmount.of(BigDecimal.ZERO, currency);
     }
 
     public String getIban() {

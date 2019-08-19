@@ -25,8 +25,8 @@ public class UnicreditAgent extends UnicreditBaseAgent {
     }
 
     @Override
-    protected UnicreditBaseApiClient getApiClient() {
-        return new UnicreditApiClient(client, persistentStorage, credentials);
+    protected UnicreditBaseApiClient getApiClient(boolean requestIsManual) {
+        return new UnicreditApiClient(client, persistentStorage, credentials, requestIsManual);
     }
 
     @Override
@@ -35,7 +35,8 @@ public class UnicreditAgent extends UnicreditBaseAgent {
         //      If works on prod custom controller not necessary
         final UnicreditAuthenticationController controller =
                 new UnicreditAuthenticationController(
-                        new UnicreditAuthenticator((UnicreditApiClient) apiClient));
+                        new UnicreditAuthenticator((UnicreditApiClient) apiClient),
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

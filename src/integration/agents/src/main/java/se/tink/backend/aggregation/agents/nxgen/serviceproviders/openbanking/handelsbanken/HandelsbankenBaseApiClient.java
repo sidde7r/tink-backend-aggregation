@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import java.util.Date;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Urls;
@@ -16,14 +18,22 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.ConfirmPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.TransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.rpc.HandelsbankenErrorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -58,7 +68,7 @@ public class HandelsbankenBaseApiClient {
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
-                .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getAppId())
+                .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getClientId())
                 .addBearerToken(getOauthFromSession())
                 .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
@@ -131,7 +141,7 @@ public class HandelsbankenBaseApiClient {
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .body(
                         new SessionRequest(
-                                configuration.getAppId(),
+                                configuration.getClientId(),
                                 BodyValues.AIS_SCOPE + ":" + consentId,
                                 configuration.getPsuIpAddress(),
                                 personalId,
@@ -143,9 +153,9 @@ public class HandelsbankenBaseApiClient {
 
     public SessionResponse getSession(String ssn) {
 
-        TokenResponse tokenResponse = getBearerToken(configuration.getAppId());
+        TokenResponse tokenResponse = getBearerToken(configuration.getClientId());
         AuthorizationResponse authResponse =
-                getAuthorizationToken(tokenResponse.getAccessToken(), configuration.getAppId());
+                getAuthorizationToken(tokenResponse.getAccessToken(), configuration.getClientId());
 
         return getSessionId(ssn, authResponse.getConsentId());
     }
@@ -156,7 +166,7 @@ public class HandelsbankenBaseApiClient {
                 Form.builder()
                         .put(BodyKeys.GRANT_TYPE, BodyValues.REFRESH_TOKEN)
                         .put(BodyKeys.REFRESH_TOKEN, refreshToken)
-                        .put(BodyKeys.CLIENT_ID, configuration.getAppId())
+                        .put(BodyKeys.CLIENT_ID, configuration.getClientId())
                         .build();
 
         return client.request(Urls.TOKEN)
@@ -164,5 +174,61 @@ public class HandelsbankenBaseApiClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(TokenResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, HandelsbankenPaymentType paymentProduct)
+            throws PaymentException {
+        try {
+            return createRequest(
+                            new URL(Urls.INITIATE_PAYMENT)
+                                    .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct.toString()))
+                    .post(CreatePaymentResponse.class, createPaymentRequest);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
+    }
+
+    public ConfirmPaymentResponse confirmPayment(
+            String paymentId, HandelsbankenPaymentType paymentProduct) throws PaymentException {
+        try {
+            return createRequest(
+                            new URL(Urls.CONFIRM_PAYMENT)
+                                    .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct.toString())
+                                    .parameter(IdTags.PAYMENT_ID, paymentId))
+                    .put(ConfirmPaymentResponse.class);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
+    }
+
+    public GetPaymentResponse getPayment(String paymentId, String paymentProduct)
+            throws PaymentException {
+        try {
+            return createRequest(
+                            new URL(Urls.GET_PAYMENT)
+                                    .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                    .parameter(IdTags.PAYMENT_ID, paymentId))
+                    .get(GetPaymentResponse.class);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
+    }
+
+    private void handleHttpResponseException(HttpResponseException httpResponseException)
+            throws PaymentException {
+        if (httpResponseException.getResponse().hasBody()) {
+            try {
+                httpResponseException
+                        .getResponse()
+                        .getBody(HandelsbankenErrorResponse.class)
+                        .parseAndThrow(httpResponseException);
+            } catch (HttpClientException | HttpResponseException d) {
+                throw httpResponseException;
+            }
+        }
     }
 }

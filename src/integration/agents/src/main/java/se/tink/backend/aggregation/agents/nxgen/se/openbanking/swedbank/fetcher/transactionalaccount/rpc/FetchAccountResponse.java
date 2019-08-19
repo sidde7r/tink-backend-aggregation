@@ -7,9 +7,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class FetchAccountResponse {
 
-    private List<AccountEntity> accountList;
+    private List<AccountEntity> accounts;
 
     public List<AccountEntity> getAccountList() {
-        return accountList;
+        return accounts;
     }
 }

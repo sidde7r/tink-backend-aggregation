@@ -1,9 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonInclude(Include.NON_NULL)
 public class PartyIdentificationEntity {
     @JsonProperty("name")
     private String name = null;
@@ -16,6 +20,18 @@ public class PartyIdentificationEntity {
 
     @JsonProperty("privateId")
     private GenericPrivateIdentificationEntity privateId = null;
+
+    @JsonCreator
+    public PartyIdentificationEntity(
+            String name,
+            PostalAddressEntity postalAddress,
+            GenericOrganisationIdentificationEntity organisationId,
+            GenericPrivateIdentificationEntity privateId) {
+        this.name = name;
+        this.postalAddress = postalAddress;
+        this.organisationId = organisationId;
+        this.privateId = privateId;
+    }
 
     public String getName() {
         return name;

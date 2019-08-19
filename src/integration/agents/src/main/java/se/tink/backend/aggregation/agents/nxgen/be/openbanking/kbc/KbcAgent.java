@@ -35,7 +35,8 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
                 persistentStorage,
                 supplementalInformationHelper,
                 new KbcAuthenticator(apiClient),
-                credentials);
+                credentials,
+                strongAuthenticationState);
     }
 
     @Override
@@ -64,7 +65,8 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
     @Override
     public Optional<PaymentController> constructPaymentController() {
         BerlinGroupPaymentAuthenticator paymentAuthenticator =
-                new BerlinGroupPaymentAuthenticator(supplementalInformationHelper);
+                new BerlinGroupPaymentAuthenticator(
+                        supplementalInformationHelper, strongAuthenticationState);
 
         KbcPaymentExecutor kbcPaymentExecutor =
                 new KbcPaymentExecutor(apiClient, paymentAuthenticator, getConfiguration());

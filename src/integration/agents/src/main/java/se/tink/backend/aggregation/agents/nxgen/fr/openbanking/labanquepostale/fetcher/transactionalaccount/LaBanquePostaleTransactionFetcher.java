@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount;
 
-import org.assertj.core.util.Strings;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
@@ -23,6 +23,6 @@ public class LaBanquePostaleTransactionFetcher extends BerlinGroupTransactionFet
                 Strings.isNullOrEmpty(nextUrl)
                         ? account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL)
                         : nextUrl;
-        return laBanquePostaleApiClient.fetchTransactionsLaBanquePortal(url);
+        return laBanquePostaleApiClient.fetchTransactionsLaBanquePostal(url);
     }
 }

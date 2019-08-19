@@ -26,7 +26,7 @@ public class FetchTransactionsResponse implements PaginatorResponse {
     private Transaction toTinkTransaction(
             final TransactionEntity transaction, final boolean isPending) {
         return Transaction.builder()
-                .setAmount(transaction.getAmount())
+                .setAmount(transaction.getTransactionAmount())
                 .setDate(transaction.getValueDate())
                 .setDescription(transaction.getRemittanceInformationUnstructured())
                 .setPending(isPending)

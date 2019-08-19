@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.util.Strings;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -45,21 +44,21 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(BalanceEntity balanceEntity) {
-        final AccountTypes type =
-                Xs2aDevelopersConstants.ACCOUNT_TYPE_MAPPER
-                        .translate(accountType)
-                        .orElse(AccountTypes.OTHER);
-
-        switch (type) {
-            case CHECKING:
-                return Optional.ofNullable(
-                        toTypeAccount(balanceEntity, TransactionalAccountType.CHECKING));
-            case SAVINGS:
-                return Optional.ofNullable(
-                        toTypeAccount(balanceEntity, TransactionalAccountType.SAVINGS));
-            default:
-                return Optional.empty();
-        }
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(Xs2aDevelopersConstants.ACCOUNT_TYPE_MAPPER, accountType)
+                .withBalance(BalanceModule.of(balanceEntity.toAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getAccountNumber())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(getAccountName())
+                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                .build())
+                .addHolderName(getAccountName())
+                .setApiIdentifier(resourceId)
+                .setBankIdentifier(getAccountNumber())
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
+                .build();
     }
 
     @JsonIgnore
@@ -74,34 +73,6 @@ public class AccountEntity {
         } else {
             return Optional.empty();
         }
-    }
-
-    @JsonIgnore
-    private TransactionalAccount toTypeAccount(
-            BalanceEntity balanceEntity, TransactionalAccountType transactionalAccountType) {
-
-        String accountName;
-        if (!Strings.isNullOrEmpty(name)) {
-            accountName = name;
-        } else {
-            accountName = iban;
-        }
-
-        return TransactionalAccount.nxBuilder()
-                .withType(transactionalAccountType)
-                .withBalance(BalanceModule.of(balanceEntity.toAmount()))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(getAccountNumber())
-                                .withAccountNumber(getAccountNumber())
-                                .withAccountName(getAccountName())
-                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
-                                .build())
-                .addHolderName(getAccountName())
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(getAccountNumber())
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
-                .build();
     }
 
     @JsonIgnore

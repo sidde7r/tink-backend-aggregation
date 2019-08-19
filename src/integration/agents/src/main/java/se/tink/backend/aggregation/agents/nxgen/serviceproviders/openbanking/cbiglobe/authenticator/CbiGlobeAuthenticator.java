@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
@@ -34,6 +36,7 @@ public class CbiGlobeAuthenticator {
     protected final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final CbiGlobeConfiguration configuration;
+    private static final Logger logger = LoggerFactory.getLogger(CbiGlobeAuthenticator.class);
 
     public CbiGlobeAuthenticator(
             CbiGlobeApiClient apiClient,
@@ -131,12 +134,14 @@ public class CbiGlobeAuthenticator {
             return;
         }
         if (!consentStatus.isAcceptedStatus()) {
+            // only for testing, this commit will be reverted after tests
+            logger.info("CONSENT STATUS: " + consentStatus);
             apiClient.removeAccountsFromStorage();
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 
-    private void tokenAutoAuthentication() {
+    public void tokenAutoAuthentication() {
         try {
             if (!apiClient.isTokenValid()) {
                 getToken();

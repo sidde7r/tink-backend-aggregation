@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.entities;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -13,6 +14,6 @@ public class BalanceAmountEntity {
     }
 
     public ExactCurrencyAmount toAmount() {
-        return ExactCurrencyAmount.of(Double.parseDouble(amount), currency);
+        return ExactCurrencyAmount.of(new BigDecimal(amount), currency);
     }
 }

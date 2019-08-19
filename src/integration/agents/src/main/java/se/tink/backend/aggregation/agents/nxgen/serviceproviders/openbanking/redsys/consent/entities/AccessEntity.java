@@ -1,42 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormValues;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonInclude(Include.NON_NULL)
 public class AccessEntity {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty
-    private List<AccountInfoEntity> accounts;
+    public static AccessEntity ALL_PSD2 = AccessEntity.ofAllPsd2Accounts();
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty
-    private List<AccountInfoEntity> balances;
+    @JsonProperty private List<AccountInfoEntity> accounts = null;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty
-    private List<AccountInfoEntity> transactions;
+    @JsonProperty private List<AccountInfoEntity> balances = null;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty
-    private String availableAccounts;
+    @JsonProperty private List<AccountInfoEntity> transactions = null;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty
-    private String allPsd2;
+    @JsonProperty private String availableAccounts = null;
 
-    public AccessEntity(
-            List<AccountInfoEntity> accounts,
-            List<AccountInfoEntity> balances,
-            List<AccountInfoEntity> transactions,
-            String availableAccounts,
-            String allPsd2) {
-        this.accounts = accounts;
-        this.balances = balances;
-        this.transactions = transactions;
-        this.availableAccounts = availableAccounts;
-        this.allPsd2 = allPsd2;
+    @JsonProperty private String allPsd2 = null;
+
+    private static AccessEntity ofAllPsd2Accounts() {
+        AccessEntity accessEntity = new AccessEntity();
+        accessEntity.allPsd2 = FormValues.ALL_ACCOUNTS;
+        return accessEntity;
     }
 }

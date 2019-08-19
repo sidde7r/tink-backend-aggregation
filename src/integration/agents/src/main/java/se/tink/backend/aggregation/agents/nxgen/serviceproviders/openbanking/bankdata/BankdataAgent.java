@@ -82,7 +82,8 @@ public abstract class BankdataAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new BankdataAuthenticator(apiClient, getClientConfiguration()),
-                        credentials);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,
@@ -103,7 +104,8 @@ public abstract class BankdataAgent extends NextGenerationAgent
                         bankdataPaymentExecutorSelector,
                         bankdataPaymentExecutorSelector,
                         supplementalInformationHelper,
-                        sessionStorage));
+                        sessionStorage,
+                        strongAuthenticationState));
     }
 
     @Override

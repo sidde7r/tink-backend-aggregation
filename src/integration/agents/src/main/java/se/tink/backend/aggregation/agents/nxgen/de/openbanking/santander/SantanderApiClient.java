@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.IdTag;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.rpc.ConsentRequest;
@@ -14,6 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authent
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.configuration.SantanderConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
@@ -78,7 +82,7 @@ public final class SantanderApiClient {
         return client.request(Urls.CONSENT)
                 .addBearerToken(getTokenFromStorage())
                 .header(HeaderKeys.X_IBM_CLIENT_ID, getConfiguration().getClientId())
-                .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID)
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentResponse.class)
                 .getConsentId();
@@ -124,5 +128,30 @@ public final class SantanderApiClient {
 
     private String getRequestId() {
         return java.util.UUID.randomUUID().toString();
+    }
+
+    public CreatePaymentResponse createSepaPayment(CreatePaymentRequest request) {
+        return client.request(Urls.SEPA_PAYMENT)
+                .addBearerToken(getTokenFromStorage())
+                .header(HeaderKeys.X_IBM_CLIENT_ID, getConfiguration().getClientId())
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .body(request.toData(), MediaType.APPLICATION_JSON_TYPE)
+                .post(CreatePaymentResponse.class);
+    }
+
+    public FetchPaymentResponse fetchPayment(String paymentId) {
+        return client.request(
+                        Urls.FETCH_PAYMENT
+                                .parameter(IdTag.PAYMENT_PRODUCT, IdTag.SEPA_PAYMENT)
+                                .parameter(IdTag.PAYMENT_ID, paymentId))
+                .addBearerToken(getTokenFromStorage())
+                .header(HeaderKeys.X_IBM_CLIENT_ID, getConfiguration().getClientId())
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(FetchPaymentResponse.class);
     }
 }

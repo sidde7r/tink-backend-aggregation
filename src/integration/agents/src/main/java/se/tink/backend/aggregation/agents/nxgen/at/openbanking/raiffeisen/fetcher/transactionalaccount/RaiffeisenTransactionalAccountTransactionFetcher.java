@@ -18,6 +18,6 @@ public class RaiffeisenTransactionalAccountTransactionFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        return apiClient.getTransactions(account, fromDate, toDate);
+        return apiClient.fetchTransactions(account, fromDate, toDate);
     }
 }

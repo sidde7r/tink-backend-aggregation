@@ -2,6 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.FetchPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentSigningRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
@@ -30,9 +38,11 @@ public class SebApiClient extends SebBaseApiClient {
 
     @Override
     public OAuth2Token getToken(TokenRequest request) {
-        return createRequest(
+        return client.request(
                         new URL(SebCommonConstants.Urls.BASE_URL)
                                 .concat(SebCommonConstants.Urls.TOKEN))
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, request.toData())
                 .toTinkToken();
     }
@@ -84,5 +94,42 @@ public class SebApiClient extends SebBaseApiClient {
 
         return buildCardTransactionsFetch(url, fromDate, toDate)
                 .get(FetchCardAccountsTransactions.class);
+    }
+
+    public CreatePaymentResponse createPaymentInitiation(
+            CreatePaymentRequest createPaymentRequest, String paymentProduct) {
+        return createRequestInSession(
+                        new URL(SebCommonConstants.Urls.BASE_URL)
+                                .concat(Urls.CREATE_PAYMENT)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct))
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public FetchPaymentResponse getPayment(String paymentId, String paymentProduct) {
+        return createRequestInSession(
+                        new URL(SebCommonConstants.Urls.BASE_URL)
+                                .concat(Urls.GET_PAYMENT)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .get(FetchPaymentResponse.class);
+    }
+
+    public PaymentStatusResponse getPaymentStatus(String paymentId, String paymentProduct) {
+        return createRequestInSession(
+                        new URL(SebCommonConstants.Urls.BASE_URL)
+                                .concat(Urls.GET_PAYMENT_STATUS)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .get(PaymentStatusResponse.class);
+    }
+
+    public PaymentStatusResponse signPayment(
+            String paymentId, String paymentProduct, PaymentSigningRequest body) {
+        return createRequestInSession(
+                        new URL(SebCommonConstants.Urls.BASE_URL)
+                                .concat(Urls.SIGN_PAYMENT)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .post(PaymentStatusResponse.class, body);
     }
 }

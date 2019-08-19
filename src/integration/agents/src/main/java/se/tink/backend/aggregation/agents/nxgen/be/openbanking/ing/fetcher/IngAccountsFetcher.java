@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.entities.AccountEntity;
@@ -19,10 +20,12 @@ public class IngAccountsFetcher implements AccountFetcher<TransactionalAccount> 
     public Collection<TransactionalAccount> fetchAccounts() {
         return client.fetchAccounts().getAccounts().stream()
                 .map(this::enrichAccountWithBalance)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private TransactionalAccount enrichAccountWithBalance(AccountEntity account) {
+    private Optional<TransactionalAccount> enrichAccountWithBalance(AccountEntity account) {
 
         return account.toTinkAccount(client.fetchBalances(account).getBalance());
     }

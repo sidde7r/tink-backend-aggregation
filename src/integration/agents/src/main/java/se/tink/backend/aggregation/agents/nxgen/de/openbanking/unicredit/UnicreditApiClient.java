@@ -1,11 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit;
 
-import java.util.Calendar;
-import java.util.Date;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.entity.UnicreditConsentAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditScaAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditUserData;
@@ -13,24 +9,24 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.PathParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class UnicreditApiClient extends UnicreditBaseApiClient {
 
     public UnicreditApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
-        super(client, persistentStorage, credentials);
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            Credentials credentials,
+            boolean requestIsManual) {
+        super(client, persistentStorage, credentials, requestIsManual);
     }
 
     public void authenticate() {
@@ -85,21 +81,6 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
                 .header(HeaderKeys.TPP_REDIRECT_PREFERED, true)
                 .header(HeaderKeys.TPP_REDIRECT_URI, new URL(getConfiguration().getRedirectUrl()))
                 .header(HeaderKeys.PSU_ID, getCredentials().getField(Key.USERNAME));
-    }
-
-    @Override
-    protected ConsentRequest getConsentRequest() {
-
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date()); // Today's date
-        c.add(Calendar.DATE, 1); // Adds 1 day
-
-        return new UnicreditConsentRequest(
-                new UnicreditConsentAccessEntity(FormValues.ALL_ACCOUNTS),
-                true,
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(c.getTime()),
-                FormValues.FREQUENCY_PER_DAY,
-                false);
     }
 
     @Override

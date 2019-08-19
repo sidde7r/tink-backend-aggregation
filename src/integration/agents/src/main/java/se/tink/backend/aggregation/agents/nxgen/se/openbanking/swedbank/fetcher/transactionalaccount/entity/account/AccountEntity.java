@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -12,13 +13,14 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
 public class AccountEntity {
-    private String id;
-    private String iban;
-    private String accountType;
-    private String currency;
-    private String cashAccountType;
-    private String bic;
     private String bankId;
+    private String bban;
+    private String cashAccountType;
+    private String currency;
+    private String iban;
+    private String product;
+    private String resourceId;
+    private String name;
 
     @JsonProperty("_links")
     private AccountLinksEntity links;
@@ -27,25 +29,58 @@ public class AccountEntity {
         return iban;
     }
 
-    public String getId() {
-        return id;
+    public String getBankId() {
+        return bankId;
     }
 
-    public TransactionalAccount toTinkAccount(AccountBalanceResponse accountBalanceResponse) {
+    public String getBban() {
+        return bban;
+    }
+
+    public String getCashAccountType() {
+        return cashAccountType;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public AccountLinksEntity getLinks() {
+        return links;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    private String getAccountName() {
+        return (name != null) ? name : product;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public Optional<TransactionalAccount> toTinkAccount(
+            AccountBalanceResponse accountBalanceResponse) {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance(currency)))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(id)
-                                .withAccountName(cashAccountType)
+                                .withUniqueIdentifier(bban)
+                                .withAccountNumber(bban)
+                                .withAccountName(getAccountName())
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .putInTemporaryStorage(SwedbankConstants.StorageKeys.ACCOUNT_ID, iban)
-                .setApiIdentifier(id)
-                .setBankIdentifier(id)
+                .setApiIdentifier(resourceId)
                 .build();
     }
 }

@@ -32,7 +32,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = getApiClient();
+        apiClient = getApiClient(request.isManual());
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -40,7 +40,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
 
     protected abstract String getIntegrationName();
 
-    protected abstract UnicreditBaseApiClient getApiClient();
+    protected abstract UnicreditBaseApiClient getApiClient(boolean requestIsManual);
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -66,7 +66,9 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         final UnicreditAuthenticationController controller =
                 new UnicreditAuthenticationController(
-                        supplementalInformationHelper, new UnicreditAuthenticator(apiClient));
+                        supplementalInformationHelper,
+                        new UnicreditAuthenticator(apiClient),
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

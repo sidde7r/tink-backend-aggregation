@@ -65,7 +65,8 @@ public final class AktiaAgent extends NextGenerationAgent
                         apiClient, persistentStorage, credentials.getField(CredentialKeys.IBAN));
 
         AktiaAuthenticationController controller =
-                new AktiaAuthenticationController(supplementalInformationHelper, authenticator);
+                new AktiaAuthenticationController(
+                        supplementalInformationHelper, authenticator, strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

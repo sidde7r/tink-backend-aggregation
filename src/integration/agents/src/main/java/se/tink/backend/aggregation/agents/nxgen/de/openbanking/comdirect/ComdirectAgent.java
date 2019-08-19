@@ -39,7 +39,8 @@ public final class ComdirectAgent extends Xs2aDevelopersAgent {
                                 persistentStorage,
                                 getClientConfiguration(),
                                 CredentialKeys.IBAN),
-                        credentials);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

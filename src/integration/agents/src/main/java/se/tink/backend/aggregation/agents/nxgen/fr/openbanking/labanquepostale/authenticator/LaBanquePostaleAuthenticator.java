@@ -1,17 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator;
 
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class LaBanquePostaleAuthenticator extends BerlinGroupAuthenticator
-        implements Authenticator {
+        implements OAuth2Authenticator {
 
     private final LaBanquePostaleApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -24,11 +22,12 @@ public class LaBanquePostaleAuthenticator extends BerlinGroupAuthenticator
     }
 
     @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {}
+    public URL buildAuthorizeUrl(String state) {
+        return apiClient.getAuthorizeUrl(state);
+    }
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-        return null;
+        return apiClient.getToken(code);
     }
 }

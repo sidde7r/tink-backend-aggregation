@@ -1,14 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public final class NordeaBaseConstants {
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "Current")
-                    .put(AccountTypes.SAVINGS, "Savings")
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "Current")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "Savings")
                     .build();
 
     private NordeaBaseConstants() {
@@ -29,6 +36,11 @@ public final class NordeaBaseConstants {
         public static final URL CONFIRM_PAYMENT = new URL(BASE_URL + ApiService.CONFIRM_PAYMENT);
         public static final URL GET_PAYMENT = new URL(BASE_URL + ApiService.GET_PAYMENT);
         public static final URL GET_PAYMENTS = new URL(BASE_URL + ApiService.GET_PAYMENTS);
+    }
+
+    public static class TransactionalAccounts {
+        public static final String PERSONAL_ACCOUNT = "PERSONKONTO";
+        public static final String NORDEA_CLEARING_NUMBER = "3300";
     }
 
     public static class ApiService {

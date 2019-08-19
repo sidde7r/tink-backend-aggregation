@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.unicredit.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.entity.ConsentAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class UnicreditConsentRequest implements ConsentRequest {
+public class UnicreditConsentRequest {
 
     private ConsentAccessEntity access;
     private Boolean recurringIndicator;

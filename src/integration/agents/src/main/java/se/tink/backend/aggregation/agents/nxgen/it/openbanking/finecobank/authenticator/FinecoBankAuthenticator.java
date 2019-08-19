@@ -1,36 +1,100 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator;
 
+import com.google.common.base.Strings;
+import com.google.common.util.concurrent.Uninterruptibles;
+import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.configuration.FinecoBankConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.i18n.LocalizableKey;
 
-public class FinecoBankAuthenticator implements Authenticator {
+public final class FinecoBankAuthenticator
+        implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
-    private final FinecoBankApiClient apiClient;
+    private static final Random random = new SecureRandom();
+    private static final long WAIT_FOR_MINUTES = 9L;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final PersistentStorage persistentStorage;
-    private final FinecoBankConfiguration configuration;
+    private final FinecoBankAuthenticationHelper finecoAuthenticator;
+    private final StrongAuthenticationState strongAuthenticationState;
+    private static final Encoder encoder = Base64.getUrlEncoder();
 
     public FinecoBankAuthenticator(
-            FinecoBankApiClient apiClient,
+            SupplementalInformationHelper supplementalInformationHelper,
             PersistentStorage persistentStorage,
-            FinecoBankConfiguration configuration) {
-        this.apiClient = apiClient;
+            FinecoBankAuthenticationHelper finecoAuthenticator,
+            StrongAuthenticationState strongAuthenticationState) {
+        this.supplementalInformationHelper = supplementalInformationHelper;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
-    }
-
-    private FinecoBankConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        this.finecoAuthenticator = finecoAuthenticator;
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {}
+    public void autoAuthenticate()
+            throws SessionException, BankServiceException, AuthorizationException {
+
+        if (Strings.isNullOrEmpty(persistentStorage.get(StorageKeys.CONSENT_ID))
+                || !finecoAuthenticator.getApprovedConsent()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    @Override
+    public ThirdPartyAppResponse<String> init() {
+        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
+    }
+
+    @Override
+    public ThirdPartyAppResponse<String> collect(String reference)
+            throws AuthenticationException, AuthorizationException {
+        long startTime = System.currentTimeMillis();
+        this.supplementalInformationHelper
+                .waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(),
+                        WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES)
+                .orElseThrow(
+                        () ->
+                                new IllegalMonitorStateException(
+                                        "No supplemental info found in api response"));
+
+        for (int i = 0;
+                i < FormValues.MAX_POLLS_COUNTER && !finecoAuthenticator.getApprovedConsent();
+                ++i) {
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        }
+
+        finecoAuthenticator.storeAccounts();
+        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+    }
+
+    @Override
+    public ThirdPartyAppAuthenticationPayload getAppPayload() {
+        return ThirdPartyAppAuthenticationPayload.of(
+                finecoAuthenticator.buildAuthorizeUrl(strongAuthenticationState.getState()));
+    }
+
+    @Override
+    public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
+        return Optional.empty();
+    }
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.entity.account;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -17,10 +18,11 @@ public class AccountEntity {
     private RelationshipsEntity relationships;
     private AccountLinksEntity links;
 
-    public TransactionalAccount toTinkAccount(Amount balance) {
+    public Optional<TransactionalAccount> toTinkAccount(Amount balance) {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(balance))
                 .withId(
                         IdModule.builder()

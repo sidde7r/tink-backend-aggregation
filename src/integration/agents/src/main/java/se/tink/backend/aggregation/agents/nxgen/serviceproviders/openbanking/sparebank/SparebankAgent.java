@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -68,7 +68,9 @@ public class SparebankAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         final SparebankController controller =
                 new SparebankController(
-                        supplementalInformationHelper, new SparebankAuthenticator(apiClient));
+                        supplementalInformationHelper,
+                        new SparebankAuthenticator(apiClient),
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,
@@ -110,7 +112,7 @@ public class SparebankAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionIndexPaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController<>(transactionFetcher)));
     }
 
     @Override
@@ -128,7 +130,8 @@ public class SparebankAgent extends NextGenerationAgent
                         sparebankPaymentExecutor,
                         sparebankPaymentExecutor,
                         supplementalInformationHelper,
-                        sessionStorage));
+                        sessionStorage,
+                        strongAuthenticationState));
     }
 
     private List<String> splitPayload(String payload) {

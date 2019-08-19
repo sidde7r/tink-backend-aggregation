@@ -48,8 +48,6 @@ public class TransactionalAccountAccountFetcher implements AccountFetcher<Transa
             Optional<AccountDetailsEntity> accountDetails,
             AmountEntity amount) {
 
-        final String uniqueIdentifier = accountEntity.getAccountId();
-
         final String accountNumber =
                 accountDetails
                         .map(AccountDetailsEntity::getIdentification)
@@ -57,11 +55,11 @@ public class TransactionalAccountAccountFetcher implements AccountFetcher<Transa
 
         final CheckingBuildStep checkingBuildStep =
                 CheckingAccount.builder()
-                        .setUniqueIdentifier(uniqueIdentifier)
+                        .setUniqueIdentifier(accountNumber)
                         .setAccountNumber(accountNumber)
                         .setBalance(new Amount(amount.getCurrency(), amount.getAmount()))
                         .setAlias(accountEntity.getDescription())
-                        .addAccountIdentifier(new TinkIdentifier(uniqueIdentifier))
+                        .addAccountIdentifier(new TinkIdentifier(accountEntity.getAccountId()))
                         .addAccountIdentifier(new IbanIdentifier(accountNumber))
                         .setApiIdentifier(accountEntity.getAccountId())
                         .setProductName(accountEntity.getDescription());

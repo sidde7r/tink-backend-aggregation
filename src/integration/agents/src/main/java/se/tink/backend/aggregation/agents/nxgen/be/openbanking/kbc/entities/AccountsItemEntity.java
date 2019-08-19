@@ -65,17 +65,12 @@ public class AccountsItemEntity {
         return currency;
     }
 
-    public TransactionalAccount toTinkAccount() {
-
-        return parseAccount(
-                KbcConstants.ACCOUNT_TYPE_MAPPER
-                        .translate(cashAccountType)
-                        .orElse(TransactionalAccountType.CHECKING));
-    }
-
-    private TransactionalAccount parseAccount(TransactionalAccountType accountType) {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
-                .withType(accountType)
+                .withTypeAndFlagsFrom(
+                        KbcConstants.ACCOUNT_TYPE_MAPPER,
+                        cashAccountType,
+                        TransactionalAccountType.CHECKING)
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()

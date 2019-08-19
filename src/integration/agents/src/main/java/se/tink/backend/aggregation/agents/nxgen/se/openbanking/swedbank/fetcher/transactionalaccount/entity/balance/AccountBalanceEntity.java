@@ -4,8 +4,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountBalanceEntity {
+    private Account account;
+    private BalanceAmount balances;
     private BalanceAuthorisedEntity authorised;
     private BalanceInterimAvailableEntity interimAvailable;
+    private BalanceAmountEntity balanceAmountEntity;
 
     public BalanceAuthorisedEntity getAuthorised() {
         return authorised;
@@ -13,5 +16,9 @@ public class AccountBalanceEntity {
 
     public BalanceInterimAvailableEntity getInterimAvailable() {
         return interimAvailable;
+    }
+
+    public BalanceAmountEntity getBalanceAmountEntity() {
+        return balanceAmountEntity;
     }
 }

@@ -5,6 +5,7 @@ import java.util.Base64;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Signature;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
@@ -58,15 +59,18 @@ public final class SignatureUtil {
                         + httpMethod.toLowerCase()
                         + " "
                         + reqPath
-                        + System.lineSeparator()
+                        + "\n"
                         + CmcicConstants.Signature.DATE
                         + date
-                        + System.lineSeparator()
+                        + "\n"
                         + CmcicConstants.Signature.DIGEST
                         + digest
-                        + System.lineSeparator()
+                        + "\n"
                         + CmcicConstants.Signature.X_REQUEST_ID
-                        + requestId;
+                        + requestId
+                        + "\n"
+                        + CmcicConstants.Signature.CONTENT_TYPE
+                        + MediaType.APPLICATION_JSON;
 
         return new QsealcEidasProxySigner(eidasProxyConf, "Tink")
                 .getSignatureBase64(signatureEntity.getBytes());

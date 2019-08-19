@@ -17,4 +17,8 @@ public class LinksEntity {
     private LinkEntity self;
     private LinkEntity status;
     private LinkEntity scaStatus;
+
+    public String getRedirectUrl() {
+        return scaRedirect.getHref();
+    }
 }

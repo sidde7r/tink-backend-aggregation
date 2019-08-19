@@ -1,10 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.entity.account;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.Currency;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -25,19 +33,26 @@ public class AccountEntity {
     private List<BalanceEntity> balances;
     private LinksEntity links;
 
-    public CheckingAccount toTinkAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(iban)
-                .setBalance(getBalance())
-                .setAlias(product)
-                .addAccountIdentifier(new IbanIdentifier(iban))
+    public Optional<TransactionalAccount> toTinkAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(
+                        RaiffeisenConstants.ACCOUNT_TYPE_MAPPER
+                                .translate(cashAccountType)
+                                .orElse(TransactionalAccountType.CHECKING))
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(name)
+                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                .build())
                 .setApiIdentifier(resourceId)
                 .build();
     }
 
-    private Amount getBalance() {
-
+    private ExactCurrencyAmount getBalance() {
         return balances.stream()
                 .filter(BalanceEntity::isForwardBalanceAvailable)
                 .findAny()
@@ -45,11 +60,11 @@ public class AccountEntity {
                 .orElseGet(this::getInterimBalance);
     }
 
-    private Amount getInterimBalance() {
+    private ExactCurrencyAmount getInterimBalance() {
         return balances.stream()
                 .filter(BalanceEntity::isInterimBalanceAvailable)
                 .findAny()
                 .map(balanceEntity -> balanceEntity.getBalanceAmount().toTinkAmount())
-                .orElse(new Amount("EUR", 0));
+                .orElse(ExactCurrencyAmount.of(BigDecimal.ZERO, Currency.EUR));
     }
 }

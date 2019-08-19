@@ -23,13 +23,14 @@ public class BuddybankAgent extends UnicreditBaseAgent {
     }
 
     @Override
-    protected UnicreditBaseApiClient getApiClient() {
-        return new BuddybankApiClient(client, persistentStorage, credentials);
+    protected UnicreditBaseApiClient getApiClient(boolean requestIsManual) {
+        return new BuddybankApiClient(client, persistentStorage, credentials, requestIsManual);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new BuddybankAuthenticationController(
-                new BuddybankAuthenticator((BuddybankApiClient) apiClient));
+                new BuddybankAuthenticator((BuddybankApiClient) apiClient),
+                strongAuthenticationState);
     }
 }

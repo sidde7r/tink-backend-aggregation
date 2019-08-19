@@ -2,8 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public abstract class KbcConstants {
 
@@ -19,10 +20,11 @@ public abstract class KbcConstants {
         }
     }
 
-    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<TransactionalAccountType>builder()
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
                     .put(
                             TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "CACC",
                             "CASH",
                             "CHAR",
@@ -33,7 +35,12 @@ public abstract class KbcConstants {
                             "TRAS",
                             "CurrentAccount",
                             "Current")
-                    .put(TransactionalAccountType.SAVINGS, "LLSV", "ONDP", "SVGS")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "LLSV",
+                            "ONDP",
+                            "SVGS")
                     .build();
 
     private KbcConstants() {

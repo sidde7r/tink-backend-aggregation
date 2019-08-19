@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken.executor.payment.HandelsbankenPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
@@ -10,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent {
@@ -45,6 +48,14 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent {
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
                 new HandelsbankenBankidAuthenticator(apiClient, sessionStorage),
-                persistentStorage);
+                persistentStorage,
+                credentials);
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        HandelsbankenPaymentExecutorSelector paymentExecutorSelector =
+                new HandelsbankenPaymentExecutorSelector(apiClient);
+        return Optional.of(new PaymentController(paymentExecutorSelector, paymentExecutorSelector));
     }
 }

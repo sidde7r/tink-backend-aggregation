@@ -24,4 +24,8 @@ public class ConsentResponse {
     public String getConsentId() {
         return consentId;
     }
+
+    public String getRedirectUrl() {
+        return links.getRedirectUrl();
+    }
 }

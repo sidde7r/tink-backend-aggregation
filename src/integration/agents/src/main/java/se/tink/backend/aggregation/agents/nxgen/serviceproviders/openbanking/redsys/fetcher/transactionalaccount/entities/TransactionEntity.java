@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 @JsonObject
 public class TransactionEntity {
@@ -39,8 +40,7 @@ public class TransactionEntity {
     @JsonProperty private AccountReferenceEntity debtorAccount;
     @JsonProperty private String ultimateDebtor;
 
-    @JsonProperty private String remittanceInformationUnstructured;
-    @JsonProperty private String remittanceInformationStructured;
+    @JsonProperty protected String remittanceInformationUnstructured;
 
     @JsonProperty private String purposeCo; // ExternalPurpose1Co
 
@@ -62,27 +62,40 @@ public class TransactionEntity {
 
     @JsonIgnore
     public Transaction toBookedTransaction() {
-        return toTinkTransaction(false);
+        return Transaction.builder()
+                .setAmount(transactionAmount.toTinkAmount())
+                .setDate(getDate())
+                .setDescription(getDescription())
+                .build();
     }
 
     @JsonIgnore
-    public Transaction toPendingTransaction() {
-        return toTinkTransaction(true);
+    public UpcomingTransaction toPendingTransaction() {
+        return UpcomingTransaction.builder()
+                .setAmount(transactionAmount.toTinkAmount())
+                .setDate(getDate())
+                .setDescription(getDescription())
+                .build();
     }
 
     @JsonIgnore
     public String getDescription() {
-        return Optional.ofNullable(remittanceInformationUnstructured)
-                .orElse(remittanceInformationStructured);
+        return remittanceInformationUnstructured;
     }
 
     @JsonIgnore
-    private Transaction toTinkTransaction(boolean pending) {
-        return Transaction.builder()
-                .setAmount(transactionAmount.toTinkAmount())
-                .setDate(valueDate)
-                .setDescription(getDescription())
-                .setPending(pending)
-                .build();
+    private Date getDate() {
+        if (bookingDate != null) {
+            return bookingDate;
+        } else if (valueDate != null) {
+            return valueDate;
+        } else {
+            throw new IllegalStateException("Transaction has no date.");
+        }
+    }
+
+    @JsonIgnore
+    public String getEntryReference() {
+        return entryReference;
     }
 }

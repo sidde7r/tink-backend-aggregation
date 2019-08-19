@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.authenticator;
 
+import com.google.common.base.Preconditions;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -19,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -28,15 +28,16 @@ public class SdcAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OAuth2Authenticator authenticator;
-    private final String state;
+    private final StrongAuthenticationState strongAuthenticationState;
     private static final long WAIT_FOR_MINUTES = 9L;
 
     public SdcAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
-            OAuth2Authenticator authenticator) {
+            OAuth2Authenticator authenticator,
+            StrongAuthenticationState strongAuthenticationState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.state = BerlinGroupUtils.getRequestId();
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     public ThirdPartyAppResponse<String> init() {
@@ -53,7 +54,9 @@ public class SdcAuthenticationController
 
         Optional<Map<String, String>> stringStringMap =
                 supplementalInformationHelper.waitForSupplementalInformation(
-                        this.formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                        strongAuthenticationState.getSupplementalKey(),
+                        WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES);
 
         Map<String, String> callbackData =
                 stringStringMap.orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
@@ -67,7 +70,7 @@ public class SdcAuthenticationController
     }
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizeUrl = authenticator.buildAuthorizeUrl(state);
+        URL authorizeUrl = authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
 
         Android androidPayload = new Android();
@@ -85,9 +88,5 @@ public class SdcAuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private String formatSupplementalKey(String key) {
-        return String.format("tpcb_%s", key);
     }
 }

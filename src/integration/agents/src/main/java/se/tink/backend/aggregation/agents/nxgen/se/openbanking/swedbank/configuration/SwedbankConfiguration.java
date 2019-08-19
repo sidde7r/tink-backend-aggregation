@@ -12,6 +12,9 @@ public class SwedbankConfiguration implements ClientConfiguration {
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
+    private String eidasQwac;
+    private String psuIpAddress;
+    private boolean bypassTransactionConsent;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -35,5 +38,21 @@ public class SwedbankConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
+    }
+
+    public String getEidasQwac() {
+        return eidasQwac;
+    }
+
+    public String getPsuIpAddress() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(psuIpAddress),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
+
+        return psuIpAddress;
+    }
+
+    public boolean getBypassConsent() {
+        return bypassTransactionConsent;
     }
 }

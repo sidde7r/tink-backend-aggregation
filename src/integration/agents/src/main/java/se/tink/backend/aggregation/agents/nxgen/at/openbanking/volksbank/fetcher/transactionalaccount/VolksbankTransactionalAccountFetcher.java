@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher.transactionalaccount.entity.account.AccountEntity;
@@ -20,10 +21,12 @@ public class VolksbankTransactionalAccountFetcher implements AccountFetcher<Tran
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().getAccounts().stream()
                 .map(this::getAccountWithBalance)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private TransactionalAccount getAccountWithBalance(AccountEntity accountEntity) {
+    private Optional<TransactionalAccount> getAccountWithBalance(AccountEntity accountEntity) {
 
         BalanceResponse balanceResponse =
                 apiClient.fetchAccountBalance(accountEntity.getResourceId());

@@ -8,4 +8,9 @@ public class ConsentLinksEntity {
     private String scaRedirect;
     private String self;
     private String status;
+    private String redirect;
+
+    public String getRedirect() {
+        return redirect;
+    }
 }

@@ -85,7 +85,8 @@ public final class SebAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new SebAuthenticator(apiClient, sessionStorage),
-                        credentials);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

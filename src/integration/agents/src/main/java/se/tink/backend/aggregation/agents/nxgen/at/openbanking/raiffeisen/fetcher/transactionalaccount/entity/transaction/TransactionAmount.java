@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.entity.transaction;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionAmount {
 
-    public String currency;
-    public double amount;
+    private String currency;
+    private BigDecimal amount;
 
-    public Amount toTinkAmount() {
-        return new Amount(currency, amount);
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
     }
 }

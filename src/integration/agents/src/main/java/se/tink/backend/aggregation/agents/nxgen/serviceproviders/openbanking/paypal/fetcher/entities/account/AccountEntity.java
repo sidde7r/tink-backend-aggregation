@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.entities.account;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -17,9 +18,11 @@ public class AccountEntity {
         this.email = email;
     }
 
-    public TransactionalAccount toTinkAccount(AccountBalanceResponse accountBalanceResponse) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            AccountBalanceResponse accountBalanceResponse) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance()))
                 .withId(
                         IdModule.builder()
