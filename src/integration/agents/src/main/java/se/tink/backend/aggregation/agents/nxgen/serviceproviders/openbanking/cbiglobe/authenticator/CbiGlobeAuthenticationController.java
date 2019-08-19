@@ -24,8 +24,8 @@ public class CbiGlobeAuthenticationController
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CbiGlobeAuthenticator authenticator;
-    private StrongAuthenticationState consentAccountState;
-    private StrongAuthenticationState consentTransactionState;
+    private final StrongAuthenticationState consentAccountState;
+    private final StrongAuthenticationState consentTransactionState;
 
     public CbiGlobeAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,

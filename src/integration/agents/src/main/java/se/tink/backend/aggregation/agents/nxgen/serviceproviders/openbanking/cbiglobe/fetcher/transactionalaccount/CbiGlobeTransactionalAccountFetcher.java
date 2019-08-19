@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -25,16 +24,12 @@ public class CbiGlobeTransactionalAccountFetcher
 
     private final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final CbiGlobeAuthenticationController controller;
     private static final Logger logger =
             LoggerFactory.getLogger(CbiGlobeTransactionalAccountFetcher.class);
 
     public CbiGlobeTransactionalAccountFetcher(
-            CbiGlobeApiClient apiClient,
-            PersistentStorage persistentStorage,
-            CbiGlobeAuthenticationController controller) {
+            CbiGlobeApiClient apiClient, PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
-        this.controller = controller;
         this.persistentStorage = persistentStorage;
     }
 

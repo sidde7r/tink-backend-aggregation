@@ -112,7 +112,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
 
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
-                new CbiGlobeTransactionalAccountFetcher(apiClient, persistentStorage, controller);
+                new CbiGlobeTransactionalAccountFetcher(apiClient, persistentStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

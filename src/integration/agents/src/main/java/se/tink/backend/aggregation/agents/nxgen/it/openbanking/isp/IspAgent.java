@@ -49,7 +49,7 @@ public class IspAgent extends CbiGlobeAgent
     @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final IspTransactionalAccountFetcher accountFetcher =
-                new IspTransactionalAccountFetcher(apiClient, persistentStorage, controller);
+                new IspTransactionalAccountFetcher(apiClient, persistentStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
