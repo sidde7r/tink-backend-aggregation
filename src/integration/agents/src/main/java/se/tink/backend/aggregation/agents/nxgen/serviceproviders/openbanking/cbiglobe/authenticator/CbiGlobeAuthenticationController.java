@@ -24,15 +24,18 @@ public class CbiGlobeAuthenticationController
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CbiGlobeAuthenticator authenticator;
-    private StrongAuthenticationState strongAuthenticationState;
+    private StrongAuthenticationState consentAccountState;
+    private StrongAuthenticationState consentTransactionState;
 
     public CbiGlobeAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
             CbiGlobeAuthenticator authenticator,
-            StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState consentAccountState,
+            StrongAuthenticationState consentTransactionState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.strongAuthenticationState = strongAuthenticationState;
+        this.consentAccountState = consentAccountState;
+        this.consentTransactionState = consentTransactionState;
     }
 
     public ThirdPartyAppResponse<String> init() {
@@ -47,14 +50,14 @@ public class CbiGlobeAuthenticationController
     @Override
     public ThirdPartyAppResponse<String> collect(String reference) {
         // Consent for accounts
-        waitForSuplementInformation();
+        waitForSuplementalInformation(consentAccountState);
 
         // account fetching in AUTHENTICATING phase due to two times consent authentication flow
         GetAccountsResponse getAccountsResponse = accountFetch();
         openThirdPartyApp(getAccountsResponse);
 
         // Consent for transactions and balances
-        waitForSuplementInformation();
+        waitForSuplementalInformation(consentTransactionState);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
@@ -63,7 +66,7 @@ public class CbiGlobeAuthenticationController
         this.authenticator.tokenAutoAuthentication();
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
-                        strongAuthenticationState.getState(),
+                        consentAccountState.getState(),
                         this.authenticator.createConsentRequestAccount());
         return getAppPayload(authorizeUrl);
     }
@@ -86,11 +89,9 @@ public class CbiGlobeAuthenticationController
     }
 
     public void openThirdPartyApp(GetAccountsResponse getAccountsResponse) {
-        // Due to 2 consent flow, new state is needed, so new StrongAuthenticationState creation
-        this.strongAuthenticationState = new StrongAuthenticationState("");
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
-                        this.strongAuthenticationState.getState(),
+                        this.consentTransactionState.getState(),
                         this.authenticator.createConsentRequestBalancesTransactions(
                                 getAccountsResponse));
         ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
@@ -102,8 +103,8 @@ public class CbiGlobeAuthenticationController
         return authenticator.fetchAccounts();
     }
 
-    private void waitForSuplementInformation() {
+    private void waitForSuplementalInformation(StrongAuthenticationState state) {
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                state.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 }
