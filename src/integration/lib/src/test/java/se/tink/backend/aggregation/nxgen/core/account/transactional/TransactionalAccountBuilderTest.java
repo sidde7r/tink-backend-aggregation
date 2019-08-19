@@ -4,12 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountBuilder;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
@@ -18,6 +20,7 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 /**
  * This suite also serves as the test suite for {@link AccountBuilder}, since that class is abstract
@@ -33,20 +36,24 @@ public class TransactionalAccountBuilderTest {
                     .addIdentifier(new SwedishIdentifier("123456789"))
                     .build();
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void illegalAccountType() {
         // Build an otherwise correct account
-        TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.from(AccountTypes.LOAN))
-                .withBalance(BalanceModule.of(Amount.inEUR(2)))
-                .withId(ID_MODULE)
-                .build();
+        assertEquals(
+                Optional.empty(),
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.from(AccountTypes.LOAN).orElse(null))
+                        .withoutFlags()
+                        .withBalance(BalanceModule.of(Amount.inEUR(2)))
+                        .withId(ID_MODULE)
+                        .build());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullArguments() {
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withoutFlags()
                 .withBalance(null)
                 .withId(null)
                 .build();
@@ -56,6 +63,7 @@ public class TransactionalAccountBuilderTest {
     public void nullBalance() {
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withoutFlags()
                 .withBalance(null)
                 .withId(ID_MODULE)
                 .build();
@@ -65,6 +73,7 @@ public class TransactionalAccountBuilderTest {
     public void nullId() {
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withoutFlags()
                 .withBalance(BalanceModule.of(Amount.inEUR(2)))
                 .withId(null)
                 .build();
@@ -74,9 +83,9 @@ public class TransactionalAccountBuilderTest {
     public void nullFlagList() {
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
+                .withFlags((AccountFlag) null)
                 .withBalance(BalanceModule.of(Amount.inSEK(2572.28)))
                 .withId(ID_MODULE)
-                .addAccountFlags((AccountFlag) null)
                 .build();
     }
 
@@ -85,12 +94,15 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.SAVINGS)
+                        .withFlags(
+                                AccountFlag.BUSINESS,
+                                AccountFlag.BUSINESS,
+                                AccountFlag.MANDATE,
+                                AccountFlag.PSD2_PAYMENT_ACCOUNT)
                         .withBalance(BalanceModule.of(Amount.inSEK(2572.28)))
                         .withId(ID_MODULE)
-                        .addAccountFlags(AccountFlag.BUSINESS, AccountFlag.BUSINESS)
-                        .addAccountFlags(AccountFlag.MANDATE)
-                        .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                        .build();
+                        .build()
+                        .orElse(null);
 
         Assert.assertArrayEquals(
                 new AccountFlag[] {
@@ -106,6 +118,7 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.OTHER)
+                        .withoutFlags()
                         .withBalance(
                                 BalanceModule.builder()
                                         .withBalance(Amount.inSEK(398.32))
@@ -114,7 +127,8 @@ public class TransactionalAccountBuilderTest {
                                         .build())
                         .withId(ID_MODULE)
                         .putInTemporaryStorage("box", box)
-                        .build();
+                        .build()
+                        .orElse(null);
 
         Optional<SomeBoxing> storage = account.getFromTemporaryStorage("box", SomeBoxing.class);
 
@@ -149,12 +163,14 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.SAVINGS)
+                        .withoutFlags()
                         .withBalance(BalanceModule.of(Amount.inNOK(3483.23)))
                         .withId(ID_MODULE)
                         .addHolderName("Britte Larsen")
                         .addHolderName("Britte Larsen")
                         .addHolderName("Sigvird Larsen")
-                        .build();
+                        .build()
+                        .orElse(null);
 
         assertEquals("Britte Larsen", account.getHolderName().toString());
     }
@@ -164,12 +180,54 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.SAVINGS)
+                        .withoutFlags()
                         .withBalance(BalanceModule.of(Amount.inDKK(20)))
                         .withId(ID_MODULE)
                         .setApiIdentifier("2a3ffe-38320c")
-                        .build();
+                        .build()
+                        .orElse(null);
 
         assertEquals("2a3ffe-38320c", account.getApiIdentifier());
+    }
+
+    @Test
+    public void unsuccessfulAndSuccessfulMappings() {
+        AccountTypeMapper mapper =
+                AccountTypeMapper.builder()
+                        .put(AccountTypes.CREDIT_CARD, "a", "b")
+                        .put(AccountTypes.LOAN, "c")
+                        .put(AccountTypes.CHECKING, AccountFlag.PSD2_PAYMENT_ACCOUNT, "zZ")
+                        .build();
+
+        Optional<TransactionalAccount> creditCardAccount =
+                TransactionalAccount.nxBuilder()
+                        .withTypeAndFlagsFrom(mapper, "a")
+                        .withBalance(
+                                BalanceModule.of(ExactCurrencyAmount.of(BigDecimal.ZERO, "SEK")))
+                        .withId(ID_MODULE)
+                        .build();
+
+        Optional<TransactionalAccount> loanAccount =
+                TransactionalAccount.nxBuilder()
+                        .withTypeAndFlagsFrom(mapper, "c")
+                        .withBalance(
+                                BalanceModule.of(ExactCurrencyAmount.of(BigDecimal.ZERO, "SEK")))
+                        .withId(ID_MODULE)
+                        .build();
+
+        Optional<TransactionalAccount> checkingAccount =
+                TransactionalAccount.nxBuilder()
+                        .withTypeAndFlagsFrom(mapper, "zz")
+                        .withBalance(
+                                BalanceModule.of(ExactCurrencyAmount.of(BigDecimal.ZERO, "SEK")))
+                        .withId(ID_MODULE)
+                        .build();
+
+        assertEquals(Optional.empty(), creditCardAccount);
+        assertEquals(Optional.empty(), loanAccount);
+        assertTrue(checkingAccount.isPresent());
+        assertTrue(
+                checkingAccount.get().getAccountFlags().contains(AccountFlag.PSD2_PAYMENT_ACCOUNT));
     }
 
     @Test
@@ -179,6 +237,7 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.SAVINGS)
+                        .withoutFlags()
                         .withBalance(
                                 BalanceModule.builder()
                                         .withBalance(Amount.inEUR(579.3))
@@ -198,7 +257,8 @@ public class TransactionalAccountBuilderTest {
                         .addHolderName("Jürgen Flughaubtkopf")
                         .setApiIdentifier("2a3ffe-38320c")
                         .putInTemporaryStorage("box", box)
-                        .build();
+                        .build()
+                        .orElse(null);
 
         Optional<SomeBoxing> storage = account.getFromTemporaryStorage("box", SomeBoxing.class);
 

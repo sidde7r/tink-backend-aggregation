@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.account.enums.AccountFlag;
 
@@ -23,7 +24,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      * @param holderName Name of the account holder.
      * @return The next step of the builder.
      */
-    B addHolderName(@Nonnull String holderName);
+    B addHolderName(@Nullable String holderName);
 
     B addAccountFlags(@Nonnull AccountFlag... accountFlags);
 
@@ -35,13 +36,6 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      * @return The final step of the builder.
      */
     <V> B putInTemporaryStorage(@Nonnull String key, @Nonnull V value);
-
-    /**
-     * Constructs an account from this builder.
-     *
-     * @return An account with the data provided to this builder.
-     */
-    A build();
 
     B setBankIdentifier(String number);
 }

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher;
 
+import com.google.common.collect.Lists;
 import java.util.Collection;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.AccountBalanceResponse;
@@ -30,9 +30,10 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
         String holderName = accountInfo.getAccountHolderName();
         AccountBalanceResponse balanceInfo = apiClient.fetchAccountBalance();
 
-        TransactionalAccount account =
+        Optional<TransactionalAccount> account =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.CHECKING)
+                        .withPaymentAccountFlag()
                         .withBalance(BalanceModule.of(balanceInfo.toAmount()))
                         .withId(
                                 IdModule.builder()
@@ -45,6 +46,6 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
                         .putInTemporaryStorage(StorageKey.ACCOUNT_CONSENT_ID, accountNumber)
                         .build();
 
-        return Stream.of(account).collect(Collectors.toList());
+        return account.map(Lists::newArrayList).orElseGet(Lists::newArrayList);
     }
 }

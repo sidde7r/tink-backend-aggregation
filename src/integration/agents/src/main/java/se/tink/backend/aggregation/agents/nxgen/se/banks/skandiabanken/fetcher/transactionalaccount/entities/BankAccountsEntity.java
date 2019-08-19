@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -81,28 +80,12 @@ public class BankAccountsEntity {
     }
 
     @JsonIgnore
-    private AccountTypes getAccountType() {
-        return SkandiaBankenConstants.ACCOUNT_TYPE_MAPPER
-                .translate(typeName)
-                .orElse(AccountTypes.OTHER);
-    }
-
-    @JsonIgnore
-    public boolean isTransactionalAccount() {
-        switch (getAccountType()) {
-            case CHECKING:
-            case OTHER:
-            case SAVINGS:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @JsonIgnore
-    public TransactionalAccount toTinkTransactionalAccount() {
+    public Optional<TransactionalAccount> toTinkTransactionalAccount() {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.from(getAccountType()))
+                .withTypeAndFlagsFrom(
+                        SkandiaBankenConstants.ACCOUNT_TYPE_MAPPER,
+                        typeName,
+                        TransactionalAccountType.OTHER)
                 .withBalance(BalanceModule.of(balance.getAmount()))
                 .withId(
                         IdModule.builder()

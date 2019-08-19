@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
+import java.util.Optional;
+import javax.annotation.Nullable;
 import se.tink.backend.agents.rpc.AccountTypes;
 
 /**
@@ -11,17 +13,20 @@ public enum TransactionalAccountType {
     SAVINGS,
     OTHER;
 
-    public static TransactionalAccountType from(AccountTypes type) {
+    public static Optional<TransactionalAccountType> from(@Nullable AccountTypes type) {
+        if (type == null) {
+            return Optional.empty();
+        }
+
         switch (type) {
             case CHECKING:
-                return CHECKING;
+                return Optional.of(CHECKING);
             case SAVINGS:
-                return SAVINGS;
+                return Optional.of(SAVINGS);
             case OTHER:
-                return OTHER;
+                return Optional.of(OTHER);
             default:
-                throw new IllegalArgumentException(
-                        "Account Type must be CHECKING, SAVINGS or OTHER.");
+                return Optional.empty();
         }
     }
 

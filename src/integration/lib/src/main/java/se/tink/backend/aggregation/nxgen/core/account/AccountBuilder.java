@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithIdStep;
@@ -19,7 +20,7 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     private IdModule idModule;
     private String apiIdentifier;
     private final List<HolderName> holderNames = new ArrayList<>();
-    private final List<AccountFlag> accountFlags = new ArrayList<>();
+    protected final List<AccountFlag> accountFlags = new ArrayList<>();
     private final TemporaryStorage temporaryStorage = new TemporaryStorage();
 
     protected abstract B buildStep();
@@ -39,9 +40,11 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     }
 
     @Override
-    public B addHolderName(@Nonnull String holderName) {
-        Preconditions.checkNotNull(holderName, "Holder name must not be null.");
-        holderNames.add(new HolderName(holderName));
+    public B addHolderName(@Nullable String holderName) {
+        if (holderName != null) {
+            holderNames.add(new HolderName(holderName));
+        }
+
         return buildStep();
     }
 
@@ -58,32 +61,33 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
         return buildStep();
     }
 
+    @Override
     public B setBankIdentifier(String bankIdentifier) {
         temporaryStorage.put(Account.BANK_IDENTIFIER_KEY, bankIdentifier);
         return buildStep();
     }
 
-    private String getBankIdentifier() {
+    String getBankIdentifier() {
         return temporaryStorage.get(Account.BANK_IDENTIFIER_KEY);
     }
 
-    public IdModule getIdModule() {
+    IdModule getIdModule() {
         return idModule;
     }
 
-    public String getApiIdentifier() {
+    String getApiIdentifier() {
         return apiIdentifier;
     }
 
-    public List<HolderName> getHolderNames() {
+    List<HolderName> getHolderNames() {
         return ImmutableList.copyOf(holderNames);
     }
 
-    public List<AccountFlag> getAccountFlags() {
+    List<AccountFlag> getAccountFlags() {
         return ImmutableList.copyOf(accountFlags);
     }
 
-    public TemporaryStorage getTransientStorage() {
+    TemporaryStorage getTransientStorage() {
         return temporaryStorage;
     }
 }
