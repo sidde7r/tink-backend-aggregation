@@ -2258,12 +2258,13 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
             ],
             "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "UNKNOWN",
             "currency": "SEK",
             "displayDescription": "Token generator",
             "displayName": "Swedbank",
@@ -2280,7 +2281,7 @@
                     "patternError": "Please enter a valid social security number."
                 },
                 {
-                    "description": "Password",
+                    "description": "Security token",
                     "hint": "NNNN",
                     "masked": true,
                     "maxLength": 8,
@@ -2306,12 +2307,13 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
             ],
             "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "UNKNOWN",
             "currency": "SEK",
             "displayDescription": "Token generator",
             "displayName": "Sparbankerna",
@@ -2328,7 +2330,7 @@
                     "patternError": "Please enter a valid social security number."
                 },
                 {
-                    "description": "Password",
+                    "description": "Security token",
                     "hint": "NNNN",
                     "masked": true,
                     "maxLength": 8,
