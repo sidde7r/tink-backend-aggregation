@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
@@ -13,7 +14,8 @@ public class AmountEntity {
 
     @JsonIgnore
     public ExactCurrencyAmount toTinkAmount() {
-        return ExactCurrencyAmount.of(StringUtils.parseAmount(amount), currency);
+        return ExactCurrencyAmount.of(
+                BigDecimal.valueOf(StringUtils.parseAmount(amount)), currency);
     }
 
     public static AmountEntity withAmount(ExactCurrencyAmount amount) {

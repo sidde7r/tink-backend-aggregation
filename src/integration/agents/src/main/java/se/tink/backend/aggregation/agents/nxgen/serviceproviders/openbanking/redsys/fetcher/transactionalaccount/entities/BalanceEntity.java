@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -56,7 +57,7 @@ public class BalanceEntity {
         if (balances == null) {
             // No balances (sandbox)
             log.error("Account has no balances. Is this sandbox?");
-            return ExactCurrencyAmount.of(1337.42, "EUR");
+            return ExactCurrencyAmount.of(BigDecimal.valueOf(1337.42), "EUR");
         } else if (balances.stream()
                 .allMatch(balanceEntity -> Strings.isNullOrEmpty(balanceEntity.getBalanceType()))) {
             // Balances without type (sandbox)

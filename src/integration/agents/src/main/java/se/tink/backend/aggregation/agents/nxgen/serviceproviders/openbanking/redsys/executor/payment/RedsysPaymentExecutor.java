@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment;
 
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +80,8 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         final AccountReferenceEntity debtorAccount =
                 AccountReferenceEntity.ofIban(payment.getDebtor().getAccountNumber());
         final ExactCurrencyAmount amount =
-                ExactCurrencyAmount.of(payment.getAmount().getValue(), payment.getCurrency());
+                ExactCurrencyAmount.of(
+                        BigDecimal.valueOf(payment.getAmount().getValue()), payment.getCurrency());
 
         CreatePaymentRequest.Builder requestBuilder =
                 new CreatePaymentRequest.Builder()
