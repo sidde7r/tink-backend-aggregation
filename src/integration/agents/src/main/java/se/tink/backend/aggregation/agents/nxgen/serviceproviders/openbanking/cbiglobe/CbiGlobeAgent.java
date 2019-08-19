@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -76,7 +77,8 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new CbiGlobeAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()),
-                        strongAuthenticationState);
+                        new StrongAuthenticationState(request.getAppUriId()),
+                        new StrongAuthenticationState(request.getAppUriId()));
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
@@ -110,7 +112,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
 
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
-                new CbiGlobeTransactionalAccountFetcher(apiClient, persistentStorage, controller);
+                new CbiGlobeTransactionalAccountFetcher(apiClient, persistentStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

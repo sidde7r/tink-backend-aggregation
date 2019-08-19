@@ -46,15 +46,15 @@ public final class CbiGlobeConstants {
     public static class ApiServices {
         public static final String TOKEN = "/auth/oauth/v2/token";
         public static final String CONSENTS =
-                "/sbx/platform/enabler/psd2orchestrator/ais/2.3.2/consents";
+                "/platform/enabler/psd2orchestrator/ais/2.3.2/consents";
         public static final String ACCOUNTS =
-                "/sbx/platform/enabler/psd2orchestrator/ais/2.3.2/accounts";
+                "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts";
         public static final String BALANCES =
-                "/sbx/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/balances";
+                "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/balances";
         public static final String TRANSACTIONS =
-                "/sbx/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/transactions";
+                "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/transactions";
         public static final String CONSENTS_STATUS =
-                "/sbx/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
+                "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
         private static final String PAYMENT =
                 "/sbx/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers";
         private static final String FETCH_PAYMENT =

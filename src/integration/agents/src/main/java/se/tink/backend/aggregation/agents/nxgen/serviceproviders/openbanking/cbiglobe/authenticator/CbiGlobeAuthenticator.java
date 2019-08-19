@@ -181,4 +181,8 @@ public class CbiGlobeAuthenticator {
                 || message.contains(MessageCodes.CONSENT_EXPIRED.name())
                 || message.contains(MessageCodes.RESOURCE_UNKNOWN.name());
     }
+
+    public GetAccountsResponse fetchAccounts() {
+        return apiClient.fetchAccounts();
+    }
 }

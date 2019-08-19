@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CbiGlobeApiClient {
 
@@ -186,5 +187,17 @@ public class CbiGlobeApiClient {
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
                 .get(CreatePaymentResponse.class);
+    }
+
+    public GetAccountsResponse fetchAccounts() {
+        GetAccountsResponse getAccountsResponse =
+                SerializationUtils.deserializeFromString(
+                        persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
+
+        if (getAccountsResponse == null) {
+            getAccountsResponse = getAccounts();
+            persistentStorage.put(StorageKeys.ACCOUNTS, getAccountsResponse);
+        }
+        return getAccountsResponse;
     }
 }

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -23,14 +22,10 @@ public class IspTransactionalAccountFetcher
 
     protected final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final CbiGlobeAuthenticationController controller;
 
     public IspTransactionalAccountFetcher(
-            CbiGlobeApiClient apiClient,
-            PersistentStorage persistentStorage,
-            CbiGlobeAuthenticationController controller) {
+            CbiGlobeApiClient apiClient, PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
-        this.controller = controller;
         this.persistentStorage = persistentStorage;
     }
 
@@ -48,19 +43,8 @@ public class IspTransactionalAccountFetcher
                 SerializationUtils.deserializeFromString(
                         persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
 
-        if (getAccountsResponse == null) {
-            getAccountsResponse = getAccounts();
-            persistentStorage.put(StorageKeys.ACCOUNTS, getAccountsResponse);
-        }
-
         return getAccountsResponse.getAccounts().stream()
                 .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
                 .collect(Collectors.toList());
-    }
-
-    private GetAccountsResponse getAccounts() {
-        GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
-        controller.openThirdPartyApp(getAccountsResponse);
-        return getAccountsResponse;
     }
 }
