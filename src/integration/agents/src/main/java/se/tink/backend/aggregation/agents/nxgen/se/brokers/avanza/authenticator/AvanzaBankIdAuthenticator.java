@@ -74,25 +74,23 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         BankIdCollectResponse bankIdResponse;
         try {
             bankIdResponse = apiClient.collectBankId(transactionId);
+
+            final BankIdStatus status = bankIdResponse.getBankIdStatus();
+            if (status == BankIdStatus.DONE) {
+                // Complete the authentication and store auth session + security token for all
+                // profiles
+                bankIdResponse
+                        .getLogins()
+                        .forEach(loginEntity -> completeAuthentication(loginEntity, transactionId));
+
+                temporaryStorage.put(StorageKeys.HOLDER_NAME, bankIdResponse.getName());
+            }
+
+            return status;
         } catch (HttpResponseException e) {
-
             handlePollBankIdErrors(e.getResponse());
-
             throw e;
         }
-
-        final BankIdStatus status = bankIdResponse.getBankIdStatus();
-
-        if (status == BankIdStatus.DONE) {
-            // Complete the authentication and store auth session + security token for all profiles
-            bankIdResponse
-                    .getLogins()
-                    .forEach(loginEntity -> completeAuthentication(loginEntity, transactionId));
-
-            temporaryStorage.put(StorageKeys.HOLDER_NAME, bankIdResponse.getName());
-        }
-
-        return status;
     }
 
     private void handlePollBankIdErrors(HttpResponse response) throws BankIdException {
