@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -43,7 +44,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
     protected Authenticator constructAuthenticator() {
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
                 new RedirectOAuth2Authenticator(redirectToOxfordStaging);
-        OAuth2AuthenticationController oAuth2AuthenticationController =
+
+        final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
@@ -51,8 +53,12 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
                         credentials,
                         strongAuthenticationState);
 
-        return new ThirdPartyAppAuthenticationController<>(
-                oAuth2AuthenticationController, supplementalInformationHelper);
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
