@@ -11,9 +11,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
 
 public final class BerlinGroupUtils {
 
@@ -45,13 +45,17 @@ public final class BerlinGroupUtils {
         return Base64.getEncoder().encodeToString(Hash.sha256(data));
     }
 
-    public static String generateSignature(
-            final String input, final String signingKeyPath, final String algorithm) {
-        return Base64.getEncoder()
-                .encodeToString(
-                        RSA.signSha256(
-                                JwtUtils.readSigningKey(signingKeyPath, algorithm),
-                                input.getBytes()));
+    public static String generateSignature(final String input, final String signingKeyPath) {
+        try {
+            return Base64.getEncoder()
+                    .encodeToString(
+                            RSA.signSha256(
+                                    Pem.parsePrivateKey(
+                                            Files.readAllBytes(Paths.get(signingKeyPath))),
+                                    input.getBytes()));
+        } catch (IOException e) {
+            throw new IllegalStateException("Something went wrong when reading signingKeyPath.", e);
+        }
     }
 
     public static String getFormattedCurrentDate(final String format, final String timeZone) {
