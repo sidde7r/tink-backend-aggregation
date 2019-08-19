@@ -41,6 +41,7 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
 
     private final StarlingApiClient apiClient;
     private final ClientConfigurationEntity pisConfiguration;
+    private final String redirectUrl;
     private final String keyUid;
     private final PrivateKey privateKey;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -50,6 +51,7 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
     public StarlingTransferExecutor(
             StarlingApiClient apiClient,
             ClientConfigurationEntity pisConfiguration,
+            String redirectUrl,
             String keyUid,
             PrivateKey privateKey,
             Credentials credentials,
@@ -57,11 +59,30 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.pisConfiguration = pisConfiguration;
+        this.redirectUrl = redirectUrl;
         this.keyUid = keyUid;
         this.privateKey = privateKey;
         this.credentials = credentials;
         this.strongAuthenticationState = strongAuthenticationState;
         this.supplementalInformationHelper = supplementalInformationHelper;
+    }
+
+    private static Optional<SortCodeIdentifier> toSortCodeIdentifier(
+            final AccountIdentifier identifier) {
+
+        if (identifier.getType() == AccountIdentifier.Type.SORT_CODE) {
+            return Optional.of((SortCodeIdentifier) identifier);
+        }
+
+        return Optional.empty();
+    }
+
+    private static TransferExecutionException getTransferException(
+            String msg, TransferExecutionException.EndUserMessage userMsg) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(msg)
+                .setEndUserMessage(userMsg)
+                .build();
     }
 
     @Override
@@ -128,7 +149,7 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                         new OAuth2AuthenticationController(
                                 dummyStorage,
                                 supplementalInformationHelper,
-                                new StarlingAuthenticator(apiClient, pisConfiguration),
+                                new StarlingAuthenticator(apiClient, pisConfiguration, redirectUrl),
                                 credentials,
                                 strongAuthenticationState),
                         supplementalInformationHelper);
@@ -204,23 +225,5 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
             final String accountUid, final AccountIdentifier accountIdentifier) {
 
         return apiClient.fetchAccountIdentifiers(accountUid).hasIdentifier(accountIdentifier);
-    }
-
-    private static Optional<SortCodeIdentifier> toSortCodeIdentifier(
-            final AccountIdentifier identifier) {
-
-        if (identifier.getType() == AccountIdentifier.Type.SORT_CODE) {
-            return Optional.of((SortCodeIdentifier) identifier);
-        }
-
-        return Optional.empty();
-    }
-
-    private static TransferExecutionException getTransferException(
-            String msg, TransferExecutionException.EndUserMessage userMsg) {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(msg)
-                .setEndUserMessage(userMsg)
-                .build();
     }
 }

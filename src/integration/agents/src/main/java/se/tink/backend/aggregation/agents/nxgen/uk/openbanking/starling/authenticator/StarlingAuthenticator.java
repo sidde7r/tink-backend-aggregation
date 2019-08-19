@@ -15,19 +15,22 @@ public class StarlingAuthenticator implements OAuth2Authenticator {
 
     private final StarlingApiClient apiClient;
     private final ClientConfigurationEntity configuration;
+    private final String redirectUrl;
 
     public StarlingAuthenticator(
-            StarlingApiClient apiClient, ClientConfigurationEntity configuration) {
+            StarlingApiClient apiClient,
+            ClientConfigurationEntity configuration,
+            String redirectUrl) {
         this.apiClient = apiClient;
         this.configuration = configuration;
+        this.redirectUrl = redirectUrl;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
         return new URL(StarlingConstants.Url.AUTH_STARLING)
                 .queryParam(StarlingConstants.RequestKey.CLIENT_ID, configuration.getClientId())
-                .queryParam(
-                        StarlingConstants.RequestKey.REDIRECT_URI, configuration.getRedirectUrl())
+                .queryParam(StarlingConstants.RequestKey.REDIRECT_URI, redirectUrl)
                 .queryParam(
                         StarlingConstants.RequestKey.RESPONSE_TYPE,
                         StarlingConstants.RequestValue.CODE)
@@ -41,7 +44,7 @@ public class StarlingAuthenticator implements OAuth2Authenticator {
                 CodeExchangeForm.builder()
                         .withCode(code)
                         .asClient(configuration.getClientId(), configuration.getClientSecret())
-                        .withRedirect(configuration.getRedirectUrl())
+                        .withRedirect(redirectUrl)
                         .build();
 
         return apiClient.exchangeCode(exchangeForm);

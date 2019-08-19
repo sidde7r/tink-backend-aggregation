@@ -169,13 +169,12 @@ data:
             aisConfiguration:
               clientId: "STARLING_AIS_CLIENT_ID"
               clientSecret: "STARLING_AIS_CLIENT_SECRET"
-              redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
             pisConfiguration:
               clientId: "STARLING_PIS_CLIENT_ID"
               clientSecret: "STARLING_PIS_CLIENT_SECRET"
-              redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
             keyUid: "STARLING_SIGNING_KEY_UID"
             signingKey: "STARLING_SIGNING_KEY"
+            redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
         {{- end }}
 
         {{- if $agentsConfig.volksbank }}

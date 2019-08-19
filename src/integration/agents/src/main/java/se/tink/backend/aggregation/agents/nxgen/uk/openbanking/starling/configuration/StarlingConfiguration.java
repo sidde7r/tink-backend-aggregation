@@ -8,10 +8,10 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configur
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.OpenBankingClientConfiguration;
 
 @JsonObject
-public class StarlingConfiguration implements ClientConfiguration {
+public class StarlingConfiguration extends OpenBankingClientConfiguration {
 
     @JsonProperty private ClientConfigurationEntity aisConfiguration;
     @JsonProperty private ClientConfigurationEntity pisConfiguration;
