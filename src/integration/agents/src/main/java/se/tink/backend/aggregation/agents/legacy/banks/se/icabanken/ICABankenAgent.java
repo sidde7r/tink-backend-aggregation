@@ -139,10 +139,10 @@ import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class ICABankenAgent extends AbstractAgent
         implements RefreshCheckingAccountsExecutor,
@@ -976,7 +976,7 @@ public class ICABankenAgent extends AbstractAgent
         String deviceApplicationId = credentials.getSensitivePayload(DEVICEAPPLICATIONID_KEY);
 
         if (Strings.isNullOrEmpty(deviceApplicationId)) {
-            deviceApplicationId = StringUtils.generateUUID();
+            deviceApplicationId = UUIDUtils.generateUUID();
             credentials.setSensitivePayload(DEVICEAPPLICATIONID_KEY, deviceApplicationId);
         }
     }

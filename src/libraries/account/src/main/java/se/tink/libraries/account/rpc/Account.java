@@ -23,8 +23,8 @@ import se.tink.libraries.account.enums.AccountTypes;
 import se.tink.libraries.account.identifiers.GiroIdentifier;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.rpc.TransferDestination;
+import se.tink.libraries.uuid.UUIDUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(
@@ -65,7 +65,7 @@ public class Account implements Cloneable {
     }
 
     public Account() {
-        this.id = StringUtils.generateUUID();
+        this.id = UUIDUtils.generateUUID();
         this.ownership = 1;
         this.identifiers = "[]";
         this.flags = "[]";

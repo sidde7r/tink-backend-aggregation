@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.uuid.UUIDUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Transaction implements Comparable<Transaction>, Cloneable {
@@ -48,7 +48,7 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
 
     private void generateIdIfMissing() {
         if (id == null) {
-            id = StringUtils.generateUUID();
+            id = UUIDUtils.generateUUID();
         }
     }
 

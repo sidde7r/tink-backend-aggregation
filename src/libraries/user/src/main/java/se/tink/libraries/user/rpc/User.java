@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.uuid.UUIDUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
@@ -23,7 +23,7 @@ public class User {
     private Date debugUntil;
 
     public User() {
-        id = StringUtils.generateUUID();
+        id = UUIDUtils.generateUUID();
     }
 
     public List<String> getFlags() {

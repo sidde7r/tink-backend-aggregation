@@ -167,6 +167,7 @@ import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class SEBApiAgent extends AbstractAgent
         implements RefreshTransferDestinationExecutor,
@@ -733,7 +734,7 @@ public class SEBApiAgent extends AbstractAgent
 
             // Random bank id assignment is intentional. See method comment above.
             if (Strings.isNullOrEmpty(bankId)) {
-                bankId = StringUtils.generateUUID();
+                bankId = UUIDUtils.generateUUID();
             }
         }
 

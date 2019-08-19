@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.libraries.pair.Pair;
-import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.uuid.UUIDUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RequestUserOptInAccountsAgentWorkerCommandTest {
@@ -48,7 +48,7 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
     public void ensureSupplementalInformationHavePortfolioTypesWhenAccountHaveIt()
             throws Exception {
         Account account = new Account();
-        account.setBankId(StringUtils.generateUUID());
+        account.setBankId(UUIDUtils.generateUUID());
         account.setType(AccountTypes.INVESTMENT);
 
         Portfolio portfolio = new Portfolio();
@@ -78,7 +78,7 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
     public void ensureSupplementalInformationDoNotHavePortfolioTypesWhenAccountDoNotHaveIt()
             throws Exception {
         Account account = new Account();
-        account.setBankId(StringUtils.generateUUID());
+        account.setBankId(UUIDUtils.generateUUID());
         account.setType(AccountTypes.CHECKING);
 
         List<Account> accountsInRequest = Lists.newArrayList(account);
@@ -100,7 +100,7 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
     public void ensureSupplementalInformationHaveCurrencyCode() throws Exception {
         // Arrange
         Account account = new Account();
-        account.setBankId(StringUtils.generateUUID());
+        account.setBankId(UUIDUtils.generateUUID());
         account.setType(AccountTypes.CHECKING);
         account.setCurrencyCode("USD");
 

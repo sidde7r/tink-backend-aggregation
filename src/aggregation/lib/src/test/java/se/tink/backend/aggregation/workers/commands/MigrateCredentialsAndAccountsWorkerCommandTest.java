@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigra
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class MigrateCredentialsAndAccountsWorkerCommandTest {
 
@@ -607,7 +607,7 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     private Account createAccount() {
         Account a = new Account();
         a.setBankId("b-a-n-k-i-d");
-        a.setId(StringUtils.generateUUID());
+        a.setId(UUIDUtils.generateUUID());
         return a;
     }
 

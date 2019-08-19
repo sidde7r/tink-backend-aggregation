@@ -1,8 +1,8 @@
 package se.tink.libraries.account.identifiers;
 
 import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.strings.StringUtils;
 
 /**
  * Norwegian account number implemented according to specifications at:
