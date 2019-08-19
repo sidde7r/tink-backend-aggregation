@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -27,7 +28,10 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.session.IngSessionH
 import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -46,13 +50,15 @@ public class IngAgent extends SubsequentGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                ProgressiveAuthAgent {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
     private final IngTransferHelper ingTransferHelper;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final ProgressiveAuthenticator authenticator;
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -66,23 +72,22 @@ public class IngAgent extends SubsequentGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+
+        authenticator =
+                new AutoAuthenticationController(
+                        request,
+                        systemUpdater,
+                        new IngCardReaderAuthenticationController(
+                                new IngCardReaderAuthenticator(
+                                        apiClient, persistentStorage, ingHelper),
+                                supplementalInformationFormer),
+                        new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(USER_AGENT);
         client.setFollowRedirects(false);
         client.addFilter(new IngHttpFilter());
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return new AutoAuthenticationController(
-                request,
-                systemUpdater,
-                new IngCardReaderAuthenticationController(
-                        new IngCardReaderAuthenticator(apiClient, persistentStorage, ingHelper),
-                        supplementalInformationFormer),
-                new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper));
     }
 
     @Override
@@ -165,5 +170,16 @@ public class IngAgent extends SubsequentGenerationAgent
                 new IngTransferExecutor(apiClient, persistentStorage, ingHelper, ingTransferHelper);
 
         return Optional.of(new TransferController(null, bankTransferExecutor, null, null));
+    }
+
+    @Override
+    public SteppableAuthenticationResponse login(final SteppableAuthenticationRequest request)
+            throws Exception {
+        return ProgressiveAuthController.of(authenticator, credentials).login(request);
+    }
+
+    @Override
+    public boolean login() throws Exception {
+        throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
     }
 }

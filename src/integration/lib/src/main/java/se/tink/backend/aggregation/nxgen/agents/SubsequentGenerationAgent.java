@@ -1,27 +1,17 @@
 package se.tink.backend.aggregation.nxgen.agents;
 
 import java.security.Security;
-import java.util.Iterator;
 import java.util.Optional;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.SuperAbstractAgent;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
@@ -41,13 +31,11 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 /**
- * Same as the old NextGenerationAgent, but with SupplementalInformationController + Helper removed.
+ * Same as the old NextGenerationAgent, but with SupplementalInformationController + Helper and the
+ * imposing authenticator removed.
  */
 public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
-        implements TransferExecutorNxgen,
-                PersistentLogin,
-                // TODO auth: remove this implements
-                ProgressiveAuthAgent {
+        implements TransferExecutorNxgen, PersistentLogin {
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -67,7 +55,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     protected final StrongAuthenticationState strongAuthenticationState;
 
     private TransferController transferController;
-    private Authenticator authenticator;
     private SessionController sessionController;
     private PaymentController paymentController;
 
@@ -116,54 +103,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         client.setDebugOutput(configuration.getTestConfiguration().isDebugOutputEnabled());
         client.setCensorSensitiveHeaders(
                 configuration.getTestConfiguration().isCensorSensitiveHeadersEnabled());
-    }
-
-    // TODO auth: remove the legacy login.
-    @Override
-    public boolean login() throws AuthenticationException, AuthorizationException {
-        getAuthenticator().authenticate(credentials);
-        return true;
-    }
-
-    @Override
-    public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
-            throws AuthenticationException, AuthorizationException {
-
-        final AuthenticationRequest loadedRequest =
-                new AuthenticationRequest(request.getUserInputs(), credentials);
-
-        final ProgressiveAuthenticator authenticator =
-                (ProgressiveAuthenticator) getAuthenticator();
-        final Iterator<? extends AuthenticationStep> steps =
-                authenticator.authenticationSteps(loadedRequest.getCredentials()).iterator();
-
-        if (!request.getStep().isPresent()) {
-            final AuthenticationStep step = steps.next();
-            if (steps.hasNext()) {
-                final AuthenticationStep upcomingStep = steps.next();
-                return SteppableAuthenticationResponse.intermediateResponse(
-                        upcomingStep.getClass(), step.respond(loadedRequest));
-            } else {
-                return SteppableAuthenticationResponse.finalResponse(step.respond(loadedRequest));
-            }
-        }
-
-        final Class<? extends AuthenticationStep> cls = request.getStep().get();
-
-        while (steps.hasNext()) {
-            final AuthenticationStep step = steps.next();
-            if (cls.isInstance(step)) {
-                if (steps.hasNext()) {
-                    final AuthenticationStep upcomingStep = steps.next();
-                    return SteppableAuthenticationResponse.intermediateResponse(
-                            upcomingStep.getClass(), step.respond(loadedRequest));
-                } else {
-                    return SteppableAuthenticationResponse.finalResponse(
-                            step.respond(loadedRequest));
-                }
-            }
-        }
-        throw new IllegalStateException("The agent seems to have defined no steps");
     }
 
     @Override
@@ -217,13 +156,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         filterFactory.addClientFilter(client.getInternalClient());
     }
 
-    private Authenticator getAuthenticator() {
-        if (authenticator == null) {
-            authenticator = this.constructAuthenticator();
-        }
-        return authenticator;
-    }
-
     private Optional<TransferController> getTransferController() {
         if (transferController == null) {
             transferController = constructTransferController().orElse(null);
@@ -252,8 +184,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         }
         return sessionController;
     }
-
-    protected abstract Authenticator constructAuthenticator();
 
     protected abstract SessionHandler constructSessionHandler();
 
