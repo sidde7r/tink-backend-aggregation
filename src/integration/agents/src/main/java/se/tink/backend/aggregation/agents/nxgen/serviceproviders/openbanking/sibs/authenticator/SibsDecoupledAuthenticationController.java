@@ -85,7 +85,7 @@ public class SibsDecoupledAuthenticationController
         ThirdPartyAppAuthenticationPayload.Android androidPayload =
                 new ThirdPartyAppAuthenticationPayload.Android();
         androidPayload.setIntent(SibsConstants.AppPayload.CAIXADIRECTA_DEEPLINK);
-        androidPayload.setIntent(SibsConstants.AppPayload.ANDROID_PACKAGE_NAME);
+        androidPayload.setPackageName(SibsConstants.AppPayload.ANDROID_PACKAGE_NAME);
         payload.setAndroid(androidPayload);
 
         URL iosRedirectUrl = new URL(SibsConstants.AppPayload.CAIXADIRECTA_DEEPLINK);
