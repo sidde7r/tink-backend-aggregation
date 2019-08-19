@@ -1032,7 +1032,7 @@ java_import(
     jars = [
         # This should be a java_librar w/ exports instead, see:
         # https://github.com/bazelbuild/intellij/issues/66
-        "@tink_aws_sdk_1_11//:libaws-java-sdk-core.jar",
+        "//third_party/aws_java_sdk_core:libaws_java_sdk_core.jar",
     ],
     visibility = ["//visibility:public"],
     exports = [

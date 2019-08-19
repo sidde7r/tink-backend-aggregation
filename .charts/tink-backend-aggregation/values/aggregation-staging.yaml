@@ -124,6 +124,7 @@ agents:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
+      environment: production
   bec:
     tink:
       tppRedirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
