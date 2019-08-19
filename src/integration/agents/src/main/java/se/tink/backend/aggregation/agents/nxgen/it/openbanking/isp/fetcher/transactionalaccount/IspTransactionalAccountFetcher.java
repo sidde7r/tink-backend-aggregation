@@ -48,19 +48,8 @@ public class IspTransactionalAccountFetcher
                 SerializationUtils.deserializeFromString(
                         persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
 
-        if (getAccountsResponse == null) {
-            getAccountsResponse = getAccounts();
-            persistentStorage.put(StorageKeys.ACCOUNTS, getAccountsResponse);
-        }
-
         return getAccountsResponse.getAccounts().stream()
                 .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
                 .collect(Collectors.toList());
-    }
-
-    private GetAccountsResponse getAccounts() {
-        GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
-        controller.openThirdPartyApp(getAccountsResponse);
-        return getAccountsResponse;
     }
 }

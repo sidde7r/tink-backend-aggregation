@@ -44,10 +44,6 @@ public class CbiGlobeTransactionalAccountFetcher
                 SerializationUtils.deserializeFromString(
                         persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
 
-        if (getAccountsResponse == null) {
-            getAccountsResponse = getAccounts();
-            persistentStorage.put(StorageKeys.ACCOUNTS, getAccountsResponse);
-        }
         // only for testing, thiss will commit will be reverted after tests
         Collection<TransactionalAccount> accounts =
                 getAccountsResponse.getAccounts().stream()
@@ -55,12 +51,6 @@ public class CbiGlobeTransactionalAccountFetcher
                         .collect(Collectors.toList());
         logger.info("FETCHED ACCOUNTS: " + accounts.toString());
         return accounts;
-    }
-
-    private GetAccountsResponse getAccounts() {
-        GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
-        controller.openThirdPartyApp(getAccountsResponse);
-        return getAccountsResponse;
     }
 
     @Override
