@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Test;
@@ -87,7 +88,7 @@ public class InvestmentAccountBuilderTest {
     public void missingIdModule() {
         InvestmentAccount.nxBuilder()
                 .withoutPortfolios()
-                .withCashBalance(ExactCurrencyAmount.of(200, "SEK"))
+                .withCashBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"))
                 .withId(null);
     }
 
@@ -96,7 +97,7 @@ public class InvestmentAccountBuilderTest {
         InvestmentAccount account =
                 InvestmentAccount.nxBuilder()
                         .withoutPortfolios()
-                        .withCashBalance(ExactCurrencyAmount.of(200, "SEK"))
+                        .withCashBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"))
                         .withId(ID_MODULE)
                         .build();
 
@@ -108,7 +109,8 @@ public class InvestmentAccountBuilderTest {
         assertEquals(
                 AccountIdentifier.create(Type.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
-        assertEquals(ExactCurrencyAmount.of(200, "SEK"), account.getExactBalance());
+        assertEquals(
+                ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"), account.getExactBalance());
     }
 
     @Test
@@ -116,7 +118,7 @@ public class InvestmentAccountBuilderTest {
         InvestmentAccount account =
                 InvestmentAccount.nxBuilder()
                         .withPortfolios(PORTFOLIO_MODULE)
-                        .withCashBalance(ExactCurrencyAmount.of(200, "SEK"))
+                        .withCashBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"))
                         .withId(ID_MODULE)
                         .build();
 
@@ -128,7 +130,8 @@ public class InvestmentAccountBuilderTest {
         assertEquals(
                 AccountIdentifier.create(Type.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
-        assertEquals(ExactCurrencyAmount.of(330, "SEK"), account.getExactBalance());
+        assertEquals(
+                ExactCurrencyAmount.of(BigDecimal.valueOf(330), "SEK"), account.getExactBalance());
         assertNotNull(account.getSystemPortfolios());
         assertTrue(account.getSystemPortfolios() instanceof ImmutableList);
         assertEquals(1, account.getSystemPortfolios().size());
@@ -141,7 +144,7 @@ public class InvestmentAccountBuilderTest {
         InvestmentAccount account =
                 InvestmentAccount.nxBuilder()
                         .withPortfolios(Lists.newArrayList(PORTFOLIO_MODULE))
-                        .withCashBalance(ExactCurrencyAmount.of(200, "SEK"))
+                        .withCashBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"))
                         .withId(ID_MODULE)
                         .build();
 
@@ -153,7 +156,8 @@ public class InvestmentAccountBuilderTest {
         assertEquals(
                 AccountIdentifier.create(Type.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
-        assertEquals(ExactCurrencyAmount.of(330, "SEK"), account.getExactBalance());
+        assertEquals(
+                ExactCurrencyAmount.of(BigDecimal.valueOf(330), "SEK"), account.getExactBalance());
         assertNotNull(account.getSystemPortfolios());
         assertTrue(account.getSystemPortfolios() instanceof ImmutableList);
         assertEquals(1, account.getSystemPortfolios().size());
@@ -166,7 +170,7 @@ public class InvestmentAccountBuilderTest {
         InvestmentAccount account =
                 InvestmentAccount.nxBuilder()
                         .withoutPortfolios()
-                        .withCashBalance(ExactCurrencyAmount.of(200, "SEK"))
+                        .withCashBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"))
                         .withId(ID_MODULE)
                         .setApiIdentifier("65423-13445")
                         .build();
@@ -179,7 +183,8 @@ public class InvestmentAccountBuilderTest {
         assertEquals(
                 AccountIdentifier.create(Type.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
-        assertEquals(ExactCurrencyAmount.of(200, "SEK"), account.getExactBalance());
+        assertEquals(
+                ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"), account.getExactBalance());
         assertEquals("65423-13445", account.getApiIdentifier());
     }
 
@@ -188,7 +193,7 @@ public class InvestmentAccountBuilderTest {
         InvestmentAccount account =
                 InvestmentAccount.nxBuilder()
                         .withoutPortfolios()
-                        .withCashBalance(ExactCurrencyAmount.of(200, "SEK"))
+                        .withCashBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"))
                         .withId(ID_MODULE)
                         .setApiIdentifier("65423-13445")
                         .addHolderName("Account Holder Name")
@@ -202,7 +207,8 @@ public class InvestmentAccountBuilderTest {
         assertEquals(
                 AccountIdentifier.create(Type.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
-        assertEquals(ExactCurrencyAmount.of(200, "SEK"), account.getExactBalance());
+        assertEquals(
+                ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"), account.getExactBalance());
         assertEquals("65423-13445", account.getApiIdentifier());
         assertEquals("Account Holder Name", account.getHolderName().toString());
     }
@@ -226,7 +232,8 @@ public class InvestmentAccountBuilderTest {
         assertEquals(
                 AccountIdentifier.create(Type.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
-        assertEquals(ExactCurrencyAmount.of(130, "SEK"), account.getExactBalance());
+        assertEquals(
+                ExactCurrencyAmount.of(BigDecimal.valueOf(130), "SEK"), account.getExactBalance());
         assertEquals("65423-13445", account.getApiIdentifier());
         assertEquals("Account Holder Name", account.getHolderName().toString());
     }
@@ -258,7 +265,7 @@ public class InvestmentAccountBuilderTest {
                                                         .withProfit(20.3)
                                                         .build())
                                         .build())
-                        .withCashBalance(ExactCurrencyAmount.of(100, "SEK"))
+                        .withCashBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(100), "SEK"))
                         .withId(ID_MODULE)
                         .setApiIdentifier("65423-13445")
                         .addHolderName("Account Holder Name")
@@ -272,7 +279,8 @@ public class InvestmentAccountBuilderTest {
         assertEquals(
                 AccountIdentifier.create(Type.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
-        assertEquals(ExactCurrencyAmount.of(230, "SEK"), account.getExactBalance());
+        assertEquals(
+                ExactCurrencyAmount.of(BigDecimal.valueOf(230), "SEK"), account.getExactBalance());
         assertEquals("65423-13445", account.getApiIdentifier());
         assertEquals("Account Holder Name", account.getHolderName().toString());
     }
@@ -283,7 +291,7 @@ public class InvestmentAccountBuilderTest {
         InvestmentAccount account =
                 InvestmentAccount.nxBuilder()
                         .withoutPortfolios()
-                        .withCashBalance(ExactCurrencyAmount.of(200, "SEK"))
+                        .withCashBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"))
                         .withId(ID_MODULE)
                         .putInTemporaryStorage("box", box)
                         .build();

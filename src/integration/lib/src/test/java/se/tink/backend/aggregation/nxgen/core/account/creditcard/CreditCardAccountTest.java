@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Test;
@@ -19,8 +20,8 @@ public class CreditCardAccountTest {
     private final CreditCardModule CARD_MODULE =
             CreditCardModule.builder()
                     .withCardNumber("5254 - 7078 1002 9393")
-                    .withBalance(ExactCurrencyAmount.of(579.3, "EUR"))
-                    .withAvailableCredit(ExactCurrencyAmount.of(420.7, "EUR"))
+                    .withBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(579.3), "EUR"))
+                    .withAvailableCredit(ExactCurrencyAmount.of(BigDecimal.valueOf(420.7), "EUR"))
                     .withCardAlias("Kalle Anka-Kortet")
                     .build();
 

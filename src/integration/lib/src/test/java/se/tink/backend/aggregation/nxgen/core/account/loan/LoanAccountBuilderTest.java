@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class LoanAccountBuilderTest {
     private final LoanModule LOAN_MODULE =
             LoanModule.builder()
                     .withType(Type.MORTGAGE)
-                    .withBalance(ExactCurrencyAmount.of(4_372_982.11, "SEK"))
+                    .withBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(4_372_982.11), "SEK"))
                     .withInterestRate(0.017689)
                     .setLoanNumber("L0000462381243")
                     .setSecurity("2837 Toink Str, 78422 VT")
@@ -148,7 +149,9 @@ public class LoanAccountBuilderTest {
                         .withLoanDetails(
                                 LoanModule.builder()
                                         .withType(Type.MORTGAGE)
-                                        .withBalance(ExactCurrencyAmount.of(2_565_389.43, "SEK"))
+                                        .withBalance(
+                                                ExactCurrencyAmount.of(
+                                                        BigDecimal.valueOf(2_565_389.43), "SEK"))
                                         .withInterestRate(0.00155)
                                         .setNumMonthsBound(12)
                                         .setCoApplicant(true)

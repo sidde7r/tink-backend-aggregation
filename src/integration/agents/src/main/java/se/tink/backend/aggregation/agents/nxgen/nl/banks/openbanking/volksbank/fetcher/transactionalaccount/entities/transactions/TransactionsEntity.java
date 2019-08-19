@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,7 +64,7 @@ public class TransactionsEntity implements TransactionKeyPaginatorResponse<Strin
 
     private static ExactCurrencyAmount createAmount(final BookedEntity movement) {
         return ExactCurrencyAmount.of(
-                new Double(movement.getTransactionAmount().getAmount()),
+                new BigDecimal(movement.getTransactionAmount().getAmount()),
                 movement.getTransactionAmount().getCurrency());
     }
 

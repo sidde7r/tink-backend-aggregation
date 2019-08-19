@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.balances;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.math.BigDecimal;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -20,6 +21,6 @@ public class BalanceEntity {
 
     public ExactCurrencyAmount toAmount() {
         return ExactCurrencyAmount.of(
-                new Double(balanceAmount.getAmount()), balanceAmount.getCurrency());
+                new BigDecimal(balanceAmount.getAmount()), balanceAmount.getCurrency());
     }
 }

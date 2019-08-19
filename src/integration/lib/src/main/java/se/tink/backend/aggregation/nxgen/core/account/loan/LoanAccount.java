@@ -42,7 +42,8 @@ public class LoanAccount extends Account {
     @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
         return builder(uniqueIdentifier)
-                .setExactBalance(ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency()));
+                .setExactBalance(
+                        ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency()));
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, ExactCurrencyAmount balance) {

@@ -38,7 +38,7 @@ public abstract class AggregationTransaction {
             String rawDetails,
             TransactionTypes type,
             Map<TransactionPayloadTypes, String> payload) {
-        this.amount = ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency());
+        this.amount = ExactCurrencyAmount.of(amount.toBigDecimal(), amount.getCurrency());
         this.date = date;
         this.description = description;
         this.rawDetails = rawDetails;
@@ -145,7 +145,7 @@ public abstract class AggregationTransaction {
 
         @Deprecated
         public Builder setAmount(Amount amount) {
-            this.amount = ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency());
+            this.amount = ExactCurrencyAmount.of(amount.toBigDecimal(), amount.getCurrency());
             return this;
         }
 

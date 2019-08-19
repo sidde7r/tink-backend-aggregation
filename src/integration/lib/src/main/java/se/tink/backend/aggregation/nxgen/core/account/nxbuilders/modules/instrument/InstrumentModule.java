@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument;
 
 import com.google.common.base.Preconditions;
+import java.math.BigDecimal;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Instrument.Type;
@@ -9,7 +10,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class InstrumentModule {
     private final InstrumentIdModule instrumentIdModule;
-    private final double averageAcquisitionPrice;
+    private final BigDecimal averageAcquisitionPrice;
     private final String currency;
     private final double marketValue;
     private final double price;
@@ -59,7 +60,7 @@ public final class InstrumentModule {
         return instrumentIdModule;
     }
 
-    public double getAverageAcquisitionPrice() {
+    public BigDecimal getAverageAcquisitionPrice() {
         return averageAcquisitionPrice;
     }
 
@@ -106,7 +107,7 @@ public final class InstrumentModule {
                     QuantityStep<InstrumentBuildStep>,
                     ProfitStep<InstrumentBuildStep> {
         private InstrumentIdModule instrumentIdModule;
-        private double averageAcquisitionPrice;
+        private BigDecimal averageAcquisitionPrice;
         private String currency;
         private double marketValue;
         private double price;
@@ -122,7 +123,7 @@ public final class InstrumentModule {
             Preconditions.checkArgument(
                     averageAcquisitionPrice >= 0,
                     "Average Acquisition Price  must not be negative.");
-            this.averageAcquisitionPrice = averageAcquisitionPrice;
+            this.averageAcquisitionPrice = BigDecimal.valueOf(averageAcquisitionPrice);
             return this;
         }
 

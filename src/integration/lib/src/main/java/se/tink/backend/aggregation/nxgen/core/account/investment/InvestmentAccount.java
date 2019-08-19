@@ -92,7 +92,7 @@ public class InvestmentAccount extends Account {
         @Deprecated
         public Builder<A, T> setCashBalance(Amount cashBalance) {
             this.cashBalance =
-                    ExactCurrencyAmount.of(cashBalance.getValue(), cashBalance.getCurrency());
+                    ExactCurrencyAmount.of(cashBalance.toBigDecimal(), cashBalance.getCurrency());
             return this;
         }
 
@@ -125,7 +125,7 @@ public class InvestmentAccount extends Account {
         @Deprecated
         public Builder<A, T> setBalance(Amount balance) {
             return super.setExactBalance(
-                    ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency()));
+                    ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency()));
         }
 
         @Override

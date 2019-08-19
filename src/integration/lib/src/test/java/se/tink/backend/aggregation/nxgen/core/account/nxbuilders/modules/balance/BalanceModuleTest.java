@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import org.junit.Test;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -12,7 +13,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class BalanceModuleTest {
     @Test
     public void of_exactBalance() {
-        ExactCurrencyAmount amount = ExactCurrencyAmount.of(257.90, "SEK");
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of(BigDecimal.valueOf(257.90), "SEK");
         BalanceModule balance = BalanceModule.of(amount);
 
         // Test successful build
@@ -49,8 +50,8 @@ public class BalanceModuleTest {
     @Test(expected = IllegalArgumentException.class)
     public void negativeInterest() {
         BalanceModule.builder()
-                .withBalance(ExactCurrencyAmount.of(20, "SEK"))
-                .setAvailableCredit(ExactCurrencyAmount.of(10_000, "SEK"))
+                .withBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(20), "SEK"))
+                .setAvailableCredit(ExactCurrencyAmount.of(BigDecimal.valueOf(10_000), "SEK"))
                 .setInterestRate(-0.25)
                 .build();
     }
@@ -82,8 +83,8 @@ public class BalanceModuleTest {
 
     @Test
     public void successfulBuildWithExactCurrencyAmount() {
-        ExactCurrencyAmount bal = ExactCurrencyAmount.of(25506.32, "DKK");
-        ExactCurrencyAmount credit = ExactCurrencyAmount.of(9473.27, "DKK");
+        ExactCurrencyAmount bal = ExactCurrencyAmount.of(BigDecimal.valueOf(25506.32), "DKK");
+        ExactCurrencyAmount credit = ExactCurrencyAmount.of(BigDecimal.valueOf(9473.27), "DKK");
 
         BalanceModule balance =
                 BalanceModule.builder()
