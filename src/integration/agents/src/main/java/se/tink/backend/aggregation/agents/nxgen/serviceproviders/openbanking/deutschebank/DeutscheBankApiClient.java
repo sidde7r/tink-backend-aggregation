@@ -25,18 +25,22 @@ public class DeutscheBankApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private DeutscheBankConfiguration configuration;
+    private final DeutscheBankConfiguration configuration;
 
-    public DeutscheBankApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public DeutscheBankApiClient(
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            DeutscheBankConfiguration configuration) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-    }
-
-    public void setConfiguration(DeutscheBankConfiguration configuration) {
         this.configuration = configuration;
     }
 
-    private RequestBuilder createRequest(URL url) {
+    public DeutscheBankConfiguration getConfiguration() {
+        return this.configuration;
+    }
+
+    protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);

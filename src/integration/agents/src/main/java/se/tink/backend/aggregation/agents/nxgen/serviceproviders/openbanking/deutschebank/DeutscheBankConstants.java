@@ -4,9 +4,8 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMa
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
 
-public class DeutscheBankConstants {
+public final class DeutscheBankConstants {
 
-    public static final String INTEGRATION_NAME = "deutschebank";
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
                     .put(

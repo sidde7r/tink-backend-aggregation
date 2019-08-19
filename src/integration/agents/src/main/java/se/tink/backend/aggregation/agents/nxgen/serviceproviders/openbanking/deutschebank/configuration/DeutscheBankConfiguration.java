@@ -53,12 +53,4 @@ public class DeutscheBankConfiguration implements ClientConfiguration {
 
         return psuIdType;
     }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public void setPsuIdType(String psuIdType) {
-        this.psuIdType = psuIdType;
-    }
 }
