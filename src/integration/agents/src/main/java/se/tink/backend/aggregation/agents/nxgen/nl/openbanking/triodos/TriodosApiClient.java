@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.SignatureEntity;
@@ -196,8 +195,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         final String clientSigningKeyPath = getConfiguration().getClientSigningKeyPath();
         final SignatureEntity signatureEntity = new SignatureEntity(digest, xRequestId);
 
-        return BerlinGroupUtils.generateSignature(
-                signatureEntity.toString(), clientSigningKeyPath, Signature.SIGNING_ALGORITHM);
+        return BerlinGroupUtils.generateSignature(signatureEntity.toString(), clientSigningKeyPath);
     }
 
     private RequestBuilder createRequest(final URL url, final String digest) {

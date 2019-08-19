@@ -92,8 +92,7 @@ public final class LaBanquePostaleApiClient
 
         final SignatureEntity signatureEntity = new SignatureEntity(digest, requestId);
 
-        return BerlinGroupUtils.generateSignature(
-                signatureEntity.toString(), clientSigningKeyPath, Signature.SIGNING_ALGORITHM);
+        return BerlinGroupUtils.generateSignature(signatureEntity.toString(), clientSigningKeyPath);
     }
 
     private String getAuthorization(final String digest, String requestId) {

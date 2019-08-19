@@ -131,8 +131,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
 
         final SignatureEntity signatureEntity = new SignatureEntity(digest, requestId);
 
-        return BerlinGroupUtils.generateSignature(
-                signatureEntity.toString(), clientSigningKeyPath, Signature.SIGNING_ALGORITHM);
+        return BerlinGroupUtils.generateSignature(signatureEntity.toString(), clientSigningKeyPath);
     }
 
     private String getAuthorization(final String digest, final String requestId) {
