@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.AccountNameStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.AccountNumberStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
@@ -117,9 +118,7 @@ public final class IdModule {
         }
 
         @Override
-        public IdBuildStep setProductName(@Nonnull String productName) {
-            Preconditions.checkNotNull(productName, "ProductName must not be null if set.");
-
+        public IdBuildStep setProductName(@Nullable String productName) {
             this.productName = productName;
             return this;
         }
