@@ -405,6 +405,24 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.pt.openbanking.unicre.UnicreAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "Unicre (Test)",
+            "fields": [],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "Unicre",
+            "multiFactor": true,
+            "name": "pt-unicre-oauth2",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
         }
     ]
 }
