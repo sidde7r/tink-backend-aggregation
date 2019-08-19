@@ -17,10 +17,12 @@ final class RedirectStep<T> implements AuthenticationStep {
 
     private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);
 
-    private final ThirdPartyAppAuthenticator<T> authenticator;
+    private final ThirdPartyAppProgressiveAuthenticator<T> authenticator;
     private final int maxPollAttempts;
 
-    RedirectStep(final ThirdPartyAppAuthenticator<T> authenticator, final int maxPollAttempts) {
+    RedirectStep(
+            final ThirdPartyAppProgressiveAuthenticator<T> authenticator,
+            final int maxPollAttempts) {
         this.authenticator = authenticator;
         this.maxPollAttempts = maxPollAttempts;
     }

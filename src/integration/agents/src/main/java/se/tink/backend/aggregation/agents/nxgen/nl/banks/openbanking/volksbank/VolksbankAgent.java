@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAut
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationProgressiveController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -111,8 +111,8 @@ public class VolksbankAgent extends NextGenerationAgent
                         clientId,
                         clientSecret);
 
-        OAuth2AuthenticationController oAuth2AuthenticationController =
-                new OAuth2AuthenticationController(
+        OAuth2AuthenticationProgressiveController oAuth2AuthenticationController =
+                new OAuth2AuthenticationProgressiveController(
                         persistentStorage,
                         supplementalInformationHelper,
                         authenticator,

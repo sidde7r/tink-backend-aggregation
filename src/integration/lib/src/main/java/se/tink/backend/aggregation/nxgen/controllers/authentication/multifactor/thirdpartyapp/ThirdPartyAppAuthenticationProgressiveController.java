@@ -10,18 +10,18 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveT
 public class ThirdPartyAppAuthenticationProgressiveController<T>
         implements ProgressiveTypedAuthenticator {
 
-    private final ThirdPartyAppAuthenticator<T> authenticator;
+    private final ThirdPartyAppProgressiveAuthenticator<T> authenticator;
     private final int maxPollAttempts;
 
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            ThirdPartyAppAuthenticator<T> authenticator) {
+            ThirdPartyAppProgressiveAuthenticator<T> authenticator) {
         this(authenticator, DEFAULT_MAX_ATTEMPTS);
     }
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            ThirdPartyAppAuthenticator<T> authenticator, int maxPollAttempts) {
+            ThirdPartyAppProgressiveAuthenticator<T> authenticator, int maxPollAttempts) {
         Preconditions.checkArgument(maxPollAttempts > 0);
         this.authenticator = authenticator;
         this.maxPollAttempts = maxPollAttempts;

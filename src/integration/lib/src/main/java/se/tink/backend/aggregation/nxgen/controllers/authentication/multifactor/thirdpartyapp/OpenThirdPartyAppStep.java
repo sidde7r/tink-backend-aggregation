@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 final class OpenThirdPartyAppStep<T> implements AuthenticationStep {
 
-    private final ThirdPartyAppAuthenticator<T> authenticator;
+    private final ThirdPartyAppProgressiveAuthenticator<T> authenticator;
 
-    OpenThirdPartyAppStep(final ThirdPartyAppAuthenticator<T> authenticator) {
+    OpenThirdPartyAppStep(final ThirdPartyAppProgressiveAuthenticator<T> authenticator) {
         this.authenticator = authenticator;
     }
 
