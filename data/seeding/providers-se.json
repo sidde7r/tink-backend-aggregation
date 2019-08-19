@@ -2264,7 +2264,7 @@
                 "MORTGAGE_AGGREGATION"
             ],
             "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
-            "credentialsType": "UNKNOWN",
+            "credentialsType": "PASSWORD",
             "currency": "SEK",
             "displayDescription": "Token generator",
             "displayName": "Swedbank",
@@ -2279,18 +2279,43 @@
                     "numeric": true,
                     "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
-                },
+                }
+            ],
+            "supplementalFields": [
                 {
-                    "description": "Security token",
-                    "hint": "NNNN",
+                    "description": "Challenge",
+                    "helpText": "Start your token generator by pressing triangle.\nEnter your pin code.\nPress '1'.\nEnter the eight digits displayed on the token generator.",
+                    "hint": "NNNNNNNN",
                     "masked": true,
                     "maxLength": 8,
                     "minLength": 8,
-                    "name": "password",
                     "numeric": true,
                     "pattern": "([0-9]{8})",
                     "patternError": "Please enter eight digits.",
-                    "sensitive": true
+                    "sensitive": true,
+                    "name": "logininput"
+                },
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                },
+                {
+                    "description": "Challenge",
+                    "helpText": "Press triangle.\nPress '2'.\nEnter the challenge.\nEnter the eight digits displayed on the token generator.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodedescription"
+                },
+                {
+                    "description": "Response Code",
+                    "helpText": "Enter your 8 digit response code from your card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodeinput",
+                    "numeric": true
                 }
             ],
             "groupDisplayName": "Swedbank och Sparbankerna",
@@ -2313,7 +2338,7 @@
                 "MORTGAGE_AGGREGATION"
             ],
             "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
-            "credentialsType": "UNKNOWN",
+            "credentialsType": "PASSWORD",
             "currency": "SEK",
             "displayDescription": "Token generator",
             "displayName": "Sparbankerna",
@@ -2328,18 +2353,43 @@
                     "numeric": true,
                     "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
-                },
+                }
+            ],
+            "supplementalFields": [
                 {
-                    "description": "Security token",
-                    "hint": "NNNN",
+                    "description": "Challenge",
+                    "helpText": "Start your token generator by pressing triangle.\nEnter your pin code.\nPress '1'.\nEnter the eight digits displayed on the token generator.",
+                    "hint": "NNNNNNNN",
                     "masked": true,
                     "maxLength": 8,
                     "minLength": 8,
-                    "name": "password",
                     "numeric": true,
                     "pattern": "([0-9]{8})",
                     "patternError": "Please enter eight digits.",
-                    "sensitive": true
+                    "sensitive": true,
+                    "name": "logininput"
+                },
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                },
+                {
+                    "description": "Challenge",
+                    "helpText": "Press triangle.\nPress '2'.\nEnter the challenge.\nEnter the eight digits displayed on the token generator.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodedescription"
+                },
+                {
+                    "description": "Response Code",
+                    "helpText": "Enter your 8 digit response code from your card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodeinput",
+                    "numeric": true
                 }
             ],
             "groupDisplayName": "Swedbank och Sparbankerna",
