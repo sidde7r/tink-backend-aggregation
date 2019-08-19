@@ -279,7 +279,7 @@ public class NorwegianAgent extends AbstractAgent
 
         // Get balance and credit
         account.setBalance(creditCardResponse.getBalance());
-        account.setAvailableCredit(creditCardResponse.getAmountAvaiable());
+        account.setAvailableCredit(creditCardResponse.getAmountAvailable());
 
         // Get card number
         final CreditCardOverviewResponse creditCardOverview =

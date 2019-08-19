@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CreditCardResponse {
     private double limit;
-    private double amountAvaiable;
+    private double amountAvailable;
     private double balance;
     private Link cardTransactionsLink;
     private Link paymentsLink;
@@ -18,11 +18,11 @@ public class CreditCardResponse {
 
     public double getBalance() {
         // include reserved transactions
-        return amountAvaiable - limit;
+        return amountAvailable - limit;
     }
 
-    public double getAmountAvaiable() {
-        return amountAvaiable;
+    public double getAmountAvailable() {
+        return amountAvailable;
     }
 }
 

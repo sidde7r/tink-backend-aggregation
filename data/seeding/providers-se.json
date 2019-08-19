@@ -1005,6 +1005,7 @@
             "type": "BROKER"
         },
         {
+            "accessType": "OTHER",
             "className": "banks.norwegian.NorwegianAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1022,6 +1023,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "824b9a1381fa5346acd64c5e8773d403",
+            "financialInstitutionName": "Norwegian Bank",
             "market": "SE",
             "multiFactor": true,
             "name": "norwegian-bankid",
