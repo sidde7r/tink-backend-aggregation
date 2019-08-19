@@ -595,6 +595,9 @@ java_library(
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_core//jar",
     ],
+    runtime_deps = [
+        "@io_perfmark_perfmark_api//jar",
+    ],
 )
 
 java_library(
