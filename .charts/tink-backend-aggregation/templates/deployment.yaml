@@ -490,6 +490,20 @@ spec:
               key: rabobank-qsealc-abn
               optional: true
         {{- end }}
+        {{- if $agentsConfig.redsys }}
+        - name: REDSYS_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: redsys-client-id
+              optional: true
+        - name: REDSYS_QSEALC
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: redsys-qsealc
+              optional: true
+        {{- end }}
         {{- if $agentsConfig.sibs }}
         - name: SIBS_CLIENT_ID_TINK
           valueFrom:
