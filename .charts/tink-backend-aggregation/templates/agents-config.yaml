@@ -677,6 +677,7 @@ data:
             aspspCode: "05387"
             aspspProductCode: "SMART"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
         bpm:
           tink:
             clientId: "CBI_CLIENT_ID_TINK_TAG"
@@ -685,6 +686,7 @@ data:
             aspspCode: "05034"
             aspspProductCode: "IBP01"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
         bpsondrio:
           tink:
             clientId: "CBI_CLIENT_ID_TINK_TAG"
@@ -693,6 +695,7 @@ data:
             aspspCode: "05696"
             aspspProductCode: "BIR"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
         credem:
           tink:
             clientId: "CBI_CLIENT_ID_TINK_TAG"
@@ -701,6 +704,7 @@ data:
             aspspCode: "03032"
             aspspProductCode: "PR"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
         isp:
           tink:
             clientId: "CBI_CLIENT_ID_TINK_TAG"
@@ -709,6 +713,7 @@ data:
             aspspCode: "03069"
             aspspProductCode: "ALLPRODUCTS"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
         mps:
           tink:
             clientId: "CBI_CLIENT_ID_TINK_TAG"
@@ -717,6 +722,7 @@ data:
             aspspCode: "01030"
             aspspProductCode: "retail"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
         ubi:
           tink:
             clientId: "CBI_CLIENT_ID_TINK_TAG"
@@ -725,6 +731,7 @@ data:
             aspspCode: "03111"
             aspspProductCode: "ContoCorrenteGenerico"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
         {{- end }}
 
         {{- if $agentsConfig.abnamro }}
