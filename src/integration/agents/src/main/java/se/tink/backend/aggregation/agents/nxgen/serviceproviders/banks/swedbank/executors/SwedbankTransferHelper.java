@@ -301,7 +301,8 @@ public class SwedbankTransferHelper {
             String challenge) {
         try {
             return Optional.ofNullable(
-                    supplementalInformationHelper.waitForSignForBeneficiaryChallengeResponse(challenge));
+                    supplementalInformationHelper.waitForSignForBeneficiaryChallengeResponse(
+                            challenge));
         } catch (SupplementalInfoException e) {
             return Optional.empty();
         }
@@ -311,7 +312,8 @@ public class SwedbankTransferHelper {
             String challenge) {
         try {
             return Optional.ofNullable(
-                    supplementalInformationHelper.waitForSignForTransferChallengeResponse(challenge));
+                    supplementalInformationHelper.waitForSignForTransferChallengeResponse(
+                            challenge));
         } catch (SupplementalInfoException e) {
             return Optional.empty();
         }
