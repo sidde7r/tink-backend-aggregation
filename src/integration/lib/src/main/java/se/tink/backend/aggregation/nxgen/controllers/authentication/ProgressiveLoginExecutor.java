@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 
 public final class ProgressiveLoginExecutor {
@@ -34,8 +35,26 @@ public final class ProgressiveLoginExecutor {
         if (payload.getThirdPartyAppPayload().isPresent()) {
             supplementalInformationController.openThirdPartyApp(
                     payload.getThirdPartyAppPayload().get());
+
             return SteppableAuthenticationRequest.subsequentRequest(
                     step, AuthenticationRequest.createEmpty());
+        }
+
+        if (payload.getSupplementalWaitRequest().isPresent()) {
+            SupplementalWaitRequest waitRequest = payload.getSupplementalWaitRequest().get();
+
+            final Map<String, String> callbackData =
+                    supplementalInformationController
+                            .waitForSupplementalInformation(
+                                    waitRequest.getKey(),
+                                    waitRequest.getWaitFor(),
+                                    waitRequest.getTimeUnit())
+                            .orElseThrow(
+                                    LoginError.INCORRECT_CREDENTIALS
+                                            ::exception); // todo: change this exception
+
+            return SteppableAuthenticationRequest.subsequentRequest(
+                    step, AuthenticationRequest.fromCallbackData(callbackData));
         }
 
         final List<Field> fields = payload.getFields();

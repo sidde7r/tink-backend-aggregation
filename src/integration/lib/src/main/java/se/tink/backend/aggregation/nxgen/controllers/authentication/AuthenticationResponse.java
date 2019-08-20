@@ -16,6 +16,7 @@ public final class AuthenticationResponse {
 
     private final ImmutableList<Field> fields;
     private ThirdPartyAppAuthenticationPayload payload;
+    private SupplementalWaitRequest supplementalWaitRequest;
 
     public AuthenticationResponse(@Nonnull List<Field> fields) {
         this.fields = ImmutableList.copyOf(fields);
@@ -28,11 +29,22 @@ public final class AuthenticationResponse {
         return response;
     }
 
+    public static AuthenticationResponse requestWaitingForSupplementalInformation(
+            final SupplementalWaitRequest supplementalWaitRequest) {
+        final AuthenticationResponse response = new AuthenticationResponse(Collections.emptyList());
+        response.supplementalWaitRequest = supplementalWaitRequest;
+        return response;
+    }
+
     public ImmutableList<Field> getFields() {
         return fields;
     }
 
     public Optional<ThirdPartyAppAuthenticationPayload> getThirdPartyAppPayload() {
         return Optional.ofNullable(payload);
+    }
+
+    public Optional<SupplementalWaitRequest> getSupplementalWaitRequest() {
+        return Optional.ofNullable(supplementalWaitRequest);
     }
 }

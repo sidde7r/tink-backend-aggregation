@@ -31,6 +31,7 @@ public class ThirdPartyAppAuthenticationProgressiveController<T>
             final Credentials credentials) {
         return Arrays.asList(
                 new OpenThirdPartyAppStep<>(authenticator),
-                new RedirectStep<>(authenticator, supplementalInformationHelper));
+                new RedirectStep<>(authenticator),
+                new PostRedirectStep<>(authenticator));
     }
 }
