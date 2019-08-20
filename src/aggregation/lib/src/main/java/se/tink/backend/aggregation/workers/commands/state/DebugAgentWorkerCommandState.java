@@ -11,33 +11,13 @@ import se.tink.backend.aggregation.configuration.AggregationWorkerConfiguration;
 public class DebugAgentWorkerCommandState {
     private static final Logger log = LoggerFactory.getLogger(DebugAgentWorkerCommandState.class);
     private final String debugLogDir;
+    private final int debugLogFrequencyPercent;
     private File debugDirectory;
 
     @Inject
     public DebugAgentWorkerCommandState(AgentsServiceConfiguration configuration) {
-        if (Objects.isNull(configuration)) {
-            this.debugLogDir = null;
-            return;
-        }
-
-        if (Objects.isNull(configuration.getAggregationWorker())) {
-            this.debugLogDir = null;
-            return;
-        }
-
-        if (Objects.isNull(configuration.getAggregationWorker().getDebugLogDir())) {
-            this.debugLogDir = null;
-            return;
-        }
-
-        if (Objects.equals(
-                AggregationWorkerConfiguration.DEFAULT_DEBUG_LOG_DIR,
-                configuration.getAggregationWorker().getDebugLogDir())) {
-            this.debugLogDir = null;
-            return;
-        }
-
-        this.debugLogDir = configuration.getAggregationWorker().getDebugLogDir();
+        debugLogDir = getDebugLogDirFromConfig(configuration);
+        debugLogFrequencyPercent = getDebugLogFrequencyFromConfig(configuration);
     }
 
     public boolean isSaveLocally() {
@@ -66,5 +46,28 @@ public class DebugAgentWorkerCommandState {
         }
 
         return this.debugDirectory;
+    }
+
+    private String getDebugLogDirFromConfig(AgentsServiceConfiguration configuration) {
+        if (Objects.isNull(configuration)
+                || Objects.isNull(configuration.getAggregationWorker())
+                || Objects.isNull(configuration.getAggregationWorker().getDebugLogDir())
+                || Objects.equals(
+                        AggregationWorkerConfiguration.DEFAULT_DEBUG_LOG_DIR,
+                        configuration.getAggregationWorker().getDebugLogDir())) {
+            return null;
+        }
+        return configuration.getAggregationWorker().getDebugLogDir();
+    }
+
+    private int getDebugLogFrequencyFromConfig(AgentsServiceConfiguration configuration) {
+        if (Objects.isNull(configuration) || Objects.isNull(configuration.getAggregationWorker())) {
+            return 0;
+        }
+        return configuration.getAggregationWorker().getDebugFrequencyPercent();
+    }
+
+    public int getDebugFrequencyPercent() {
+        return debugLogFrequencyPercent;
     }
 }

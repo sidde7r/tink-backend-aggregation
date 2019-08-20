@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -32,6 +33,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     private DebugAgentWorkerCommandState state;
     private AgentWorkerCommandContext context;
     private AgentDebugStorageHandler agentDebugStorage;
+    private int debugLogFrequencyPercent;
 
     public DebugAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -72,7 +74,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             SignableOperationStatuses transferStatus =
                     transferRequest.getSignableOperation().getStatus();
             if (transferStatus == SignableOperationStatuses.FAILED
-                    || transferStatus == SignableOperationStatuses.CANCELLED) {
+                    || transferStatus == SignableOperationStatuses.CANCELLED
+                    || shouldPrintDebugLogRegardless()) {
                 writeToDebugFile(credentials, transferRequest);
             }
         } else {
@@ -83,7 +86,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                     || credentials.getStatus() == CredentialsStatus.TEMPORARY_ERROR
                     || credentials.getStatus() == CredentialsStatus.UNCHANGED
                     || credentials.isDebug()
-                    || user.isDebug()) {
+                    || user.isDebug()
+                    || shouldPrintDebugLogRegardless()) {
                 writeToDebugFile(credentials, null);
             }
         }
@@ -171,5 +175,9 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                         credentials.getId(),
                         getFormattedSize(logContent))
                 .replace(":", ".");
+    }
+
+    private boolean shouldPrintDebugLogRegardless() {
+        return state.getDebugFrequencyPercent() > RandomUtils.randomInt(100);
     }
 }
