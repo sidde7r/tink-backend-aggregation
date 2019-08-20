@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
@@ -15,7 +16,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.Santand
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
@@ -115,14 +123,23 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(LoginResponse loginResponse) {
+    public Optional<TransactionalAccount> toTinkAccount(LoginResponse loginResponse) {
         UserData userData = loginResponse.getUserData();
         HolderName holderName = loginResponse.getHolderName();
-        return TransactionalAccount.builder(
-                        getTinkAccountType(), getUniqueIdentifier(), balance.getTinkAmount())
-                .setAccountNumber(iban)
-                .setName(generalInfo.getAlias())
-                .setHolderName(holderName)
+
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.from(getTinkAccountType()).get())
+                .withoutFlags()
+                .withBalance(BalanceModule.of(balance.parseToExactCurrencyAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getUniqueIdentifier())
+                                .withAccountNumber(formatIban(iban))
+                                .withAccountName(generalInfo.getAlias())
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .addHolderName(holderName.toString())
+                .setBankIdentifier(iban)
                 .putInTemporaryStorage(
                         SantanderEsConstants.Storage.USER_DATA_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(userData))
@@ -147,6 +164,12 @@ public class AccountEntity {
         }
 
         return AccountTypes.OTHER;
+    }
+
+    @JsonIgnore
+    private String formatIban(String iban) {
+        return new DisplayAccountIdentifierFormatter()
+                .apply(AccountIdentifier.create(Type.IBAN, iban));
     }
 
     @JsonIgnore

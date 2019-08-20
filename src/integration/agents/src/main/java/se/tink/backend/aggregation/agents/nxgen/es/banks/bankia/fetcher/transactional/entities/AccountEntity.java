@@ -1,12 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 
 @JsonObject
 public class AccountEntity {
@@ -43,7 +52,8 @@ public class AccountEntity {
                 "%s *%s", contract.getAlias(), iban.substring(iban.length() - 4, iban.length()));
     }
 
-    public TransactionalAccount toTinkAccount() {
+    @JsonIgnore
+    public Optional<TransactionalAccount> toTinkAccount() {
         final String iban = contract.getIdentifierProductContract();
 
         // These are used to fetch transactions for the account.
@@ -51,13 +61,26 @@ public class AccountEntity {
         final String controlDigits = iban.substring(2, 4);
         final String bankIdentifier = iban.substring(4);
 
-        return TransactionalAccount.builder(getTinkAccountType(), iban.toLowerCase())
-                .setAccountNumber(iban)
-                .setName(getAccountName(iban))
-                .setBalance(availableBalance.toTinkAmount())
-                .setBankIdentifier(bankIdentifier)
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.from(getTinkAccountType()).get())
+                .withoutFlags()
+                .withBalance(BalanceModule.of(availableBalance.parseToExactCurrencyAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(formatIban(iban))
+                                .withAccountName(getAccountName(iban))
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .setApiIdentifier(bankIdentifier)
                 .putInTemporaryStorage(BankiaConstants.StorageKey.COUNTRY, country)
                 .putInTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS, controlDigits)
                 .build();
+    }
+
+    @JsonIgnore
+    private String formatIban(String iban) {
+        return new DisplayAccountIdentifierFormatter()
+                .apply(AccountIdentifier.create(Type.IBAN, iban));
     }
 }

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.trans
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +10,14 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
@@ -39,14 +45,21 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(getTinkAccountType(), iban, amount.parseToTinkAmount())
-                .setAccountNumber(iban)
-                .setName(getTinkName())
-                .setHolderName(new HolderName(owner))
+    public Optional<TransactionalAccount> toTinkAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.from(getTinkAccountType()).get())
+                .withoutFlags()
+                .withBalance(BalanceModule.of(amount.parseToExactCurrencyAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(formatIban(iban))
+                                .withAccountName(getTinkName())
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .addHolderName(owner)
                 .setBankIdentifier(iban)
-                .addIdentifier(new IbanIdentifier(iban))
-                .putInTemporaryStorage(iban, this)
+                .putInTemporaryStorage(formatIban(iban), this)
                 .build();
     }
 
@@ -68,6 +81,12 @@ public class AccountEntity {
                         SerializationUtils.serializeToString(this));
                 return AccountTypes.OTHER;
         }
+    }
+
+    @JsonIgnore
+    private String formatIban(String iban) {
+        return new DisplayAccountIdentifierFormatter()
+                .apply(AccountIdentifier.create(Type.IBAN, iban));
     }
 
     @JsonIgnore
