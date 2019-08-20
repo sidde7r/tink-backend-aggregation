@@ -349,8 +349,7 @@
             "type": "BANK"
         },
         {
-            "accessType": "OTHER",
-            "className": "nxgen.fi.banks.spankki.SpankkiAgent",
+            "className": "nxgen.fi.banks.spankki.v1.SpankkiAgent",
             "credentialsType": "PASSWORD",
             "displayName": "S-Pankki",
             "fields": [
