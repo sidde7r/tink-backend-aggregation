@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp;
 
-import com.google.common.base.Preconditions;
 import java.util.Arrays;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -13,24 +12,12 @@ public class ThirdPartyAppAuthenticationProgressiveController<T>
         implements ProgressiveTypedAuthenticator {
 
     private final OAuth2AuthenticationProgressiveController authenticator;
-    private final int maxPollAttempts;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
-    private static final int DEFAULT_MAX_ATTEMPTS = 90;
-
     public ThirdPartyAppAuthenticationProgressiveController(
             OAuth2AuthenticationProgressiveController authenticator,
             SupplementalInformationHelper supplementalInformationHelper) {
-        this(authenticator, DEFAULT_MAX_ATTEMPTS, supplementalInformationHelper);
-    }
-
-    public ThirdPartyAppAuthenticationProgressiveController(
-            OAuth2AuthenticationProgressiveController authenticator,
-            int maxPollAttempts,
-            SupplementalInformationHelper supplementalInformationHelper) {
-        Preconditions.checkArgument(maxPollAttempts > 0);
         this.authenticator = authenticator;
-        this.maxPollAttempts = maxPollAttempts;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
@@ -44,6 +31,6 @@ public class ThirdPartyAppAuthenticationProgressiveController<T>
             final Credentials credentials) {
         return Arrays.asList(
                 new OpenThirdPartyAppStep<>(authenticator),
-                new RedirectStep<>(authenticator, maxPollAttempts, supplementalInformationHelper));
+                new RedirectStep<>(authenticator, supplementalInformationHelper));
     }
 }

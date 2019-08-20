@@ -18,18 +18,13 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 final class RedirectStep<T> implements AuthenticationStep {
 
-    private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);
-
     private final OAuth2AuthenticationProgressiveController authenticator;
-    private final int maxPollAttempts;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
     RedirectStep(
             final OAuth2AuthenticationProgressiveController authenticator,
-            final int maxPollAttempts,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.authenticator = authenticator;
-        this.maxPollAttempts = maxPollAttempts;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
