@@ -11,7 +11,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/lib",
-        "//src/integration/agent_data_availability_tracker/client",
         "//src/libraries/draining",
         "//src/libraries/dropwizard_utils",
         "//third_party:com_google_guava_guava",
