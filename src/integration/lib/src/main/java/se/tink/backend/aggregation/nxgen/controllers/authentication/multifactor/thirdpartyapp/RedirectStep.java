@@ -32,9 +32,6 @@ final class RedirectStep<T> implements AuthenticationStep {
     public AuthenticationResponse respond(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        ThirdPartyAppResponse<String> response =
-                ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
-
         final Map<String, String> callbackData =
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
@@ -45,7 +42,7 @@ final class RedirectStep<T> implements AuthenticationStep {
                                 LoginError.INCORRECT_CREDENTIALS
                                         ::exception); // todo: change this exception
 
-        response = authenticator.collect(null, callbackData);
+        authenticator.collect(null, callbackData);
 
         return new AuthenticationResponse(Collections.emptyList());
     }
