@@ -43,7 +43,7 @@ agents:
     tink:
       clientId: PSDSE-FINA-44059
       certificateId: Tink
-      redirectUri: https://api.tink.se/api/v1/credentials/third-party/callback
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   seb:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
@@ -120,7 +120,7 @@ agents:
       eidasQwac: Tink
   bec:
     tink:
-      tppRedirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       eidasQwac: Tink
   handelsbanken:
     tink:
