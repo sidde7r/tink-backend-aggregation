@@ -2241,6 +2241,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "e0320a1b135652e1b799a8363a40f2e4",
+            "financialInstitutionName": "Supreme Card",
             "market": "SE",
             "multiFactor": true,
             "name": "supremecard-bankid",
