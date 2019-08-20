@@ -439,7 +439,6 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "financialInstitutionId": "sdfs",
             "type": "BANK"
         },
         {
