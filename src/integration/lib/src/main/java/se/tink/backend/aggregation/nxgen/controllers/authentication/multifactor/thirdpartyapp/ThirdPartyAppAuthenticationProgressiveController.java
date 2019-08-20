@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveT
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
-public class ThirdPartyAppAuthenticationProgressiveController<T>
+public class ThirdPartyAppAuthenticationProgressiveController
         implements ProgressiveTypedAuthenticator {
 
     private final OAuth2AuthenticationProgressiveController authenticator;
@@ -30,8 +30,8 @@ public class ThirdPartyAppAuthenticationProgressiveController<T>
     public Iterable<? extends AuthenticationStep> authenticationSteps(
             final Credentials credentials) {
         return Arrays.asList(
-                new OpenThirdPartyAppStep<>(authenticator),
+                new OpenThirdPartyAppStep(authenticator),
                 new RedirectStep<>(authenticator),
-                new PostRedirectStep<>(authenticator));
+                new PostRedirectStep(authenticator));
     }
 }
