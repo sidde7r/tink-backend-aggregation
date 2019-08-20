@@ -194,9 +194,13 @@ public class SupremeCardAgent extends AbstractAgent
         ClientResponse bankIdLoginUrlResponse =
                 apiAgent.followInitiateBankIdRedirect(followRedirect.getLocation().toString());
 
+        ClientResponse bankIdLoginUrlResponse2 =
+                apiAgent.followSecondBankIdRedirect(
+                        bankIdLoginUrlResponse.getLocation().toString());
+
         Map<String, String> initiateBankIdMap = Maps.newHashMap();
         initiateBankIdMap.put("referer", followRedirect.getLocation().toString());
-        initiateBankIdMap.put("htmlResponse", bankIdLoginUrlResponse.getEntity(String.class));
+        initiateBankIdMap.put("htmlResponse", bankIdLoginUrlResponse2.getEntity(String.class));
 
         followRedirect.close();
         bankIdLoginUrlResponse.close();

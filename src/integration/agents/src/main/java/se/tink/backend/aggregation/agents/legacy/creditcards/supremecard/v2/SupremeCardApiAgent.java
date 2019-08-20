@@ -78,6 +78,11 @@ public class SupremeCardApiAgent {
                 url, SupremeCardApiConstants.BASE_URL, MediaType.TEXT_HTML, ClientResponse.class);
     }
 
+    public ClientResponse followSecondBankIdRedirect(final String url) {
+        return getRequestWithOptionalAccept(
+                url, SupremeCardApiConstants.BASE_URL, MediaType.TEXT_HTML, ClientResponse.class);
+    }
+
     ClientResponse initiateBankIdLogin(String url, String referer) {
         return getRequestWithOptionalAccept(
                 url, referer, MediaType.TEXT_HTML, ClientResponse.class);
