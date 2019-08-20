@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 
 @Ignore
 public class CaixaAgentTest {
@@ -25,7 +25,7 @@ public class CaixaAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-caixa-oauth2")
-                        .addCredentialField(CredentialKeys.PSU_ID, TEST_PSU_ID)
+                        .addCredentialField(SibsConstants.Storage.PSU_ID, TEST_PSU_ID)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
