@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class SibsAuthenticator {
 
-    private static final int NINETEEN_DAYS = 90;
+    private static final int NINETY_DAYS = 90;
     private final SibsBaseApiClient apiClient;
     private final Credentials credentials;
 
@@ -66,7 +66,7 @@ public class SibsAuthenticator {
             Date sessionExpiryDate =
                     Date.from(
                             LocalDateTime.now()
-                                    .plusDays(NINETEEN_DAYS)
+                                    .plusDays(NINETY_DAYS)
                                     .atZone(ZoneId.systemDefault())
                                     .toInstant());
 
