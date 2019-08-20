@@ -11,7 +11,7 @@ public class LansforsakringarConfiguration implements ClientConfiguration {
     private String clientId;
     private String clientSecret;
     private String consentId;
-    private String redirectUri;
+    private String redirectUrl;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -37,11 +37,11 @@ public class LansforsakringarConfiguration implements ClientConfiguration {
         return consentId;
     }
 
-    public String getRedirectUri() {
+    public String getRedirectUrl() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUri),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URI"));
+                Strings.emptyToNull(redirectUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
-        return redirectUri;
+        return redirectUrl;
     }
 }

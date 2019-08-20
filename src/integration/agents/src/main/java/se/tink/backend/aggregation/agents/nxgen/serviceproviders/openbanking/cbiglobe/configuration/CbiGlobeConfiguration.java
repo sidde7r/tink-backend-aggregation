@@ -21,7 +21,7 @@ public class CbiGlobeConfiguration implements ClientConfiguration {
 
     public String getClientId() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
+                Strings.emptyToNull(clientId),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
@@ -29,7 +29,7 @@ public class CbiGlobeConfiguration implements ClientConfiguration {
 
     public String getClientSecret() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
+                Strings.emptyToNull(clientSecret),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;

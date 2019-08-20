@@ -144,7 +144,7 @@ public final class LansforsakringarApiClient {
                                 .parameter(
                                         IdTags.PAYMENT_TYPE,
                                         PaymentTypes.DOMESTIC_CREDIT_TRANSFERS))
-                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUri())
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .post(DomesticPaymentResponse.class, domesticPaymentRequest);
     }
 
@@ -155,7 +155,7 @@ public final class LansforsakringarApiClient {
                                 .parameter(
                                         IdTags.PAYMENT_TYPE,
                                         PaymentTypes.CROSS_BORDER_CREDIT_TRANSFERS))
-                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUri())
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .post(CrossBorderPaymentResponse.class, crossBorderPaymentRequest);
     }
 

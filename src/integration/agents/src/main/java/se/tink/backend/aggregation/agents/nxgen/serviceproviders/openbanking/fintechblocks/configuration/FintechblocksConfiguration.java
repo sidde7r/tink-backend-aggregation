@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class FintechblocksConfiguration implements ClientConfiguration {
 
     private String clientId;
-    private String redirectUri;
+    private String redirectUrl;
     private String clientSigningKeyPath;
     private String baseUrl;
 
@@ -25,14 +25,14 @@ public class FintechblocksConfiguration implements ClientConfiguration {
         return clientId;
     }
 
-    public String getRedirectUri() {
+    public String getRedirectUrl() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUri),
+                Strings.emptyToNull(redirectUrl),
                 String.format(
                         BnpParibasFortisConstants.ErrorMessages.INVALID_CONFIGURATION,
                         "Redirect URL"));
 
-        return redirectUri;
+        return redirectUrl;
     }
 
     public String getClientSigningKeyPath() {

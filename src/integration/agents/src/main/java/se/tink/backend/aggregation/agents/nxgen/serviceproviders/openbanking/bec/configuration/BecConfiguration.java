@@ -12,7 +12,7 @@ public class BecConfiguration implements ClientConfiguration {
     private String eidasQwac;
     private String qSealc;
     private String keyId;
-    private String tppRedirectUrl;
+    private String redirectUrl;
 
     public String getEidasQwac() {
         Preconditions.checkNotNull(
@@ -37,8 +37,8 @@ public class BecConfiguration implements ClientConfiguration {
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(tppRedirectUrl),
+                Strings.emptyToNull(redirectUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "TPP redirect url"));
-        return tppRedirectUrl;
+        return redirectUrl;
     }
 }

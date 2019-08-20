@@ -57,7 +57,7 @@ public class RaiffeisenAuthenticator implements OAuth2Authenticator {
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
         final String clientId = apiClient.getConfiguration().getClientId();
         final String clientSecret = apiClient.getConfiguration().getClientSecret();
-        final String redirectUri = apiClient.getConfiguration().getRedirectUri();
+        final String redirectUri = apiClient.getConfiguration().getRedirectUrl();
 
         GetTokenForm getTokenForm =
                 GetTokenForm.builder()

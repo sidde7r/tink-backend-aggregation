@@ -69,7 +69,7 @@ public class FintechblocksAuthenticator implements OAuth2Authenticator {
         ClaimsEntity claimsEntity = new ClaimsEntity(claimsInfoEntity, claimsInfoEntity);
         AuthJWTPayload authJWTPayload =
                 new AuthJWTPayload(
-                        claimsEntity, configuration.getClientId(), configuration.getRedirectUri());
+                        claimsEntity, configuration.getClientId(), configuration.getRedirectUrl());
 
         String request =
                 String.format(
@@ -137,7 +137,7 @@ public class FintechblocksAuthenticator implements OAuth2Authenticator {
                 GetTokenForm.builder()
                         .setGrantType(FormValues.AUTHORIZATION_CODE)
                         .setCode(code)
-                        .setRedirectUri(configuration.getRedirectUri())
+                        .setRedirectUri(configuration.getRedirectUrl())
                         .setClientAssertionType(FormValues.CLIENT_ASSERTION_TYPE)
                         .setClientAssertion(getJwt())
                         .build();
