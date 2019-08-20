@@ -21,7 +21,7 @@ public class AxaAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-axa-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-axa-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
