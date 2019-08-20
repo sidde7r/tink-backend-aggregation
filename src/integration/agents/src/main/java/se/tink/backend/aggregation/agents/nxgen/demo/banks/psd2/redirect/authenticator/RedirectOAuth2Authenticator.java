@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -40,6 +41,12 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+        if (!CODE.equals(code)) {
+            // Ensure the code we got back from the fake-bank is the one
+            // we sent.
+            throw BankServiceError.CONSENT_REVOKED.exception();
+        }
+
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
         String refreshToken = BASE64_ENCODER.encodeToString("fakeRefreshToken".getBytes());
 
