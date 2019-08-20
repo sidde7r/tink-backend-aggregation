@@ -126,6 +126,6 @@ final class FinalStep implements AuthenticationStep {
 
         AxaCommonAuthenticator.authenticate(apiClient, storage);
 
-        return new AuthenticationResponse(Collections.emptyList());
+        return AuthenticationResponse.fromSupplementalFields(Collections.emptyList());
     }
 }

@@ -33,7 +33,7 @@ public final class FinalStep implements AuthenticationStep {
                 extractSignCodeInput(request.getUserInputs()),
                 request.getCredentials().getSensitivePayload(SIGN_ID));
         authenticator.authenticate(request.getCredentials().getField(Field.Key.USERNAME));
-        return new AuthenticationResponse(Collections.emptyList());
+        return AuthenticationResponse.fromSupplementalFields(Collections.emptyList());
     }
 
     private static String extractSignCodeInput(final ImmutableList<String> userInputs) {

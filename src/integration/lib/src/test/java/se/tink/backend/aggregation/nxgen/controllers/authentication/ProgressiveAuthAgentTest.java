@@ -46,7 +46,8 @@ public final class ProgressiveAuthAgentTest {
                             final SteppableAuthenticationRequest request) {
 
                         final AuthenticationResponse payload =
-                                new AuthenticationResponse(Collections.emptyList());
+                                AuthenticationResponse.fromSupplementalFields(
+                                        Collections.emptyList());
 
                         return SteppableAuthenticationResponse.finalResponse(payload);
                     }
@@ -58,7 +59,7 @@ public final class ProgressiveAuthAgentTest {
         final SteppableAuthenticationResponse response = agent.login(request);
 
         Assert.assertEquals(Optional.empty(), response.getStep());
-        Assert.assertEquals(Collections.emptyList(), response.getPayload().getFields());
+        Assert.assertEquals(null, response.getPayload().getFields());
     }
 
     @Test
@@ -73,7 +74,7 @@ public final class ProgressiveAuthAgentTest {
                 Assert.assertEquals(1, request.getUserInputs().size());
                 Assert.assertEquals("133700", request.getUserInputs().get(0));
 
-                return new AuthenticationResponse(Collections.emptyList());
+                return AuthenticationResponse.fromSupplementalFields(Collections.emptyList());
             }
         }
 
@@ -103,7 +104,8 @@ public final class ProgressiveAuthAgentTest {
                                             .build();
 
                             final AuthenticationResponse payload =
-                                    new AuthenticationResponse(Arrays.asList(description, input));
+                                    AuthenticationResponse.fromSupplementalFields(
+                                            Arrays.asList(description, input));
 
                             response =
                                     SteppableAuthenticationResponse.intermediateResponse(
@@ -143,6 +145,6 @@ public final class ProgressiveAuthAgentTest {
         final SteppableAuthenticationResponse response2 = agent.login(request2);
 
         Assert.assertEquals(Optional.empty(), response2.getStep());
-        Assert.assertEquals(Collections.emptyList(), response2.getPayload().getFields());
+        Assert.assertEquals(null, response2.getPayload().getFields());
     }
 }

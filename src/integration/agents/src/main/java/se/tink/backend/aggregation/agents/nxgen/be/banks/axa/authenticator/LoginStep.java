@@ -44,7 +44,7 @@ final class LoginStep implements AuthenticationStep {
         storage.sessionStoreUcrid(ucrid);
 
         // Request supplemental info from card reader
-        return new AuthenticationResponse(fields);
+        return AuthenticationResponse.fromSupplementalFields(fields);
     }
 
     private static String generateUcrid() {

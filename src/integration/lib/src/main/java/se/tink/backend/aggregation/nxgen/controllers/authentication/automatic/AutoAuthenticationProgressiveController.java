@@ -85,7 +85,8 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
         try {
             autoAuthenticator.autoAuthenticate();
             return Collections.singletonList(
-                    request -> new AuthenticationResponse(Collections.emptyList()));
+                    request ->
+                            AuthenticationResponse.fromSupplementalFields(Collections.emptyList()));
         } catch (SessionException autoException) {
             if (!request.isManual()) {
                 credentials.setType(manualAuthenticator.getType());

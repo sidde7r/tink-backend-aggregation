@@ -27,6 +27,6 @@ public final class OtpStep implements AuthenticationStep {
         List<Field> otpInput =
                 Collections.singletonList(
                         supplementalInformationFormer.getField(Field.Key.OTP_INPUT));
-        return new AuthenticationResponse(otpInput);
+        return AuthenticationResponse.fromSupplementalFields(otpInput);
     }
 }

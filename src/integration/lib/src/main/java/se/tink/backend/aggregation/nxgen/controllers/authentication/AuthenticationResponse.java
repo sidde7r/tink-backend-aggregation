@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -14,24 +13,28 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
  */
 public final class AuthenticationResponse {
 
-    private final ImmutableList<Field> fields;
+    private ImmutableList<Field> fields;
     private ThirdPartyAppAuthenticationPayload payload;
     private SupplementalWaitRequest supplementalWaitRequest;
 
-    public AuthenticationResponse(@Nonnull List<Field> fields) {
-        this.fields = ImmutableList.copyOf(fields);
+    private AuthenticationResponse() {}
+
+    public static AuthenticationResponse fromSupplementalFields(@Nonnull List<Field> fields) {
+        final AuthenticationResponse response = new AuthenticationResponse();
+        response.fields = ImmutableList.copyOf(fields);
+        return response;
     }
 
     public static AuthenticationResponse openThirdPartyApp(
             final ThirdPartyAppAuthenticationPayload payload) {
-        final AuthenticationResponse response = new AuthenticationResponse(Collections.emptyList());
+        final AuthenticationResponse response = new AuthenticationResponse();
         response.payload = payload;
         return response;
     }
 
     public static AuthenticationResponse requestWaitingForSupplementalInformation(
             final SupplementalWaitRequest supplementalWaitRequest) {
-        final AuthenticationResponse response = new AuthenticationResponse(Collections.emptyList());
+        final AuthenticationResponse response = new AuthenticationResponse();
         response.supplementalWaitRequest = supplementalWaitRequest;
         return response;
     }

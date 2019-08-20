@@ -22,6 +22,6 @@ final class PostRedirectStep implements AuthenticationStep {
 
         authenticator.collect(request.getCallbackData());
 
-        return new AuthenticationResponse(Collections.emptyList());
+        return AuthenticationResponse.fromSupplementalFields(Collections.emptyList());
     }
 }
