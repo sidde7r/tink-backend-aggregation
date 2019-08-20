@@ -14,8 +14,8 @@ public class AccessTokenRequest extends AbstractForm {
         return this;
     }
 
-    public AccessTokenRequest withRedirectUri(String redirectUri) {
-        this.put("redirect_uri", redirectUri);
+    public AccessTokenRequest withRedirectUrl(String redirectUrl) {
+        this.put("redirect_uri", redirectUrl);
         return this;
     }
 }
