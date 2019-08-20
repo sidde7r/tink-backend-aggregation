@@ -1477,7 +1477,29 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionId": "53c8b70749624122959aa524421ca93d",
+            "financialInstitutionName": "Ringkjøbing Landbobank"
+        },
+        {
+            "name": "dk-ringkjobinglandbobank-oauth2",
+            "displayName": "Ringkjøbing Landbobank",
+            "accessType": "OPEN_BANKING",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.dk.openbanking.ringkjobinglandbobank.RingkjobingLandbobankAgent",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "transactional": true,
+            "tutorialUrl": null,
+            "fields": [],
+            "financialInstitutionId": "53c8b70749624122959aa524421ca93d",
+            "financialInstitutionName": "Ringkjøbing Landbobank",
+            "market": "DK",
+            "currency": "DKK",
+            "payload": "tink"
         },
         {
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
