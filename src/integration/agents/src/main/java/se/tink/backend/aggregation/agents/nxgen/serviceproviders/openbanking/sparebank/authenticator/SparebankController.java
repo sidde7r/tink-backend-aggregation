@@ -82,6 +82,6 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
 
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
-        return Optional.ofNullable(errorMessage).map(LocalizableKey::of);
+        return Optional.ofNullable(errorMessage).map(LocalizableKey::new);
     }
 }
