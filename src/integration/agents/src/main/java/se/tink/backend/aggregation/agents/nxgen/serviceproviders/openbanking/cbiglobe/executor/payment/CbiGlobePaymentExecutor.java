@@ -14,8 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -124,15 +122,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     }
 
     private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-        Android androidPayload = new Android();
-        androidPayload.setIntent(authorizeUrl.get());
-        payload.setAndroid(androidPayload);
-        Ios iOsPayload = new Ios();
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        payload.setIos(iOsPayload);
-        return payload;
+        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     private void collect() {

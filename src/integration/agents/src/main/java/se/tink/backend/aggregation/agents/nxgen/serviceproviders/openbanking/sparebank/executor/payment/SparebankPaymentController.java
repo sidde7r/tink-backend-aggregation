@@ -11,8 +11,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -62,15 +60,7 @@ public class SparebankPaymentController extends PaymentController {
     }
 
     private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-        Android androidPayload = new Android();
-        androidPayload.setIntent(authorizeUrl.get());
-        payload.setAndroid(androidPayload);
-        Ios iOsPayload = new Ios();
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        payload.setIos(iOsPayload);
-        return payload;
+        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override

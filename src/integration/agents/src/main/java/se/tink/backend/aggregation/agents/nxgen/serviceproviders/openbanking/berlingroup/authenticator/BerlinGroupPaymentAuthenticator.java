@@ -6,8 +6,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -32,18 +30,7 @@ public class BerlinGroupPaymentAuthenticator {
     }
 
     private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-
-        Android androidPayload = new Android();
-        androidPayload.setIntent(authorizeUrl.get());
-
-        Ios iOsPayload = new Ios();
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-
-        payload.setAndroid(androidPayload);
-        payload.setIos(iOsPayload);
-        return payload;
+        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     public void openThirdPartyApp(URL authorizeUrl) {
