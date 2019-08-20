@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
@@ -31,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -130,8 +132,16 @@ public class CbiGlobeApiClient {
     }
 
     public GetBalancesResponse getBalances(String resourceId) {
-        return createRequestWithConsent(Urls.BALANCES.parameter(IdTags.ACCOUNT_ID, resourceId))
-                .get(GetBalancesResponse.class);
+        try {
+            return createRequestWithConsent(Urls.BALANCES.parameter(IdTags.ACCOUNT_ID, resourceId))
+                    .get(GetBalancesResponse.class);
+        } catch (HttpResponseException e) {
+            final String message = e.getResponse().getBody(String.class).toLowerCase();
+            if (message.contains(ErrorMessages.ACCESS_EXCEEDED)) {
+                throw BankServiceError.ACCESS_EXCEEDED.exception();
+            }
+            throw e;
+        }
     }
 
     public GetTransactionsResponse getTransactions(

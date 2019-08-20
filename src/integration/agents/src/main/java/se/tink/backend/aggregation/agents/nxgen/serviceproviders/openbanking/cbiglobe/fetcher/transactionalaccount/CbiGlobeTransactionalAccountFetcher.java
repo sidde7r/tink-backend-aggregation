@@ -5,8 +5,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
@@ -24,8 +22,6 @@ public class CbiGlobeTransactionalAccountFetcher
 
     private final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private static final Logger logger =
-            LoggerFactory.getLogger(CbiGlobeTransactionalAccountFetcher.class);
 
     public CbiGlobeTransactionalAccountFetcher(
             CbiGlobeApiClient apiClient, PersistentStorage persistentStorage) {
@@ -39,13 +35,9 @@ public class CbiGlobeTransactionalAccountFetcher
                 SerializationUtils.deserializeFromString(
                         persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
 
-        // only for testing, thiss will commit will be reverted after tests
-        Collection<TransactionalAccount> accounts =
-                getAccountsResponse.getAccounts().stream()
-                        .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
-                        .collect(Collectors.toList());
-        logger.info("FETCHED ACCOUNTS: " + accounts.toString());
-        return accounts;
+        return getAccountsResponse.getAccounts().stream()
+                .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -54,11 +46,7 @@ public class CbiGlobeTransactionalAccountFetcher
         // Bank allows to fetch transactions for last 90 days
         fromDate = calculateFromDate(toDate);
 
-        // only for testing, this commit will be reverted after tests
-        PaginatorResponse transactions =
-                apiClient.getTransactions(
-                        account.getApiIdentifier(), fromDate, toDate, QueryValues.BOTH);
-        logger.info("FETCHED TRANSACTIONS: " + transactions.toString());
-        return transactions;
+        return apiClient.getTransactions(
+                account.getApiIdentifier(), fromDate, toDate, QueryValues.BOTH);
     }
 }

@@ -96,7 +96,7 @@ public class CbiGlobeAuthenticator {
 
     private String generateValidUntilDate() {
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                new DateTime(new Date()).plusDays(15).toDate());
+                new DateTime(new Date()).plusDays(90).toDate());
     }
 
     protected String createRedirectUrl(String state) {

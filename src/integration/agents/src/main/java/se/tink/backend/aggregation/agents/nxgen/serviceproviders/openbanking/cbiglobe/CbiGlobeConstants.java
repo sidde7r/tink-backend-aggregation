@@ -27,6 +27,7 @@ public final class CbiGlobeConstants {
         public static final String BALANCE_NOT_FOUND = "Balance cannot be found.";
         public static final String MAPPING =
                 "Cannot map payment status: %s to Tink payment status.";
+        public static final String ACCESS_EXCEEDED = "access_exceeded";
     }
 
     public static class Urls {
