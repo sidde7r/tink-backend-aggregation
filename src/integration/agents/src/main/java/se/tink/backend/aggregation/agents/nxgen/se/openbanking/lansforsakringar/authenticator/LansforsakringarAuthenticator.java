@@ -96,7 +96,7 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
                         .setCode(code)
                         .build();
 
-        return apiClient.postToken(form);
+        return apiClient.getToken(form);
     }
 
     @Override

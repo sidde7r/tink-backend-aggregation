@@ -79,9 +79,6 @@ public abstract class LansforsakringarConstants {
         public static final String TPP_EXPLICIT_AUTH_PREFERRED =
                 "TPP-Explicit-Authorisation-Preferred";
         public static final String X_TINK_DEBUG = "X-Tink-Debug";
-        public static final String CONTENT_TYPE = "Content-Type";
-        public static final String ACCEPT = "Accept";
-
     }
 
     public static class HeaderValues {
