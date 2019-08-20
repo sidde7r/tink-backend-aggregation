@@ -54,9 +54,6 @@ final class RedirectStep<T> implements AuthenticationStep {
 
     private boolean handleStatus(ThirdPartyAppStatus status)
             throws AuthenticationException, AuthorizationException {
-        if (status == null) {
-            throw new IllegalStateException(String.format("Status missing"));
-        }
         return false;
     }
 
