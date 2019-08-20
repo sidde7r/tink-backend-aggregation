@@ -57,21 +57,7 @@ final class RedirectStep<T> implements AuthenticationStep {
         if (status == null) {
             throw new IllegalStateException(String.format("Status missing"));
         }
-        switch (status) {
-            case WAITING:
-                return false;
-            case DONE:
-                return true;
-            case CANCELLED:
-                throw decorateException(status, ThirdPartyAppError.CANCELLED);
-            case TIMED_OUT:
-                throw decorateException(status, ThirdPartyAppError.TIMED_OUT);
-            case ALREADY_IN_PROGRESS:
-                throw decorateException(status, ThirdPartyAppError.ALREADY_IN_PROGRESS);
-            default:
-                throw new IllegalStateException(
-                        String.format("Unknown status: %s", status.toString()));
-        }
+        return false;
     }
 
     private ThirdPartyAppException decorateException(
