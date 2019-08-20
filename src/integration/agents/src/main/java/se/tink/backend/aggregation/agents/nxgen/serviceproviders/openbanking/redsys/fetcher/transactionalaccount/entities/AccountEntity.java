@@ -58,7 +58,10 @@ public class AccountEntity {
                         .withUniqueIdentifier(iban)
                         .withAccountNumber(iban)
                         .withAccountName(
-                                Option.of(name).orElse(Option.of(product)).getOrElse(details))
+                                Option.of(name)
+                                        .orElse(Option.of(product))
+                                        .orElse(Option.of(details))
+                                        .getOrElse(iban))
                         .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                         .setProductName(Option.of(product).getOrElse(details))
                         .build();
