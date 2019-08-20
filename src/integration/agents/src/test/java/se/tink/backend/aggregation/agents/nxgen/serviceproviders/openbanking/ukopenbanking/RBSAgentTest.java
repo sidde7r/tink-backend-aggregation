@@ -22,8 +22,8 @@ public class RBSAgentTest {
 
     private AgentIntegrationTest.Builder getAgentBuilder() {
         return new AgentIntegrationTest.Builder("uk", "uk-rbs-oauth2")
-                .loadCredentialsBefore(true)
-                .saveCredentialsAfter(true)
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
                 .doLogout(false);
     }

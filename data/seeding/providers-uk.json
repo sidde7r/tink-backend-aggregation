@@ -341,7 +341,7 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.uk.openbanking.monzo.MonzoAgent",
+            "className": "nxgen.uk.openbanking.monzo.MonzoV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Monzo",
             "fields": [
@@ -356,7 +356,7 @@
             "multiFactor": false,
             "name": "uk-monzo-oauth2",
             "passwordHelpText": "",
-            "payload": "tink",
+            "payload": "tink:monzo",
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
@@ -439,6 +439,7 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
+            "financialInstitutionId": "sdfs",
             "type": "BANK"
         },
         {

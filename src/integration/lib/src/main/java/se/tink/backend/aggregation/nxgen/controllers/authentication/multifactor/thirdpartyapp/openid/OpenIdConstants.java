@@ -26,7 +26,8 @@ public class OpenIdConstants {
     }
 
     public enum SIGNING_ALGORITHM {
-        RS256
+        RS256,
+        PS256
     }
 
     public enum TOKEN_ENDPOINT_AUTH_METHOD {
@@ -50,7 +51,10 @@ public class OpenIdConstants {
                     .build();
 
     public static final ImmutableList<String> PREFERRED_ID_TOKEN_SIGNING_ALGORITHM =
-            ImmutableList.<String>builder().add(SIGNING_ALGORITHM.RS256.toString()).build();
+            ImmutableList.<String>builder()
+                    .add(SIGNING_ALGORITHM.RS256.toString())
+                    .add(SIGNING_ALGORITHM.PS256.toString())
+                    .build();
 
     public static final ImmutableList<String> PREFERRED_TOKEN_ENDPOINT_SIGNING_ALGORITHM =
             ImmutableList.<String>builder().add(SIGNING_ALGORITHM.RS256.toString()).build();

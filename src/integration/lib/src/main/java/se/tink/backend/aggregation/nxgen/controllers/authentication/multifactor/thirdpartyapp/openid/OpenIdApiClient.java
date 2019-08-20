@@ -135,6 +135,7 @@ public class OpenIdApiClient {
 
             case tls_client_auth:
                 // Do nothing. We authenticate using client certificate.
+                requestForm.withClientId(clientInfo.getClientId());
                 break;
 
             default:

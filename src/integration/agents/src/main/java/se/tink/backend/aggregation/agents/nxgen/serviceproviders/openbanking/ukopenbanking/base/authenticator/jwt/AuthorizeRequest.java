@@ -4,15 +4,27 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JOSEObjectType;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.crypto.RSASSASigner;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import net.minidev.json.JSONObject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.entities.AuthorizeRequestClaims;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.Params;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.OpenIdSignUtils;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 // This is an Authorize request JWT that is used by UK OpenBanking.
 public class AuthorizeRequest {
@@ -117,16 +129,58 @@ public class AuthorizeRequest {
                             intentId,
                             UkOpenBankingAisAuthenticatorConstants.ACR_SECURE_AUTHENTICATION_RTS);
 
+            String preferredAlgorithm =
+                    wellknownConfiguration
+                            .getPreferredIdTokenSigningAlg(
+                                    OpenIdConstants.PREFERRED_ID_TOKEN_SIGNING_ALGORITHM)
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    "Preferred signing algorithm unknown: only RS256 and PS256 are supported"));
+
+            switch (OpenIdConstants.SIGNING_ALGORITHM.valueOf(preferredAlgorithm)) {
+                case PS256:
+                    return signWithPs256(
+                            keyId,
+                            issuer,
+                            clientId,
+                            scope,
+                            redirectUri,
+                            responseTypes,
+                            authorizeRequestClaims);
+                case RS256:
+                default:
+                    return signWithRs256(
+                            keyId,
+                            algorithm,
+                            issuer,
+                            clientId,
+                            scope,
+                            redirectUri,
+                            responseTypes,
+                            authorizeRequestClaims);
+            }
+        }
+
+        private String signWithRs256(
+                String keyId,
+                Algorithm algorithm,
+                String issuer,
+                String clientId,
+                String scope,
+                String redirectUri,
+                String responseTypes,
+                AuthorizeRequestClaims authorizeRequestClaims) {
             return TinkJwtCreator.create()
                     .withKeyId(keyId)
                     .withIssuer(clientId)
                     .withAudience(issuer)
-                    .withClaim(OpenIdConstants.Params.RESPONSE_TYPE, responseTypes)
-                    .withClaim(OpenIdConstants.Params.CLIENT_ID, clientId)
-                    .withClaim(OpenIdConstants.Params.REDIRECT_URI, redirectUri)
-                    .withClaim(OpenIdConstants.Params.SCOPE, scope)
-                    .withClaim(OpenIdConstants.Params.STATE, state)
-                    .withClaim(OpenIdConstants.Params.NONCE, nonce)
+                    .withClaim(Params.RESPONSE_TYPE, responseTypes)
+                    .withClaim(Params.CLIENT_ID, clientId)
+                    .withClaim(Params.REDIRECT_URI, redirectUri)
+                    .withClaim(Params.SCOPE, scope)
+                    .withClaim(Params.STATE, state)
+                    .withClaim(Params.NONCE, nonce)
                     .withClaim(
                             UkOpenBankingAisAuthenticatorConstants.Params.MAX_AGE,
                             UkOpenBankingAisAuthenticatorConstants.MAX_AGE)
@@ -134,6 +188,59 @@ public class AuthorizeRequest {
                             UkOpenBankingAisAuthenticatorConstants.Params.CLAIMS,
                             authorizeRequestClaims)
                     .sign(algorithm);
+        }
+
+        private String signWithPs256(
+                String keyId,
+                String issuer,
+                String clientId,
+                String scope,
+                String redirectUri,
+                String responseTypes,
+                AuthorizeRequestClaims authorizeRequestClaims) {
+
+            JSONObject object = new JSONObject();
+            object.put(Params.RESPONSE_TYPE, responseTypes);
+            object.put(Params.CLIENT_ID, clientId);
+            object.put(Params.REDIRECT_URI, redirectUri);
+            object.put(Params.SCOPE, scope);
+            object.put(Params.STATE, state);
+            object.put(Params.NONCE, nonce);
+            object.put(
+                    UkOpenBankingAisAuthenticatorConstants.Params.MAX_AGE,
+                    UkOpenBankingAisAuthenticatorConstants.MAX_AGE);
+            object.put(
+                    UkOpenBankingAisAuthenticatorConstants.Params.CLAIMS, authorizeRequestClaims);
+            object.put("iss", clientId);
+            object.put("exp", Instant.now().plusSeconds(3600).getEpochSecond());
+            object.put("aud", issuer);
+
+            JWSHeader header =
+                    new JWSHeader(
+                            JWSAlgorithm.PS256,
+                            JOSEObjectType.JWT,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            keyId,
+                            null,
+                            null);
+            String data = SerializationUtils.serializeToString(object);
+            Payload payload = new Payload(data);
+            JWSObject signed = new JWSObject(header, payload);
+            JWSSigner signer = new RSASSASigner(softwareStatement.getSigningKey());
+            try {
+                signed.sign(signer);
+
+            } catch (JOSEException e) {
+                throw new IllegalStateException("Signing request with PS256 failed");
+            }
+            return signed.serialize();
         }
     }
 }

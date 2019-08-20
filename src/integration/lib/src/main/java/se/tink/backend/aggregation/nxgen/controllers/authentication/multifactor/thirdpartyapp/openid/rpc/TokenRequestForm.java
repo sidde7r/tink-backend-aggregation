@@ -54,4 +54,9 @@ public class TokenRequestForm extends AbstractForm {
         this.put("client_secret", clientSecret);
         return this;
     }
+
+    public TokenRequestForm withClientId(String clientId) {
+        this.put("client_id", clientId);
+        return this;
+    }
 }
