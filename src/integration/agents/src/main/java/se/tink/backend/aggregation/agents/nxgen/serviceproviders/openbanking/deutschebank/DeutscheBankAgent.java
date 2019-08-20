@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -31,42 +30,32 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
     private DeutscheBankConfiguration deutscheBankConfiguration;
 
     public DeutscheBankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration configuration,
+            String integrationName) {
+        super(request, context, configuration.getSignatureKeyPair());
 
-        apiClient = new DeutscheBankApiClient(client, sessionStorage);
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
 
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
         deutscheBankConfiguration =
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
-                                DeutscheBankConstants.INTEGRATION_NAME,
-                                clientName,
-                                DeutscheBankConfiguration.class)
+                                integrationName, clientName, DeutscheBankConfiguration.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
                                                 DeutscheBankConstants.ErrorMessages
                                                         .MISSING_CONFIGURATION));
 
-        deutscheBankConfiguration.setBaseUrl(getBaseURL());
-        deutscheBankConfiguration.setPsuIdType(getPSUIdType());
+        apiClient = new DeutscheBankApiClient(client, sessionStorage, deutscheBankConfiguration);
 
-        apiClient.setConfiguration(deutscheBankConfiguration);
         client.setEidasProxy(
                 configuration.getEidasProxy(), deutscheBankConfiguration.getCertificateId());
     }
-
-    protected abstract String getBaseURL();
-
-    protected abstract String getPSUIdType();
 
     @Override
     protected Authenticator constructAuthenticator() {
