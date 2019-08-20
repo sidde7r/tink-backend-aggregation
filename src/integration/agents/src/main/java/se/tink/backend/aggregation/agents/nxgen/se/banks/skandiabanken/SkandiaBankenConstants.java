@@ -204,7 +204,13 @@ public class SkandiaBankenConstants {
 
     public static final TypeMapper<TransferType> PAYMENT_TRANSFER_TYPE_MAP =
             TypeMapper.<TransferType>builder()
-                    .put(TransferType.EINVOICE, "BankGiroOCR", "BankGiroInvoice")
+                    .put(TransferType.EINVOICE, "BankGiroOCR", "BankGiroInvoice", "PlusGiroInvoice")
                     .put(TransferType.BANK_TRANSFER, "SingleTransfer")
+                    .put(
+                            TransferType.PAYMENT,
+                            "AutoGiroRecurrent",
+                            "CreditCardInvoice",
+                            "PlusGiroOCR",
+                            "BankGiro")
                     .build();
 }
