@@ -147,7 +147,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
 
         try {
             response =
-                    supplementalInformationHelper.waitForSignForTransferChallengeResponse(
+                    supplementalInformationHelper.waitForTwoStepSignForTransferChallengeResponse(
                             transferSignChallenge.getChallenge(),
                             transferSignChallenge.getSignType());
         } catch (SupplementalInfoException e) {
@@ -227,7 +227,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         apiClient.getSignProtocol().cardReaderAllowed();
         SignProtocolResponse transferSignChallenge = apiClient.getTransferSignChallenge();
         String response =
-                supplementalInformationHelper.waitForSignForTransferChallengeResponse(
+                supplementalInformationHelper.waitForTwoStepSignForTransferChallengeResponse(
                         transferSignChallenge.getChallenge(), transferSignChallenge.getSignType());
         SignProtocolResponse signProtocolResponse = apiClient.doubleSignTransfer(response);
 
@@ -236,7 +236,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         } else if (signProtocolResponse.signError()) {
             signProtocolResponse = apiClient.doubleClickPayment();
             response =
-                    supplementalInformationHelper.waitForSignForTransferChallengeResponse(
+                    supplementalInformationHelper.waitForTwoStepSignForTransferChallengeResponse(
                             signProtocolResponse.getChallenge(),
                             signProtocolResponse.getSignType());
             signProtocolResponse = apiClient.doubleSignTransfer(response);
@@ -264,7 +264,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                         TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
             }
             response =
-                    supplementalInformationHelper.waitForSignForBeneficiaryChallengeResponse(
+                    supplementalInformationHelper.waitForTwoStepSignForBeneficiaryChallengeResponse(
                             signProtocolResponse.getChallenge(),
                             signProtocolResponse.getSignType());
         } catch (SupplementalInfoException e) {

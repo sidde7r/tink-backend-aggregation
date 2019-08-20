@@ -227,7 +227,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         String challenge = signingChallengeUcrResponse.getChallenge().getValue();
 
         String response =
-                supplementalInformationHelper.waitForSignForTransferChallengeResponse(
+                supplementalInformationHelper.waitForTwoStepSignForTransferChallengeResponse(
                         challenge, signTypeSigningId);
         String panNr = credentials.getField(Field.Key.USERNAME);
         apiClient.signingValidationUcr(response, panNr, signTypeSigningId, cipherKey);
