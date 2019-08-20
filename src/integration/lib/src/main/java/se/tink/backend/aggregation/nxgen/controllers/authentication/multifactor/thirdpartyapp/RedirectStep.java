@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp;
 
-import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -42,30 +41,17 @@ final class RedirectStep<T> implements AuthenticationStep {
 
         handleStatus(response.getStatus());
 
-        boolean finished = false;
+        final Map<String, String> callbackData =
+                supplementalInformationHelper
+                        .waitForSupplementalInformation(
+                                authenticator.getStrongAuthenticationStateSupplementalKey(),
+                                authenticator.getWaitForMinutes(),
+                                TimeUnit.MINUTES)
+                        .orElseThrow(
+                                LoginError.INCORRECT_CREDENTIALS
+                                        ::exception); // todo: change this exception
 
-        for (int i = 0; i < maxPollAttempts && !finished; i++) {
-            final Map<String, String> callbackData =
-                    supplementalInformationHelper
-                            .waitForSupplementalInformation(
-                                    authenticator.getStrongAuthenticationStateSupplementalKey(),
-                                    authenticator.getWaitForMinutes(),
-                                    TimeUnit.MINUTES)
-                            .orElseThrow(
-                                    LoginError.INCORRECT_CREDENTIALS
-                                            ::exception); // todo: change this exception
-
-            response = authenticator.collect(response.getReference(), callbackData);
-            if (handleStatus(response.getStatus())) {
-                finished = true;
-            } else {
-                Uninterruptibles.sleepUninterruptibly(SLEEP_SECONDS, TimeUnit.SECONDS);
-            }
-        }
-        if (!finished) {
-            // Treat poll exhaustion as a timeout.
-            throw decorateException(ThirdPartyAppStatus.TIMED_OUT, ThirdPartyAppError.TIMED_OUT);
-        }
+        response = authenticator.collect(response.getReference(), callbackData);
 
         return new AuthenticationResponse(Collections.emptyList());
     }
