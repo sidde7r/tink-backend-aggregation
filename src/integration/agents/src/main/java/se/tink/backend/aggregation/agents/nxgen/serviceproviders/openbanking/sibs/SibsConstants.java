@@ -55,7 +55,6 @@ public final class SibsConstants {
     }
 
     public static class QueryKeys {
-
         public static final String STATE = "state";
         public static final String WITH_BALANCE = "withBalance";
         public static final String PSU_INVOLVED = "psuInvolved";
@@ -65,12 +64,10 @@ public final class SibsConstants {
     }
 
     public static class QueryValues {
-
         public static final String BOTH = "both";
     }
 
     public static class HeaderKeys {
-
         public static final String TPP_REQUEST_ID = "TPP-Request-ID";
         public static final String DATE = "Date";
         public static final String X_IBM_CLIENT_ID = "x-ibm-client-id";
@@ -86,13 +83,11 @@ public final class SibsConstants {
     }
 
     public static class FormValues {
-
         public static final String ALL_ACCOUNTS = "all-accounts";
         public static final Integer FREQUENCY_PER_DAY = 4;
     }
 
     public static class Formats {
-
         public static final String CONSENT_BODY_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
         public static final String CONSENT_REQUEST_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss Z";
         public static final String RSA = "RSA";
@@ -103,13 +98,11 @@ public final class SibsConstants {
     }
 
     public static class HeaderValues {
-
         public static final String DIGEST_PREFIX = "SHA-256=";
         public static final String CLIENTE_PARTICULAR = "CP";
     }
 
     public static class PathParameterKeys {
-
         public static final String ASPSP_CDE = "aspsp-cde";
         public static final String ACCOUNT_ID = "account-id";
         public static final String CONSENT_ID = "consent-id";
@@ -118,20 +111,13 @@ public final class SibsConstants {
     }
 
     public static class SignatureValues {
-
         public static final String RSA_SHA256 = "rsa-sha256";
         public static final String HEADERS = "Digest TPP-Transaction-ID TPP-Request-ID Date";
         public static final String HEADERS_NO_DIGEST = "TPP-Transaction-ID TPP-Request-ID Date";
     }
 
-    public static class CredentialKeys {
-
-        public static final String PSU_ID = "username";
-    }
-
     public static class Storage {
-        public static final String CONSENT_ID = "consentId";
-        public static final String PAYMENT_ID = "paymentId";
+        public static final String PSU_ID = "username";
         public static final String PAYMENT_REDIRECT_URI = "paymentRedirectUrl";
         public static final String PAYMENT_UPDATE_PSU_URI = "updatePsuIdentification";
         public static final String STATE = "payment_state";

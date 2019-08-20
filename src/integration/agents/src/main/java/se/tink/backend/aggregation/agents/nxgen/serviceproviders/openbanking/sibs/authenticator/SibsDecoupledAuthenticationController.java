@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -70,7 +69,7 @@ public class SibsDecoupledAuthenticationController
             authenticator.initializeDecoupledConsent(
                     state,
                     SibsConstants.HeaderValues.CLIENTE_PARTICULAR,
-                    credentials.getField(CredentialKeys.PSU_ID));
+                    credentials.getField(SibsConstants.Storage.PSU_ID));
         } catch (HttpClientException e) {
             logger.warn("Authorization failed, cannot create consents.", e);
             throw new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT);
