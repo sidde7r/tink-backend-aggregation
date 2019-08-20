@@ -150,9 +150,11 @@ public final class SwedbankConstants {
 
     public static final class TimeValues {
         public static final int SLEEP_TIME_MILLISECONDS = 4000;
-        public static final int MONTHS_TO_FETCH = 25;
+        public static final int MONTHS_TO_FETCH_MAX = 25;
+        public static final int MONTHS_TO_FETCH_MIN = 1;
         public static final int ATTEMPS_BEFORE_TIMEOUT = 10;
         public static final int CONSENT_DURATION_IN_DAYS = 90;
+        public static final int MONTHS_TO_FETCH = 25;
     }
 
     public static final class LogMessages {
