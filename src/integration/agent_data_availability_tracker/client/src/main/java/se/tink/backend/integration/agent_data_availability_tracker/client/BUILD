@@ -15,6 +15,7 @@ java_library(
         "//src/libraries/account:enums",
         "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
+        "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:io_netty_netty_all",
         "//third_party:netty",
         "//third_party:org_slf4j_slf4j_api",
