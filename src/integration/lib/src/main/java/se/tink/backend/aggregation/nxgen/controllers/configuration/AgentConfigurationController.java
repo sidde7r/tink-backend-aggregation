@@ -126,13 +126,13 @@ public final class AgentConfigurationController {
 
         if (!allSecrets.containsKey(REDIRECT_URLS_KEY)) {
             // We end up here when the secrets do not contain redirectUrls key.
-            log.error(
+            log.info(
                     "Could not find redirectUrls in secrets for financialInstitutionId: "
                             + financialInstitutionId
                             + " and appId: "
                             + appId);
 
-            return false;
+            return true;
         }
 
         Type listType = new TypeToken<List<String>>() {}.getType();
