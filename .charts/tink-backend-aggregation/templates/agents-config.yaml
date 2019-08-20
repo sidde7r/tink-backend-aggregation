@@ -1,5 +1,5 @@
 {{- $agentsConfig := .Values.agents | default dict }}
-  {{- $tppSecretsServiceConfig := .Values.tppSecretsServiceConfiguration | default dict }}
+{{- $tppSecretsServiceConfig := .Values.tppSecretsServiceConfiguration | default dict }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
