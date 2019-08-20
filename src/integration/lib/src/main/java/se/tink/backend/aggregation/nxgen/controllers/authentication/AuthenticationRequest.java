@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Collections;
 import java.util.List;
 import se.tink.backend.agents.rpc.Credentials;
 
@@ -12,6 +13,10 @@ public final class AuthenticationRequest implements Credentialsable {
     public AuthenticationRequest(final List<String> userInputs, final Credentials credentials) {
         this.userInputs = ImmutableList.copyOf(userInputs);
         this.credentials = credentials;
+    }
+
+    public static AuthenticationRequest createEmpty() {
+        return new AuthenticationRequest(Collections.emptyList(), null);
     }
 
     @Override

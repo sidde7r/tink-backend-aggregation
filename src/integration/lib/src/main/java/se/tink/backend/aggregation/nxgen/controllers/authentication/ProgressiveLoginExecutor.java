@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Field;
@@ -35,7 +34,8 @@ public final class ProgressiveLoginExecutor {
         if (payload.getThirdPartyAppPayload().isPresent()) {
             supplementalInformationController.openThirdPartyApp(
                     payload.getThirdPartyAppPayload().get());
-            return SteppableAuthenticationRequest.subsequentRequest(step, Collections.emptyList());
+            return SteppableAuthenticationRequest.subsequentRequest(
+                    step, AuthenticationRequest.createEmpty());
         }
 
         final List<Field> fields = payload.getFields();
@@ -44,6 +44,6 @@ public final class ProgressiveLoginExecutor {
                         fields.toArray(new Field[fields.size()]));
 
         return SteppableAuthenticationRequest.subsequentRequest(
-                step, new ArrayList<>(map.values()));
+                step, new AuthenticationRequest(new ArrayList<>(map.values()), null));
     }
 }

@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
-import com.google.common.collect.ImmutableList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.assertj.core.util.Preconditions;
@@ -12,23 +9,23 @@ import org.assertj.core.util.Preconditions;
  */
 public final class SteppableAuthenticationRequest implements AuthenticationSteppable {
     private final Class<? extends AuthenticationStep> step;
-    private final ImmutableList<String> userInputs;
+    private final AuthenticationRequest payload;
 
     private SteppableAuthenticationRequest(
-            final Class<? extends AuthenticationStep> step,
-            @Nonnull final List<String> userInputs) {
+            final Class<? extends AuthenticationStep> step, final AuthenticationRequest payload) {
         this.step = step;
-        this.userInputs = ImmutableList.copyOf(userInputs);
+        this.payload = payload;
     }
 
     public static SteppableAuthenticationRequest initialRequest() {
-        return new SteppableAuthenticationRequest(null, Collections.emptyList());
+        return new SteppableAuthenticationRequest(null, AuthenticationRequest.createEmpty());
     }
 
     public static SteppableAuthenticationRequest subsequentRequest(
             @Nonnull final Class<? extends AuthenticationStep> klass,
-            @Nonnull final List<String> userInputs) {
-        return new SteppableAuthenticationRequest(Preconditions.checkNotNull(klass), userInputs);
+            @Nonnull final AuthenticationRequest payload) {
+        return new SteppableAuthenticationRequest(
+                Preconditions.checkNotNull(klass), Preconditions.checkNotNull(payload));
     }
 
     @Override
@@ -36,7 +33,7 @@ public final class SteppableAuthenticationRequest implements AuthenticationStepp
         return Optional.ofNullable(step);
     }
 
-    public ImmutableList<String> getUserInputs() {
-        return userInputs;
+    public AuthenticationRequest getPayload() {
+        return payload;
     }
 }
