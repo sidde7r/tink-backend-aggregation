@@ -48,6 +48,7 @@ public class StarlingAgent extends NextGenerationAgent
 
     private ClientConfigurationEntity aisConfiguration;
     private ClientConfigurationEntity pisConfiguration;
+    private String redirectUrl;
     private String signingKeyUid;
     private PrivateKey signingKey;
 
@@ -81,6 +82,7 @@ public class StarlingAgent extends NextGenerationAgent
 
         aisConfiguration = starlingConfiguration.getAisConfiguration();
         pisConfiguration = starlingConfiguration.getPisConfiguration();
+        redirectUrl = starlingConfiguration.getRedirectUrl();
 
         /*
         TODO: enable these when starting to work on PIS
@@ -97,7 +99,7 @@ public class StarlingAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new StarlingAuthenticator(apiClient, aisConfiguration),
+                        new StarlingAuthenticator(apiClient, aisConfiguration, redirectUrl),
                         credentials,
                         strongAuthenticationState);
 
@@ -164,6 +166,7 @@ public class StarlingAgent extends NextGenerationAgent
                         new StarlingTransferExecutor(
                                 apiClient,
                                 pisConfiguration,
+                                redirectUrl,
                                 signingKeyUid,
                                 signingKey,
                                 credentials,

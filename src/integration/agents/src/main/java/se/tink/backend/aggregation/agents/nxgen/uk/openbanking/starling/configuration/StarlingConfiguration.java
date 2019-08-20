@@ -17,6 +17,13 @@ public class StarlingConfiguration implements ClientConfiguration {
     @JsonProperty private ClientConfigurationEntity pisConfiguration;
     @JsonProperty private String keyUid;
     @JsonProperty private String signingKey;
+    @JsonProperty private String redirectUrl;
+
+    public String getRedirectUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl), "Starling redirectUrl could not load.");
+        return redirectUrl;
+    }
 
     public ClientConfigurationEntity getAisConfiguration() {
 

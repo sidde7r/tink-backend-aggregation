@@ -90,13 +90,13 @@ public final class SbabApiClient {
 
     public URL buildAuthorizeUrl(String state) {
         final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUri();
+        final String redirectUrl = getConfiguration().getRedirectUrl();
 
         final PendingAuthCodeRequest request =
                 new PendingAuthCodeRequest()
                         .withClientId(clientId)
                         .withResponseType(AuthResponseTypeEntity.PENDING_CODE)
-                        .withRedirectUri(redirectUri)
+                        .withRedirectUrl(redirectUrl)
                         .withScope(AuthScopeEntity.ACCOUNT_LOAN_READ)
                         .withState(state)
                         .withAuthMethod(AuthMethodEntity.MOBILE_BANKID)
@@ -112,14 +112,14 @@ public final class SbabApiClient {
     }
 
     public AccessTokenResponse getAccessToken(String pendingCode) {
-        final String redirectUri = getConfiguration().getRedirectUri();
+        final String redirectUrl = getConfiguration().getRedirectUrl();
         final String uri = Uris.GET_ACCESS_TOKEN();
 
         final AccessTokenRequest accessTokenRequest =
                 new AccessTokenRequest()
                         .withGrantType(AuthGrantTypeEntity.PENDING_AUTHORIZATION_CODE)
                         .withPendingCode(pendingCode)
-                        .withRedirectUri(redirectUri);
+                        .withRedirectUrl(redirectUrl);
 
         return createRequest(uri).body(accessTokenRequest).post(AccessTokenResponse.class);
     }

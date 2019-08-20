@@ -169,11 +169,10 @@ agentsServiceConfiguration:
         aisConfiguration:
           clientId: "dummyId"
           clientSecret: "dummySecret"
-          redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         pisConfiguration:
           clientId: "dummyId"
           clientSecret: "dummySecret"
-          redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         keyUid: "dummyUid"
         signingKey: "signingKeyInBase64"
     volksbank:
@@ -181,14 +180,14 @@ agentsServiceConfiguration:
         aisConfiguration:
           clientId: "dummyId"
           clientSecret: "dummyClient"
-          redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
           certificateId: "Tink"
+        redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
       tink-sandbox:
         aisConfiguration:
           clientId: "dummyId"
           clientSecret: "dummyClient"
-          redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
           certificateId: "Tink"
+        redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
     bunq:
       tink:
         clientId: ""

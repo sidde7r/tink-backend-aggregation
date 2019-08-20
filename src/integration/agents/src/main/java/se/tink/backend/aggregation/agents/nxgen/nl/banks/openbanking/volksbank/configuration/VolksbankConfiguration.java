@@ -8,7 +8,12 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class VolksbankConfiguration implements ClientConfiguration {
 
+    @JsonProperty private String redirectUrl;
     @JsonProperty private AISClientConfigurationEntity aisConfiguration;
+
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
 
     public AISClientConfigurationEntity getAisConfiguration() {
         return aisConfiguration;

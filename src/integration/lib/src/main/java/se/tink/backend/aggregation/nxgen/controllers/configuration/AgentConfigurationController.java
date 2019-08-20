@@ -4,8 +4,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -25,6 +29,7 @@ public final class AgentConfigurationController {
     private final boolean tppSecretsServiceEnabled;
     private final String financialInstitutionId;
     private final String appId;
+    private final String redirectUrl;
     private Map<String, String> allSecrets;
     // For fallback
     private boolean fallback = false;
@@ -35,7 +40,8 @@ public final class AgentConfigurationController {
             TppSecretsServiceConfiguration tppSecretsServiceConfiguration,
             IntegrationsConfiguration integrationsConfiguration,
             String financialInstitutionId,
-            String appId) {
+            String appId,
+            String redirectUrl) {
         Preconditions.checkNotNull(
                 tppSecretsServiceConfiguration, "tppSecretsServiceConfiguration not found.");
         Preconditions.checkNotNull(
@@ -57,6 +63,7 @@ public final class AgentConfigurationController {
         this.integrationsConfiguration = integrationsConfiguration;
         this.financialInstitutionId = financialInstitutionId;
         this.appId = appId;
+        this.redirectUrl = redirectUrl;
     }
 
     public AgentConfigurationController withFallback(String integrationName, String clientName) {
@@ -102,7 +109,71 @@ public final class AgentConfigurationController {
                 }
                 return false;
             }
+            return initRedirectUrl();
         }
+        return true;
+    }
+
+    private boolean initRedirectUrl() {
+        if (allSecrets == null) {
+            log.error(
+                    "allSecrets is null, make sure you fetched the secrets before you called initRedirectUrl.");
+            return false;
+        }
+
+        final String REDIRECT_URLS_KEY = "redirectUrls";
+        final String CHOSEN_REDIRECT_URL_KEY = "redirectUrl";
+
+        if (!allSecrets.containsKey(REDIRECT_URLS_KEY)) {
+            // We end up here when the secrets do not contain redirectUrls key.
+            log.error(
+                    "Could not find redirectUrls in secrets for financialInstitutionId: "
+                            + financialInstitutionId
+                            + " and appId: "
+                            + appId);
+
+            return false;
+        }
+
+        Type listType = new TypeToken<List<String>>() {}.getType();
+        List<String> redirectUrls =
+                new Gson().fromJson(allSecrets.get(REDIRECT_URLS_KEY), listType);
+
+        if (redirectUrls.isEmpty()) {
+            // We end up here when the secrets do contain redirectUrls key but it is an empty list.
+            log.info(
+                    "Empty redirectUrls list in secrets for financialInstitutionId: "
+                            + financialInstitutionId
+                            + " and appId: "
+                            + appId);
+
+            return true;
+        }
+
+        if (Strings.isNullOrEmpty(redirectUrl)) {
+            // No redirectUrl provided in the CredentialsRequest, pick the first one from
+            // the registered list.
+            allSecrets.put(CHOSEN_REDIRECT_URL_KEY, redirectUrls.get(0));
+        } else if (!redirectUrls.contains(redirectUrl)) {
+            // The redirectUrl provided in the CredentialsRequest is not among those
+            // registered.
+            log.error(
+                    "Requested redirectUrl : "
+                            + redirectUrl
+                            + " is not registered for financialInstitutionId: "
+                            + financialInstitutionId
+                            + " and appId: "
+                            + appId);
+            return false;
+        } else {
+            // The redirectUrl provided in the CredentialsRequest is among those registered.
+            allSecrets.put(CHOSEN_REDIRECT_URL_KEY, redirectUrl);
+        }
+
+        // To avoid agents accessing the list of registered redirectUrls via their configuration
+        // classes. Declaring a member 'redirectUrls' for example.
+        allSecrets.remove(REDIRECT_URLS_KEY);
+
         return true;
     }
 
@@ -150,7 +221,16 @@ public final class AgentConfigurationController {
 
     private <T extends ClientConfiguration> T getAgentConfigurationFallback(
             String integrationName, String clientName, Class<T> clientConfigClass) {
-        log.info("Falling back to k8s, try to use secrets service instead.");
+        log.warn(
+                "Falling back to k8s for for financialInstitutionId: "
+                        + financialInstitutionId
+                        + " and appId: "
+                        + appId
+                        + ". Reading configuration using integrationName: "
+                        + integrationName
+                        + " and clientName: "
+                        + clientName
+                        + ". Try to use secrets service instead.");
 
         return integrationsConfiguration
                 .getClientConfiguration(integrationName, clientName, clientConfigClass)

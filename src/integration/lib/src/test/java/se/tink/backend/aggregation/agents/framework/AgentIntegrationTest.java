@@ -77,6 +77,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private final AisValidator validator;
     private final NewAgentTestContext context;
     private final SupplementalInformationController supplementalInformationController;
+    private final String redirectUrl;
     private Credentials credential;
     // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
@@ -95,6 +96,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.expectLoggedIn = builder.isExpectLoggedIn();
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
+        this.redirectUrl = builder.getRedirectUrl();
 
         this.context =
                 new NewAgentTestContext(
@@ -131,13 +133,18 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     private RefreshInformationRequest createRefreshInformationRequest() {
-        return new RefreshInformationRequest(
-                user,
-                provider,
-                credential,
-                requestFlagManual,
-                requestFlagCreate,
-                requestFlagUpdate);
+        RefreshInformationRequest refreshInformationRequest =
+                new RefreshInformationRequest(
+                        user,
+                        provider,
+                        credential,
+                        requestFlagManual,
+                        requestFlagCreate,
+                        requestFlagUpdate);
+
+        refreshInformationRequest.setCallbackUri(redirectUrl);
+
+        return refreshInformationRequest;
     }
 
     private Agent createAgent(CredentialsRequest credentialsRequest) {
@@ -150,7 +157,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             configuration.getTppSecretsServiceConfiguration(),
                             configuration.getIntegrations(),
                             provider.getFinancialInstitutionId(),
-                            context.getAppId());
+                            context.getAppId(),
+                            credentialsRequest.getCallbackUri());
             if (!agentConfigurationController.init()) {
                 throw new IllegalStateException(
                         "Error when initializing AgentConfigurationController.");
@@ -634,6 +642,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private AisValidator validator;
 
         private String appId = "tink";
+        private String redirectUrl;
 
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
@@ -825,6 +834,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         /** Inject a custom validator of AIS data. */
         public Builder setValidator(final AisValidator validator) {
             this.validator = validator;
+            return this;
+        }
+
+        public String getRedirectUrl() {
+            return redirectUrl;
+        }
+
+        public Builder setRedirectUrl(String redirectUrl) {
+            this.redirectUrl = redirectUrl;
             return this;
         }
 

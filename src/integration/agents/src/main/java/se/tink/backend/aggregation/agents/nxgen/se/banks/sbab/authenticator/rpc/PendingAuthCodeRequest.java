@@ -16,8 +16,8 @@ public class PendingAuthCodeRequest extends StringKeyStringValueIgnoreCaseMultiv
         return this;
     }
 
-    public PendingAuthCodeRequest withRedirectUri(String redirectUri) {
-        this.putSingle("redirect_uri", redirectUri);
+    public PendingAuthCodeRequest withRedirectUrl(String redirectUrl) {
+        this.putSingle("redirect_uri", redirectUrl);
         return this;
     }
 

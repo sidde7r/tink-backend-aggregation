@@ -147,9 +147,9 @@ public class TppSecretsServiceClient {
 
     private void addHomeDevelopmentLocalKeyManager(SslContextBuilder sslContextBuilder) {
         File localClientCertFile =
-                new File(System.getProperty("user.home"), "/.eidas/local-cluster/tls.crt");
+                new File(System.getProperty("user.home"), "/.eidas/local-cluster/ss/tls.crt");
         File localClientKeyFile =
-                new File(System.getProperty("user.home"), "/.eidas/local-cluster/tls.key");
+                new File(System.getProperty("user.home"), "/.eidas/local-cluster/ss/tls.key");
         if (!localClientCertFile.exists() || !localClientKeyFile.exists()) {
             throw getLocalClusterTlsMaFilesNotAvailableException();
         }
@@ -218,7 +218,8 @@ public class TppSecretsServiceClient {
 
             case DEVELOPMENT_LOCAL:
                 File localCaCertFile =
-                        new File(System.getProperty("user.home"), "/.eidas/local-cluster/ca.crt");
+                        new File(
+                                System.getProperty("user.home"), "/.eidas/local-cluster/ss/ca.crt");
                 if (!localCaCertFile.exists()) {
                     throw getLocalClusterTlsMaFilesNotAvailableException();
                 }
@@ -234,7 +235,7 @@ public class TppSecretsServiceClient {
         return new IllegalStateException(
                 "When running a local cluster, store the server and client certificates under "
                         + System.getProperty("user.home")
-                        + "/.eidas/local-cluster/ with the following names: ca.crt, tls.key, tls.crt");
+                        + "/.eidas/local-cluster/ss/ with the following names: ca.crt, tls.key, tls.crt");
     }
 
     public void shutdown() {

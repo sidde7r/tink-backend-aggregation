@@ -169,13 +169,12 @@ data:
             aisConfiguration:
               clientId: "STARLING_AIS_CLIENT_ID"
               clientSecret: "STARLING_AIS_CLIENT_SECRET"
-              redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
             pisConfiguration:
               clientId: "STARLING_PIS_CLIENT_ID"
               clientSecret: "STARLING_PIS_CLIENT_SECRET"
-              redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
             keyUid: "STARLING_SIGNING_KEY_UID"
             signingKey: "STARLING_SIGNING_KEY"
+            redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
         {{- end }}
 
         {{- if $agentsConfig.volksbank }}
@@ -184,20 +183,20 @@ data:
             aisConfiguration:
               clientId: "VOLKSBANK_AIS_CLIENT_ID_TINK_TAG"
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_TINK_TAG"
-              redirectUrl: "{{ $agentsConfig.volksbank.tink.redirectUrl }}"
               certificateId: "Tink"
+            redirectUrl: "{{ $agentsConfig.volksbank.tink.redirectUrl }}"
           abn-staging:
             aisConfiguration:
               clientId: "VOLKSBANK_AIS_CLIENT_ID_ABN_TAG"
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_ABN_TAG"
-              redirectUrl: "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
               certificateId: "abnamro2"
+            redirectUrl: "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
           abn:
             aisConfiguration:
               clientId: "VOLKSBANK_AIS_CLIENT_ID_ABN_TAG"
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_ABN_TAG"
-              redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
               certificateId: "abnamro2"
+            redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
         {{- end }}
 
         {{- if $agentsConfig.bec }}
