@@ -7,25 +7,31 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
 public class ThirdPartyAppAuthenticationProgressiveController<T>
         implements ProgressiveTypedAuthenticator {
 
     private final OAuth2AuthenticationProgressiveController authenticator;
     private final int maxPollAttempts;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            OAuth2AuthenticationProgressiveController authenticator) {
-        this(authenticator, DEFAULT_MAX_ATTEMPTS);
+            OAuth2AuthenticationProgressiveController authenticator,
+            SupplementalInformationHelper supplementalInformationHelper) {
+        this(authenticator, DEFAULT_MAX_ATTEMPTS, supplementalInformationHelper);
     }
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            OAuth2AuthenticationProgressiveController authenticator, int maxPollAttempts) {
+            OAuth2AuthenticationProgressiveController authenticator,
+            int maxPollAttempts,
+            SupplementalInformationHelper supplementalInformationHelper) {
         Preconditions.checkArgument(maxPollAttempts > 0);
         this.authenticator = authenticator;
         this.maxPollAttempts = maxPollAttempts;
+        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
@@ -38,6 +44,6 @@ public class ThirdPartyAppAuthenticationProgressiveController<T>
             final Credentials credentials) {
         return Arrays.asList(
                 new OpenThirdPartyAppStep<>(authenticator),
-                new RedirectStep<>(authenticator, maxPollAttempts));
+                new RedirectStep<>(authenticator, maxPollAttempts, supplementalInformationHelper));
     }
 }

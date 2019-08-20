@@ -5,7 +5,6 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -25,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -41,7 +39,6 @@ public class OAuth2AuthenticationProgressiveController
     private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
 
     private final PersistentStorage persistentStorage;
-    private final SupplementalInformationHelper supplementalInformationHelper;
     private final OAuth2Authenticator authenticator;
     private final Credentials credentials;
     private final int tokenLifetime;
@@ -56,13 +53,11 @@ public class OAuth2AuthenticationProgressiveController
 
     public OAuth2AuthenticationProgressiveController(
             PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState) {
         this(
                 persistentStorage,
-                supplementalInformationHelper,
                 authenticator,
                 credentials,
                 strongAuthenticationState,
@@ -72,14 +67,12 @@ public class OAuth2AuthenticationProgressiveController
 
     public OAuth2AuthenticationProgressiveController(
             PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
-        this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
@@ -144,19 +137,18 @@ public class OAuth2AuthenticationProgressiveController
         return null;
     }
 
-    @Override
-    public ThirdPartyAppResponse<String> collect(String reference)
-            throws AuthenticationException, AuthorizationException {
+    public final String getStrongAuthenticationStateSupplementalKey() {
+        return strongAuthenticationStateSupplementalKey;
+    }
 
-        Map<String, String> callbackData =
-                supplementalInformationHelper
-                        .waitForSupplementalInformation(
-                                strongAuthenticationStateSupplementalKey,
-                                WAIT_FOR_MINUTES,
-                                TimeUnit.MINUTES)
-                        .orElseThrow(
-                                LoginError.INCORRECT_CREDENTIALS
-                                        ::exception); // todo: change this exception
+    public final long getWaitForMinutes() {
+        return WAIT_FOR_MINUTES;
+    }
+
+    @Override
+    public ThirdPartyAppResponse<String> collect(
+            String reference, final Map<String, String> callbackData)
+            throws AuthenticationException, AuthorizationException {
 
         handleErrors(callbackData);
 

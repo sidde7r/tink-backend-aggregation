@@ -2,16 +2,19 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.LocalizableKey;
 
 final class RedirectStep<T> implements AuthenticationStep {
@@ -20,12 +23,15 @@ final class RedirectStep<T> implements AuthenticationStep {
 
     private final OAuth2AuthenticationProgressiveController authenticator;
     private final int maxPollAttempts;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     RedirectStep(
             final OAuth2AuthenticationProgressiveController authenticator,
-            final int maxPollAttempts) {
+            final int maxPollAttempts,
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.authenticator = authenticator;
         this.maxPollAttempts = maxPollAttempts;
+        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
@@ -39,7 +45,17 @@ final class RedirectStep<T> implements AuthenticationStep {
         boolean finished = false;
 
         for (int i = 0; i < maxPollAttempts && !finished; i++) {
-            response = authenticator.collect(response.getReference());
+            final Map<String, String> callbackData =
+                    supplementalInformationHelper
+                            .waitForSupplementalInformation(
+                                    authenticator.getStrongAuthenticationStateSupplementalKey(),
+                                    authenticator.getWaitForMinutes(),
+                                    TimeUnit.MINUTES)
+                            .orElseThrow(
+                                    LoginError.INCORRECT_CREDENTIALS
+                                            ::exception); // todo: change this exception
+
+            response = authenticator.collect(response.getReference(), callbackData);
             if (handleStatus(response.getStatus())) {
                 finished = true;
             } else {
