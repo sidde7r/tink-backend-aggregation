@@ -57,7 +57,15 @@ public class SupplementalInformationHelper {
                 Field.Key.SIGN_CODE_DESCRIPTION, Field.Key.SIGN_CODE_INPUT, challenge);
     }
 
-    public String waitForSignForBeneficiaryChallengeResponse(
+    public String waitForSignForBeneficiaryChallengeResponse(final String challenge)
+            throws SupplementalInfoException {
+        return waitForChallengeResponse(
+                Field.Key.SIGN_FOR_BENEFICIARY_DESCRIPTION,
+                Field.Key.SIGN_FOR_BENEFICIARY_INPUT,
+                challenge);
+    }
+
+    public String waitForTwoStepSignForBeneficiaryChallengeResponse(
             final String challenge, final String extraChallenge) throws SupplementalInfoException {
         return waitForChallengeResponseExtra(
                 Field.Key.SIGN_FOR_BENEFICIARY_DESCRIPTION,
@@ -67,7 +75,15 @@ public class SupplementalInformationHelper {
                 extraChallenge);
     }
 
-    public String waitForSignForTransferChallengeResponse(
+    public String waitForSignForTransferChallengeResponse(final String challenge)
+            throws SupplementalInfoException {
+        return waitForChallengeResponse(
+                Field.Key.SIGN_FOR_TRANSFER_DESCRIPTION,
+                Field.Key.SIGN_FOR_TRANSFER_INPUT,
+                challenge);
+    }
+
+    public String waitForTwoStepSignForTransferChallengeResponse(
             final String challenge, final String extraChallenge) throws SupplementalInfoException {
         return waitForChallengeResponseExtra(
                 Field.Key.SIGN_FOR_TRANSFER_DESCRIPTION,

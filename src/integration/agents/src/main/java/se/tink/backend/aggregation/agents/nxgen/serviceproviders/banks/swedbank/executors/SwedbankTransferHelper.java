@@ -8,7 +8,6 @@ import java.util.function.Function;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
@@ -275,14 +274,14 @@ public class SwedbankTransferHelper {
         } else {
             InitiateSecurityTokenSignTransferResponse initiateSecurityTokenSignTransferResponse =
                     apiClient.signExternalTransferSecurityToken(signLink);
-            return collectToken(initiateSecurityTokenSignTransferResponse);
+            return collectTokenNewBeneficiary(initiateSecurityTokenSignTransferResponse);
         }
     }
 
-    private Optional<LinksEntity> collectToken(
+    private Optional<LinksEntity> collectTokenNewBeneficiary(
             InitiateSecurityTokenSignTransferResponse initiateSecurityTokenSignTransferResponse) {
         Optional<String> supplementalAnswer =
-                requestSecurityTokenSignTransferChallengeSupplemental(
+                requestSecurityTokenSignBeneficiaryChallengeSupplemental(
                         initiateSecurityTokenSignTransferResponse.getChallenge());
         if (!supplementalAnswer.isPresent()) {
             return Optional.empty();
@@ -298,23 +297,23 @@ public class SwedbankTransferHelper {
         }
     }
 
-    private Field getChallengeField(String challenge) {
-        return Field.builder()
-                .description(challenge)
-                .name(SwedbankBaseConstants.DeviceAuthentication.CHALLENGE)
-                .pattern(".+")
-                .helpText(
-                        catalog.getString(
-                                "Please enter this code into your token generator "
-                                        + "and write the generated response code here."))
-                .build();
+    public Optional<String> requestSecurityTokenSignBeneficiaryChallengeSupplemental(
+            String challenge) {
+        try {
+            return Optional.ofNullable(
+                    supplementalInformationHelper.waitForSignForBeneficiaryChallengeResponse(
+                            challenge));
+        } catch (SupplementalInfoException e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<String> requestSecurityTokenSignTransferChallengeSupplemental(
             String challenge) {
         try {
             return Optional.ofNullable(
-                    supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge));
+                    supplementalInformationHelper.waitForSignForTransferChallengeResponse(
+                            challenge));
         } catch (SupplementalInfoException e) {
             return Optional.empty();
         }
