@@ -35,7 +35,20 @@ final class RedirectStep<T> implements AuthenticationStep {
 
         handleStatus(response.getStatus());
 
-        poll(response);
+        boolean finished = false;
+
+        for (int i = 0; i < maxPollAttempts && !finished; i++) {
+            response = authenticator.collect(response.getReference());
+            if (handleStatus(response.getStatus())) {
+                finished = true;
+            } else {
+                Uninterruptibles.sleepUninterruptibly(SLEEP_SECONDS, TimeUnit.SECONDS);
+            }
+        }
+        if (!finished) {
+            // Treat poll exhaustion as a timeout.
+            throw decorateException(ThirdPartyAppStatus.TIMED_OUT, ThirdPartyAppError.TIMED_OUT);
+        }
 
         return new AuthenticationResponse(Collections.emptyList());
     }
@@ -67,21 +80,5 @@ final class RedirectStep<T> implements AuthenticationStep {
         Optional<LocalizableKey> authenticatorMessage =
                 authenticator.getUserErrorMessageFor(status);
         return error.exception(authenticatorMessage.orElse(error.userMessage()));
-    }
-
-    private void poll(ThirdPartyAppResponse<T> response)
-            throws AuthenticationException, AuthorizationException {
-
-        for (int i = 0; i < maxPollAttempts; i++) {
-            response = authenticator.collect(response.getReference());
-            if (handleStatus(response.getStatus())) {
-                return;
-            }
-
-            Uninterruptibles.sleepUninterruptibly(SLEEP_SECONDS, TimeUnit.SECONDS);
-        }
-
-        // Treat poll exhaustion as a timeout.
-        throw decorateException(ThirdPartyAppStatus.TIMED_OUT, ThirdPartyAppError.TIMED_OUT);
     }
 }
