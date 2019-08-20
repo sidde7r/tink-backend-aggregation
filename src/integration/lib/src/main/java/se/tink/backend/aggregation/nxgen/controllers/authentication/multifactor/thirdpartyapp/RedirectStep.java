@@ -35,8 +35,6 @@ final class RedirectStep<T> implements AuthenticationStep {
         ThirdPartyAppResponse<String> response =
                 ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
 
-        handleStatus(response.getStatus());
-
         final Map<String, String> callbackData =
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
@@ -50,11 +48,6 @@ final class RedirectStep<T> implements AuthenticationStep {
         response = authenticator.collect(response.getReference(), callbackData);
 
         return new AuthenticationResponse(Collections.emptyList());
-    }
-
-    private boolean handleStatus(ThirdPartyAppStatus status)
-            throws AuthenticationException, AuthorizationException {
-        return false;
     }
 
     private ThirdPartyAppException decorateException(
