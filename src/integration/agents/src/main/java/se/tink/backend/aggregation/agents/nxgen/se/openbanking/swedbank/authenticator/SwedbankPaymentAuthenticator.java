@@ -32,18 +32,7 @@ public class SwedbankPaymentAuthenticator {
     }
 
     private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-
-        Android androidPayload = new Android();
-        androidPayload.setIntent(authorizeUrl.get());
-
-        Ios iOsPayload = new Ios();
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-
-        payload.setAndroid(androidPayload);
-        payload.setIos(iOsPayload);
-        return payload;
+        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     public void openThirdPartyApp(URL authorizeUrl) {

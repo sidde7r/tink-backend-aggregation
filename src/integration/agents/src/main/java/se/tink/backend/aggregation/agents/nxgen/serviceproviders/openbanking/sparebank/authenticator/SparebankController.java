@@ -76,20 +76,10 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        final ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-        final Android androidPayload = new Android();
-        payload.setAndroid(androidPayload);
-
         final URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
-        androidPayload.setIntent(authorizeUrl.get());
 
-        final Ios iOsPayload = new Ios();
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        payload.setIos(iOsPayload);
-
-        return payload;
+        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override

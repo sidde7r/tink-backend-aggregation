@@ -54,15 +54,7 @@ public class DnbAuthenticatorController
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         final URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
-        final ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-        final Android androidPayload = new Android();
-        androidPayload.setIntent(authorizeUrl.get());
-        payload.setAndroid(androidPayload);
-        final Ios iOsPayload = new Ios();
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        payload.setIos(iOsPayload);
-        return payload;
+       return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override

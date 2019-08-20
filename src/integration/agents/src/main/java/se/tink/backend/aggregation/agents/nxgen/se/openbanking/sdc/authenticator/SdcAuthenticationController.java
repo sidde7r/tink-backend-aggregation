@@ -71,18 +71,7 @@ public class SdcAuthenticationController
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         URL authorizeUrl = authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-
-        Android androidPayload = new Android();
-        androidPayload.setIntent(authorizeUrl.get());
-
-        Ios iOsPayload = new Ios();
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-
-        payload.setAndroid(androidPayload);
-        payload.setIos(iOsPayload);
-        return payload;
+        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override
