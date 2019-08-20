@@ -2266,7 +2266,7 @@
             "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
-            "displayDescription": "Token generator",
+            "displayDescription": "Security token",
             "displayName": "Swedbank",
             "fields": [
                 {
@@ -2283,8 +2283,8 @@
             ],
             "supplementalFields": [
                 {
-                    "description": "Challenge",
-                    "helpText": "Start your token generator by pressing triangle.\nEnter your pin code.\nPress '1'.\nEnter the eight digits displayed on the token generator.",
+                    "description": "One time code",
+                    "helpText": "Start your Security token by using the arrow button.\nEnter PIN code.\nSelect number 1 when 'APPLI' appears.\nEnter the code from the Security token.",
                     "hint": "NNNNNNNN",
                     "masked": true,
                     "maxLength": 8,
@@ -2304,14 +2304,14 @@
                 },
                 {
                     "description": "Challenge",
-                    "helpText": "Press triangle.\nPress '2'.\nEnter the challenge.\nEnter the eight digits displayed on the token generator.",
+                    "helpText": "Press the arrow button.\nSelect number '2'.\nEnter the challenge in your Security token.\nEnter the code from the Security token.",
                     "immutable": true,
                     "masked": false,
                     "name": "signcodedescription"
                 },
                 {
                     "description": "Response Code",
-                    "helpText": "Enter your 8 digit response code from your card reader.",
+                    "helpText": "Enter the code from the Security token",
                     "immutable": true,
                     "masked": false,
                     "name": "signcodeinput",
@@ -2322,7 +2322,7 @@
             "market": "SE",
             "multiFactor": true,
             "name": "swedbank-token",
-            "passwordHelpText": "You need access to your token generator to create a screen code.",
+            "passwordHelpText": "You need access to your Security token to create a screen code.",
             "payload": "swedbank",
             "popular": true,
             "refreshFrequency": 1,
@@ -2340,7 +2340,7 @@
             "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
-            "displayDescription": "Token generator",
+            "displayDescription": "Security token",
             "displayName": "Sparbankerna",
             "fields": [
                 {
@@ -2357,8 +2357,8 @@
             ],
             "supplementalFields": [
                 {
-                    "description": "Challenge",
-                    "helpText": "Start your token generator by pressing triangle.\nEnter your pin code.\nPress '1'.\nEnter the eight digits displayed on the token generator.",
+                    "description": "One time code",
+                    "helpText": "Start your Security token by using the arrow button.\nEnter PIN code.\nSelect number 1 when 'APPLI' appears.\nEnter the code from the Security token.",
                     "hint": "NNNNNNNN",
                     "masked": true,
                     "maxLength": 8,
@@ -2378,14 +2378,14 @@
                 },
                 {
                     "description": "Challenge",
-                    "helpText": "Press triangle.\nPress '2'.\nEnter the challenge.\nEnter the eight digits displayed on the token generator.",
+                    "helpText": "Press the arrow button.\nSelect number '2'.\nEnter the challenge in your Security token.\nEnter the code from the Security token.",
                     "immutable": true,
                     "masked": false,
                     "name": "signcodedescription"
                 },
                 {
                     "description": "Response Code",
-                    "helpText": "Enter your 8 digit response code from your card reader.",
+                    "helpText": "Enter the code from the Security token",
                     "immutable": true,
                     "masked": false,
                     "name": "signcodeinput",
@@ -2396,7 +2396,7 @@
             "market": "SE",
             "multiFactor": true,
             "name": "savingsbank-token",
-            "passwordHelpText": "You need access to your token generator to create a screen code.",
+            "passwordHelpText": "You need access to your Security token to create a screen code.",
             "payload": "savingsbank",
             "popular": true,
             "refreshFrequency": 1,
