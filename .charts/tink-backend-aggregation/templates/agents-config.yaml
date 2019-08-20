@@ -105,7 +105,7 @@ data:
         icabanken:
           tink:
             clientId: "{{ $agentsConfig.icabanken.tink.clientId }}"
-            redirectUri: "{{ $agentsConfig.icabanken.tink.redirectUri }}"
+            redirectUrl: "{{ $agentsConfig.icabanken.tink.redirectUrl }}"
             certificateId: "{{ $agentsConfig.icabanken.tink.certificateId }}"
         {{- end }}
 
@@ -205,7 +205,7 @@ data:
             eidasQwac: "{{ $agentsConfig.bec.tink.eidasQwac }}"
             qSealc: "BEC_QSEALC"
             keyId: "BEC_KEY_ID"
-            tppRedirectUrl: "{{ $agentsConfig.bec.tink.tppRedirectUrl }}"
+            redirectUrl: "{{ $agentsConfig.bec.tink.redirectUrl }}"
         {{- end }}
 
         {{- if $agentsConfig.fints }}
