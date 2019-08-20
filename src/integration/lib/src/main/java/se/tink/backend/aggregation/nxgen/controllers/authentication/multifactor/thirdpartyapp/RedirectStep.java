@@ -45,7 +45,7 @@ final class RedirectStep<T> implements AuthenticationStep {
                                 LoginError.INCORRECT_CREDENTIALS
                                         ::exception); // todo: change this exception
 
-        response = authenticator.collect(response.getReference(), callbackData);
+        response = authenticator.collect(null, callbackData);
 
         return new AuthenticationResponse(Collections.emptyList());
     }
