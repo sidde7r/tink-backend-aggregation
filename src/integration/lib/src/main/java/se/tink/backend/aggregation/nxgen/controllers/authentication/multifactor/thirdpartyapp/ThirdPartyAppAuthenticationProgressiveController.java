@@ -6,22 +6,23 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 
 public class ThirdPartyAppAuthenticationProgressiveController<T>
         implements ProgressiveTypedAuthenticator {
 
-    private final ThirdPartyAppProgressiveAuthenticator<T> authenticator;
+    private final OAuth2AuthenticationProgressiveController authenticator;
     private final int maxPollAttempts;
 
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            ThirdPartyAppProgressiveAuthenticator<T> authenticator) {
+            OAuth2AuthenticationProgressiveController authenticator) {
         this(authenticator, DEFAULT_MAX_ATTEMPTS);
     }
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            ThirdPartyAppProgressiveAuthenticator<T> authenticator, int maxPollAttempts) {
+            OAuth2AuthenticationProgressiveController authenticator, int maxPollAttempts) {
         Preconditions.checkArgument(maxPollAttempts > 0);
         this.authenticator = authenticator;
         this.maxPollAttempts = maxPollAttempts;

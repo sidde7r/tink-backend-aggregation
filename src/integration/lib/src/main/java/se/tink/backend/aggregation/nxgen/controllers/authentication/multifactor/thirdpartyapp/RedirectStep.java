@@ -11,17 +11,18 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 import se.tink.libraries.i18n.LocalizableKey;
 
 final class RedirectStep<T> implements AuthenticationStep {
 
     private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);
 
-    private final ThirdPartyAppProgressiveAuthenticator<T> authenticator;
+    private final OAuth2AuthenticationProgressiveController authenticator;
     private final int maxPollAttempts;
 
     RedirectStep(
-            final ThirdPartyAppProgressiveAuthenticator<T> authenticator,
+            final OAuth2AuthenticationProgressiveController authenticator,
             final int maxPollAttempts) {
         this.authenticator = authenticator;
         this.maxPollAttempts = maxPollAttempts;
@@ -31,7 +32,7 @@ final class RedirectStep<T> implements AuthenticationStep {
     public AuthenticationResponse respond(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        ThirdPartyAppResponse<T> response = authenticator.init();
+        ThirdPartyAppResponse<String> response = authenticator.init();
 
         handleStatus(response.getStatus());
 
