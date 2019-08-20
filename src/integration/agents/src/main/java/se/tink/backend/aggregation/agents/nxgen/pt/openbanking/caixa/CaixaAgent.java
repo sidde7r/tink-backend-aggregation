@@ -30,7 +30,8 @@ public class CaixaAgent extends SibsBaseAgent {
     protected Authenticator constructAuthenticator() {
         final SibsDecoupledAuthenticationController controller =
                 new SibsDecoupledAuthenticationController(
-                        new SibsAuthenticator(apiClient), supplementalInformationHelper);
+                        new SibsAuthenticator(apiClient, credentials),
+                        supplementalInformationHelper);
         return new AutoAuthenticationController(request, systemUpdater, controller, controller);
     }
 

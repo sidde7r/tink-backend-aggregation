@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutionException;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsPSUDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsPaymentType;
@@ -36,7 +36,7 @@ public class SibsDecoupledSignPaymentStrategy extends AbstractSibsSignPaymentStr
 
         SibsPaymentUpdateRequest request = new SibsPaymentUpdateRequest();
         request.setPsuData(new SibsPSUDataEntity());
-        request.getPsuData().setPassword(credentials.getField(CredentialKeys.PSU_ID));
+        request.getPsuData().setPassword(credentials.getField(SibsConstants.Storage.PSU_ID));
 
         String psuUpdateUrl =
                 paymentMultiStepRequest.getStorage().get(Storage.PAYMENT_REDIRECT_URI);
