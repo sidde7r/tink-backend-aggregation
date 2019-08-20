@@ -33,6 +33,10 @@ public class SupplementalInformationHelper {
         return field;
     }
 
+    public String waitForLoginInput() throws SupplementalInfoException {
+        return waitForSupplementalInput(Field.Key.LOGIN_INPUT);
+    }
+
     public String waitForAddBeneficiaryInput() throws SupplementalInfoException {
         return waitForSupplementalInput(Field.Key.ADD_BENEFICIARY_INPUT);
     }

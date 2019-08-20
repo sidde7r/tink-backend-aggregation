@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors;
 
+import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -225,32 +225,15 @@ public class SwedbankTransferHelper {
 
     private Optional<String> requestRecipientNameSupplemental() {
         // If we're adding the recipient, we need to ask the user to name it.
-
-        Field nameField = getNameField();
         try {
-            Map<String, String> answers =
-                    supplementalInformationHelper.askSupplementalInformation(nameField);
-            Optional<String> name = Optional.ofNullable(answers.get("name"));
-            if (!name.isPresent()) {
-                log.warn("Did not get recipient name from {}", answers.keySet());
+            String beneficiary = supplementalInformationHelper.waitForAddBeneficiaryInput();
+            if (Strings.isNullOrEmpty(beneficiary)) {
+                return Optional.empty();
             }
-            return name;
-        } catch (SupplementalInfoException e) {
-            log.warn("Could not get recipient name", e);
+            return Optional.of(beneficiary);
+        } catch (SupplementalInfoException sie) {
             return Optional.empty();
         }
-    }
-
-    private Field getNameField() {
-        return Field.builder()
-                .description(catalog.getString("Recipient name"))
-                .name("name")
-                .pattern(".+")
-                .helpText(
-                        catalog.getString(
-                                "Because this is the first time you transfer money to this"
-                                        + " account, you'll need to register a name for it."))
-                .build();
     }
 
     private Optional<PaymentBaseinfoResponse> getConfirmResponse(LinkEntity linkEntity) {
@@ -330,19 +313,9 @@ public class SwedbankTransferHelper {
     public Optional<String> requestSecurityTokenSignTransferChallengeSupplemental(
             String challenge) {
         try {
-            Map<String, String> answers =
-                    supplementalInformationHelper.askSupplementalInformation(
-                            getChallengeField(challenge));
-            Optional<String> userChallenge =
-                    Optional.ofNullable(
-                            answers.get(SwedbankBaseConstants.DeviceAuthentication.CHALLENGE));
-            if (!userChallenge.isPresent()) {
-                log.warn("Did not get user challenge");
-                return Optional.empty();
-            }
-            return userChallenge;
+            return Optional.ofNullable(
+                    supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge));
         } catch (SupplementalInfoException e) {
-            log.warn("Could not get user challenge");
             return Optional.empty();
         }
     }

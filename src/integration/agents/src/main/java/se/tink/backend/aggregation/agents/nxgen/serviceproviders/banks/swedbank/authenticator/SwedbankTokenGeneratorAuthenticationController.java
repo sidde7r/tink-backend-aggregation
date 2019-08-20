@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator;
 
 import com.google.common.base.Strings;
-import java.util.Map;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -15,20 +13,20 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.SecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.Catalog;
 
 public class SwedbankTokenGeneratorAuthenticationController implements MultiFactorAuthenticator {
     private final SwedbankDefaultApiClient apiClient;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final Catalog catalog;
 
     public SwedbankTokenGeneratorAuthenticationController(
             SwedbankDefaultApiClient apiClient,
-            SupplementalInformationController supplementalInformationController,
+            SupplementalInformationHelper supplementalInformationHelper,
             Catalog catalog) {
         this.apiClient = apiClient;
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
         this.catalog = catalog;
     }
 
@@ -48,20 +46,16 @@ public class SwedbankTokenGeneratorAuthenticationController implements MultiFact
         InitSecurityTokenChallengeResponse initSecurityTokenChallengeResponse =
                 initTokenGenerator(ssn);
 
-        Map<String, String> supplementalInformation =
-                supplementalInformationController.askSupplementalInformation(responseField());
-
-        Optional<String> challenge =
-                Optional.ofNullable(
-                        supplementalInformation.get(
-                                SwedbankBaseConstants.DeviceAuthentication.CHALLENGE));
-        if (!challenge.isPresent()) {
+        String challenge = supplementalInformationHelper.waitForLoginInput();
+        if (Strings.isNullOrEmpty(challenge)
+                || challenge.length() != 8
+                || !challenge.matches("[0-9]+")) {
             throw SupplementalInfoError.NO_VALID_CODE.exception();
         }
 
         SecurityTokenChallengeResponse securityTokenChallengeResponse =
                 apiClient.sendLoginChallenge(
-                        initSecurityTokenChallengeResponse.getLinks(), challenge.get());
+                        initSecurityTokenChallengeResponse.getLinks(), challenge);
         apiClient.completeAuthentication(
                 securityTokenChallengeResponse.getLinks().getNextOrThrow());
     }
