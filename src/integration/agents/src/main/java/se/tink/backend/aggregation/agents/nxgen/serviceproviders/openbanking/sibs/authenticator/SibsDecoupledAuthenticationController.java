@@ -52,7 +52,8 @@ public class SibsDecoupledAuthenticationController
         initializeDecoupledConsent(credentials);
         supplementalInformationHelper.openThirdPartyApp(getAppPayload());
         try {
-            ConsentStatus consentStatus = consentStatusRetryer.call(authenticator::getConsentStatus);
+            ConsentStatus consentStatus =
+                    consentStatusRetryer.call(authenticator::getConsentStatus);
             authenticator.setSessionExpiryDateIfAccepted(consentStatus);
         } catch (ExecutionException | RetryException e) {
             logger.warn("Authorization failed, consents status is not accepted.", e);
