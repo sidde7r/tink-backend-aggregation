@@ -67,7 +67,7 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
                         .withExecutionDate(paymentRequest.getPayment().getExecutionDate())
                         .withCreationDateTime(LocalDateTime.now())
                         .withRedirectUrl(
-                                new URL(configuration.getRedirectUri())
+                                new URL(configuration.getRedirectUrl())
                                         .queryParam(
                                                 QueryKeys.STATE,
                                                 strongAuthenticationState.getState()))
