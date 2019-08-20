@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,6 @@ import se.tink.backend.aggregation.agents.abnamro.client.model.RejectedContractE
 import se.tink.libraries.account.enums.AccountTypes;
 import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.credentials.rpc.Credentials;
-import se.tink.libraries.strings.StringUtils;
 
 public class AbnAmroUtils {
 

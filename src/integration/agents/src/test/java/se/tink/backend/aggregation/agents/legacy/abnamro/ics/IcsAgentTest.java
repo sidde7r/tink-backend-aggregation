@@ -5,7 +5,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroIcsCredentials;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
-import se.tink.libraries.strings.StringUtils;
 
 public class IcsAgentTest extends AbstractAgentTest<IcsAgent> {
 
@@ -22,7 +21,7 @@ public class IcsAgentTest extends AbstractAgentTest<IcsAgent> {
 
         AbnAmroIcsCredentials credentials =
                 AbnAmroIcsCredentials.create(
-                        StringUtils.generateUUID(), "64317013", ImmutableSet.of(4818618001336577L));
+                        UUIDUtils.generateUUID(), "64317013", ImmutableSet.of(4818618001336577L));
 
         testAgent(CoreCredentialsMapper.toAggregationCredentials(credentials.getCredentials()));
     }

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer.validators;
 
 import com.google.common.base.Strings;
-import se.tink.libraries.strings.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class StructuredMessageValidator {
 

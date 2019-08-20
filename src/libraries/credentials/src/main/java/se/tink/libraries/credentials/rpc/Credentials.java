@@ -16,7 +16,7 @@ import se.tink.libraries.credentials.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.field.rpc.Field;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.uuid.UUIDUtils;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -54,7 +54,7 @@ public class Credentials implements Cloneable {
 
     private void generateIdIfMissing() {
         if (id == null) {
-            id = StringUtils.generateUUID();
+            id = UUIDUtils.generateUUID();
         }
     }
 

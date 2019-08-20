@@ -46,7 +46,7 @@ java_library(
         "//src/libraries/credentials:enums",
         "//src/libraries/field:rpc",
         "//src/libraries/serialization",
-        "//src/libraries/strings",
+        "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_google_guava_guava",
@@ -59,10 +59,11 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api",
-        "//src/libraries/strings",
         "//src/libraries/user:rpc",
+        "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
+        "@tink_backend//src/libraries/strings",
     ],
 )

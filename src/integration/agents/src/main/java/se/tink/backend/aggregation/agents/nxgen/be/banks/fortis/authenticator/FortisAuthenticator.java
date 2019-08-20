@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator;
 
 import com.google.common.base.Strings;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -32,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.strings.StringUtils;
 
 public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
