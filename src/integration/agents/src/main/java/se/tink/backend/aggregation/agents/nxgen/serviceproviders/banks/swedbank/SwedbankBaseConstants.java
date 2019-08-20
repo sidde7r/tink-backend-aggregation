@@ -395,4 +395,9 @@ public class SwedbankBaseConstants {
         public static final String PAGINATION_ERROR = "PAGINATION_ERROR";
         public static final String PAGINATION_ERROR_MSG = "Error_paginating_transactions ";
     }
+
+    public static class Retry {
+        public static final int FIRST_ATTEMPT = 1;
+        public static final int MAX_RETRY_ATTEMPTS = 2;
+    }
 }

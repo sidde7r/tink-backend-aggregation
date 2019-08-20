@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants.Retry;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitBankIdResponse;
@@ -69,15 +70,11 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class SwedbankDefaultApiClient {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultApiClient.class);
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final DefaultAccountIdentifierFormatter
-            DEFAULT_ACCOUNT_IDENTIFIER_FORMATTER_FORMATTER =
-                    new DefaultAccountIdentifierFormatter();
     protected final TinkHttpClient client;
     private final SwedbankConfiguration configuration;
     private final String username;
@@ -109,8 +106,8 @@ public class SwedbankDefaultApiClient {
         return buildAbstractRequest(url).get(responseClass);
     }
 
-    private HttpResponse makeGetRequest(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, HttpResponse.class);
+    private HttpResponse makeGetRequest(LinkEntity linkEntity, boolean retry) {
+        return makeRequest(linkEntity, HttpResponse.class, retry);
     }
 
     private <T> T makePostRequest(URL url, Object requestObject, Class<T> responseClass) {
@@ -125,12 +122,25 @@ public class SwedbankDefaultApiClient {
         return buildAbstractRequest(url).delete(responseClass, requestObject);
     }
 
-    protected <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass) {
-        return makeRequest(linkEntity, null, responseClass);
+    protected <T> T makeRequest(LinkEntity linkEntity, Class<T> responseClass, boolean retry) {
+        return makeRequest(linkEntity, null, responseClass, retry, Retry.FIRST_ATTEMPT);
     }
 
-    private <T> T makeRequest(LinkEntity linkEntity, Object requestObject, Class<T> responseClass) {
-        return makeRequest(linkEntity, requestObject, responseClass, Collections.emptyMap());
+    private <T> T makeRequest(
+            LinkEntity linkEntity,
+            Object requestObject,
+            Class<T> responseClass,
+            boolean retry,
+            int attempt) {
+        try {
+            return makeRequest(linkEntity, requestObject, responseClass, Collections.emptyMap());
+        } catch (HttpResponseException hre) {
+            if (retry) {
+                return makeRequestWithRetry(hre, linkEntity, requestObject, responseClass, attempt);
+            } else {
+                throw hre;
+            }
+        }
     }
 
     private <T> T makeRequest(
@@ -184,6 +194,23 @@ public class SwedbankDefaultApiClient {
                 .cookie(new Cookie(SwedbankBaseConstants.Url.DSID_KEY, dsid));
     }
 
+    private <T> T makeRequestWithRetry(
+            HttpResponseException hre,
+            LinkEntity linkEntity,
+            Object requestObject,
+            Class<T> responseClass,
+            int attempt) {
+
+        if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+            if (attempt <= Retry.MAX_RETRY_ATTEMPTS) {
+                log.info("Retrying fetching {}", responseClass);
+                return makeRequest(linkEntity, requestObject, responseClass, true, ++attempt);
+            }
+        }
+
+        throw hre;
+    }
+
     public InitBankIdResponse initBankId(String ssn) {
         try {
             return makePostRequest(
@@ -201,11 +228,11 @@ public class SwedbankDefaultApiClient {
     }
 
     public CollectBankIdResponse collectBankId(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, CollectBankIdResponse.class);
+        return makeRequest(linkEntity, CollectBankIdResponse.class, false);
     }
 
     public PaymentBaseinfoResponse confirmSignNewRecipient(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, PaymentBaseinfoResponse.class);
+        return makeRequest(linkEntity, PaymentBaseinfoResponse.class, false);
     }
 
     // this is where we handle the profiles, fetch all and store store in session storage
@@ -215,7 +242,7 @@ public class SwedbankDefaultApiClient {
             throws AuthenticationException {
         ProfileResponse profileResponse;
         try {
-            profileResponse = makeRequest(linkEntity, ProfileResponse.class);
+            profileResponse = makeRequest(linkEntity, ProfileResponse.class, false);
         } catch (HttpResponseException hre) {
             if (SwedbankApiErrors.isUserNotACustomer(hre)) {
                 throw LoginError.NOT_CUSTOMER.exception();
@@ -247,7 +274,7 @@ public class SwedbankDefaultApiClient {
     }
 
     public EngagementTransactionsResponse engagementTransactions(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, EngagementTransactionsResponse.class);
+        return makeRequest(linkEntity, EngagementTransactionsResponse.class, true);
     }
 
     public LoanOverviewResponse loanOverview() {
@@ -260,19 +287,15 @@ public class SwedbankDefaultApiClient {
     }
 
     public String optionalRequest(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, String.class);
+        return makeRequest(linkEntity, String.class, true);
     }
 
     public LoanDetailsResponse loanDetails(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, LoanDetailsResponse.class);
+        return makeRequest(linkEntity, LoanDetailsResponse.class, true);
     }
 
     public DetailedCardAccountResponse cardAccountDetails(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, DetailedCardAccountResponse.class);
-    }
-
-    public String savingAccountDetails(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, String.class);
+        return makeRequest(linkEntity, DetailedCardAccountResponse.class, true);
     }
 
     public String portfolioHoldings() {
@@ -280,11 +303,11 @@ public class SwedbankDefaultApiClient {
     }
 
     public String detailedPortfolioInfo(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, String.class);
+        return makeRequest(linkEntity, String.class, true);
     }
 
     public FundMarketInfoResponse fundMarketInfo(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, FundMarketInfoResponse.class);
+        return makeRequest(linkEntity, FundMarketInfoResponse.class, true);
     }
 
     public FundMarketInfoResponse fundMarketInfo(String fundCode) {
@@ -305,7 +328,7 @@ public class SwedbankDefaultApiClient {
     }
 
     public EInvoiceDetailsResponse eInvoiceDetails(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, EInvoiceDetailsResponse.class);
+        return makeRequest(linkEntity, EInvoiceDetailsResponse.class, false);
     }
 
     public PaymentBaseinfoResponse paymentBaseinfo() {
@@ -414,11 +437,11 @@ public class SwedbankDefaultApiClient {
     }
 
     public RegisteredTransfersResponse registeredTransfers(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, RegisteredTransfersResponse.class);
+        return makeRequest(linkEntity, RegisteredTransfersResponse.class, false);
     }
 
     public ConfirmTransferResponse confirmTransfer(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, ConfirmTransferResponse.class);
+        return makeRequest(linkEntity, ConfirmTransferResponse.class, false);
     }
 
     public PaymentsConfirmedResponse paymentsConfirmed() {
@@ -428,11 +451,11 @@ public class SwedbankDefaultApiClient {
     }
 
     public HttpResponse deleteTransfer(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, HttpResponse.class);
+        return makeRequest(linkEntity, HttpResponse.class, false);
     }
 
     public PaymentDetailsResponse paymentDetails(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, PaymentDetailsResponse.class);
+        return makeRequest(linkEntity, PaymentDetailsResponse.class, false);
     }
 
     public RegisterTransferResponse updatePayment(
@@ -447,23 +470,27 @@ public class SwedbankDefaultApiClient {
                 linkEntity,
                 RegisterPaymentRequest.createPayment(
                         amount, message, referenceType, date, recipientId, fromAccountId),
-                RegisterTransferResponse.class);
+                RegisterTransferResponse.class,
+                false,
+                Retry.FIRST_ATTEMPT);
     }
 
     public InitiateSignTransferResponse signExternalTransferBankId(LinkEntity linkEntity) {
         return makeRequest(
                 linkEntity,
                 InitiateSignTransferRequest.create(),
-                InitiateSignTransferResponse.class);
+                InitiateSignTransferResponse.class,
+                false,
+                Retry.FIRST_ATTEMPT);
     }
 
     public InitiateSecurityTokenSignTransferResponse signExternalTransferSecurityToken(
             LinkEntity linkEntity) {
-        return makeRequest(linkEntity, InitiateSecurityTokenSignTransferResponse.class);
+        return makeRequest(linkEntity, InitiateSecurityTokenSignTransferResponse.class, false);
     }
 
     public String getQrCodeImageAsBase64EncodedString(final LinkEntity linkEntity) {
-        final HttpResponse response = makeGetRequest(linkEntity);
+        final HttpResponse response = makeGetRequest(linkEntity, false);
         try {
             byte[] bytes = IOUtils.toByteArray(response.getBodyInputStream());
             return Base64.encodeBase64String(bytes);
@@ -474,7 +501,7 @@ public class SwedbankDefaultApiClient {
     }
 
     public CollectBankIdSignResponse collectSignBankId(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, CollectBankIdSignResponse.class);
+        return makeRequest(linkEntity, CollectBankIdSignResponse.class, false);
     }
 
     public TouchResponse touch() {
@@ -632,7 +659,7 @@ public class SwedbankDefaultApiClient {
 
     private Map<String, MenuItemLinkEntity> fetchProfile(LinkEntity linkEntity) {
         SelectedProfileResponse selectedProfileResponse =
-                makeRequest(linkEntity, SelectedProfileResponse.class);
+                makeRequest(linkEntity, SelectedProfileResponse.class, false);
 
         Map<String, MenuItemLinkEntity> menuItemsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         menuItemsMap.putAll(
@@ -693,7 +720,9 @@ public class SwedbankDefaultApiClient {
             return makeRequest(
                     links.getNext(),
                     SecurityTokenChallengeRequest.createFromChallenge(challenge),
-                    SecurityTokenChallengeResponse.class);
+                    SecurityTokenChallengeResponse.class,
+                    false,
+                    Retry.FIRST_ATTEMPT);
         } catch (HttpResponseException hre) {
             SwedbankApiErrors.handleTokenErrors(hre);
             // unknown error: rethrow
@@ -713,7 +742,9 @@ public class SwedbankDefaultApiClient {
             return makeRequest(
                     linkEntity,
                     SecurityTokenChallengeRequest.createFromChallenge(challenge),
-                    RegisterTransferResponse.class);
+                    RegisterTransferResponse.class,
+                    false,
+                    Retry.FIRST_ATTEMPT);
         } catch (HttpResponseException hre) {
             SwedbankApiErrors.handleTokenErrors(hre);
             // unknown error: rethrow
@@ -734,7 +765,9 @@ public class SwedbankDefaultApiClient {
             return makeRequest(
                     linkEntity,
                     SecurityTokenChallengeRequest.createFromChallenge(challenge),
-                    RegisterTransferResponse.class);
+                    RegisterTransferResponse.class,
+                    false,
+                    Retry.FIRST_ATTEMPT);
         } catch (HttpResponseException hre) {
             SwedbankApiErrors.handleTokenErrors(hre);
             // unknown error: rethrow

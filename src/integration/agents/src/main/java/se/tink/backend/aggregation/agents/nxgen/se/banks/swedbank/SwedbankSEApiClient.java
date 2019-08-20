@@ -17,10 +17,6 @@ public class SwedbankSEApiClient extends SwedbankDefaultApiClient {
     }
 
     public DetailedLoanResponse loadDetailsEntity(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, DetailedLoanResponse.class);
-    }
-
-    public LinkEntity loadLinkEntity(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, LinkEntity.class);
+        return makeRequest(linkEntity, DetailedLoanResponse.class, true);
     }
 }
