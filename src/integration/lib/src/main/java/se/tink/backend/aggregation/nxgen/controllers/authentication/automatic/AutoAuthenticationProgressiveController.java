@@ -84,9 +84,7 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
             throws AuthenticationException, AuthorizationException {
         try {
             autoAuthenticator.autoAuthenticate();
-            return Collections.singletonList(
-                    request ->
-                            AuthenticationResponse.fromSupplementalFields(Collections.emptyList()));
+            return Collections.singletonList(request -> AuthenticationResponse.empty());
         } catch (SessionException autoException) {
             if (!request.isManual()) {
                 credentials.setType(manualAuthenticator.getType());

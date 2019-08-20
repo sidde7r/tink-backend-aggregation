@@ -53,10 +53,7 @@ public class AutoAuthenticationController
                 Preconditions.checkState(
                         !Objects.equals(request.getType(), CredentialsRequestType.CREATE));
                 auto(credentials);
-                return Collections.singletonList(
-                        request ->
-                                AuthenticationResponse.fromSupplementalFields(
-                                        Collections.emptyList()));
+                return Collections.singletonList(request -> AuthenticationResponse.empty());
             }
         } finally {
             // TODO auth: move it up layer

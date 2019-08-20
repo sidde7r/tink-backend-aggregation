@@ -19,6 +19,10 @@ public final class AuthenticationResponse {
 
     private AuthenticationResponse() {}
 
+    public static AuthenticationResponse empty() {
+        return new AuthenticationResponse();
+    }
+
     public static AuthenticationResponse fromSupplementalFields(@Nonnull List<Field> fields) {
         final AuthenticationResponse response = new AuthenticationResponse();
         response.fields = ImmutableList.copyOf(fields);

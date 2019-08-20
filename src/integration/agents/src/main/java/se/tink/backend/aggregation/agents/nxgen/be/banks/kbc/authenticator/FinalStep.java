@@ -59,6 +59,6 @@ final class FinalStep implements AuthenticationStep {
 
         kbcAuthenticator.login(device);
 
-        return AuthenticationResponse.fromSupplementalFields(Collections.emptyList());
+        return AuthenticationResponse.empty();
     }
 }

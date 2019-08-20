@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp;
 
-import java.util.Collections;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
@@ -22,6 +21,6 @@ final class PostRedirectStep implements AuthenticationStep {
 
         authenticator.collect(request.getCallbackData());
 
-        return AuthenticationResponse.fromSupplementalFields(Collections.emptyList());
+        return AuthenticationResponse.empty();
     }
 }

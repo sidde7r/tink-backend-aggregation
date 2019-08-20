@@ -45,9 +45,7 @@ public final class ProgressiveAuthAgentTest {
                     public SteppableAuthenticationResponse login(
                             final SteppableAuthenticationRequest request) {
 
-                        final AuthenticationResponse payload =
-                                AuthenticationResponse.fromSupplementalFields(
-                                        Collections.emptyList());
+                        final AuthenticationResponse payload = AuthenticationResponse.empty();
 
                         return SteppableAuthenticationResponse.finalResponse(payload);
                     }
@@ -74,7 +72,7 @@ public final class ProgressiveAuthAgentTest {
                 Assert.assertEquals(1, request.getUserInputs().size());
                 Assert.assertEquals("133700", request.getUserInputs().get(0));
 
-                return AuthenticationResponse.fromSupplementalFields(Collections.emptyList());
+                return AuthenticationResponse.empty();
             }
         }
 
