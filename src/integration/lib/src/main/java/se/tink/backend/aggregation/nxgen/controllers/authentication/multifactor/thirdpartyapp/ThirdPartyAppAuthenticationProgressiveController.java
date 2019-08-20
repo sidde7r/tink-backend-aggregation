@@ -6,19 +6,15 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
 public class ThirdPartyAppAuthenticationProgressiveController
         implements ProgressiveTypedAuthenticator {
 
     private final OAuth2AuthenticationProgressiveController authenticator;
-    private final SupplementalInformationHelper supplementalInformationHelper;
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            OAuth2AuthenticationProgressiveController authenticator,
-            SupplementalInformationHelper supplementalInformationHelper) {
+            OAuth2AuthenticationProgressiveController authenticator) {
         this.authenticator = authenticator;
-        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
