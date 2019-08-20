@@ -146,8 +146,7 @@ public class OAuth2AuthenticationProgressiveController
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(
-            String reference, final Map<String, String> callbackData)
+    public ThirdPartyAppResponse<String> collect(final Map<String, String> callbackData)
             throws AuthenticationException, AuthorizationException {
 
         handleErrors(callbackData);

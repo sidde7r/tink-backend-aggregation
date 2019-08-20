@@ -11,7 +11,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 public interface ThirdPartyAppProgressiveAuthenticator<T> extends ProgressiveAuthenticator {
     ThirdPartyAppResponse<T> init();
 
-    ThirdPartyAppResponse<T> collect(T reference, final Map<String, String> callbackData)
+    ThirdPartyAppResponse<T> collect(Map<String, String> callbackData)
             throws AuthenticationException, AuthorizationException;
 
     ThirdPartyAppAuthenticationPayload getAppPayload();
