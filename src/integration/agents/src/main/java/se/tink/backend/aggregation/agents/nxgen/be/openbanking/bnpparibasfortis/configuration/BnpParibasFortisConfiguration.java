@@ -11,7 +11,7 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
 
     private String clientId;
     private String clientSecret;
-    private String redirectUri;
+    private String redirectUrl;
     private String authBaseUrl;
     private String apiBaseUrl;
     private String organisationId;
@@ -37,14 +37,14 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
         return clientSecret;
     }
 
-    public String getRedirectUri() {
+    public String getRedirectUrl() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUri),
+                Strings.emptyToNull(redirectUrl),
                 String.format(
                         BnpParibasFortisConstants.ErrorMessages.INVALID_CONFIGURATION,
-                        "Redirect URI"));
+                        "Redirect URL"));
 
-        return redirectUri;
+        return redirectUrl;
     }
 
     public String getAuthBaseUrl() {

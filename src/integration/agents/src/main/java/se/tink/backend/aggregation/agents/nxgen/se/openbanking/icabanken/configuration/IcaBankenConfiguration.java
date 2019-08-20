@@ -12,7 +12,7 @@ public class IcaBankenConfiguration implements ClientConfiguration {
     @JsonProperty private String baseUrl;
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
-    @JsonProperty private String redirectUri;
+    @JsonProperty private String redirectUrl;
     @JsonProperty private String certificateId;
     @JsonProperty private String environment = "PRODUCTION";
 
@@ -24,8 +24,8 @@ public class IcaBankenConfiguration implements ClientConfiguration {
         return clientSecret;
     }
 
-    public String getRedirectUri() {
-        return redirectUri;
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 
     public String getCertificateId() {

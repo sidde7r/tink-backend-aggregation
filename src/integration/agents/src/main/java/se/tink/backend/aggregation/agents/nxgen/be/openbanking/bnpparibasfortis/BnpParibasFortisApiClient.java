@@ -74,7 +74,7 @@ public final class BnpParibasFortisApiClient {
     public URL getAuthorizeUrl(String state) {
         final String clientId = getConfiguration().getClientId();
 
-        final String redirectUri = getConfiguration().getRedirectUri();
+        final String redirectUri = getConfiguration().getRedirectUrl();
         final String authBaseUrl = getConfiguration().getAuthBaseUrl();
         final String oauthUrl = authBaseUrl + Urls.OAUTH;
 
@@ -93,7 +93,7 @@ public final class BnpParibasFortisApiClient {
         final String openbankStetVersion = getConfiguration().getOpenbankStetVersion();
         final String organizationId = getConfiguration().getOrganisationId();
 
-        final String redirectUri = getConfiguration().getRedirectUri();
+        final String redirectUri = getConfiguration().getRedirectUrl();
         final String authBaseUrl = getConfiguration().getAuthBaseUrl();
         final String tokenUrl = authBaseUrl + Urls.TOKEN;
 
@@ -127,7 +127,7 @@ public final class BnpParibasFortisApiClient {
         final String openbankStetVersion = getConfiguration().getOpenbankStetVersion();
         final String organizationId = getConfiguration().getOrganisationId();
 
-        final String redirectUri = getConfiguration().getRedirectUri();
+        final String redirectUri = getConfiguration().getRedirectUrl();
         final String authBaseUrl = getConfiguration().getAuthBaseUrl();
         final String tokenUrl = authBaseUrl + Urls.TOKEN;
 

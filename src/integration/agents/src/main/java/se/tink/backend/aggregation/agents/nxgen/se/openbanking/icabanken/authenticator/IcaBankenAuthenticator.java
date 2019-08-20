@@ -49,7 +49,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
                                 IcaBankenConstants.QueryValues.SCOPE)
                         .put(
                                 IcaBankenConstants.QueryKeys.REDIRECT_URI,
-                                icaBankenConfiguration.getRedirectUri())
+                                icaBankenConfiguration.getRedirectUrl())
                         .put(IcaBankenConstants.QueryKeys.STATE, state)
                         .put(
                                 IcaBankenConstants.QueryKeys.SSN,
@@ -66,7 +66,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
                         .setClientId(icaBankenConfiguration.getClientId())
                         .setCode(code)
                         .setGrantType(IcaBankenConstants.QueryValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(icaBankenConfiguration.getRedirectUri())
+                        .setRedirectUri(icaBankenConfiguration.getRedirectUrl())
                         .build();
 
         TokenResponse response = apiClient.exchangeAuthorizationCode(request);

@@ -77,7 +77,7 @@ public final class RaiffeisenApiClient {
 
     public URL getUrl(String state, GetConsentResponse getConsentResponse) {
         final String clientId = configuration.getClientId();
-        final String redirectUri = configuration.getRedirectUri();
+        final String redirectUri = configuration.getRedirectUrl();
 
         return createRequest(Urls.AUTHORIZE)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)

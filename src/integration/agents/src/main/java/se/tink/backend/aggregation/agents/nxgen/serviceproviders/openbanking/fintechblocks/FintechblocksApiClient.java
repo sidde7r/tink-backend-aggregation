@@ -84,7 +84,7 @@ public class FintechblocksApiClient {
         return new URL(configuration.getBaseUrl() + ApiService.AUTH)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
-                .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUri())
+                .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
                 .queryParam(QueryKeys.SCOPE, QueryValues.ACCOUNTS)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REQUEST, request);

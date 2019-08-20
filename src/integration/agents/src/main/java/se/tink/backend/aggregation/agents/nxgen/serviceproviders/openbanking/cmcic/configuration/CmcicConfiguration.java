@@ -27,7 +27,7 @@ public class CmcicConfiguration implements ClientConfiguration {
 
     public String getClientId() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
+                Strings.emptyToNull(clientId),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
