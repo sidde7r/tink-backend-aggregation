@@ -32,7 +32,8 @@ final class RedirectStep<T> implements AuthenticationStep {
     public AuthenticationResponse respond(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        ThirdPartyAppResponse<String> response = authenticator.init();
+        ThirdPartyAppResponse<String> response =
+                ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
 
         handleStatus(response.getStatus());
 
