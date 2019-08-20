@@ -42,8 +42,14 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
+        // Note: It's on purpose that this agent does not use the
+        // AgentConfigurationController to get the callbackUri/redirectUri.
+        // This is only for customers to test the callbackUri without
+        // having to configure it etc.
+        String callbackUri = request.getCallbackUri();
+
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging);
+                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri);
 
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(

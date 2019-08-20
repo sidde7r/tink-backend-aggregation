@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator;
 
+import com.google.common.base.Strings;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -14,17 +15,27 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
     private static final long THIRTY_DAYS_IN_SECONDS = 2592000;
 
     private final boolean redirectToOxfordStaging;
+    private final String preferredCallbackUri;
 
-    public RedirectOAuth2Authenticator(boolean redirectToOxfordStaging) {
+    public RedirectOAuth2Authenticator(
+            boolean redirectToOxfordStaging, String preferredCallbackUri) {
         this.redirectToOxfordStaging = redirectToOxfordStaging;
+        this.preferredCallbackUri = preferredCallbackUri;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        return new URL(REDIRECT_HOST)
-                .queryParam("staging", String.valueOf(redirectToOxfordStaging))
-                .queryParam("code", CODE)
-                .queryParam("state", state);
+        URL authorizationUrl =
+                new URL(REDIRECT_HOST).queryParam("code", CODE).queryParam("state", state);
+
+        if (!Strings.isNullOrEmpty(preferredCallbackUri)) {
+            authorizationUrl = authorizationUrl.queryParam("redirectUrl", preferredCallbackUri);
+        } else {
+            authorizationUrl =
+                    authorizationUrl.queryParam("staging", String.valueOf(redirectToOxfordStaging));
+        }
+
+        return authorizationUrl;
     }
 
     @Override
