@@ -169,6 +169,11 @@ public final class AgentConfigurationController {
             // The redirectUrl provided in the CredentialsRequest is among those registered.
             allSecrets.put(CHOSEN_REDIRECT_URL_KEY, redirectUrl);
         }
+
+        // To avoid agents accessing the list of registered redirectUrls via their configuration
+        // classes. Declaring a member 'redirectUrls' for example.
+        allSecrets.remove(REDIRECT_URLS_KEY);
+
         return true;
     }
 
