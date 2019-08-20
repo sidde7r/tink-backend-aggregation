@@ -8,15 +8,22 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configur
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.configuration.OpenBankingClientConfiguration;
+import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
-public class StarlingConfiguration extends OpenBankingClientConfiguration {
+public class StarlingConfiguration implements ClientConfiguration {
 
     @JsonProperty private ClientConfigurationEntity aisConfiguration;
     @JsonProperty private ClientConfigurationEntity pisConfiguration;
     @JsonProperty private String keyUid;
     @JsonProperty private String signingKey;
+    @JsonProperty private String redirectUrl;
+
+    public String getRedirectUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl), "Starling redirectUrl could not load.");
+        return redirectUrl;
+    }
 
     public ClientConfigurationEntity getAisConfiguration() {
 

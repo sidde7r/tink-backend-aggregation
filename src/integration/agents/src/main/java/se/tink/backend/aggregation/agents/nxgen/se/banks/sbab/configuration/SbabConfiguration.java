@@ -15,7 +15,7 @@ public class SbabConfiguration implements ClientConfiguration {
     private String basicAuthPassword;
     private String clientId;
     private String sandboxAccessToken;
-    private String redirectUri;
+    private String redirectUrl;
 
     public Environment getEnvironment() {
         Preconditions.checkNotNull(
@@ -59,11 +59,11 @@ public class SbabConfiguration implements ClientConfiguration {
         return clientId;
     }
 
-    public String getRedirectUri() {
+    public String getRedirectUrl() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUri),
+                Strings.emptyToNull(redirectUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
-        return redirectUri;
+        return redirectUrl;
     }
 }

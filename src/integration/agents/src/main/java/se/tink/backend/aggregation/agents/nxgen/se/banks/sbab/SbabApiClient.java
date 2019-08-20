@@ -90,7 +90,7 @@ public final class SbabApiClient {
 
     public URL buildAuthorizeUrl(String state) {
         final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUri();
+        final String redirectUri = getConfiguration().getRedirectUrl();
 
         final PendingAuthCodeRequest request =
                 new PendingAuthCodeRequest()
@@ -112,7 +112,7 @@ public final class SbabApiClient {
     }
 
     public AccessTokenResponse getAccessToken(String pendingCode) {
-        final String redirectUri = getConfiguration().getRedirectUri();
+        final String redirectUri = getConfiguration().getRedirectUrl();
         final String uri = Uris.GET_ACCESS_TOKEN();
 
         final AccessTokenRequest accessTokenRequest =
