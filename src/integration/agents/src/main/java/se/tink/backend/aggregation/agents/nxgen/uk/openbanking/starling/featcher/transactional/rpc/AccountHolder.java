@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.base.Strings;
 import java.util.Date;
 
-public abstract class AccountHolder {
+public class AccountHolder {
 
     private String firstName;
     private String lastName;
