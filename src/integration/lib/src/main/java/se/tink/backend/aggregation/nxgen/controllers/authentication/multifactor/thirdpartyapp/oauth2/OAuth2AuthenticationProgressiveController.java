@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -29,8 +28,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class OAuth2AuthenticationProgressiveController
-        implements AutoAuthenticator, ThirdPartyAppProgressiveAuthenticator<String> {
+public class OAuth2AuthenticationProgressiveController implements AutoAuthenticator {
 
     private static final Logger logger =
             LoggerFactory.getLogger(OAuth2AuthenticationProgressiveController.class);
@@ -118,12 +116,10 @@ public class OAuth2AuthenticationProgressiveController
         authenticator.useAccessToken(accessToken);
     }
 
-    @Override
     public ThirdPartyAppResponse<String> init() {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
-    @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         URL authorizeUrl = authenticator.buildAuthorizeUrl(strongAuthenticationState);
 
@@ -138,7 +134,6 @@ public class OAuth2AuthenticationProgressiveController
         return WAIT_FOR_MINUTES;
     }
 
-    @Override
     public ThirdPartyAppResponse<String> collect(final Map<String, String> callbackData)
             throws AuthenticationException, AuthorizationException {
 
@@ -172,7 +167,6 @@ public class OAuth2AuthenticationProgressiveController
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
-    @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
     }
