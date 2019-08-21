@@ -26,7 +26,6 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/creditcards/amex",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/opbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/bunq",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/abnamro",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/bunq",
