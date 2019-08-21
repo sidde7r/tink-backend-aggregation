@@ -7,6 +7,7 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import java.security.interfaces.RSAPrivateKey;
+import java.util.Arrays;
 import net.minidev.json.JSONObject;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -37,7 +38,7 @@ public class PS256 {
 
         } catch (JOSEException e) {
             throw new IllegalStateException(
-                    "Signing request with PS256 failed : " + e.getStackTrace());
+                    "Signing request with PS256 failed." + Arrays.toString(e.getStackTrace()));
         }
         return signed.serialize();
     }
