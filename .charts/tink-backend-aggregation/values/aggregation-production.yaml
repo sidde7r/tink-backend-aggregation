@@ -118,6 +118,7 @@ agents:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       eidasQwac: Tink
+      environment: production
   bec:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
