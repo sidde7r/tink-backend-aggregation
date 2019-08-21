@@ -837,6 +837,14 @@ data:
             certificateId: "{{ $agentsConfig.handelsbanken.tink.certificateId }}"
         {{- end }}
 
+        {{- if $agentsConfig.crosskey }}
+        crosskey:
+          tink:
+            clientId: "CROSSKEY_CLIENT_ID_TAG"
+            clientSecret: "CROSSKEY_CLIENT_SECRET_TAG"
+            redirectUrl: "{{ $agentsConfig.crosskey.tink.redirectUrl }}"
+        {{- end }}
+
       abnAmro:
 
       {{- if $agentsConfig.abnAmro }}
