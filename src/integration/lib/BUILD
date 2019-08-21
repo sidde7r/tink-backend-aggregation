@@ -65,6 +65,7 @@ java_library(
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "//third_party:com_github_detro_ghostdriver_phantomjsdriver",
         "//third_party:com_github_rholder_guava_retrying",
+        "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_code_gson_gson",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_extensions_guice_multibindings",
