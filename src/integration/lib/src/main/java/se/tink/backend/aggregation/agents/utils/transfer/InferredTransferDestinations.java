@@ -1,4 +1,4 @@
-package se.tink.libraries.transfer.auto;
+package se.tink.backend.aggregation.agents.utils.transfer;
 
 import java.util.ArrayList;
 import java.util.List;
