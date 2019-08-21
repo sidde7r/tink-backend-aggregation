@@ -37,7 +37,7 @@ public final class ProgressiveLoginExecutor {
                     payload.getThirdPartyAppPayload().get());
 
             return SteppableAuthenticationRequest.subsequentRequest(
-                    step, AuthenticationRequest.createEmpty());
+                    step, AuthenticationRequest.empty());
         }
 
         if (payload.getSupplementalWaitRequest().isPresent()) {

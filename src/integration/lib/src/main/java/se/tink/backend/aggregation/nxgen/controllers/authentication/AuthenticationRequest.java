@@ -15,7 +15,7 @@ public final class AuthenticationRequest implements Credentialsable {
 
     private AuthenticationRequest() {}
 
-    public static AuthenticationRequest createEmpty() {
+    public static AuthenticationRequest empty() {
         return new AuthenticationRequest();
     }
 

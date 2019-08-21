@@ -18,7 +18,7 @@ public final class SteppableAuthenticationRequest implements AuthenticationStepp
     }
 
     public static SteppableAuthenticationRequest initialRequest() {
-        return new SteppableAuthenticationRequest(null, AuthenticationRequest.createEmpty());
+        return new SteppableAuthenticationRequest(null, AuthenticationRequest.empty());
     }
 
     public static SteppableAuthenticationRequest subsequentRequest(
