@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import java.lang.reflect.Type;
@@ -136,8 +137,21 @@ public final class AgentConfigurationController {
         }
 
         Type listType = new TypeToken<List<String>>() {}.getType();
-        List<String> redirectUrls =
-                new Gson().fromJson(allSecrets.get(REDIRECT_URLS_KEY), listType);
+
+        final List<String> redirectUrls;
+        try {
+            redirectUrls = new Gson().fromJson(allSecrets.get(REDIRECT_URLS_KEY), listType);
+        } catch (JsonSyntaxException e) {
+            log.error(
+                    "Could not parse redirectUrls secret : "
+                            + allSecrets.get(REDIRECT_URLS_KEY)
+                            + " for financialInstitutionId: "
+                            + financialInstitutionId
+                            + " and appId: "
+                            + appId,
+                    e);
+            return false;
+        }
 
         if (redirectUrls.isEmpty()) {
             // We end up here when the secrets do contain redirectUrls key but it is an empty list.
