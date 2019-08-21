@@ -18,6 +18,9 @@ public abstract class BnpParibasFortisConstants {
         public static final String OAUTH = "/authorize";
         public static final String TOKEN = "/token";
         public static final String ACCOUNTS = "/v1/accounts";
+        public static final String PAYMENTS = "/v1/payment-requests";
+        public static final String GET_PAYMENT = PAYMENTS + "/%s";
+        public static final String AUTH_PAYMENT = "/payment-requests/{paymentId}/consent";
     }
 
     public static class StorageKeys {
@@ -35,7 +38,7 @@ public abstract class BnpParibasFortisConstants {
 
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
-        public static final String SCOPE = "aisp";
+        public static final String SCOPE = "aisp;pisp";
     }
 
     public static class HeaderKeys {
@@ -48,7 +51,7 @@ public abstract class BnpParibasFortisConstants {
 
     public static class FormValues {
         public static final String GRANT_TYPE = "authorization_code";
-        public static final String SCOPE = "aisp";
+        public static final String SCOPE = "aisp;pisp";
     }
 
     public static class Accounts {
@@ -63,5 +66,17 @@ public abstract class BnpParibasFortisConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String AMOUNT_EXTRACT_ERROR =
+                "Amount cannot be extracted from the response";
+    }
+
+    public static class IdTags {
+        public static final String PAYMENT_ID = "paymentId";
+    }
+
+    public static class PaymentRequestValues {
+        public static final String INITIATING_PARTY = "TINK";
+        public static final int NUMBER_OF_TRANSACTIONS = 1;
+        public static final String AUTHENTICATION_METHODS = "REDIRECT";
     }
 }
