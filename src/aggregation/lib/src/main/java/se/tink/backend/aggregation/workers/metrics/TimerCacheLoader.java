@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.workers.metrics;
 import com.google.common.cache.CacheLoader;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.timers.Timer;
 
 public class TimerCacheLoader extends CacheLoader<MetricId.MetricLabels, Timer> {
     private MetricRegistry metricRegistry;

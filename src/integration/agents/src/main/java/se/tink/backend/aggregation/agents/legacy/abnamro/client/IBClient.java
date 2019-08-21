@@ -40,10 +40,10 @@ import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroPro
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroProductsConfiguration;
 import se.tink.libraries.account.enums.AccountTypes;
 import se.tink.libraries.account.rpc.Account;
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.counters.Counter;
+import se.tink.libraries.metrics.types.timers.Timer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 /**

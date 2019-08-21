@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.workers.metrics;
 import com.google.common.base.Preconditions;
 import java.util.List;
 import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.timers.Timer;
 
 public class MetricAction {
     private final AgentWorkerCommandMetricState state;

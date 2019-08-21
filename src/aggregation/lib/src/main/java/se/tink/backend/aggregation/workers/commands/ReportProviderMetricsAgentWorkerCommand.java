@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.utils.MetricsUtils;
 
 public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand {
     private static final AggregationLogger log =
@@ -34,7 +33,7 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
 
         return new MetricId.MetricLabels()
                 .add("provider_type", provider.getType().name().toLowerCase())
-                .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
+                .add("provider", cleanMetricName(provider.getName()))
                 .add("operation", operationName);
     }
 
@@ -103,5 +102,9 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
         // Counts total executions finished. Useful when calculating relative errors from meters
         // above.
         state.getExecutionsMeters().get(providerMetricName).inc();
+    }
+
+    private static String cleanMetricName(String proposal) {
+        return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 }

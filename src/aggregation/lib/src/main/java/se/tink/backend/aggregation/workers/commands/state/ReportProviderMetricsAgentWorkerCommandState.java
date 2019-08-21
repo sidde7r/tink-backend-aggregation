@@ -5,10 +5,10 @@ import com.google.common.cache.LoadingCache;
 import javax.inject.Inject;
 import se.tink.backend.aggregation.workers.metrics.MeterCacheLoader;
 import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.counters.Counter;
+import se.tink.libraries.metrics.types.timers.Timer;
 
 public class ReportProviderMetricsAgentWorkerCommandState {
     private LoadingCache<MetricId.MetricLabels, Counter> authenticationErrorMeters;

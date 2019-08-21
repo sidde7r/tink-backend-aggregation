@@ -31,10 +31,9 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.utils.MetricsUtils;
+import se.tink.libraries.metrics.types.counters.Counter;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
@@ -96,7 +95,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                         .addAll(
                                 createClusterMetricsLabels(
                                         controllerWrapper.getHostConfiguration().getClusterId()))
-                        .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
+                        .add("provider", cleanMetricName(provider.getName()))
                         .add("market", provider.getMarket())
                         .add(
                                 "agent",

@@ -3,9 +3,9 @@ package se.tink.libraries.concurrency;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.types.counters.Counter;
 
 public class ListenableThreadPoolSubmitterBuilder<T extends Callable<?>> {
     private static final MetricId DEFAULT_METRIC_ID = MetricId.newId("thread_pool");

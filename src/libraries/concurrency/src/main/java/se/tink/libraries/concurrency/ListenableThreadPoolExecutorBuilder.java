@@ -4,9 +4,9 @@ import com.google.common.util.concurrent.FutureCallback;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import se.tink.libraries.concurrency.logger.exception.FutureUncaughtExceptionLogger;
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.types.counters.Counter;
 
 public final class ListenableThreadPoolExecutorBuilder<T extends Runnable> {
     private static final MetricId DEFAULT_METRIC_ID = MetricId.newId("thread_pool_executor");

@@ -5,7 +5,7 @@ import java.util.List;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.timers.Timer;
 
 public abstract class MetricAction {
     private final Credentials credentials;

@@ -4,7 +4,7 @@ import java.util.List;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.timers.Timer;
 
 // TODO: This class doesn't do anything useful, please remove.
 public class MetricCacheLoader {
