@@ -67,7 +67,7 @@ public class LoanDetails {
     }
 
     public ExactCurrencyAmount getExactAmortized() {
-        return Optional.ofNullable(amortized).map(ExactCurrencyAmount::of).orElse(null);
+        return amortized;
     }
 
     private Double calculateAmortizedValue(LoanAccount account) {
@@ -104,7 +104,7 @@ public class LoanDetails {
     }
 
     public ExactCurrencyAmount getExactMonthlyAmortization() {
-        return Optional.ofNullable(monthlyAmortization).map(ExactCurrencyAmount::of).orElse(null);
+        return monthlyAmortization;
     }
 
     private Double calculateMonthlyAmortizationValue(LoanAccount account) {
@@ -268,10 +268,7 @@ public class LoanDetails {
         }
 
         public ExactCurrencyAmount getExactAmortized() {
-            return Optional.ofNullable(amortized)
-                    .filter(a -> Objects.nonNull(a.getExactValue()))
-                    .map(ExactCurrencyAmount::of)
-                    .orElse(null);
+            return amortized;
         }
 
         @Deprecated
@@ -296,10 +293,7 @@ public class LoanDetails {
         }
 
         public ExactCurrencyAmount getExactMonthlyAmortization() {
-            return Optional.ofNullable(monthlyAmortization)
-                    .filter(m -> Objects.nonNull(m.getExactValue()))
-                    .map(ExactCurrencyAmount::of)
-                    .orElse(null);
+            return monthlyAmortization;
         }
 
         @Deprecated
@@ -324,10 +318,7 @@ public class LoanDetails {
         }
 
         public ExactCurrencyAmount getExactInitialBalance() {
-            return Optional.ofNullable(initialBalance)
-                    .filter(i -> Objects.nonNull(i.getExactValue()))
-                    .map(ExactCurrencyAmount::of)
-                    .orElse(null);
+            return initialBalance;
         }
 
         public Date getInitialDate() {

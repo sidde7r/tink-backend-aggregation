@@ -47,7 +47,7 @@ public class LoanAccount extends Account {
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, ExactCurrencyAmount balance) {
-        return builder(uniqueIdentifier).setExactBalance(ExactCurrencyAmount.of(balance));
+        return builder(uniqueIdentifier).setExactBalance(balance);
     }
 
     private static ExactCurrencyAmount ensureNegativeSign(ExactCurrencyAmount amount) {
@@ -70,9 +70,7 @@ public class LoanAccount extends Account {
 
     @Override
     public ExactCurrencyAmount getExactBalance() {
-        return Optional.ofNullable(super.getExactBalance())
-                .map(ExactCurrencyAmount::of)
-                .orElseThrow(NullPointerException::new);
+        return Optional.ofNullable(super.getExactBalance()).orElseThrow(NullPointerException::new);
     }
 
     public Double getInterestRate() {
