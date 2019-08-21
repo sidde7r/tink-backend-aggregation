@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 
-final class RedirectStep<T> implements AuthenticationStep {
+final class RedirectStep implements AuthenticationStep {
 
     private final OAuth2AuthenticationProgressiveController authenticator;
 
