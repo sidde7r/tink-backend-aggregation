@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.transactionalaccount.entities.AccountsEntity;
@@ -17,7 +18,9 @@ public class SpankkiTransactionalAccountFetcher implements AccountFetcher<Transa
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().getAccounts().stream()
-                .map(AccountsEntity::toTinkAccount)
+                .map(AccountsEntity::toTinkTransactionalAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }
