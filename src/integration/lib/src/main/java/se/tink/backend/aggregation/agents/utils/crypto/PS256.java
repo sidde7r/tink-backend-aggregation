@@ -36,7 +36,8 @@ public class PS256 {
             signed.sign(signer);
 
         } catch (JOSEException e) {
-            throw new IllegalStateException("Signing request with PS256 failed");
+            throw new IllegalStateException(
+                    "Signing request with PS256 failed : " + e.getStackTrace());
         }
         return signed.serialize();
     }
