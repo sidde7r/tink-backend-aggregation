@@ -113,11 +113,11 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
     private void migrate(AgentVersionMigration migration) {
         log.debug(String.format("Migrating request for %s", request.getProvider().getName()));
 
-        // Change the Request
-        migration.changeRequest(request);
-
         migration.setWrapper(controllerWrapper);
         migration.setClientIfo(clientInfo);
+
+        // Change the Request
+        migration.changeRequest(request);
 
         if (migration.shouldMigrateData(request)) {
             // Change any data in the database
