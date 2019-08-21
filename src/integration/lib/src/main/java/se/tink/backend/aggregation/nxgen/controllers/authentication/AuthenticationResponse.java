@@ -43,8 +43,8 @@ public final class AuthenticationResponse {
         return response;
     }
 
-    public ImmutableList<Field> getFields() {
-        return fields;
+    public Optional<ImmutableList<Field>> getFields() {
+        return Optional.ofNullable(fields);
     }
 
     public Optional<ThirdPartyAppAuthenticationPayload> getThirdPartyAppPayload() {

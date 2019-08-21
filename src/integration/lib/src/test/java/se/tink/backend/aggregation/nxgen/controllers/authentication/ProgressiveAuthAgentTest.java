@@ -57,7 +57,7 @@ public final class ProgressiveAuthAgentTest {
         final SteppableAuthenticationResponse response = agent.login(request);
 
         Assert.assertEquals(Optional.empty(), response.getStep());
-        Assert.assertEquals(null, response.getPayload().getFields());
+        Assert.assertFalse(response.getPayload().getFields().isPresent());
     }
 
     @Test
@@ -131,7 +131,8 @@ public final class ProgressiveAuthAgentTest {
 
         Assert.assertTrue(response1.getStep().isPresent());
         Assert.assertEquals(LoginStep.class, response1.getStep().get());
-        Assert.assertEquals(2, response1.getPayload().getFields().size());
+        Assert.assertTrue(response1.getPayload().getFields().isPresent());
+        Assert.assertEquals(2, response1.getPayload().getFields().get().size());
 
         // Response code given by the user and their card reader
         final List<String> responseCode = Collections.singletonList("133700");
@@ -144,6 +145,6 @@ public final class ProgressiveAuthAgentTest {
         final SteppableAuthenticationResponse response2 = agent.login(request2);
 
         Assert.assertEquals(Optional.empty(), response2.getStep());
-        Assert.assertEquals(null, response2.getPayload().getFields());
+        Assert.assertFalse(response2.getPayload().getFields().isPresent());
     }
 }

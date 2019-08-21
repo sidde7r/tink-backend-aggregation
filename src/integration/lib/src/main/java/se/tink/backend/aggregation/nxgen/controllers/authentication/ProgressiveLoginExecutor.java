@@ -57,12 +57,16 @@ public final class ProgressiveLoginExecutor {
                     step, AuthenticationRequest.fromCallbackData(callbackData));
         }
 
-        final List<Field> fields = payload.getFields();
-        final Map<String, String> map =
-                supplementalInformationController.askSupplementalInformation(
-                        fields.toArray(new Field[fields.size()]));
+        if (payload.getFields().isPresent()) {
+            final List<Field> fields = payload.getFields().get();
+            final Map<String, String> map =
+                    supplementalInformationController.askSupplementalInformation(
+                            fields.toArray(new Field[fields.size()]));
 
-        return SteppableAuthenticationRequest.subsequentRequest(
-                step, AuthenticationRequest.fromUserInputs(new ArrayList<>(map.values())));
+            return SteppableAuthenticationRequest.subsequentRequest(
+                    step, AuthenticationRequest.fromUserInputs(new ArrayList<>(map.values())));
+        }
+
+        throw new IllegalStateException("The authentication response payload contained nothing");
     }
 }
