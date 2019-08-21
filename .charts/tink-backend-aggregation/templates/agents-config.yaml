@@ -53,10 +53,13 @@ data:
         password: CREDITSAFE_PASSWORD
         logConsumerMonitoringTraffic: true
 
-      {{- if $agentsConfig.collectorSubscriptionKey }}
       aggregationWorker:
-        collectorSubscriptionKey: COLLECTOR_SUBSCRIPTION_KEY
-      {{- end }}
+        {{- if .Values.debugLogFrequencyPercent }}
+          debugLogFrequencyPercent: {{ .Values.debugLogFrequencyPercent }}
+        {{- end }}
+        {{- if $agentsConfig.collectorSubscriptionKey }}
+          collectorSubscriptionKey: COLLECTOR_SUBSCRIPTION_KEY
+        {{- end }}
 
       integrations:
         {{- if $agentsConfig.sbab }}
