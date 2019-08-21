@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki;
 
 import java.util.Arrays;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AgentBaseError;
@@ -11,7 +10,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.entities.StatusEntity;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class SpankkiConstants {
@@ -31,41 +33,21 @@ public class SpankkiConstants {
                         "You need to change your password at S-Pankki before you can login.");
     }
 
-    public enum AccountType {
-        HOUSE_SAVINGS_ACCOUNT("443", AccountTypes.SAVINGS),
-        SAVINGS_ACCOUNT("419", AccountTypes.SAVINGS),
-        INVESTMENT_ACCOUNT("427", AccountTypes.SAVINGS),
-        SPANKKI_ACCOUNT("418", AccountTypes.CHECKING),
-        SPANKKI_FUND("416", AccountTypes.SAVINGS),
-        CURRENT_ACCOUNT("415", AccountTypes.CHECKING),
-        UNKOWN("", AccountTypes.OTHER);
-
-        AccountType(String sPankkiAccountType, AccountTypes tinkType) {
-            this.sPankkiAccountType = sPankkiAccountType;
-            this.tinkType = tinkType;
-        }
-
-        private final String sPankkiAccountType;
-        private final AccountTypes tinkType;
-
-        public static AccountType toAccountType(String sAccountType) {
-            for (AccountType accountType : AccountType.values()) {
-                if (accountType.sPankkiAccountType.equalsIgnoreCase(sAccountType)) {
-                    return accountType;
-                }
-            }
-
-            return AccountType.UNKOWN;
-        }
-
-        public AccountTypes getTinkType() {
-            return tinkType;
-        }
-
-        public String getSPankkiAccountType() {
-            return sPankkiAccountType;
-        }
-    }
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "418",
+                            "415")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "443",
+                            "419",
+                            "427",
+                            "416")
+                    .build();
 
     public static class Request {
         public static final String CLIENT_INFO_PLATFORM_NAME = "iPhone9,3";
@@ -222,5 +204,9 @@ public class SpankkiConstants {
                 return tinkType;
             }
         }
+    }
+
+    public static class Regex {
+        public static final String WHITE_SPACE = "\\s+";
     }
 }

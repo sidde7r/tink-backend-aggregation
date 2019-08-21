@@ -32,7 +32,7 @@ public class SpankkiTransactionFetcher implements TransactionDatePaginator<Trans
 
         if (shouldIncludeReservations(toDate)) {
             ReservationsResponse reservationsResponse =
-                    apiClient.fetchReservations(account.getBankIdentifier());
+                    apiClient.fetchReservations(account.getApiIdentifier());
             if (reservationsResponse.getReservations() != null) {
                 transactions.addAll(
                         reservationsResponse.getReservations().stream()
