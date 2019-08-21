@@ -1,5 +1,6 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
+import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
@@ -8,8 +9,8 @@ import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.netty.handler.ssl.SslContext;
 import java.io.File;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import javax.net.ssl.SSLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -31,23 +32,36 @@ public class AgentDataAvailabilityTrackerClientImpl
             agentctServiceStub;
 
     private StreamObserver<TrackAccountRequest> requestStream;
-    private final NettyChannelBuilder channelBuilder;
+    private NettyChannelBuilder channelBuilder;
     private final AccountDeque accountDeque;
 
+    private boolean sendingData;
+
+    private final String host;
+    private final int port;
+
+    private final Random random;
+    private static final float TRACKING_FRACTION = 0.20f; // 20% of requests
+
+    @Inject
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
-    public AgentDataAvailabilityTrackerClientImpl(String host, int port) throws SSLException {
-        this(NettyChannelBuilder.forAddress(host, port));
+    public AgentDataAvailabilityTrackerClientImpl(
+            AgentDataAvailabilityTrackerConfiguration configuration) {
+        this(configuration.getHost(), configuration.getPort());
     }
 
-    /** Construct client for accessing RouteGuide server using the existing channel. */
-    public AgentDataAvailabilityTrackerClientImpl(NettyChannelBuilder channelBuilder)
-            throws SSLException {
-        this.channelBuilder = channelBuilder;
+    public AgentDataAvailabilityTrackerClientImpl(String host, int port) {
+        this.host = host;
+        this.port = port;
         this.accountDeque = new AccountDeque();
+        this.random = new Random();
     }
 
     @Override
     public void beginStream() {
+
+        log.debug("Opening connection");
+        channelBuilder = NettyChannelBuilder.forAddress(host, port);
 
         log.debug("Open Tracking Stream");
 
@@ -78,6 +92,12 @@ public class AgentDataAvailabilityTrackerClientImpl
             final String agent, final Account account, final AccountFeatures features) {
 
         try {
+
+            sendingData = sendingData();
+
+            if (!sendingData) {
+                return;
+            }
 
             AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
 
@@ -124,9 +144,13 @@ public class AgentDataAvailabilityTrackerClientImpl
         channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
     }
 
+    private boolean sendingData() {
+        return random.nextFloat() < TRACKING_FRACTION;
+    }
+
     @Override
-    public boolean isMockClient() {
-        return false;
+    public boolean sendingRealData() {
+        return this.sendingData;
     }
 
     @Override

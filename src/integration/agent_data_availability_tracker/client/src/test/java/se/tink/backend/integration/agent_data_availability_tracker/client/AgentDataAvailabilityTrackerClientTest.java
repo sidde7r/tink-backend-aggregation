@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import javax.net.ssl.SSLException;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -47,7 +46,7 @@ public class AgentDataAvailabilityTrackerClientTest {
         AgentDataAvailabilityTrackerClientImpl transmitter = null;
         try {
             transmitter = new AgentDataAvailabilityTrackerClientImpl("192.168.99.100", 30789);
-        } catch (SSLException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
 

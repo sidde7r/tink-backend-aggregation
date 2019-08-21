@@ -11,5 +11,5 @@ public interface AgentDataAvailabilityTrackerClient {
 
     void endStreamBlocking() throws InterruptedException;
 
-    boolean isMockClient();
+    boolean sendingRealData();
 }
