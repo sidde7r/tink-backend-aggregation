@@ -272,7 +272,7 @@ public class AgentWorkerOperationFactory {
 
         commands.add(
                 new CredentialsRefreshStartEventCommand(
-                        credentialsEventProducer, request.getCredentials(), null));
+                        credentialsEventProducer, request.getCredentials(), clientInfo.getAppId()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
