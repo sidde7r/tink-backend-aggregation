@@ -18,5 +18,6 @@ junit_test(
         "//src/libraries/account:enums",
         "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
+        "//third_party:io_dropwizard_dropwizard_lifecycle",
     ],
 )
