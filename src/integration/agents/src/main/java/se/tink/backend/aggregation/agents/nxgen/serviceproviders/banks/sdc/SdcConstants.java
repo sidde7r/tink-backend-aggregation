@@ -29,7 +29,8 @@ public class SdcConstants {
         PIN_OR_CODE_NOT_VALID("pin or code is not valid", false),
         PASSWORD_BLOCKED("the password is blocked", true),
         NO_AGREEMENT("you have no agreement", false),
-        DEVICE_REGISTRATION_NOT_ALLOWED("your bank doesn't allow device registration", false);
+        DEVICE_REGISTRATION_NOT_ALLOWED("your bank doesn't allow device registration", false),
+        CUSTOMER_KNOWLEDGE_QUESTIONNAIRE_PENDING("ks01052f", true);
 
         private final String message;
         private final boolean blocked;
