@@ -16,8 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.f
 import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
@@ -33,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @ProgressiveAuth
-public class VolksbankAgent extends NextGenerationAgent
+public class VolksbankAgent extends SubsequentGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
@@ -124,8 +123,8 @@ public class VolksbankAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Authenticator constructAuthenticator() {
-        throw new AssertionError(); // TODO Remove when the class is decoupled from NxgenAgent
+    public boolean login() throws Exception {
+        throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
     }
 
     @Override
