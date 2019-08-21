@@ -4,27 +4,22 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSObject;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.Payload;
-import com.nimbusds.jose.crypto.RSASSASigner;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minidev.json.JSONObject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.entities.AuthorizeRequestClaims;
+import se.tink.backend.aggregation.agents.utils.crypto.PS256;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.Params;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.OpenIdSignUtils;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 // This is an Authorize request JWT that is used by UK OpenBanking.
 public class AuthorizeRequest {
@@ -199,21 +194,14 @@ public class AuthorizeRequest {
                 String responseTypes,
                 AuthorizeRequestClaims authorizeRequestClaims) {
 
-            JSONObject object = new JSONObject();
-            object.put(Params.RESPONSE_TYPE, responseTypes);
-            object.put(Params.CLIENT_ID, clientId);
-            object.put(Params.REDIRECT_URI, redirectUri);
-            object.put(Params.SCOPE, scope);
-            object.put(Params.STATE, state);
-            object.put(Params.NONCE, nonce);
-            object.put(
-                    UkOpenBankingAisAuthenticatorConstants.Params.MAX_AGE,
-                    UkOpenBankingAisAuthenticatorConstants.MAX_AGE);
-            object.put(
-                    UkOpenBankingAisAuthenticatorConstants.Params.CLAIMS, authorizeRequestClaims);
-            object.put("iss", clientId);
-            object.put("exp", Instant.now().plusSeconds(3600).getEpochSecond());
-            object.put("aud", issuer);
+            JSONObject object =
+                    createPayload(
+                            issuer,
+                            clientId,
+                            scope,
+                            redirectUri,
+                            responseTypes,
+                            authorizeRequestClaims);
 
             JWSHeader header =
                     new JWSHeader(
@@ -230,17 +218,32 @@ public class AuthorizeRequest {
                             keyId,
                             null,
                             null);
-            String data = SerializationUtils.serializeToString(object);
-            Payload payload = new Payload(data);
-            JWSObject signed = new JWSObject(header, payload);
-            JWSSigner signer = new RSASSASigner(softwareStatement.getSigningKey());
-            try {
-                signed.sign(signer);
+            return PS256.sign(header, object, softwareStatement.getSigningKey());
+        }
 
-            } catch (JOSEException e) {
-                throw new IllegalStateException("Signing request with PS256 failed");
-            }
-            return signed.serialize();
+        private JSONObject createPayload(
+                String issuer,
+                String clientId,
+                String scope,
+                String redirectUri,
+                String responseTypes,
+                AuthorizeRequestClaims authorizeRequestClaims) {
+            JSONObject object = new JSONObject();
+            object.put(Params.RESPONSE_TYPE, responseTypes);
+            object.put(Params.CLIENT_ID, clientId);
+            object.put(Params.REDIRECT_URI, redirectUri);
+            object.put(Params.SCOPE, scope);
+            object.put(Params.STATE, state);
+            object.put(Params.NONCE, nonce);
+            object.put(
+                    UkOpenBankingAisAuthenticatorConstants.Params.MAX_AGE,
+                    UkOpenBankingAisAuthenticatorConstants.MAX_AGE);
+            object.put(
+                    UkOpenBankingAisAuthenticatorConstants.Params.CLAIMS, authorizeRequestClaims);
+            object.put("iss", clientId);
+            object.put("exp", Instant.now().plusSeconds(3600).getEpochSecond());
+            object.put("aud", issuer);
+            return object;
         }
     }
 }
