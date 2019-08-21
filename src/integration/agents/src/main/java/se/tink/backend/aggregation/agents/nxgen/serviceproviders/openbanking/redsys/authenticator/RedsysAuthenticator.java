@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -15,11 +16,16 @@ public class RedsysAuthenticator implements OAuth2Authenticator {
     private final RedsysApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final String codeVerifier;
+    private final RedsysConsentController consentController;
 
-    public RedsysAuthenticator(RedsysApiClient apiClient, SessionStorage sessionStorage) {
+    public RedsysAuthenticator(
+            RedsysApiClient apiClient,
+            SessionStorage sessionStorage,
+            RedsysConsentController consentController) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.codeVerifier = generateCodeVerifier();
+        this.consentController = consentController;
     }
 
     @Override
@@ -40,6 +46,7 @@ public class RedsysAuthenticator implements OAuth2Authenticator {
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         sessionStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+        consentController.requestConsentIfNeeded();
     }
 
     private String generateCodeChallenge(String codeVerifier) {
