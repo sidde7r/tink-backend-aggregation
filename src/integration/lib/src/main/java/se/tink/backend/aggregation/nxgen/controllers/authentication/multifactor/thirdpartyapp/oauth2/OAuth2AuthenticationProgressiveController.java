@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -129,12 +128,6 @@ public class OAuth2AuthenticationProgressiveController
         URL authorizeUrl = authenticator.buildAuthorizeUrl(strongAuthenticationState);
 
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
-    }
-
-    @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps(final Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        return null;
     }
 
     public final String getStrongAuthenticationStateSupplementalKey() {
