@@ -36,12 +36,20 @@ public class CreditCardAccountTest {
     @Test(expected = NullPointerException.class)
     public void noCardDetails() {
         // Build an otherwise correct account
-        CreditCardAccount.nxBuilder().withCardDetails(null).withId(ID_MODULE).build();
+        CreditCardAccount.nxBuilder()
+                .withCardDetails(null)
+                .withoutFlags()
+                .withId(ID_MODULE)
+                .build();
     }
 
     @Test(expected = NullPointerException.class)
     public void nullArguments() {
-        CreditCardAccount.nxBuilder().withCardDetails(CARD_MODULE).withId(null).build();
+        CreditCardAccount.nxBuilder()
+                .withCardDetails(CARD_MODULE)
+                .withoutFlags()
+                .withId(null)
+                .build();
     }
 
     @SuppressWarnings("unused")
@@ -72,6 +80,7 @@ public class CreditCardAccountTest {
         CreditCardAccount account =
                 CreditCardAccount.nxBuilder()
                         .withCardDetails(CARD_MODULE)
+                        .withoutFlags()
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier("4532 - 1012 0773 2467")
