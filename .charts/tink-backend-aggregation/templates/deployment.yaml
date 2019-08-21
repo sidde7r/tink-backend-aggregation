@@ -678,6 +678,20 @@ spec:
               key: bpost-psd2-client-id
               optional: true
         {{- end }}
+        {{- if $agentsConfig.crosskey }}
+        - name: CROSSKEY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: crosskey-client-id
+              optional: true
+        - name: CROSSKEY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: crosskey-client-secret
+              optional: true
+        {{- end }}
       containers:
       - name: tink-backend-aggregation
         {{- if eq "local" .Values.Cluster }}

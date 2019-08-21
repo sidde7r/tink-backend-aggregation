@@ -138,6 +138,9 @@ agents:
       baseUrl: https://psd2.b2b.belfius.be:8443
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
+  crosskey:
+    tink:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: true

@@ -126,6 +126,9 @@ agents:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       certificateId: Tink
+  crosskey:
+    tink:
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
 
   proxyUri: http://10.88.12.185:8080
 
