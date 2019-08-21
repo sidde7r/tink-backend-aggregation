@@ -24,7 +24,9 @@ public class StarlingConstants {
 
         static final String GET_OAUTH2_TOKEN = "/oauth/access-token";
         static final String GET_ACCOUNTS = "/api/v2/accounts";
-        static final String GET_ACCOUNT_HOLDER = "/api/v2/account-holder/individual";
+        static final String GET_ACCOUNT_HOLDER = "/api/v2/account-holder";
+        static final String GET_INDIVIDUAL_ACCOUNT_HOLDER = "/api/v2/account-holder/individual";
+        static final String GET_JOINT_ACCOUNT_HOLDER = "/api/v2/account-holder/joint";
         static final String GET_ACCOUNT_IDENTIFIERS =
                 "/api/v2/accounts/{" + UrlParams.ACCOUNT_UID + "}/identifiers";
         static final String GET_ACCOUNT_BALANCE =
@@ -52,6 +54,10 @@ public class StarlingConstants {
         public static final URL GET_ACCOUNTS = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNTS);
         public static final URL GET_ACCOUNT_HOLDER =
                 new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_HOLDER);
+        public static final URL GET_INDIVIDUAL_ACCOUNT_HOLDER =
+                new URL(API_STARLING + ApiEndpoint.GET_INDIVIDUAL_ACCOUNT_HOLDER);
+        public static final URL GET_JOINT_ACCOUNT_HOLDER =
+                new URL(API_STARLING + ApiEndpoint.GET_JOINT_ACCOUNT_HOLDER);
         public static final URL GET_ACCOUNT_IDENTIFIERS =
                 new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_IDENTIFIERS);
         public static final URL GET_ACCOUNT_BALANCE =
@@ -62,6 +68,11 @@ public class StarlingConstants {
         public static final URL PUT_PAYMENT = new URL(API_STARLING + ApiEndpoint.PUT_PAYMENT);
         public static final URL GET_PAYMENT_STATUS =
                 new URL(API_STARLING + ApiEndpoint.GET_PAYMENT_STATUS);
+    }
+
+    public class AccountHolderType {
+        public static final String INDIVIDUAL = "INDIVIDUAL";
+        public static final String JOINT = "JOINT";
     }
 
     public class RequestValue {
