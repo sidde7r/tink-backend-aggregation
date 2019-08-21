@@ -111,9 +111,9 @@ public final class ProgressiveAuthAgentTest {
                         } else {
                             // Authentication step 2
                             final AuthenticationRequest requestPayload =
-                                    new AuthenticationRequest(
-                                            request.getPayload().getUserInputs(),
-                                            new Credentials());
+                                    AuthenticationRequest.fromUserInputs(
+                                                    request.getPayload().getUserInputs())
+                                            .withCredentials(new Credentials());
                             final AuthenticationResponse payload =
                                     new LoginStep().respond(requestPayload);
 
@@ -138,7 +138,8 @@ public final class ProgressiveAuthAgentTest {
 
         final SteppableAuthenticationRequest request2 =
                 SteppableAuthenticationRequest.subsequentRequest(
-                        response1.getStep().get(), new AuthenticationRequest(responseCode, null));
+                        response1.getStep().get(),
+                        AuthenticationRequest.fromUserInputs(responseCode));
 
         final SteppableAuthenticationResponse response2 = agent.login(request2);
 

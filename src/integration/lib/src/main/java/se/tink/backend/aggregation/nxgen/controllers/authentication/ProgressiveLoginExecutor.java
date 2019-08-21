@@ -63,6 +63,6 @@ public final class ProgressiveLoginExecutor {
                         fields.toArray(new Field[fields.size()]));
 
         return SteppableAuthenticationRequest.subsequentRequest(
-                step, new AuthenticationRequest(new ArrayList<>(map.values()), null));
+                step, AuthenticationRequest.fromUserInputs(new ArrayList<>(map.values())));
     }
 }
