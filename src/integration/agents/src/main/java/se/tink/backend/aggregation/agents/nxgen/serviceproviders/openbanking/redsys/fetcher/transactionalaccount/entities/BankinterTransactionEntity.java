@@ -1,21 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class BankinterTransactionEntity extends TransactionEntity {
-    private static Pattern DESCRIPTION_DATE_PATTERN =
-            Pattern.compile("/TXT/[DH]\\|(?<description>.+)");
+/* Unstructured remittance information uses EACT format.
+ * Description matching RE agent in /TXT/ field, prefixed by "D|" or "H|"
+ */
+public class BankinterTransactionEntity extends EactParsingTransactionEntity {
+    private static final Logger LOG = LoggerFactory.getLogger(BankinterTransactionEntity.class);
 
     @Override
     @JsonIgnore
     public String getDescription() {
-        final Matcher matcher = DESCRIPTION_DATE_PATTERN.matcher(remittanceInformationUnstructured);
-        if (matcher.find()) {
-            return matcher.group("description");
+        final String text = super.getDescription();
+        if (text.startsWith("D|") || text.startsWith("H|")) {
+            return text.substring(2);
         } else {
-            return remittanceInformationUnstructured;
+            LOG.warn(
+                    "Could not parse transaction description: {}",
+                    remittanceInformationUnstructured);
+            return text;
         }
     }
 }
