@@ -7,9 +7,11 @@ public final class BunqConstants {
     private BunqConstants() {}
 
     public static final class Urls {
-        public static final URL TOKEN_EXCHANGE =
+        public static final URL TOKEN_EXCHANGE = new URL("https://api.oauth.bunq.com/v1/token");
+        public static final URL TOKEN_EXCHANGE_SANDBOX =
                 new URL("https://api-oauth.sandbox.bunq.com/v1/token");
-        public static final URL AUTHORIZE = new URL("https://oauth.sandbox.bunq.com/auth");
+        public static final URL AUTHORIZE = new URL("https://oauth.bunq.com/auth");
+        public static final URL AUTHORIZE_SANDBOX = new URL("https://oauth.sandbox.bunq.com/auth");
         public static final String PAYMENT =
                 "/v1/user/{userId}/monetary-account/{accountId}/payment";
         public static final String DRAFT_PAYMENT =
