@@ -337,9 +337,14 @@ public final class RedsysApiClient {
 
     private LocalDate transactionsFromDate(String accountId) {
         final Optional<LocalDate> fetchedDate = fetchedTransactionsUntil(accountId);
-        return fetchedDate
-                .map(localDate -> localDate.minusDays(7))
-                .orElseGet(() -> aspspConfiguration.oldestTransactionDate());
+        final LocalDate defaultRefreshDate =
+                LocalDate.now().minusDays(RedsysConstants.DEFAULT_REFRESH_DAYS);
+        if (fetchedDate.isPresent() && fetchedDate.get().isAfter(defaultRefreshDate)) {
+            return defaultRefreshDate;
+        } else {
+            // This might trigger SCA
+            return aspspConfiguration.oldestTransactionDate();
+        }
     }
 
     private Optional<LocalDate> fetchedTransactionsUntil(String accountId) {
