@@ -277,7 +277,9 @@ public class OpenIdApiClient {
             SoftwareStatement softwareStatement, URL wellKnownURL, TinkHttpClient httpClient) {
 
         WellKnownResponse wellKnownResponse =
-                httpClient.request(wellKnownURL).get(WellKnownResponse.class);
+                SerializationUtils.deserializeFromString(
+                        httpClient.request(wellKnownURL).get(String.class),
+                        WellKnownResponse.class);
         URL registrationEndpoint = wellKnownResponse.getRegistrationEndpoint();
         String postData =
                 ClientRegistration.create()

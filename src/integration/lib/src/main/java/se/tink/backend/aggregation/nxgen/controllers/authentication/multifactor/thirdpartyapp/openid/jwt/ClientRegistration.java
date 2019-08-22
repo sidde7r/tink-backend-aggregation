@@ -4,8 +4,15 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.nimbusds.jose.JOSEObjectType;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
 import java.util.Date;
 import java.util.List;
+import net.minidev.json.JSONObject;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PS256.PAYLOAD;
+import se.tink.backend.aggregation.agents.utils.crypto.PS256;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
@@ -79,10 +86,7 @@ public class ClientRegistration {
                     wellknownConfiguration
                             .getPreferredTokenEndpointSigningAlg(
                                     OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_SIGNING_ALGORITHM)
-                            .orElseThrow(
-                                    () ->
-                                            new IllegalStateException(
-                                                    "Preferred token endpoint sign alg. not found."));
+                            .orElse("");
 
             String requestObjectSigningAlg =
                     wellknownConfiguration
@@ -126,7 +130,69 @@ public class ClientRegistration {
             Date expiresAt = JwtUtils.addHours(issuedAt, 1);
 
             String jwtId = JwtUtils.generateId();
+            String preferredAlgorithm =
+                    wellknownConfiguration
+                            .getPreferredIdTokenSigningAlg(
+                                    OpenIdConstants.PREFERRED_ID_TOKEN_SIGNING_ALGORITHM)
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    "Preferred signing algorithm unknown: only RS256 and PS256 are supported"));
 
+            switch (OpenIdConstants.SIGNING_ALGORITHM.valueOf(preferredAlgorithm)) {
+                case PS256:
+                    return signWithPs256(
+                            grantTypes,
+                            responseTypes,
+                            idTokenSigningAlg,
+                            tokenEndpointSigningAlg,
+                            requestObjectSigningAlg,
+                            tokenEndpointAuthMethod,
+                            issuer,
+                            scope,
+                            keyId,
+                            softwareId,
+                            softwareStatementAssertion,
+                            issuedAt,
+                            expiresAt,
+                            jwtId);
+                case RS256:
+                default:
+                    return signWithRs256(
+                            grantTypes,
+                            responseTypes,
+                            idTokenSigningAlg,
+                            tokenEndpointSigningAlg,
+                            requestObjectSigningAlg,
+                            tokenEndpointAuthMethod,
+                            issuer,
+                            scope,
+                            keyId,
+                            algorithm,
+                            softwareId,
+                            softwareStatementAssertion,
+                            issuedAt,
+                            expiresAt,
+                            jwtId);
+            }
+        }
+
+        private String signWithRs256(
+                List<String> grantTypes,
+                List<String> responseTypes,
+                String idTokenSigningAlg,
+                String tokenEndpointSigningAlg,
+                String requestObjectSigningAlg,
+                String tokenEndpointAuthMethod,
+                String issuer,
+                String scope,
+                String keyId,
+                Algorithm algorithm,
+                String softwareId,
+                String softwareStatementAssertion,
+                Date issuedAt,
+                Date expiresAt,
+                String jwtId) {
             return JWT.create()
                     .withKeyId(keyId)
                     .withJWTId(jwtId)
@@ -162,6 +228,96 @@ public class ClientRegistration {
                             OpenIdConstants.Params.RESPONSE_TYPES,
                             JwtUtils.listToStringArray(responseTypes))
                     .sign(algorithm);
+        }
+
+        private String signWithPs256(
+                List<String> grantTypes,
+                List<String> responseTypes,
+                String idTokenSigningAlg,
+                String tokenEndpointSigningAlg,
+                String requestObjectSigningAlg,
+                String tokenEndpointAuthMethod,
+                String issuer,
+                String scope,
+                String keyId,
+                String softwareId,
+                String softwareStatementAssertion,
+                Date issuedAt,
+                Date expiresAt,
+                String jwtId) {
+
+            JSONObject object =
+                    createPayload(
+                            grantTypes,
+                            responseTypes,
+                            idTokenSigningAlg,
+                            tokenEndpointSigningAlg,
+                            requestObjectSigningAlg,
+                            tokenEndpointAuthMethod,
+                            issuer,
+                            scope,
+                            softwareId,
+                            softwareStatementAssertion,
+                            issuedAt,
+                            expiresAt,
+                            jwtId);
+
+            JWSHeader header =
+                    new JWSHeader(
+                            JWSAlgorithm.PS256,
+                            JOSEObjectType.JWT,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            keyId,
+                            null,
+                            null);
+            return PS256.sign(header, object, softwareStatement.getSigningKey());
+        }
+
+        private JSONObject createPayload(
+                List<String> grantTypes,
+                List<String> responseTypes,
+                String idTokenSigningAlg,
+                String tokenEndpointSigningAlg,
+                String requestObjectSigningAlg,
+                String tokenEndpointAuthMethod,
+                String issuer,
+                String scope,
+                String softwareId,
+                String softwareStatementAssertion,
+                Date issuedAt,
+                Date expiresAt,
+                String jwtId) {
+            JSONObject object = new JSONObject();
+            object.put(OpenIdConstants.Params.SOFTWARE_ID, softwareId);
+            object.put(OpenIdConstants.Params.SOFTWARE_STATEMENT, softwareStatementAssertion);
+            object.put(OpenIdConstants.Params.SCOPE, scope);
+            object.put(OpenIdConstants.Params.TOKEN_ENDPOINT_AUTH_METHOD, tokenEndpointAuthMethod);
+            object.put(OpenIdConstants.Params.ID_TOKEN_SIGNED_RESPONSE_ALG, idTokenSigningAlg);
+            object.put(
+                    OpenIdConstants.Params.TOKEN_ENDPOINT_AUTH_SIGNING_ALG,
+                    tokenEndpointSigningAlg);
+            object.put(OpenIdConstants.Params.REQUEST_OBJECT_SIGNING_ALG, requestObjectSigningAlg);
+            object.put(OpenIdConstants.Params.APPLICATION_TYPE, OpenIdConstants.ParamDefaults.WEB);
+            object.put(
+                    OpenIdConstants.Params.REDIRECT_URIS, softwareStatement.getAllRedirectUris());
+            object.put(OpenIdConstants.Params.GRANT_TYPES, JwtUtils.listToStringArray(grantTypes));
+            object.put(
+                    OpenIdConstants.Params.RESPONSE_TYPES,
+                    JwtUtils.listToStringArray(responseTypes));
+
+            object.put(PAYLOAD.ISSUER, UkOpenBankingConstants.TINK_ORGID);
+            object.put(PAYLOAD.ISSUED_AT, issuedAt);
+            object.put(PAYLOAD.EXPIRES_AT, expiresAt);
+            object.put(PAYLOAD.AUDIENCE, issuer);
+            object.put(PAYLOAD.JWT_ID, jwtId);
+            return object;
         }
     }
 

@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConsta
 
 public abstract class UkOpenBankingConstants extends OpenbankConstants {
     public static final String INTEGRATION_NAME = "ukOpenBankingJson";
+    public static final String TINK_ORGID = "00158000016i44IAAQ";
 
     public static class HttpHeaders {
         public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
@@ -58,6 +59,17 @@ public abstract class UkOpenBankingConstants extends OpenbankConstants {
         public static class PAYLOAD {
             public static final String DATA = "Data";
             public static final String RISK = "Risk";
+        }
+    }
+
+    public static class PS256 {
+
+        public static class PAYLOAD {
+            public static final String ISSUER = "iss";
+            public static final String ISSUED_AT = "iat";
+            public static final String EXPIRES_AT = "exp";
+            public static final String AUDIENCE = "aud";
+            public static final String JWT_ID = "jti";
         }
     }
 }

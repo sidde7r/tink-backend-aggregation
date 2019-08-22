@@ -156,9 +156,11 @@ public class WellKnownResponse {
     }
 
     public Optional<String> getPreferredTokenEndpointSigningAlg(List<String> supportedAlgs) {
-        return supportedAlgs.stream()
-                .filter(alg -> tokenEndpointAuthSigningAlgValuesSupported.contains(alg))
-                .findFirst();
+        return tokenEndpointAuthSigningAlgValuesSupported == null
+                ? Optional.empty()
+                : supportedAlgs.stream()
+                        .filter(alg -> tokenEndpointAuthSigningAlgValuesSupported.contains(alg))
+                        .findFirst();
     }
 
     public Optional<String> getPreferredRequestObjectSigningAlg(List<String> supportedAlgs) {

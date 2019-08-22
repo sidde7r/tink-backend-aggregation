@@ -52,15 +52,21 @@ public class OpenIdConstants {
 
     public static final ImmutableList<String> PREFERRED_ID_TOKEN_SIGNING_ALGORITHM =
             ImmutableList.<String>builder()
-                    .add(SIGNING_ALGORITHM.RS256.toString())
                     .add(SIGNING_ALGORITHM.PS256.toString())
+                    .add(SIGNING_ALGORITHM.RS256.toString())
                     .build();
 
     public static final ImmutableList<String> PREFERRED_TOKEN_ENDPOINT_SIGNING_ALGORITHM =
-            ImmutableList.<String>builder().add(SIGNING_ALGORITHM.RS256.toString()).build();
+            ImmutableList.<String>builder()
+                    .add(SIGNING_ALGORITHM.PS256.toString())
+                    .add(SIGNING_ALGORITHM.RS256.toString())
+                    .build();
 
     public static final ImmutableList<String> PREFERRED_REQUEST_OBJECT_SIGNING_ALGORITHM =
-            ImmutableList.<String>builder().add(SIGNING_ALGORITHM.RS256.toString()).build();
+            ImmutableList.<String>builder()
+                    .add(SIGNING_ALGORITHM.PS256.toString())
+                    .add(SIGNING_ALGORITHM.RS256.toString())
+                    .build();
 
     public static final ImmutableList<TOKEN_ENDPOINT_AUTH_METHOD>
             PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS =
