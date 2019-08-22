@@ -11,6 +11,7 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
@@ -51,6 +52,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         private static final String LOGIN = "login";
         private static final String LOGIN_MANUAL = "login-manual";
         private static final String LOGIN_AUTO = "login-auto";
+        private static final String LOGIN_CRON = "login-cron";
         private static final String LOGOUT = "logout";
         private static final String ACQUIRE_LOCK = "acquire-lock";
         private static final String RELEASE_LOCK = "release-lock";
@@ -65,7 +67,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     private final User user;
     private Agent agent;
     private final SupplementalInformationController supplementalInformationController;
-    private final boolean isManual;
 
     private InterProcessSemaphoreMutex lock;
 
@@ -82,7 +83,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.user = request.getUser();
         this.supplementalInformationController =
                 new SupplementalInformationController(context, request.getCredentials());
-        this.isManual = request.isManual();
     }
 
     @Override
@@ -220,15 +220,26 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         }
     }
 
+    private boolean isManualAuthentication(Credentials credentials) {
+        if (agent instanceof ManualOrAutoAuth) {
+            ManualOrAutoAuth manualOrAutoAuth = (ManualOrAutoAuth) agent;
+            return manualOrAutoAuth.isManualAuthentication(credentials);
+        }
+        return false;
+    }
+
     private AgentWorkerCommandResult login() throws Exception {
         ArrayList<Context> loginTimerContext =
                 state.getTimerContexts(state.LOGIN_TIMER_NAME, credentials.getType());
+        final CredentialsRequest request = context.getRequest();
+        final boolean isCron = !request.isManual();
         MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGIN));
         MetricAction actionLoginType =
-                isManual
-                        ? metrics.buildAction(metricForAction(MetricName.LOGIN_MANUAL))
-                        : metrics.buildAction(metricForAction(MetricName.LOGIN_AUTO));
-
+                isCron
+                        ? metrics.buildAction(metricForAction(MetricName.LOGIN_CRON))
+                        : (isManualAuthentication(request.getCredentials())
+                                ? metrics.buildAction(metricForAction(MetricName.LOGIN_MANUAL))
+                                : metrics.buildAction(metricForAction(MetricName.LOGIN_AUTO)));
         try {
             // TODO auth: temporarily use the annotation to filter agents that are migrated to use
             // new Auth flow

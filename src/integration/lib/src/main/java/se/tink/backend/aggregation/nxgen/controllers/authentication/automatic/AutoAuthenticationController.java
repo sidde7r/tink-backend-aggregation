@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -18,7 +19,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
-public class AutoAuthenticationController implements TypedAuthenticator, ProgressiveAuthenticator {
+public class AutoAuthenticationController
+        implements TypedAuthenticator, ProgressiveAuthenticator, ManualOrAutoAuth {
     private final CredentialsRequest request;
     private final SystemUpdater systemUpdater;
     private final MultiFactorAuthenticator manualAuthenticator;
@@ -71,13 +73,7 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         try {
-            if (!forceAutoAuthentication()
-                            && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
-                                    || (request.isUpdate()
-                                            && !Objects.equals(
-                                                    request.getType(),
-                                                    CredentialsRequestType.TRANSFER)))
-                    || credentials.forceManualAuthentication()) {
+            if (isManualAuthentication(credentials)) {
                 manual(credentials);
             } else {
                 Preconditions.checkState(
@@ -87,6 +83,20 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
         } finally {
             systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        if (!forceAutoAuthentication()
+                        && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
+                                || (request.isUpdate()
+                                        && !Objects.equals(
+                                                request.getType(),
+                                                CredentialsRequestType.TRANSFER)))
+                || credentials.forceManualAuthentication()) {
+            return true;
+        }
+        return false;
     }
 
     // TODO: Remove this when there is support for new MultiFactor credential types.
