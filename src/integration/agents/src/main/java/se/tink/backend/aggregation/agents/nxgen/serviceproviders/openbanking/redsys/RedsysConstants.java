@@ -8,6 +8,9 @@ public final class RedsysConstants {
 
     public static final String INTEGRATION_NAME = "redsys";
 
+    // Some banks will fail at certain times when using 90 days
+    public static final int DEFAULT_REFRESH_DAYS = 89;
+
     private RedsysConstants() {
         throw new AssertionError();
     }
