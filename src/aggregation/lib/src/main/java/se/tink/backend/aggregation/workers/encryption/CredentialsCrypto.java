@@ -48,8 +48,8 @@ public class CredentialsCrypto {
         if (Strings.isNullOrEmpty(cachedSensitiveData)
                 && Strings.isNullOrEmpty(credentialsSensitiveData)) {
             // There's nothing to decrypt. Both cache and credential were empty.
-            logger.error("There is nothing to decrypt.");
-            return false;
+            logger.info("There is nothing to decrypt.");
+            return true;
         }
 
         String sensitiveData =
