@@ -10,10 +10,9 @@ import com.nimbusds.jose.JWSHeader;
 import java.util.Date;
 import java.util.List;
 import net.minidev.json.JSONObject;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PS256.PAYLOAD;
 import se.tink.backend.aggregation.agents.utils.crypto.PS256;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PS256.PAYLOAD_CLAIMS;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtUtils;
@@ -312,11 +311,11 @@ public class ClientRegistration {
                     OpenIdConstants.Params.RESPONSE_TYPES,
                     JwtUtils.listToStringArray(responseTypes));
 
-            object.put(PAYLOAD.ISSUER, UkOpenBankingConstants.TINK_ORGID);
-            object.put(PAYLOAD.ISSUED_AT, issuedAt);
-            object.put(PAYLOAD.EXPIRES_AT, expiresAt);
-            object.put(PAYLOAD.AUDIENCE, issuer);
-            object.put(PAYLOAD.JWT_ID, jwtId);
+            object.put(PAYLOAD_CLAIMS.ISSUER, OpenIdConstants.TINK_UKOPENBANKING_ORGID);
+            object.put(PAYLOAD_CLAIMS.ISSUED_AT, issuedAt);
+            object.put(PAYLOAD_CLAIMS.EXPIRES_AT, expiresAt);
+            object.put(PAYLOAD_CLAIMS.AUDIENCE, issuer);
+            object.put(PAYLOAD_CLAIMS.JWT_ID, jwtId);
             return object;
         }
     }

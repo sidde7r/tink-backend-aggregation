@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 
 public class OpenIdConstants {
 
+    public static final String TINK_UKOPENBANKING_ORGID = "00158000016i44IAAQ";
+
     public static class Scopes {
         public static final String OPEN_ID = "openid";
         public static final String ACCOUNTS = "accounts";
@@ -128,5 +130,16 @@ public class OpenIdConstants {
 
     public static class Errors {
         public static final String ACCESS_DENIED = "access_denied";
+    }
+
+    public static class PS256 {
+
+        public static class PAYLOAD_CLAIMS {
+            public static final String ISSUER = "iss";
+            public static final String ISSUED_AT = "iat";
+            public static final String EXPIRES_AT = "exp";
+            public static final String AUDIENCE = "aud";
+            public static final String JWT_ID = "jti";
+        }
     }
 }
