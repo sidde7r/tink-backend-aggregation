@@ -92,6 +92,7 @@ public class CardAccountsItem {
                                 .withAvailableCredit(creditLimit.toTinkAmount())
                                 .withCardAlias(name)
                                 .build())
+                .withPaymentAccountFlag()
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(maskedPan)

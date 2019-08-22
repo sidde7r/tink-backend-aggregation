@@ -85,6 +85,7 @@ public class AccountEntity {
                                 .withAvailableCredit(balanceEntity.toAmount())
                                 .withCardAlias(name)
                                 .build())
+                .withPaymentAccountFlag()
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getAccountNumber())

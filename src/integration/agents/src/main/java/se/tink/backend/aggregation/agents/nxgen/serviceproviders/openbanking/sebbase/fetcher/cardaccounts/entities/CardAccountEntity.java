@@ -67,6 +67,7 @@ public class CardAccountEntity {
                                 .withAvailableCredit(getAvailableCredit())
                                 .withCardAlias(name)
                                 .build())
+                .withPaymentAccountFlag()
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(maskedPan)
