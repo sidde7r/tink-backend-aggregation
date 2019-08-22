@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.KeyPair;
 import java.security.Security;
+import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -24,7 +25,10 @@ import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.aggregation.register.RegisterEnvironment;
+import se.tink.backend.aggregation.register.nl.bunq.entities.CallbackUrlEntity;
+import se.tink.backend.aggregation.register.nl.bunq.entities.OauthClientEntity;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.AddOAuthClientIdResponse;
+import se.tink.backend.aggregation.register.nl.bunq.rpc.GetCallbackResponse;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.GetClientIdAndSecretResponse;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.RegisterAsPSD2ProviderRequest;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.RegisterAsPSD2ProviderResponse;
@@ -241,22 +245,51 @@ public class BunqRegisterCommand {
 
     private static void registerOAuthCallback(
             BunqRegisterCommandApiClient apiClient, String psd2UserId, String redirectUrl) {
-        // Call POST /v1/user/{userID}/oauth-client
-        AddOAuthClientIdResponse addOAuthClientIdResponse = apiClient.addOAuthClientId(psd2UserId);
-        String oauthClientId = String.valueOf(addOAuthClientIdResponse.getId().getId());
 
-        // Call GET /v1/user/{userID}/oauth-client/{oauth-clientID}. We will return your Client ID
-        // and Client Secret.
-        GetClientIdAndSecretResponse getClientIdAndSecretResponse =
-                apiClient.getClientIdAndSecret(psd2UserId, oauthClientId);
-        bunqRegistrationResponse.setClientId(
-                getClientIdAndSecretResponse.getOauthClient().getClientId());
-        bunqRegistrationResponse.setClientSecret(
-                getClientIdAndSecretResponse.getOauthClient().getClientSecret());
+        // Call GET /v1/user/{userID}/oauth-client
+        List<GetClientIdAndSecretResponse> getOAuthClientIdResponse =
+                apiClient.getOAuthClientId(psd2UserId);
 
-        // Call POST /v1/user/{userID}/oauth-client/{oauth-clientID}/callback-url. Include the
-        // OAuth callback URL of your application.
-        apiClient.registerCallbackUrl(psd2UserId, oauthClientId, redirectUrl);
+        String oauthClientId;
+        // Only one active OAuth Client can be registered
+        if (getOAuthClientIdResponse == null || getOAuthClientIdResponse.isEmpty()) {
+            // Call POST /v1/user/{userID}/oauth-client
+            AddOAuthClientIdResponse addOAuthClientIdResponse =
+                    apiClient.addOAuthClientId(psd2UserId);
+            oauthClientId = String.valueOf(addOAuthClientIdResponse.getId().getId());
+
+            // Call GET /v1/user/{userID}/oauth-client/{oauth-clientID}. We will return your Client
+            // ID and Client Secret.
+            GetClientIdAndSecretResponse getClientIdAndSecretResponse =
+                    apiClient.getClientIdAndSecret(psd2UserId, oauthClientId);
+            bunqRegistrationResponse.setClientId(
+                    getClientIdAndSecretResponse.getOauthClient().getClientId());
+            bunqRegistrationResponse.setClientSecret(
+                    getClientIdAndSecretResponse.getOauthClient().getClientSecret());
+
+        } else {
+            OauthClientEntity clientEntity = getOAuthClientIdResponse.get(0).getOauthClient();
+            oauthClientId = String.valueOf(clientEntity.getId());
+            bunqRegistrationResponse.setClientId(clientEntity.getClientId());
+            bunqRegistrationResponse.setClientSecret(clientEntity.getClientSecret());
+        }
+
+        List<GetCallbackResponse> getCallbackResponse =
+                apiClient.getCallbackUrl(psd2UserId, oauthClientId);
+        boolean urlExist = false;
+        if (getCallbackResponse != null) {
+            urlExist =
+                    getCallbackResponse.stream()
+                            .map(GetCallbackResponse::getCallbackUrlEntity)
+                            .map(CallbackUrlEntity::getUrl)
+                            .anyMatch(str -> str.equals(redirectUrl));
+        }
+
+        if (!urlExist) {
+            // Call POST /v1/user/{userID}/oauth-client/{oauth-clientID}/callback-url. Include the
+            // OAuth callback URL of your application.
+            apiClient.registerCallbackUrl(psd2UserId, oauthClientId, redirectUrl);
+        }
         bunqRegistrationResponse.setRedirectUrl(redirectUrl);
     }
 

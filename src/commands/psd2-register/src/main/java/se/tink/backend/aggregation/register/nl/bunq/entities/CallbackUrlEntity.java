@@ -5,4 +5,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CallbackUrlEntity {
     private String url;
+
+    public String getUrl() {
+        return url;
+    }
 }

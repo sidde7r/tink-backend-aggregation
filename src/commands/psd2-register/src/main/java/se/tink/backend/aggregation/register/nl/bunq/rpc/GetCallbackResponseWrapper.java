@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.entities.PaginationEntity;
 
-public class GetClientIdAndSecretResponseWrapper {
+public class GetCallbackResponseWrapper {
     @JsonProperty("Response")
-    private List<GetClientIdAndSecretResponse> response;
+    private List<GetCallbackResponse> response;
 
     @JsonProperty("Pagination")
     private PaginationEntity pagination;
 
-    public List<GetClientIdAndSecretResponse> getResponse() {
+    public List<GetCallbackResponse> getResponse() {
         return response;
     }
 }
