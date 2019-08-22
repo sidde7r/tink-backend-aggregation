@@ -109,7 +109,7 @@ public class QsealcSigner {
                 post.setHeader(TINK_QSEALC_APPID, eidasIdentity.getAppId());
             }
             post.setHeader(TINK_QSEALC_CLUSTERID, eidasIdentity.getClusterId());
-            post.setHeader(TINK_REQUESTER, eidasIdentity.getSignRequester());
+            post.setHeader(TINK_REQUESTER, eidasIdentity.getRequester());
             post.setEntity(new ByteArrayEntity(Base64.getEncoder().encode(signingData)));
             HttpResponse response = httpClient.execute(post);
 
