@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
+import javax.persistence.PersistenceException;
+import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -38,13 +44,6 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import javax.persistence.PersistenceException;
-import javax.ws.rs.core.MediaType;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
 
 public final class LansforsakringarApiClient {
 
@@ -97,11 +96,15 @@ public final class LansforsakringarApiClient {
         return createRequestInSession(new URL(url));
     }
 
-    public OAuth2Token getToken(AuthenticateForm form) {
+    public OAuth2Token postToken(AuthenticateForm form) {
+
         return client.request(Urls.TOKEN)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .header(LansforsakringarConstants.HeaderKeys.X_TINK_DEBUG, LansforsakringarConstants.HeaderValues.TRUST_ALL)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
                 .accept(MediaType.APPLICATION_JSON)
-                .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .body(form)
                 .post(AuthenticateResponse.class)
                 .toTinkToken();
     }
@@ -114,7 +117,12 @@ public final class LansforsakringarApiClient {
         getConsentStatus(consentResponse);
 
         return createRequestInSession(Urls.GET_ACCOUNTS)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.CONSENT_ID, configuration.getConsentId())
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
+                .header(HeaderKeys.AUTHORIZATION, getTokenFromStorage())
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .get(GetAccountsResponse.class)
                 .toTinkAccounts();

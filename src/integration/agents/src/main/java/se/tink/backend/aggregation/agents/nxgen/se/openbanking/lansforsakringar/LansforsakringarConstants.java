@@ -79,6 +79,9 @@ public abstract class LansforsakringarConstants {
         public static final String TPP_EXPLICIT_AUTH_PREFERRED =
                 "TPP-Explicit-Authorisation-Preferred";
         public static final String X_TINK_DEBUG = "X-Tink-Debug";
+        public static final String CONTENT_TYPE = "Content-Type";
+        public static final String CACHE_CONTROL = "cache-control";
+        public static final String AUTHORIZATION = "Authorization";
     }
 
     public static class HeaderValues {
@@ -87,6 +90,7 @@ public abstract class LansforsakringarConstants {
         public static final String PSU_USER_AGENT = "Desktop Mode";
         public static final String PSU_ID_TYPE = "SSSN";
         public static final String TRUST_ALL = "trust_all";
+        public static final String NO_CACHE = "no-cache";
     }
 
     public static class FormKeys {

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator;
 
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
@@ -7,15 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-
-import javax.ws.rs.core.MediaType;
 
 public class LansforsakringarAuthenticator implements OAuth2Authenticator {
 
@@ -92,20 +90,13 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
         final AuthenticateForm form =
                 AuthenticateForm.builder()
                         .setClientId(clientId)
-                        .setClientSecret(clientSecret)
-                        .setGrantType(LansforsakringarConstants.FormValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(apiClient.getConfiguration().getRedirectUri())
+                        .setGrantType(FormValues.AUTHORIZATION_CODE)
                         .setCode(code)
+                        .setClientSecret(clientSecret)
+                        .setRedirectUri(apiClient.getConfiguration().getRedirectUri())
                         .build();
 
-        final TokenForm tokenForm =
-                TokenForm.builder()
-                    .setClientId(clientId)
-                    .setClientSecret(clientSecret)
-                    .setGrantType("authorization_code")
-                    .build();
-
-        return apiClient.getToken(tokenForm);
+        return apiClient.postToken(form);
     }
 
     @Override
