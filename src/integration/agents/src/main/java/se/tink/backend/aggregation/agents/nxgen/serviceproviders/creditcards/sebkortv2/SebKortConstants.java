@@ -2,7 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.se
 
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public class SebKortConstants {
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Stockholm");
@@ -10,6 +13,28 @@ public class SebKortConstants {
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ");
     public static final String AUTHORIZATION_UUID =
             "ca4d47c0-e61f-30ad-b0c0-86d20f26d5eb"; // Required (and the same) for all SEB Kort
+
+    // This has to be kept in sync with the OB providers configuration.
+    // As per SEB docs "chevrolet" and "djurgards" brands are not available in the OB agent, so
+    // should not be flagged
+    public static final AccountTypeMapper PROVIDER_PSD2_FLAG_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(
+                            AccountTypes.CREDIT_CARD,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "stse",
+                            "ecse",
+                            "fase",
+                            "jese",
+                            "nkse",
+                            "cose",
+                            "opse",
+                            "sbse",
+                            "sase",
+                            "wase",
+                            "sjse")
+                    .put(AccountTypes.CREDIT_CARD, "chse")
+                    .build();
 
     public static class Urls {
         private static final String SEBKORT_HOST = "https://secure.eurocard.se";

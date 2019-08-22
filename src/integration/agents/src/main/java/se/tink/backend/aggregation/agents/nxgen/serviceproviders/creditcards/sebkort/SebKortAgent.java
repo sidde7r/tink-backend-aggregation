@@ -64,7 +64,7 @@ public class SebKortAgent extends NextGenerationAgent
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                new SebKortAccountFetcher(apiClient),
+                new SebKortAccountFetcher(apiClient, config),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(

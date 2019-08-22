@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
@@ -78,9 +79,9 @@ public class CardContractEntity {
     }
 
     public List<CreditCardAccount> toTinkCreditCardAccounts(
-            Map<String, CardAccountEntity> accountsHashMap) {
+            Map<String, CardAccountEntity> accountsHashMap, SebKortConfiguration config) {
         return cards.stream()
-                .map(card -> card.toTinkCreditCardAccount(accountsHashMap, this))
+                .map(card -> card.toTinkCreditCardAccount(accountsHashMap, this, config))
                 .collect(Collectors.toList());
     }
 }

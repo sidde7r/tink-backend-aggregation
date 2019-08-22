@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.se
 
 import java.util.List;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
@@ -109,7 +111,7 @@ public class BillingUnitEntity {
         return salesFinancing;
     }
 
-    public CreditCardAccount createCreditCardAccount() {
+    public CreditCardAccount createCreditCardAccount(SebKortConfiguration config) {
         return CreditCardAccount.builder(arrangementNumber)
                 .setAvailableCredit(
                         Amount.inSEK(AgentParsingUtils.parseAmountTrimCurrency(disposableAmount)))
@@ -117,6 +119,9 @@ public class BillingUnitEntity {
                 .setBankIdentifier(billingUnitIdClear)
                 .setBalance(Amount.inSEK(-AgentParsingUtils.parseAmountTrimCurrency(balance)))
                 .setName(billingUnitName)
+                .addAccountFlags(
+                        SebKortConstants.PROVIDER_PSD2_FLAG_MAPPER.getItems(
+                                config.getProviderCode()))
                 .build();
     }
 }
