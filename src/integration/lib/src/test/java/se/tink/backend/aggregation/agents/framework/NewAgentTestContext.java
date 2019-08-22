@@ -74,7 +74,7 @@ public final class NewAgentTestContext extends AgentContext {
         this.user = user;
         this.credential = credential;
         this.transactionsToPrint = transactionsToPrint;
-        this.setClusterId("oxford-staging");
+        this.setClusterId(TEST_CLUSTERID);
         this.setAppId(MoreObjects.firstNonNull(appId, TEST_APPID));
 
         setTestContext(true);
