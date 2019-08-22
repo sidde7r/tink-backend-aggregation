@@ -12,8 +12,10 @@ import java.util.Optional;
 import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceResponse;
@@ -126,6 +128,21 @@ public class KbcApiClient {
 
     private void verifyDoubleZeroResponseCode(HeaderDto header) {
         verifyResponseCode(header, KbcConstants.ResultCode.DOUBLE_ZERO, "");
+    }
+
+    private void verifyResponseCodeForLogin(HeaderDto header) throws LoginException {
+        String resultValue = getResultCodeOrThrow(header);
+        if (!Objects.equals(KbcConstants.ResultCode.DOUBLE_ZERO, resultValue)) {
+            bankServerErrors(header, resultValue);
+            notEnoughFundsCancelTransfer(header, resultValue);
+            switch (resultValue) {
+                case KbcConstants.ErrorCodes.AUTHENTICATION_ERROR:
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+
+                default:
+                    throwInvalidResultCodeError(header, resultValue, "");
+            }
+        }
     }
 
     private void verifyResponseCode(HeaderDto header) {
@@ -477,7 +494,8 @@ public class KbcApiClient {
     }
 
     public EnrollDeviceRoundTwoResponse enrollDeviceWithSigningId(
-            String signingId, final byte[] cipherKey) throws AuthorizationException {
+            String signingId, final byte[] cipherKey)
+            throws AuthorizationException, LoginException {
         EnrollDeviceRoundTwoRequest enrollDeviceRoundTwoRequest =
                 EnrollDeviceRoundTwoRequest.create(signingId);
 
@@ -488,7 +506,7 @@ public class KbcApiClient {
                         EnrollDeviceRoundTwoResponse.class,
                         cipherKey);
         checkBlockedAccount(response.first.getHeader(), response.second);
-        verifyDoubleZeroResponseCode(response.first.getHeader());
+        verifyResponseCodeForLogin(response.first.getHeader());
 
         return response.first;
     }
@@ -618,7 +636,7 @@ public class KbcApiClient {
     }
 
     public void loginSotp(KbcDevice device, String otp, final byte[] cipherKey)
-            throws AuthorizationException {
+            throws AuthorizationException, LoginException {
         LoginSotpRequest loginSotpRequest =
                 LoginSotpRequest.builder()
                         .setApplicationId(KbcConstants.RequestInput.APPLICATION_ID)
@@ -643,7 +661,7 @@ public class KbcApiClient {
                         LoginSotpResponse.class,
                         cipherKey);
         checkBlockedAccount(response.first.getHeader(), response.second);
-        verifyDoubleZeroResponseCode(response.first.getHeader());
+        verifyResponseCodeForLogin(response.first.getHeader());
     }
 
     public AccountsResponse fetchAccounts(String language, final byte[] cipherKey) {

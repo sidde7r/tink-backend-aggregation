@@ -153,6 +153,10 @@ public class KbcConstants {
         public static final String ZERO_NINE = "09"; // isSigningRequired
     }
 
+    public static class ErrorCodes {
+        public static final String AUTHENTICATION_ERROR = "02";
+    }
+
     public static class PairTypeTypes {
         public static final String BOOLEAN = "boolean";
         public static final String TEXT = "text";
