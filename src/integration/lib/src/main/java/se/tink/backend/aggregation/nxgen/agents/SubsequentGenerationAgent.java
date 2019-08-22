@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
@@ -96,10 +97,14 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         return context.getAgentConfigurationController();
     }
 
+    protected EidasIdentity getEidasIdentity() {
+        return new EidasIdentity(context.getClusterId(), context.getAppId(), getAgentClass());
+    }
+
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        client.setClusterId(context.getClusterId());
+        client.setEidasIdentity(getEidasIdentity());
         client.setDebugOutput(configuration.getTestConfiguration().isDebugOutputEnabled());
         client.setCensorSensitiveHeaders(
                 configuration.getTestConfiguration().isCensorSensitiveHeadersEnabled());

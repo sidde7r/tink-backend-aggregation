@@ -27,6 +27,7 @@ public final class QsealcEidasProxySigner implements Signer {
         this(proxyConfig, certificateId, EidasProxyConstants.Algorithm.EIDAS_RSA_SHA256);
     }
 
+    @Deprecated
     public QsealcEidasProxySigner(
             final EidasProxyConfiguration proxyConfig,
             final String certificateId,
