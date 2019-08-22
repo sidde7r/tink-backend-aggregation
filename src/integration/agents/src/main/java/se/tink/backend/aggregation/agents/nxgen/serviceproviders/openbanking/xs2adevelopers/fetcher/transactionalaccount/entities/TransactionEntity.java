@@ -46,6 +46,6 @@ public class TransactionEntity {
         return Stream.of(debtorName, creditorName, remittanceInformationUnstructured, purposeCode)
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElseThrow(IllegalStateException::new);
+                .orElse("");
     }
 }
