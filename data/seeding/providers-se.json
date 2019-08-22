@@ -1315,7 +1315,7 @@
                     "masked": false,
                     "name": "addbeneficiaryinput"
                 }
-			},
+            },
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
@@ -1359,7 +1359,7 @@
                     "masked": false,
                     "name": "addbeneficiaryinput"
                 }
-			},
+            },
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
@@ -2303,7 +2303,7 @@
                     "masked": false,
                     "name": "addbeneficiaryinput"
                 }
-			},
+            },
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
@@ -2581,7 +2581,7 @@
                     "masked": false,
                     "name": "addbeneficiaryinput"
                 }
-			},
+            },
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
