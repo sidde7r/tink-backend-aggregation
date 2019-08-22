@@ -357,7 +357,7 @@ public final class RedsysApiClient {
     }
 
     private void setFetchingTransactionsUntil(String accountId, LocalDate date) {
-        final String fetchedUntilDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        final String fetchedUntilDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
         sessionStorage.put(StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
     }
 
