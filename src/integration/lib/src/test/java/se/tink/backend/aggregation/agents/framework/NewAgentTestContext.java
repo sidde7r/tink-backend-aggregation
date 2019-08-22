@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.framework;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -51,6 +52,9 @@ public final class NewAgentTestContext extends AgentContext {
     private static final Logger log = LoggerFactory.getLogger(NewAgentTestContext.class);
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    private final String TEST_CLUSTERID = "oxford-staging";
+    private final String TEST_APPID = "5f98e87106384b2981c0354a33b51590";
+
     private final Map<String, Account> accountsByBankId = new HashMap<>();
     private final Map<String, AccountFeatures> accountFeaturesByBankId = new HashMap<>();
     private final Map<String, List<Transaction>> transactionsByAccountBankId = new HashMap<>();
@@ -70,7 +74,8 @@ public final class NewAgentTestContext extends AgentContext {
         this.user = user;
         this.credential = credential;
         this.transactionsToPrint = transactionsToPrint;
-        this.setAppId(appId);
+        this.setClusterId("oxford-staging");
+        this.setAppId(MoreObjects.firstNonNull(appId, TEST_APPID));
 
         setTestContext(true);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
