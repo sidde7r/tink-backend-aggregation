@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import se.tink.libraries.metrics.LastUpdateGauge;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.types.gauges.LastUpdateGauge;
 
 public class CircuitBreakerStatistics {
     private final LastUpdateGauge circuitBrokenGauge;

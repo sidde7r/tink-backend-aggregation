@@ -2,10 +2,10 @@ package se.tink.backend.integration.boot.configuration;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import se.tink.libraries.metrics.MetricCollector;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.PrometheusConfiguration;
 import se.tink.libraries.metrics.PrometheusExportServer;
+import se.tink.libraries.metrics.collection.MetricCollector;
 
 public class IntegrationServiceModule extends AbstractModule {
 

@@ -1,6 +1,6 @@
 package se.tink.libraries.concurrency;
 
-import se.tink.libraries.metrics.Counter;
+import se.tink.libraries.metrics.types.counters.Counter;
 
 /** Thread-safe. */
 public class IncrementCounterRunnable implements Runnable {

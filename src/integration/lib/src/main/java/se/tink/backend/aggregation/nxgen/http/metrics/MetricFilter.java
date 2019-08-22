@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.utils.MetricsUtils;
 
 /*
  * Measure round trip time and response status of each request.
@@ -26,9 +25,22 @@ public class MetricFilter extends Filter {
     }
 
     private MetricId populateMetric(MetricId metric, HttpResponse response) {
-        return metric.label("provider", MetricsUtils.cleanMetricName(provider.getName()))
+        return metric.label("provider", cleanMetricName(provider.getName()))
                 .label("agent", provider.getClassName())
                 .label("status", Integer.toString(response.getStatus()));
+    }
+
+    /**
+     * Clean graphite metrics names.
+     *
+     * <p>This was created because I was seeing a lot of stacktraces in Carbon log due to broken
+     * metric names.
+     *
+     * @param proposal the proposed metrics' name.
+     * @return cleaned metric's name
+     */
+    private static String cleanMetricName(String proposal) {
+        return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 
     @Override

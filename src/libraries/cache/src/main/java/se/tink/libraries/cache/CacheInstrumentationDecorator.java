@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.timers.Timer;
 
 public class CacheInstrumentationDecorator implements CacheClient {
     private static final Logger logger =

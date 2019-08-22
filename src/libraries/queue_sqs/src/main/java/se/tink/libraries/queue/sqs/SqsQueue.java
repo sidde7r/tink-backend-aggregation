@@ -18,9 +18,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.types.counters.Counter;
 import se.tink.libraries.queue.sqs.auth.RetryableInstanceProfileCredentialsProvider;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 

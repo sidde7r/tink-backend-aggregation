@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.workers.metrics;
 
 import com.google.common.cache.CacheLoader;
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.types.counters.Counter;
 
 public class MeterCacheLoader extends CacheLoader<MetricId.MetricLabels, Counter> {
     private MetricRegistry metricRegistry;

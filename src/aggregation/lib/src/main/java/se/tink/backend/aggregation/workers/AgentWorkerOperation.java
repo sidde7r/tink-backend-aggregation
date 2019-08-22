@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
-import se.tink.libraries.metrics.Timer.Context;
+import se.tink.libraries.metrics.types.timers.Timer;
+import se.tink.libraries.metrics.types.timers.Timer.Context;
 
 public class AgentWorkerOperation implements Runnable {
     public static class AgentWorkerOperationState {

@@ -18,7 +18,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.metrics.Counter;
+import se.tink.libraries.metrics.types.counters.Counter;
 
 /**
  * Something similar to a {@link ThreadPoolExecutor}, but

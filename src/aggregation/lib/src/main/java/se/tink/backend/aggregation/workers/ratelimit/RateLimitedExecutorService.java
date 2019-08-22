@@ -16,7 +16,6 @@ import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.NamedRunnable;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.utils.MetricsUtils;
 
 public class RateLimitedExecutorService implements Managed {
 
@@ -84,8 +83,7 @@ public class RateLimitedExecutorService implements Managed {
                                                         provider.getType().name().toLowerCase())
                                                 .add(
                                                         "provider",
-                                                        MetricsUtils.cleanMetricName(
-                                                                provider.getName()));
+                                                        cleanMetricName(provider.getName()));
 
                                 return new RateLimitedExecutorProxy(
                                         () ->
@@ -140,5 +138,9 @@ public class RateLimitedExecutorService implements Managed {
 
         log.info(String.format("Old provider rate limiter factory: %s", oldFactory));
         log.info(String.format("New provider rate limiter factory: %s", cachedFactor));
+    }
+
+    private static String cleanMetricName(String proposal) {
+        return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 }

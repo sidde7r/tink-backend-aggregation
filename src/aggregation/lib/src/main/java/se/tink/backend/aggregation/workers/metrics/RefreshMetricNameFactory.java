@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import java.util.List;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.metrics.utils.MetricsUtils;
 
 public class RefreshMetricNameFactory {
 
@@ -17,8 +16,7 @@ public class RefreshMetricNameFactory {
                 if (RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS.equals(item)) {
                     return "transactions";
                 }
-                return MetricsUtils.cleanMetricName(item.toString().toLowerCase())
-                        .replaceAll("_", "");
+                return cleanMetricName(item.toString().toLowerCase()).replaceAll("_", "");
             };
 
     public static String createCleanName(RefreshableItem item) {
@@ -41,5 +39,9 @@ public class RefreshMetricNameFactory {
         names.add(isManual ? "manual" : "auto");
 
         return Joiner.on('-').join(names);
+    }
+
+    private static String cleanMetricName(String proposal) {
+        return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 }

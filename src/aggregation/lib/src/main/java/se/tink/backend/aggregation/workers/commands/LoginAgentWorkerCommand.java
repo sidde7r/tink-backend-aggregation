@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.Timer.Context;
+import se.tink.libraries.metrics.types.timers.Timer.Context;
 import se.tink.libraries.user.rpc.User;
 
 public class LoginAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {

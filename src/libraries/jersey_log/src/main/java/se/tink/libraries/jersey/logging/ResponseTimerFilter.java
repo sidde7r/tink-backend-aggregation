@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.libraries.api.annotations.TeamOwnership;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.timers.Timer;
 
 class ResponseTimerFilter
         implements ContainerRequestFilter, ContainerResponseFilter, ResourceFilter {

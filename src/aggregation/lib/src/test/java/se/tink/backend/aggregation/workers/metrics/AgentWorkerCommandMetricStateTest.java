@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.commands.MetricsCommand;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.timers.Timer;
 
 public class AgentWorkerCommandMetricStateTest {
     private AgentWorkerCommandMetricState metrics;

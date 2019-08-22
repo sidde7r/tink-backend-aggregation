@@ -1,8 +1,8 @@
 package se.tink.libraries.concurrency;
 
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.types.counters.Counter;
 
 public class InstrumentedRunnable implements Runnable {
     private final MetricId METRIC_ID_BASE = MetricId.newId("instrumented_runnable");

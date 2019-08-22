@@ -32,10 +32,10 @@ import se.tink.backend.aggregation.agents.abnamro.client.rpc.SubscriptionRespons
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroInternetBankingConfiguration;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.counters.Counter;
+import se.tink.libraries.metrics.types.timers.Timer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 /** Service client for handling with grip subscriptions. */

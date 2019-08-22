@@ -11,7 +11,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -37,7 +36,7 @@ public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorker
         MetricId.MetricLabels metricLabels =
                 new MetricId.MetricLabels()
                         .add("provider_type", provider.getType().name().toLowerCase())
-                        .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
+                        .add("provider", cleanMetricName(provider.getName()))
                         .add("className", Optional.ofNullable(provider.getClassName()).orElse(""))
                         .add("operation", operationName)
                         .add("status", status.name())
@@ -90,5 +89,9 @@ public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorker
             default:
                 break;
         }
+    }
+
+    private static String cleanMetricName(String proposal) {
+        return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 }

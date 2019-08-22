@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.abnamro.client.rpc.enrollment.Initiate
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroEnrollmentConfiguration;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.Timer;
+import se.tink.libraries.metrics.types.timers.Timer;
 
 public class EnrollmentClient {
     private final AbnAmroEnrollmentConfiguration enrollmentConfiguration;
