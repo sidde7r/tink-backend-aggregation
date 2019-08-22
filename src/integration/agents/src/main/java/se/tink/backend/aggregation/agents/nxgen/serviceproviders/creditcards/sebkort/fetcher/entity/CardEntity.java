@@ -67,6 +67,7 @@ public class CardEntity {
                                         getAvailableCreditIfOwnerIfPresent(account, contract))
                                 .withCardAlias(contract.getProductName())
                                 .build())
+                .withoutFlags()
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(maskedCardNumber)
