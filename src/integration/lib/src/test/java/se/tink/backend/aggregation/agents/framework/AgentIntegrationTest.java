@@ -641,7 +641,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         private AisValidator validator;
 
-        private String appId = "tink";
+        private String appId = null;
         private String redirectUrl;
 
         public Builder(String market, String providerName) {
