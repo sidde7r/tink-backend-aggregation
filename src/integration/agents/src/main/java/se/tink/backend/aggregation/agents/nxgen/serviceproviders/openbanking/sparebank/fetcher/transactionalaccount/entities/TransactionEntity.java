@@ -40,10 +40,17 @@ public class TransactionEntity {
     public Collection<Transaction> toTinkTransactions() {
         final Stream<Transaction> bookedTransactionsStream =
                 booked.stream().map(entity -> entity.toTinkTransaction(false));
-        final Stream<Transaction> pendingTransactionsStream =
+
+        /**
+         * Since the bank erroneously sends pending transactions regardless of date range, we never
+         * get an empty list which causes infinite loop in pagination. To avoid that we completely
+         * ignore pending transactions until the bank fixes the bug.
+         */
+        /*final Stream<Transaction> pendingTransactionsStream =
                 pending.stream().map(entity -> entity.toTinkTransaction(true));
 
         return Stream.concat(bookedTransactionsStream, pendingTransactionsStream)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
+        return bookedTransactionsStream.collect(Collectors.toList());
     }
 }
