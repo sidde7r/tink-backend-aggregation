@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.entities.AuthorizeRequestClaims;
 import se.tink.backend.aggregation.agents.utils.crypto.PS256;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PS256.PAYLOAD_CLAIMS;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.Params;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
@@ -240,9 +241,9 @@ public class AuthorizeRequest {
                     UkOpenBankingAisAuthenticatorConstants.MAX_AGE);
             object.put(
                     UkOpenBankingAisAuthenticatorConstants.Params.CLAIMS, authorizeRequestClaims);
-            object.put("iss", clientId);
-            object.put("exp", Instant.now().plusSeconds(3600).getEpochSecond());
-            object.put("aud", issuer);
+            object.put(PAYLOAD_CLAIMS.ISSUER, clientId);
+            object.put(PAYLOAD_CLAIMS.EXPIRES_AT, Instant.now().plusSeconds(3600).getEpochSecond());
+            object.put(PAYLOAD_CLAIMS.AUDIENCE, issuer);
             return object;
         }
     }

@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 
 public class OpenIdConstants {
 
+    public static final String TINK_UKOPENBANKING_ORGID = "00158000016i44IAAQ";
+
     public static class Scopes {
         public static final String OPEN_ID = "openid";
         public static final String ACCOUNTS = "accounts";
@@ -52,15 +54,21 @@ public class OpenIdConstants {
 
     public static final ImmutableList<String> PREFERRED_ID_TOKEN_SIGNING_ALGORITHM =
             ImmutableList.<String>builder()
-                    .add(SIGNING_ALGORITHM.RS256.toString())
                     .add(SIGNING_ALGORITHM.PS256.toString())
+                    .add(SIGNING_ALGORITHM.RS256.toString())
                     .build();
 
     public static final ImmutableList<String> PREFERRED_TOKEN_ENDPOINT_SIGNING_ALGORITHM =
-            ImmutableList.<String>builder().add(SIGNING_ALGORITHM.RS256.toString()).build();
+            ImmutableList.<String>builder()
+                    .add(SIGNING_ALGORITHM.PS256.toString())
+                    .add(SIGNING_ALGORITHM.RS256.toString())
+                    .build();
 
     public static final ImmutableList<String> PREFERRED_REQUEST_OBJECT_SIGNING_ALGORITHM =
-            ImmutableList.<String>builder().add(SIGNING_ALGORITHM.RS256.toString()).build();
+            ImmutableList.<String>builder()
+                    .add(SIGNING_ALGORITHM.PS256.toString())
+                    .add(SIGNING_ALGORITHM.RS256.toString())
+                    .build();
 
     public static final ImmutableList<TOKEN_ENDPOINT_AUTH_METHOD>
             PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS =
@@ -122,5 +130,16 @@ public class OpenIdConstants {
 
     public static class Errors {
         public static final String ACCESS_DENIED = "access_denied";
+    }
+
+    public static class PS256 {
+
+        public static class PAYLOAD_CLAIMS {
+            public static final String ISSUER = "iss";
+            public static final String ISSUED_AT = "iat";
+            public static final String EXPIRES_AT = "exp";
+            public static final String AUDIENCE = "aud";
+            public static final String JWT_ID = "jti";
+        }
     }
 }
