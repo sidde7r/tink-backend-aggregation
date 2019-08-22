@@ -4,19 +4,19 @@ public class EidasIdentity {
     private final String clusterId;
     private final String appId;
 
-    private final String signRequester;
+    private final String requester;
 
-    public EidasIdentity(String clusterId, String appId, Class signRequester) {
+    public EidasIdentity(String clusterId, String appId, Class requester) {
         this.clusterId = clusterId;
         this.appId = appId;
 
-        this.signRequester = signRequester.getCanonicalName();
+        this.requester = requester.getCanonicalName();
     }
 
-    public EidasIdentity(String clusterId, String appId, String signRequester) {
+    public EidasIdentity(String clusterId, String appId, String requester) {
         this.clusterId = clusterId;
         this.appId = appId;
-        this.signRequester = signRequester;
+        this.requester = requester;
     }
 
     public String getAppId() {
@@ -27,7 +27,7 @@ public class EidasIdentity {
         return clusterId;
     }
 
-    public String getSignRequester() {
-        return signRequester;
+    public String getRequester() {
+        return requester;
     }
 }

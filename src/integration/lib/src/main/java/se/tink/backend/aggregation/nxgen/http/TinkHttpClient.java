@@ -67,6 +67,7 @@ import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.constants.CommonHeaders;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -544,17 +545,17 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         requestExecutor.setProxyCredentials(username, password);
     }
 
-    public void setClusterId(String clusterId) {
-        requestExecutor.setClusterId(clusterId);
+    public void setEidasIdentity(EidasIdentity eidasIdentity) {
+        requestExecutor.setEidasIdentity(eidasIdentity);
     }
 
-    public void setEidasProxy(EidasProxyConfiguration conf, String certificateId) {
+    public void setEidasProxy(EidasProxyConfiguration conf, String legacyCertId) {
 
         try {
             setEidasClient(conf.toInternalConfig());
 
             setProxy(conf.getHost());
-            requestExecutor.setEidasCertificateId(certificateId);
+            requestExecutor.setLegacyCertId(legacyCertId);
 
             this.internalHttpClientBuilder =
                     this.internalHttpClientBuilder.setHostnameVerifier(
@@ -565,6 +566,11 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         }
     }
 
+    /**
+     * @deprecated This should not be used. Use `setEidasProxy` if making proxied requests. Use
+     *     `QsealcSigner` if requesting signatures
+     */
+    @Deprecated
     public void setEidasSign(EidasProxyConfiguration conf) {
         setEidasClient(conf.toInternalConfig());
     }

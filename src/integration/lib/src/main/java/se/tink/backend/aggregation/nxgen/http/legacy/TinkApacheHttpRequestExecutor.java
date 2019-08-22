@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 
 /*
    This HttpRequestExecutor is only necessary because of bugs in the underlying libraries (jersey and apache).
@@ -44,6 +45,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String SIGNATURE_HEADER_KEY = "X-Signature";
     private static final String EIDAS_CERTIFICATE_ID_HEADER = "X-Tink-Eidas-Proxy-Certificate-Id";
     private static final String EIDAS_CLUSTER_ID_HEADER = "X-Tink-QWAC-ClusterId";
+    private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
+    private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
     private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
@@ -52,12 +55,12 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private String proxyUsername;
     private String proxyPassword;
 
-    private boolean shouldAddEidasCertificateId = false;
-    private String eidasCertificateId;
-    private String clusterId;
+    private boolean shouldUseEidasProxy = false;
+    private String legacyCertId;
+    private EidasIdentity eidasIdentity;
 
-    public void setClusterId(String clusterId) {
-        this.clusterId = clusterId;
+    public void setEidasIdentity(EidasIdentity eidasIdentity) {
+        this.eidasIdentity = eidasIdentity;
     }
 
     public TinkApacheHttpRequestExecutor(SignatureKeyPair signatureKeyPair) {
@@ -76,9 +79,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         this.proxyPassword = password;
     }
 
-    public void setEidasCertificateId(String eidasCertificateId) {
-        this.shouldAddEidasCertificateId = true;
-        this.eidasCertificateId = eidasCertificateId;
+    public void setLegacyCertId(String legacyCertId) {
+        this.shouldUseEidasProxy = true;
+        this.legacyCertId = legacyCertId;
     }
 
     @Override
@@ -90,11 +93,13 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         // Authentication towards the EIDAS proxy is with TLS-MA, we don't need to add an auth
         // header for EIDAS requests.
-        if (isHttpProxyRequest(request) && (!shouldAddEidasCertificateId)) {
+        if (isHttpProxyRequest(request) && (!shouldUseEidasProxy)) {
             addProxyAuthorizationHeader(request);
-        } else if (shouldAddEidasCertificateId) {
-            request.addHeader(EIDAS_CERTIFICATE_ID_HEADER, eidasCertificateId);
-            request.addHeader(EIDAS_CLUSTER_ID_HEADER, clusterId);
+        } else if (shouldUseEidasProxy) {
+            request.addHeader(EIDAS_CERTIFICATE_ID_HEADER, legacyCertId);
+            request.addHeader(EIDAS_CLUSTER_ID_HEADER, eidasIdentity.getClusterId());
+            request.addHeader(EIDAS_APPID_HEADER, eidasIdentity.getAppId());
+            request.addHeader(EIDAS_PROXY_REQUESTER, eidasIdentity.getRequester());
         } else if (shouldAddRequestSignature) {
             // Do not add a signature header on the proxy requests.
             // This is because we don't want to leak unnecessary information to proxy providers.

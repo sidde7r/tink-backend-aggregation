@@ -35,6 +35,10 @@ agents:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
     abn:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
+  crelan:
+    tink:
+      certificateId: Tink
+      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   rabobank:
     tink_sandbox:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback

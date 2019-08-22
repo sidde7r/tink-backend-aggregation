@@ -147,6 +147,15 @@ data:
             baseUrl: "https://api.psd2.bpostbank.be"
         {{- end }}
 
+        {{- if $agentsConfig.crelan }}
+        crelan:
+          tink:
+            clientId: "CRELAN_PSD2_CLIENT_ID"
+            redirectUrl: "{{ $agentsConfig.crelan.tink.redirectUrl }}"
+            certificateId: "{{ $agentsConfig.crelan.tink.certificateId }}"
+            baseUrl: "https://api.crelan.be"
+        {{- end }}
+
         {{- if $agentsConfig.sparebank }}
         sparebank:
           tink:
