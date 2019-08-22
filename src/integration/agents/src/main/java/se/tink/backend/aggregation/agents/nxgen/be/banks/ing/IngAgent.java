@@ -5,10 +5,12 @@ import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
@@ -51,7 +53,8 @@ public class IngAgent extends SubsequentGenerationAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                ProgressiveAuthAgent {
+                ProgressiveAuthAgent,
+                ManualOrAutoAuth {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
     private final IngTransferHelper ingTransferHelper;
@@ -181,5 +184,11 @@ public class IngAgent extends SubsequentGenerationAgent
     @Override
     public boolean login() throws Exception {
         throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        // TODO: remove casting
+        return ((ManualOrAutoAuth) authenticator).isManualAuthentication(credentials);
     }
 }

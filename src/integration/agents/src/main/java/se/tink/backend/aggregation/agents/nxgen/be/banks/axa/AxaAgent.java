@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
 import java.util.Locale;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -32,7 +34,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class AxaAgent extends SubsequentGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                ProgressiveAuthAgent {
+                ProgressiveAuthAgent,
+                ManualOrAutoAuth {
 
     private final AxaApiClient apiClient;
     private final AxaStorage storage;
@@ -121,5 +124,11 @@ public final class AxaAgent extends SubsequentGenerationAgent
     @Override
     public boolean login() {
         throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        // TODO: remove casting
+        return ((ManualOrAutoAuth) authenticator).isManualAuthentication(credentials);
     }
 }
