@@ -1307,6 +1307,15 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "supplementalFields": [
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                }
+            ],
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
@@ -1340,6 +1349,15 @@
                     "numeric": true,
                     "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "supplementalFields": [
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
                 }
             ],
             "groupDisplayName": "Swedbank och Sparbankerna",
@@ -2277,6 +2295,15 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "supplementalFields": [
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                }
+            ],
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
@@ -2544,6 +2571,15 @@
                     "numeric": true,
                     "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "supplementalFields": [
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
                 }
             ],
             "groupDisplayName": "Swedbank och Sparbankerna",
