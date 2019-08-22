@@ -47,6 +47,10 @@ agents:
     tink:
       certificateId: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+  crelan:
+    tink:
+      certificateId: Tink
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   sparebank:
     tink:
       qwacCertId: Tink
