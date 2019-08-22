@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import java.time.LocalDate;
 import java.util.List;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
@@ -33,9 +34,11 @@ public class SebBrandedCardsApiClient extends SebBaseApiClient {
 
     @Override
     public OAuth2Token getToken(TokenRequest request) {
-        return createRequest(
+        return client.request(
                         new URL(SebCommonConstants.Urls.BASE_URL)
                                 .concat(SebBrandedCardsConstants.Urls.TOKEN))
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, request.toData())
                 .toTinkToken();
     }
