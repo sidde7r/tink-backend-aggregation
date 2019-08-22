@@ -136,23 +136,34 @@ public class CbiGlobeApiClient {
             return createRequestWithConsent(Urls.BALANCES.parameter(IdTags.ACCOUNT_ID, resourceId))
                     .get(GetBalancesResponse.class);
         } catch (HttpResponseException e) {
-            final String message = e.getResponse().getBody(String.class).toLowerCase();
-            if (message.contains(ErrorMessages.ACCESS_EXCEEDED)) {
-                throw BankServiceError.ACCESS_EXCEEDED.exception();
-            }
+            handleAccessExceededError(e);
             throw e;
         }
     }
 
     public GetTransactionsResponse getTransactions(
             String apiIdentifier, Date fromDate, Date toDate, String bookingType) {
-        return createRequestWithConsent(
-                        Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
-                .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
-                .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                .get(GetTransactionsResponse.class);
+        try {
+            return createRequestWithConsent(
+                            Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
+                    .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
+                    .queryParam(
+                            QueryKeys.DATE_FROM,
+                            ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                    .queryParam(
+                            QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                    .get(GetTransactionsResponse.class);
+        } catch (HttpResponseException e) {
+            handleAccessExceededError(e);
+            throw e;
+        }
+    }
+
+    public void handleAccessExceededError(HttpResponseException e) {
+        final String message = e.getResponse().getBody(String.class).toLowerCase();
+        if (message.contains(ErrorMessages.ACCESS_EXCEEDED)) {
+            throw BankServiceError.ACCESS_EXCEEDED.exception();
+        }
     }
 
     public boolean isTokenValid() {
