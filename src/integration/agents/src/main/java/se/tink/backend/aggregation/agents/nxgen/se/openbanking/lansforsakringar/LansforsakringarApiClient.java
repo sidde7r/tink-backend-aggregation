@@ -219,6 +219,5 @@ public final class LansforsakringarApiClient {
                         getConfiguration().getRedirectUri())
                 .header(LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, false)
                 .get(HttpResponse.class);
-
     }
 }

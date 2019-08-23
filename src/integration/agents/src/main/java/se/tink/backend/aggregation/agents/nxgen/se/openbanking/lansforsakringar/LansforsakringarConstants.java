@@ -80,7 +80,7 @@ public abstract class LansforsakringarConstants {
                 "TPP-Explicit-Authorisation-Preferred";
         public static final String X_TINK_DEBUG = "X-Tink-Debug";
         public static final String CONTENT_TYPE = "Content-Type";
-        public static final String CACHE_CONTROL = "cache-control";
+        public static final String CACHE_CONTROL = "Cache-Control";
         public static final String AUTHORIZATION = "Authorization";
     }
 
