@@ -1,7 +1,6 @@
 package se.tink.libraries.amount;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Objects;
 
 public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
@@ -13,24 +12,12 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
         this.currencyCode = currencyCode;
     }
 
-    private ExactCurrencyAmount(double value, String currencyCode) {
-        this(BigDecimal.valueOf(value), currencyCode);
-    }
-
-    private ExactCurrencyAmount(long value, int scale, String currencyCode) {
-        this(new BigDecimal(BigInteger.valueOf(value), scale), currencyCode);
-    }
-
     public static ExactCurrencyAmount of(BigDecimal i, String currencyCode) {
         return new ExactCurrencyAmount(i, currencyCode);
     }
 
     public static ExactCurrencyAmount of(String i, String currencyCode) {
         return new ExactCurrencyAmount(new BigDecimal(i), currencyCode);
-    }
-
-    public static ExactCurrencyAmount of(ExactCurrencyAmount amount) {
-        return new ExactCurrencyAmount(amount.getExactValue(), amount.getCurrencyCode());
     }
 
     public double getDoubleValue() {

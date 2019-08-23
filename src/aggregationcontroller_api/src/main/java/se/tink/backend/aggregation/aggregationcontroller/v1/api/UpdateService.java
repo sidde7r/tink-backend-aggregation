@@ -9,6 +9,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import se.tink.api.annotations.Team;
+import se.tink.api.annotations.TeamOwnership;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
@@ -19,8 +21,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredential
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
-import se.tink.libraries.api.annotations.Team;
-import se.tink.libraries.api.annotations.TeamOwnership;
 import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 

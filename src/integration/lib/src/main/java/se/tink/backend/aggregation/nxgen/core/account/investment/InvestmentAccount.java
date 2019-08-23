@@ -97,12 +97,12 @@ public class InvestmentAccount extends Account {
         }
 
         public Builder<A, T> setCashBalance(ExactCurrencyAmount cashBalance) {
-            this.cashBalance = ExactCurrencyAmount.of(cashBalance);
+            this.cashBalance = cashBalance;
             return this;
         }
 
         ExactCurrencyAmount getExactCashBalance() {
-            return ExactCurrencyAmount.of(cashBalance);
+            return cashBalance;
         }
 
         @Override

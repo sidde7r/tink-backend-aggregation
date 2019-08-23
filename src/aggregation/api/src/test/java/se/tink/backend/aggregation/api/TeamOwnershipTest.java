@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.api;
 
 import org.junit.Test;
-import se.tink.libraries.api.annotations.ApiTeamOwnershipChecker;
+import se.tink.api.annotations.ApiTeamOwnershipChecker;
 
 public class TeamOwnershipTest {
 

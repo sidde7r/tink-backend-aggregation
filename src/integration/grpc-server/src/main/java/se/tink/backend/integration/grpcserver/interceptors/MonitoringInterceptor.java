@@ -8,11 +8,11 @@ import io.grpc.ServerCallHandler;
 import io.grpc.ServerInterceptor;
 import java.lang.reflect.Method;
 import java.util.Optional;
+import se.tink.api.annotations.TeamOwnership;
 import se.tink.backend.integration.gprcserver.interceptors.metrics.GrpcMethod;
 import se.tink.backend.integration.gprcserver.interceptors.metrics.GrpcMethodUtils;
 import se.tink.backend.integration.gprcserver.interceptors.metrics.MonitoringCall;
 import se.tink.backend.integration.gprcserver.interceptors.metrics.MonitoringCallListener;
-import se.tink.libraries.api.annotations.TeamOwnership;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class MonitoringInterceptor implements ServerInterceptor {

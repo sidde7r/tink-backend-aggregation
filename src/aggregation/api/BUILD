@@ -39,7 +39,7 @@ junit_test(
     ],
     deps = [
         "//src/integration/api",
-        "//src/libraries/api_annotations:api_annotations_test",
+        "//src/libraries/api_annotations/testlib",
         "//src/libraries/credentials:service",
         "//src/libraries/user:rpc",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
