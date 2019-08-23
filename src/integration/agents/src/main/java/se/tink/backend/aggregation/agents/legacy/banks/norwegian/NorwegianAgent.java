@@ -1,13 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.norwegian;
 
-import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.net.UrlEscapers;
 import com.google.common.util.concurrent.Uninterruptibles;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
 import java.util.Date;
@@ -19,6 +15,9 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -52,15 +51,20 @@ import se.tink.backend.aggregation.agents.banks.norwegian.model.TransactionEntit
 import se.tink.backend.aggregation.agents.banks.norwegian.model.TransactionListResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils.AccountNotFoundException;
+import se.tink.backend.aggregation.agents.banks.norwegian.utils.LoginParsingUtils;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
@@ -80,6 +84,7 @@ public class NorwegianAgent extends AbstractAgent
     private static final int AUTHENTICATION_BANK_ID_RETRIES = 60;
 
     private static final String BASE_URL = "https://www.banknorwegian.se/";
+    private static final String IDENTITY_BASE_URL = "https://identity.banknorwegian.se/";
     private static final String CREDIT_CARD_URL = BASE_URL + "MinSida/Creditcard/";
     private static final String CREDIT_CARD_OVERVIEW_URL =
             BASE_URL + "api/mypage/creditcard/overview";
@@ -111,27 +116,27 @@ public class NorwegianAgent extends AbstractAgent
     private static final URL TRANSACTIONS_PAGINATION_URL =
             new URL(BASE_URL + "MyPage2/Transaction/GetTransactionsFromTo");
 
+    private static final String INIT_URL = "https://www.banknorwegian.se/Login";
     private static final String LOGIN_URL =
-            "https://id.banknorwegian.se/std/method/"
-                    + "banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=https%3a%2f%2fwww.banknorwegian.se%"
-                    + "2fLogin%2fSignicatCallback%3fipid%3d22%26returnUrl%3d%252FMinSida";
+            "https://id.banknorwegian.se/std/method/banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=";
+    private static final String TARGET_URL =
+            "https://identity.banknorwegian.se/MyPage/SignicatCallback?ipid=22&returnUrl=";
     private static final String COLLECT = "collect";
     private static final String ORDER = "order";
 
-    private final Client client;
+    private final TinkHttpClient client;
 
     public NorwegianAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
-        //        DefaultApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
-        //        config.getProperties().put(
-        //                ApacheHttpClient4Config.PROPERTY_PROXY_URI,
-        //                "http://127.0.0.1:8888"
-        //        );
-        //        client = clientFactory.createProxyClient(context.getLogOutputStream(), config);
-
-        client = clientFactory.createCookieClient(context.getLogOutputStream());
+        client =
+                new TinkHttpClient(
+                        getAggregatorInfo(),
+                        null,
+                        context.getLogOutputStream(),
+                        signatureKeyPair,
+                        request.getProvider());
     }
 
     @Override
@@ -140,16 +145,27 @@ public class NorwegianAgent extends AbstractAgent
     }
 
     private boolean authenticate(Credentials credentials) throws BankIdException {
+        HttpResponse response = client.request(INIT_URL).get(HttpResponse.class);
 
-        String initStartPage = client.resource(LOGIN_URL).get(String.class);
+        String returnUrl =
+                response.getRedirects().stream()
+                        .map(uri -> URLEncodedUtils.parse(uri, "UTF-8"))
+                        .flatMap(List::stream)
+                        .filter(pair -> "returnUrl".equals(pair.getName()))
+                        .findFirst()
+                        .map(NameValuePair::getValue)
+                        .map(EncodingUtils::encodeUrl)
+                        .orElseThrow(NoSuchElementException::new);
 
+        String targetUrl = LOGIN_URL.concat(EncodingUtils.encodeUrl(TARGET_URL.concat(returnUrl)));
+        String initStartPage = client.request(targetUrl).get(String.class);
         String bankIdUrl = SignicatParsingUtils.parseBankIdServiceUrl(initStartPage);
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setSubject(credentials.getField(Field.Key.USERNAME));
 
         OrderBankIdResponse orderBankIdResponse =
-                client.resource(bankIdUrl + ORDER)
+                client.request(bankIdUrl + ORDER)
                         .type(MediaType.APPLICATION_JSON)
                         .post(OrderBankIdResponse.class, loginRequest);
 
@@ -184,26 +200,39 @@ public class NorwegianAgent extends AbstractAgent
         Element formElement = completeDocument.getElementById("responseForm");
 
         // Use the SAML created secret key to authenticate the user.
-
-        ClientResponse authenticateClientResponse =
+        String redirectResponse =
                 createClientRequest(formElement.attr("action"))
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                        .entity(ElementUtils.parseFormParameters(formElement))
-                        .post(ClientResponse.class);
+                        .post(String.class, ElementUtils.parseFormParameters(formElement));
+
+        String redirectUrl = LoginParsingUtils.getRedirectUrl(redirectResponse);
+
+        HttpResponse authenticationFormResponse =
+                createScrapeRequest(IDENTITY_BASE_URL.concat(redirectUrl.substring(1)))
+                        .get(HttpResponse.class);
+
+        Document authenticationForm = Jsoup.parse(authenticationFormResponse.getBody(String.class));
+        Element authenticationFormElement = authenticationForm.select("form").first();
+
+        HttpResponse authenticationResponse =
+                createClientRequest(authenticationFormElement.attr("action"))
+                        .post(
+                                HttpResponse.class,
+                                ElementUtils.parseFormParameters(authenticationFormElement));
 
         // Try to access transaction page and verify that we aren't redirected
-        ClientResponse loggedInResponse =
-                createClientRequest(CARD_TRANSACTION_URL).get(ClientResponse.class);
+        HttpResponse loggedInResponse =
+                createClientRequest(CARD_TRANSACTION_URL).get(HttpResponse.class);
 
-        if (authenticateClientResponse.getStatus() == HttpStatusCodes.STATUS_CODE_OK
-                && loggedInResponse.getStatus() == HttpStatusCodes.STATUS_CODE_OK) {
+        if (authenticationResponse.getStatus() == HttpStatus.SC_OK
+                && loggedInResponse.getStatus() == HttpStatus.SC_OK) {
             return true;
         } else {
             throw new IllegalStateException(
                     String.format(
-                            "#login-refactoring - Norwegian - Did not get status code for both authenticateClientResponse "
+                            "#login-refactoring - Norwegian - Did not get status code for both authenticationResponse "
                                     + "and loggedInResponse: %s, %s",
-                            authenticateClientResponse.getStatus(), loggedInResponse.getStatus()));
+                            authenticationResponse.getStatus(), loggedInResponse.getStatus()));
         }
     }
 
@@ -447,7 +476,7 @@ public class NorwegianAgent extends AbstractAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        String identityPage = createClientRequest(IDENTITY_URL).get(String.class);
+        String identityPage = createScrapeRequest(IDENTITY_URL).get(String.class);
         String ssn = request.getCredentials().getField(Key.USERNAME);
 
         return CreditCardParsingUtils.parseAccountName(identityPage)
@@ -495,14 +524,14 @@ public class NorwegianAgent extends AbstractAgent
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(date);
     }
 
-    private WebResource.Builder createScrapeRequest(String url) {
-        return client.resource(url)
+    private RequestBuilder createScrapeRequest(String url) {
+        return client.request(url)
                 .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
                 .accept(MediaType.TEXT_HTML);
     }
 
-    private WebResource.Builder createClientRequest(String url) {
-        return client.resource(url)
+    private RequestBuilder createClientRequest(String url) {
+        return client.request(url)
                 .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
                 .accept(MediaType.APPLICATION_JSON);
     }
@@ -513,17 +542,17 @@ public class NorwegianAgent extends AbstractAgent
      */
     private <T> T fetchAccountsRequest(String url, Class<T> responseType) {
 
-        ClientResponse response =
-                client.resource(url)
+        HttpResponse response =
+                client.request(url)
                         .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
                         .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML)
-                        .get(ClientResponse.class);
+                        .get(HttpResponse.class);
 
         if (response.getType().getType().equals(MediaType.APPLICATION_JSON_TYPE.getType())
                 && response.getType()
                         .getSubtype()
                         .equals(MediaType.APPLICATION_JSON_TYPE.getSubtype())) {
-            return response.getEntity(responseType);
+            return response.getBody(responseType);
         }
 
         return null;
