@@ -51,7 +51,8 @@ public class SparebankAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+        apiClient.setConfiguration(
+                getClientConfiguration(), configuration.getEidasProxy(), this.getEidasIdentity());
     }
 
     public SparebankConfiguration getClientConfiguration() {
