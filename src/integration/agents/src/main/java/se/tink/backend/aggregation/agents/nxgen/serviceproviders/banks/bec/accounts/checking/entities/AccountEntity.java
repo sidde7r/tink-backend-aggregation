@@ -5,9 +5,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -84,7 +83,7 @@ public class AccountEntity {
                 .setName(accountName)
                 .setHolderName(new HolderName(details.getAccountHolder()))
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                .addIdentifier(AccountIdentifier.create(Type.IBAN, details.getIban()))
+                .addIdentifier(new IbanIdentifier(details.getIban()))
                 .build();
     }
 }
