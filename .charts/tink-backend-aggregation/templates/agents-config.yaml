@@ -858,7 +858,7 @@ data:
         finecobank:
           tink:
             clientId: "FINECOBANK_CLIENT_ID_TAG"
-            redirectUrl: "{{ $agentsConfig.finecobank.tink.redirectUrl }}""
+            redirectUrl: "{{ $agentsConfig.finecobank.tink.redirectUrl }}"
             certificateId: "{{ $agentsConfig.finecobank.tink.certificateId }}"
             psuIpAddress: "0.0.0.0"
         {{- end }}
