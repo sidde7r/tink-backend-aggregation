@@ -854,6 +854,15 @@ data:
             redirectUrl: "{{ $agentsConfig.crosskey.tink.redirectUrl }}"
         {{- end }}
 
+        {{- if $agentsConfig.finecobank }}
+        finecobank:
+          tink:
+            clientId: "FINECOBANK_CLIENT_ID_TAG"
+            redirectUrl: "{{ $agentsConfig.finecobank.tink.redirectUrl }}""
+            certificateId: "{{ $agentsConfig.finecobank.tink.certificateId }}"
+            psuIpAddress: "0.0.0.0"
+        {{- end }}
+
       abnAmro:
 
       {{- if $agentsConfig.abnAmro }}
