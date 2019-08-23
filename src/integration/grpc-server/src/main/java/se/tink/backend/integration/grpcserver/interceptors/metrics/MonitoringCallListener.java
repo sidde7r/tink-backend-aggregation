@@ -2,7 +2,7 @@ package se.tink.backend.integration.gprcserver.interceptors.metrics;
 
 import io.grpc.ForwardingServerCallListener;
 import io.grpc.ServerCall;
-import se.tink.libraries.api.annotations.TeamOwnership;
+import se.tink.api.annotations.TeamOwnership;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 
