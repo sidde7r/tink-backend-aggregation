@@ -80,8 +80,7 @@ public class SwedbankDefaultApiClient {
     private final String username;
     private final SessionStorage sessionStorage;
     // only use cached menu items for a profile
-    protected BankProfileHandler bankProfileHandler;
-    private Map<String, MenuItemLinkEntity> menuItems;
+    private BankProfileHandler bankProfileHandler;
 
     protected SwedbankDefaultApiClient(
             TinkHttpClient client,
@@ -338,8 +337,6 @@ public class SwedbankDefaultApiClient {
     public RegisterRecipientResponse registerPayee(RegisterPayeeRequest registerPayeeRequest)
             throws TransferExecutionException {
 
-        throwIfNotAuthorizedForRegisterAction(SwedbankBaseConstants.MenuItemKey.REGISTER_PAYEE);
-
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYEE,
                 registerPayeeRequest,
@@ -348,10 +345,6 @@ public class SwedbankDefaultApiClient {
 
     public RegisterTransferRecipientResponse registerTransferRecipient(
             RegisterTransferRecipientRequest request) throws TransferExecutionException {
-
-        throwIfNotAuthorizedForRegisterAction(
-                SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT);
-
         try {
             return makeMenuItemRequest(
                     SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT,
@@ -368,17 +361,6 @@ public class SwedbankDefaultApiClient {
 
             // unknown error: rethrow
             throw hre;
-        }
-    }
-
-    private void throwIfNotAuthorizedForRegisterAction(
-            SwedbankBaseConstants.MenuItemKey menuItemKey) throws TransferExecutionException {
-        if (!isAuthorizedForAction(menuItemKey)) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(
-                            SwedbankBaseConstants.UserMessage.STRONGER_AUTHENTICATION_NEEDED)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.NEEDS_EXTENDED_USE)
-                    .build();
         }
     }
 
@@ -538,9 +520,9 @@ public class SwedbankDefaultApiClient {
             Class<T> responseClass,
             Map<String, String> parameters) {
 
-        Map<String, MenuItemLinkEntity> menuItems = getMenuItems();
+        Map<String, MenuItemLinkEntity> menuItems = bankProfileHandler.getMenuItems();
 
-        if (!isAuthorizedForAction(menuItemKey)) {
+        if (!bankProfileHandler.isAuthorizedForAction(menuItemKey)) {
             MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
             log.warn(
                     "User not authorized to perform request with key: [{}], name: [{}], authorization: [{}]",
@@ -552,26 +534,6 @@ public class SwedbankDefaultApiClient {
 
         return makeRequest(
                 menuItems.get(menuItemKey.getKey()), requestObject, responseClass, parameters);
-    }
-
-    private boolean isAuthorizedForAction(SwedbankBaseConstants.MenuItemKey menuItemKey) {
-        Map<String, MenuItemLinkEntity> menuItems = getMenuItems();
-        Preconditions.checkNotNull(menuItemKey);
-        Preconditions.checkNotNull(menuItems);
-        Preconditions.checkState(menuItems.containsKey(menuItemKey.getKey()));
-        MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
-
-        return menuItem.isAuthorized();
-    }
-
-    private Map<String, MenuItemLinkEntity> getMenuItems() {
-        //        bankProfileHandler = getBankProfileHandler();
-        if (bankProfileHandler != null && bankProfileHandler.getActiveBankProfile() != null) {
-            return bankProfileHandler.getActiveBankProfile().getMenuItems();
-        }
-
-        // this is for bootstrapping
-        return menuItems;
     }
 
     private void ensureAuthorizationHeaderIsSet() {
@@ -627,7 +589,8 @@ public class SwedbankDefaultApiClient {
 
         for (BankEntity bank : profileResponse.getBanks()) {
             // fetch all profile details
-            menuItems = fetchProfile(bank.getPrivateProfile().getLinks().getNextOrThrow());
+            Map<String, MenuItemLinkEntity> menuItems =
+                    fetchProfile(bank.getPrivateProfile().getLinks().getNextOrThrow());
             EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
             PaymentBaseinfoResponse paymentBaseinfoResponse = fetchPaymentBaseinfo();
             // create and add profile
@@ -635,6 +598,7 @@ public class SwedbankDefaultApiClient {
                     new BankProfile(
                             bank, menuItems, engagementOverViewResponse, paymentBaseinfoResponse);
             bankProfileHandler.addBankProfile(bankProfile);
+            bankProfileHandler.setMenuItems(menuItems);
             // profile is already activated
             bankProfileHandler.setActiveBankProfile(bankProfile);
         }

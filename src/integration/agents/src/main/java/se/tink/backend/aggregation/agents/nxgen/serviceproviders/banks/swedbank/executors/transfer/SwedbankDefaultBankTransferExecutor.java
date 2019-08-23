@@ -13,7 +13,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.transfer.rpc.RegisterTransferRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfileHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.i18n.Catalog;
@@ -23,12 +25,15 @@ import se.tink.libraries.transfer.rpc.Transfer;
 public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
         implements BankTransferExecutor {
     private final Catalog catalog;
+    private final SessionStorage sessionStorage;
 
     public SwedbankDefaultBankTransferExecutor(
             Catalog catalog,
             SwedbankDefaultApiClient apiClient,
-            SwedbankTransferHelper transferHelper) {
+            SwedbankTransferHelper transferHelper,
+            SessionStorage sessionStorage) {
         super(apiClient, transferHelper);
+        this.sessionStorage = sessionStorage;
         this.catalog = catalog;
     }
 
@@ -96,6 +101,15 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
                             catalog.getString("You can only make transfers to Swedish accounts"))
                     .build();
         }
+
+        BankProfileHandler handler =
+                sessionStorage
+                        .get(
+                                SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER,
+                                BankProfileHandler.class)
+                        .orElseThrow(IllegalStateException::new);
+        handler.throwIfNotAuthorizedForRegisterAction(
+                SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT);
 
         SwedishIdentifier destination = accountIdentifier.to(SwedishIdentifier.class);
 
