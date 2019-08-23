@@ -39,7 +39,7 @@ public final class BalanceModule {
     }
 
     public ExactCurrencyAmount getExactBalance() {
-        return ExactCurrencyAmount.of(this.exactBalance);
+        return exactBalance;
     }
 
     public Optional<Double> getInterestRate() {
@@ -81,7 +81,7 @@ public final class BalanceModule {
         @Override
         public BalanceBuilderStep setAvailableCredit(@Nonnull ExactCurrencyAmount availableCredit) {
             Preconditions.checkNotNull(availableCredit, "Available Credit must not be null.");
-            this.exactAvailableCredit = ExactCurrencyAmount.of(availableCredit);
+            this.exactAvailableCredit = availableCredit;
             return this;
         }
 
@@ -97,7 +97,7 @@ public final class BalanceModule {
         @Override
         public BalanceBuilderStep withBalance(@Nonnull ExactCurrencyAmount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
-            this.exactBalance = ExactCurrencyAmount.of(balance);
+            this.exactBalance = balance;
             return this;
         }
 

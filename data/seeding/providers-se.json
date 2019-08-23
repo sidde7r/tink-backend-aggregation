@@ -2304,6 +2304,7 @@
                     "name": "addbeneficiaryinput"
                 }
             ],
+            "financialInstitutionId": "6c1749b4475e5677a83e9fa4bb60a18a",
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
