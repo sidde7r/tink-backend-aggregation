@@ -38,8 +38,6 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
 
         clientName = request.getProvider().getPayload();
 
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
         deutscheBankConfiguration =
                 configuration
                         .getIntegrations()
@@ -53,6 +51,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
 
         apiClient = new DeutscheBankApiClient(client, sessionStorage, deutscheBankConfiguration);
 
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.setEidasProxy(
                 configuration.getEidasProxy(), deutscheBankConfiguration.getCertificateId());
     }
