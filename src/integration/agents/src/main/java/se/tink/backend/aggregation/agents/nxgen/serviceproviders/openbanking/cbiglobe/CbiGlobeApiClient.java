@@ -75,7 +75,7 @@ public class CbiGlobeApiClient {
                 .header(HeaderKeys.DATE, CbiGlobeUtils.getCurrentDateFormatted());
     }
 
-    private RequestBuilder createRequestWithConsent(URL url) {
+    protected RequestBuilder createRequestWithConsent(URL url) {
         RequestBuilder rb =
                 createRequestInSession(url)
                         .header(
