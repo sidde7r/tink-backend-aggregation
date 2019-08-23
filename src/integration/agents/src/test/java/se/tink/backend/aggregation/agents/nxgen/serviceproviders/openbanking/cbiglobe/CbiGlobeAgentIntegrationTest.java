@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -170,8 +171,10 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
                 response =
                         progressiveAgent.login(
                                 SteppableAuthenticationRequest.subsequentRequest(
-                                        response.getStep().get(), new ArrayList(map.values())))) {
-            List<Field> fields = response.getFields();
+                                        response.getStep().get(),
+                                        AuthenticationRequest.fromUserInputs(
+                                                new ArrayList(map.values()))))) {
+            List<Field> fields = response.getPayload().getFields().get();
             map =
                     this.supplementalInformationController.askSupplementalInformation(
                             (Field[]) fields.toArray(new Field[fields.size()]));
