@@ -76,7 +76,7 @@ final class SignStep implements AuthenticationStep {
         final String signTypeId = apiClient.signTypeManual(signingId, cipherKey);
         final String signChallengeCode = apiClient.signChallenge(signTypeId, signingId, cipherKey);
 
-        return new AuthenticationResponse(
+        return AuthenticationResponse.fromSupplementalFields(
                 supplementalInformationFormer.formChallengeResponseFields(
                         Key.SIGN_CODE_DESCRIPTION, Key.SIGN_CODE_INPUT, signChallengeCode));
     }

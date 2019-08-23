@@ -48,7 +48,7 @@ public final class SignStep implements AuthenticationStep {
                 authenticator.initEnroll(username, cardNumber, otp);
         request.getCredentials()
                 .setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
-        return new AuthenticationResponse(
+        return AuthenticationResponse.fromSupplementalFields(
                 supplementalInformationFormer.formChallengeResponseFields(
                         Key.SIGN_CODE_DESCRIPTION,
                         Key.SIGN_CODE_INPUT,

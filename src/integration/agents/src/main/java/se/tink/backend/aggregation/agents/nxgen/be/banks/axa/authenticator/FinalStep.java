@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator;
 
-import java.util.Collections;
 import java.util.UUID;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
@@ -126,6 +125,6 @@ final class FinalStep implements AuthenticationStep {
 
         AxaCommonAuthenticator.authenticate(apiClient, storage);
 
-        return new AuthenticationResponse(Collections.emptyList());
+        return AuthenticationResponse.empty();
     }
 }

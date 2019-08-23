@@ -47,7 +47,7 @@ final class LoginStep implements AuthenticationStep {
 
         String challengeCode = apiClient.challenge(cipherKey);
 
-        return new AuthenticationResponse(
+        return AuthenticationResponse.fromSupplementalFields(
                 supplementalInformationFormer.formChallengeResponseFields(
                         Key.LOGIN_DESCRIPTION, Key.LOGIN_INPUT, challengeCode));
     }

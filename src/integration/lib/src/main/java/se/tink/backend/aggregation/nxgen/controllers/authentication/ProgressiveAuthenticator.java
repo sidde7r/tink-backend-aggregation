@@ -4,7 +4,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 
-public interface ProgressiveAuthenticator extends Authenticator {
+public interface ProgressiveAuthenticator {
 
     /**
      * An iterable collection of authentication steps, where each step maps an authentication

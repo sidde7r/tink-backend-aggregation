@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
 import com.google.common.base.Preconditions;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import se.tink.backend.agents.rpc.Field;
 
 public final class SteppableAuthenticationResponse implements AuthenticationSteppable {
 
@@ -35,7 +33,7 @@ public final class SteppableAuthenticationResponse implements AuthenticationStep
         return Optional.ofNullable(klass);
     }
 
-    public List<Field> getFields() {
-        return response.getFields();
+    public AuthenticationResponse getPayload() {
+        return response;
     }
 }

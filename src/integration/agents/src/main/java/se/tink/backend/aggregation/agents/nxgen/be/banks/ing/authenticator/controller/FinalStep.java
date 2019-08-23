@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
@@ -33,7 +32,7 @@ public final class FinalStep implements AuthenticationStep {
                 extractSignCodeInput(request.getUserInputs()),
                 request.getCredentials().getSensitivePayload(SIGN_ID));
         authenticator.authenticate(request.getCredentials().getField(Field.Key.USERNAME));
-        return new AuthenticationResponse(Collections.emptyList());
+        return AuthenticationResponse.empty();
     }
 
     private static String extractSignCodeInput(final ImmutableList<String> userInputs) {
