@@ -127,6 +127,11 @@ agents:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       certificateId: Tink
+  belfius:
+    tink:
+      baseUrl: https://psd2.b2b.belfius.be:8443
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+      certificateId: Tink
   crosskey:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
