@@ -705,7 +705,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: fenicobank-psd2-client-id
+              key: finecobank-psd2-client-id
               optional: true
         {{- end }}
       containers:
