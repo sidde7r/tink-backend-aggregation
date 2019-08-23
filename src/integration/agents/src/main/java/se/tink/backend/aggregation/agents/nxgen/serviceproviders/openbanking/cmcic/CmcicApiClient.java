@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.util.CodeChallengeUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.util.SignatureUtil;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpMethod;
@@ -41,6 +42,7 @@ public final class CmcicApiClient {
     private final SessionStorage sessionStorage;
     private CmcicConfiguration configuration;
     private EidasProxyConfiguration eidasProxyConfiguration;
+    private EidasIdentity eidasIdentity;
 
     public CmcicApiClient(
             TinkHttpClient client,
@@ -57,7 +59,9 @@ public final class CmcicApiClient {
     }
 
     protected void setConfiguration(
-            CmcicConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
+            CmcicConfiguration configuration,
+            EidasProxyConfiguration eidasProxyConfiguration,
+            EidasIdentity eidasIdentity) {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
     }
@@ -104,7 +108,8 @@ public final class CmcicApiClient {
                         date,
                         digest,
                         requestId,
-                        eidasProxyConfiguration);
+                        eidasProxyConfiguration,
+                        eidasIdentity);
 
         URL requestUrl = baseUrl.concat(path);
 

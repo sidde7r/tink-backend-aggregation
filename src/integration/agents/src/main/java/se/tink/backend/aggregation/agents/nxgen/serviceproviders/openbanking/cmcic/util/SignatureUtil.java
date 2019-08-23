@@ -10,7 +10,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Signature;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public final class SignatureUtil {
 
@@ -27,10 +29,18 @@ public final class SignatureUtil {
             final String date,
             final String digest,
             final String requestId,
-            final EidasProxyConfiguration eidasProxyConf) {
+            final EidasProxyConfiguration eidasProxyConf,
+            EidasIdentity eidasIdentity) {
 
         String signature =
-                getSignatureValue(httpMethod, requestPath, date, digest, requestId, eidasProxyConf);
+                getSignatureValue(
+                        httpMethod,
+                        requestPath,
+                        date,
+                        digest,
+                        requestId,
+                        eidasProxyConf,
+                        eidasIdentity);
 
         return CmcicConstants.Signature.KEY_ID_NAME
                 + "\""
@@ -52,7 +62,8 @@ public final class SignatureUtil {
             final String date,
             final String digest,
             final String requestId,
-            final EidasProxyConfiguration eidasProxyConf) {
+            final EidasProxyConfiguration eidasProxyConf,
+            EidasIdentity eidasIdentity) {
 
         String signatureEntity =
                 CmcicConstants.Signature.SIGNING_STRING
@@ -72,7 +83,11 @@ public final class SignatureUtil {
                         + CmcicConstants.Signature.CONTENT_TYPE
                         + MediaType.APPLICATION_JSON;
 
-        return new QsealcEidasProxySigner(eidasProxyConf, "Tink")
+        return QsealcSigner.build(
+                        eidasProxyConf.toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        eidasIdentity,
+                        "Tink")
                 .getSignatureBase64(signatureEntity.getBytes());
     }
 
