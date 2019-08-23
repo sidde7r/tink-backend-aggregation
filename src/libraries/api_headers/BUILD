@@ -1,5 +1,5 @@
-java_library(
+alias(
     name = "api_headers",
-    srcs = glob(["src/main/**/*.java"]),
+    actual = "@tink_backend//src/libraries/api-headers",
     visibility = ["//visibility:public"],
 )
