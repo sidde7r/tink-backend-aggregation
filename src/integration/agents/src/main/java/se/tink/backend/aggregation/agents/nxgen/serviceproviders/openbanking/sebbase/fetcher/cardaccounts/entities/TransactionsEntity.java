@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 @JsonObject
@@ -26,11 +25,11 @@ public class TransactionsEntity {
     }
 
     @JsonIgnore
-    public List<CreditCardTransaction> toTinkTransactions(CreditCardAccount creditAccount) {
+    public List<CreditCardTransaction> toTinkTransactions() {
         List<CreditCardTransaction> bookedTransactions =
-                collect(booked, tr -> tr.toTinkTransaction(creditAccount));
+                collect(booked, BookedEntity::toTinkTransaction);
         List<CreditCardTransaction> pendingTransactions =
-                collect(pending, tr -> tr.toTinkTransaction(creditAccount));
+                collect(pending, PendingEntity::toTinkTransaction);
 
         List<CreditCardTransaction> transactions = new ArrayList<>(bookedTransactions);
         transactions.addAll(pendingTransactions);
@@ -41,7 +40,7 @@ public class TransactionsEntity {
     public <T> List<CreditCardTransaction> collect(
             List<T> transactions, Function<T, CreditCardTransaction> mapMethod) {
         return Optional.ofNullable(transactions)
-                .map(t -> t.stream().map(tr -> mapMethod.apply(tr)).collect(Collectors.toList()))
+                .map(t -> t.stream().map(mapMethod).collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);
     }
 }
