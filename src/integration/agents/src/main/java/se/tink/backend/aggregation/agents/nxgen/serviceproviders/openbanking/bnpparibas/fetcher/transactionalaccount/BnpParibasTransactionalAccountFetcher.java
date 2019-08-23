@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasUtils;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -19,6 +20,7 @@ public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<Tra
     private final BnpParibasApiBaseClient apiClient;
     private final SessionStorage sessionStorage;
     private EidasProxyConfiguration eidasProxyConfiguration;
+    private EidasIdentity eidasIdentity;
 
     public BnpParibasTransactionalAccountFetcher(
             BnpParibasApiBaseClient apiClient, SessionStorage sessionStorage) {
@@ -26,8 +28,10 @@ public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<Tra
         this.sessionStorage = sessionStorage;
     }
 
-    public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
+    public void setEidasProxyConfiguration(
+            EidasProxyConfiguration eidasProxyConfiguration, EidasIdentity eidasIdentity) {
         this.eidasProxyConfiguration = eidasProxyConfiguration;
+        this.eidasIdentity = eidasIdentity;
     }
 
     @Override
@@ -36,6 +40,7 @@ public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<Tra
         String signature =
                 BnpParibasUtils.buildSignatureHeader(
                         eidasProxyConfiguration,
+                        eidasIdentity,
                         sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN),
                         reqId,
                         apiClient.getBnpParibasConfiguration());

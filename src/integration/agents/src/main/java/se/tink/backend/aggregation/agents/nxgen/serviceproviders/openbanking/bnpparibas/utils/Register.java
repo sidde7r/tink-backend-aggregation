@@ -8,11 +8,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class Register {
+    public static EidasIdentity defaultEidasIdentity =
+            new EidasIdentity("oxford-staging", "5f98e87106384b2981c0354a33b51590", Register.class);
 
     public static String buildSignatureHeader(
             EidasProxyConfiguration configuration,
@@ -20,7 +23,7 @@ public class Register {
         return bnpParibasConfiguration.getKeyId()
                 + BnpParibasUtils.getAlgorithm()
                 + getEmptyHeaders()
-                + getSignature(configuration, bnpParibasConfiguration);
+                + getSignature(configuration, bnpParibasConfiguration, defaultEidasIdentity);
     }
 
     private static String getEmptyHeaders() {
