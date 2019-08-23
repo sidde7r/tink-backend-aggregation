@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
@@ -205,14 +206,16 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
         while (response.getStep().isPresent()) {
             // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
             // etc.
-            final List<Field> fields = response.getFields();
+            final List<Field> fields = response.getPayload().getFields().get();
             final Map<String, String> map =
                     supplementalInformationController.askSupplementalInformation(
                             fields.toArray(new Field[fields.size()]));
             response =
                     progressiveAgent.login(
                             SteppableAuthenticationRequest.subsequentRequest(
-                                    response.getStep().get(), new ArrayList<>(map.values())));
+                                    response.getStep().get(),
+                                    AuthenticationRequest.fromUserInputs(
+                                            new ArrayList<>(map.values()))));
         }
     }
 
