@@ -6,8 +6,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import se.tink.libraries.api.annotations.Team;
-import se.tink.libraries.api.annotations.TeamOwnership;
+import se.tink.api.annotations.Team;
+import se.tink.api.annotations.TeamOwnership;
 import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 
 @Path("/monitoring")

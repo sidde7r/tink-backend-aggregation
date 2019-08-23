@@ -7,7 +7,7 @@ import io.grpc.ServerCall;
 import io.grpc.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import se.tink.libraries.api.annotations.TeamOwnership;
+import se.tink.api.annotations.TeamOwnership;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.types.timers.Timer;
