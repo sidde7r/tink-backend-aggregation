@@ -24,7 +24,7 @@ public class FetchCardAccountResponse {
         return cardAccounts;
     }
 
-    public List<CreditCardAccount> getTransactions() {
+    public List<CreditCardAccount> toTinkAccounts() {
 
         return Optional.ofNullable(cardAccounts)
                 .map(Collection::stream)

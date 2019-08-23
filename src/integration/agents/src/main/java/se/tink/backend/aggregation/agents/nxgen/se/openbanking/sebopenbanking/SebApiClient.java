@@ -80,7 +80,7 @@ public class SebApiClient extends SebBaseApiClient {
                         new URL(SebCommonConstants.Urls.BASE_URL)
                                 .concat(SebConstants.Urls.CREDIT_CARD_ACCOUNTS))
                 .get(FetchCardAccountResponse.class)
-                .getTransactions();
+                .toTinkAccounts();
     }
 
     @Override

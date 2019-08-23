@@ -71,7 +71,7 @@ public class CardAccountEntity {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(maskedPan)
-                                .withAccountNumber(name)
+                                .withAccountNumber(maskedPan)
                                 .withAccountName(product)
                                 .addIdentifier(
                                         AccountIdentifier.create(
