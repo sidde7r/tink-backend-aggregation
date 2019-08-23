@@ -145,6 +145,10 @@ agents:
   crosskey:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+  finecobank:
+    tink:
+      redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+      certificateId: Tink
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: true
