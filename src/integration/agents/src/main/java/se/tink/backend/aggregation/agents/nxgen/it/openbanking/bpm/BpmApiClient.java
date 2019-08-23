@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderValues;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BpmApiClient extends CbiGlobeApiClient {
@@ -18,5 +19,11 @@ public class BpmApiClient extends CbiGlobeApiClient {
     protected RequestBuilder createAccountsRequestWithConsent() {
         return super.createAccountsRequestWithConsent()
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS);
+    }
+
+    @Override
+    protected RequestBuilder createRequestWithConsent(URL url) {
+        return super.createRequestWithConsent(url)
+                .overrideHeader(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS);
     }
 }
