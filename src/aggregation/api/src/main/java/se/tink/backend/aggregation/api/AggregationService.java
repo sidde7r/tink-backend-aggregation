@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.api;
 
+import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
+import se.tink.libraries.credentials.service.BatchMigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -131,4 +133,12 @@ public interface AggregationService {
     @Produces(MediaType.APPLICATION_JSON)
     Response reEncryptCredentials(
             ReEncryptCredentialsRequest request, @ClientContext ClientInfo clientInfo);
+
+    @POST
+    @Path("batchMigrate")
+    @TeamOwnership(Team.AGGREGATION)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    List<Credentials> batchMigrateCredentials(
+            BatchMigrateCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 }

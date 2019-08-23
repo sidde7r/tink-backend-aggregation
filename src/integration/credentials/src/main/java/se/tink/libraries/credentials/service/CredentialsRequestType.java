@@ -11,4 +11,5 @@ public enum CredentialsRequestType {
     PRODUCT_REFRESH,
     UPDATE,
     REENCRYPT,
+    MIGRATE
 }
