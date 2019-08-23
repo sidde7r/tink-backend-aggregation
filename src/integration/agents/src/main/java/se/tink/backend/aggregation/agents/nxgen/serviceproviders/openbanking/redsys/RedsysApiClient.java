@@ -44,6 +44,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -60,28 +61,25 @@ public final class RedsysApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
-    private final String appId;
-    private final String clusterId;
     private RedsysConfiguration configuration;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private X509Certificate clientSigningCertificate;
     private AspspConfiguration aspspConfiguration;
     private ConsentStatus cachedConsentStatus = ConsentStatus.UNKNOWN;
     private String psuIpAddress = null;
+    private EidasIdentity eidasIdentity;
 
     public RedsysApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
             AspspConfiguration aspspConfiguration,
-            String appId,
-            String clusterId) {
+            EidasIdentity eidasIdentity) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.aspspConfiguration = aspspConfiguration;
-        this.appId = appId;
-        this.clusterId = clusterId;
+        this.eidasIdentity = eidasIdentity;
     }
 
     private RedsysConfiguration getConfiguration() {
@@ -282,8 +280,7 @@ public final class RedsysApiClient {
                         configuration,
                         eidasProxyConfiguration,
                         clientSigningCertificate,
-                        appId,
-                        clusterId,
+                        eidasIdentity,
                         allHeaders);
         allHeaders.put(HeaderKeys.SIGNATURE, signature);
         allHeaders.put(

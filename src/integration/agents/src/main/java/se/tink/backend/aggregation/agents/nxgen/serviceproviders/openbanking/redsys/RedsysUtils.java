@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
@@ -98,22 +99,19 @@ public class RedsysUtils {
 
     private static String signPayloadWithProxy(
             EidasProxyConfiguration proxyConfiguration,
-            String appId,
-            String clusterId,
+            EidasIdentity eidasIdentity,
             String payload) {
         return QsealcSigner.build(
                         proxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        appId,
-                        clusterId)
+                        eidasIdentity)
                 .getSignatureBase64(payload.getBytes());
     }
 
     private static String signPayload(
             RedsysConfiguration configuration,
             EidasProxyConfiguration eidasProxyConfiguration,
-            String appId,
-            String clusterId,
+            EidasIdentity eidasIdentity,
             String payload) {
         if (configuration.getClientSigningKeyPath().isPresent()) {
             // sign with key
@@ -127,7 +125,7 @@ public class RedsysUtils {
                     .encodeToString(RSA.signSha256(privateKey, payload.getBytes()));
         } else {
             // sign with EIDAS proxy
-            return signPayloadWithProxy(eidasProxyConfiguration, appId, clusterId, payload);
+            return signPayloadWithProxy(eidasProxyConfiguration, eidasIdentity, payload);
         }
     }
 
@@ -143,8 +141,7 @@ public class RedsysUtils {
             RedsysConfiguration configuration,
             EidasProxyConfiguration eidasProxyConfiguration,
             X509Certificate certificate,
-            String appId,
-            String clusterId,
+            EidasIdentity eidasIdentity,
             Map<String, Object> headers) {
         ArrayList<String> signedHeaders = Lists.newArrayList();
         ArrayList<String> payloadElements = Lists.newArrayList();
@@ -162,8 +159,7 @@ public class RedsysUtils {
         final String payloadToSign = Joiner.on("\n").join(payloadElements);
         final String headerList = Joiner.on(" ").join(signedHeaders).toLowerCase(Locale.ENGLISH);
         final String signature =
-                signPayload(
-                        configuration, eidasProxyConfiguration, appId, clusterId, payloadToSign);
+                signPayload(configuration, eidasProxyConfiguration, eidasIdentity, payloadToSign);
         final String keyID = getKeyID(certificate);
         return String.format(Signature.FORMAT, keyID, headerList, signature);
     }
