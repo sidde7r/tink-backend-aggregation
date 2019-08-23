@@ -73,7 +73,7 @@ public final class DeutscheBankConstants {
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String PSU_ID = "PSU-ID";
         public static final String PSU_ID_TYPE = "PSU-ID-Type";
-        public static final String TPP_NOK_REDIRECT_URI = "TPP-Nok-Redirect_URI";
+        public static final String TPP_NOK_REDIRECT_URI = "TPP-Nok-Redirect-URI";
     }
 
     public static class QueryValues {
