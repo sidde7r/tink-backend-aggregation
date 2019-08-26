@@ -24,9 +24,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.EidasIdentity;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidas.EidasProxyConstants.Algorithm;
+import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CompositePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -47,20 +46,17 @@ public final class RabobankApiClient {
     private final boolean requestIsManual;
     private final RabobankConfiguration rabobankConfiguration;
     private final EidasProxyConfiguration eidasProxyConf;
-    private final EidasIdentity eidasIdentity;
 
     RabobankApiClient(
             final TinkHttpClient client,
             final PersistentStorage persistentStorage,
             final RabobankConfiguration rabobankConfiguration,
             final EidasProxyConfiguration eidasProxyConf,
-            final EidasIdentity eidasIdentity,
             final boolean requestIsManual) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.rabobankConfiguration = rabobankConfiguration;
         this.eidasProxyConf = eidasProxyConf;
-        this.eidasIdentity = eidasIdentity;
         this.requestIsManual = requestIsManual;
     }
 
@@ -223,11 +219,8 @@ public final class RabobankApiClient {
         final String certificateId = rabobankConfiguration.getCertificateId();
 
         final byte[] signatureBytes =
-                QsealcSigner.build(
-                                eidasProxyConf.toInternalConfig(),
-                                QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity,
-                                certificateId)
+                new QsealcEidasProxySigner(
+                                eidasProxyConf, certificateId, Algorithm.EIDAS_RSA_SHA256)
                         .getSignature(signingString.getBytes());
 
         final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);
