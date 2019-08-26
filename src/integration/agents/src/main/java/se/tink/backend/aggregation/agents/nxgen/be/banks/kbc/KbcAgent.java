@@ -7,10 +7,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
@@ -47,7 +49,8 @@ public final class KbcAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                ProgressiveAuthAgent {
+                ProgressiveAuthAgent,
+                ManualOrAutoAuth {
 
     private final Logger logger = LoggerFactory.getLogger(KbcAgent.class);
     private final KbcApiClient apiClient;
@@ -56,6 +59,9 @@ public final class KbcAgent extends NextGenerationAgent
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+
+    private final Authenticator authenticator; // TODO remove when decoupled from NxgenAgent
+    private final ManualOrAutoAuth manualOrAutoAuthAuthenticator;
 
     public KbcAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -68,6 +74,18 @@ public final class KbcAgent extends NextGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+
+        final KbcAuthenticator kbcAuthenticator =
+                new KbcAuthenticator(
+                        sessionStorage,
+                        persistentStorage,
+                        apiClient,
+                        supplementalInformationFormer);
+        final AutoAuthenticationController autoAuthenticationController =
+                new AutoAuthenticationController(
+                        request, systemUpdater, kbcAuthenticator, kbcAuthenticator);
+        manualOrAutoAuthAuthenticator = autoAuthenticationController;
+        authenticator = autoAuthenticationController;
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -78,14 +96,7 @@ public final class KbcAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        KbcAuthenticator authenticator =
-                new KbcAuthenticator(
-                        sessionStorage,
-                        persistentStorage,
-                        apiClient,
-                        supplementalInformationFormer);
-        return new AutoAuthenticationController(
-                request, systemUpdater, authenticator, authenticator);
+        return authenticator;
     }
 
     @Override
@@ -192,5 +203,16 @@ public final class KbcAgent extends NextGenerationAgent
         return ProgressiveAuthController.of(
                         (ProgressiveAuthenticator) getAuthenticator(), credentials)
                 .login(request);
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        // TODO: remove casting
+        try {
+            return manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
+        } catch (NullPointerException e) {
+            logger.error("KBC authenticator cannot be cast to ManualOrAutoAuth because it's null");
+            return false; // TODO For fault tolerance. Make proper fix.
+        }
     }
 }
