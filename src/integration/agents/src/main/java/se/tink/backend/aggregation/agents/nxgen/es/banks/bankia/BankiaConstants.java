@@ -116,9 +116,9 @@ public abstract class BankiaConstants {
                             "10600",
                             "11359" // Non-adult account
                             )
-                    .put(AccountTypes.SAVINGS, "10450")
+                    .put(AccountTypes.SAVINGS, "10450", "11403")
                     .put(AccountTypes.INVESTMENT, "31000")
-                    .put(AccountTypes.OTHER, "11403", "11658")
+                    .put(AccountTypes.OTHER, "11658")
                     .build();
 
     public static class CardTypes {
