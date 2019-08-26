@@ -30,18 +30,16 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
 
-    private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+    // TODO: fix
+    private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient = null;
 
     private final String agentName;
     private boolean forceMockClient;
 
     public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
-            AgentWorkerCommandContext context,
-            AgentWorkerCommandMetricState metrics,
-            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient) {
+            AgentWorkerCommandContext context, AgentWorkerCommandMetricState metrics) {
         this.context = context;
         this.metrics = metrics.init(this);
-        this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
 
         CredentialsRequest request = context.getRequest();
 
