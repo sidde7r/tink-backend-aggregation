@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity.CardAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity.CardContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.rpc.CardsResponse;
@@ -13,9 +14,11 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 
 public class SebKortAccountFetcher implements AccountFetcher<CreditCardAccount> {
     private final SebKortApiClient apiClient;
+    private final SebKortConfiguration config;
 
-    public SebKortAccountFetcher(SebKortApiClient apiClient) {
+    public SebKortAccountFetcher(SebKortApiClient apiClient, SebKortConfiguration config) {
         this.apiClient = apiClient;
+        this.config = config;
     }
 
     @Override
@@ -27,7 +30,9 @@ public class SebKortAccountFetcher implements AccountFetcher<CreditCardAccount> 
                 cardsResponse.getCardAccountsHashMap();
 
         return cardContracts.stream()
-                .flatMap(contract -> contract.toTinkCreditCardAccounts(accountsHashMap).stream())
+                .flatMap(
+                        contract ->
+                                contract.toTinkCreditCardAccounts(accountsHashMap, config).stream())
                 .collect(Collectors.toList());
     }
 }

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.se
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -55,7 +56,9 @@ public class CardEntity {
     }
 
     public CreditCardAccount toTinkCreditCardAccount(
-            Map<String, CardAccountEntity> accountsHashMap, CardContractEntity contract) {
+            Map<String, CardAccountEntity> accountsHashMap,
+            CardContractEntity contract,
+            SebKortConfiguration config) {
         final CardAccountEntity account = accountsHashMap.get(contract.getCardAccountId());
 
         return CreditCardAccount.nxBuilder()
@@ -67,7 +70,7 @@ public class CardEntity {
                                         getAvailableCreditIfOwnerIfPresent(account, contract))
                                 .withCardAlias(contract.getProductName())
                                 .build())
-                .withoutFlags()
+                .withFlagsFrom(SebKortConstants.PROVIDER_PSD2_FLAG_MAPPER, config.getProviderCode())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(maskedCardNumber)
