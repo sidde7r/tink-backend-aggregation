@@ -61,8 +61,9 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
         } catch (HttpResponseException e) {
             String exceptionBody = e.getResponse().getBody(String.class);
             log.error(
-                    "%s: Authorization failed with message \"%s\"",
-                    NordeaSeConstants.Tags.AUTHORIZATION_ERROR, exceptionBody);
+                    "{}, Authorization failed with message \"{}\"",
+                    NordeaSeConstants.Tags.AUTHORIZATION_ERROR,
+                    exceptionBody);
             if (exceptionBody.contains(NordeaSeConstants.ErrorMessage.CANCEL_ERROR)) {
                 return BankIdStatus.CANCELLED;
             } else if (exceptionBody.contains(NordeaSeConstants.ErrorMessage.TIME_OUT_ERROR)) {
