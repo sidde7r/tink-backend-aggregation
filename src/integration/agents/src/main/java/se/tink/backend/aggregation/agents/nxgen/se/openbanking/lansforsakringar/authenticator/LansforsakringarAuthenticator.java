@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
@@ -33,7 +34,7 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
         this.persistentStorage = persistentStorage;
     }
 
-    public ConsentResponse postConsent() {
+    public ConsentResponse getConsent() {
 
         return apiClient
                 .createRequest(new URL(LansforsakringarConstants.Urls.CONSENT))
@@ -50,7 +51,7 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
                 .post(ConsentResponse.class, LansforsakringarConstants.BodyValues.EMPTY_BODY);
     }
 
-    public ConsentResponse postConsentAuthorisations(ConsentResponse consentResponse) {
+    public ConsentResponse getConsentAuthorizations(ConsentResponse consentResponse) {
 
         return apiClient
                 .createRequest(new URL(LansforsakringarConstants.Urls.CONSENT_PROVIDED).parameter(LansforsakringarConstants.IdTags.CONSENT_ID, consentResponse.getConsentId()))
@@ -69,9 +70,11 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        ConsentResponse consentResponse = postConsentAuthorisations(postConsent());
+        ConsentResponse consentResponse = getConsentAuthorizations(getConsent());
 
         persistentStorage.put(LansforsakringarConstants.StorageKeys.CONSENT_ID, consentResponse);
+        persistentStorage.put(StorageKeys.AUTHORIZATION_ID, consentResponse.getAuthorisationId());
+
 
         return apiClient.createRequest(new URL(LansforsakringarConstants.Urls.AUTHORIZATION)).queryParam(LansforsakringarConstants.QueryKeys.CLIENT_ID, lansforsakringarConfiguration.getClientId())
                 .queryParam(LansforsakringarConstants.QueryKeys.RESPONSE_TYPE, LansforsakringarConstants.QueryValues.RESPONSE_TYPE)
@@ -86,12 +89,13 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
         final String clientId = apiClient.getConfiguration().getClientId();
         final String clientSecret = apiClient.getConfiguration().getClientSecret();
+        final String code2 = persistentStorage.get(StorageKeys.AUTHORIZATION_ID);
 
         final AuthenticateForm form =
                 AuthenticateForm.builder()
                         .setClientId(clientId)
                         .setGrantType(FormValues.AUTHORIZATION_CODE)
-                        .setCode(code)
+                        .setCode(code2)
                         .setClientSecret(clientSecret)
                         .setRedirectUri(apiClient.getConfiguration().getRedirectUri())
                         .build();
