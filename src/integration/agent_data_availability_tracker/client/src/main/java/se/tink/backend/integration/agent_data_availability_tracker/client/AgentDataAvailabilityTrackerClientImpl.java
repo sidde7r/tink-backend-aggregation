@@ -1,5 +1,6 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
+import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
 import io.grpc.ManagedChannel;
@@ -27,13 +28,15 @@ public class AgentDataAvailabilityTrackerClientImpl
     private static final Logger log =
             LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientImpl.class);
 
+    private static final long QUEUE_POLL_WAIT_SECONDS = 2;
+
     private ManagedChannel channel;
     private AgentDataAvailabilityTrackerServiceGrpc.AgentDataAvailabilityTrackerServiceStub
             agentctServiceStub;
 
     private StreamObserver<TrackAccountRequest> requestStream;
-    private NettyChannelBuilder channelBuilder;
     private final AccountDeque accountDeque;
+    private final AbstractExecutionThreadService service;
 
     private boolean sendingData;
 
@@ -55,13 +58,17 @@ public class AgentDataAvailabilityTrackerClientImpl
         this.port = port;
         this.accountDeque = new AccountDeque();
         this.random = new Random();
+        this.service =
+                new AbstractExecutionThreadService() {
+                    @Override
+                    protected void run() throws Exception {
+                        sendAccounts();
+                    }
+                };
     }
 
     @Override
     public void beginStream() {
-
-        log.debug("Opening connection");
-        channelBuilder = NettyChannelBuilder.forAddress(host, port);
 
         log.debug("Open Tracking Stream");
 
@@ -88,54 +95,67 @@ public class AgentDataAvailabilityTrackerClientImpl
         requestStream = agentctServiceStub.trackAccount(responseObserver);
     }
 
+    private void sendAccounts() throws InterruptedException {
+
+        while (service.isRunning()) {
+            try {
+
+                TrackAccountRequest request =
+                        accountDeque.poll(QUEUE_POLL_WAIT_SECONDS, TimeUnit.SECONDS);
+
+                // If poll timed out request will be null, in this case the loop will check if we
+                // are still running and terminate or try polling again.
+                if (request != null) {
+
+                    requestStream.onNext(request);
+                }
+
+            } catch (StatusRuntimeException e) {
+
+                log.warn(
+                        String.format(
+                                "Aborting tracking attempt. Capability Tracking service code: %s",
+                                e.getStatus()),
+                        e);
+                requestStream.onError(e);
+            } catch (Exception e) {
+
+                log.warn(String.format("Tracking failed with exception: %s", e.getMessage()), e);
+                requestStream.onError(e);
+            }
+        }
+    }
+
     public void sendAccount(
             final String agent, final Account account, final AccountFeatures features) {
 
-        try {
+        sendingData = sendingData();
 
-            sendingData = sendingData();
-
-            if (!sendingData) {
-                return;
-            }
-
-            AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
-
-            if (features.getPortfolios() != null) {
-                features.getPortfolios().stream()
-                        .map(PortfolioTrackingSerializer::new)
-                        .forEach(e -> serializer.addChild("portfolios", e));
-            }
-
-            TrackAccountRequest.Builder requestBuilder =
-                    TrackAccountRequest.newBuilder().setAgent(agent);
-
-            // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
-            serializer
-                    .buildList()
-                    .forEach(
-                            entry ->
-                                    requestBuilder
-                                            .addFieldName(entry.getName())
-                                            .addFieldValue(entry.getValue()));
-
-            accountDeque.add(requestBuilder.build());
-
-            requestStream.onNext(accountDeque.pop());
-
-        } catch (StatusRuntimeException e) {
-
-            log.warn(
-                    String.format(
-                            "Aborting tracking attempt. Capability Tracking service code: %s",
-                            e.getStatus()),
-                    e);
-            requestStream.onError(e);
-        } catch (Exception e) {
-
-            log.warn(String.format("Tracking failed with exception: %s", e.getMessage()), e);
-            requestStream.onError(e);
+        if (!sendingData) {
+            return;
         }
+
+        AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
+
+        if (features.getPortfolios() != null) {
+            features.getPortfolios().stream()
+                    .map(PortfolioTrackingSerializer::new)
+                    .forEach(e -> serializer.addChild("portfolios", e));
+        }
+
+        TrackAccountRequest.Builder requestBuilder =
+                TrackAccountRequest.newBuilder().setAgent(agent);
+
+        // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
+        serializer
+                .buildList()
+                .forEach(
+                        entry ->
+                                requestBuilder
+                                        .addFieldName(entry.getName())
+                                        .addFieldValue(entry.getValue()));
+
+        accountDeque.add(requestBuilder.build());
     }
 
     @Override
@@ -161,14 +181,26 @@ public class AgentDataAvailabilityTrackerClientImpl
                         .trustManager(new File("/etc/client-certificate/ca.crt"))
                         .build();
 
-        channel = channelBuilder.useTransportSecurity().sslContext(sslContext).build();
+        log.debug("Opening connection");
+
+        channel =
+                NettyChannelBuilder.forAddress(host, port)
+                        .useTransportSecurity()
+                        .sslContext(sslContext)
+                        .build();
         agentctServiceStub = AgentDataAvailabilityTrackerServiceGrpc.newStub(channel);
 
         beginStream();
+
+        service.startAsync();
+        service.awaitRunning(30, TimeUnit.SECONDS);
     }
 
     @Override
     public void stop() throws Exception {
+        service.stopAsync();
+        System.out.println(service.isRunning());
+        service.awaitTerminated(60, TimeUnit.SECONDS);
         endStreamBlocking();
     }
 }

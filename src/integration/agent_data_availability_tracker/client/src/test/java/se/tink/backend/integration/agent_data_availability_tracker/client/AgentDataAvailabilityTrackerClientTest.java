@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
@@ -18,8 +19,16 @@ public class AgentDataAvailabilityTrackerClientTest {
 
     private CountDownLatch latch;
 
+    private AgentDataAvailabilityTrackerClientImpl client;
+
+    @Before
+    public void setup() throws Exception {
+        client = new AgentDataAvailabilityTrackerClientImpl("192.168.99.100", 30789);
+        client.start();
+    }
+
     @Test
-    public void test() {
+    public void test() throws Exception {
 
         final int numClients = 10;
         latch = new CountDownLatch(numClients);
@@ -33,35 +42,26 @@ public class AgentDataAvailabilityTrackerClientTest {
         }
 
         try {
-            latch.await(60, TimeUnit.SECONDS);
+            latch.await(120, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
 
             e.printStackTrace();
             Assert.fail();
         }
+
+        System.out.println("Stopping...");
+        client.stop();
     }
 
     private void spamClientRunnable() {
 
-        AgentDataAvailabilityTrackerClientImpl transmitter = null;
-        try {
-            transmitter = new AgentDataAvailabilityTrackerClientImpl("192.168.99.100", 30789);
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        transmitter.beginStream();
         for (int i = 0; i < 50; i++) {
 
-            transmitter.sendAccount("TestBank", buildAccount(), new AccountFeatures());
+            client.sendAccount("TestBank", buildAccount(), new AccountFeatures());
         }
 
         System.out.println("Sent 50 accounts.");
-        try {
-            transmitter.endStreamBlocking();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         latch.countDown();
     }
 
