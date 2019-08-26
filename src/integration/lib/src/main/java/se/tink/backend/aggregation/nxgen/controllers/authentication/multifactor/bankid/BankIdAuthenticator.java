@@ -9,7 +9,9 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public interface BankIdAuthenticator<T> {
-    T init(String ssn) throws BankIdException, BankServiceException, AuthorizationException;
+    T init(String ssn)
+            throws BankIdException, BankServiceException, AuthorizationException,
+                    AuthenticationException;
 
     BankIdStatus collect(T reference) throws AuthenticationException, AuthorizationException;
 
