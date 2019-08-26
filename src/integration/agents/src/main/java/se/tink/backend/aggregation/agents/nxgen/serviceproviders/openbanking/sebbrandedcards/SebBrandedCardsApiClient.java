@@ -48,7 +48,7 @@ public class SebBrandedCardsApiClient extends SebBaseApiClient {
                         new URL(SebCommonConstants.Urls.BASE_URL)
                                 .concat(SebBrandedCardsConstants.Urls.CREDIT_CARD_ACCOUNTS))
                 .get(FetchCardAccountResponse.class)
-                .getTransactions();
+                .toTinkAccounts();
     }
 
     @Override

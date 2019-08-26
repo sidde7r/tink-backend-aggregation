@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -55,11 +55,11 @@ public class BookedEntity {
     }
 
     public String getMaskedPan() {
-        return maskedPan;
+        return Strings.emptyToNull(maskedPan);
     }
 
     public String getNameOnCard() {
-        return nameOnCard;
+        return Strings.emptyToNull(nameOnCard);
     }
 
     public OriginalAmountEntity getOriginalAmount() {
@@ -83,12 +83,11 @@ public class BookedEntity {
     }
 
     @JsonIgnore
-    public CreditCardTransaction toTinkTransaction(CreditCardAccount creditAccount) {
+    public CreditCardTransaction toTinkTransaction() {
         return CreditCardTransaction.builder()
                 .setAmount(
                         new ExactCurrencyAmount(
                                 transactionAmount.getAmount(), transactionAmount.getCurrency()))
-                .setCreditAccount(creditAccount)
                 .setCreditCard(CreditCard.create(getNameOnCard(), getMaskedPan()))
                 .setDate(getValueDate())
                 .setDescription(getTransactionDetails())

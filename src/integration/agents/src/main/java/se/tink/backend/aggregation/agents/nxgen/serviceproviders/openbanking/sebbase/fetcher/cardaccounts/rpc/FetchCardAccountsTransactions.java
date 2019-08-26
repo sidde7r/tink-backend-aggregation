@@ -5,7 +5,6 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.entities.ErrorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 @JsonObject
@@ -23,7 +22,7 @@ public class FetchCardAccountsTransactions {
     }
 
     @JsonIgnore
-    public List<CreditCardTransaction> tinkTransactions(CreditCardAccount creditAccount) {
-        return transactions.toTinkTransactions(creditAccount);
+    public List<CreditCardTransaction> tinkTransactions() {
+        return transactions.toTinkTransactions();
     }
 }

@@ -35,7 +35,7 @@ public class SebCardTransactionsFetcher implements TransactionMonthPaginator<Cre
         try {
             FetchCardAccountsTransactions response =
                     client.fetchCardTransactions(account.getApiIdentifier(), fromDate, toDate);
-            return PaginatorResponseImpl.create(response.tinkTransactions(account));
+            return PaginatorResponseImpl.create(response.tinkTransactions());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
                     && e.getResponse().getBody(ErrorResponse.class).isEndOfPagingError()) {
