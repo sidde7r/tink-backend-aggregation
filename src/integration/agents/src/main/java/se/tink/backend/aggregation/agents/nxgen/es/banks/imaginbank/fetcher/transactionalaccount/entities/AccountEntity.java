@@ -39,7 +39,7 @@ public class AccountEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
-                .withoutFlags()
+                .withInferredAccountFlags()
                 .withBalance(
                         BalanceModule.of(
                                 new ExactCurrencyAmount(

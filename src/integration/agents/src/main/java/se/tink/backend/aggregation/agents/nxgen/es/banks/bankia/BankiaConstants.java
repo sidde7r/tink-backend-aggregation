@@ -3,9 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 import java.time.ZoneId;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public abstract class BankiaConstants {
 
@@ -116,9 +119,30 @@ public abstract class BankiaConstants {
                             "10600",
                             "11359" // Non-adult account
                             )
-                    .put(AccountTypes.SAVINGS, "10450", "11403")
+                    .put(AccountTypes.SAVINGS, "10450")
                     .put(AccountTypes.INVESTMENT, "31000")
-                    .put(AccountTypes.OTHER, "11658")
+                    .put(AccountTypes.OTHER, "11403", "11658")
+                    .build();
+
+    public static final TransactionalAccountTypeMapper PSD2_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "11594",
+                            "10300",
+                            "11186",
+                            "11239",
+                            "11660",
+                            "11590",
+                            "10600",
+                            "11359" // Non-adult account
+                            )
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "10450",
+                            "11403")
                     .build();
 
     public static class CardTypes {

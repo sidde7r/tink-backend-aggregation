@@ -129,7 +129,7 @@ public class AccountEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.from(getTinkAccountType()).get())
-                .withoutFlags()
+                .withInferredAccountFlags()
                 .withBalance(BalanceModule.of(balance.parseToExactCurrencyAmount()))
                 .withId(
                         IdModule.builder()

@@ -63,7 +63,7 @@ public class AccountEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.from(getTinkAccountType()).get())
-                .withoutFlags()
+                .withFlagsFrom(BankiaConstants.PSD2_TYPE_MAPPER, contract.getProductCode())
                 .withBalance(BalanceModule.of(availableBalance.parseToExactCurrencyAmount()))
                 .withId(
                         IdModule.builder()

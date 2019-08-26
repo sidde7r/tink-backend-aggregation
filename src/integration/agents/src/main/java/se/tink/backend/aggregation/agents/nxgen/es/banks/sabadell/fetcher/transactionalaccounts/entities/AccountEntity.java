@@ -23,7 +23,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @JsonObject
 public class AccountEntity {
     private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
-
     private String alias;
     private String description;
     private String availability;
@@ -48,7 +47,7 @@ public class AccountEntity {
     public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.from(getTinkAccountType()).get())
-                .withoutFlags()
+                .withInferredAccountFlags()
                 .withBalance(BalanceModule.of(amount.parseToExactCurrencyAmount()))
                 .withId(
                         IdModule.builder()
