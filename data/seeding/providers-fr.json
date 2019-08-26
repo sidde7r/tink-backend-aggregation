@@ -2294,6 +2294,24 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.nl.banks.openbanking.ing.IngAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "ING",
+            "fields": [],
+            "multiFactor": false,
+            "name": "fr-ing-oauth2",
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "ING",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "className": "nxgen.fr.banks.labanquepostale.LaBanquePostaleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "La Banque Postale",
