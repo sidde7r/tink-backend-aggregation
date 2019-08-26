@@ -92,6 +92,7 @@ public abstract class LansforsakringarConstants {
         public static final String PSU_ID_TYPE = "SSSN";
         public static final String TRUST_ALL = "trust_all";
         public static final String NO_CACHE = "no-cache";
+        public static final String BEARER = "Bearer";
     }
 
     public static class FormKeys {

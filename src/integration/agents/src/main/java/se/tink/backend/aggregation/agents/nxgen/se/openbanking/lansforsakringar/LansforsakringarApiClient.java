@@ -20,9 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateForm;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.AuthenticateForm;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.AuthenticateResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.AuthorizePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.CrossBorderPaymentRequest;
@@ -118,11 +118,13 @@ public final class LansforsakringarApiClient {
 
         return createRequestInSession(Urls.GET_ACCOUNTS)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(HeaderKeys.CONSENT_ID, configuration.getConsentId())
-                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
-                .header(HeaderKeys.AUTHORIZATION, getTokenFromStorage())
+                .header(HeaderKeys.AUTHORIZATION, HeaderValues.BEARER + getTokenFromStorage())
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .get(GetAccountsResponse.class)
                 .toTinkAccounts();

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 
