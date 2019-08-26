@@ -4,8 +4,6 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -52,7 +50,6 @@ public final class KbcAgent extends NextGenerationAgent
                 ProgressiveAuthAgent,
                 ManualOrAutoAuth {
 
-    private final Logger logger = LoggerFactory.getLogger(KbcAgent.class);
     private final KbcApiClient apiClient;
     private final String kbcLanguage;
     private KbcHttpFilter httpFilter;
