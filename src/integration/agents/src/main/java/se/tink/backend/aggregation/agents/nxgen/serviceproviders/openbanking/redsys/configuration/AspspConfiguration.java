@@ -10,7 +10,7 @@ public interface AspspConfiguration {
     /** Send withBalance=true when requesting account list. */
     boolean shouldRequestAccountsWithBalance();
 
-    /** True if the ASPSP supports requesting transactions with bookingStatus=both */
+    /** True if the ASPSP supports requesting pending transactions with bookingStatus=pending */
     boolean supportsPendingTransactions();
 
     /**

@@ -53,16 +53,6 @@ public class RedsysConfiguration implements ClientConfiguration {
         return redirectUrl;
     }
 
-    public String getClientSigningCertificateId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSigningCertificateId),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION,
-                        "Client Signing Certificate (QsealC) ID"));
-
-        return clientSigningCertificateId;
-    }
-
     public String getCertificateId() {
         return certificateId;
     }
