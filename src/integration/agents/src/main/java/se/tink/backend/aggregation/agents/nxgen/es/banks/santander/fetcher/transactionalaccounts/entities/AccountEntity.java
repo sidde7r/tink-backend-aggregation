@@ -169,7 +169,7 @@ public class AccountEntity {
     @JsonIgnore
     private String formatIban(String iban) {
         return new DisplayAccountIdentifierFormatter()
-                .apply(AccountIdentifier.create(Type.IBAN, iban));
+                .apply(AccountIdentifier.create(Type.IBAN, iban.replaceAll("\\s+", "")));
     }
 
     @JsonIgnore
