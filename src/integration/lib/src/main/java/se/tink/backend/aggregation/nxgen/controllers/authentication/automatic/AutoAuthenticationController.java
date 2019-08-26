@@ -41,13 +41,7 @@ public class AutoAuthenticationController
     public Iterable<? extends AuthenticationStep> authenticationSteps(final Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         try {
-            if (!forceAutoAuthentication()
-                            && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
-                                    || (request.isUpdate()
-                                            && !Objects.equals(
-                                                    request.getType(),
-                                                    CredentialsRequestType.TRANSFER)))
-                    || request.getCredentials().forceManualAuthentication()) {
+            if (shouldDoManualAuthentication(credentials)) {
                 return manualProgressive(credentials);
             } else {
                 Preconditions.checkState(
@@ -84,8 +78,7 @@ public class AutoAuthenticationController
         }
     }
 
-    @Override
-    public boolean isManualAuthentication(Credentials credentials) {
+    private boolean shouldDoManualAuthentication(final Credentials credentials) {
         return !forceAutoAuthentication()
                         && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
                                 || (request.isUpdate()
@@ -93,6 +86,11 @@ public class AutoAuthenticationController
                                                 request.getType(),
                                                 CredentialsRequestType.TRANSFER)))
                 || credentials.forceManualAuthentication();
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        return shouldDoManualAuthentication(credentials);
     }
 
     // TODO: Remove this when there is support for new MultiFactor credential types.
