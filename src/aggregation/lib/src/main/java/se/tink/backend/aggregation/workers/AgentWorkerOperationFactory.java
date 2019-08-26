@@ -64,7 +64,6 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
@@ -93,7 +92,6 @@ public class AgentWorkerOperationFactory {
     private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
     private MetricRegistry metricRegistry;
     private SupplementalInformationController supplementalInformationController;
-    private AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -113,8 +111,7 @@ public class AgentWorkerOperationFactory {
             AggregatorInfoProvider aggregatorInfoProvider,
             CuratorFramework coordinationClient,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            CredentialsEventProducer credentialsEventProducer,
-            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient) {
+            CredentialsEventProducer credentialsEventProducer) {
         this.cacheClient = cacheClient;
 
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
@@ -136,7 +133,6 @@ public class AgentWorkerOperationFactory {
         this.coordinationClient = coordinationClient;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
         this.credentialsEventProducer = credentialsEventProducer;
-        this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
     }
 
     /**
@@ -214,9 +210,7 @@ public class AgentWorkerOperationFactory {
                             context, createCommandMetricState(request)));
             commands.add(
                     new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
-                            context,
-                            createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient));
+                            context, createCommandMetricState(request)));
         }
 
         for (RefreshableItem item : nonAccountItems) {
@@ -236,9 +230,7 @@ public class AgentWorkerOperationFactory {
                             context, createCommandMetricState(request)));
             commands.add(
                     new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
-                            context,
-                            createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient));
+                            context, createCommandMetricState(request)));
         }
         return commands;
     }
@@ -938,9 +930,7 @@ public class AgentWorkerOperationFactory {
                             context, createCommandMetricState(request)));
             commands.add(
                     new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
-                            context,
-                            createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient));
+                            context, createCommandMetricState(request)));
         }
 
         // Add all refreshable items that aren't accounts to refresh them.
