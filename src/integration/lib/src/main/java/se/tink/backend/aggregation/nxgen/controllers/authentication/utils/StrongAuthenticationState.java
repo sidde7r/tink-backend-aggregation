@@ -24,8 +24,6 @@ public class StrongAuthenticationState {
 
     private String generateState(String appUriId) {
         if (Strings.isNullOrEmpty(appUriId)) {
-            logger.warn("appUriId is empty!");
-
             // Beware! Some financial institutes have limitations on
             // the state parameter. Known limitations:
             // - SDC only allow UUID.
