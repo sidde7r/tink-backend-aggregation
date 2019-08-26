@@ -93,7 +93,7 @@ public final class KbcAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return authenticator;
+        throw new AssertionError(); // Never called because Agent::login is never called
     }
 
     @Override
