@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -58,16 +57,12 @@ public final class RabobankAgent extends NextGenerationAgent
         client.disableSignatureRequestHeader();
         client.setSslClientCertificate(p12, password);
 
-        EidasIdentity eidasIdentity =
-                new EidasIdentity(context.getClusterId(), context.getAppId(), RabobankAgent.class);
-
         apiClient =
                 new RabobankApiClient(
                         client,
                         persistentStorage,
                         rabobankConfiguration,
                         agentsConfiguration.getEidasProxy(),
-                        eidasIdentity,
                         request.isManual());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
