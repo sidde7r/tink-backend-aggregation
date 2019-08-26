@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
@@ -29,25 +30,20 @@ public class FinecoBankPaymentController extends PaymentController {
     private static final Encoder encoder = Base64.getUrlEncoder();
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final String state;
     private final SessionStorage sessionStorage;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public FinecoBankPaymentController(
             PaymentExecutor paymentExecutor,
             FetchablePaymentExecutor fetchablePaymentExecutor,
             SupplementalInformationHelper supplementalInformationHelper,
-            SessionStorage sessionStorage) {
+            SessionStorage sessionStorage,
+            StrongAuthenticationState strongAuthenticationState) {
         super(paymentExecutor, fetchablePaymentExecutor);
 
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.sessionStorage = sessionStorage;
-        this.state = generateRandomState();
-    }
-
-    private static String generateRandomState() {
-        byte[] randomData = new byte[32];
-        random.nextBytes(randomData);
-        return encoder.encodeToString(randomData);
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     private ThirdPartyAppResponse<String> init() {
@@ -56,14 +52,16 @@ public class FinecoBankPaymentController extends PaymentController {
 
     private ThirdPartyAppResponse<String> collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        sessionStorage.put(FinecoBankConstants.StorageKeys.STATE, state);
+        sessionStorage.put(
+                FinecoBankConstants.StorageKeys.STATE,
+                strongAuthenticationState.getState());
         return super.create(paymentRequest);
     }
 
@@ -85,9 +83,5 @@ public class FinecoBankPaymentController extends PaymentController {
         } else {
             return super.sign(paymentMultiStepRequest);
         }
-    }
-
-    private String formatSupplementalKey(String key) {
-        return String.format("tpcb_%s", key);
     }
 }
