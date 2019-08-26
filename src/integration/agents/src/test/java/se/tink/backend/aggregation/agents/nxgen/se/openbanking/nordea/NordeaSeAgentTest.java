@@ -26,7 +26,7 @@ public class NordeaSeAgentTest {
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("nordea")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true);
     }
 
