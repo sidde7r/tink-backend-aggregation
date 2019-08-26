@@ -59,7 +59,9 @@ public final class KbcAgent extends NextGenerationAgent
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private ProgressiveAuthenticator authenticator;
+
+    private final Authenticator authenticator; // TODO remove when decoupled from NxgenAgent
+    private final ManualOrAutoAuth manualOrAutoAuthAuthenticator;
 
     public KbcAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -72,6 +74,18 @@ public final class KbcAgent extends NextGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+
+        final KbcAuthenticator kbcAuthenticator =
+                new KbcAuthenticator(
+                        sessionStorage,
+                        persistentStorage,
+                        apiClient,
+                        supplementalInformationFormer);
+        final AutoAuthenticationController autoAuthenticationController =
+                new AutoAuthenticationController(
+                        request, systemUpdater, kbcAuthenticator, kbcAuthenticator);
+        manualOrAutoAuthAuthenticator = autoAuthenticationController;
+        authenticator = autoAuthenticationController;
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -82,15 +96,6 @@ public final class KbcAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        KbcAuthenticator authenticator =
-                new KbcAuthenticator(
-                        sessionStorage,
-                        persistentStorage,
-                        apiClient,
-                        supplementalInformationFormer);
-        this.authenticator =
-                new AutoAuthenticationController(
-                        request, systemUpdater, authenticator, authenticator);
         return authenticator;
     }
 
@@ -204,7 +209,7 @@ public final class KbcAgent extends NextGenerationAgent
     public boolean isManualAuthentication(Credentials credentials) {
         // TODO: remove casting
         try {
-            return ((ManualOrAutoAuth) authenticator).isManualAuthentication(credentials);
+            return manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
         } catch (NullPointerException e) {
             logger.error("KBC authenticator cannot be cast to ManualOrAutoAuth because it's null");
             return false; // TODO For fault tolerance. Make proper fix.
