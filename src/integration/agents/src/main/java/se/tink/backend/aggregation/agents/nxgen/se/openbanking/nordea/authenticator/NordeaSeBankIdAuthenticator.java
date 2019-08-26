@@ -37,6 +37,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     @Override
     public AuthorizeResponse init(String ssn) throws BankServiceException, LoginException {
         AuthorizeRequest authorizeRequest = getAuthorizeRequest(ssn);
+        log.info("Troubleshoot - SSN to init: {}", ssn);
 
         try {
             return apiClient.authorize(authorizeRequest);
