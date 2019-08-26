@@ -207,12 +207,6 @@ public final class KbcAgent extends NextGenerationAgent
 
     @Override
     public boolean isManualAuthentication(Credentials credentials) {
-        // TODO: remove casting
-        try {
-            return manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
-        } catch (NullPointerException e) {
-            logger.error("KBC authenticator cannot be cast to ManualOrAutoAuth because it's null");
-            return false; // TODO For fault tolerance. Make proper fix.
-        }
+        return manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
     }
 }
