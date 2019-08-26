@@ -3,17 +3,18 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentic
 import com.google.api.client.http.HttpStatusCodes;
 import java.util.Arrays;
 import java.util.Optional;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.GetCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
@@ -22,32 +23,45 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<AuthorizeResponse> {
     private final NordeaSeApiClient apiClient;
     private static final Logger log = LoggerFactory.getLogger(NordeaSeBankIdAuthenticator.class);
     private final String language;
 
-    public NordeaSeBankIdAuthenticator(
-            NordeaSeApiClient apiClient, SessionStorage sessionStorage, String language) {
+    public NordeaSeBankIdAuthenticator(NordeaSeApiClient apiClient, String language) {
         this.apiClient = apiClient;
         this.language = language;
     }
 
     @Override
-    public AuthorizeResponse init(String ssn)
-            throws BankIdException, BankServiceException, AuthorizationException {
+    public AuthorizeResponse init(String ssn) throws BankServiceException, LoginException {
         AuthorizeRequest authorizeRequest = getAuthorizeRequest(ssn);
 
-        AuthorizeResponse authorizeResponse = apiClient.authorize(authorizeRequest);
+        try {
+            return apiClient.authorize(authorizeRequest);
+        } catch (HttpResponseException e) {
+            if (isSsnInvalidError(e)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw e;
+        }
+    }
 
-        return authorizeResponse;
+    private boolean isSsnInvalidError(HttpResponseException e) {
+        if (e.getResponse().getStatus() != HttpStatus.SC_BAD_REQUEST) {
+            return false;
+        }
+        ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+        if (errorResponse == null) {
+            return false;
+        }
+
+        return errorResponse.isSsnInvalidError();
     }
 
     @Override
-    public BankIdStatus collect(AuthorizeResponse reference)
-            throws AuthenticationException, AuthorizationException {
+    public BankIdStatus collect(AuthorizeResponse reference) {
         try {
             HttpResponse response =
                     apiClient.getCode(
