@@ -45,9 +45,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class BecApiClient {
     private final TinkHttpClient client;
-    private String state;
     private final String baseUrl;
     private final PersistentStorage persistentStorage;
+    private String state;
     private BecConfiguration becConfiguration;
     private AgentsServiceConfiguration config;
 
@@ -208,7 +208,8 @@ public final class BecApiClient {
         return createPisRequest(
                         new URL(baseUrl.concat(ApiService.CREATE_PAYMENT))
                                 .parameter(
-                                        IdTags.PAYMENT_TYPE, PaymentProducts.DOMESTIC_CREDIT_TRANSFER),
+                                        IdTags.PAYMENT_TYPE,
+                                        PaymentProducts.DOMESTIC_CREDIT_TRANSFER),
                         SerializationUtils.serializeToString(createPaymentRequest))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }

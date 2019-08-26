@@ -77,6 +77,43 @@ public abstract class BecConstants {
                             "LLSV")
                     .build();
 
+    enum HeadersToSign {
+        X_REQUEST_ID("x-request-id"),
+        TPP_REDIRECT_URI("tpp-redirect-uri"),
+        DIGEST("digest");
+        private String header;
+
+        HeadersToSign(String header) {
+            this.header = header;
+        }
+
+        public String getHeader() {
+            return header;
+        }
+    }
+
+    public enum BalanceType {
+        FORWARD_AVAILABLE("forwardAvailable"),
+        CLOSING_BOOKED("closingBooked"),
+        EXPECTED("expected"),
+        AUTHORIZED("authorised"),
+        OPENING_BOOKED("openingBooked"),
+        INTERIM_AVAILABLE("interimAvailable");
+
+        private String type;
+
+        BalanceType(String type) {
+            this.type = type;
+        }
+
+        public static BalanceType fromString(String text) {
+            return Arrays.stream(values())
+                    .filter(balanceType -> balanceType.type.equalsIgnoreCase(text))
+                    .findFirst()
+                    .orElse(null);
+        }
+    }
+
     public static class ApiService {
         public static final String GET_CONSENT = "/consents";
         public static final String GET_CONSENT_STATUS = "/consents/{consentId}/status";
@@ -157,42 +194,5 @@ public abstract class BecConstants {
     public static class PaymentProducts {
         public static final String DOMESTIC_CREDIT_TRANSFER = "domestic-credit-transfers";
         public static final String SEPA_CREDIT_TRANSFERS = "sepa-credit-transfers";
-    }
-
-    enum HeadersToSign {
-        X_REQUEST_ID("x-request-id"),
-        TPP_REDIRECT_URI("tpp-redirect-uri"),
-        DIGEST("digest");
-        private String header;
-
-        HeadersToSign(String header) {
-            this.header = header;
-        }
-
-        public String getHeader() {
-            return header;
-        }
-    }
-
-    public enum BalanceType {
-        FORWARD_AVAILABLE("forwardAvailable"),
-        CLOSING_BOOKED("closingBooked"),
-        EXPECTED("expected"),
-        AUTHORIZED("authorised"),
-        OPENING_BOOKED("openingBooked"),
-        INTERIM_AVAILABLE("interimAvailable");
-
-        private String type;
-
-        BalanceType(String type) {
-            this.type = type;
-        }
-
-        public static BalanceType fromString(String text) {
-            return Arrays.stream(values())
-                    .filter(balanceType -> balanceType.type.equalsIgnoreCase(text))
-                    .findFirst()
-                    .orElse(null);
-        }
     }
 }
