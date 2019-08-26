@@ -202,7 +202,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     private boolean isManualAuthentication(Credentials credentials) {
         if (agent instanceof ManualOrAutoAuth) {
             ManualOrAutoAuth manualOrAutoAuth = (ManualOrAutoAuth) agent;
-            return manualOrAutoAuth.isManualAuthentication(credentials);
+            final boolean isManual = manualOrAutoAuth.isManualAuthentication(credentials);
+            log.info("Authentication requires user intervention: " + isManual);
+            return isManual;
         }
         return false;
     }

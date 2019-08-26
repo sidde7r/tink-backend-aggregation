@@ -4,8 +4,6 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -52,7 +50,6 @@ public final class KbcAgent extends NextGenerationAgent
                 ProgressiveAuthAgent,
                 ManualOrAutoAuth {
 
-    private final Logger logger = LoggerFactory.getLogger(KbcAgent.class);
     private final KbcApiClient apiClient;
     private final String kbcLanguage;
     private KbcHttpFilter httpFilter;
@@ -60,7 +57,7 @@ public final class KbcAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    private final Authenticator authenticator; // TODO remove when decoupled from NxgenAgent
+    private final ProgressiveAuthenticator progressiveAuthenticator;
     private final ManualOrAutoAuth manualOrAutoAuthAuthenticator;
 
     public KbcAgent(
@@ -85,7 +82,7 @@ public final class KbcAgent extends NextGenerationAgent
                 new AutoAuthenticationController(
                         request, systemUpdater, kbcAuthenticator, kbcAuthenticator);
         manualOrAutoAuthAuthenticator = autoAuthenticationController;
-        authenticator = autoAuthenticationController;
+        progressiveAuthenticator = autoAuthenticationController;
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -96,7 +93,7 @@ public final class KbcAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return authenticator;
+        throw new AssertionError(); // Never called because Agent::login is never called
     }
 
     @Override
@@ -200,19 +197,11 @@ public final class KbcAgent extends NextGenerationAgent
     @Override
     public SteppableAuthenticationResponse login(final SteppableAuthenticationRequest request)
             throws Exception {
-        return ProgressiveAuthController.of(
-                        (ProgressiveAuthenticator) getAuthenticator(), credentials)
-                .login(request);
+        return ProgressiveAuthController.of(progressiveAuthenticator, credentials).login(request);
     }
 
     @Override
     public boolean isManualAuthentication(Credentials credentials) {
-        // TODO: remove casting
-        try {
-            return manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
-        } catch (NullPointerException e) {
-            logger.error("KBC authenticator cannot be cast to ManualOrAutoAuth because it's null");
-            return false; // TODO For fault tolerance. Make proper fix.
-        }
+        return manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
     }
 }
