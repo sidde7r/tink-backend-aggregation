@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientImpl;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
@@ -42,12 +41,6 @@ public class AggregationModule extends AbstractModule {
     protected void configure() {
         bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
-        bind(AgentDataAvailabilityTrackerClientImpl.class)
-                .toInstance(
-                        new AgentDataAvailabilityTrackerClientImpl(
-                                configuration
-                                        .getAgentsServiceConfiguration()
-                                        .getAgentDataAvailabilityTrackerConfiguration()));
 
         if (Objects.nonNull(configuration.getS3StorageConfiguration())
                 && configuration.getS3StorageConfiguration().isEnabled()) {

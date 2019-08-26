@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientFactory;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.MetricId;
 
@@ -30,22 +32,28 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
 
-    // TODO: fix
-    private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient = null;
+    private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
 
     private final String agentName;
-    private boolean forceMockClient;
 
     public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
             AgentWorkerCommandContext context, AgentWorkerCommandMetricState metrics) {
         this.context = context;
         this.metrics = metrics.init(this);
 
+        AgentDataAvailabilityTrackerConfiguration configuration =
+                context.getAgentsServiceConfiguration()
+                        .getAgentDataAvailabilityTrackerConfiguration();
+
         CredentialsRequest request = context.getRequest();
 
         this.agentName = request.getProvider().getClassName();
 
-        forceMockClient = !TEST_MARKET.equalsIgnoreCase(request.getProvider().getMarket());
+        boolean forceMockClient = !TEST_MARKET.equalsIgnoreCase(request.getProvider().getMarket());
+
+        this.agentDataAvailabilityTrackerClient =
+                AgentDataAvailabilityTrackerClientFactory.getInstance()
+                        .getClient(configuration, forceMockClient);
     }
 
     @Override
@@ -66,7 +74,8 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                                         agentDataAvailabilityTrackerClient.sendAccount(
                                                 agentName, pair.first, pair.second));
 
-                if (forceMockClient || !agentDataAvailabilityTrackerClient.sendingRealData()) {
+                if (agentDataAvailabilityTrackerClient.isMockClient()) {
+
                     action.cancelled();
                 } else {
                     action.completed();

@@ -22,7 +22,7 @@ public class AgentDataAvailabilityTrackerMockClientImpl
     }
 
     @Override
-    public boolean sendingRealData() {
-        return false;
+    public boolean isMockClient() {
+        return true;
     }
 }
