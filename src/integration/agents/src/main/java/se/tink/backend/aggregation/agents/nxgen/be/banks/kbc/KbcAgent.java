@@ -57,7 +57,7 @@ public final class KbcAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    private final Authenticator authenticator; // TODO remove when decoupled from NxgenAgent
+    private final ProgressiveAuthenticator progressiveAuthenticator;
     private final ManualOrAutoAuth manualOrAutoAuthAuthenticator;
 
     public KbcAgent(
@@ -82,7 +82,7 @@ public final class KbcAgent extends NextGenerationAgent
                 new AutoAuthenticationController(
                         request, systemUpdater, kbcAuthenticator, kbcAuthenticator);
         manualOrAutoAuthAuthenticator = autoAuthenticationController;
-        authenticator = autoAuthenticationController;
+        progressiveAuthenticator = autoAuthenticationController;
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -197,9 +197,7 @@ public final class KbcAgent extends NextGenerationAgent
     @Override
     public SteppableAuthenticationResponse login(final SteppableAuthenticationRequest request)
             throws Exception {
-        return ProgressiveAuthController.of(
-                        (ProgressiveAuthenticator) getAuthenticator(), credentials)
-                .login(request);
+        return ProgressiveAuthController.of(progressiveAuthenticator, credentials).login(request);
     }
 
     @Override
