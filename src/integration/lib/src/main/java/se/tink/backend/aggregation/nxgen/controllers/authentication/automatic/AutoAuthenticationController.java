@@ -86,16 +86,13 @@ public class AutoAuthenticationController
 
     @Override
     public boolean isManualAuthentication(Credentials credentials) {
-        if (!forceAutoAuthentication()
+        return !forceAutoAuthentication()
                         && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
                                 || (request.isUpdate()
                                         && !Objects.equals(
                                                 request.getType(),
                                                 CredentialsRequestType.TRANSFER)))
-                || credentials.forceManualAuthentication()) {
-            return true;
-        }
-        return false;
+                || credentials.forceManualAuthentication();
     }
 
     // TODO: Remove this when there is support for new MultiFactor credential types.
