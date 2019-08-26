@@ -27,7 +27,7 @@ public abstract class NextGenerationAgent extends SubsequentGenerationAgent {
 
     protected abstract Authenticator constructAuthenticator();
 
-    protected final Authenticator getAuthenticator() {
+    private Authenticator getAuthenticator() {
         if (authenticator == null) {
             authenticator = this.constructAuthenticator();
         }
