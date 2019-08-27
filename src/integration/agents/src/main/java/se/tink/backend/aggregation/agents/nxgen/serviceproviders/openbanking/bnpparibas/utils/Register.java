@@ -14,6 +14,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class Register {
+
+    // Default Tink AppID for oxford-staging. Determines which eIDAS certificate is use.
     public static EidasIdentity defaultEidasIdentity =
             new EidasIdentity("oxford-staging", "5f98e87106384b2981c0354a33b51590", Register.class);
 

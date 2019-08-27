@@ -67,7 +67,7 @@ public final class RedsysApiClient {
     private AspspConfiguration aspspConfiguration;
     private ConsentStatus cachedConsentStatus = ConsentStatus.UNKNOWN;
     private String psuIpAddress = null;
-    private EidasIdentity eidasIdentity;
+    private final EidasIdentity eidasIdentity;
 
     public RedsysApiClient(
             TinkHttpClient client,
