@@ -2,10 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticat
 
 import java.util.Optional;
 import org.apache.http.HttpStatus;
+import org.assertj.core.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.BankIdStatusCodes;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.StorageKeys;
@@ -22,6 +27,7 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
     private String autostarttoken;
     private OAuth2Token token;
     private PersistentStorage persistentStorage;
+    private static final Logger logger = LoggerFactory.getLogger(SbabAuthenticator.class);
 
     public SbabAuthenticator(SbabApiClient apiClient, PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
@@ -29,7 +35,12 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
     }
 
     @Override
-    public BankIdResponse init(String ssn) throws BankIdException, BankServiceException {
+    public BankIdResponse init(String ssn)
+            throws BankIdException, BankServiceException, LoginException {
+        if (Strings.isNullOrEmpty(ssn)) {
+            logger.error("SSN was passed as empty or null!");
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
         persistentStorage.remove(StorageKeys.PAGINATION_INDICATOR_REFRESHED_TOKEN);
         try {
             BankIdResponse response = apiClient.initBankId(ssn);
