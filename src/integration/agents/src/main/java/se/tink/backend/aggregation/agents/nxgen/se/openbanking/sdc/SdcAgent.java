@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.authenticator
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.configuration.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.SdcTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.SdcTransactionalAccountTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.util.SdcUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -48,7 +48,7 @@ public final class SdcAgent extends NextGenerationAgent
         apiClient.setConfiguration(getClientConfiguration());
 
         client.setSslClientCertificate(
-                BerlinGroupUtils.readFile(getClientConfiguration().getClientKeyStorePath()),
+                SdcUtils.readFile(getClientConfiguration().getClientKeyStorePath()),
                 getClientConfiguration().getClientKeyStorePassword());
     }
 

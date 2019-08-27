@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetche
 import com.google.common.base.Strings;
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -29,7 +29,8 @@ public class SantanderTransactionalAccountFetcher
             TransactionalAccount account, String nextUrl) {
         String url =
                 Strings.isNullOrEmpty(nextUrl)
-                        ? account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL)
+                        ? account.getFromTemporaryStorage(
+                                SantanderConstants.StorageKeys.TRANSACTIONS_URL)
                         : nextUrl;
         return apiClient.fetchTransactions(url);
     }

@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConsta
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.entity.ConsentBaseRequest;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.entity.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.configuration.BawagConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.rpc.CreatePaymentResponse;
@@ -18,8 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;

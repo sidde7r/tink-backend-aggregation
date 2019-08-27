@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authentica
 import java.util.Calendar;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.entity.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.entity.ConsentBaseRequest;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.entity.ConsentBaseResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 

@@ -2,16 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.tr
 
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class GetBalancesResponse {
 
     private AccountEntity account;
-    private List<BalanceBaseEntity> balances;
+    private List<BalanceEntity> balances;
 
-    public List<BalanceBaseEntity> getBalances() {
+    public List<BalanceEntity> getBalances() {
         return balances;
     }
 }

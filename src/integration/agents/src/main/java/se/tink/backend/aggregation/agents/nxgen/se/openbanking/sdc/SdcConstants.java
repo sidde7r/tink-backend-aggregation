@@ -65,6 +65,8 @@ public final class SdcConstants {
         public static final String STATE = "state";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
+        public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String WITH_BALANCE = "withBalance";
     }
 
     public static class QueryValues {
@@ -75,6 +77,7 @@ public final class SdcConstants {
 
     public static class HeaderKeys {
 
+        public static final String CONSENT_ID = "Consent-ID";
         public static final String X_REQUEST_ID = "x_request_id";
         public static final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
     }

@@ -19,8 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.configuration
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.util.SdcUtils;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -95,30 +94,26 @@ public final class SdcApiClient {
                         "");
 
         return createRequest(Urls.TOKEN)
-                .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, SdcUtils.getRequestId())
                 .post(TokenResponse.class, tokenRequest)
                 .toTinkToken();
     }
 
     public AccountsResponse fetchAccounts() {
         return createRequestInSession(Urls.ACCOUNTS)
-                .header(
-                        BerlinGroupConstants.HeaderKeys.X_REQUEST_ID,
-                        BerlinGroupUtils.getRequestId())
-                .header(BerlinGroupConstants.HeaderKeys.CONSENT_ID, BerlinGroupUtils.getRequestId())
+                .header(SdcConstants.HeaderKeys.X_REQUEST_ID, SdcUtils.getRequestId())
+                .header(SdcConstants.HeaderKeys.CONSENT_ID, SdcUtils.getRequestId())
                 .header(
                         SdcConstants.HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
                         getConfiguration().getOcpApimSubscriptionKey())
-                .queryParam(BerlinGroupConstants.QueryKeys.WITH_BALANCE, String.valueOf(true))
+                .queryParam(SdcConstants.QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(AccountsResponse.class);
     }
 
     public BalancesResponse fetchAccountBalances(String accountId) {
         return createRequestInSession(Urls.BALANCES.parameter(PathParameters.ACCOUNT_ID, accountId))
-                .header(
-                        BerlinGroupConstants.HeaderKeys.X_REQUEST_ID,
-                        BerlinGroupUtils.getRequestId())
-                .header(BerlinGroupConstants.HeaderKeys.CONSENT_ID, BerlinGroupUtils.getRequestId())
+                .header(SdcConstants.HeaderKeys.X_REQUEST_ID, SdcUtils.getRequestId())
+                .header(SdcConstants.HeaderKeys.CONSENT_ID, SdcUtils.getRequestId())
                 .header(
                         SdcConstants.HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
                         getConfiguration().getOcpApimSubscriptionKey())
@@ -130,15 +125,13 @@ public final class SdcApiClient {
         return createRequestInSession(
                         Urls.TRANSACTIONS.parameter(
                                 PathParameters.ACCOUNT_ID, account.getApiIdentifier()))
-                .header(
-                        BerlinGroupConstants.HeaderKeys.X_REQUEST_ID,
-                        BerlinGroupUtils.getRequestId())
-                .header(BerlinGroupConstants.HeaderKeys.CONSENT_ID, BerlinGroupUtils.getRequestId())
+                .header(SdcConstants.HeaderKeys.X_REQUEST_ID, SdcUtils.getRequestId())
+                .header(SdcConstants.HeaderKeys.CONSENT_ID, SdcUtils.getRequestId())
                 .header(
                         SdcConstants.HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
                         getConfiguration().getOcpApimSubscriptionKey())
                 .queryParam(
-                        BerlinGroupConstants.QueryKeys.BOOKING_STATUS,
+                        SdcConstants.QueryKeys.BOOKING_STATUS,
                         SdcConstants.QueryValues.BOOKED) // TODO Verify pagination
                 .queryParam(
                         SdcConstants.QueryKeys.DATE_FROM,
