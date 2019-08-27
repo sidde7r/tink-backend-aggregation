@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.fet
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import java.util.stream.Stream;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -82,6 +84,17 @@ public class TransactionEntity {
     }
 
     private String getTinkDescription() {
-        return description == null ? "" : description;
+        return Stream.of(description, getDebtor(), getCreditor())
+                .filter(str -> !Strings.isNullOrEmpty(str))
+                .findFirst()
+                .orElse("");
+    }
+
+    private String getDebtor() {
+        return counterpartyAlias == null ? null : counterpartyAlias.getDisplayName();
+    }
+
+    private String getCreditor() {
+        return alias == null ? null : alias.getDisplayName();
     }
 }
