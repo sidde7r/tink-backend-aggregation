@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator;
 
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
-import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
