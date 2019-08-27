@@ -118,19 +118,15 @@ public class BankIdAuthenticationController<T>
                         credentials.getType()));
 
         String ssn = "";
-
         if (credentials.hasField(Field.Key.USERNAME)) {
-            log.warn("Troubleshoot - Credential has username field!");
             ssn = credentials.getField(Field.Key.USERNAME);
-            log.warn(String.format("Troubleshoot - SSN from credential: %s", ssn));
             if (Strings.isNullOrEmpty(ssn)) {
-                log.warn("Troubleshoot - SSN is empty or null!");
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
-        } else {
-            log.warn("Troubleshoot - There was not username in the credential, ssn: " + ssn);
         }
 
+        // Empty SSN is valid for autostart token agents, handling for ssn not empty needs to be
+        // done in each agent
         T reference = authenticator.init(ssn);
 
         supplementalRequester.openBankId(
