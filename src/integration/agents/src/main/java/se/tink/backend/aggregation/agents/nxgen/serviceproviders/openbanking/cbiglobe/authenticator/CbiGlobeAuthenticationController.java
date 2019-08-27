@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
@@ -40,9 +38,6 @@ public class CbiGlobeAuthenticationController
         this.consentTransactionState = consentTransactionState;
     }
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(CbiGlobeAuthenticationController.class);
-
     public ThirdPartyAppResponse<String> init() {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
@@ -62,13 +57,8 @@ public class CbiGlobeAuthenticationController
         openThirdPartyApp(getAccountsResponse);
 
         // Consent for transactions and balances
-        // Changes in this commit just for testing, will be reverted after tests
-        if (this.authenticator.getConfiguration().getAspspCode().equals("03069")) {
-            logger.info("ISP wait for suplemental infor");
-            waitForSuplementalInformation(consentAccountState);
-        } else {
-            waitForSuplementalInformation(consentTransactionState);
-        }
+        waitForSuplementalInformation(consentTransactionState);
+
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
@@ -99,23 +89,11 @@ public class CbiGlobeAuthenticationController
     }
 
     public void openThirdPartyApp(GetAccountsResponse getAccountsResponse) {
-        URL authorizeUrl;
-        // Changes in this commit just for testing, will be reverted after tests
-        if (this.authenticator.getConfiguration().getAspspCode().equals("03069")) {
-            logger.info("ISP Authorization URL");
-            authorizeUrl =
-                    this.authenticator.buildAuthorizeUrl(
-                            this.consentAccountState.getState(),
-                            this.authenticator.createConsentRequestBalancesTransactions(
-                                    getAccountsResponse));
-
-        } else {
-            authorizeUrl =
-                    this.authenticator.buildAuthorizeUrl(
-                            this.consentTransactionState.getState(),
-                            this.authenticator.createConsentRequestBalancesTransactions(
-                                    getAccountsResponse));
-        }
+        URL authorizeUrl =
+                this.authenticator.buildAuthorizeUrl(
+                        this.consentTransactionState.getState(),
+                        this.authenticator.createConsentRequestBalancesTransactions(
+                                getAccountsResponse));
         ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
         Preconditions.checkNotNull(payload);
         this.supplementalInformationHelper.openThirdPartyApp(payload);
