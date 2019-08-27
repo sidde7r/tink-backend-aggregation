@@ -11,7 +11,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.unicredit.authenticator.entity.UnicreditConsentAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
@@ -29,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.util.UnicreditBaseUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -102,7 +102,7 @@ public abstract class UnicreditBaseApiClient {
 
         RequestBuilder requestBuilder =
                 createRequest(url)
-                        .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                        .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
                         .header(HeaderKeys.CONSENT_ID, consentId);
 
         // This header must be present if the request was initiated by the PSU
@@ -127,7 +127,7 @@ public abstract class UnicreditBaseApiClient {
 
         ConsentResponse consentResponse =
                 createRequest(new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENTS))
-                        .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                        .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
                         .header(HeaderKeys.PSU_ID_TYPE, getConfiguration().getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
@@ -147,7 +147,7 @@ public abstract class UnicreditBaseApiClient {
         return createRequest(
                         new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENT_STATUS)
                                 .parameter(PathParameters.CONSENT_ID, getConsentIdFromStorage()))
-                .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
                 .get(ConsentStatusResponse.class);
     }
 

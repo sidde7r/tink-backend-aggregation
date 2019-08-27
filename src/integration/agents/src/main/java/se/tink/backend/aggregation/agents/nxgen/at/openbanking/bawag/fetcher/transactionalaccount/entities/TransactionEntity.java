@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.tr
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceAmountBaseEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.CreditorAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.DebtorAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -20,7 +17,7 @@ public class TransactionEntity {
     protected String debtorName;
     protected String mandateId;
     protected String remittanceInformationStructured;
-    protected BalanceAmountBaseEntity transactionAmount;
+    protected BalanceAmountEntity transactionAmount;
     protected String transactionId;
 
     public Transaction toBookedTinkTransaction() {

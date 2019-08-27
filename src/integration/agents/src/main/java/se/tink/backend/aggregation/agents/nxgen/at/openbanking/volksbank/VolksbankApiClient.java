@@ -8,7 +8,10 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.Urls;
@@ -23,8 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryValues;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -133,8 +134,7 @@ public final class VolksbankApiClient {
 
         ConsentRequest consentRequest = getConsentRequest(new DetailedConsentAccessEntity(ibans));
         ConsentResponse consentResponse = getConsentResponse(state, consentRequest);
-        persistentStorage.put(
-                VolksbankConstants.StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
 
         return consentResponse;
     }
@@ -144,18 +144,15 @@ public final class VolksbankApiClient {
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(getConfiguration().getRedirectUrl())
-                                .queryParam(VolksbankConstants.QueryKeys.STATE, state)
-                                .queryParam(
-                                        VolksbankConstants.QueryKeys.CODE,
-                                        VolksbankConstants.QueryValues.CODE)) // TODO patch server
+                                .queryParam(QueryKeys.STATE, state)
+                                .queryParam(QueryKeys.CODE, QueryValues.CODE)) // TODO patch server
                 .header(HeaderKeys.PSU_ID, credentials.getField(Key.LOGIN_INPUT))
                 .header(HeaderKeys.PSU_ID_TYPE, credentials.getField(Key.LOGIN_DESCRIPTION))
                 .post(ConsentResponse.class, consentRequest);
     }
 
     private ConsentRequest getConsentRequest(ConsentAccessEntity consentAccessEntity) {
-        return new ConsentRequest(
-                true, VolksbankConstants.FormValues.MAX_DATE, 100, false, consentAccessEntity);
+        return new ConsentRequest(true, FormValues.MAX_DATE, 100, false, consentAccessEntity);
     }
 
     public PaginatorResponse fetchTransactionsFor(
@@ -165,11 +162,8 @@ public final class VolksbankApiClient {
                                 UrlParameters.ACCOUNT_ID, account.getApiIdentifier()))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .queryParam(
-                        VolksbankConstants.QueryKeys.DATE_FROM,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(
-                        VolksbankConstants.QueryKeys.DATE_TO,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(TransactionsResponse.class);
     }
 }

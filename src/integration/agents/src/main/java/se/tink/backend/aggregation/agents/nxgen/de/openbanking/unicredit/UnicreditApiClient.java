@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authent
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditScaAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditUserData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditUserDataResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
@@ -14,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.util.UnicreditBaseUtils;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -35,7 +35,7 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
 
         ConsentResponse consentResponse =
                 createRequest(new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENTS))
-                        .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                        .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
                         .header(
                                 HeaderKeys.PSU_ID_TYPE,
                                 getCredentials().getField(Key.ADDITIONAL_INFORMATION))
@@ -74,7 +74,7 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
     private RequestBuilder getConsentUpdateRequest(URL url) {
 
         return createRequest(url)
-                .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
                 .header(
                         HeaderKeys.PSU_ID_TYPE,
                         getCredentials().getField(Key.ADDITIONAL_INFORMATION))

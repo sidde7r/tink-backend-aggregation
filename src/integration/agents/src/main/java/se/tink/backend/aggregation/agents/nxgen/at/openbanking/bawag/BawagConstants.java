@@ -52,6 +52,11 @@ public final class BawagConstants {
                 "/xs2a/v1/payments/cross-border-credit-transfers/{paymentId}";
     }
 
+    public static class Accounts {
+        public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
+        public static final String CLBD = "CLBD";
+    }
+
     public static class StorageKeys {
         public static final String CONSENT_ID = "consent-id";
     }

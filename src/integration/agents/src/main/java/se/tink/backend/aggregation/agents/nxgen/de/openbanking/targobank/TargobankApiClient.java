@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.authent
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.authenticator.rpc.ScaConfirmResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.configuration.TargobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.util.TargoBankUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -51,7 +51,7 @@ public final class TargobankApiClient {
         this.configuration = configuration;
 
         client.setSslClientCertificate(
-                BerlinGroupUtils.readFile(configuration.getClientKeyStorePath()),
+                TargoBankUtils.readFile(configuration.getClientKeyStorePath()),
                 configuration.getClientKeyStorePassword());
     }
 

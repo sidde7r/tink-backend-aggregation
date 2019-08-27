@@ -63,11 +63,19 @@ public final class SantanderConstants {
     }
 
     public static class QueryKeys {
+        public static final String CLIENT_ID = "client_id";
+        public static final String WITH_BALANCE = "withBalance";
+        public static final String BOOKING_STATUS = "bookingStatus";
         public static final String GRANT_TYPE = "grant_type";
     }
 
     public static class QueryValues {
         public static final String GRANT_TYPE = "client_credentials";
+        public static final String SCOPE = "AIS:";
+        public static final String RESPONSE_TYPE = "code";
+        public static final String CODE_CHALLENGE_METHOD = "S256";
+        public static final String BOTH = "both";
+        public static final String TRUE = "true";
     }
 
     public static class HeaderKeys {

@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.entities.TransactionsEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class GetTransactionsResponse implements PaginatorResponse {
 
     private AccountEntity account;
-    private List<BalanceBaseEntity> balances;
+    private List<BalanceEntity> balances;
     private TransactionsEntity transactions;
 
     @Override

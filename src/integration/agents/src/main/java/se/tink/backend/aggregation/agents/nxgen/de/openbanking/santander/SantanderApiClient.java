@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.Santand
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.IdTag;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.rpc.ConsentRequest;
@@ -19,10 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -62,9 +61,9 @@ public final class SantanderApiClient {
     }
 
     public OAuth2Token getToken(String code) {
-        TokenRequest request = new TokenRequest(SantanderConstants.QueryValues.GRANT_TYPE);
+        TokenRequest request = new TokenRequest(QueryValues.GRANT_TYPE);
 
-        return client.request(SantanderConstants.Urls.TOKEN)
+        return client.request(Urls.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .addBasicAuth(
                         getConfiguration().getClientId(), getConfiguration().getClientSecret())
@@ -90,7 +89,7 @@ public final class SantanderApiClient {
 
     public AccountsResponse fetchAccounts() {
         final String clientId = getConfiguration().getClientId();
-        final String consentId = persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID);
+        final String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
 
         return client.request(Urls.ACCOUNTS)
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
@@ -102,8 +101,8 @@ public final class SantanderApiClient {
                 .get(AccountsResponse.class);
     }
 
-    public TransactionsKeyPaginatorBaseResponse fetchTransactions(String url) {
-        final String consentId = persistentStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID);
+    public TransactionsKeyPaginatorResponse fetchTransactions(String url) {
+        final String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
         final String clientId = getConfiguration().getClientId();
 
         return client.request(Urls.TRANSACTIONS + url)
@@ -112,7 +111,7 @@ public final class SantanderApiClient {
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .header(HeaderKeys.X_IBM_CLIENT_ID, clientId)
                 .header(HeaderKeys.X_REQUEST_ID, getRequestId())
-                .get(TransactionsKeyPaginatorBaseResponse.class);
+                .get(TransactionsKeyPaginatorResponse.class);
     }
 
     public void setTokenToStorage(OAuth2Token token) {

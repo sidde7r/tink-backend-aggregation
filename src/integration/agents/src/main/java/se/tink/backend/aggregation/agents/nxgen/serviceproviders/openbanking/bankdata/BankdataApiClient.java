@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.utils.BankdataUtils;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -335,8 +334,8 @@ public final class BankdataApiClient {
     }
 
     private URL signPaymentUrl(String paymentId) {
-        final String codeVerifier = BerlinGroupUtils.generateCodeVerifier();
-        final String codeChallenge = BerlinGroupUtils.generateCodeChallenge(codeVerifier);
+        final String codeVerifier = BankdataUtils.generateCodeVerifier();
+        final String codeChallenge = BankdataUtils.generateCodeChallenge(codeVerifier);
         final String clientId = getConfiguration().getClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
