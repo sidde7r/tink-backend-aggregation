@@ -86,7 +86,11 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
         this.expectLoggedIn = builder.isExpectLoggedIn();
         this.context =
                 new NewAgentTestContext(
-                        this.user, this.credential, builder.getTransactionsToPrint(), "");
+                        this.user,
+                        this.credential,
+                        builder.getTransactionsToPrint(),
+                        builder.getAppId(),
+                        builder.getClusterId());
         this.supplementalInformationController =
                 new SupplementalInformationController(this.context, this.credential);
     }
@@ -366,6 +370,9 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
         private Set<RefreshableItem> refreshableItems = new HashSet();
         private AisValidator validator;
 
+        private String appId = null;
+        private String clusterId = null;
+
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
@@ -469,6 +476,24 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
 
         public Builder addCredentialField(String key, String value) {
             this.credential.setField(key, value);
+            return this;
+        }
+
+        public String getClusterId() {
+            return clusterId;
+        }
+
+        public String getAppId() {
+            return appId;
+        }
+
+        public Builder setClusterId(String clusterId) {
+            this.clusterId = clusterId;
+            return this;
+        }
+
+        public Builder setAppId(final String appId) {
+            this.appId = appId;
             return this;
         }
 

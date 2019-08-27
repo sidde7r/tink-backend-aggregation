@@ -103,7 +103,11 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
 
         this.context =
                 new NewAgentTestContext(
-                        user, credential, builder.getTransactionsToPrint(), builder.getAppId());
+                        user,
+                        credential,
+                        builder.getTransactionsToPrint(),
+                        builder.getAppId(),
+                        builder.getClusterId());
 
         this.supplementalInformationController =
                 new SupplementalInformationController(context, credential);
@@ -161,6 +165,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
                             configuration.getIntegrations(),
                             provider.getFinancialInstitutionId(),
                             context.getAppId(),
+                            context.getClusterId(),
                             credentialsRequest.getCallbackUri());
             if (!agentConfigurationController.init()) {
                 throw new IllegalStateException(
@@ -646,7 +651,8 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
 
         private AisValidator validator;
 
-        private String appId = "tink";
+        private String appId = null;
+        private String clusterId = null;
 
         private String redirectUrl;
 
@@ -839,6 +845,15 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
 
         public String getRedirectUrl() {
             return redirectUrl;
+        }
+
+        public String getClusterId() {
+            return clusterId;
+        }
+
+        public Builder setClusterId(String clusterId) {
+            this.clusterId = clusterId;
+            return this;
         }
 
         public Builder setRedirectUrl(String redirectUrl) {
