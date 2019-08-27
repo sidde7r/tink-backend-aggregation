@@ -54,12 +54,8 @@ public abstract class RedsysAgent extends NextGenerationAgent
 
         apiClient =
                 new RedsysApiClient(
-                        client,
-                        sessionStorage,
-                        persistentStorage,
-                        this,
-                        context.getAppId(),
-                        context.getClusterId());
+                        client, sessionStorage, persistentStorage, this, this.getEidasIdentity());
+
         consentStorage = new RedsysConsentStorage(persistentStorage);
         consentController =
                 new RedsysConsentController(

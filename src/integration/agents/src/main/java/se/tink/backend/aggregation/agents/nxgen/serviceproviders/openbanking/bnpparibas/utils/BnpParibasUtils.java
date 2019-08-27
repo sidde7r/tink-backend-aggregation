@@ -3,13 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bn
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidas.EidasProxyConstants;
-import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public class BnpParibasUtils {
 
     public static String buildSignatureHeader(
             EidasProxyConfiguration configuration,
+            EidasIdentity eidasIdentity,
             String authorizationCode,
             String requestId,
             BnpParibasConfiguration bnpParibasConfiguration) {
@@ -18,7 +20,12 @@ public class BnpParibasUtils {
                 getKeyId(bnpParibasConfiguration),
                 getAlgorithm(),
                 getHeaders(),
-                getSignature(configuration, authorizationCode, requestId, bnpParibasConfiguration));
+                getSignature(
+                        configuration,
+                        eidasIdentity,
+                        authorizationCode,
+                        requestId,
+                        bnpParibasConfiguration));
     }
 
     private static String getKeyId(BnpParibasConfiguration bnpParibasConfiguration) {
@@ -45,20 +52,23 @@ public class BnpParibasUtils {
 
     public static String getSignature(
             EidasProxyConfiguration configuration,
-            BnpParibasConfiguration bnpParibasConfiguration) {
+            BnpParibasConfiguration bnpParibasConfiguration,
+            EidasIdentity eidasIdentity) {
 
         return String.format(
                 "%s=\"%s\"",
                 BnpParibasBaseConstants.SignatureKeys.SIGNATURE,
-                new QsealcEidasProxySigner(
-                                configuration,
-                                bnpParibasConfiguration.getEidasQwac(),
-                                EidasProxyConstants.Algorithm.EIDAS_RSA_SHA256)
+                QsealcSigner.build(
+                                configuration.toInternalConfig(),
+                                QsealcAlg.EIDAS_RSA_SHA256,
+                                eidasIdentity,
+                                bnpParibasConfiguration.getEidasQwac())
                         .getSignatureBase64("".getBytes()));
     }
 
     private static String getSignature(
             EidasProxyConfiguration configuration,
+            EidasIdentity eidasIdentity,
             String authorizationCode,
             String requestId,
             BnpParibasConfiguration bnpParibasConfiguration) {
@@ -75,10 +85,11 @@ public class BnpParibasUtils {
         return String.format(
                 "%s=\"%s\"",
                 BnpParibasBaseConstants.SignatureKeys.SIGNATURE,
-                new QsealcEidasProxySigner(
-                                configuration,
-                                bnpParibasConfiguration.getEidasQwac(),
-                                EidasProxyConstants.Algorithm.EIDAS_RSA_SHA256)
+                QsealcSigner.build(
+                                configuration.toInternalConfig(),
+                                QsealcAlg.EIDAS_RSA_SHA256,
+                                eidasIdentity,
+                                bnpParibasConfiguration.getEidasQwac())
                         .getSignatureBase64(signatureString.getBytes()));
     }
 }

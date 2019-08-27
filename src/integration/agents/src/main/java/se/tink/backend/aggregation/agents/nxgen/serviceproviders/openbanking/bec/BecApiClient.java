@@ -32,7 +32,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -50,6 +52,7 @@ public final class BecApiClient {
     private final PersistentStorage persistentStorage;
     private BecConfiguration becConfiguration;
     private AgentsServiceConfiguration config;
+    private EidasIdentity eidasIdentity;
 
     public BecApiClient(
             TinkHttpClient client, PersistentStorage persistentStorage, String baseUrl) {
@@ -59,9 +62,12 @@ public final class BecApiClient {
     }
 
     public void setConfiguration(
-            BecConfiguration becConfiguration, final AgentsServiceConfiguration configuration) {
+            BecConfiguration becConfiguration,
+            final AgentsServiceConfiguration configuration,
+            EidasIdentity eidasIdentity) {
         this.becConfiguration = becConfiguration;
         this.config = configuration;
+        this.eidasIdentity = eidasIdentity;
     }
 
     private Map<String, Object> getHeaders(String requestId, String digest) {
@@ -180,8 +186,12 @@ public final class BecApiClient {
     }
 
     private String generateSignatureHeader(Map<String, Object> headers) {
-        QsealcEidasProxySigner signer =
-                new QsealcEidasProxySigner(config.getEidasProxy(), becConfiguration.getEidasQwac());
+        QsealcSigner signer =
+                QsealcSigner.build(
+                        config.getEidasProxy().toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        eidasIdentity,
+                        becConfiguration.getEidasQwac());
 
         String signedHeaders =
                 Arrays.stream(HeadersToSign.values())

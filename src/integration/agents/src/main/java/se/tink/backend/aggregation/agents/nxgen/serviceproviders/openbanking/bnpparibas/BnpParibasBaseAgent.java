@@ -86,8 +86,10 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
         apiClient.setConfiguration(bnpParibasConfiguration);
         client.setEidasProxy(configuration.getEidasProxy(), bnpParibasConfiguration.getEidasQwac());
 
-        accountFetcher.setEidasProxyConfiguration(configuration.getEidasProxy());
-        transactionFetcher.setEidasProxyConfiguration(configuration.getEidasProxy());
+        accountFetcher.setEidasProxyConfiguration(
+                configuration.getEidasProxy(), getEidasIdentity());
+        transactionFetcher.setEidasProxyConfiguration(
+                configuration.getEidasProxy(), getEidasIdentity());
     }
 
     public AgentsServiceConfiguration getConfiguration() {
