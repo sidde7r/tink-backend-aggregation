@@ -1242,6 +1242,7 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "cd4a1d371f495c82a3224f23ab803498",
             "groupDisplayName": "American Express",
             "market": "SE",
             "multiFactor": false,
