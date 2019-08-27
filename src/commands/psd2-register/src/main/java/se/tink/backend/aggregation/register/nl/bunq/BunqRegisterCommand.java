@@ -43,6 +43,8 @@ public class BunqRegisterCommand {
     private static final String QSEALC_PATH = "q";
     private static final String QSEALC_CHAIN_PATH = "c";
     private static final String CERTIFICATE_ID = "i";
+    private static final String CLUSTER_ID = "l";
+    private static final String APP_ID = "a";
 
     private static BunqRegistrationResponse.Builder bunqRegistrationResponse =
             BunqRegistrationResponse.builder();
@@ -70,6 +72,8 @@ public class BunqRegisterCommand {
             selectedEnvironment = RegisterEnvironment.PRODUCTION;
             Preconditions.checkState(cmd.hasOption(QSEALC_PATH), "Conditionally required");
             Preconditions.checkState(cmd.hasOption(QSEALC_CHAIN_PATH), "Conditionally required");
+            Preconditions.checkState(cmd.hasOption(CLUSTER_ID), "Conditionally required");
+            Preconditions.checkState(cmd.hasOption(APP_ID), "Conditionally required");
             Preconditions.checkState(cmd.hasOption(CERTIFICATE_ID), "Conditionally required");
         } else if (cmd.hasOption(SANDBOX_OPTION_NAME)) {
             selectedEnvironment = RegisterEnvironment.SANDBOX;
@@ -85,7 +89,11 @@ public class BunqRegisterCommand {
             case PRODUCTION:
                 environment =
                         new ProductionEnvironment(
-                                qsealcPath, qsealcChainPath, cmd.getOptionValue(CERTIFICATE_ID));
+                                qsealcPath,
+                                qsealcChainPath,
+                                cmd.getOptionValue(CLUSTER_ID),
+                                cmd.getOptionValue(APP_ID),
+                                cmd.getOptionValue(CERTIFICATE_ID));
                 break;
             case SANDBOX:
                 environment = new SandboxEnvironment();
@@ -159,6 +167,22 @@ public class BunqRegisterCommand {
                         .desc("Path to a file containing the root and intermediate certificates")
                         .build();
         options.addOption(qsealcChainPathOption);
+
+        Option clusterIdOption =
+                Option.builder(CLUSTER_ID)
+                        .longOpt("cluster-id")
+                        .hasArg()
+                        .desc("Identifier for the cluster the proxy will use for signing")
+                        .build();
+        options.addOption(clusterIdOption);
+
+        Option appIdOption =
+                Option.builder(APP_ID)
+                        .longOpt("app-id")
+                        .hasArg()
+                        .desc("Identifier for the app the proxy will use for signing")
+                        .build();
+        options.addOption(appIdOption);
 
         Option certificateIdOption =
                 Option.builder(CERTIFICATE_ID)
