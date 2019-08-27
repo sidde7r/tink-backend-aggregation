@@ -17,7 +17,7 @@ public final class AmericanExpressV62Constants {
     public enum ConstantValueHeaders implements HeaderEnum {
         CHARSET("charset", "UTF-8"),
         CLIENT_TYPE("X-AXP-ClientType", "iPhone"),
-        APP_VERSION("X-AXP-AppVersion", "6.2.1"),
+        APP_VERSION("X-AXP-AppVersion", "6.21.1"),
         DEVICE_MODEL("X-AXP-DeviceModel", "iPhone8,1"),
         DEVICE_OS("X-AXP-DeviceOS", "iOS"),
         HARDWARE_ID("X-AXP-HardwareID", ""),
