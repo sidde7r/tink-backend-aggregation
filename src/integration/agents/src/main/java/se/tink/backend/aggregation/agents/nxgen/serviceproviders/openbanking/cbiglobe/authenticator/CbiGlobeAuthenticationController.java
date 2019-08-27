@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
@@ -24,22 +22,16 @@ public class CbiGlobeAuthenticationController
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CbiGlobeAuthenticator authenticator;
-    private final StrongAuthenticationState consentAccountState;
-    private final StrongAuthenticationState consentTransactionState;
+    private final StrongAuthenticationState consentState;
 
     public CbiGlobeAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
             CbiGlobeAuthenticator authenticator,
-            StrongAuthenticationState consentAccountState,
-            StrongAuthenticationState consentTransactionState) {
+            StrongAuthenticationState consentState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.consentAccountState = consentAccountState;
-        this.consentTransactionState = consentTransactionState;
+        this.consentState = consentState;
     }
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(CbiGlobeAuthenticationController.class);
 
     public ThirdPartyAppResponse<String> init() {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
@@ -53,20 +45,15 @@ public class CbiGlobeAuthenticationController
     @Override
     public ThirdPartyAppResponse<String> collect(String reference) {
         // Consent for accounts
-        waitForSuplementalInformation(consentAccountState);
+        waitForSuplementalInformation(consentState);
 
         // account fetching in AUTHENTICATING phase due to two times consent authentication flow
         GetAccountsResponse getAccountsResponse = accountFetch();
         openThirdPartyApp(getAccountsResponse);
 
         // Consent for transactions and balances
-        // Changes in this commit just for testing, will be reverted after tests
-        if (this.authenticator.getConfiguration().getAspspCode().equals("03069")) {
-            logger.info("ISP wait for suplemental infor");
-            waitForSuplementalInformation(consentAccountState);
-        } else {
-            waitForSuplementalInformation(consentTransactionState);
-        }
+        waitForSuplementalInformation(consentState);
+
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
@@ -74,8 +61,7 @@ public class CbiGlobeAuthenticationController
         this.authenticator.tokenAutoAuthentication();
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
-                        consentAccountState.getState(),
-                        this.authenticator.createConsentRequestAccount());
+                        consentState.getState(), this.authenticator.createConsentRequestAccount());
         return getAppPayload(authorizeUrl);
     }
 
@@ -89,23 +75,11 @@ public class CbiGlobeAuthenticationController
     }
 
     public void openThirdPartyApp(GetAccountsResponse getAccountsResponse) {
-        URL authorizeUrl;
-        // Changes in this commit just for testing, will be reverted after tests
-        if (this.authenticator.getConfiguration().getAspspCode().equals("03069")) {
-            logger.info("ISP Authorization URL");
-            authorizeUrl =
-                    this.authenticator.buildAuthorizeUrl(
-                            this.consentAccountState.getState(),
-                            this.authenticator.createConsentRequestBalancesTransactions(
-                                    getAccountsResponse));
-
-        } else {
-            authorizeUrl =
-                    this.authenticator.buildAuthorizeUrl(
-                            this.consentTransactionState.getState(),
-                            this.authenticator.createConsentRequestBalancesTransactions(
-                                    getAccountsResponse));
-        }
+        URL authorizeUrl =
+                this.authenticator.buildAuthorizeUrl(
+                        this.consentState.getState(),
+                        this.authenticator.createConsentRequestBalancesTransactions(
+                                getAccountsResponse));
         ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
         Preconditions.checkNotNull(payload);
         this.supplementalInformationHelper.openThirdPartyApp(payload);
