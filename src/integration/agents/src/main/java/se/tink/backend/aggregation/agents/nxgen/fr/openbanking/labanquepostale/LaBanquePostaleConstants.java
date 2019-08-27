@@ -15,6 +15,10 @@ public final class LaBanquePostaleConstants {
         public static final String CONFIRM_PAYMENT = BASE_URL + "/payment-requests/%s/confirmation";
     }
 
+    public static class StorageKeys {
+        public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
+    }
+
     public static class HeaderKeys {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String SIGNATURE = "Signature";
@@ -42,6 +46,8 @@ public final class LaBanquePostaleConstants {
     }
 
     public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
         public static final String PAYMENT_NOT_FOUND = "Payment can not be found";
     }
 
