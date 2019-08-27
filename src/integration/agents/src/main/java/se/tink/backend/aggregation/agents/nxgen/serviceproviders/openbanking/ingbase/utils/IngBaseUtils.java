@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.utils;
 
+import com.google.common.base.Strings;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -11,13 +12,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 
-public final class IngUtils {
+public final class IngBaseUtils {
 
-    private IngUtils() {}
+    private IngBaseUtils() {}
 
     public static String getRequestId() {
         return UUID.randomUUID().toString();
@@ -35,7 +35,8 @@ public final class IngUtils {
         return Base64.getEncoder()
                 .encodeToString(
                         RSA.signSha256(
-                                IngUtils.readSigningKey(signingKey, algorithm), input.getBytes()));
+                                IngBaseUtils.readSigningKey(signingKey, algorithm),
+                                input.getBytes()));
     }
 
     public static PrivateKey readSigningKey(String keyString, String algorithm) {

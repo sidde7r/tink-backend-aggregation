@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -23,16 +24,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.utils.IngUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.utils.IngBaseUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import tink.org.apache.http.client.utils.DateUtils;
 
 public class IngBaseApiClient {
 
+    private final SimpleDateFormat dateFormat;
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     private final String market;
@@ -42,6 +43,7 @@ public class IngBaseApiClient {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.market = market;
+        dateFormat = new SimpleDateFormat(QueryValues.DATE_FORMAT);
     }
 
     public IngBaseConfiguration getConfiguration() {
@@ -76,12 +78,8 @@ public class IngBaseApiClient {
             final String reqPath, final Date fromDate, final Date toDate) {
         final String completeReqPath =
                 new URL(reqPath)
-                        .queryParam(
-                                QueryKeys.DATE_FROM,
-                                DateUtils.formatDate(fromDate, QueryValues.DATE_FORMAT))
-                        .queryParam(
-                                QueryKeys.DATE_TO,
-                                DateUtils.formatDate(toDate, QueryValues.DATE_FORMAT))
+                        .queryParam(QueryKeys.DATE_FROM, dateFormat.format(fromDate))
+                        .queryParam(QueryKeys.DATE_TO, dateFormat.format(fromDate))
                         .queryParam(
                                 QueryKeys.LIMIT,
                                 "10") // TODO - Temporary added for Sandbox specification
@@ -134,7 +132,7 @@ public class IngBaseApiClient {
     }
 
     private TokenResponse getApplicationAccessToken() {
-        final String reqId = IngUtils.getRequestId();
+        final String reqId = IngBaseUtils.getRequestId();
         final String date = getFormattedDate();
         final String payload = new ApplicationTokenRequest().toData();
         final String digest = generateDigest(payload);
@@ -182,7 +180,7 @@ public class IngBaseApiClient {
 
     private RequestBuilder buildRequestWithSignature(
             final String reqPath, final String httpMethod, final String payload) {
-        final String reqId = IngUtils.getRequestId();
+        final String reqId = IngBaseUtils.getRequestId();
         final String date = getFormattedDate();
         final String digest = generateDigest(payload);
 
@@ -262,15 +260,15 @@ public class IngBaseApiClient {
         final SignatureEntity signatureEntity =
                 new SignatureEntity(httpMethod, reqPath, date, digest, xIngRequestId);
 
-        return IngUtils.generateSignature(
+        return IngBaseUtils.generateSignature(
                 signatureEntity.toString(), clientSigningKey, Signature.SIGNING_ALGORITHM);
     }
 
     private String generateDigest(final String data) {
-        return Signature.DIGEST_PREFIX + IngUtils.calculateDigest(data);
+        return Signature.DIGEST_PREFIX + IngBaseUtils.calculateDigest(data);
     }
 
     private String getFormattedDate() {
-        return IngUtils.getFormattedCurrentDate(Signature.DATE_FORMAT, Signature.TIMEZONE);
+        return IngBaseUtils.getFormattedCurrentDate(Signature.DATE_FORMAT, Signature.TIMEZONE);
     }
 }
