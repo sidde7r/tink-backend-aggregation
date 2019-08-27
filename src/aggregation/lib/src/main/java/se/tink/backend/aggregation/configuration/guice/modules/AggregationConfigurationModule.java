@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentCo
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.metrics.PrometheusConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
@@ -45,6 +46,11 @@ public class AggregationConfigurationModule extends AbstractModule {
         bind(AggregationServiceConfiguration.class).toInstance(configuration);
         bind(AgentsServiceConfiguration.class)
                 .toInstance(configuration.getAgentsServiceConfiguration());
+        bind(AgentDataAvailabilityTrackerConfiguration.class)
+                .toInstance(
+                        configuration
+                                .getAgentsServiceConfiguration()
+                                .getAgentDataAvailabilityTrackerConfiguration());
 
         if (configuration.isDevelopmentMode()
                 && configuration.getDevelopmentConfiguration().isValid()) {
