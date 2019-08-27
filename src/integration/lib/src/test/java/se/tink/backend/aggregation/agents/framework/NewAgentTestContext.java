@@ -70,11 +70,15 @@ public final class NewAgentTestContext extends AgentContext {
     private final int transactionsToPrint;
 
     public NewAgentTestContext(
-            User user, Credentials credential, int transactionsToPrint, String appId) {
+            User user,
+            Credentials credential,
+            int transactionsToPrint,
+            String appId,
+            String clusterId) {
         this.user = user;
         this.credential = credential;
         this.transactionsToPrint = transactionsToPrint;
-        this.setClusterId(TEST_CLUSTERID);
+        this.setClusterId(MoreObjects.firstNonNull(clusterId, TEST_CLUSTERID));
         this.setAppId(MoreObjects.firstNonNull(appId, TEST_APPID));
 
         setTestContext(true);

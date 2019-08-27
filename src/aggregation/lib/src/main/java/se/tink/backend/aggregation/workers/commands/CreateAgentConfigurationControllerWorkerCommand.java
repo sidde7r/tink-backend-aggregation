@@ -33,6 +33,7 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
                         agentsServiceConfiguration.getIntegrations(),
                         credentialsRequest.getProvider().getFinancialInstitutionId(),
                         agentWorkerCommandContext.getAppId(),
+                        agentWorkerCommandContext.getClusterId(),
                         agentWorkerCommandContext.getRequest().getCallbackUri());
 
         agentWorkerCommandContext.setAgentConfigurationController(agentConfigurationController);
