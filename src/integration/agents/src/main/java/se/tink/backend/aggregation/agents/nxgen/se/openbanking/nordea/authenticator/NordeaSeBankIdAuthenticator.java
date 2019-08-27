@@ -4,6 +4,7 @@ import com.google.api.client.http.HttpStatusCodes;
 import java.util.Arrays;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
+import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
@@ -37,7 +38,10 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     @Override
     public AuthorizeResponse init(String ssn) throws BankServiceException, LoginException {
         AuthorizeRequest authorizeRequest = getAuthorizeRequest(ssn);
-        log.info("Troubleshoot - SSN to init: {}", ssn);
+        if (Strings.isNullOrEmpty(ssn)) {
+            log.error("SSN was passed as empty or null!");
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
 
         try {
             return apiClient.authorize(authorizeRequest);
