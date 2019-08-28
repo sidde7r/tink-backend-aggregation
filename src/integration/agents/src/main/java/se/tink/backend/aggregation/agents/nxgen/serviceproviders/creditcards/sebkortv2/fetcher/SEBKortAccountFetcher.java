@@ -10,15 +10,19 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 public class SEBKortAccountFetcher implements AccountFetcher<CreditCardAccount> {
     private final SebKortApiClient apiClient;
     private final SebKortConfiguration config;
+    private final String currency;
 
-    public SEBKortAccountFetcher(SebKortApiClient apiClient, SebKortConfiguration config) {
+    public SEBKortAccountFetcher(
+            SebKortApiClient apiClient, SebKortConfiguration config, String currency) {
         this.apiClient = apiClient;
         this.config = config;
+        this.currency = currency;
     }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         BillingUnitsResponse billingUnitsResponse = apiClient.fetchBillingUnits();
-        return billingUnitsResponse.getCreditCardAccounts(config);
+
+        return billingUnitsResponse.getCreditCardAccounts(config, currency);
     }
 }
