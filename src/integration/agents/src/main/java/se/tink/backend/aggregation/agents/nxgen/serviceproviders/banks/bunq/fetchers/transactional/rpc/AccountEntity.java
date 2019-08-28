@@ -7,8 +7,12 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.entities.AliasEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -103,28 +107,36 @@ public class AccountEntity {
         return overdraftLimit;
     }
 
-    public Optional<CheckingAccount> toTinkCheckingAccount() {
+    public Optional<TransactionalAccount> toTinkAccount(TransactionalAccountType accountType) {
         List<AliasEntity> aliasList = Optional.ofNullable(alias).orElseGet(Collections::emptyList);
 
-        Optional<String> accountIban =
-                aliasList.stream()
-                        .filter(BunqPredicates.FILTER_IBAN)
-                        .findFirst()
-                        .map(AliasEntity::getValue);
+        Optional<AliasEntity> accountIban =
+                aliasList.stream().filter(BunqPredicates.FILTER_IBAN).findFirst();
 
-        Optional<Amount> balanceAsAmount =
+        Optional<ExactCurrencyAmount> balanceAsAmount =
                 Optional.ofNullable(balance).map(AmountEntity::getAsTinkAmount);
 
-        if (!balanceAsAmount.isPresent()) {
-            return Optional.empty();
-        }
+        return balanceAsAmount.flatMap(
+                balance ->
+                        accountIban.flatMap(
+                                account ->
+                                        TransactionalAccount.nxBuilder()
+                                                .withType(accountType)
+                                                .withPaymentAccountFlag()
+                                                .withBalance(BalanceModule.of(balance))
+                                                .withId(getIdModule(account.getValue()))
+                                                .addHolderName(account.getName())
+                                                .setApiIdentifier(accountId)
+                                                .setBankIdentifier(account.getValue())
+                                                .build()));
+    }
 
-        return accountIban.map(
-                accountNumber ->
-                        CheckingAccount.builder(accountNumber, balanceAsAmount.get())
-                                .setAccountNumber(accountNumber)
-                                .setName(description)
-                                .setBankIdentifier(accountId)
-                                .build());
+    private IdModule getIdModule(String accountNumber) {
+        return IdModule.builder()
+                .withUniqueIdentifier(accountNumber)
+                .withAccountNumber(accountNumber)
+                .withAccountName(description)
+                .addIdentifier(new IbanIdentifier(accountNumber))
+                .build();
     }
 }

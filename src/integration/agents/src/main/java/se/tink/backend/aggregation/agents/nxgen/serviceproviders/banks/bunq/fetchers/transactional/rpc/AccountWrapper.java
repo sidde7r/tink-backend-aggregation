@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.fetchers.transactional.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 @JsonObject
 public class AccountWrapper {
@@ -38,15 +39,27 @@ public class AccountWrapper {
         return savingAccount;
     }
 
-    public List<CheckingAccount> toTinkAccounts() {
+    public List<TransactionalAccount> toTinkAccounts() {
 
-        AccountEntity[] accountArray = {account, joinAccount, lightAccount, savingAccount};
+        List<Optional<TransactionalAccount>> accountList = new ArrayList<>();
 
-        List<AccountEntity> accountList =
-                Arrays.stream(accountArray).filter(s -> (s != null)).collect(Collectors.toList());
+        if (account != null) {
+            accountList.add(account.toTinkAccount(TransactionalAccountType.CHECKING));
+        }
+
+        if (joinAccount != null) {
+            accountList.add(joinAccount.toTinkAccount(TransactionalAccountType.CHECKING));
+        }
+
+        if (lightAccount != null) {
+            accountList.add(lightAccount.toTinkAccount(TransactionalAccountType.CHECKING));
+        }
+
+        if (savingAccount != null) {
+            accountList.add(savingAccount.toTinkAccount(TransactionalAccountType.SAVINGS));
+        }
 
         return accountList.stream()
-                .map(AccountEntity::toTinkCheckingAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

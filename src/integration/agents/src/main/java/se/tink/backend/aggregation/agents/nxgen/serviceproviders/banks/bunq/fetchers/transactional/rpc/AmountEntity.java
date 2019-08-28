@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.fetchers.transactional.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
@@ -19,7 +18,7 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public Amount getAsTinkAmount() {
-        return new Amount(currency, AgentParsingUtils.parseAmount(value));
+    public ExactCurrencyAmount getAsTinkAmount() {
+        return ExactCurrencyAmount.of(value, currency);
     }
 }

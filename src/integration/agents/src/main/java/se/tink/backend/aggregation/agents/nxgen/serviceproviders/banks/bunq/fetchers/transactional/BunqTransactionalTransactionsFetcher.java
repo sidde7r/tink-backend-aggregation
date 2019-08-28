@@ -25,7 +25,7 @@ public class BunqTransactionalTransactionsFetcher
         if (Strings.isNullOrEmpty(key)) {
             return apiClient.listAccountTransactions(
                     sessionStorage.get(BunqBaseConstants.StorageKeys.USER_ID),
-                    account.getBankIdentifier());
+                    account.getApiIdentifier());
         }
 
         return apiClient.listAccountTransactionsPagination(key);
