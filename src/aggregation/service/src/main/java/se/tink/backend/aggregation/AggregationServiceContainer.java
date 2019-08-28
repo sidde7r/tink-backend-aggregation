@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.configuration.guice.modules.AggregationModule
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.AgentWorker;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
@@ -62,7 +62,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
         environment
                 .lifecycle()
-                .manage(injector.getInstance(AgentDataAvailabilityTrackerClientImpl.class));
+                .manage(injector.getInstance(AgentDataAvailabilityTrackerClient.class));
     }
 
     /**
