@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class BerlinGroupAgent<
@@ -24,7 +23,6 @@ public abstract class BerlinGroupAgent<
                 TConfiguration extends BerlinGroupConfiguration>
         extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
-    private final String clientId;
     private final String clientName;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -34,38 +32,24 @@ public abstract class BerlinGroupAgent<
             final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        clientId = request.getProvider().getPayload();
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public String getClientId() {
-        return clientId;
+        client.setEidasProxy(configuration.getEidasProxy(), getConfiguration().getEidasQwac());
     }
 
     protected abstract TApiCliient getApiClient();
-
-    protected void setupClient(final TinkHttpClient client) {}
 
     protected TConfiguration getConfiguration() {
         return configuration
                 .getIntegrations()
                 .getClientConfiguration(
-                        getIntegrationName(), getClientName(), getConfigurationClassDescription())
+                        getIntegrationName(), clientName, getConfigurationClassDescription())
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
-        setupClient(client);
-
-        //noinspection unchecked
         getApiClient().setConfiguration(getConfiguration());
     }
 
