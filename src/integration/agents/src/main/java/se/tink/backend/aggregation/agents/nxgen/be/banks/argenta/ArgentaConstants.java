@@ -12,6 +12,7 @@ public class ArgentaConstants {
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CHECKING")
                     .put(AccountTypes.SAVINGS, "SAVINGS")
+                    .put(AccountTypes.SAVINGS, "ESAVINGS")
                     .build();
 
     public static final class Url {
