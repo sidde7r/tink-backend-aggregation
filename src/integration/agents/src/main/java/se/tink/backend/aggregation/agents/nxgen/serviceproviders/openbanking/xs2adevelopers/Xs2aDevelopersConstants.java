@@ -143,6 +143,7 @@ public final class Xs2aDevelopersConstants {
     public static class Transactions {
         public static final int EMPTY_PAGES_RESPONSE_LIMIT = 1;
         public static final int ERROR_CODE_MAX_ACCESS_EXCEEDED = 429;
+        public static final int ERROR_CODE_SERVICE_UNAVAILABLE = 503;
         public static final String HREF = "href";
         public static final int ERROR_CODE_INTERNAL_SERVER = 500;
     }

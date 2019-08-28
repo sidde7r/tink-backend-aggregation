@@ -50,7 +50,8 @@ public class Xs2aDevelopersTransactionalAccountFetcher
             return PaginatorResponseImpl.create(
                     apiClient.getTransactions(account, fromDate, toDate).toTinkTransactions());
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == Transactions.ERROR_CODE_MAX_ACCESS_EXCEEDED) {
+            if (e.getResponse().getStatus() == Transactions.ERROR_CODE_MAX_ACCESS_EXCEEDED
+                    || e.getResponse().getStatus() == Transactions.ERROR_CODE_SERVICE_UNAVAILABLE) {
                 return PaginatorResponseImpl.createEmpty(false);
             } else {
                 throw e;
