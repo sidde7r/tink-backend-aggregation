@@ -30,7 +30,7 @@ public class AibV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig);
+        return new UkOpenBankingV31Ais(aisConfig, persistentStorage);
     }
 
     @Override

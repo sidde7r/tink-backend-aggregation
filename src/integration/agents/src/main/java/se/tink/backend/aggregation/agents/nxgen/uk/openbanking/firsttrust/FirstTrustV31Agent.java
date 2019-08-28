@@ -29,7 +29,7 @@ public class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig);
+        return new UkOpenBankingV31Ais(aisConfig, persistentStorage);
     }
 
     @Override
