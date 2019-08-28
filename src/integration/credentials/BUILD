@@ -46,6 +46,7 @@ java_library(
     srcs = glob(["src/main/**/rpc/*.java"]),
     visibility = [
         "//src/aggregation:__subpackages__",
+        "//src/aggregationcontroller_api:__subpackages__",
         "//src/integration:__subpackages__",
     ],
     deps = [
