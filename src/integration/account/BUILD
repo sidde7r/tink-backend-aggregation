@@ -3,7 +3,7 @@ java_library(
     srcs = glob(["src/main/**/enums/*.java"]),
     visibility = ["//src/integration:__subpackages__"],
     deps = [
-        "//src/libraries/enums",
+        "//src/integration/enums",
     ],
 )
 
