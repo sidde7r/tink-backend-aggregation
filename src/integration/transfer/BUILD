@@ -18,9 +18,9 @@ java_library(
         "//src/libraries/signableoperation:__pkg__",
     ],
     deps = [
+        "//src/integration/amount",
         "//src/integration/transfer:enums",
         "//src/libraries/account_identifier",
-        "//src/libraries/amount",
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
@@ -42,8 +42,8 @@ java_library(
     deps = [
         ":enums",
         ":rpc",
+        "//src/integration/amount",
         "//src/libraries/account_identifier",
-        "//src/libraries/amount",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
     ],

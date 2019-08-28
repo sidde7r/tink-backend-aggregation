@@ -3,10 +3,10 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//src/libraries/amount",
         "//src/libraries/credentials:service",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",

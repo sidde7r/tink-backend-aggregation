@@ -5,11 +5,11 @@ java_library(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk/rpc",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk/rpc/entities",
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
-        "//src/libraries/amount",
         "//src/libraries/credentials:service",
         "//src/libraries/pair",
         "//src/libraries/serialization",

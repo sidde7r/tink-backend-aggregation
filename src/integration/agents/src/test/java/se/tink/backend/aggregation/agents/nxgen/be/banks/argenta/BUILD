@@ -14,10 +14,10 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/argenta",
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
-        "//src/libraries/amount",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

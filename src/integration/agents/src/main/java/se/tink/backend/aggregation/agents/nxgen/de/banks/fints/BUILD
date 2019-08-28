@@ -3,6 +3,7 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
@@ -10,7 +11,6 @@ java_library(
         "//src/integration/models",
         "//src/libraries/account:enums",
         "//src/libraries/account_identifier",
-        "//src/libraries/amount",
         "//src/libraries/credentials:service",
         "//src/libraries/strings",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

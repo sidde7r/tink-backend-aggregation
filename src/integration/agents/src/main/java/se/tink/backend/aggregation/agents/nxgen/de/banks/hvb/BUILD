@@ -3,12 +3,12 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
-        "//src/libraries/amount",
         "//src/libraries/credentials:service",
         "//src/libraries/serialization",
         "//third_party:com_auth0_java_jwt",

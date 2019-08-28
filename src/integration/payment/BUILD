@@ -15,12 +15,12 @@ java_library(
         "//src/integration:__subpackages__",
     ],
     deps = [
+        "//src/integration/amount",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/payment:enums",
         "//src/libraries/account:enums",
         "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
-        "//src/libraries/amount",
         "//src/libraries/date",
         "//src/libraries/pair",
         "//src/libraries/serialization",

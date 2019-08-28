@@ -14,6 +14,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/kbc",
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
@@ -21,7 +22,6 @@ junit_test(
         "//src/integration/transfer:rpc",
         "//src/libraries/account:enums",
         "//src/libraries/account_identifier",
-        "//src/libraries/amount",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:org_assertj_assertj_core",
