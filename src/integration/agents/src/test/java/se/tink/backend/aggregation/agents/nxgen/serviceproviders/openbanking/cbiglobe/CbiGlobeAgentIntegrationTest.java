@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
-import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
@@ -86,7 +85,11 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
         this.expectLoggedIn = builder.isExpectLoggedIn();
         this.context =
                 new NewAgentTestContext(
-                        this.user, this.credential, builder.getTransactionsToPrint(), "");
+                        this.user,
+                        this.credential,
+                        builder.getTransactionsToPrint(),
+                        builder.getAppId(),
+                        builder.getClusterId());
         this.supplementalInformationController =
                 new SupplementalInformationController(this.context, this.credential);
     }
@@ -183,7 +186,7 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
 
     private void login(Agent agent) throws Exception {
         if (!this.isLoggedIn(agent)) {
-            if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
+            if (agent instanceof ProgressiveAuthAgent) {
                 this.progressiveLogin(agent);
             } else {
                 boolean loginSuccessful = agent.login();
@@ -366,6 +369,9 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
         private Set<RefreshableItem> refreshableItems = new HashSet();
         private AisValidator validator;
 
+        private String appId = null;
+        private String clusterId = null;
+
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
@@ -469,6 +475,24 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
 
         public Builder addCredentialField(String key, String value) {
             this.credential.setField(key, value);
+            return this;
+        }
+
+        public String getClusterId() {
+            return clusterId;
+        }
+
+        public String getAppId() {
+            return appId;
+        }
+
+        public Builder setClusterId(String clusterId) {
+            this.clusterId = clusterId;
+            return this;
+        }
+
+        public Builder setAppId(final String appId) {
+            this.appId = appId;
             return this;
         }
 

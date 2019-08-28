@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
-import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
@@ -103,7 +102,11 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
 
         this.context =
                 new NewAgentTestContext(
-                        user, credential, builder.getTransactionsToPrint(), builder.getAppId());
+                        user,
+                        credential,
+                        builder.getTransactionsToPrint(),
+                        builder.getAppId(),
+                        builder.getClusterId());
 
         this.supplementalInformationController =
                 new SupplementalInformationController(context, credential);
@@ -161,6 +164,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
                             configuration.getIntegrations(),
                             provider.getFinancialInstitutionId(),
                             context.getAppId(),
+                            context.getClusterId(),
                             credentialsRequest.getCallbackUri());
             if (!agentConfigurationController.init()) {
                 throw new IllegalStateException(
@@ -223,7 +227,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
         if (isLoggedIn(agent)) {
             return;
         }
-        if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
+        if (agent instanceof ProgressiveAuthAgent) {
             progressiveLogin(agent);
             return;
         }
@@ -646,7 +650,8 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
 
         private AisValidator validator;
 
-        private String appId = "tink";
+        private String appId = null;
+        private String clusterId = null;
 
         private String redirectUrl;
 
@@ -839,6 +844,15 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
 
         public String getRedirectUrl() {
             return redirectUrl;
+        }
+
+        public String getClusterId() {
+            return clusterId;
+        }
+
+        public Builder setClusterId(String clusterId) {
+            this.clusterId = clusterId;
+            return this;
         }
 
         public Builder setRedirectUrl(String redirectUrl) {
