@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -27,7 +28,6 @@ public class SdcAuthenticationController
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OAuth2Authenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
-    private static final long WAIT_FOR_MINUTES = 9L;
 
     public SdcAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
@@ -53,7 +53,7 @@ public class SdcAuthenticationController
         Optional<Map<String, String>> stringStringMap =
                 supplementalInformationHelper.waitForSupplementalInformation(
                         strongAuthenticationState.getSupplementalKey(),
-                        WAIT_FOR_MINUTES,
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES);
 
         Map<String, String> callbackData =

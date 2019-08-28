@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.Volksba
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -26,7 +27,6 @@ public class VolksbankAuthenticationController
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final VolksbankAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
-    private static final long WAIT_FOR_MINUTES = 9L;
 
     public VolksbankAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
@@ -50,7 +50,9 @@ public class VolksbankAuthenticationController
     public ThirdPartyAppResponse<String> collect(String reference) {
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
 
         if (!authenticator.getConsentStatus().isValid()) {
             throw new IllegalStateException("Invalid consent!");
@@ -65,7 +67,9 @@ public class VolksbankAuthenticationController
     private ThirdPartyAppResponse<String> collectDetailedConsent() {
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
 
         if (!authenticator.getConsentStatus().isValid()) {
             throw new IllegalStateException(VolksbankConstants.ErrorMessages.INVALID_CONSENT);

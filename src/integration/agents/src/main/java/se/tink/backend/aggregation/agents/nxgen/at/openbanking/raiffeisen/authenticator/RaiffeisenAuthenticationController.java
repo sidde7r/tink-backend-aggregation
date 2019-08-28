@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.Raiffe
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -29,7 +30,6 @@ public class RaiffeisenAuthenticationController
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final RaiffeisenAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
-    private static final long WAIT_FOR_MINUTES = 9L;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
 
@@ -76,7 +76,9 @@ public class RaiffeisenAuthenticationController
     public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException {
 
         supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
 
         if (authenticator
                 .checkConsentStatus()

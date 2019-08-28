@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -20,7 +21,6 @@ public class UnicreditAuthenticationController
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final UnicreditAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
-    private static final long WAIT_FOR_MINUTES = 9L;
 
     public UnicreditAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
@@ -44,7 +44,9 @@ public class UnicreditAuthenticationController
     public ThirdPartyAppResponse<String> collect(String reference) throws SessionException {
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
 
         if (!authenticator.isConsentValid()) {
             throw new IllegalStateException("Authorization failed");
