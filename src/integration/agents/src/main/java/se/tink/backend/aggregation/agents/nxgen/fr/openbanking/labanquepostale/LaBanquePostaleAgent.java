@@ -19,8 +19,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class LaBanquePostaleAgent
         extends BerlinGroupAgent<LaBanquePostaleApiClient, LaBanquePostaleConfiguration> {
-
-    private final String clientName;
     private final LaBanquePostaleApiClient apiClient;
 
     public LaBanquePostaleAgent(
@@ -28,8 +26,6 @@ public final class LaBanquePostaleAgent
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        clientName = request.getProvider().getPayload();
-
         apiClient = new LaBanquePostaleApiClient(client, sessionStorage);
     }
 
@@ -74,11 +70,6 @@ public final class LaBanquePostaleAgent
     @Override
     protected BerlinGroupTransactionFetcher getTransactionFetcher() {
         return new LaBanquePostaleTransactionFetcher(getApiClient());
-    }
-
-    @Override
-    public String getClientName() {
-        return clientName;
     }
 
     @Override

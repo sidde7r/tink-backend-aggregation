@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupConfiguration> {
@@ -24,7 +23,7 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
     public KbcAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = getApiClient();
+        apiClient = new KbcApiClient(client, sessionStorage, credentials, persistentStorage);
     }
 
     @Override
@@ -40,15 +39,7 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
     }
 
     @Override
-    protected void setupClient(TinkHttpClient client) {
-        client.setEidasProxy(configuration.getEidasProxy(), getConfiguration().getEidasQwac());
-    }
-
-    @Override
     protected KbcApiClient getApiClient() {
-        if (apiClient == null) {
-            apiClient = new KbcApiClient(client, sessionStorage, credentials, persistentStorage);
-        }
         return apiClient;
     }
 
