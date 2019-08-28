@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -18,7 +19,6 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class DeutscheBankAuthenticatorController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-    private static final long WAIT_FOR_MINUTES = 9L;
     private SupplementalInformationHelper supplementalInformationHelper;
     private final DeutscheBankAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
@@ -44,7 +44,9 @@ public class DeutscheBankAuthenticatorController
     @Override
     public ThirdPartyAppResponse<String> collect(final String reference) {
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }

@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.configur
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -57,10 +58,6 @@ public class SwedbankAuthenticationController
     private final StrongAuthenticationState strongAuthenticationState;
     private final SwedbankTransactionFetcher swedbankTransactionFetcher;
     private final SwedbankConfiguration swedbankConfiguration;
-
-    // This wait time is for the whole user authentication. Different banks have different
-    // cumbersome authentication flows.
-    private static final long WAIT_FOR_MINUTES = 9;
 
     public SwedbankAuthenticationController(
             PersistentStorage persistentStorage,
@@ -157,7 +154,7 @@ public class SwedbankAuthenticationController
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
                                 strongAuthenticationState.getSupplementalKey(),
-                                WAIT_FOR_MINUTES,
+                                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
                         .orElseThrow(
                                 LoginError.INCORRECT_CREDENTIALS

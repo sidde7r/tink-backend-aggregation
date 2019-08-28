@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.Fineco
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -30,7 +31,6 @@ public final class FinecoBankAuthenticator
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
     private static final Random random = new SecureRandom();
-    private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final PersistentStorage persistentStorage;
     private final FinecoBankAuthenticationHelper finecoAuthenticator;
@@ -70,7 +70,7 @@ public final class FinecoBankAuthenticator
         this.supplementalInformationHelper
                 .waitForSupplementalInformation(
                         strongAuthenticationState.getSupplementalKey(),
-                        WAIT_FOR_MINUTES,
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES)
                 .orElseThrow(
                         () ->

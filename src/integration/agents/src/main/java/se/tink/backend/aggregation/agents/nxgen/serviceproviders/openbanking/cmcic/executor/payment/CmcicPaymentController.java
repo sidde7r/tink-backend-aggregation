@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -20,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class CmcicPaymentController extends PaymentController {
-    private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SessionStorage sessionStorage;
@@ -43,7 +43,9 @@ public class CmcicPaymentController extends PaymentController {
 
     private ThirdPartyAppResponse<String> collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
