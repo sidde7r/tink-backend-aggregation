@@ -70,8 +70,10 @@ public class TppSecretsServiceClient {
         internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
     }
 
-    public Map<String, String> getAllSecrets(String financialInstitutionId, String appId) {
-        GetSecretsRequest getSecretsRequest = buildRequest(financialInstitutionId, appId);
+    public Map<String, String> getAllSecrets(
+            String financialInstitutionId, String appId, String clusterId) {
+        GetSecretsRequest getSecretsRequest =
+                buildRequest(financialInstitutionId, appId, clusterId);
 
         GetAllSecretsResponse allSecretsResponse =
                 internalSecretsServiceStub.getAllSecrets(getSecretsRequest);
@@ -84,8 +86,10 @@ public class TppSecretsServiceClient {
                 .collect(Collectors.toMap(TppSecret::getKey, TppSecret::getValue));
     }
 
-    public Map<String, String> getSecrets(String financialInstitutionId, String appId) {
-        GetSecretsRequest getSecretsRequest = buildRequest(financialInstitutionId, appId);
+    public Map<String, String> getSecrets(
+            String financialInstitutionId, String appId, String clusterId) {
+        GetSecretsRequest getSecretsRequest =
+                buildRequest(financialInstitutionId, appId, clusterId);
 
         GetSecretsResponse secretsResponse =
                 internalSecretsServiceStub.getSecrets(getSecretsRequest);
@@ -94,8 +98,10 @@ public class TppSecretsServiceClient {
                 .collect(Collectors.toMap(TppSecret::getKey, TppSecret::getValue));
     }
 
-    public Map<String, String> getEncrypted(String financialInstitutionId, String appId) {
-        GetSecretsRequest getSecretsRequest = buildRequest(financialInstitutionId, appId);
+    public Map<String, String> getEncrypted(
+            String financialInstitutionId, String appId, String clusterId) {
+        GetSecretsRequest getSecretsRequest =
+                buildRequest(financialInstitutionId, appId, clusterId);
 
         GetEncryptedSecretsResponse encryptedSecrets =
                 internalSecretsServiceStub.getEncryptedSecrets(getSecretsRequest);
@@ -104,14 +110,17 @@ public class TppSecretsServiceClient {
                 .collect(Collectors.toMap(TppSecret::getKey, TppSecret::getValue));
     }
 
-    private GetSecretsRequest buildRequest(String financialInstitutionId, String appId) {
+    private GetSecretsRequest buildRequest(
+            String financialInstitutionId, String appId, String clusterId) {
         Preconditions.checkNotNull(
                 financialInstitutionId, "financialInstitutionId must not be null");
         Preconditions.checkNotNull(appId, "appId must not be null");
+        Preconditions.checkNotNull(clusterId, "clusterId must not be null");
 
         return GetSecretsRequest.newBuilder()
                 .setFinancialInstitutionId(financialInstitutionId)
                 .setAppId(appId)
+                .setClusterId(clusterId)
                 .build();
     }
 

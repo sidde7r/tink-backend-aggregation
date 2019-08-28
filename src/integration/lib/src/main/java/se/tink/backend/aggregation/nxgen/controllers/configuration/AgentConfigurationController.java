@@ -30,6 +30,7 @@ public final class AgentConfigurationController {
     private final boolean tppSecretsServiceEnabled;
     private final String financialInstitutionId;
     private final String appId;
+    private final String clusterId;
     private final String redirectUrl;
     private Map<String, String> allSecrets;
     // For fallback
@@ -42,12 +43,15 @@ public final class AgentConfigurationController {
             IntegrationsConfiguration integrationsConfiguration,
             String financialInstitutionId,
             String appId,
+            String clusterId,
             String redirectUrl) {
         Preconditions.checkNotNull(
                 tppSecretsServiceConfiguration, "tppSecretsServiceConfiguration not found.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(financialInstitutionId),
                 "financialInstitutionId cannot be empty/null.");
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
         // TODO: Enable preconditons once we get word from aggregation that all users have an appId.
         // Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
 
@@ -64,6 +68,7 @@ public final class AgentConfigurationController {
         this.integrationsConfiguration = integrationsConfiguration;
         this.financialInstitutionId = financialInstitutionId;
         this.appId = appId;
+        this.clusterId = clusterId;
         this.redirectUrl = redirectUrl;
     }
 
@@ -84,24 +89,20 @@ public final class AgentConfigurationController {
     public boolean init() {
         if (tppSecretsServiceEnabled) {
             try {
-                allSecrets = tppSecretsServiceClient.getAllSecrets(financialInstitutionId, appId);
+                allSecrets =
+                        tppSecretsServiceClient.getAllSecrets(
+                                financialInstitutionId, appId, clusterId);
             } catch (RuntimeException e) {
                 if (e instanceof StatusRuntimeException) {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) e;
                     if (statusRuntimeException.getStatus() == Status.NOT_FOUND) {
-                        log.info(
-                                "Could not find secrets for financialInstitutionId: "
-                                        + financialInstitutionId
-                                        + " and appId: "
-                                        + appId);
+                        log.info("Could not find secrets" + getSecretsServiceParamsString());
                         return true;
                     } else {
                         log.error(
-                                "StatusRuntimeException when trying to retrieve secrets for financialInstitutionId: "
-                                        + financialInstitutionId
-                                        + " and appId: "
-                                        + appId
-                                        + " with Status: "
+                                "StatusRuntimeException when trying to retrieve secrets"
+                                        + getSecretsServiceParamsString()
+                                        + "with Status: "
                                         + statusRuntimeException.getStatus(),
                                 statusRuntimeException);
                     }
@@ -113,6 +114,16 @@ public final class AgentConfigurationController {
             return initRedirectUrl();
         }
         return true;
+    }
+
+    private String getSecretsServiceParamsString() {
+        return " for financialInstitutionId: "
+                + financialInstitutionId
+                + ", appId: "
+                + appId
+                + " and clusterId: "
+                + clusterId
+                + " ";
     }
 
     private boolean initRedirectUrl() {
@@ -127,11 +138,7 @@ public final class AgentConfigurationController {
 
         if (!allSecrets.containsKey(REDIRECT_URLS_KEY)) {
             // We end up here when the secrets do not contain redirectUrls key.
-            log.error(
-                    "Could not find redirectUrls in secrets for financialInstitutionId: "
-                            + financialInstitutionId
-                            + " and appId: "
-                            + appId);
+            log.error("Could not find redirectUrls in secrets " + getSecretsServiceParamsString());
 
             return false;
         }
@@ -145,21 +152,14 @@ public final class AgentConfigurationController {
             log.error(
                     "Could not parse redirectUrls secret : "
                             + allSecrets.get(REDIRECT_URLS_KEY)
-                            + " for financialInstitutionId: "
-                            + financialInstitutionId
-                            + " and appId: "
-                            + appId,
+                            + getSecretsServiceParamsString(),
                     e);
             return false;
         }
 
         if (redirectUrls.isEmpty()) {
             // We end up here when the secrets do contain redirectUrls key but it is an empty list.
-            log.info(
-                    "Empty redirectUrls list in secrets for financialInstitutionId: "
-                            + financialInstitutionId
-                            + " and appId: "
-                            + appId);
+            log.info("Empty redirectUrls list in secrets" + getSecretsServiceParamsString());
 
             return true;
         }
@@ -174,10 +174,8 @@ public final class AgentConfigurationController {
             log.error(
                     "Requested redirectUrl : "
                             + redirectUrl
-                            + " is not registered for financialInstitutionId: "
-                            + financialInstitutionId
-                            + " and appId: "
-                            + appId);
+                            + " is not registered"
+                            + getSecretsServiceParamsString());
             return false;
         } else {
             // The redirectUrl provided in the CredentialsRequest is among those registered.
@@ -227,19 +225,15 @@ public final class AgentConfigurationController {
                                 new IllegalStateException(
                                         "Agent configuration for agent: "
                                                 + clientConfigClass.toString()
-                                                + " is missing for financialInstitutionId: "
-                                                + financialInstitutionId
-                                                + " and appId: "
-                                                + appId));
+                                                + " is missing"
+                                                + getSecretsServiceParamsString()));
     }
 
     private <T extends ClientConfiguration> T getAgentConfigurationFallback(
             String integrationName, String clientName, Class<T> clientConfigClass) {
         log.warn(
-                "Falling back to k8s for for financialInstitutionId: "
-                        + financialInstitutionId
-                        + " and appId: "
-                        + appId
+                "Falling back to k8s for"
+                        + getSecretsServiceParamsString()
                         + ". Reading configuration using integrationName: "
                         + integrationName
                         + " and clientName: "
@@ -275,10 +269,8 @@ public final class AgentConfigurationController {
                                 new IllegalStateException(
                                         "Agent configuration for agent: "
                                                 + clientConfigClass.toString()
-                                                + " is missing for financialInstitutionId: "
-                                                + financialInstitutionId
-                                                + " and appId: "
-                                                + appId
+                                                + " is missing"
+                                                + getSecretsServiceParamsString()
                                                 + ". In the development.yml file."));
     }
 }

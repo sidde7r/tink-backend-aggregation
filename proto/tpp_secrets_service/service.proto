@@ -5,18 +5,15 @@ option java_package = "se.tink.backend.secretservice.grpc";
 option java_outer_classname = "Protos";
 option go_package = "proto";
 
-// Stick to one service per app, otherwise your microservice is not so micro.
 service InternalCertificateService {
     rpc GetQwacCertificateWithEncryptedPrivateKey (QwacCertificateRequest) returns (CertificateResponse) {}
     rpc GetQsealcCertificateWithEncryptedPrivateKey (QsealcCertificateRequest) returns (CertificateResponse) {}
-    rpc GetQsealcCertificate (QsealcCertificateRequest) returns (CertificateResponse) {}
-    rpc GetQsealcPrivateKeyEncrypted(QsealcCertificateRequest) returns (CertificateResponse) {}
+    rpc Ping(PingMessage) returns (PingMessage) {}
 }
 
 service ExternalCertificateService {
     rpc GetUploadKey (PublicKeyRequest) returns (PublicKeyResponse) {}
     rpc ConvertEncryptedPrivateKey (ConvertEncryptedPrivateKeyRequest) returns (ConvertEncryptedPrivateKeyResponse) {}
-    rpc PutEncryptedCertificate (CertificateUploadRequest) returns (CertificateUploadResponse) {}
 }
 
 service InternalSecretsService {
@@ -27,23 +24,11 @@ service InternalSecretsService {
 
 service ExternalSecretsService {
     rpc GetUploadKey (PublicKeyRequest) returns (PublicKeyResponse) {}
-    rpc PutTppSecrets (PutTppSecretsRequest) returns (PutTppSecretsResponse) {}
 }
 
 enum CertType {
     QWAC = 0;
     QSEALC = 1;
-}
-
-message PutTppSecretsRequest {
-    string appId = 1;
-    string financialInstitutionId = 2;
-    repeated TppSecret secrets = 3;
-    repeated EncryptedTppSecret encryptedSecrets = 4;
-}
-
-message PutTppSecretsResponse {
-
 }
 
 message TppSecret {
@@ -56,8 +41,9 @@ message EncryptedTppSecret {
     string value = 2;
 }
 message GetSecretsRequest {
-    string appId =1;
+    string appId = 1;
     string financialInstitutionId = 2;
+    string clusterId = 3;
 }
 
 message GetAllSecretsResponse {
@@ -73,37 +59,23 @@ message GetEncryptedSecretsResponse {
     repeated TppSecret encryptedSecrets = 1;
 }
 
-message CertificateUploadRequest {
-    string appId = 1;
-    string certId = 2;
-    string encryptedPrivateKey = 3;
-    string uploadKey = 4;
-    string certificate = 5;
-    CertType certificateType = 6;
-    string certFileFormat = 7;
-}
-
-message CertificateUploadResponse {
-    string appId = 1;
-    string certId = 2;
-    CertType certificateType = 3;
-    string encryptedPrivateKey = 4;
-}
-
 message QwacCertificateRequest {
     string appId = 1;
     string certId = 2;
+    string clusterId = 3;
 }
 
 message CertificateResponse {
     bytes certificate = 1;
     bytes privateKeyInPlaintext = 2;
     string encryptedPrivateKey = 3;
+    string resolvedAppId = 4;
 }
 
 message QsealcCertificateRequest {
     string appId = 1;
     string certId = 2;
+    string clusterId = 3;
 }
 
 message PublicKeyRequest {}
@@ -120,10 +92,6 @@ message SignWithEncryptedQsealcRequest {
     string algorithm = 5;
 }
 
-message SignWithQsealcResponse {
-    bytes signature = 1;
-}
-
 message ConvertEncryptedPrivateKeyRequest {
     string appId = 1;
     string certId = 2;
@@ -134,4 +102,7 @@ message ConvertEncryptedPrivateKeyRequest {
 
 message ConvertEncryptedPrivateKeyResponse {
     string encryptedPrivateKey = 1;
+}
+
+message PingMessage {
 }
