@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -29,8 +28,8 @@ public abstract class BerlinGroupAgent<
     public BerlinGroupAgent(
             final CredentialsRequest request,
             final AgentContext context,
-            final SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            final AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();

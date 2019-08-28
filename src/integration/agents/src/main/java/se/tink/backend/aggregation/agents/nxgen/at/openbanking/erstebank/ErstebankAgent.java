@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executo
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.fetcher.transactionalaccount.ErstebankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -19,8 +19,10 @@ public final class ErstebankAgent
     private final ErstebankApiClient apiClient;
 
     public ErstebankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration);
 
         apiClient = new ErstebankApiClient(client, sessionStorage);
     }

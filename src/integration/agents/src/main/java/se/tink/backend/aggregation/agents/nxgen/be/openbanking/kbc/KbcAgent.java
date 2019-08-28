@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -21,8 +21,10 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
     private KbcApiClient apiClient;
 
     public KbcAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration);
         apiClient = new KbcApiClient(client, sessionStorage, credentials, persistentStorage);
     }
 
