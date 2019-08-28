@@ -1,7 +1,10 @@
 java_library(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
-    visibility = ["//src/aggregation:__subpackages__", "//src/integration:__subpackages__"],
+    visibility = [
+        "//src/aggregation:__subpackages__",
+        "//src/integration:__subpackages__",
+    ],
 )
 
 java_library(
@@ -9,17 +12,17 @@ java_library(
     srcs = glob(["src/main/**/rpc/*.java"]),
     visibility = [
         "//src/aggregation:__subpackages__",
+        "//src/aggregationcontroller_api:__pkg__",
         "//src/integration:__subpackages__",
         "//src/libraries/account:__pkg__",
         "//src/libraries/signableoperation:__pkg__",
-        "//src/aggregationcontroller_api:__pkg__",
     ],
     deps = [
+        "//src/integration/transfer:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/amount",
         "//src/libraries/date",
         "//src/libraries/serialization",
-        "//src/integration/transfer:enums",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
@@ -32,12 +35,15 @@ java_library(
 java_library(
     name = "mocks",
     srcs = glob(["src/main/**/mocks/*.java"]),
-    visibility = ["//src/aggregation:__subpackages__", "//src/integration:__subpackages__"],
+    visibility = [
+        "//src/aggregation:__subpackages__",
+        "//src/integration:__subpackages__",
+    ],
     deps = [
-        "//src/libraries/account_identifier",
-        "//src/libraries/amount",
         ":enums",
         ":rpc",
+        "//src/libraries/account_identifier",
+        "//src/libraries/amount",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
     ],

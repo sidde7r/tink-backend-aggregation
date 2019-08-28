@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/integration/api",
         "//src/integration/models",
+        "//src/integration/transfer:rpc",
         "//src/libraries/account:rpc",
         "//src/libraries/api_annotations",
         "//src/libraries/credentials:rpc",
@@ -14,7 +15,6 @@ java_library(
         "//src/libraries/http_client",
         "//src/libraries/jersey_utils",
         "//src/libraries/signableoperation:rpc",
-        "//src/integration/transfer:rpc",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
