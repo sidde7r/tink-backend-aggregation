@@ -20,6 +20,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.api.AgentData
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.LoanTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.PortfolioTrackingSerializer;
 
 public class AgentDataAvailabilityTrackerClientImpl
@@ -44,7 +45,7 @@ public class AgentDataAvailabilityTrackerClientImpl
     private final int port;
 
     private final Random random;
-    private static final float TRACKING_FRACTION = 0.20f; // 20% of requests
+    private static final float TRACKING_FRACTION = 0.40f; // 20% of requests
 
     @Inject
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
@@ -143,6 +144,12 @@ public class AgentDataAvailabilityTrackerClientImpl
                     .forEach(e -> serializer.addChild("portfolios", e));
         }
 
+        if (features.getLoans() != null) {
+            features.getLoans().stream()
+                    .map(LoanTrackingSerializer::new)
+                    .forEach(e -> serializer.addChild("loans", e));
+        }
+
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder().setAgent(agent);
 
@@ -155,6 +162,10 @@ public class AgentDataAvailabilityTrackerClientImpl
                                         .addFieldName(entry.getName())
                                         .addFieldValue(entry.getValue()));
 
+        log.debug(
+                String.format(
+                        "Adding request to queue: %d | Service running: %b",
+                        accountDeque.size(), service.isRunning()));
         accountDeque.add(requestBuilder.build());
     }
 

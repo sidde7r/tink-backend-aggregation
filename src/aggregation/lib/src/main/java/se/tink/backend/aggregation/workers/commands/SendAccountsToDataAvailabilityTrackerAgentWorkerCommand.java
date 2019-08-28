@@ -33,7 +33,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
 
     private final String agentName;
-    private boolean forceMockClient;
+    private final boolean isEnabledMarket;
 
     public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -47,7 +47,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
 
         this.agentName = request.getProvider().getClassName();
 
-        forceMockClient = !TEST_MARKET.equalsIgnoreCase(request.getProvider().getMarket());
+        isEnabledMarket = TEST_MARKET.equalsIgnoreCase(request.getProvider().getMarket());
     }
 
     @Override
@@ -62,16 +62,19 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
             MetricAction action =
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
             try {
-                context.getCachedAccountsWithFeatures()
-                        .forEach(
-                                pair ->
-                                        agentDataAvailabilityTrackerClient.sendAccount(
-                                                agentName, pair.first, pair.second));
 
-                if (forceMockClient || !agentDataAvailabilityTrackerClient.sendingRealData()) {
-                    action.cancelled();
-                } else {
+                if (isEnabledMarket) {
+
+                    context.getCachedAccountsWithFeatures()
+                            .forEach(
+                                    pair ->
+                                            agentDataAvailabilityTrackerClient.sendAccount(
+                                                    agentName, pair.first, pair.second));
+
                     action.completed();
+                } else {
+
+                    action.cancelled();
                 }
 
             } catch (Exception e) {
