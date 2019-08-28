@@ -20,6 +20,7 @@ java_library(
     deps = [
         "//src/aggregation/aggregationcontroller_api",
         "//src/aggregation/api",
+        "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agents",
         "//src/integration/api",
@@ -30,7 +31,6 @@ java_library(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/cache",
         "//src/libraries/concurrency",

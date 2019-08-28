@@ -14,7 +14,7 @@ java_library(
         "//src/aggregation:__subpackages__",
         "//src/aggregation/aggregationcontroller_api:__pkg__",
         "//src/integration:__subpackages__",
-        "//src/libraries/account:__pkg__",
+        "//src/integration/account:__pkg__",
         "//src/libraries/signableoperation:__pkg__",
     ],
     deps = [
