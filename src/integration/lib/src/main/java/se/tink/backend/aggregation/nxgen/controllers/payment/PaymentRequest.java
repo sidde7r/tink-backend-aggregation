@@ -33,7 +33,10 @@ public class PaymentRequest {
     public static PaymentRequest of(TransferRequest transferRequest) {
         Transfer transfer = transferRequest.getTransfer();
 
-        Creditor creditorInRequest = new Creditor(transfer.getDestination());
+        Creditor creditorInRequest =
+                new Creditor(
+                        transfer.getDestination(),
+                        transfer.getDestination().getName().orElse(null));
 
         Debtor debtorInRequest = new Debtor(transfer.getSource());
 
