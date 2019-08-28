@@ -13,13 +13,16 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 public class BillingUnitsResponse {
     private List<BillingUnitEntity> body;
 
-    public List<CreditCardAccount> getCreditCardAccounts(SebKortConfiguration config) {
+    public List<CreditCardAccount> getCreditCardAccounts(
+            SebKortConfiguration config, String currency) {
         if (Objects.isNull(body)) {
             return Collections.emptyList();
         }
 
         return body.stream()
-                .map(billingUnitEntity -> billingUnitEntity.createCreditCardAccount(config))
+                .map(
+                        billingUnitEntity ->
+                                billingUnitEntity.createCreditCardAccount(config, currency))
                 .collect(Collectors.toList());
     }
 }

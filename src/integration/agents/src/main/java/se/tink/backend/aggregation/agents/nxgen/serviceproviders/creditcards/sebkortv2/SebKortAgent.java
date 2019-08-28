@@ -34,7 +34,8 @@ public class SebKortAgent extends NextGenerationAgent implements RefreshCreditCa
         this.apiClient = new SebKortApiClient(client, sessionStorage, config);
         this.config = config;
 
-        this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.creditCardRefreshController =
+                constructCreditCardRefreshController(request.getProvider().getCurrency());
     }
 
     @Override
@@ -56,11 +57,12 @@ public class SebKortAgent extends NextGenerationAgent implements RefreshCreditCa
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    private CreditCardRefreshController constructCreditCardRefreshController() {
+    private CreditCardRefreshController constructCreditCardRefreshController(String currency) {
+
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                new SEBKortAccountFetcher(apiClient, config),
+                new SEBKortAccountFetcher(apiClient, config, currency),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
