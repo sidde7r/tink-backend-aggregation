@@ -43,6 +43,8 @@ public final class IngBaseConstants {
     public static class QueryValues {
         public static final String DATE_FORMAT = "yyyy-MM-dd";
         public static final String CODE = "code";
+        public static final String PAYMENT_ACCOUNTS_TRANSACTIONS_VIEW =
+                "payment-accounts:transactions:view";
     }
 
     public static class HeaderKeys {

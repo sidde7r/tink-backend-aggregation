@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
@@ -12,47 +10,40 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class IngBaseConfiguration implements ClientConfiguration {
 
     private String baseUrl;
-    private String clientId;
-    private String clientSigningKey;
-    private String clientSigningCertificate;
-    private String clientKeyStore;
-    private String clientKeyStorePassword;
+    private String clientCertificateSerial;
+    private String clientCertificate;
     private String redirectUrl;
+    private String certificateId;
 
     public String getBaseUrl() {
         return "https://api.sandbox.ing.com";
     }
 
-    public String getClientId() {
-        return "SN=499602D2,CA=C=NL,ST=Amsterdam,L=Amsterdam,O=ING,OU=ING,CN=AppCertificateMeansAPI";
+    public String getClientCertificateSerial() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client certificate serial"));
+        return clientCertificateSerial;
     }
 
-    public String getClientSigningKey() {
-        return "MIIEpQIBAAKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABAoIBAQCdrURaGBr2w/3NvGGA2E+8eY64n9PjRjiMi/1TdCgrKsjTiyu0mnffj0PtiEyHmUYw4Q8U/peUoIk6anWxpAYl9uMrDEO7ZUvt5lxvNPJ7rmvGDMrCkgVSx8IIkoLRxxi2SAEXTDInPT7PpfOIkm0kmLKKNB1wcCCiiwejVRVvvax1glO73VdI2r8EQatL8DvQCvxrDaVO8384tBtGI6mLlKGmyexBR7fOFkZtg23HAWxkpuSm8AXiqBGI7Cx0eG2ti23t/KChh2fDUZ8lb06AOXO0KGMAelJA9LUYDM1puoGCtjQUMfaR3jHg/hh5DDN+bhwhJjEVhsW9upgdMT3xAoGBAPabl9rDJ2WA00SA3OpFIFte4h6qOnOSqOnIZiSQfMOe7wlND9EENpeMAdKxDR8Uf14HpQ6R0IeOdQfA3w11jLLEMKDiAQ3D5Fk/gipEx7C4SmUmZLSaNz3/r3qtvOMzYg4t2E7Bwt5LEEH2YqwTqbSIg0ypLOF6kKiKjbanfkV9AoGBAMzp5dK6wm7i4ZTBhXwyQtrxAamn1ZyFvrLggAvAzwkI0OnpVxnS6a3e83/U///F9WFLyyB1RnniGhXJyHU6NsTikDU+r2RNNvfBGWqwRyUbxWWJxyhKmp6taJxbHQ/a8qZuYosclvnBF2rTc0M/hU2scdJckyeoe2252gSgVFh/AoGAGwGVEq72fIYsHL9j8f/Z+Eeeya7osclo2BlLHkv4bc/U65bV2ZT1iYkalgEvp6yt+hUqPTs4s++k31F+29F4tAcKMEQvy1sdgayTy582oyK7evJGawTMceyzQeMO4W66GUVp/832UjO0NxUNXzzUA+JDRrzsHlE20E5EELGtAV0CgYEAms/HY1rX1ICynvlKCRfL7K+SawOy3esptOjptHd5s0Cm3WH9/TOcelDrtFNPCYUcquJhV2di1Gie/oERYoeVo0/sVV3DksrHUYzgz/rX9VAy5VCfV3Btup4WX7JylWz8UAMrjiAObCiWsY2JEnBmHNXAtIZeYuLmRXLZJQ+gSa8CgYEApLB4itr04dkTw8b/ivl4AEE0muwo+ZRWynzoPrhnSQIRG+nvZ40Z+YERI9tAmGP9ujKEYM6qcoS0Szc6u3fvq+ixMcrFyvjANAiB5sah2ZybBQJYGbwXU/GFzubi7AJwPQqpVF+wKPYgrzZ2rpX54/g1FHQ0m5rCKZs71jtV1Gk=";
-    }
-
-    public String getClientSigningCertificate() {
-        return "-----BEGIN CERTIFICATE-----MIID9TCCAt2gAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADByMR8wHQYDVQQDDBZBcHBDZXJ0aWZpY2F0ZU1lYW5zQVBJMQwwCgYDVQQLDANJTkcxDDAKBgNVBAoMA0lORzESMBAGA1UEBwwJQW1zdGVyZGFtMRIwEAYDVQQIDAlBbXN0ZXJkYW0xCzAJBgNVBAYTAk5MMB4XDTE5MDMwNDEzNTkwN1oXDTIwMDMwNDE0NTkwN1owPjEdMBsGA1UECwwUc2FuZGJveF9laWRhc19xc2VhbGMxHTAbBgNVBGEMFFBTRE5MLVNCWC0xMjM0NTEyMzQ1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWVOA7gAntPONQAfmLCEpQUcdi2oNRkQ7HioxD1cIxsy9QRFNFhbl8bSW++oSh/Gdo2tds9Oe7i/54cxp7svQitBDvOLLqC5/4+xtNXOYLFVjQF2EyJWlFBq9ZEqmD/5uk8UpJHt9lqJZfuxUeF0ZA/NAADR3nEL1mSSbEqRpxRvdJ+rn+9DaquRBthZSlPJkOTKyQ9tzbTgmsrrzD1GLA8UMt6GqpYZnFvuJapa9yDHxEe1laazwgTmmcD0su/K5D9hqSWlbxEDp0Bud5GeEYVhV6Zqf2J8vMbTVD9UZHI9Bb0W99u1+NUyPKqV+jwgbmA37ehDaB17i4ABbItxAwIDAQABo4HGMIHDMBUGA1UdHwQOMAwwCqAIoAaHBH8AAAEwIQYDVR0jBBowGKAWBBRwSLteAMD0JvjEdNF40sRO37RyWTCBhgYIKwYBBQUHAQMEejB4MAoGBgQAjkYBAQwAMBMGBgQAjkYBBjAJBgcEAI5GAQYCMFUGBgQAgZgnAjBLMDkwEQYHBACBmCcBAwwGUFNQX0FJMBEGBwQAgZgnAQEMBlBTUF9BUzARBgcEAIGYJwECDAZQU1BfUEkMBlgtV0lORwwGTkwtWFdHMA0GCSqGSIb3DQEBCwUAA4IBAQB3TXQgvS+vm0CuFoILkAwXc/FKL9MNHb1JYc/TZKbHwPDsYJT3KNCMDs/HWnBD/VSNPMteH8Pk5Eh+PIvQyOhY3LeqvmTwDZ6lMUYk5yRRXXh/zYbiilZAATrOBCo02ymm6TqcYfPHF3kh4FHIVLsSe4m/XuGoBO2ru5sMUCxncrWtw4UXZ38ncms2zHbkH6TB5cSh2LXY2aZSX8NvYyHPCCw0jrkVm1/kAs69xM2JfIh8fJtycI9NvcoSd8HGSe/D5SjUwIFKTWXq2eCMsNEAG51qS0jWXQqPtqBRRTdu+AEAJ3DeIY6Qqg2mjk+i6rTMqSwFVqo7Cq7zHty4E7qK-----END CERTIFICATE-----";
-    }
-
-    public String getClientKeyStore() {
-        return "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";
-    }
-
-    @JsonIgnore
-    public byte[] getClientSSLP12bytes() {
-        return Base64.getDecoder().decode(getClientKeyStore());
+    public String getClientCertificate() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client certificate"));
+        return clientCertificate;
     }
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
         return redirectUrl;
     }
 
-    public String getClientKeyStorePassword() {
-        return "123456";
+    public String getCertificateId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
+        return certificateId;
     }
 }

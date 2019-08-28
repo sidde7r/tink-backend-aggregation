@@ -7,8 +7,15 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngAgent extends IngBaseAgent {
 
+    public static final String INTEGRATION_NAME = "ing";
+
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+    }
+
+    @Override
+    protected String getIntegrationName() {
+        return INTEGRATION_NAME;
     }
 }

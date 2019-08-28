@@ -25,6 +25,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.utils.IngBaseUtils;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -38,6 +42,7 @@ public class IngBaseApiClient {
     protected final SessionStorage sessionStorage;
     private final String market;
     private IngBaseConfiguration configuration;
+    private EidasProxyConfiguration eidasConf;
 
     public IngBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage, String market) {
         this.client = client;
@@ -51,8 +56,10 @@ public class IngBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    public void setConfiguration(IngBaseConfiguration configuration) {
+    public void setConfiguration(
+            IngBaseConfiguration configuration, EidasProxyConfiguration eidasConf) {
         this.configuration = configuration;
+        this.eidasConf = eidasConf;
     }
 
     public FetchAccountsResponse fetchAccounts() {
@@ -142,7 +149,7 @@ public class IngBaseApiClient {
                 Signature.SIGNATURE
                         + " "
                         + getAuthorization(
-                                getConfiguration().getClientId(),
+                                getConfiguration().getClientCertificateSerial(),
                                 Signature.HTTP_METHOD_POST,
                                 Urls.TOKEN,
                                 reqId,
@@ -152,7 +159,9 @@ public class IngBaseApiClient {
         return buildRequest(reqId, date, digest, Urls.TOKEN)
                 .header(HeaderKeys.AUTHORIZATION, authHeader)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .header(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, getCertificate())
+                .header(
+                        HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
+                        getConfiguration().getClientCertificate())
                 .post(TokenResponse.class, payload);
     }
 
@@ -162,8 +171,8 @@ public class IngBaseApiClient {
         final String reqPath =
                 new URL(Urls.OAUTH)
                         .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                        .queryParam(QueryKeys.SCOPE, tokenResponse.getScope())
-                        .queryParam(QueryKeys.COUNTRY_CODE, market)
+                        .queryParam(QueryKeys.SCOPE, QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_VIEW)
+                        // .queryParam(QueryKeys.COUNTRY_CODE, market)
                         .toString();
 
         return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
@@ -234,10 +243,6 @@ public class IngBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CLIENT_ID));
     }
 
-    private String getCertificate() {
-        return getConfiguration().getClientSigningCertificate();
-    }
-
     private String getAuthorization(
             final String clientId,
             final String httpMethod,
@@ -256,13 +261,18 @@ public class IngBaseApiClient {
             final String xIngRequestId,
             final String date,
             final String digest) {
-        final String clientSigningKey = getConfiguration().getClientSigningKey();
 
         final SignatureEntity signatureEntity =
                 new SignatureEntity(httpMethod, reqPath, date, digest, xIngRequestId);
 
-        return IngBaseUtils.generateSignature(
-                signatureEntity.toString(), clientSigningKey, Signature.SIGNING_ALGORITHM);
+        QsealcSigner proxySigner =
+                QsealcSigner.build(
+                        eidasConf.toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        new EidasIdentity(
+                                "oxford-staging", "5f98e87106384b2981c0354a33b51590", "ing"),
+                        "Tink");
+        return proxySigner.getSignatureBase64(signatureEntity.toString().getBytes());
     }
 
     private String generateDigest(final String data) {
