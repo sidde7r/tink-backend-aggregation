@@ -22,9 +22,9 @@ import javax.ws.rs.core.Context;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.api.headers.TinkHttpHeaders;
 import se.tink.libraries.accesslogging.AccessLoggingRequestDetails;
 import se.tink.libraries.accesslogging.AccessLoggingUtils;
-import se.tink.libraries.api.headers.TinkHttpHeaders;
 import se.tink.libraries.auth.HttpAuthenticationMethod;
 
 public class AccessLoggingFilter implements ContainerRequestFilter, ContainerResponseFilter {
