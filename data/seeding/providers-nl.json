@@ -144,17 +144,19 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.banks.openbanking.ing.IngAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "ING",
             "fields": [],
-            "financialInstitutionId": "a87e0b36cb9542e49ede8d768299f0dc",
-            "multiFactor": false,
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "ING",
+            "multiFactor": true,
             "name": "nl-ing-oauth2",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "payload": "tink",
             "popular": true,
-            "status": "DISABLED",
+            "status": "ENABLED",
             "transactional": "true",
             "tutorialUrl": null,
             "type": "BANK"
