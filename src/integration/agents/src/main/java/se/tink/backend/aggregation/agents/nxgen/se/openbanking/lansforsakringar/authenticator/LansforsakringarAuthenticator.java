@@ -5,8 +5,11 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -98,7 +101,9 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
                         .setRedirectUri(apiClient.getConfiguration().getRedirectUri())
                         .build();
 
-        return apiClient.postToken(form);
+        URL tokenUrl =  new URL(Urls.TOKEN + "?" + FormKeys.CLIENT_ID + "=" + lansforsakringarConfiguration.getClientId() + "&" + QueryKeys.RESPONSE_TYPE + "=code" + "&" + QueryKeys.AUTHORIZATION_ID + "=" + code2 + "&" + QueryKeys.REDIRECT_URI + "=" + lansforsakringarConfiguration.getRedirectUri());
+
+        return apiClient.postToken(form, tokenUrl);
     }
 
     @Override

@@ -96,9 +96,9 @@ public final class LansforsakringarApiClient {
         return createRequestInSession(new URL(url));
     }
 
-    public OAuth2Token postToken(AuthenticateForm form) {
+    public OAuth2Token postToken(AuthenticateForm form, URL tokenUrl) {
 
-        return client.request(Urls.TOKEN)
+        return client.request(tokenUrl)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .header(LansforsakringarConstants.HeaderKeys.X_TINK_DEBUG, LansforsakringarConstants.HeaderValues.TRUST_ALL)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
