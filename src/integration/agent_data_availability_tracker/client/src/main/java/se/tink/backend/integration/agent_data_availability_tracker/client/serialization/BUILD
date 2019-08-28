@@ -5,7 +5,7 @@ java_library(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
         "//src/integration/api",
         "//src/integration/models",

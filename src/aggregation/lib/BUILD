@@ -18,8 +18,8 @@ java_library(
         "//po:i18n",
     ],
     deps = [
+        "//src/aggregation/aggregationcontroller_api",
         "//src/aggregation/api",
-        "//src/aggregationcontroller_api",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agents",
         "//src/integration/api",
@@ -122,9 +122,9 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
+        "//src/aggregation/aggregationcontroller_api",
         "//src/aggregation/api",
         "//src/aggregation/lib",
-        "//src/aggregationcontroller_api",
         "//src/integration/agents",
         "//src/integration/api",
         "//src/integration/lib",

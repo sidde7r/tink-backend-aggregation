@@ -7,7 +7,7 @@ junit_test(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/serialization",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
