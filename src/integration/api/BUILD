@@ -7,8 +7,8 @@ java_library(
     deps = [
         "//src/integration/account:enums",
         "//src/integration/amount",
+        "//src/integration/credentials:demo",
         "//src/libraries/account_identifier",
-        "//src/libraries/credentials:demo",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",

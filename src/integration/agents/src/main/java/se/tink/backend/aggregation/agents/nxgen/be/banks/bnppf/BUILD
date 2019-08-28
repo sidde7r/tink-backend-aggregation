@@ -5,9 +5,9 @@ java_library(
     deps = [
         "//src/integration/amount",
         "//src/integration/api",
+        "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//src/libraries/credentials:service",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_io_commons_io",

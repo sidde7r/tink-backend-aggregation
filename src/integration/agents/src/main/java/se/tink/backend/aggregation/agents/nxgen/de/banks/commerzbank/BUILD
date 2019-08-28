@@ -5,10 +5,10 @@ java_library(
     deps = [
         "//src/integration/amount",
         "//src/integration/api",
+        "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/libraries/account_identifier",
-        "//src/libraries/credentials:service",
         "//src/libraries/strings",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",

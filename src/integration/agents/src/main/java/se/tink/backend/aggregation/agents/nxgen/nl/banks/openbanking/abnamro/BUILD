@@ -4,11 +4,11 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/amount",
+        "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
-        "//src/libraries/credentials:service",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",

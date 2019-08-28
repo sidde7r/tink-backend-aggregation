@@ -5,10 +5,10 @@ java_library(
     deps = [
         "//src/integration/account:rpc",
         "//src/integration/api",
+        "//src/integration/credentials:rpc",
         "//src/integration/models",
         "//src/integration/transfer:rpc",
         "//src/libraries/api_annotations",
-        "//src/libraries/credentials:rpc",
         "//src/libraries/document_container",
         "//src/libraries/enums",
         "//src/libraries/http:http_annotations",
