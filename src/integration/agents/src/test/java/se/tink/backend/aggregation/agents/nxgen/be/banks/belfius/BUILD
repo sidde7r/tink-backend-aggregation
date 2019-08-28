@@ -15,6 +15,7 @@ junit_test(
     deps = [
         "//src/integration/agents",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/belfius",
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
@@ -22,7 +23,6 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
-        "//src/libraries/amount",
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//src/libraries/serialization",

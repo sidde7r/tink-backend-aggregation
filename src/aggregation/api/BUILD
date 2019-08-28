@@ -6,9 +6,9 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api",
+        "//src/integration/credentials:service",
         "//src/integration/transfer:rpc",
         "//src/libraries/api_annotations",
-        "//src/libraries/credentials:service",
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/http:http_annotations",
         "//src/libraries/metrics",
@@ -39,8 +39,8 @@ junit_test(
     ],
     deps = [
         "//src/integration/api",
+        "//src/integration/credentials:service",
         "//src/libraries/api_annotations/testlib",
-        "//src/libraries/credentials:service",
         "//src/libraries/user:rpc",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

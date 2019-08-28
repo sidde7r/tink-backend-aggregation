@@ -192,7 +192,7 @@ public class AgentDataAvailabilityTrackerClientImpl
                         .trustManager(new File("/etc/client-certificate/ca.crt"))
                         .build();
 
-        log.debug("Opening connection");
+        log.debug(String.format("Opening connection: %s:%d", host, port));
 
         channel =
                 NettyChannelBuilder.forAddress(host, port)
@@ -209,8 +209,8 @@ public class AgentDataAvailabilityTrackerClientImpl
 
     @Override
     public void stop() throws Exception {
+        log.debug("Received signal to stop.");
         service.stopAsync();
-        System.out.println(service.isRunning());
         service.awaitTerminated(60, TimeUnit.SECONDS);
         endStreamBlocking();
     }
