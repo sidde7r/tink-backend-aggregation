@@ -35,7 +35,7 @@ PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus.svc.cluster.local
 
 ### Queries
 PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', environment='production', provider!~'.*abstract.*', className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}) by (provider, market)"
-INSTANCES_QUERY = "sum(up{job='tink-aggregation', environment='production'})"
+INSTANCES_QUERY = "sum(up{kubernetes_namespace='aggregation', environment='production'})"
 
 # LOGGING
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
