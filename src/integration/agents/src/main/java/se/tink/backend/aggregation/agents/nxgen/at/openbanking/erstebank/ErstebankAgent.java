@@ -8,12 +8,10 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executo
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.fetcher.transactionalaccount.ErstebankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class ErstebankAgent
@@ -21,8 +19,10 @@ public final class ErstebankAgent
     private final ErstebankApiClient apiClient;
 
     public ErstebankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration);
 
         apiClient = new ErstebankApiClient(client, sessionStorage);
     }
@@ -52,13 +52,6 @@ public final class ErstebankAgent
     @Override
     protected Class<ErstebankConfiguration> getConfigurationClassDescription() {
         return ErstebankConfiguration.class;
-    }
-
-    @Override
-    protected void setupClient(TinkHttpClient client) {
-        client.setSslClientCertificate(
-                BerlinGroupUtils.readFile(getConfiguration().getClientKeyStorePath()),
-                getConfiguration().getClientKeyStorePassword());
     }
 
     @Override

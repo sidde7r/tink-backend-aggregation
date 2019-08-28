@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.f
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -19,17 +19,13 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class LaBanquePostaleAgent
         extends BerlinGroupAgent<LaBanquePostaleApiClient, LaBanquePostaleConfiguration> {
-
-    private final String clientName;
     private final LaBanquePostaleApiClient apiClient;
 
     public LaBanquePostaleAgent(
             final CredentialsRequest request,
             final AgentContext context,
-            final SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-        clientName = request.getProvider().getPayload();
-
+            final AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration);
         apiClient = new LaBanquePostaleApiClient(client, sessionStorage);
     }
 
@@ -74,11 +70,6 @@ public final class LaBanquePostaleAgent
     @Override
     protected BerlinGroupTransactionFetcher getTransactionFetcher() {
         return new LaBanquePostaleTransactionFetcher(getApiClient());
-    }
-
-    @Override
-    public String getClientName() {
-        return clientName;
     }
 
     @Override
