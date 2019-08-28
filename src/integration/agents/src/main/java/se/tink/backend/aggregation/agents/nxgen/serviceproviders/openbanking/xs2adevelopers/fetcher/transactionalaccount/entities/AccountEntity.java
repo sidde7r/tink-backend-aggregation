@@ -44,6 +44,10 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(BalanceEntity balanceEntity) {
+        if (iban == null) {
+            return Optional.empty();
+        }
+
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(Xs2aDevelopersConstants.ACCOUNT_TYPE_MAPPER, accountType)
                 .withBalance(BalanceModule.of(balanceEntity.toAmount()))
