@@ -192,7 +192,7 @@ public class AgentDataAvailabilityTrackerClientImpl
                         .trustManager(new File("/etc/client-certificate/ca.crt"))
                         .build();
 
-        log.debug("Opening connection");
+        log.debug(String.format("Opening connection: %s:%d", host, port));
 
         channel =
                 NettyChannelBuilder.forAddress(host, port)
