@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -30,8 +31,6 @@ public class OAuth1AuthenticationController
     private final OAuth1Authenticator authenticator;
     private final String strongAuthenticationState;
     private final String strongAuthenticationStateSupplementalKey;
-
-    private static final long WAIT_FOR_MINUTES = 9;
 
     public OAuth1AuthenticationController(
             PersistentStorage persistentStorage,
@@ -92,7 +91,7 @@ public class OAuth1AuthenticationController
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
                                 strongAuthenticationStateSupplementalKey,
-                                WAIT_FOR_MINUTES,
+                                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
                         .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
 

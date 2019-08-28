@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -31,7 +32,6 @@ public class SibsRedirectAuthenticationController
 
     private static final Logger logger =
             LoggerFactory.getLogger(SibsRedirectAuthenticationController.class);
-    private static final long WAIT_FOR_MINUTES = 9L;
     private static final long SLEEP_TIME = 10L;
     private static final int RETRY_ATTEMPTS = 10;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -108,7 +108,7 @@ public class SibsRedirectAuthenticationController
         supplementalInformationHelper
                 .waitForSupplementalInformation(
                         strongAuthenticationStateSupplementalKey,
-                        WAIT_FOR_MINUTES,
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES)
                 .orElseThrow(() -> new ThirdPartyAppException(ThirdPartyAppError.TIMED_OUT));
     }
