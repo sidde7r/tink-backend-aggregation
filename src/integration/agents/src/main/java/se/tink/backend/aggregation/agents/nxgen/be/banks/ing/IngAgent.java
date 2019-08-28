@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transferdestination.IngTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.filter.IngHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.session.IngSessionHandler;
-import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
@@ -47,7 +46,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-@ProgressiveAuth
 public class IngAgent extends SubsequentGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,

@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
-import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -224,7 +223,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         try {
             // TODO auth: temporarily use the annotation to filter agents that are migrated to use
             // new Auth flow
-            if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
+            if (agent instanceof ProgressiveAuthAgent) {
                 final ProgressiveLoginExecutor executor =
                         new ProgressiveLoginExecutor(
                                 supplementalInformationController, (ProgressiveAuthAgent) agent);
