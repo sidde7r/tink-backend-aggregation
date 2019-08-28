@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
-import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
@@ -187,7 +186,7 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
 
     private void login(Agent agent) throws Exception {
         if (!this.isLoggedIn(agent)) {
-            if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
+            if (agent instanceof ProgressiveAuthAgent) {
                 this.progressiveLogin(agent);
             } else {
                 boolean loginSuccessful = agent.login();

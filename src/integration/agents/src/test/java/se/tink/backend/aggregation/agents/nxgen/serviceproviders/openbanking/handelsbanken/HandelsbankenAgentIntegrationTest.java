@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
-import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
@@ -228,7 +227,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
         if (isLoggedIn(agent)) {
             return;
         }
-        if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
+        if (agent instanceof ProgressiveAuthAgent) {
             progressiveLogin(agent);
             return;
         }
