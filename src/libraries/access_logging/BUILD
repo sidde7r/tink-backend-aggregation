@@ -1,10 +1,5 @@
-java_library(
+alias(
     name = "access_logging",
-    srcs = glob(["src/main/**/*.java"]),
+    actual = "@tink_backend//src/libraries/access_logging",
     visibility = ["//visibility:public"],
-    deps = [
-        "//src/libraries/auth",
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_slf4j_jul_to_slf4j",
-    ],
 )
