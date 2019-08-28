@@ -16,7 +16,10 @@ public class IngBaseConfiguration implements ClientConfiguration {
     private String certificateId;
 
     public String getBaseUrl() {
-        return "https://api.sandbox.ing.com";
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
+        return baseUrl;
     }
 
     public String getClientCertificateSerial() {
