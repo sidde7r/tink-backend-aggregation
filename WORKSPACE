@@ -38,7 +38,7 @@ git_repository(
     name = "tink_httpclient_4_5_5",
     commit = "1ed65fa09a4b7bc9f469fbb3625ac5b087f9cc3e",
     remote = "git@github.com:tink-ab/httpcomponents-client.git",
-    shallow_since = "1537529121 +0200",	
+    shallow_since = "1537529121 +0200",
 )
 
 git_repository(
@@ -49,7 +49,7 @@ git_repository(
 
 git_repository(
     name = "tink_backend_integration_openbanking",
-    commit = "e629aecc2eddaded6a6d37889763c675aa9355ec",
+    commit = "3b87053e9d43ad173f45180ef28a236e2fd37ac6",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
     shallow_since = "1562076445 +0000",
 )
