@@ -209,8 +209,8 @@ public class AgentDataAvailabilityTrackerClientImpl
 
     @Override
     public void stop() throws Exception {
+        log.debug("Received signal to stop.");
         service.stopAsync();
-        System.out.println(service.isRunning());
         service.awaitTerminated(60, TimeUnit.SECONDS);
         endStreamBlocking();
     }
