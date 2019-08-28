@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
@@ -48,10 +49,6 @@ public class OAuth2AuthenticationController
 
     private final String strongAuthenticationState;
     private final String strongAuthenticationStateSupplementalKey;
-
-    // This wait time is for the whole user authentication. Different banks have different
-    // cumbersome authentication flows.
-    private static final long WAIT_FOR_MINUTES = 9;
 
     public OAuth2AuthenticationController(
             PersistentStorage persistentStorage,
@@ -163,7 +160,7 @@ public class OAuth2AuthenticationController
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
                                 strongAuthenticationStateSupplementalKey,
-                                WAIT_FOR_MINUTES,
+                                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
                         .orElseThrow(
                                 LoginError.INCORRECT_CREDENTIALS
