@@ -13,12 +13,15 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HttpErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryValues.BookingStatus;
@@ -42,6 +45,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.AccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.filters.ErrorFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
@@ -80,6 +84,12 @@ public final class RedsysApiClient {
         this.persistentStorage = persistentStorage;
         this.aspspConfiguration = aspspConfiguration;
         this.eidasIdentity = eidasIdentity;
+
+        client.addFilter(
+                new ErrorFilter(
+                        HttpErrorCodes.TOO_MANY_REQUESTS,
+                        ErrorCodes.ACCESS_EXCEEDED,
+                        BankServiceError.ACCESS_EXCEEDED));
     }
 
     private RedsysConfiguration getConfiguration() {
