@@ -12,7 +12,7 @@ java_library(
         "//src/libraries/generic_application",
         "//src/libraries/serialization",
         "//src/libraries/signableoperation:enums",
-        "//src/libraries/transfer:rpc",
+        "//src/integration/transfer:rpc",
         "//src/libraries/user:rpc",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

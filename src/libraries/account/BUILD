@@ -15,7 +15,7 @@ java_library(
         "//src/libraries/account:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
-        "//src/libraries/transfer:rpc",
+        "//src/integration/transfer:rpc",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",

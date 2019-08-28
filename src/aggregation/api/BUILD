@@ -12,7 +12,7 @@ java_library(
         "//src/libraries/http:http_annotations",
         "//src/libraries/metrics",
         "//src/libraries/signableoperation:rpc",
-        "//src/libraries/transfer:rpc",
+        "//src/integration/transfer:rpc",
         "//src/libraries/user:rpc",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
