@@ -2,7 +2,6 @@ package se.tink.backend.integration.agent_data_availability_tracker.client;
 
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
-import io.dropwizard.lifecycle.Managed;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.GrpcSslContexts;
@@ -23,8 +22,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.client.serial
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.LoanTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.PortfolioTrackingSerializer;
 
-public class AgentDataAvailabilityTrackerClientImpl
-        implements AgentDataAvailabilityTrackerClient, Managed {
+public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabilityTrackerClient {
 
     private static final Logger log =
             LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientImpl.class);
