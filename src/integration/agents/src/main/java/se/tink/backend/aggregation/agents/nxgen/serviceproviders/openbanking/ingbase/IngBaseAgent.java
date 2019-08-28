@@ -26,6 +26,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class IngBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
+    private final String clientName;
     protected final IngBaseApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -33,9 +34,9 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     public IngBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
         final String market = request.getProvider().getMarket().toLowerCase();
         apiClient = new IngBaseApiClient(client, sessionStorage, market);
+        clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -43,14 +44,25 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
-        IngBaseConfiguration config = new IngBaseConfiguration();
-
-        apiClient.setConfiguration(config);
-
-        final byte[] p12 = config.getClientSSLP12bytes();
-        client.setSslClientCertificate(p12, config.getClientKeyStorePassword());
+        final IngBaseConfiguration ingBaseConfiguration = getClientConfiguration();
+        apiClient.setConfiguration(ingBaseConfiguration, configuration.getEidasProxy());
+        client.setEidasProxy(
+                configuration.getEidasProxy(), ingBaseConfiguration.getCertificateId());
+        client.setDebugOutput(true);
     }
+
+    protected IngBaseConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        getIntegrationName(), clientName, IngBaseConfiguration.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        IngBaseConstants.ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    protected abstract String getIntegrationName();
 
     @Override
     protected Authenticator constructAuthenticator() {
