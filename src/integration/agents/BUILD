@@ -69,7 +69,7 @@ java_library(
         "//src/libraries/net",
         "//src/libraries/pair",
         "//src/libraries/phone_number_utils",
-        "//src/libraries/provider:rpc",
+        "//src/integration/provider:rpc",
         "//src/libraries/serialization",
         "//src/libraries/signableoperation:enums",
         "//src/libraries/social_security_number",
