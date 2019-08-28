@@ -162,6 +162,10 @@ public class AgentDataAvailabilityTrackerClientImpl
                                         .addFieldName(entry.getName())
                                         .addFieldValue(entry.getValue()));
 
+        log.debug(
+                String.format(
+                        "Adding request to queue: %d | Service running: %b",
+                        accountDeque.size(), service.isRunning()));
         accountDeque.add(requestBuilder.build());
     }
 
