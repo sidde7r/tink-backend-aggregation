@@ -8,6 +8,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
 public class UpdateTransfersRequest {
 
     private String credentialsId;
+    private int credentialsDataVersion;
     private List<Transfer> transfers;
     private String userId;
 
@@ -33,5 +34,13 @@ public class UpdateTransfersRequest {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public int getCredentialsDataVersion() {
+        return credentialsDataVersion;
+    }
+
+    public void setCredentialsDataVersion(int credentialsDataVersion) {
+        this.credentialsDataVersion = credentialsDataVersion;
     }
 }

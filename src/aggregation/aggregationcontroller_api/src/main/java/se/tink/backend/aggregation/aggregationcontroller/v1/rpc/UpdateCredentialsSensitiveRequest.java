@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class UpdateCredentialsSensitiveRequest {
     private String userId;
     private String credentialsId;
+    private int credentialsDataVersion;
     private String sensitiveData;
 
     public String getUserId() {
@@ -32,6 +33,15 @@ public class UpdateCredentialsSensitiveRequest {
 
     public UpdateCredentialsSensitiveRequest setSensitiveData(String sensitiveData) {
         this.sensitiveData = sensitiveData;
+        return this;
+    }
+
+    public int getCredentialsDataVersion() {
+        return credentialsDataVersion;
+    }
+
+    public UpdateCredentialsSensitiveRequest setCredentialsDataVersion(int credentialsDataVersion) {
+        this.credentialsDataVersion = credentialsDataVersion;
         return this;
     }
 }
