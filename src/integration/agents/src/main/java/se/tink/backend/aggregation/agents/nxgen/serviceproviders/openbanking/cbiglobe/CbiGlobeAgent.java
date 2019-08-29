@@ -42,6 +42,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
 
         apiClient = new CbiGlobeApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected abstract String getIntegrationName();
@@ -78,8 +79,6 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
                         new CbiGlobeAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()),
                         new StrongAuthenticationState(request.getAppUriId()));
-
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         return new AutoAuthenticationController(
                 request,
