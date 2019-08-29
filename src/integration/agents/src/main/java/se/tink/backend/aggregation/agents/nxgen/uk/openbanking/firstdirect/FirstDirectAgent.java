@@ -34,7 +34,7 @@ public class FirstDirectAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV11Ais(aisConfig);
+        return new UkOpenBankingV11Ais(aisConfig, persistentStorage);
     }
 
     @Override

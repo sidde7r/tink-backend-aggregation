@@ -35,7 +35,7 @@ public class NatWestAgent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV20Ais(aisConfig);
+        return new UkOpenBankingV20Ais(aisConfig, persistentStorage);
     }
 
     @Override
