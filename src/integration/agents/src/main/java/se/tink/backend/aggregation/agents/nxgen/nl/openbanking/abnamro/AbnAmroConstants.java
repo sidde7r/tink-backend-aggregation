@@ -15,11 +15,11 @@ public final class AbnAmroConstants {
     public static final String INTEGRATION_NAME = "abnamro";
 
     public static class URLs {
-        private static final URL API_ABNAMRO = new URL("https://api-sandbox.abnamro.com");
+        private static final URL API_ABNAMRO = new URL("https://api.abnamro.com");
         private static final URL OAUTH2_ABNAMRO =
-                new URL("https://auth-sandbox.connect.abnamro.com");
+                new URL("https://auth.connect.abnamro.com");
         public static final URL OAUTH2_ABNAMRO_SSL =
-                new URL("https://auth-sandbox.connect.abnamro.com:8443");
+                new URL("https://auth.connect.abnamro.com:8443");
         public static final URL AUTHORIZE_ABNAMRO =
                 OAUTH2_ABNAMRO
                         .concatWithSeparator("as")
