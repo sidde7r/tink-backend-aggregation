@@ -35,7 +35,7 @@ public class NordeaBaseApiClient implements TokenInterface {
         this.client = client;
         this.sessionStorage = sessionStorage;
 
-        client.addFilter(new BankSideFailureFilter());
+        this.client.addFilter(new BankSideFailureFilter());
     }
 
     public NordeaBaseConfiguration getConfiguration() {
