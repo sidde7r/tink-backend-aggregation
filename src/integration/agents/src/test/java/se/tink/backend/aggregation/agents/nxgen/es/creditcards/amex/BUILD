@@ -15,7 +15,7 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex",
         "//src/integration/api",
-        "//src/integration/credentials:service",
         "//src/integration/lib:lib_test",
+        "//src/libraries/credentials:service",
     ],
 )
