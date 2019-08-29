@@ -9,6 +9,7 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import net.minidev.json.JSONObject;
 import se.tink.backend.aggregation.agents.utils.crypto.PS256;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
@@ -296,7 +297,7 @@ public class ClientRegistration {
             JSONObject object = new JSONObject();
             object.put(OpenIdConstants.Params.SOFTWARE_ID, softwareId);
             object.put(OpenIdConstants.Params.SOFTWARE_STATEMENT, softwareStatementAssertion);
-            object.put(OpenIdConstants.Params.SCOPE, scope);
+            object.put(OpenIdConstants.Params.SCOPE, scope.split(" "));
             object.put(OpenIdConstants.Params.TOKEN_ENDPOINT_AUTH_METHOD, tokenEndpointAuthMethod);
             object.put(OpenIdConstants.Params.ID_TOKEN_SIGNED_RESPONSE_ALG, idTokenSigningAlg);
             object.put(
@@ -315,7 +316,8 @@ public class ClientRegistration {
             object.put(PAYLOAD_CLAIMS.ISSUED_AT, issuedAt);
             object.put(PAYLOAD_CLAIMS.EXPIRES_AT, expiresAt);
             object.put(PAYLOAD_CLAIMS.AUDIENCE, issuer);
-            object.put(PAYLOAD_CLAIMS.JWT_ID, jwtId);
+            object.put(PAYLOAD_CLAIMS.JWT_ID, UUID.randomUUID().toString());
+            object.put(PAYLOAD_CLAIMS.TLS_CLIENT_AUTH_DN, OpenIdConstants.TINK_TLS_AUTH_CLIENT_DN);
             return object;
         }
     }
