@@ -3,7 +3,10 @@ load("//tools/bzl:junit.bzl", "junit_test")
 java_library(
     name = "demo",
     srcs = glob(["src/main/**/demo/*.java"]),
-    visibility = ["//visibility:public"],
+    visibility = [
+        "//src/integration:__subpackages__",
+        "//src/libraries/social_security_number:__pkg__",
+    ],
     deps = [
         "//third_party:com_google_guava_guava",
     ],
@@ -12,9 +15,9 @@ java_library(
 junit_test(
     name = "demo_test",
     srcs = glob(["src/test/**/demo/*.java"]),
-    visibility = ["//visibility:public"],
+    visibility = ["//src/integration:__subpackages__"],
     deps = [
-        "//src/libraries/credentials:demo",
+        "//src/integration/credentials:demo",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
     ],
@@ -23,9 +26,9 @@ junit_test(
 junit_test(
     name = "service_test",
     srcs = glob(["src/test/**/service/*.java"]),
-    visibility = ["//visibility:public"],
+    visibility = ["//src/integration:__subpackages__"],
     deps = [
-        "//src/libraries/credentials:service",
+        "//src/integration/credentials:service",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
@@ -35,15 +38,19 @@ junit_test(
 java_library(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
-    visibility = ["//visibility:public"],
+    visibility = ["//src/integration:__subpackages__"],
 )
 
 java_library(
     name = "rpc",
     srcs = glob(["src/main/**/rpc/*.java"]),
-    visibility = ["//visibility:public"],
+    visibility = [
+        "//src/aggregation:__subpackages__",
+        "//src/aggregationcontroller_api:__subpackages__",
+        "//src/integration:__subpackages__",
+    ],
     deps = [
-        "//src/libraries/credentials:enums",
+        "//src/integration/credentials:enums",
         "//src/libraries/field:rpc",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
@@ -56,7 +63,10 @@ java_library(
 java_library(
     name = "service",
     srcs = glob(["src/main/**/service/*.java"]),
-    visibility = ["//visibility:public"],
+    visibility = [
+        "//src/aggregation:__subpackages__",
+        "//src/integration:__subpackages__",
+    ],
     deps = [
         "//src/integration/api",
         "//src/libraries/user:rpc",
