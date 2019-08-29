@@ -44,7 +44,7 @@ public class VolksbankConstants {
         public static final String PAGE_DIRECTION = "pageDirection";
         public static final String PAGE_DIRECTION_VALUE = "next";
         public static final String LIMIT = "limit";
-        public static final Integer LIMIT_VALUE = 5;
+        public static final Integer LIMIT_VALUE = 50;
     }
 
     public static class Storage {
