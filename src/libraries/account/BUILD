@@ -1,23 +1,19 @@
 java_library(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
-    visibility = ["//src/integration:__subpackages__"],
+    visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/enums",
+        "//src/libraries/enums",
     ],
 )
 
 java_library(
     name = "rpc",
     srcs = glob(["src/main/**/rpc/*.java"]),
-    visibility = [
-        "//src/aggregation:__subpackages__",
-        "//src/aggregationcontroller_api:__subpackages__",
-        "//src/integration:__subpackages__",
-    ],
+    visibility = ["//visibility:public"],
     deps = [
-        ":enums",
         "//src/integration/transfer:rpc",
+        "//src/libraries/account:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//src/libraries/uuid",

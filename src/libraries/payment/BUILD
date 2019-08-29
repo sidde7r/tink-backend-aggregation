@@ -1,28 +1,22 @@
 java_library(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
-    visibility = [
-        "//src/aggregation:__subpackages__",
-        "//src/integration:__subpackages__",
-    ],
+    visibility = ["//visibility:public"],
 )
 
 java_library(
     name = "rpc",
     srcs = glob(["src/main/**/rpc/*.java"]),
-    visibility = [
-        "//src/aggregation:__subpackages__",
-        "//src/integration:__subpackages__",
-    ],
+    visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/account:enums",
-        "//src/integration/account:rpc",
-        "//src/integration/amount",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/integration/payment:enums",
+        "//src/libraries/account:enums",
+        "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
+        "//src/libraries/amount",
         "//src/libraries/date",
         "//src/libraries/pair",
+        "//src/libraries/payment:enums",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
