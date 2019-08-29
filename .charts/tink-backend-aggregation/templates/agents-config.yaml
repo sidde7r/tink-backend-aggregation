@@ -104,6 +104,12 @@ data:
             certificateId: "{{ $agentsConfig.belfius.tink.certificateId }}"
         {{- end }}
 
+        {{- if $agentsConfig.dnb }}
+        dnb:
+          tink:
+            redirectUrl: "{{ $agentsConfig.dnb.tink.redirectUrl }}"
+        {{- end }}
+
         {{- if $agentsConfig.icabanken }}
         icabanken:
           tink:
