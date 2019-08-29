@@ -291,7 +291,7 @@ public class AccountDetailsResponse {
                                 .addIdentifier(new SwedishIdentifier(accountId))
                                 .build())
                 .addHolderName(holderName.toString())
-                .setBankIdentifier(accountId)
+                .setApiIdentifier(accountId)
                 .build();
     }
 }
