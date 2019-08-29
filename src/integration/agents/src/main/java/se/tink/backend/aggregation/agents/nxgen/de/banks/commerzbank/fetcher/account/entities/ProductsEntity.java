@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.utils.CreditCardMasker;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -352,19 +354,28 @@ public class ProductsEntity {
     }
 
     public TransactionalAccount toTransactionalAccount() {
+        AccountTypes accountType = getType();
 
-        return TransactionalAccount.builder(getType(), getInternalAccountNumber(), getTinkBalance())
-                .setName(getProductType().getProductName())
-                .setAccountNumber(getInternalAccountNumber())
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .putInTemporaryStorage(
-                        CommerzbankConstants.HEADERS.IDENTIFIER, getProductId().getIdentifier())
-                .putInTemporaryStorage(
-                        CommerzbankConstants.HEADERS.PRODUCT_TYPE, getProductId().getProductType())
-                .putInTemporaryStorage(
-                        CommerzbankConstants.HEADERS.PRODUCT_BRANCH,
-                        getProductType().getProductBranch())
-                .build();
+        TransactionalAccount.Builder builder =
+                TransactionalAccount.builder(accountType, iban, getTinkBalance())
+                        .setName(getProductType().getProductName())
+                        .setAccountNumber(getInternalAccountNumber())
+                        .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                        .putInTemporaryStorage(
+                                CommerzbankConstants.HEADERS.IDENTIFIER,
+                                getProductId().getIdentifier())
+                        .putInTemporaryStorage(
+                                CommerzbankConstants.HEADERS.PRODUCT_TYPE,
+                                getProductId().getProductType())
+                        .putInTemporaryStorage(
+                                CommerzbankConstants.HEADERS.PRODUCT_BRANCH,
+                                getProductType().getProductBranch());
+
+        if (canMakePayment(accountType)) {
+            builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        }
+
+        return builder.build();
     }
 
     public CreditCardAccount toCreditCardAccount() {
@@ -372,6 +383,7 @@ public class ProductsEntity {
                         se.tink.libraries.strings.StringUtils.hashAsStringMD5(identifier),
                         getTinkBalance(),
                         getTinkCredit())
+                .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .setName(getProductType().getProductName())
                 .setAccountNumber(CreditCardMasker.maskCardNumber(creditCardNumber))
                 .putInTemporaryStorage(
@@ -389,6 +401,14 @@ public class ProductsEntity {
     public boolean isCreditCard() {
         return productType.getDisplayCategoryIndex()
                 == CommerzbankConstants.DISPLAYCATEGORYINDEX.CREDIT;
+    }
+
+    private boolean canMakePayment(AccountTypes type) {
+        List<AccountTypes> paymentAccountTypes =
+                Arrays.asList(
+                        AccountTypes.CHECKING, AccountTypes.SAVINGS, AccountTypes.CREDIT_CARD);
+        return paymentAccountTypes.stream()
+                .anyMatch(paymentAccountType -> paymentAccountType == type);
     }
 
     public Object getConvertedBalance() {
