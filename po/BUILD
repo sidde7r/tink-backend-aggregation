@@ -20,12 +20,18 @@ i18n_java_source(
     lang = "de",
 )
 
+i18n_java_source(
+    name = "i18n_pt",
+    lang = "pt",
+)
+
 java_library(
     name = "i18n",
     srcs = [
         "//po:i18n_de",
         "//po:i18n_fr",
         "//po:i18n_nl",
+        "//po:i18n_pt",
         "//po:i18n_sv",
     ],
     visibility = ["//visibility:public"],
