@@ -668,6 +668,16 @@ data:
             aspspCode: "BST"
         {{- end }}
 
+        {{- if $agentsConfig.ing }}
+        ing:
+          tink:
+            baseUrl: "https://api.ing.com"
+            clientCertificateSerial: "ING_CERTIFICATE_SERIAL_NUMBER_TAG"
+            clientCertificate: "ING_CERTIFICATE_P12_TAG"
+            redirectUrl: "{{ $agentsConfig.ing.redirectUrl }}"
+            certificateId: "{{ $agentsConfig.ing.certificateId }}"
+        {{- end }}
+
         {{- if $agentsConfig.swedbank }}
         swedbank:
           tink:

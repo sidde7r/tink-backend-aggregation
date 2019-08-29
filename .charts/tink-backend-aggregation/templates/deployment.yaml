@@ -554,6 +554,20 @@ spec:
               key: sibs-certificate-serial-number-cgd
               optional: true
         {{- end }}
+        {{- if $agentsConfig.ing }}
+        - name: ING_CERTIFICATE_SERIAL_NUMBER
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: ing-certificate-serial-number
+              optional: true
+        - name: ING_CERTIFICATE_P12
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: ing-certificate-p12
+              optional: true
+        {{- end }}
         {{- if $agentsConfig.cmcic }}
         - name: CIC_CLIENT_ID
           valueFrom:
