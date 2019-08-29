@@ -1790,36 +1790,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_mortbay_jetty_servlet_api",
-    artifact = "org.mortbay.jetty:servlet-api:2.5-20081211",
-    sha1 = "22bff70037e1e6fa7e6413149489552ee2064702",
-)
-
-maven_jar(
-    name = "org_mortbay_jetty_jsp_2_1",
-    artifact = "org.mortbay.jetty:jsp-2.1:6.1.14",
-    sha1 = "3a1df1e8e0fa56e9a940abbd19bc6f397fce16b5",
-)
-
-maven_jar(
-    name = "org_mortbay_jetty_jsp_api_2_1",
-    artifact = "org.mortbay.jetty:jsp-api-2.1:6.1.14",
-    sha1 = "756b3fac155e31bd0e85545dbf953495e0455c73",
-)
-
-maven_jar(
-    name = "org_mortbay_jetty_jetty_util",
-    artifact = "org.mortbay.jetty:jetty-util:6.1.26",
-    sha1 = "e5642fe0399814e1687d55a3862aa5a3417226a9",
-)
-
-maven_jar(
-    name = "org_mortbay_jetty_jetty",
-    artifact = "org.mortbay.jetty:jetty:6.1.26",
-    sha1 = "2f546e289fddd5b1fab1d4199fbb6e9ef43ee4b0",
-)
-
-maven_jar(
     name = "org_eclipse_jdt_core",
     artifact = "org.eclipse.jdt:core:3.1.1",
     sha1 = "88c83ce444cf46d02494da37c9fa1eebc9ce9cea",
