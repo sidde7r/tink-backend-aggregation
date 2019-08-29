@@ -119,6 +119,10 @@ agents:
     tink:
       certificateId: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+  commerzbank:
+    tink:
+      certificateId: Tink
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   swedbank:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback

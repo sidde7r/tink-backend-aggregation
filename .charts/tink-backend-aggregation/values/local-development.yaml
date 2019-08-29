@@ -62,6 +62,10 @@ agents:
     tink:
       certificateId: Tink
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
+  commerzbank:
+    tink:
+      certificateId: Tink
+      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
 
 clients:
   provision-job-testing:
