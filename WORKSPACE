@@ -1736,12 +1736,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_hadoop_hadoop_core",
-    artifact = "org.apache.hadoop:hadoop-core:1.2.1",
-    sha1 = "3e5874122a26a735162a380627210779b41bfd59",
-)
-
-maven_jar(
     name = "hsqldb_hsqldb",
     artifact = "hsqldb:hsqldb:1.8.0.10",
     sha1 = "7e9978fdb754bce5fcd5161133e7734ecb683036",
