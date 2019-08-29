@@ -27,7 +27,7 @@ public class AvanzaAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("se", "se-avanza-bankid")
+                new AgentIntegrationTest.Builder("se", "avanza-bankid")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
