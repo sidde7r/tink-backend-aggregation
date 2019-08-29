@@ -67,7 +67,7 @@ public class AccountEntity {
                 .withBalance(BalanceModule.of(availableBalance.parseToExactCurrencyAmount()))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(iban)
+                                .withUniqueIdentifier(iban.toLowerCase())
                                 .withAccountNumber(formatIban(iban))
                                 .withAccountName(getAccountName(iban))
                                 .addIdentifier(new IbanIdentifier(iban))
