@@ -60,8 +60,7 @@ public class FinecoBankPaymentController extends PaymentController {
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         sessionStorage.put(
-                FinecoBankConstants.StorageKeys.STATE,
-                strongAuthenticationState.getState());
+                FinecoBankConstants.StorageKeys.STATE, strongAuthenticationState.getState());
         return super.create(paymentRequest);
     }
 
