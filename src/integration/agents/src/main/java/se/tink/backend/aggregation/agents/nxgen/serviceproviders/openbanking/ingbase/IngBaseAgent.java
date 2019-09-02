@@ -34,7 +34,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     public IngBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        final String market = request.getProvider().getMarket().toLowerCase();
+        final String market = request.getProvider().getMarket();
         apiClient = new IngBaseApiClient(client, sessionStorage, market);
         clientName = request.getProvider().getPayload();
 
@@ -48,7 +48,6 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         apiClient.setConfiguration(ingBaseConfiguration, configuration.getEidasProxy());
         client.setEidasProxy(
                 configuration.getEidasProxy(), ingBaseConfiguration.getCertificateId());
-        client.setDebugOutput(true);
     }
 
     protected IngBaseConfiguration getClientConfiguration() {
