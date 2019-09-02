@@ -177,8 +177,6 @@ public final class SwedbankApiClient {
     public ConsentResponse getConsent(List<String> list) {
         return createRequestInSession(SwedbankConstants.Urls.CONSENTS)
                 .type(MediaType.APPLICATION_JSON)
-                .header(SwedbankConstants.HeaderKeys.TPP_TRANSACTION_ID, getRequestId())
-                .header(SwedbankConstants.HeaderKeys.TPP_REQUEST_ID, getRequestId())
                 .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .post(ConsentResponse.class, createConsentRequest(list));
     }
@@ -186,8 +184,6 @@ public final class SwedbankApiClient {
     public ConsentResponse createFirstConsent() {
         return createRequestInSession(SwedbankConstants.Urls.CONSENTS)
                 .type(MediaType.APPLICATION_JSON)
-                .header(SwedbankConstants.HeaderKeys.TPP_TRANSACTION_ID, getRequestId())
-                .header(SwedbankConstants.HeaderKeys.TPP_REQUEST_ID, getRequestId())
                 .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .post(ConsentResponse.class, createConsentRequest());
     }

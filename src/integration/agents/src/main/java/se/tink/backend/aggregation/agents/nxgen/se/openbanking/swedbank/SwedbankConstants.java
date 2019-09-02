@@ -90,8 +90,6 @@ public final class SwedbankConstants {
         public static final String DATE = "Date";
         public static final String FROM_DATE = "dateFrom";
         public static final String TO_DATE = "dateTo";
-        public static final String TPP_TRANSACTION_ID = "TPP-Transaction-ID";
-        public static final String TPP_REQUEST_ID = "TPP-Request-ID";
         public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
         public static final String TPP_NOK_REDIRECT_URI = "tpp-nok-redirect-uri";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
