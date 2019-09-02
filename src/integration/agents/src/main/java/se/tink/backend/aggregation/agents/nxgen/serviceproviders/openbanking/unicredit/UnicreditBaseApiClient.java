@@ -213,7 +213,7 @@ public abstract class UnicreditBaseApiClient {
                                                 UnicreditPaymentProduct
                                                         .INSTANT_SEPA_CREDIT_TRANSFERS
                                                         .toString()))
-                        .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                        .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
                         .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                         .header(
                                 HeaderKeys.PSU_ID_TYPE,
@@ -243,7 +243,7 @@ public abstract class UnicreditBaseApiClient {
                                         UnicreditPaymentProduct.INSTANT_SEPA_CREDIT_TRANSFERS
                                                 .toString())
                                 .parameter(PathParameters.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .get(FetchPaymentResponse.class);
     }
