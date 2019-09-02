@@ -3,8 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.RabobankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.SandboxTransactionFetcher;
@@ -12,11 +15,14 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationProgressiveController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -25,13 +31,16 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class RabobankAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+public final class RabobankAgent extends SubsequentGenerationAgent
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                ProgressiveAuthAgent {
 
     private final RabobankApiClient apiClient;
     private final String clientName;
     private final RabobankConfiguration rabobankConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final ProgressiveAuthenticator progressiveAuthenticator;
 
     public RabobankAgent(
             final CredentialsRequest request,
@@ -71,25 +80,32 @@ public final class RabobankAgent extends NextGenerationAgent
                         request.isManual());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-    }
 
-    @Override
-    protected Authenticator constructAuthenticator() {
-        final OAuth2AuthenticationController controller =
-                new OAuth2AuthenticationController(
+        final OAuth2AuthenticationProgressiveController controller =
+                new OAuth2AuthenticationProgressiveController(
                         persistentStorage,
-                        supplementalInformationHelper,
                         new RabobankAuthenticator(
                                 apiClient, persistentStorage, rabobankConfiguration),
                         credentials,
                         strongAuthenticationState);
 
-        return new AutoAuthenticationController(
-                request,
-                context,
-                new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                controller);
+        progressiveAuthenticator =
+                new AutoAuthenticationProgressiveController(
+                        request,
+                        context,
+                        new ThirdPartyAppAuthenticationProgressiveController(controller),
+                        controller);
+    }
+
+    @Override
+    public boolean login() {
+        throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
+    }
+
+    @Override
+    public SteppableAuthenticationResponse login(final SteppableAuthenticationRequest request)
+            throws AuthenticationException, AuthorizationException {
+        return ProgressiveAuthController.of(progressiveAuthenticator, credentials).login(request);
     }
 
     @Override
