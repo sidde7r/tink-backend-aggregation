@@ -35,10 +35,8 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.banks.norwegian.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdResponse;
-import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardInfoResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardOverviewResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardResponse;
@@ -296,35 +294,22 @@ public class NorwegianAgent extends AbstractAgent
      * @throws AccountNotFoundException if the account could not be found
      */
     private Account refreshAccount() throws AccountNotFoundException {
-
-        AccountEntity account = new AccountEntity();
-
         CreditCardResponse creditCardResponse =
                 fetchAccountsRequest(CREDIT_CARD_URL, CreditCardResponse.class);
-
         if (creditCardResponse == null) {
             throw new AccountNotFoundException("No active cards found.");
         }
 
-        // Get balance and credit
-        account.setBalance(creditCardResponse.getBalance());
-        account.setAvailableCredit(creditCardResponse.getAmountAvailable());
-
-        // Get card number
-        final CreditCardOverviewResponse creditCardOverview =
-                createClientRequest(CREDIT_CARD_OVERVIEW_URL).get(CreditCardOverviewResponse.class);
-        if (creditCardOverview.getCreditCardList().size() == 0) {
-            // no cards
-            throw new AccountNotFoundException("No active cards found.");
-        }
-        final CreditCardEntity creditCard = creditCardOverview.getCreditCardList().get(0);
-        account.setAccountNumber(creditCard.getCardNumberMasked());
-
-        if (!account.hasValidBankId()) {
-            throw new AccountNotFoundException("Invalid card number.");
-        }
-
-        return account.toTinkAccount();
+        return createClientRequest(CREDIT_CARD_OVERVIEW_URL).get(CreditCardOverviewResponse.class)
+                .getCreditCardList().stream()
+                .filter(creditCardEntity -> creditCardEntity.hasValidBankId())
+                .findFirst()
+                .map(
+                        creditCardEntity ->
+                                creditCardEntity.toTinkAccount(
+                                        creditCardResponse.getBalance(),
+                                        creditCardResponse.getAmountAvailable()))
+                .orElseThrow(() -> new AccountNotFoundException("Invalid card number."));
     }
 
     private Optional<Account> getCachedAccount() {
@@ -332,7 +317,6 @@ public class NorwegianAgent extends AbstractAgent
             if (cachedAccount == null) {
                 cachedAccount = refreshAccount();
             }
-
             return Optional.of(cachedAccount);
         } catch (AccountNotFoundException e) {
             return Optional.empty();
