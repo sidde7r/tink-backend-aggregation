@@ -29,7 +29,9 @@ public class BpostAgentTest {
                                                 .bpost.BpostAgentTest.Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("bpost")
+                        .setAppId("tink");
     }
 
     @Test

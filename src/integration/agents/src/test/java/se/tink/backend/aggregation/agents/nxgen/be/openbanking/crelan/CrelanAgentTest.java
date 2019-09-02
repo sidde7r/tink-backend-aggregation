@@ -26,7 +26,9 @@ public class CrelanAgentTest {
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("crelan")
+                        .setAppId("tink");
     }
 
     @Test
