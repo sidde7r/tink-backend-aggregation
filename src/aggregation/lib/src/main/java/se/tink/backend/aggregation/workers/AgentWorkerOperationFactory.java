@@ -1007,7 +1007,11 @@ public class AgentWorkerOperationFactory {
                         new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(
                 new MigrateCredentialWorkerCommand(
-                        context.getRequest(), clientInfo, targetVersion));
+                        context.getRequest(),
+                        clientInfo,
+                        targetVersion,
+                        context,
+                        controllerWrapper));
 
         log.debug("Created migration operation chain for credential");
         return new AgentWorkerOperation(

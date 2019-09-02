@@ -3,19 +3,28 @@ package se.tink.backend.aggregation.workers.commands;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.DataVersionMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.DataVersionMigration.MigrationResult;
+import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.MigrationFailedException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 
@@ -24,6 +33,8 @@ public class MigrateCredentialWorkerCommandTest {
     private DataVersionMigration migration_v1_v2;
     private DataVersionMigration migration_v2_v3;
     private ImmutableMap<String, List<DataVersionMigration>> migrations;
+    private AgentWorkerCommandContext context;
+    private ControllerWrapper wrapper;
 
     @Before
     public void setUp() throws Exception {
@@ -35,8 +46,9 @@ public class MigrateCredentialWorkerCommandTest {
                     }
 
                     @Override
-                    protected MigrationResult migrateData(CredentialsRequest request) {
-                        return MigrationResult.MIGRATED;
+                    protected Map<Account, String> migrateData(
+                            CredentialsRequest request, ClientInfo clientInfo) {
+                        return new HashMap<>();
                     }
                 };
 
@@ -48,8 +60,9 @@ public class MigrateCredentialWorkerCommandTest {
                     }
 
                     @Override
-                    protected MigrationResult migrateData(CredentialsRequest request) {
-                        return MigrationResult.MIGRATED;
+                    protected Map<Account, String> migrateData(
+                            CredentialsRequest request, ClientInfo clientInfo) {
+                        return new HashMap<>();
                     }
                 };
 
@@ -57,6 +70,9 @@ public class MigrateCredentialWorkerCommandTest {
                 new ImmutableMap.Builder<String, List<DataVersionMigration>>()
                         .put("avanza-bankid", Lists.newArrayList(migration_v1_v2, migration_v2_v3))
                         .build();
+
+        context = Mockito.mock(AgentWorkerCommandContext.class);
+        wrapper = Mockito.mock(ControllerWrapper.class);
     }
 
     @Test
@@ -71,7 +87,7 @@ public class MigrateCredentialWorkerCommandTest {
         CredentialsRequest request = new MigrateCredentialsRequest(null, provider, credentials);
 
         MigrateCredentialWorkerCommand command =
-                new MigrateCredentialWorkerCommand(request, null, 1);
+                new MigrateCredentialWorkerCommand(request, null, 1, context, wrapper);
 
         command.setMigrations(
                 new ImmutableMap.Builder<String, List<DataVersionMigration>>()
@@ -93,7 +109,7 @@ public class MigrateCredentialWorkerCommandTest {
         CredentialsRequest request = new MigrateCredentialsRequest(null, provider, credentials);
 
         MigrateCredentialWorkerCommand command =
-                new MigrateCredentialWorkerCommand(request, null, 1);
+                new MigrateCredentialWorkerCommand(request, null, 1, context, wrapper);
 
         command.setMigrations(
                 new ImmutableMap.Builder<String, List<DataVersionMigration>>()
@@ -103,7 +119,7 @@ public class MigrateCredentialWorkerCommandTest {
         assertTrue(command.successfulMigration());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldInvokeMigrationFromV1toV2() {
         Credentials credentials = new Credentials();
         credentials.setDataVersion(1);
@@ -114,14 +130,14 @@ public class MigrateCredentialWorkerCommandTest {
         CredentialsRequest request = new MigrateCredentialsRequest(null, provider, credentials);
 
         MigrateCredentialWorkerCommand command =
-                new MigrateCredentialWorkerCommand(request, null, 2);
+                new MigrateCredentialWorkerCommand(request, null, 2, context, wrapper);
 
         command.setMigrations(
                 new ImmutableMap.Builder<String, List<DataVersionMigration>>()
                         .put("avanza-bankid", Lists.newArrayList(throwingMigration(1)))
                         .build());
 
-        assertTrue(command.successfulMigration());
+        assertFalse(command.successfulMigration());
     }
 
     @Test
@@ -135,7 +151,7 @@ public class MigrateCredentialWorkerCommandTest {
         CredentialsRequest request = new MigrateCredentialsRequest(null, provider, credentials);
 
         MigrateCredentialWorkerCommand command =
-                new MigrateCredentialWorkerCommand(request, null, 2);
+                new MigrateCredentialWorkerCommand(request, null, 2, context, wrapper);
 
         command.setMigrations(migrations);
 
@@ -154,7 +170,7 @@ public class MigrateCredentialWorkerCommandTest {
         CredentialsRequest request = new MigrateCredentialsRequest(null, provider, credentials);
 
         MigrateCredentialWorkerCommand command =
-                new MigrateCredentialWorkerCommand(request, null, 3);
+                new MigrateCredentialWorkerCommand(request, null, 3, context, wrapper);
 
         command.setMigrations(migrations);
 
@@ -173,7 +189,7 @@ public class MigrateCredentialWorkerCommandTest {
         CredentialsRequest request = new MigrateCredentialsRequest(null, provider, credentials);
 
         MigrateCredentialWorkerCommand command =
-                new MigrateCredentialWorkerCommand(request, null, 3);
+                new MigrateCredentialWorkerCommand(request, null, 3, context, wrapper);
 
         command.setMigrations(migrations);
 
@@ -219,12 +235,40 @@ public class MigrateCredentialWorkerCommandTest {
         request.setAccounts(Lists.newArrayList(acc1, acc2));
 
         MigrateCredentialWorkerCommand command =
-                new MigrateCredentialWorkerCommand(request, null, 3);
+                new MigrateCredentialWorkerCommand(request, null, 3, context, wrapper);
 
         command.setMigrations(migrations);
 
         assertEquals(MigrationResult.ABORT, command.doVersionMigrations(migration_v2_v3));
         assertEquals(2, credentials.getDataVersion());
+    }
+
+    @Test
+    public void e2e() throws Exception {
+        Account acc1 = new Account();
+        Account acc2 = new Account();
+        acc1.setBankId("1-2-3");
+        acc2.setBankId("2-3-4");
+        Credentials credentials = new Credentials();
+        credentials.setDataVersion(1);
+        credentials.setProviderName("avanza-bankid");
+        final Provider provider = new Provider();
+        provider.setName("avanza-bankid");
+
+        CredentialsRequest request = new MigrateCredentialsRequest(null, provider, credentials);
+        request.setAccounts(Lists.newArrayList(acc1, acc2));
+
+        MigrateCredentialWorkerCommand command =
+                new MigrateCredentialWorkerCommand(request, null, 2, context, wrapper);
+
+        final AgentWorkerCommandResult execute = command.execute();
+        assertEquals(AgentWorkerCommandResult.CONTINUE, execute);
+        assertEquals(2, credentials.getDataVersion());
+
+        command.postProcess();
+        verify(context, times(1)).updateCredentialsExcludingSensitiveInformation(credentials, true);
+        verify(wrapper, times(1)).updateAccountMetaData(acc1.getId(), "123");
+        verify(wrapper, times(1)).updateAccountMetaData(acc2.getId(), "234");
     }
 
     private static DataVersionMigration throwingMigration(int from) {
@@ -235,8 +279,10 @@ public class MigrateCredentialWorkerCommandTest {
             }
 
             @Override
-            protected MigrationResult migrateData(CredentialsRequest request) {
-                throw new IllegalStateException();
+            protected Map<Account, String> migrateData(
+                    CredentialsRequest request, ClientInfo clientInfo)
+                    throws MigrationFailedException {
+                throw new MigrationFailedException();
             }
         };
     }
