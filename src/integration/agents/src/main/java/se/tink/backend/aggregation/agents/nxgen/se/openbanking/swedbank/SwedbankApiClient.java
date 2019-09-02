@@ -253,7 +253,6 @@ public final class SwedbankApiClient {
                 .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, configuration.getRedirectUrl())
                 .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
-                .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
                 .post(ConsentResponse.class);
     }
 
