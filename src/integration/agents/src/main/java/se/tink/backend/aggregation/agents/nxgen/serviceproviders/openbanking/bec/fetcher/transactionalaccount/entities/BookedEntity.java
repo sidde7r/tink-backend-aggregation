@@ -27,5 +27,7 @@ public class BookedEntity {
                 .build();
     }
 
-    public Amount getAmount() { return transactionAmount.toAmount(); }
+    public Amount getAmount() {
+        return transactionAmount.toAmount();
+    }
 }
