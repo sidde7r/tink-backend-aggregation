@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -17,7 +18,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveT
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
-public class AutoAuthenticationProgressiveController implements ProgressiveAuthenticator {
+public class AutoAuthenticationProgressiveController
+        implements ProgressiveAuthenticator, ManualOrAutoAuth {
     private final CredentialsRequest request;
     private final SystemUpdater systemUpdater;
     private final ProgressiveTypedAuthenticator manualAuthenticator;
@@ -38,13 +40,7 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
     public Iterable<? extends AuthenticationStep> authenticationSteps(final Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         try {
-            if (!forceAutoAuthentication()
-                            && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
-                                    || (request.isUpdate()
-                                            && !Objects.equals(
-                                                    request.getType(),
-                                                    CredentialsRequestType.TRANSFER)))
-                    || request.getCredentials().forceManualAuthentication()) {
+            if (shouldDoManualAuthentication(credentials)) {
                 return manualProgressive(credentials);
             } else {
                 Preconditions.checkState(
@@ -55,6 +51,21 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
             // TODO auth: move it up layer
             systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
+    }
+
+    private boolean shouldDoManualAuthentication(final Credentials credentials) {
+        return !forceAutoAuthentication()
+                        && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
+                                || (request.isUpdate()
+                                        && !Objects.equals(
+                                                request.getType(),
+                                                CredentialsRequestType.TRANSFER)))
+                || credentials.forceManualAuthentication();
+    }
+
+    @Override
+    public boolean isManualAuthentication(final Credentials credentials) {
+        return shouldDoManualAuthentication(credentials);
     }
 
     // TODO: Remove this when there is support for new MultiFactor credential types.
