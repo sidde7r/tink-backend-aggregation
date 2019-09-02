@@ -43,7 +43,7 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     private final int port;
 
     private final Random random;
-    private static final float TRACKING_FRACTION = 0.40f; // 20% of requests
+    private static final float TRACKING_FRACTION = 0.80f; // 80% of requests
 
     @Inject
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
