@@ -27,7 +27,7 @@ public class TransactionEntity {
     private Date bookingDate;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date valueDate;
+    protected Date valueDate;
 
     @JsonProperty private AmountEntity transactionAmount;
     @JsonProperty private List<ExchangeRateEntity> currencyExchange;
@@ -84,7 +84,7 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
-    private Date getDate() {
+    protected Date getDate() {
         if (bookingDate != null) {
             return bookingDate;
         } else if (valueDate != null) {
