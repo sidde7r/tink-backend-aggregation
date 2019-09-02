@@ -53,26 +53,10 @@ public final class AgentConfigurationController {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
 
-        // TODO: Remove this if and leave only the precondition once we know for sure that we should
-        //  get appId in all requests
-        if (Strings.emptyToNull(appId) == null) {
-            switch (clusterId) {
-                case "leeds-production":
-                    appId = "4fbf90a89d314e1c80128c42f10da3db";
-                    break;
-
-                case "oxford-production":
-                    appId = "e643eb7981d24acfb47834ef338a4e2a";
-                    break;
-
-                default:
-                    log.error(
-                            "appId empty or null and no fallback for submitted clusterId : "
-                                    + clusterId);
-            }
-        }
-
-        Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
+        // TODO: Enable precondiction and remove logging when verified by Access team that we don't
+        //  get empty or null appIds.
+        // Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
+        log.warn("appId cannot be empty/null for clusterId : " + clusterId);
 
         this.tppSecretsServiceEnabled = tppSecretsServiceConfiguration.isEnabled();
         if (tppSecretsServiceEnabled) {
@@ -108,9 +92,18 @@ public final class AgentConfigurationController {
     public boolean init() {
         if (tppSecretsServiceEnabled) {
             try {
-                allSecrets =
+                Optional<Map<String, String>> allSecretsOpt =
                         tppSecretsServiceClient.getAllSecrets(
                                 financialInstitutionId, appId, clusterId);
+
+                // TODO: Remove if once Access team confirms there are no null appIds around.
+                if (!allSecretsOpt.isPresent()) {
+                    log.warn(
+                            "Could not fetch secrets due to null or empty appId/financialInstitutionId");
+                    return true;
+                }
+
+                allSecrets = allSecretsOpt.get();
             } catch (RuntimeException e) {
                 if (e instanceof StatusRuntimeException) {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) e;
