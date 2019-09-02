@@ -249,11 +249,7 @@ public final class BankdataApiClient {
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
-                /**
-                 * It should be BOTH (not BOOKED) but currently the bank only supports BOOKED. This
-                 * makes us unable to fetch pending transactions.
-                 */
-                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(TransactionResponse.class);
     }
 
