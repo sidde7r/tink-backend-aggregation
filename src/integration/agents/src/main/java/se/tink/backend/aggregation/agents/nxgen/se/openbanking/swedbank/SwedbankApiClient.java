@@ -190,16 +190,14 @@ public final class SwedbankApiClient {
                 .post(ConsentResponse.class, createConsentRequest());
     }
 
-    public OAuth2Token getToken(String code) {
+    public OAuth2Token exchangeCodeForToken(String code) {
 
         TokenRequest request =
                 new TokenRequest(
                         getConfiguration().getClientId(),
                         getConfiguration().getClientSecret(),
                         getConfiguration().getRedirectUrl(),
-                        code,
-                        SwedbankConstants.QueryValues.GRANT_TYPE,
-                        SwedbankConstants.QueryValues.SCOPE);
+                        code);
 
         return createRequest(SwedbankConstants.Urls.TOKEN)
                 .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
