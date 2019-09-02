@@ -9,9 +9,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 final class PostRedirectStep implements AuthenticationStep {
 
-    private final OAuth2AuthenticationProgressiveController authenticator;
+    private final ThirdPartyAppStrongAuthenticator authenticator;
 
-    PostRedirectStep(final OAuth2AuthenticationProgressiveController authenticator) {
+    PostRedirectStep(final ThirdPartyAppStrongAuthenticator authenticator) {
         this.authenticator = authenticator;
     }
 

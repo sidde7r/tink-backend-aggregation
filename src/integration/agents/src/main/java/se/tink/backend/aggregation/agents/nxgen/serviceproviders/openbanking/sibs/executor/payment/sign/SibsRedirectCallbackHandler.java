@@ -1,28 +1,36 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SibsRedirectCallbackHandler {
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalRequester supplementalRequester;
     private final long waitFor;
     private final TimeUnit unit;
 
     /**
-     * @param supplementalInformationHelper
+     * @param supplementalRequester
      * @param waitFor total time to wait for a callback
      * @param unit total time to wait for a callback
      */
     public SibsRedirectCallbackHandler(
-            SupplementalInformationHelper supplementalInformationHelper,
+            SupplementalRequester supplementalRequester,
             long waitFor,
             TimeUnit unit) {
-        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.supplementalRequester = supplementalRequester;
         this.waitFor = waitFor;
         this.unit = unit;
     }
@@ -62,10 +70,21 @@ public class SibsRedirectCallbackHandler {
      */
     public Optional<Map<String, String>> handleRedirect(URL redirectUrl, String scaState) {
         final ThirdPartyAppAuthenticationPayload payload = getRedirectPayload(redirectUrl);
-        supplementalInformationHelper.openThirdPartyApp(payload);
-
+        AuthenticationResponse.openThirdPartyApp(payload);
         final String supplementalInformationKey = OAuthUtils.formatSupplementalKey(scaState);
-        return supplementalInformationHelper.waitForSupplementalInformation(
-                supplementalInformationKey, waitFor, unit);
+        SupplementalWaitRequest waitRequest =
+            new SupplementalWaitRequest(
+                supplementalInformationKey,
+                waitFor,
+                unit);
+        AuthenticationResponse.requestWaitingForSupplementalInformation(waitRequest);
+        return supplementalRequester
+            .waitForSupplementalInformation(supplementalInformationKey, waitFor, unit)
+            .map(SibsRedirectCallbackHandler::stringToMap);
+    }
+
+    private static Map<String, String> stringToMap(final String string) {
+        return SerializationUtils.deserializeFromString(
+            string, new TypeReference<HashMap<String, String>>() {});
     }
 }

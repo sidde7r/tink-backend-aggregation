@@ -10,10 +10,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public class ThirdPartyAppAuthenticationProgressiveController
         implements ProgressiveTypedAuthenticator {
 
-    private final OAuth2AuthenticationProgressiveController authenticator;
+    private final ThirdPartyAppStrongAuthenticator authenticator;
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            OAuth2AuthenticationProgressiveController authenticator) {
+                ThirdPartyAppStrongAuthenticator authenticator) {
         this.authenticator = authenticator;
     }
 
