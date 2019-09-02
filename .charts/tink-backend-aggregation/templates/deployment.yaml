@@ -555,17 +555,29 @@ spec:
               optional: true
         {{- end }}
         {{- if $agentsConfig.ing }}
-        - name: ING_CERTIFICATE_SERIAL_NUMBER
+        - name: ING_CERTIFICATE_SERIAL_NUMBER_TINK
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: ing-certificate-serial-number
+              key: ing-certificate-serial-number-tink
               optional: true
-        - name: ING_CERTIFICATE_P12
+        - name: ING_CERTIFICATE_P12_TINK
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: ing-certificate-p12
+              key: ing-certificate-p12-tink
+              optional: true
+        - name: ING_CERTIFICATE_SERIAL_NUMBER_ABN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: ing-certificate-serial-number-abn
+              optional: true
+        - name: ING_CERTIFICATE_P12_ABN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: ing-certificate-p12-abn
               optional: true
         {{- end }}
         {{- if $agentsConfig.cmcic }}

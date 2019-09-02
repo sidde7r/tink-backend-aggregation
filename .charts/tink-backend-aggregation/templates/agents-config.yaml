@@ -672,10 +672,17 @@ data:
         ing:
           tink:
             baseUrl: "https://api.ing.com"
-            clientCertificateSerial: "ING_CERTIFICATE_SERIAL_NUMBER_TAG"
-            clientCertificate: "ING_CERTIFICATE_P12_TAG"
+            clientCertificateSerial: "ING_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            clientCertificate: "ING_CERTIFICATE_P12_TINK_TAG"
             redirectUrl: "{{ $agentsConfig.ing.tink.redirectUrl }}"
             certificateId: "{{ $agentsConfig.ing.tink.certificateId }}"
+        ing:
+          abn:
+            baseUrl: "https://api.ing.com"
+            clientCertificateSerial: "ING_CERTIFICATE_SERIAL_NUMBER_ABN_TAG"
+            clientCertificate: "ING_CERTIFICATE_P12_ABN_TAG"
+            redirectUrl: "{{ $agentsConfig.ing.abn.redirectUrl }}"
+            certificateId: "{{ $agentsConfig.ing.abn.certificateId }}"
         {{- end }}
 
         {{- if $agentsConfig.swedbank }}
