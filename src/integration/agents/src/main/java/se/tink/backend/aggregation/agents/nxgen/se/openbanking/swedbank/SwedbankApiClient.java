@@ -142,10 +142,10 @@ public final class SwedbankApiClient {
                                                 getConfiguration().getRedirectUrl())
                                         .queryParam(
                                                 SwedbankConstants.QueryKeys.RESPONSE_TYPE,
-                                                SwedbankConstants.QueryValues.RESPONSE_TYPE_TOKEN)
+                                                SwedbankConstants.QueryValues.RESPONSE_TYPE_CODE)
                                         .queryParam(
                                                 SwedbankConstants.QueryKeys.SCOPE,
-                                                SwedbankConstants.QueryValues.SCOPE)
+                                                SwedbankConstants.QueryValues.SCOPE_PSD2)
                                         .getUrl())
                         .get(HttpResponse.class)
                         .getHeaders()
@@ -225,7 +225,7 @@ public final class SwedbankApiClient {
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .queryParam(
                         SwedbankConstants.QueryKeys.BOOKING_STATUS,
-                        SwedbankConstants.QueryValues.BOOKING_STATUS)
+                        SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
                 .get(FetchTransactionsResponse.class);
     }
 
@@ -242,7 +242,7 @@ public final class SwedbankApiClient {
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .queryParam(
                         SwedbankConstants.QueryKeys.BOOKING_STATUS,
-                        SwedbankConstants.QueryValues.BOOKING_STATUS)
+                        SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
                 .post(Response.class);
     }
 
