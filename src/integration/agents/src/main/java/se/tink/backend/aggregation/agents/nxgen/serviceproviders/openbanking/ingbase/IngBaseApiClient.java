@@ -172,7 +172,7 @@ public class IngBaseApiClient {
                 new URL(Urls.OAUTH)
                         .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                         .queryParam(QueryKeys.SCOPE, QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_VIEW)
-                        // .queryParam(QueryKeys.COUNTRY_CODE, market)
+                        .queryParam(QueryKeys.COUNTRY_CODE, market)
                         .toString();
 
         return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
