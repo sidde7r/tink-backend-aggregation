@@ -12,6 +12,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Urls;
@@ -25,6 +27,10 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetche
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.cards.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -195,5 +201,45 @@ public final class FinecoBankApiClient {
                                 new TypeReference<List<BalancesItem>>() {})
                         .orElse(Collections.emptyList());
         return balancesItems.isEmpty();
+    }
+
+    public CreatePaymentResponse createPayment(
+            String paymentProduct, CreatePaymentRequest requestBody) {
+        final String state = getStateFromStorage();
+        final URL redirectUrl =
+                new URL(getConfiguration().getRedirectUrl()).queryParam(QueryKeys.STATE, state);
+
+        return client.request(
+                        Urls.PAYMENT_INITIATION.parameter(
+                                ParameterKeys.PAYMENT_PRODUCT, paymentProduct))
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID_PAYMENT_INITIATION)
+                .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl.toString())
+                .post(CreatePaymentResponse.class, requestBody);
+    }
+
+    public GetPaymentResponse getPayment(String paymentProduct, String paymentId) {
+        return client.request(
+                        Urls.GET_PAYMENT
+                                .parameter(ParameterKeys.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(ParameterKeys.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID_GET_PAYMENT)
+                .get(GetPaymentResponse.class);
+    }
+
+    public GetPaymentStatusResponse getPaymentStatus(String paymentProduct, String paymentId) {
+        return client.request(
+                        Urls.GET_PAYMENT_STATUS
+                                .parameter(ParameterKeys.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(ParameterKeys.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID_GET_PAYMENT_STATUS)
+                .get(GetPaymentStatusResponse.class);
+    }
+
+    public String getStateFromStorage() {
+        return persistentStorage
+                .get(StorageKeys.STATE, String.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.STATE_MISSING_ERROR));
     }
 }
