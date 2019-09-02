@@ -169,17 +169,18 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         if (Objects.isNull(dateString)) {
             return Optional.empty();
         }
-        try{
-            return Optional.of(OffsetDateTime.parse(dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        }catch (DateTimeParseException e){
+        try {
+            return Optional.of(
+                    OffsetDateTime.parse(dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+        } catch (DateTimeParseException e) {
             /*
             This implies the format saved in persistent storage is ISO_LOCAL_DATE_TIME so this
             needs to be converted to ISO_OFFSET_DATE_TIME.
              */
-            LocalDateTime timeInStorage = LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            LocalDateTime timeInStorage =
+                    LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             return Optional.of(OffsetDateTime.of(timeInStorage, ZoneOffset.UTC));
         }
-
     }
 
     private OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
