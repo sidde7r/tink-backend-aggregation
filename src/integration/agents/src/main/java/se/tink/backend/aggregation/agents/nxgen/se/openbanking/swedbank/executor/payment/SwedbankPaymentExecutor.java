@@ -83,7 +83,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
 
-        String state = strongAuthenticationState.getSupplementalKey();
+        String state = strongAuthenticationState.getState();
 
         PaymentAuthorisationResponse paymentAuthorisationResponse =
                 apiClient.startPaymentAuthorisation(payment.getUniqueId(), state);
