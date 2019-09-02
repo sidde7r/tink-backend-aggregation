@@ -22,6 +22,9 @@ public interface SystemUpdater {
     void updateCredentialsExcludingSensitiveInformation(
             Credentials credentials, boolean doStatusUpdate);
 
+    void updateCredentialsExcludingSensitiveInformation(
+            Credentials credentials, boolean doStatusUpdate, boolean isMigrationUpdate);
+
     void updateFraudDetailsContent(List<FraudDetailsContent> detailsContent);
 
     List<Account> getUpdatedAccounts();

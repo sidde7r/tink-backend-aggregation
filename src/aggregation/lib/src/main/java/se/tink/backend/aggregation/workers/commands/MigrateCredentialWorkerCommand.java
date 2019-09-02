@@ -149,7 +149,8 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
     @Override
     public void postProcess() throws Exception {
         if (migrationResult != null) {
-            context.updateCredentialsExcludingSensitiveInformation(request.getCredentials(), true);
+            context.updateCredentialsExcludingSensitiveInformation(
+                    request.getCredentials(), true, true);
 
             HashMap.ofAll(migrationResult)
                     .mapKeys(Account::getId)

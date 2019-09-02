@@ -10,6 +10,7 @@ public class UpdateCredentialsStatusRequest {
     private String userDeviceId;
     private String userId;
     private boolean isManual;
+    private boolean isMigrationUpdate;
 
     public boolean isManual() {
         return isManual;
@@ -17,6 +18,14 @@ public class UpdateCredentialsStatusRequest {
 
     public void setManual(boolean manual) {
         isManual = manual;
+    }
+
+    public boolean isMigrationUpdate() {
+        return isMigrationUpdate;
+    }
+
+    public void setMigrationUpdate(boolean migrationUpdate) {
+        isMigrationUpdate = migrationUpdate;
     }
 
     public Credentials getCredentials() {

@@ -266,7 +266,8 @@ public class MigrateCredentialWorkerCommandTest {
         assertEquals(2, credentials.getDataVersion());
 
         command.postProcess();
-        verify(context, times(1)).updateCredentialsExcludingSensitiveInformation(credentials, true);
+        verify(context, times(1))
+                .updateCredentialsExcludingSensitiveInformation(credentials, true, true);
         verify(wrapper, times(1)).updateAccountMetaData(acc1.getId(), "123");
         verify(wrapper, times(1)).updateAccountMetaData(acc2.getId(), "234");
     }
