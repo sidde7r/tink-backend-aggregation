@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.BICProduction;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.BICSandbox;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderKeys;
@@ -75,7 +74,9 @@ public final class SwedbankApiClient {
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                 .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
-                .accept(MediaType.APPLICATION_JSON);
+                .accept(MediaType.APPLICATION_JSON)
+                .queryParam(
+                        SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -94,9 +95,6 @@ public final class SwedbankApiClient {
             accounts =
                     createRequestInSessionWithConsent(SwedbankConstants.Urls.ACCOUNTS)
                             .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
-                            .queryParam(
-                                    SwedbankConstants.QueryKeys.BIC,
-                                    SwedbankConstants.BICProduction.SWEDEN)
                             .get(FetchAccountResponse.class);
         }
         return accounts;
@@ -105,7 +103,6 @@ public final class SwedbankApiClient {
     public boolean checkIfConsentIsApproved(String consentId) {
         return createRequestInSession(
                         Urls.CONSENT_STATUS.parameter(UrlParameters.CONSENT_ID, consentId))
-                .queryParam(QueryKeys.BIC, BICProduction.SWEDEN)
                 .get(ConsentResponse.class)
                 .getConsentStatus()
                 .equalsIgnoreCase(SwedbankConstants.ConsentStatus.VALID);
@@ -179,14 +176,12 @@ public final class SwedbankApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, configuration.getRedirectUrl())
-                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .post(ConsentResponse.class, createConsentRequest(list));
     }
 
     public ConsentResponse createFirstConsent() {
         return createRequestInSession(SwedbankConstants.Urls.CONSENTS)
                 .type(MediaType.APPLICATION_JSON)
-                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .post(ConsentResponse.class, createConsentRequest());
     }
 
@@ -200,7 +195,6 @@ public final class SwedbankApiClient {
                         code);
 
         return createRequest(SwedbankConstants.Urls.TOKEN)
-                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, request.toData())
                 .toTinkToken();
@@ -209,14 +203,12 @@ public final class SwedbankApiClient {
     public AccountBalanceResponse getAccountBalance(String accountId) {
         return createRequestInSessionWithConsent(
                         Urls.ACCOUNT_BALANCES.parameter(UrlParameters.ACCOUNT_ID, accountId))
-                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .get(AccountBalanceResponse.class);
     }
 
     public FetchTransactionsResponse getTransactions(String accountId, Date fromDate, Date toDate) {
         return createRequestInSessionWithConsent(
                         Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParameters.ACCOUNT_ID, accountId))
-                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .queryParam(
                         SwedbankConstants.HeaderKeys.FROM_DATE,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
@@ -233,7 +225,6 @@ public final class SwedbankApiClient {
 
         return createRequestInSessionWithConsent(
                         Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParameters.ACCOUNT_ID, accountId))
-                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .queryParam(
                         SwedbankConstants.HeaderKeys.FROM_DATE,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
@@ -250,13 +241,11 @@ public final class SwedbankApiClient {
         return createRequestInSessionWithConsent(new URL(Urls.BASE.concat(endpoint)))
                 .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, configuration.getRedirectUrl())
-                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .post(ConsentResponse.class);
     }
 
     public boolean checkStatus(String statusEndpoint) {
         return createRequestInSessionWithConsent(new URL(Urls.BASE.concat(statusEndpoint)))
-                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .get(ConsentResponse.class)
                 .getStatementStatus()
                 .equalsIgnoreCase(SwedbankConstants.ConsentStatus.SIGNED);
@@ -272,7 +261,6 @@ public final class SwedbankApiClient {
                         getConfiguration().getRedirectUrl());
 
         return createRequest(SwedbankConstants.Urls.TOKEN)
-                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, request.toData())
                 .toTinkToken();
