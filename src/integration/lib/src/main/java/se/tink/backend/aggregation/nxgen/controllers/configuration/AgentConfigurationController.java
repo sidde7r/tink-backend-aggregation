@@ -52,8 +52,11 @@ public final class AgentConfigurationController {
                 "financialInstitutionId cannot be empty/null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
-        // TODO: Enable preconditons once we get word from aggregation that all users have an appId.
+
+        // TODO: Enable precondiction and remove logging when verified by Access team that we don't
+        //  get empty or null appIds.
         // Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
+        log.warn("appId cannot be empty/null for clusterId : " + clusterId);
 
         this.tppSecretsServiceEnabled = tppSecretsServiceConfiguration.isEnabled();
         if (tppSecretsServiceEnabled) {
@@ -89,9 +92,18 @@ public final class AgentConfigurationController {
     public boolean init() {
         if (tppSecretsServiceEnabled) {
             try {
-                allSecrets =
+                Optional<Map<String, String>> allSecretsOpt =
                         tppSecretsServiceClient.getAllSecrets(
                                 financialInstitutionId, appId, clusterId);
+
+                // TODO: Remove if once Access team confirms there are no null appIds around.
+                if (!allSecretsOpt.isPresent()) {
+                    log.warn(
+                            "Could not fetch secrets due to null or empty appId/financialInstitutionId");
+                    return true;
+                }
+
+                allSecrets = allSecretsOpt.get();
             } catch (RuntimeException e) {
                 if (e instanceof StatusRuntimeException) {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) e;

@@ -1,6 +1,7 @@
 package se.tink.backend.integration.tpp_secrets_service.client;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.io.Files;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.GrpcSslContexts;
@@ -22,6 +23,7 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.net.ssl.KeyManagerFactory;
@@ -70,8 +72,15 @@ public class TppSecretsServiceClient {
         internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
     }
 
-    public Map<String, String> getAllSecrets(
+    public Optional<Map<String, String>> getAllSecrets(
             String financialInstitutionId, String appId, String clusterId) {
+
+        // TODO: Remove this once Access team confirms there are no null appIds
+        if (Strings.emptyToNull(appId) == null
+                || Strings.emptyToNull(financialInstitutionId) == null) {
+            return Optional.empty();
+        }
+
         GetSecretsRequest getSecretsRequest =
                 buildRequest(financialInstitutionId, appId, clusterId);
 
@@ -82,8 +91,9 @@ public class TppSecretsServiceClient {
         allSecretsList.addAll(allSecretsResponse.getEncryptedSecretsList());
         allSecretsList.addAll(allSecretsResponse.getSecretsList());
 
-        return allSecretsList.stream()
-                .collect(Collectors.toMap(TppSecret::getKey, TppSecret::getValue));
+        return Optional.of(
+                allSecretsList.stream()
+                        .collect(Collectors.toMap(TppSecret::getKey, TppSecret::getValue)));
     }
 
     public Map<String, String> getSecrets(
