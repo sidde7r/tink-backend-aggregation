@@ -19,5 +19,4 @@ public class IspPrivateBankingAgent extends IspAgent
     protected String getIntegrationName() {
         return IspPrivateBankingConstants.INTEGRATION_NAME;
     }
-
 }

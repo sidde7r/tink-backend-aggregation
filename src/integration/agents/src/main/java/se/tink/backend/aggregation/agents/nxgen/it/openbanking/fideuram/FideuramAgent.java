@@ -19,5 +19,4 @@ public class FideuramAgent extends IspAgent
     protected String getIntegrationName() {
         return FideuramConstants.INTEGRATION_NAME;
     }
-
 }
