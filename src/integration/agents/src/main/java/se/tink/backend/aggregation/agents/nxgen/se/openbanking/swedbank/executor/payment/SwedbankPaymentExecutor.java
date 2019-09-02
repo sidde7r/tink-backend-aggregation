@@ -30,7 +30,7 @@ import se.tink.libraries.payment.rpc.Payment;
 public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private final SwedbankApiClient apiClient;
     private final SwedbankPaymentAuthenticator paymentAuthenticator;
-    private final List<PaymentResponse> createdPaymentsList;
+    private final List<PaymentResponse> createdPaymentsList = new ArrayList<>();
     private final StrongAuthenticationState strongAuthenticationState;
 
     public SwedbankPaymentExecutor(
@@ -39,7 +39,6 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.paymentAuthenticator = paymentAuthenticator;
-        this.createdPaymentsList = new ArrayList<>();
         this.strongAuthenticationState = strongAuthenticationState;
     }
 
