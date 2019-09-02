@@ -81,6 +81,7 @@ public final class SwedbankConstants {
         public static final String SCOPE_PSD2 = "PSD2";
         public static final String RESPONSE_TYPE_CODE = "code";
         public static final String GRANT_TYPE_CODE = "authorization_code";
+        public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
         public static final String BOOKING_STATUS_BOTH = "both";
     }
 

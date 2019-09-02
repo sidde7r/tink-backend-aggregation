@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.Swedbank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entity.consent.ConsentAllAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.RefreshRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.configuration.SwedbankConfiguration;
@@ -263,15 +263,18 @@ public final class SwedbankApiClient {
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        RefreshRequest refreshRequest =
-                new RefreshRequest(
+
+        RefreshTokenRequest request =
+                new RefreshTokenRequest(
                         refreshToken,
                         getConfiguration().getClientId(),
                         getConfiguration().getClientSecret(),
                         getConfiguration().getRedirectUrl());
 
         return createRequest(SwedbankConstants.Urls.TOKEN)
-                .post(TokenResponse.class, refreshRequest.toData())
+                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .post(TokenResponse.class, request.toData())
                 .toTinkToken();
     }
 
