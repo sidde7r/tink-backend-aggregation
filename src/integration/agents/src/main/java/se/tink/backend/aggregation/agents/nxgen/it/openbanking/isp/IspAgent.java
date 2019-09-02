@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.isp;
 
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.isp.fetcher.transactionalaccount.IspTransactionalAccountFetcher;
@@ -24,26 +22,6 @@ public class IspAgent extends CbiGlobeAgent
     @Override
     protected String getIntegrationName() {
         return IspConstants.INTEGRATION_NAME;
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return transactionalAccountRefreshController.fetchCheckingAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     @Override
