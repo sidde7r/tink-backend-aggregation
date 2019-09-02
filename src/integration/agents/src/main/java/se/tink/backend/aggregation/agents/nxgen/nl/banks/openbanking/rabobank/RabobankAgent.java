@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -36,7 +38,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class RabobankAgent extends SubsequentGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                ProgressiveAuthAgent {
+                ProgressiveAuthAgent,
+                ManualOrAutoAuth {
 
     private static final Logger logger = LoggerFactory.getLogger(RabobankAgent.class);
 
@@ -44,6 +47,7 @@ public final class RabobankAgent extends SubsequentGenerationAgent
     private final String clientName;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final ProgressiveAuthenticator progressiveAuthenticator;
+    private final ManualOrAutoAuth manualOrAutoAuthAuthenticator;
 
     public RabobankAgent(
             final CredentialsRequest request,
@@ -95,12 +99,15 @@ public final class RabobankAgent extends SubsequentGenerationAgent
                         credentials,
                         strongAuthenticationState);
 
-        progressiveAuthenticator =
+        final AutoAuthenticationProgressiveController autoAuthenticationController =
                 new AutoAuthenticationProgressiveController(
                         request,
                         context,
                         new ThirdPartyAppAuthenticationProgressiveController(controller),
                         controller);
+
+        progressiveAuthenticator = autoAuthenticationController;
+        manualOrAutoAuthAuthenticator = autoAuthenticationController;
     }
 
     @Override
@@ -159,5 +166,10 @@ public final class RabobankAgent extends SubsequentGenerationAgent
 
     private boolean isSandbox() {
         return clientName.toLowerCase().contains("sandbox");
+    }
+
+    @Override
+    public boolean isManualAuthentication(final Credentials credentials) {
+        return manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
     }
 }
