@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.BICSandbox;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.Urls;
@@ -263,15 +261,9 @@ public final class SwedbankApiClient {
     }
 
     private RequestBuilder getPaymentRequestBuilder(URL url) {
-        return createRequest(url)
-                .addBearerToken(getTokenFromSession())
-                .queryParam(QueryKeys.BIC, BICSandbox.SWEDEN)
-                .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
-                .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
+        return createRequestInSession(url)
                 .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, configuration.getRedirectUrl())
-                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT);
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, configuration.getRedirectUrl());
     }
 
     public CreatePaymentResponse createPayment(
