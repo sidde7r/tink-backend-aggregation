@@ -44,14 +44,7 @@ public class BunqAgent extends BunqBaseAgent {
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         bunqConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                BunqConstants.Market.INTEGRATION_NAME,
-                                clientName,
-                                BunqConfiguration.class)
-                        .orElseThrow(
-                                () -> new IllegalStateException("Bunq configuration missing."));
+                getAgentConfigurationController().getAgentConfiguration(BunqConfiguration.class);
     }
 
     @Override

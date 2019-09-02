@@ -49,4 +49,9 @@ public final class BunqConstants {
     public static final class Payment {
         public static final int MAX_POLL_ATTEMPTS = 60;
     }
+
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+    }
 }
