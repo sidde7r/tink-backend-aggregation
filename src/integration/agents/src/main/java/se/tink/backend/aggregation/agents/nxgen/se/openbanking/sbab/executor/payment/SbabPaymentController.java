@@ -33,7 +33,7 @@ public class SbabPaymentController extends PaymentController {
         this.sessionStorage = sessionStorage;
     }
 
-    public void collect(URL url, String state) {
+    private void collect(URL url, String state) {
         this.supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(url));
 

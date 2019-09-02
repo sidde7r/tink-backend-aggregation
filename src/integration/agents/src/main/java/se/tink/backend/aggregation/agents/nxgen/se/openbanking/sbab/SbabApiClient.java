@@ -93,14 +93,10 @@ public final class SbabApiClient {
 
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, String debtorAccountNumber) {
-        CreatePaymentResponse createPaymentResponse =
-                createRequest(
-                                Urls.INITIATE_PAYMENT.parameter(
-                                        IdTags.ACCOUNT_NUMBER, debtorAccountNumber))
-                        .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
-                        .post(CreatePaymentResponse.class, createPaymentRequest);
-
-        return createPaymentResponse;
+        return createRequest(
+                        Urls.INITIATE_PAYMENT.parameter(IdTags.ACCOUNT_NUMBER, debtorAccountNumber))
+                .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
+                .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public GetPaymentResponse getPayment(String transferId, String debtorId) {
