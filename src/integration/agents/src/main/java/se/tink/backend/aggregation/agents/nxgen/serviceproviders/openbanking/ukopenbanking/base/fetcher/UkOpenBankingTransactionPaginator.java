@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
@@ -28,7 +31,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private static final int PAGINATION_GRACE_LIMIT = 5;
     private static final long DEFAULT_MAX__ALLOWED_NUMBER_OF_MONTHS = 23l;
     // we can decrease this to 15 days also in future.
-    private static final long DEFAULT_MAX_ALLOWED_DAYS = 89;
+    private static final long DEFAULT_MAX_ALLOWED_DAYS = 89l;
     private static final String FROM_BOOKING_DATE_TIME = "?fromBookingDateTime=";
     private static final String FETCHED_TRANSACTIONS_UNTIL = "fetchedTxUntil:";
     private final UkOpenBankingApiClient apiClient;
@@ -73,7 +76,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         }
 
         if (key == null) {
-            final LocalDateTime fromDate =
+            final OffsetDateTime fromDate =
                     getLastTransactionsFetchedDate(account.getBankIdentifier());
 
             /*
@@ -90,7 +93,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                     ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                     account.getBankIdentifier())
                             + FROM_BOOKING_DATE_TIME
-                            + DateTimeFormatter.ISO_LOCAL_DATE.format(fromDate);
+                            + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(fromDate);
         }
 
         try {
@@ -130,7 +133,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                         ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                         account.getBankIdentifier())
                                 + FROM_BOOKING_DATE_TIME
-                                + DateTimeFormatter.ISO_LOCAL_DATE.format(
+                                + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
                                         LocalDateTime.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
                 TransactionKeyPaginatorResponse<String> response =
                         transactionConverter.toPaginatorResponse(
@@ -157,28 +160,39 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
     private void setFetchingTransactionsUntil(String accountId) {
         final String fetchedUntilDate =
-                LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         persistentStorage.put(FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
     }
 
-    private Optional<LocalDateTime> fetchedTransactionsUntil(String accountId) {
+    private Optional<OffsetDateTime> fetchedTransactionsUntil(String accountId) {
         final String dateString = persistentStorage.get(FETCHED_TRANSACTIONS_UNTIL + accountId);
         if (Objects.isNull(dateString)) {
             return Optional.empty();
         }
-        return Optional.of(LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        try {
+            return Optional.of(
+                    OffsetDateTime.parse(dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+        } catch (DateTimeParseException e) {
+            /*
+            This implies the format saved in persistent storage is ISO_LOCAL_DATE_TIME so this
+            needs to be converted to ISO_OFFSET_DATE_TIME.
+             */
+            LocalDateTime timeInStorage =
+                    LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            return Optional.of(OffsetDateTime.of(timeInStorage, ZoneOffset.UTC));
+        }
     }
 
-    private LocalDateTime getLastTransactionsFetchedDate(String accountId) {
-        final Optional<LocalDateTime> lastTransactionsFetchedDate =
+    private OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
+        final Optional<OffsetDateTime> lastTransactionsFetchedDate =
                 fetchedTransactionsUntil(accountId);
-        final LocalDateTime defaultRefreshDate =
-                LocalDateTime.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS);
+        final OffsetDateTime defaultRefreshDate =
+                OffsetDateTime.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS);
         if (lastTransactionsFetchedDate.isPresent()
                 && lastTransactionsFetchedDate.get().isAfter(defaultRefreshDate)) {
             return defaultRefreshDate;
         } else {
-            return LocalDateTime.now().minusMonths(DEFAULT_MAX__ALLOWED_NUMBER_OF_MONTHS);
+            return OffsetDateTime.now().minusMonths(DEFAULT_MAX__ALLOWED_NUMBER_OF_MONTHS);
         }
     }
 }
