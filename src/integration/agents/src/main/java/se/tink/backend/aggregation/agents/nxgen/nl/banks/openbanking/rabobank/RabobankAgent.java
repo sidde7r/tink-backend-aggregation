@@ -38,7 +38,6 @@ public final class RabobankAgent extends SubsequentGenerationAgent
 
     private final RabobankApiClient apiClient;
     private final String clientName;
-    private final RabobankConfiguration rabobankConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final ProgressiveAuthenticator progressiveAuthenticator;
 
@@ -50,7 +49,7 @@ public final class RabobankAgent extends SubsequentGenerationAgent
 
         clientName = request.getProvider().getPayload();
 
-        rabobankConfiguration =
+        final RabobankConfiguration rabobankConfiguration =
                 agentsConfiguration
                         .getIntegrations()
                         .getClientConfiguration(
