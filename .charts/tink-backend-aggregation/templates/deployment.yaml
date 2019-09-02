@@ -29,12 +29,6 @@ spec:
         operator: Exists
       {{- if not (eq "local" .Values.Cluster) }}
       affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: "kubernetes.io/hostname"
-              labelSelector:
-                matchLabels:
-                  app: aggregation-service
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
