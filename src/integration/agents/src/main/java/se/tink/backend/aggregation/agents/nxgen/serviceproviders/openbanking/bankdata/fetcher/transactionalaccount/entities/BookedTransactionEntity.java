@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -18,12 +19,21 @@ public class BookedTransactionEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
 
+    @JsonIgnore
+    private String getTransactionDescription() {
+        if (remittanceInformationStructured == null
+                || remittanceInformationStructured.getReference() == null) {
+            return "";
+        }
+        return remittanceInformationStructured.getReference();
+    }
+
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setPending(false)
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)
-                .setDescription(remittanceInformationStructured.getReference())
+                .setDescription(getTransactionDescription())
                 .build();
     }
 }
