@@ -52,8 +52,27 @@ public final class AgentConfigurationController {
                 "financialInstitutionId cannot be empty/null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
-        // TODO: Enable preconditons once we get word from aggregation that all users have an appId.
-        // Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
+
+        // TODO: Remove this if and leave only the precondition once we know for sure that we should
+        //  get appId in all requests
+        if (Strings.emptyToNull(appId) == null) {
+            switch (clusterId) {
+                case "leeds-production":
+                    appId = "4fbf90a89d314e1c80128c42f10da3db";
+                    break;
+
+                case "oxford-production":
+                    appId = "e643eb7981d24acfb47834ef338a4e2a";
+                    break;
+
+                default:
+                    log.error(
+                            "appId empty or null and no fallback for submitted clusterId : "
+                                    + clusterId);
+            }
+        }
+
+        Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
 
         this.tppSecretsServiceEnabled = tppSecretsServiceConfiguration.isEnabled();
         if (tppSecretsServiceEnabled) {

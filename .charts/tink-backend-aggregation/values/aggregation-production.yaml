@@ -267,6 +267,6 @@ clients:
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
-  enabled: false
+  enabled: true
 
 debugLogFrequencyPercent: 20
