@@ -14,13 +14,13 @@ public class FundInvestmentEntity {
     private static final AggregationLogger LOGGER =
             new AggregationLogger(FundInvestmentEntity.class);
 
-    private double gevinst;
+    private Double gevinst;
     private String isinnr;
     private String kontonummer;
-    private double kostpris;
+    private Double kostpris;
     private String navn;
-    private double sparebeloep;
-    private double verdi;
+    private Double sparebeloep;
+    private Double verdi;
     private String type;
     private String portefoljeNavn;
 
@@ -58,7 +58,7 @@ public class FundInvestmentEntity {
         return Instrument.Type.OTHER;
     }
 
-    public double getGevinst() {
+    public Double getGevinst() {
         return this.gevinst;
     }
 
@@ -70,7 +70,7 @@ public class FundInvestmentEntity {
         return this.kontonummer;
     }
 
-    public double getVerdi() {
+    public Double getVerdi() {
         return this.verdi;
     }
 

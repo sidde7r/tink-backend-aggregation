@@ -7,11 +7,11 @@ import java.util.List;
 public class Payload {
     private boolean canHaveMoreTransaksjoner;
     private int totalCountConsolidatedTransaksjoner;
-    private double sumOut;
+    private Double sumOut;
     private List<TransactionEntity> transaksjoner;
     private int start;
     private int step;
-    private double sumIn;
+    private Double sumIn;
     private int totalCount;
 
     public void setCanHaveMoreTransaksjoner(boolean canHaveMoreTransaksjoner) {
@@ -30,11 +30,11 @@ public class Payload {
         return totalCountConsolidatedTransaksjoner;
     }
 
-    public void setSumOut(double sumOut) {
+    public void setSumOut(Double sumOut) {
         this.sumOut = sumOut;
     }
 
-    public double getSumOut() {
+    public Double getSumOut() {
         return sumOut;
     }
 
@@ -62,11 +62,11 @@ public class Payload {
         return step;
     }
 
-    public void setSumIn(double sumIn) {
+    public void setSumIn(Double sumIn) {
         this.sumIn = sumIn;
     }
 
-    public double getSumIn() {
+    public Double getSumIn() {
         return sumIn;
     }
 

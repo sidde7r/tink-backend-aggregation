@@ -164,11 +164,13 @@ public class SparebankenVestApiClient {
     }
 
     public TransactionsListResponse fetchTransactions(String accountId, String from, String to) {
-        TransactionsRequestBody transactionsReqBody = new TransactionsRequestBody();
-        transactionsReqBody.setKonto(accountId);
-        transactionsReqBody.setRetning("Alle");
-        transactionsReqBody.setPeriodeFra(from);
-        transactionsReqBody.setPeriodeTil(to);
+        TransactionsRequestBody transactionsReqBody =
+                new TransactionsRequestBody.Builder(accountId)
+                        .withDirection("Alle")
+                        .fromDate(from)
+                        .toDate(to)
+                        .build();
+
         return this.client
                 .request(SparebankenVestConstants.Urls.TRANSACTIONS)
                 .header(
@@ -216,7 +218,10 @@ public class SparebankenVestApiClient {
 
         Preconditions.checkState(wresultElement != null, "Could not parse wresult from response.");
 
-        String wresult = wresultElement.getElementsByAttribute("value").attr("value");
+        String wresult =
+                wresultElement
+                        .getElementsByAttribute(SparebankenVestConstants.HttpElements.VALUE)
+                        .attr(SparebankenVestConstants.HttpElements.VALUE);
 
         InnloggetRequest innloggetRequest = InnloggetRequest.build(wresult);
         innloggetReq(innloggetRequest);

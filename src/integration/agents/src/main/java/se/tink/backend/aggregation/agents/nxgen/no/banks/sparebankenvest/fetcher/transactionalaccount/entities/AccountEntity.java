@@ -18,17 +18,17 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountEntity {
     @JsonProperty("sperretBeloep")
-    private double blockedAmount;
+    private Double blockedAmount;
 
     private Boolean isDisponentOrHasInnsyn;
 
     private Boolean isFamilie;
 
-    private double bevilgning;
+    private Double bevilgning;
 
     private Boolean hasDisponenter;
 
-    private double disponibelt;
+    private Double disponibelt;
 
     private Boolean hasKort;
 
@@ -68,11 +68,11 @@ public class AccountEntity {
     @JsonProperty("valutakode")
     private String currency;
 
-    public void setblockedAmount(double blockedAmount) {
+    public void setblockedAmount(Double blockedAmount) {
         this.blockedAmount = blockedAmount;
     }
 
-    public double getblockedAmount() {
+    public Double getblockedAmount() {
         return blockedAmount;
     }
 
@@ -92,11 +92,11 @@ public class AccountEntity {
         return isFamilie;
     }
 
-    public void setBevilgning(double bevilgning) {
+    public void setBevilgning(Double bevilgning) {
         this.bevilgning = bevilgning;
     }
 
-    public double getBevilgning() {
+    public Double getBevilgning() {
         return bevilgning;
     }
 
@@ -108,11 +108,11 @@ public class AccountEntity {
         return hasDisponenter;
     }
 
-    public void setDisponibelt(double disponibelt) {
+    public void setDisponibelt(Double disponibelt) {
         this.disponibelt = disponibelt;
     }
 
-    public double getDisponibelt() {
+    public Double getDisponibelt() {
         return disponibelt;
     }
 

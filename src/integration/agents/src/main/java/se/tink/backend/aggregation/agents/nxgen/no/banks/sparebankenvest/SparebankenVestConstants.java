@@ -171,4 +171,8 @@ public class SparebankenVestConstants {
         public static final LogTag LOANS = LogTag.from("#SparebankenVest_loans");
         public static final LogTag INVESTMENTS = LogTag.from("#SparebankenVest_investments");
     }
+
+    public static class HttpElements {
+        public static final String VALUE = "value";
+    }
 }

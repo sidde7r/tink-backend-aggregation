@@ -9,7 +9,10 @@ public class TransactionsRequestBody {
     private String accountNumber;
 
     private String fritekst;
-    private String retning;
+
+    @JsonProperty("retning")
+    private String direction;
+
     private String kid;
     private int start;
     private String belopTil;
@@ -33,12 +36,12 @@ public class TransactionsRequestBody {
         return fritekst;
     }
 
-    public void setRetning(String retning) {
-        this.retning = retning;
+    public void setDirection(String retning) {
+        this.direction = retning;
     }
 
-    public String getRetning() {
-        return retning;
+    public String Direction() {
+        return direction;
     }
 
     public void setKid(String kid) {
@@ -87,5 +90,46 @@ public class TransactionsRequestBody {
 
     public String getBelopFra() {
         return belopFra;
+    }
+
+    public static class Builder {
+        private String accountNumber;
+
+        private String fritekst;
+        private String direction;
+        private String kid;
+        private int start;
+        private String belopTil;
+        private String periodeTil;
+        private String periodeFra;
+        private String belopFra;
+
+        public Builder(String accountNumber) {
+            this.accountNumber = accountNumber;
+        }
+
+        public Builder withDirection(String direction) {
+            this.direction = direction;
+            return this;
+        }
+
+        public Builder fromDate(String from) {
+            this.periodeFra = from;
+            return this;
+        }
+
+        public Builder toDate(String to) {
+            this.periodeTil = to;
+            return this;
+        }
+
+        public TransactionsRequestBody build() {
+            TransactionsRequestBody req = new TransactionsRequestBody();
+            req.accountNumber = this.accountNumber;
+            req.direction = this.direction; // ("Alle");
+            req.periodeFra = this.periodeFra; // .setPeriodeFra(from);
+            req.periodeTil = this.periodeTil; // .setPeriodeTil(to);
+            return req;
+        }
     }
 }

@@ -2924,7 +2924,6 @@
             "className": "nxgen.no.banks.sparebankenvest.SparebankenVestAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sparebanken Vest",
-            "financialInstitutionId": "dummyFinancialInstitutionId",
             "fields": [
                 {
                     "description": "National ID number",

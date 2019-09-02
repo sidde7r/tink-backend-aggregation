@@ -19,13 +19,13 @@ public class CreditCardAccountEntity {
     private String cardId;
 
     @JsonProperty(value = "saldo")
-    private double balance;
+    private Double balance;
 
     @JsonProperty(value = "disponibelt")
-    private double available;
+    private Double available;
 
     @JsonProperty(value = "kredittgrense")
-    private double creditLimit;
+    private Double creditLimit;
 
     @JsonProperty(value = "kortnummerGuid")
     private String cardNumberGuid;
@@ -39,7 +39,7 @@ public class CreditCardAccountEntity {
     public CreditCardAccount toTinkCreditCardAccount() {
         // spv uses positive amount for balance of a credit card
         return CreditCardAccount.builder(
-                        transactionAccountNumber, Amount.inNOK(-balance), Amount.inNOK(available))
+                        transactionAccountNumber, Amount.inNOK(balance), Amount.inNOK(available))
                 .setAccountNumber(cardNumber)
                 .setName(name)
                 .setBankIdentifier(createBankIdentifier())

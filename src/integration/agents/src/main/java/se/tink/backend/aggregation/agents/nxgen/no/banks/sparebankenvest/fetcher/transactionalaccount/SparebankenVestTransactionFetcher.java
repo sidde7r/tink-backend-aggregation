@@ -30,7 +30,7 @@ public class SparebankenVestTransactionFetcher
     private final SparebankenVestApiClient apiClient;
     private final Credentials credentials;
 
-    private static final DateFormat DATEFROMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private SparebankenVestTransactionFetcher(
             SparebankenVestApiClient apiClient, Credentials credentials) {
@@ -45,8 +45,8 @@ public class SparebankenVestTransactionFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date from, Date to) {
-        String fromFormatted = DATEFROMAT.format(from);
-        String toFormatted = DATEFROMAT.format(to);
+        String fromFormatted = DATE_FORMAT.format(from);
+        String toFormatted = DATE_FORMAT.format(to);
 
         TransactionsListResponse transactionsList =
                 apiClient.fetchTransactions(account.getAccountNumber(), fromFormatted, toFormatted);

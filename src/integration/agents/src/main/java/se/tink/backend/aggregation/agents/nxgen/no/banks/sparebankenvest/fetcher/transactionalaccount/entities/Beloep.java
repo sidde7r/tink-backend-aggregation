@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Beloep {
     private BigDecimal verdi;
-    private double verdiNok;
+    private BigDecimal verdiNok;
     private String valutakode;
 
     public void setVerdi(BigDecimal verdi) {
@@ -17,11 +17,11 @@ public class Beloep {
         return verdi;
     }
 
-    public void setVerdiNok(double verdiNok) {
+    public void setVerdiNok(BigDecimal verdiNok) {
         this.verdiNok = verdiNok;
     }
 
-    public double getVerdiNok() {
+    public BigDecimal getVerdiNok() {
         return verdiNok;
     }
 
