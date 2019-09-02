@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.Log;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities.FetchAccountTransactionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.FetchAccountResponse;
@@ -25,10 +27,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.BecErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.FetchUpcomingPaymentsResponse;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class BecApiClient {
@@ -36,6 +40,7 @@ public class BecApiClient {
     private static final ObjectMapper mapper = new ObjectMapper();
     private final TinkHttpClient apiClient;
     private final BecUrlConfiguration agentUrl;
+    private static final AggregationLogger LOGGER = new AggregationLogger(BecApiClient.class);
 
     public BecApiClient(TinkHttpClient client, BecUrlConfiguration url) {
         this.apiClient = client;
@@ -153,12 +158,29 @@ public class BecApiClient {
     }
 
     public List<CardEntity> fetchCards() {
-        return createRequest(this.agentUrl.getFetchCard())
-                .queryParam(
-                        BecConstants.Header.QUERY_PARAM_ICONTYPE_KEY,
-                        BecConstants.Header.QUERY_PARAM_ICONTYPE_VALUE)
-                .get(FetchCardResponse.class)
-                .getCardArray();
+        try {
+            List<CardEntity> response =
+                    createRequest(this.agentUrl.getFetchCard())
+                            .queryParam(
+                                    BecConstants.Header.QUERY_PARAM_ICONTYPE_KEY,
+                                    BecConstants.Header.QUERY_PARAM_ICONTYPE_VALUE)
+                            .get(FetchCardResponse.class)
+                            .getCardArray();
+            return response;
+        } catch (HttpResponseException ex) {
+            /**
+             * Some banks that are part of BEC (such as PFA) throws error (403) when the agent tries
+             * to fetch credit cards. We suspect that this happens because those banks actually do
+             * not provide credit card service at all. If this is the case, only PFA (and other
+             * pension banks) should have this error. We will keep logs and see which banks have
+             * issue with credit card
+             */
+            LOGGER.errorExtraLong(
+                    String.format("Could not fetch credit card list"),
+                    Log.CREDIT_CARD_FETCH_ERROR,
+                    ex);
+            return new ArrayList<>();
+        }
     }
 
     public CardDetailsResponse fetchCardDetails(String urlDetails) {

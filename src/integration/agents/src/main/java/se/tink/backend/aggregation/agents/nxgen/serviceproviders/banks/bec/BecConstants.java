@@ -125,6 +125,8 @@ public final class BecConstants {
         public static final LogTag INVESTMENT_PAPER_TYPE =
                 LogTag.from("#dk_bec_investment_paper_type");
         public static final LogTag INVESTMENT_STOCKS = LogTag.from("#dk_bec_investment_stocks");
+        public static final LogTag CREDIT_CARD_FETCH_ERROR =
+                LogTag.from("#dk_bec_credit_card_fetch_error");
     }
 
     public static final class CreditCard {
