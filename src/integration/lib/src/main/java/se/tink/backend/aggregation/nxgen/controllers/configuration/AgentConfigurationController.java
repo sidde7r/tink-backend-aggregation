@@ -56,7 +56,9 @@ public final class AgentConfigurationController {
         // TODO: Enable precondiction and remove logging when verified by Access team that we don't
         //  get empty or null appIds.
         // Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
-        log.warn("appId cannot be empty/null for clusterId : " + clusterId);
+        if (Strings.emptyToNull(appId) == null) {
+            log.warn("appId cannot be empty/null for clusterId : " + clusterId);
+        }
 
         this.tppSecretsServiceEnabled = tppSecretsServiceConfiguration.isEnabled();
         if (tppSecretsServiceEnabled) {
