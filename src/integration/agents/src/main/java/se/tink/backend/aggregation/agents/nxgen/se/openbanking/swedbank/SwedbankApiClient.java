@@ -121,32 +121,28 @@ public final class SwedbankApiClient {
     }
 
     public URL getAuthorizeUrl(String state) {
-        return new URL(
-                client.request(
-                                createRequest(SwedbankConstants.Urls.AUTHORIZE)
-                                        .header(
-                                                SwedbankConstants.HeaderKeys.DATE,
-                                                getHeaderTimeStamp())
-                                        .queryParam(
-                                                SwedbankConstants.QueryKeys.BIC,
-                                                SwedbankConstants.BICProduction.SWEDEN)
-                                        .queryParam(SwedbankConstants.QueryKeys.STATE, state)
-                                        .queryParam(
-                                                SwedbankConstants.QueryKeys.CLIENT_ID,
-                                                getConfiguration().getClientId())
-                                        .queryParam(
-                                                SwedbankConstants.QueryKeys.REDIRECT_URI,
-                                                getConfiguration().getRedirectUrl())
-                                        .queryParam(
-                                                SwedbankConstants.QueryKeys.RESPONSE_TYPE,
-                                                SwedbankConstants.QueryValues.RESPONSE_TYPE_CODE)
-                                        .queryParam(
-                                                SwedbankConstants.QueryKeys.SCOPE,
-                                                SwedbankConstants.QueryValues.SCOPE_PSD2)
-                                        .getUrl())
-                        .get(HttpResponse.class)
-                        .getHeaders()
-                        .getFirst(SwedbankConstants.HeaderResponse.LOCATION));
+
+        HttpResponse response =
+                client.request(SwedbankConstants.Urls.AUTHORIZE)
+                        .queryParam(
+                                SwedbankConstants.QueryKeys.BIC,
+                                SwedbankConstants.BICProduction.SWEDEN)
+                        .queryParam(SwedbankConstants.QueryKeys.STATE, state)
+                        .queryParam(
+                                SwedbankConstants.QueryKeys.CLIENT_ID,
+                                getConfiguration().getClientId())
+                        .queryParam(
+                                SwedbankConstants.QueryKeys.REDIRECT_URI,
+                                getConfiguration().getRedirectUrl())
+                        .queryParam(
+                                SwedbankConstants.QueryKeys.RESPONSE_TYPE,
+                                SwedbankConstants.QueryValues.RESPONSE_TYPE_CODE)
+                        .queryParam(
+                                SwedbankConstants.QueryKeys.SCOPE,
+                                SwedbankConstants.QueryValues.SCOPE_PSD2)
+                        .get(HttpResponse.class);
+
+        return new URL(response.getHeaders().getFirst(SwedbankConstants.HeaderResponse.LOCATION));
     }
 
     public ConsentRequest createConsentRequest() {
