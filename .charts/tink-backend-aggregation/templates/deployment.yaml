@@ -29,6 +29,14 @@ spec:
         operator: Exists
       {{- if not (eq "local" .Values.Cluster) }}
       affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: "failure-domain.beta.kubernetes.io/zone"
+              labelSelector:
+              matchLabels:
+                app: aggregation-service
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
