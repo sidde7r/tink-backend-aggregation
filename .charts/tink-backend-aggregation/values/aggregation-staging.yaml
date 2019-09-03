@@ -125,7 +125,7 @@ agents:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
       bypassTransactionConsent: false
-      monthsToFetch: 24
+      monthsToFetch: 25
   cbi:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
