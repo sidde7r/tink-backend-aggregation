@@ -136,6 +136,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
+        "//src/integration/tpp_secrets_service/client",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",

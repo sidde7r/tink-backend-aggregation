@@ -51,6 +51,8 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -154,9 +156,12 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
                     CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
             configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
+            TppSecretsServiceClient tppSecretsServiceClient =
+                    new TppSecretsServiceClientImpl(
+                            configuration.getTppSecretsServiceConfiguration());
             AgentConfigurationController agentConfigurationController =
                     new AgentConfigurationController(
-                            configuration.getTppSecretsServiceConfiguration(),
+                            tppSecretsServiceClient,
                             configuration.getIntegrations(),
                             provider.getFinancialInstitutionId(),
                             context.getAppId(),

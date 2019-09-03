@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationServiceConfig
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
@@ -63,6 +64,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         environment
                 .lifecycle()
                 .manage(injector.getInstance(AgentDataAvailabilityTrackerClient.class));
+        environment.lifecycle().manage(injector.getInstance(TppSecretsServiceClient.class));
     }
 
     /**
