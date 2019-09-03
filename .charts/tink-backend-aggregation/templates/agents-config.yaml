@@ -728,6 +728,15 @@ data:
             psuIdType: "ALL"
         {{- end }}
         {{- if $agentsConfig.cbi }}
+        bancoposta:
+          tink:
+            clientId: "CBI_CLIENT_ID_TINK_TAG"
+            clientSecret: "CBI_CLIENT_SECRET_TINK_TAG"
+            redirectUrl: "{{ $agentsConfig.cbi.tink.redirectUrl }}"
+            aspspCode: "07601"
+            aspspProductCode: "BANCOPOSTA"
+            eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
         bper:
           tink:
             clientId: "CBI_CLIENT_ID_TINK_TAG"
@@ -755,6 +764,15 @@ data:
             aspspProductCode: "BIR"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
             environment: "{{ $agentsConfig.cbi.tink.environment }}"
+        bnl:
+          tink:
+            clientId: "CBI_CLIENT_ID_TINK_TAG"
+            clientSecret: "CBI_CLIENT_SECRET_TINK_TAG"
+            redirectUrl: "{{ $agentsConfig.cbi.tink.redirectUrl }}"
+            aspspCode: "01005"
+            aspspProductCode: "contocorrente"
+            eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
         credem:
           tink:
             clientId: "CBI_CLIENT_ID_TINK_TAG"
@@ -764,12 +782,48 @@ data:
             aspspProductCode: "PR"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
             environment: "{{ $agentsConfig.cbi.tink.environment }}"
+        fideuram:
+          tink:
+            clientId: "CBI_CLIENT_ID_TINK_TAG"
+            clientSecret: "CBI_CLIENT_SECRET_TINK_TAG"
+            redirectUrl: "{{ $agentsConfig.cbi.tink.redirectUrl }}"
+            aspspCode: "03296"
+            aspspProductCode: "ALLPRODUCTS"
+            eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
+        findomestic:
+          tink:
+            clientId: "CBI_CLIENT_ID_TINK_TAG"
+            clientSecret: "CBI_CLIENT_SECRET_TINK_TAG"
+            redirectUrl: "{{ $agentsConfig.cbi.tink.redirectUrl }}"
+            aspspCode: "03115"
+            aspspProductCode: "MSSPSU"
+            eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
+        itcreditagricole:
+          tink:
+            clientId: "CBI_CLIENT_ID_TINK_TAG"
+            clientSecret: "CBI_CLIENT_SECRET_TINK_TAG"
+            redirectUrl: "{{ $agentsConfig.cbi.tink.redirectUrl }}"
+            aspspCode: "06230"
+            aspspProductCode: "HBW"
+            eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
         isp:
           tink:
             clientId: "CBI_CLIENT_ID_TINK_TAG"
             clientSecret: "CBI_CLIENT_SECRET_TINK_TAG"
             redirectUrl: "{{ $agentsConfig.cbi.tink.redirectUrl }}"
             aspspCode: "03069"
+            aspspProductCode: "ALLPRODUCTS"
+            eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
+        ispprivatebanking:
+          tink:
+            clientId: "CBI_CLIENT_ID_TINK_TAG"
+            clientSecret: "CBI_CLIENT_SECRET_TINK_TAG"
+            redirectUrl: "{{ $agentsConfig.cbi.tink.redirectUrl }}"
+            aspspCode: "03239"
             aspspProductCode: "ALLPRODUCTS"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
             environment: "{{ $agentsConfig.cbi.tink.environment }}"
@@ -789,6 +843,15 @@ data:
             redirectUrl: "{{ $agentsConfig.cbi.tink.redirectUrl }}"
             aspspCode: "03111"
             aspspProductCode: "ContoCorrenteGenerico"
+            eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
+            environment: "{{ $agentsConfig.cbi.tink.environment }}"
+        widiba:
+          tink:
+            clientId: "CBI_CLIENT_ID_TINK_TAG"
+            clientSecret: "CBI_CLIENT_SECRET_TINK_TAG"
+            redirectUrl: "{{ $agentsConfig.cbi.tink.redirectUrl }}"
+            aspspCode: "03442"
+            aspspProductCode: "widiba"
             eidasQwac: "{{ $agentsConfig.cbi.tink.eidasQwac }}"
             environment: "{{ $agentsConfig.cbi.tink.environment }}"
         {{- end }}

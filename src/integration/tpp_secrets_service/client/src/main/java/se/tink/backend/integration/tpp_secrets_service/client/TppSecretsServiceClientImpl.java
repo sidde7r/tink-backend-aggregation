@@ -63,31 +63,39 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
 
     @Override
     public void start() {
-        SslContext sslContext = buildSslContext();
+        if (enabled) {
+            SslContext sslContext = buildSslContext();
 
-        this.channel =
-                NettyChannelBuilder.forAddress(
-                                tppSecretsServiceConfiguration.getHost(),
-                                tppSecretsServiceConfiguration.getPort())
-                        .useTransportSecurity()
-                        .sslContext(sslContext)
-                        .build();
+            this.channel =
+                    NettyChannelBuilder.forAddress(
+                                    tppSecretsServiceConfiguration.getHost(),
+                                    tppSecretsServiceConfiguration.getPort())
+                            .useTransportSecurity()
+                            .sslContext(sslContext)
+                            .build();
 
-        internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
+            internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
+        }
     }
 
     @Override
     public void stop() {
-        try {
-            channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            log.warn("TppSecretsServiceClient channel was not able to shutdown gracefully.");
+        if (enabled) {
+            try {
+                channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                log.warn("TppSecretsServiceClient channel was not able to shutdown gracefully.");
+            }
         }
     }
 
     @Override
     public Optional<Map<String, String>> getAllSecrets(
             String financialInstitutionId, String appId, String clusterId) {
+
+        if (!enabled) {
+            return Optional.empty();
+        }
 
         // TODO: Remove this once Access team confirms there are no null appIds
         if (Strings.emptyToNull(appId) == null
