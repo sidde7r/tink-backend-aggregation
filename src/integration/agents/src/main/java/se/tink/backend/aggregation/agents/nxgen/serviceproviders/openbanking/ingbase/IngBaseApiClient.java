@@ -42,8 +42,9 @@ public class IngBaseApiClient {
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     private final String market;
+    private EidasIdentity eidasIdentity;
     private IngBaseConfiguration configuration;
-    private EidasProxyConfiguration eidasConf;
+    private EidasProxyConfiguration eidasProxyConfiguration;
 
     public IngBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage, String market) {
         this.client = client;
@@ -58,9 +59,12 @@ public class IngBaseApiClient {
     }
 
     public void setConfiguration(
-            IngBaseConfiguration configuration, EidasProxyConfiguration eidasConf) {
+            IngBaseConfiguration configuration,
+            EidasProxyConfiguration eidasProxyConfiguration,
+            EidasIdentity eidasIdentity) {
         this.configuration = configuration;
-        this.eidasConf = eidasConf;
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+        this.eidasIdentity = eidasIdentity;
     }
 
     public FetchAccountsResponse fetchAccounts() {
@@ -71,7 +75,6 @@ public class IngBaseApiClient {
     }
 
     public FetchBalancesResponse fetchBalances(final AccountEntity account) {
-
         // TODO - Temporary fix: To replace a query in the URL set by Sandbox API
         String balanceUrl =
                 account.getBalancesUrl().replaceAll("currency=EUR", "balanceType=expected");
@@ -97,7 +100,6 @@ public class IngBaseApiClient {
     }
 
     public FetchTransactionsResponse fetchTransactions(String reqPath) {
-
         // TODO - Temporary fix for Sandbnox API
         String transactionUrl = reqPath.replaceAll("currency=EUR&", "");
 
@@ -280,11 +282,11 @@ public class IngBaseApiClient {
 
         QsealcSigner proxySigner =
                 QsealcSigner.build(
-                        eidasConf.toInternalConfig(),
+                        eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        new EidasIdentity(
-                                "oxford-staging", "5f98e87106384b2981c0354a33b51590", "ing"),
-                        "Tink");
+                        eidasIdentity,
+                        configuration.getCertificateId());
+
         return proxySigner.getSignatureBase64(signatureEntity.toString().getBytes());
     }
 
