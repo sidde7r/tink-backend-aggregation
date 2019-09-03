@@ -93,6 +93,10 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
     public Optional<Map<String, String>> getAllSecrets(
             String financialInstitutionId, String appId, String clusterId) {
 
+        if (!enabled) {
+            return Optional.empty();
+        }
+
         // TODO: Remove this once Access team confirms there are no null appIds
         if (Strings.emptyToNull(appId) == null
                 || Strings.emptyToNull(financialInstitutionId) == null) {
