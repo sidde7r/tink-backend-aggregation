@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentic
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities.Error;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities.FailuresItem;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities.GroupHeader;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -43,5 +45,16 @@ public class ErrorResponse {
                                                 .equalsIgnoreCase(failure.getDescription())
                                         && "psuId".equalsIgnoreCase(failure.getPath())
                                         && "Pattern".equalsIgnoreCase(failure.getType()));
+    }
+
+    @JsonIgnore
+    public Optional<FailuresItem> getFailure() {
+        if (error == null || error.getFailures().isEmpty()) {
+            return Optional.empty();
+        } else {
+            return error.getFailures().stream()
+                    .filter(failuresItem -> failuresItem.getDescription() != null)
+                    .findFirst();
+        }
     }
 }
