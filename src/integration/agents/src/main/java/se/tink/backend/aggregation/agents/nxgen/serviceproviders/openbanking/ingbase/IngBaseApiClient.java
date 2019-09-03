@@ -146,14 +146,13 @@ public class IngBaseApiClient {
         final String date = getFormattedDate();
 
         /*
-        ING According to documentation expects here grant_type with scope
-            grant_type=client_credentials&scope=<scope of the token>
-            however even if it accepts the scope, it returns full scope of the token
-            which we actually can handle that by passing hardcoded (allowed for us scope) later in the flow
-            IngBaseConstants.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW
-            After fix on their side we can use scope returned by token to have more elastic solution.
-
-         */
+           ING According to documentation expects here grant_type with scope
+           grant_type=client_credentials&scope=<scope of the token>
+           however even if it accepts the scope, it returns full scope of the token
+           which we actually can handle that by passing hardcoded (allowed for us scope) later in the flow
+           IngBaseConstants.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW
+           After fix on their side we can use scope returned by token to have more elastic solution.
+        */
         final String payload = new ApplicationTokenRequest().toData();
         final String digest = generateDigest(payload);
 
