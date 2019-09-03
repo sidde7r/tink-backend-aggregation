@@ -49,7 +49,7 @@ git_repository(
 
 git_repository(
     name = "tink_backend_integration_openbanking",
-    commit = "a42dba2d1b44e27b58d9f8f3724c8247427718a0",
+    commit = "2f2d1284de9500d0afb0cbb7f2d432d9aae94d18",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
     shallow_since = "1562076445 +0000",
 )
@@ -1736,12 +1736,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_hadoop_hadoop_core",
-    artifact = "org.apache.hadoop:hadoop-core:1.2.1",
-    sha1 = "3e5874122a26a735162a380627210779b41bfd59",
-)
-
-maven_jar(
     name = "hsqldb_hsqldb",
     artifact = "hsqldb:hsqldb:1.8.0.10",
     sha1 = "7e9978fdb754bce5fcd5161133e7734ecb683036",
@@ -1793,36 +1787,6 @@ maven_jar(
     name = "oro_oro",
     artifact = "oro:oro:2.0.8",
     sha1 = "5592374f834645c4ae250f4c9fbb314c9369d698",
-)
-
-maven_jar(
-    name = "org_mortbay_jetty_servlet_api",
-    artifact = "org.mortbay.jetty:servlet-api:2.5-20081211",
-    sha1 = "22bff70037e1e6fa7e6413149489552ee2064702",
-)
-
-maven_jar(
-    name = "org_mortbay_jetty_jsp_2_1",
-    artifact = "org.mortbay.jetty:jsp-2.1:6.1.14",
-    sha1 = "3a1df1e8e0fa56e9a940abbd19bc6f397fce16b5",
-)
-
-maven_jar(
-    name = "org_mortbay_jetty_jsp_api_2_1",
-    artifact = "org.mortbay.jetty:jsp-api-2.1:6.1.14",
-    sha1 = "756b3fac155e31bd0e85545dbf953495e0455c73",
-)
-
-maven_jar(
-    name = "org_mortbay_jetty_jetty_util",
-    artifact = "org.mortbay.jetty:jetty-util:6.1.26",
-    sha1 = "e5642fe0399814e1687d55a3862aa5a3417226a9",
-)
-
-maven_jar(
-    name = "org_mortbay_jetty_jetty",
-    artifact = "org.mortbay.jetty:jetty:6.1.26",
-    sha1 = "2f546e289fddd5b1fab1d4199fbb6e9ef43ee4b0",
 )
 
 maven_jar(
