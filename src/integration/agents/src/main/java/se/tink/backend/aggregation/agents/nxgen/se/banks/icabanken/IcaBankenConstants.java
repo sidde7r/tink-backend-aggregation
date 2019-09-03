@@ -146,6 +146,11 @@ public class IcaBankenConstants {
         public static final String PAYMENT = "payment";
     }
 
+    public static class TimeoutFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 3;
+        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
+    }
+
     public static final class LogMessage {
         public static final String PROVIDER_UNIQUE_ID_NOT_FOUND =
                 "Missing PROVIDER_UNIQUE_ID on transfer payload";
