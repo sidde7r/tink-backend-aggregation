@@ -88,7 +88,6 @@ public final class SwedbankConstants {
     public static class HeaderKeys {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String CONSENT_ID = "Consent-ID";
-        public static final String DATE = "Date";
         public static final String FROM_DATE = "dateFrom";
         public static final String TO_DATE = "dateTo";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
@@ -134,10 +133,6 @@ public final class SwedbankConstants {
     public static class ConsentStatus {
         public static final String VALID = "valid";
         public static final String SIGNED = "signed";
-    }
-
-    public static class HeaderResponse {
-        public static final String LOCATION = "Location";
     }
 
     public static final class BodyParameter {

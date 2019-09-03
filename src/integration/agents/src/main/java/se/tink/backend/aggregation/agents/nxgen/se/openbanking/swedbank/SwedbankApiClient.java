@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderValues;
@@ -71,7 +72,7 @@ public final class SwedbankApiClient {
                 .header(SwedbankConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
-                .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
+                .header(HttpHeaders.DATE, getHeaderTimeStamp())
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParam(
                         SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN);
@@ -92,7 +93,7 @@ public final class SwedbankApiClient {
         if (accounts == null) {
             accounts =
                     createRequestInSessionWithConsent(SwedbankConstants.Urls.ACCOUNTS)
-                            .header(SwedbankConstants.HeaderKeys.DATE, getHeaderTimeStamp())
+                            .header(HttpHeaders.DATE, getHeaderTimeStamp())
                             .get(FetchAccountResponse.class);
         }
         return accounts;
@@ -140,7 +141,7 @@ public final class SwedbankApiClient {
                                 SwedbankConstants.QueryValues.SCOPE_PSD2)
                         .get(HttpResponse.class);
 
-        return new URL(response.getHeaders().getFirst(SwedbankConstants.HeaderResponse.LOCATION));
+        return new URL(response.getHeaders().getFirst(HttpHeaders.LOCATION));
     }
 
     public ConsentRequest createConsentRequest() {
