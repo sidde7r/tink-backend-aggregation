@@ -17,8 +17,6 @@ service ExternalCertificateService {
 }
 
 service InternalSecretsService {
-    rpc GetSecrets (GetSecretsRequest) returns (GetSecretsResponse) {}
-    rpc GetEncryptedSecrets (GetSecretsRequest) returns (GetEncryptedSecretsResponse) {}
     rpc GetAllSecrets (GetSecretsRequest) returns (GetAllSecretsResponse) {}
 }
 
@@ -49,14 +47,6 @@ message GetSecretsRequest {
 message GetAllSecretsResponse {
     repeated TppSecret secrets = 1;
     repeated TppSecret encryptedSecrets = 2;
-}
-
-message GetSecretsResponse {
-    repeated TppSecret secrets = 1;
-}
-
-message GetEncryptedSecretsResponse {
-    repeated TppSecret encryptedSecrets = 1;
 }
 
 message QwacCertificateRequest {
