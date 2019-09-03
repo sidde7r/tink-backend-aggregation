@@ -92,7 +92,7 @@ spec:
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[30m])) by (action,className) > 2
     for: 5m
     labels:
-        severity: ping
+        severity: urgent
         who: integration
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
@@ -110,7 +110,7 @@ spec:
         and sum(increase(tink_agent_refresh_total{market="GB"}[30m])) by (className) > 10
     for: 5m
     labels:
-        severity: ping
+        severity: urgent
         who: integration
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
