@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
@@ -109,13 +110,14 @@ public class IngBaseApiClient {
 
     public URL getAuthorizeUrl(final String state) {
         final TokenResponse tokenResponse = getApplicationAccessToken();
-
         setApplicationTokenToSession(tokenResponse.toTinkToken());
         setClientIdToSession(tokenResponse.getClientId());
 
         return new URL(getAuthorizationUrl(tokenResponse).getLocation())
                 .queryParam(QueryKeys.CLIENT_ID, tokenResponse.getClientId())
-                .queryParam(QueryKeys.SCOPE, tokenResponse.getScope())
+                .queryParam(
+                        QueryKeys.SCOPE,
+                        QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REDIRECT_URI, getConfiguration().getRedirectUrl())
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE);
@@ -142,12 +144,22 @@ public class IngBaseApiClient {
     private TokenResponse getApplicationAccessToken() {
         final String reqId = IngBaseUtils.getRequestId();
         final String date = getFormattedDate();
+
+        /*
+        ING According to documentation expects here grant_type with scope
+            grant_type=client_credentials&scope=<scope of the token>
+            however even if it accepts the scope, it returns full scope of the token
+            which we actually can handle that by passing hardcoded (allowed for us scope) later in the flow
+            IngBaseConstants.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW
+            After fix on their side we can use scope returned by token to have more elastic solution.
+
+         */
         final String payload = new ApplicationTokenRequest().toData();
         final String digest = generateDigest(payload);
 
         final String authHeader =
                 Signature.SIGNATURE
-                        + " "
+                        + StringUtils.SPACE
                         + getAuthorization(
                                 getConfiguration().getClientCertificateSerial(),
                                 Signature.HTTP_METHOD_POST,
@@ -171,7 +183,9 @@ public class IngBaseApiClient {
         final String reqPath =
                 new URL(Urls.OAUTH)
                         .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                        .queryParam(QueryKeys.SCOPE, QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_VIEW)
+                        .queryParam(
+                                QueryKeys.SCOPE,
+                                QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW)
                         .queryParam(QueryKeys.COUNTRY_CODE, market)
                         .toString();
 
