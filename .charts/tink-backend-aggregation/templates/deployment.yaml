@@ -35,8 +35,8 @@ spec:
             podAffinityTerm:
               topologyKey: "kubernetes.io/hostname"
               labelSelector:
-              matchLabels:
-                app: aggregation-service
+                matchLabels:
+                  app: aggregation-service
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
