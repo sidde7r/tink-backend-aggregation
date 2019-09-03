@@ -5,10 +5,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import io.vavr.collection.HashMap;
 import io.vavr.control.Try;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,7 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
-        return successfulMigration()
+        return runMigrationChain()
                 ? AgentWorkerCommandResult.CONTINUE
                 : AgentWorkerCommandResult.ABORT;
     }
@@ -75,16 +75,18 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
         this.migrations = migrations;
     }
 
-    boolean successfulMigration() {
-        return migrations.entrySet().stream()
-                .filter(migration -> migration.getKey().equals(request.getProvider().getName()))
-                .map(Entry::getValue)
-                .flatMap(List::stream)
-                .map(this::doVersionMigrations)
+    private List<DataVersionMigration> getMigrationsForProvider(String providerName) {
+        return migrations.getOrDefault(providerName, Collections.EMPTY_LIST);
+    }
+
+    boolean runMigrationChain() {
+        final String providerName = request.getProvider().getName();
+        return getMigrationsForProvider(providerName).stream()
+                .map(this::runDataVersionMigration)
                 .noneMatch(result -> result == MigrationResult.ABORT);
     }
 
-    MigrationResult doVersionMigrations(DataVersionMigration migration) {
+    MigrationResult runDataVersionMigration(DataVersionMigration migration) {
         final Credentials credentials = request.getCredentials();
         final int from = migration.getMigrationFromVersion();
         final int to = migration.getMigrationToVersion();

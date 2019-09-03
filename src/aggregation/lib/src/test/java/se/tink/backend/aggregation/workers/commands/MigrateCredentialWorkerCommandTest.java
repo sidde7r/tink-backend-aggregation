@@ -127,7 +127,7 @@ public class MigrateCredentialWorkerCommandTest {
                         .put("avanza-bankid", Lists.newArrayList(throwingMigration(1)))
                         .build());
 
-        assertTrue(command.successfulMigration());
+        assertTrue(command.runMigrationChain());
     }
 
     @Test
@@ -149,7 +149,7 @@ public class MigrateCredentialWorkerCommandTest {
                         .put("avanza-bankid", Lists.newArrayList(throwingMigration(1)))
                         .build());
 
-        assertTrue(command.successfulMigration());
+        assertTrue(command.runMigrationChain());
     }
 
     @Test
@@ -170,7 +170,7 @@ public class MigrateCredentialWorkerCommandTest {
                         .put("avanza-bankid", Lists.newArrayList(throwingMigration(1)))
                         .build());
 
-        assertFalse(command.successfulMigration());
+        assertFalse(command.runMigrationChain());
     }
 
     @Test
@@ -188,7 +188,7 @@ public class MigrateCredentialWorkerCommandTest {
 
         command.setMigrations(migrations);
 
-        assertTrue(command.successfulMigration());
+        assertTrue(command.runMigrationChain());
         assertEquals(2, credentials.getDataVersion());
     }
 
@@ -207,7 +207,7 @@ public class MigrateCredentialWorkerCommandTest {
 
         command.setMigrations(migrations);
 
-        assertTrue(command.successfulMigration());
+        assertTrue(command.runMigrationChain());
         assertEquals(3, credentials.getDataVersion());
     }
 
@@ -226,7 +226,7 @@ public class MigrateCredentialWorkerCommandTest {
 
         command.setMigrations(migrations);
 
-        assertEquals(MigrationResult.MIGRATED, command.doVersionMigrations(migration_v2_v3));
+        assertEquals(MigrationResult.MIGRATED, command.runDataVersionMigration(migration_v2_v3));
         assertEquals(3, credentials.getDataVersion());
     }
 
@@ -272,7 +272,7 @@ public class MigrateCredentialWorkerCommandTest {
 
         command.setMigrations(migrations);
 
-        assertEquals(MigrationResult.ABORT, command.doVersionMigrations(migration_v2_v3));
+        assertEquals(MigrationResult.ABORT, command.runDataVersionMigration(migration_v2_v3));
         assertEquals(2, credentials.getDataVersion());
     }
 
