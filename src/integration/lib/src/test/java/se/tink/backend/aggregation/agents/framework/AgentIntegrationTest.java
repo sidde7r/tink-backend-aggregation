@@ -159,6 +159,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             TppSecretsServiceClient tppSecretsServiceClient =
                     new TppSecretsServiceClientImpl(
                             configuration.getTppSecretsServiceConfiguration());
+            tppSecretsServiceClient.start();
             AgentConfigurationController agentConfigurationController =
                     new AgentConfigurationController(
                             tppSecretsServiceClient,

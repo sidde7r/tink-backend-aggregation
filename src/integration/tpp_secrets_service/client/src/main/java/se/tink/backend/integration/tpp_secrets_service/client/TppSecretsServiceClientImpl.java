@@ -56,16 +56,13 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
             TppSecretsServiceConfiguration tppSecretsServiceConfiguration) {
         Preconditions.checkNotNull(
                 tppSecretsServiceConfiguration, "tppSecretsServiceConfiguration not found.");
-        Preconditions.checkArgument(
-                tppSecretsServiceConfiguration.isEnabled(),
-                "Trying to create a TppSecretsServiceClient when the configuration says it is not enabled.");
 
         this.tppSecretsServiceConfiguration = tppSecretsServiceConfiguration;
         this.enabled = tppSecretsServiceConfiguration.isEnabled();
     }
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         SslContext sslContext = buildSslContext();
 
         this.channel =
@@ -80,7 +77,7 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         try {
             channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
