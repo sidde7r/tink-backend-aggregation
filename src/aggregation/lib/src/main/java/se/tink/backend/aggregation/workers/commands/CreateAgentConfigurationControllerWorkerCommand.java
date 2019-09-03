@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorkerCommand {
@@ -17,19 +17,22 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final CredentialsRequest credentialsRequest;
     private final AgentWorkerCommandContext agentWorkerCommandContext;
+    private final TppSecretsServiceClient tppSecretsServiceClient;
 
     public CreateAgentConfigurationControllerWorkerCommand(
-            AgentWorkerCommandContext agentWorkerCommandContext) {
+            AgentWorkerCommandContext agentWorkerCommandContext,
+            TppSecretsServiceClient tppSecretsServiceClient) {
         this.agentsServiceConfiguration = agentWorkerCommandContext.getAgentsServiceConfiguration();
         this.credentialsRequest = agentWorkerCommandContext.getRequest();
         this.agentWorkerCommandContext = agentWorkerCommandContext;
+        this.tppSecretsServiceClient = tppSecretsServiceClient;
     }
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
         AgentConfigurationController agentConfigurationController =
                 new AgentConfigurationController(
-                        agentsServiceConfiguration.getTppSecretsServiceConfiguration(),
+                        tppSecretsServiceClient,
                         agentsServiceConfiguration.getIntegrations(),
                         credentialsRequest.getProvider().getFinancialInstitutionId(),
                         agentWorkerCommandContext.getAppId(),
@@ -47,10 +50,5 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
     }
 
     @Override
-    public void postProcess() throws Exception {
-        Optional.ofNullable(agentWorkerCommandContext.getAgentConfigurationController())
-                .ifPresent(
-                        agentConfigurationController ->
-                                agentConfigurationController.shutdownTppSecretsServiceClient());
-    }
+    public void postProcess() throws Exception {}
 }

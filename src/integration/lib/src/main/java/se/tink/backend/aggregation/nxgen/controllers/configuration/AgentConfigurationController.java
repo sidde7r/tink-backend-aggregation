@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
-import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceConfiguration;
 
 public final class AgentConfigurationController {
 
@@ -39,14 +38,14 @@ public final class AgentConfigurationController {
     private String clientName;
 
     public AgentConfigurationController(
-            TppSecretsServiceConfiguration tppSecretsServiceConfiguration,
+            TppSecretsServiceClient tppSecretsServiceClient,
             IntegrationsConfiguration integrationsConfiguration,
             String financialInstitutionId,
             String appId,
             String clusterId,
             String redirectUrl) {
         Preconditions.checkNotNull(
-                tppSecretsServiceConfiguration, "tppSecretsServiceConfiguration not found.");
+                tppSecretsServiceClient, "tppSecretsServiceClient cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(financialInstitutionId),
                 "financialInstitutionId cannot be empty/null.");
@@ -60,15 +59,12 @@ public final class AgentConfigurationController {
             log.warn("appId cannot be empty/null for clusterId : " + clusterId);
         }
 
-        this.tppSecretsServiceEnabled = tppSecretsServiceConfiguration.isEnabled();
-        if (tppSecretsServiceEnabled) {
-            this.tppSecretsServiceClient =
-                    new TppSecretsServiceClient(tppSecretsServiceConfiguration);
-        } else {
+        this.tppSecretsServiceEnabled = tppSecretsServiceClient.isEnabled();
+        this.tppSecretsServiceClient = tppSecretsServiceClient;
+        if (!tppSecretsServiceEnabled) {
             Preconditions.checkNotNull(
                     integrationsConfiguration,
                     "integrationsConfiguration cannot be null if tppSecretsService is not enabled.");
-            this.tppSecretsServiceClient = null;
         }
         this.integrationsConfiguration = integrationsConfiguration;
         this.financialInstitutionId = financialInstitutionId;
@@ -201,12 +197,6 @@ public final class AgentConfigurationController {
         allSecrets.remove(REDIRECT_URLS_KEY);
 
         return true;
-    }
-
-    public void shutdownTppSecretsServiceClient() {
-        if (tppSecretsServiceEnabled) {
-            Optional.ofNullable(tppSecretsServiceClient).ifPresent(client -> client.shutdown());
-        }
     }
 
     public <T extends ClientConfiguration> T getAgentConfiguration(
