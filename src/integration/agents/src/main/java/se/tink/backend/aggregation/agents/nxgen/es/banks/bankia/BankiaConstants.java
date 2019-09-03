@@ -108,20 +108,8 @@ public abstract class BankiaConstants {
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
-                    .put(
-                            AccountTypes.CHECKING,
-                            "11594",
-                            "10300",
-                            "11186",
-                            "11239",
-                            "11660",
-                            "11590",
-                            "10600",
-                            "11359" // Non-adult account
-                            )
-                    .put(AccountTypes.SAVINGS, "10450")
                     .put(AccountTypes.INVESTMENT, "31000")
-                    .put(AccountTypes.OTHER, "11403", "11658")
+                    .put(AccountTypes.OTHER, "11658")
                     .build();
 
     public static final TransactionalAccountTypeMapper PSD2_TYPE_MAPPER =
@@ -143,6 +131,7 @@ public abstract class BankiaConstants {
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "10450",
                             "11403")
+                    .put(TransactionalAccountType.OTHER, "11658")
                     .build();
 
     public static class CardTypes {

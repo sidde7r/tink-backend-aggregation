@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -62,8 +61,7 @@ public class AccountEntity {
         final String bankIdentifier = iban.substring(4);
 
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.from(getTinkAccountType()).get())
-                .withFlagsFrom(BankiaConstants.PSD2_TYPE_MAPPER, contract.getProductCode())
+                .withTypeAndFlagsFrom(BankiaConstants.PSD2_TYPE_MAPPER, contract.getProductCode())
                 .withBalance(BalanceModule.of(availableBalance.parseToExactCurrencyAmount()))
                 .withId(
                         IdModule.builder()
