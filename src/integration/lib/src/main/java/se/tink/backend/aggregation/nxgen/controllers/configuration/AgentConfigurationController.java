@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
@@ -31,6 +32,7 @@ public final class AgentConfigurationController {
     private final String appId;
     private final String clusterId;
     private final String redirectUrl;
+    private final boolean isOpenBankingAgent;
     private Map<String, String> allSecrets;
     // For fallback
     private boolean fallback = false;
@@ -43,7 +45,8 @@ public final class AgentConfigurationController {
             String financialInstitutionId,
             String appId,
             String clusterId,
-            String redirectUrl) {
+            String redirectUrl,
+            AccessType accessType) {
         Preconditions.checkNotNull(
                 tppSecretsServiceClient, "tppSecretsServiceClient cannot be null.");
         Preconditions.checkNotNull(
@@ -71,6 +74,7 @@ public final class AgentConfigurationController {
         this.appId = appId;
         this.clusterId = clusterId;
         this.redirectUrl = redirectUrl;
+        this.isOpenBankingAgent = AccessType.OPEN_BANKING == accessType;
     }
 
     public AgentConfigurationController withFallback(String integrationName, String clientName) {
@@ -88,7 +92,7 @@ public final class AgentConfigurationController {
     }
 
     public boolean init() {
-        if (tppSecretsServiceEnabled) {
+        if (tppSecretsServiceEnabled && isOpenBankingAgent) {
             try {
                 Optional<Map<String, String>> allSecretsOpt =
                         tppSecretsServiceClient.getAllSecrets(
