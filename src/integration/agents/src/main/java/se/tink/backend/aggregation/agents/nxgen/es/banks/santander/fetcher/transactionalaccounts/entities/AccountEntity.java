@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -127,6 +126,10 @@ public class AccountEntity {
         UserData userData = loginResponse.getUserData();
         HolderName holderName = loginResponse.getHolderName();
 
+        AccountIdentifier ibanIdentifier =
+                AccountIdentifier.create(Type.IBAN, iban.replaceAll("\\s+", ""));
+        DisplayAccountIdentifierFormatter formatter = new DisplayAccountIdentifierFormatter();
+
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.from(getTinkAccountType()).get())
                 .withInferredAccountFlags()
@@ -134,9 +137,9 @@ public class AccountEntity {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier())
-                                .withAccountNumber(formatIban(iban))
+                                .withAccountNumber(ibanIdentifier.getIdentifier(formatter))
                                 .withAccountName(generalInfo.getAlias())
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(ibanIdentifier)
                                 .build())
                 .addHolderName(holderName.toString())
                 .setBankIdentifier(iban)
@@ -166,11 +169,11 @@ public class AccountEntity {
         return AccountTypes.OTHER;
     }
 
-    @JsonIgnore
+    /* @JsonIgnore
     private String formatIban(String iban) {
         return new DisplayAccountIdentifierFormatter()
-                .apply(AccountIdentifier.create(Type.IBAN, iban.replaceAll("\\s+", "")));
-    }
+                .apply(AccountIdentifier.create(Type.IBAN, iban));
+    }*/
 
     @JsonIgnore
     public boolean isKnownAccountType() {
