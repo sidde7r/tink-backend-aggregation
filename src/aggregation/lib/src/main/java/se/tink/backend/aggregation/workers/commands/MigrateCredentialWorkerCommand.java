@@ -55,9 +55,7 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
 
     private ImmutableMap<String, List<DataVersionMigration>> migrations =
             new ImmutableMap.Builder<String, List<DataVersionMigration>>()
-                    .put(
-                            "avanza-bankid",
-                            Lists.newArrayList(new Sanitizing_v1_v2(), new Sanitizing_v1_v2()))
+                    .put("avanza-bankid", Lists.newArrayList(new Sanitizing_v1_v2()))
                     .build();
 
     @Override
@@ -65,6 +63,11 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
         return successfulMigration()
                 ? AgentWorkerCommandResult.CONTINUE
                 : AgentWorkerCommandResult.ABORT;
+    }
+
+    @VisibleForTesting
+    public ImmutableMap<String, List<DataVersionMigration>> getMigrations() {
+        return migrations;
     }
 
     @VisibleForTesting

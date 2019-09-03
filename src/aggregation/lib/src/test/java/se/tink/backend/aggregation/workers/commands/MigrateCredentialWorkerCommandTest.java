@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,38 @@ public class MigrateCredentialWorkerCommandTest {
 
         context = Mockito.mock(AgentWorkerCommandContext.class);
         wrapper = Mockito.mock(ControllerWrapper.class);
+    }
+
+    private void checkMigrationOrder(String providerName, List<DataVersionMigration> migrations) {
+        final int[] sortedDistinctFromVersions =
+                migrations.stream()
+                        .mapToInt(DataVersionMigration::getMigrationFromVersion)
+                        .sorted()
+                        .distinct()
+                        .toArray();
+
+        if (sortedDistinctFromVersions.length != migrations.size()) {
+            throw new IllegalStateException(
+                    "Duplicate data version migrations for provider " + providerName);
+        }
+
+        if (!Arrays.equals(
+                sortedDistinctFromVersions,
+                migrations.stream()
+                        .mapToInt(DataVersionMigration::getMigrationFromVersion)
+                        .toArray())) {
+            throw new IllegalStateException(
+                    "Unordered data version migrations for provider " + providerName);
+        }
+    }
+
+    @Test
+    public void migrationsShouldBeUniqueAndOrdered() {
+        // Ensure migrations for each provider are ordered with no duplicates
+        MigrateCredentialWorkerCommand command =
+                new MigrateCredentialWorkerCommand(null, null, 1, context, wrapper);
+        command.getMigrations().entrySet().stream()
+                .forEach(entry -> checkMigrationOrder(entry.getKey(), entry.getValue()));
     }
 
     @Test
