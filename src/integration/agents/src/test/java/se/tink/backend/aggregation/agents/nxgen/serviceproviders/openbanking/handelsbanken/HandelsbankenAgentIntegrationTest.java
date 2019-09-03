@@ -171,7 +171,8 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
                             provider.getFinancialInstitutionId(),
                             context.getAppId(),
                             context.getClusterId(),
-                            credentialsRequest.getCallbackUri());
+                            credentialsRequest.getCallbackUri(),
+                            provider.getAccessType());
             if (!agentConfigurationController.init()) {
                 throw new IllegalStateException(
                         "Error when initializing AgentConfigurationController.");
