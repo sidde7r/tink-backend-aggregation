@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class BerlinGroupAgent<
-                TApiCliient extends BerlinGroupApiClient,
+                TApiCliient extends BerlinGroupApiClient<TConfiguration>,
                 TConfiguration extends BerlinGroupConfiguration>
         extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
