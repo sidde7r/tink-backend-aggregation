@@ -45,6 +45,9 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                                     ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
                                     "UK.OBIE.SortCodeAccountNumber")
                             .put(ExternalAccountIdentification4Code.PAN, "UK.OBIE.PAN")
+                            // TODO: Remove the following mapping for PAN when Santander starts
+                            // sending UK.OBIE.PAN for Credit Card Accounts
+                            .put(ExternalAccountIdentification4Code.PAN, "PAN")
                             .build();
 
     private static final TypeMapper<PaymentStatus> paymentStatusMapper =

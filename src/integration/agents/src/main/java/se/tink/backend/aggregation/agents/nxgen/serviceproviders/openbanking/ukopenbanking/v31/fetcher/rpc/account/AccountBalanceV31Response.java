@@ -24,7 +24,8 @@ public class AccountBalanceV31Response extends BaseV31Response<List<AccountBalan
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
-                                        "Account does not have any balance type that we recognize as useful."));
+                                        "Account does not have any balance type that we recognize as useful."
+                                                + balanceTypeMap.keySet().toString()));
     }
 
     private Map<UkOpenBankingApiDefinitions.AccountBalanceType, AccountBalanceEntity> toMap() {
