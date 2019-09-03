@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.fideuram;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-// @Ignore
+@Ignore
 public class FideuramAgentTest {
 
     private AgentIntegrationTest.Builder builder;
