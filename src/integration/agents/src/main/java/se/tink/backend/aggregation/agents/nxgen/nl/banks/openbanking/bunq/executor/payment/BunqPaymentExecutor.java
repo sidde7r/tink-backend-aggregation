@@ -168,7 +168,7 @@ public class BunqPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     private PaymentStatus poll(String accountId, long paymentId) throws PaymentException {
         PaymentStatus status;
         for (int i = 0; i < BunqConstants.Payment.MAX_POLL_ATTEMPTS; i++) {
-            Uninterruptibles.sleepUninterruptibly(3000, TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
 
             status =
                     getDraftPaymentResponse(apiClient, accountId, paymentId)

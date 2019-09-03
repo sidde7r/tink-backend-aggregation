@@ -78,9 +78,8 @@ public class BunqAgent extends BunqBaseAgent {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(
-                new PaymentController(
-                        new BunqPaymentExecutor(
-                                sessionStorage, apiClient, supplementalInformationHelper)));
+        BunqPaymentExecutor bunqPaymentExecutor =
+                new BunqPaymentExecutor(sessionStorage, apiClient, supplementalInformationHelper);
+        return Optional.of(new PaymentController(bunqPaymentExecutor, bunqPaymentExecutor));
     }
 }
