@@ -134,7 +134,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                                         account.getBankIdentifier())
                                 + FROM_BOOKING_DATE_TIME
                                 + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
-                                        LocalDateTime.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
+                                        OffsetDateTime.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
                 TransactionKeyPaginatorResponse<String> response =
                         transactionConverter.toPaginatorResponse(
                                 apiClient.fetchAccountTransactions(
