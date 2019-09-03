@@ -12,7 +12,7 @@ public class MonsBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-monsbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-monsbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

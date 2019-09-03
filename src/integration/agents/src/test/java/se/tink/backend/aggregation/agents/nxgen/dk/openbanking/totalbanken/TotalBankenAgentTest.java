@@ -12,7 +12,7 @@ public class TotalBankenAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-totalbanken-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-totalbanken-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

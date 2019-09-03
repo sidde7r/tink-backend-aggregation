@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 @Ignore
 public class SasEurobonusMastercardDkAgentTest extends SebAgentBaseTest {
 
-    private static final String PROVIDER_NAME = "dk-saseurobonusmastercard-oauth2";
+    private static final String PROVIDER_NAME = "dk-saseurobonusmastercard-ob";
 
     private static final String MARKET = "dk";
 

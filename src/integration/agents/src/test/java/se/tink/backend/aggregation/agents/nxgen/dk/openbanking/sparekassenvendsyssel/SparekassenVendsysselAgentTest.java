@@ -22,7 +22,7 @@ public class SparekassenVendsysselAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-sparekassenvendsyssel-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-sparekassenvendsyssel-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .loadCredentialsBefore(false)

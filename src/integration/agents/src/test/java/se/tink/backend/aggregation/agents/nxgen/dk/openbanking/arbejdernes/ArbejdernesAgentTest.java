@@ -12,7 +12,7 @@ public class ArbejdernesAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-arbejdernes-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-arbejdernes-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);

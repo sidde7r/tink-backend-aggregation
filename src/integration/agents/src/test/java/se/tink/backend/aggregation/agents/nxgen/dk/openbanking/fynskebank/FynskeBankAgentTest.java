@@ -12,7 +12,7 @@ public class FynskeBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-fynskebank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-fynskebank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

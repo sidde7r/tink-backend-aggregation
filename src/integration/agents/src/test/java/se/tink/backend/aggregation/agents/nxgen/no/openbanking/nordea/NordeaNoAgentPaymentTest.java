@@ -24,7 +24,7 @@ public class NordeaNoAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("no", "no-nordea-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-nordea-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

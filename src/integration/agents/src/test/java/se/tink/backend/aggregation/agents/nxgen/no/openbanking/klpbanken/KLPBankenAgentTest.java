@@ -13,7 +13,7 @@ public class KLPBankenAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-klpbanken-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-klpbanken-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -24,7 +24,7 @@ public class KreditbankenAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DK", "dk-kreditbanken-oauth2")
+                new AgentIntegrationTest.Builder("DK", "dk-kreditbanken-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -22,7 +22,7 @@ public class SparekassenSjaellandFynAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-sparekassensjaellandfyn-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-sparekassensjaellandfyn-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .loadCredentialsBefore(false)

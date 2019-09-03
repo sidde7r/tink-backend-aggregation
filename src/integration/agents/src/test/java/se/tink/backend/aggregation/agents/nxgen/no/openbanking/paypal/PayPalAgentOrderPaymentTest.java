@@ -23,7 +23,7 @@ public class PayPalAgentOrderPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("no", "no-paypal-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-paypal-ob")
                         .addCredentialField(
                                 RunConfigurationKeys.RUN_CONFIGURATION, RunConfigurationValues.WIP)
                         .expectLoggedIn(false)

@@ -12,7 +12,7 @@ public class DanskeAndelsKassersBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-danskeandelskassersbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-danskeandelskassersbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -12,7 +12,7 @@ public class PenSamBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-pensambank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-pensambank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

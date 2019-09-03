@@ -22,7 +22,7 @@ public class SkjernAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-skjern-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-skjern-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .loadCredentialsBefore(false)

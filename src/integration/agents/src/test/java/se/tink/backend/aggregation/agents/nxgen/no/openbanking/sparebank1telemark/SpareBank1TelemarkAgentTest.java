@@ -13,7 +13,7 @@ public class SpareBank1TelemarkAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sparebank1telemark-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sparebank1telemark-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

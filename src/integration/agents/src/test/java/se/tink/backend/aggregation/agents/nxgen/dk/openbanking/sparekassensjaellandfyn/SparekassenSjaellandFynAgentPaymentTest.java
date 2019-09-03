@@ -24,7 +24,7 @@ public class SparekassenSjaellandFynAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DK", "dk-sparekassensjaellandfyn-oauth2")
+                new AgentIntegrationTest.Builder("DK", "dk-sparekassensjaellandfyn-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

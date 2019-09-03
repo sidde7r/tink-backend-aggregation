@@ -13,7 +13,7 @@ public class LandkreditAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-landkredit-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-landkredit-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -13,7 +13,7 @@ public class OKQ8AgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-okq8-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-okq8-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

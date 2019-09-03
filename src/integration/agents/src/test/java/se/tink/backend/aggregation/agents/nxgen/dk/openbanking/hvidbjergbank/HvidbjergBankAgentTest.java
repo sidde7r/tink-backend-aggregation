@@ -12,7 +12,7 @@ public class HvidbjergBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-hvidbjergbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-hvidbjergbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

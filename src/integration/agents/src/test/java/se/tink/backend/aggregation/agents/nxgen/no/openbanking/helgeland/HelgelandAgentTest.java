@@ -13,7 +13,7 @@ public class HelgelandAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-helgeland-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-helgeland-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

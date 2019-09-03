@@ -22,7 +22,7 @@ public class AlmBrandAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-almbrand-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-almbrand-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .loadCredentialsBefore(false)

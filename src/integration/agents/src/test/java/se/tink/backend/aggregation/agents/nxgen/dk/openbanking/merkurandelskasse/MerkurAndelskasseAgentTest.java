@@ -12,7 +12,7 @@ public class MerkurAndelskasseAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-merkurandelskasse-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-merkurandelskasse-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

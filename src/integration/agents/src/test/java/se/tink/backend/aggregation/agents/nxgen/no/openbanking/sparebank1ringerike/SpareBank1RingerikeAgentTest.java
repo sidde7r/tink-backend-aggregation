@@ -13,7 +13,7 @@ public class SpareBank1RingerikeAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sparebank1ringerike-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sparebank1ringerike-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
