@@ -23,17 +23,14 @@ public abstract class BerlinGroupAgent<
         extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
     private final String clientName;
-    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BerlinGroupAgent(
             final CredentialsRequest request,
             final AgentContext context,
             final AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-
         clientName = request.getProvider().getPayload();
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        client.setEidasProxy(configuration.getEidasProxy(), getConfiguration().getEidasQwac());
     }
 
     protected abstract TApiCliient getApiClient();
@@ -50,6 +47,8 @@ public abstract class BerlinGroupAgent<
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         getApiClient().setConfiguration(getConfiguration());
+        client.setEidasProxy(configuration.getEidasProxy(), getConfiguration().getEidasQwac());
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected abstract String getIntegrationName();
