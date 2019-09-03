@@ -1482,7 +1482,7 @@
             "financialInstitutionName": "Ringkjøbing Landbobank"
         },
         {
-            "name": "dk-ringkjobinglandbobank-oauth2",
+            "name": "dk-ringkjobinglandbobank-ob",
             "displayName": "Ringkjøbing Landbobank",
             "accessType": "OPEN_BANKING",
             "popular": true,

@@ -27,7 +27,7 @@ public class BankdataDkDualAgentIntegrationTest {
                                 .loadCredentialsBefore(false)
                                 .saveCredentialsAfter(false)
                                 .build(),
-                        new AgentIntegrationTest.Builder("dk", "dk-ringkjobinglandbobank-oauth2")
+                        new AgentIntegrationTest.Builder("dk", "dk-ringkjobinglandbobank-ob")
                                 .addCredentialField("iban", IBAN)
                                 .loadCredentialsBefore(false)
                                 .saveCredentialsAfter(false)
