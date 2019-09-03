@@ -77,8 +77,8 @@ public final class LansforsakringarAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         lansforsakringarAuthenticator,
-                        configuration.getCallbackJwtSignatureKeyPair(),
-                        request);
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,

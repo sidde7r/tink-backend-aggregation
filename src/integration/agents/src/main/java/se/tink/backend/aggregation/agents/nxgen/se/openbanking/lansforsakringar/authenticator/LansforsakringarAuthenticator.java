@@ -5,9 +5,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
@@ -81,7 +79,7 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
                 .queryParam(LansforsakringarConstants.QueryKeys.RESPONSE_TYPE, LansforsakringarConstants.QueryValues.RESPONSE_TYPE)
                 .queryParam(LansforsakringarConstants.QueryKeys.AUTHORIZATION_ID, consentResponse.getAuthorisationId())
                 .queryParam(LansforsakringarConstants.QueryKeys.REDIRECT_URI, lansforsakringarConfiguration.getRedirectUri())
-                .queryParam(LansforsakringarConstants.QueryKeys.STATE, state)
+                //.queryParam(LansforsakringarConstants.QueryKeys.STATE, state)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .getUrl();
     }
@@ -89,20 +87,15 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
         final String clientId = apiClient.getConfiguration().getClientId();
-        final String clientSecret = apiClient.getConfiguration().getClientSecret();
-        final String code2 = persistentStorage.get(StorageKeys.AUTHORIZATION_ID);
 
-        final AuthenticateForm form =
-                AuthenticateForm.builder()
+        final TokenForm form =
+                TokenForm.builder()
                         .setClientId(clientId)
+                        .setClientSecret(apiClient.getConfiguration().getClientSecret())
                         .setGrantType(FormValues.AUTHORIZATION_CODE)
-                        .setCode(code2)
-                        .setClientSecret(clientSecret)
-                        .setRedirectUri(apiClient.getConfiguration().getRedirectUri())
                         .build();
 
-        URL tokenUrl =  new URL(Urls.TOKEN + "?" + FormKeys.CLIENT_ID + "=" + lansforsakringarConfiguration.getClientId() + "&" + QueryKeys.RESPONSE_TYPE + "=code" + "&" + QueryKeys.AUTHORIZATION_ID + "=" + code2 + "&" + QueryKeys.REDIRECT_URI + "=" + lansforsakringarConfiguration.getRedirectUri());
-
+        URL tokenUrl = new URL(Urls.TOKEN);
         return apiClient.postToken(form, tokenUrl);
     }
 

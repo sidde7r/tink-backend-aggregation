@@ -3,19 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
-public class AuthenticateForm extends AbstractForm {
+public class TokenForm extends AbstractForm {
 
-    private AuthenticateForm(
+    private TokenForm(
             String grantType,
             String clientId,
-            String clientSecret,
-            String code,
-            String redirectUri) {
+            String clientSecret) {
         put(LansforsakringarConstants.FormKeys.GRANT_TYPE, grantType);
-        put(LansforsakringarConstants.FormKeys.CODE, code);
         put(LansforsakringarConstants.FormKeys.CLIENT_ID, clientId);
         put(LansforsakringarConstants.FormKeys.CLIENT_SECRET, clientSecret);
-        put(LansforsakringarConstants.FormKeys.REDIRECT_URI, redirectUri);
     }
 
     public static Builder builder() {
@@ -26,8 +22,6 @@ public class AuthenticateForm extends AbstractForm {
         private String grantType;
         private String clientId;
         private String clientSecret;
-        private String code;
-        private String redirectUri;
 
         public Builder setGrantType(String grantType) {
             this.grantType = grantType;
@@ -44,19 +38,9 @@ public class AuthenticateForm extends AbstractForm {
             return this;
         }
 
-        public Builder setCode(String code) {
-            this.code = code;
-            return this;
-        }
-
-        public AuthenticateForm build() {
-            return new AuthenticateForm(
-                    this.grantType, this.clientId, this.clientSecret, this.code, this.redirectUri);
-        }
-
-        public Builder setRedirectUri(String redirectUri) {
-            this.redirectUri = redirectUri;
-            return this;
+        public TokenForm build() {
+            return new TokenForm(
+                    this.grantType, this.clientId, this.clientSecret);
         }
     }
 }

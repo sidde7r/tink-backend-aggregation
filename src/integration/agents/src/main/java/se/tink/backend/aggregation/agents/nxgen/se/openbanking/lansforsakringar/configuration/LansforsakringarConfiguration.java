@@ -13,6 +13,7 @@ public class LansforsakringarConfiguration implements ClientConfiguration {
     private String consentId;
     private String redirectUri;
     private String eidasQwac;
+    private String callbackJwtSignatureKeyPair;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -50,6 +51,14 @@ public class LansforsakringarConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(eidasQwac),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
+
+        return eidasQwac;
+    }
+
+    public String getCallbackJwtSignatureKeyPair() {
+        Preconditions.checkNotNull(
+            Strings.emptyToNull(callbackJwtSignatureKeyPair),
+            String.format(ErrorMessages.INVALID_CONFIGURATION, "CallbackJwtSignatureKeyPair"));
 
         return eidasQwac;
     }

@@ -22,13 +22,11 @@ public abstract class LansforsakringarConstants {
         public static final String BASE_URL = "https://api.bank.lansforsakringar.se:443";
         public static final String AUTHORIZATION =
                 "https://secure397.lansforsakringar.se/as/authorization.oauth2";
-        public static final String TOKEN = "https://secure397.lansforsakringar.se/as/token.oauth2";
+        public static final String TOKEN = "https://api.bank.lansforsakringar.se:443/openbanking/ano/v1/oauth2/token";
         public static final String CONSENT =
                 "https://api.bank.lansforsakringar.se:443/openbanking/ano/v1/consents";
         public static final String CONSENT_PROVIDED =
                 "https://api.bank.lansforsakringar.se:443/openbanking/ano/v1/consents/{consentId}/authorisations";
-
-        public static final String AUTHENTICATE = BASE_URL + "/v1/oauth2/token";
         public static final String GET_ACCOUNTS = BASE_URL + "/openbanking/ais/v1/accounts";
         public static final String GET_TRANSACTIONS =
                 BASE_URL + "/openbanking/ais/v1/accounts/{accountId}/transactions";
@@ -101,6 +99,7 @@ public abstract class LansforsakringarConstants {
         public static final String GRANT_TYPE = "grant_type";
         public static final String SEPA = "SEPA";
         public static final String CODE = "code";
+        public static final String AUTH_ID = "AuthorisationID";
         public static final String REDIRECT_URI = "redirect_uri";
     }
 

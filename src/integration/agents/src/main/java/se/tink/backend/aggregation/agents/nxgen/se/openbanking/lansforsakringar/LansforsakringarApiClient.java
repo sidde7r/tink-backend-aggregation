@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.AuthenticateForm;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
@@ -96,7 +96,7 @@ public final class LansforsakringarApiClient {
         return createRequestInSession(new URL(url));
     }
 
-    public OAuth2Token postToken(AuthenticateForm form, URL tokenUrl) {
+    public OAuth2Token postToken(TokenForm form, URL tokenUrl) {
 
         return client.request(tokenUrl)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
