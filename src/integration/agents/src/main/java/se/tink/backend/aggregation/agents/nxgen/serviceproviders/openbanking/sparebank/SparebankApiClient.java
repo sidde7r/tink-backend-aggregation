@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank;
 
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -132,7 +134,7 @@ public class SparebankApiClient {
                         new URL(baseUrl + Urls.CREATE_PAYMENT)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct),
                         Optional.of(digest))
-                .header(HeaderKeys.DIGEST, digest)
+                .type(MediaType.APPLICATION_JSON)
                 .post(CreatePaymentResponse.class, paymentRequest);
     }
 
@@ -215,8 +217,16 @@ public class SparebankApiClient {
         String signature =
                 signer.getSignatureBase64(signedWithHeaderKeyValues.toString().trim().getBytes());
 
-        return String.format(
-                "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"",
-                configuration.getKeyId(), signedWithHeaderKeys.toString(), signature);
+        String encodedSignature =
+                Base64.getEncoder()
+                        .encodeToString(
+                                String.format(
+                                                "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"",
+                                                configuration.getKeyId(),
+                                                signedWithHeaderKeys.toString(),
+                                                signature)
+                                        .getBytes(StandardCharsets.UTF_8));
+
+        return String.format("=?utf-8?B?%s?=", encodedSignature);
     }
 }

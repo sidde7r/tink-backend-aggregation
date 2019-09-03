@@ -43,7 +43,6 @@ public class SparebankAgent extends NextGenerationAgent
         List<String> payLoadValues = splitPayload(request.getProvider().getPayload());
         apiClient = new SparebankApiClient(client, sessionStorage, payLoadValues.get(1));
         clientName = payLoadValues.get(0);
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
