@@ -8,11 +8,15 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.ErrorMessage;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities.FailuresItem;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.ErrorResponse;
@@ -66,7 +70,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     }
 
     @Override
-    public BankIdStatus collect(AuthorizeResponse reference) {
+    public BankIdStatus collect(AuthorizeResponse reference) throws BankIdException {
         try {
             HttpResponse response =
                     apiClient.getCode(
@@ -78,18 +82,8 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
                 return handleBankIdDone(response, reference);
             }
         } catch (HttpResponseException e) {
-            String exceptionBody = e.getResponse().getBody(String.class);
-            log.error(
-                    "{}, Authorization failed with message \"{}\"",
-                    NordeaSeConstants.Tags.AUTHORIZATION_ERROR,
-                    exceptionBody);
-            if (exceptionBody.contains(NordeaSeConstants.ErrorMessage.CANCEL_ERROR)) {
-                return BankIdStatus.CANCELLED;
-            } else if (exceptionBody.contains(NordeaSeConstants.ErrorMessage.TIME_OUT_ERROR)) {
-                return BankIdStatus.TIMEOUT;
-            } else {
-                return BankIdStatus.FAILED_UNKNOWN;
-            }
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            return getBankIdErrorStatus(errorResponse);
         }
     }
 
@@ -150,5 +144,25 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
                         NordeaSeConstants.FormValues.ACCOUNTS_TRANSACTIONS,
                         NordeaSeConstants.FormValues.PAYMENTS_MULTIPLE),
                 NordeaSeConstants.FormValues.STATE);
+    }
+
+    public BankIdStatus getBankIdErrorStatus(ErrorResponse errorResponse) throws BankIdException {
+        Optional<FailuresItem> error = errorResponse.getFailure();
+        if (error.isPresent()) {
+            String errorCode = error.get().getCode();
+            if (ErrorMessage.CANCEL_ERROR.equalsIgnoreCase(errorCode)
+                    || ErrorMessage.CANCELLED_ERROR.equalsIgnoreCase(errorCode)) {
+                return BankIdStatus.CANCELLED;
+            } else if (ErrorMessage.TIME_OUT_ERROR.equalsIgnoreCase(errorCode)) {
+                return BankIdStatus.TIMEOUT;
+            } else if (ErrorMessage.BANK_ID_IN_PROGRESS.equalsIgnoreCase(errorCode)) {
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            } else {
+                log.error("Unknown Error code: " + errorCode);
+                return BankIdStatus.FAILED_UNKNOWN;
+            }
+        } else {
+            return BankIdStatus.FAILED_UNKNOWN;
+        }
     }
 }
