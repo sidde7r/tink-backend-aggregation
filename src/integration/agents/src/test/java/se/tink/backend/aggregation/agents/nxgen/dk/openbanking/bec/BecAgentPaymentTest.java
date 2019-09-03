@@ -22,7 +22,7 @@ public class BecAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DK", "dk-bec-oauth2")
+                new AgentIntegrationTest.Builder("DK", "dk-bec-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

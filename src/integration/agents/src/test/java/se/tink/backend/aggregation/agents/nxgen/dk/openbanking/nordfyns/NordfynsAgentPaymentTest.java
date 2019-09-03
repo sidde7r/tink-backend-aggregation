@@ -24,7 +24,7 @@ public class NordfynsAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DK", "dk-nordfyns-oauth2")
+                new AgentIntegrationTest.Builder("DK", "dk-nordfyns-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

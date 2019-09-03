@@ -13,7 +13,7 @@ public class SbankenAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sbanken-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sbanken-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

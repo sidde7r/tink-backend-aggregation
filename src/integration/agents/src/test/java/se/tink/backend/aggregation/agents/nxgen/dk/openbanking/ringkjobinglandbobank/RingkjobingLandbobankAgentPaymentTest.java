@@ -24,7 +24,7 @@ public class RingkjobingLandbobankAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DK", "dk-ringkjobinglandbobank-oauth2")
+                new AgentIntegrationTest.Builder("DK", "dk-ringkjobinglandbobank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

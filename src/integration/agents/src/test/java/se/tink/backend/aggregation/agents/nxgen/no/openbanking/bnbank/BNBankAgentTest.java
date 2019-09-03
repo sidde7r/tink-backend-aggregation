@@ -13,7 +13,7 @@ public class BNBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-bnbank-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-bnbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

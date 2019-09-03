@@ -12,7 +12,7 @@ public class LaegernesBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-laegernesbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-laegernesbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

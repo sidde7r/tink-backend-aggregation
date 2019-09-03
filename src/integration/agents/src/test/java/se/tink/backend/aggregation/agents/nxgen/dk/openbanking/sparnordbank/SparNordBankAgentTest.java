@@ -13,7 +13,7 @@ public class SparNordBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-sparnordbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-sparnordbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

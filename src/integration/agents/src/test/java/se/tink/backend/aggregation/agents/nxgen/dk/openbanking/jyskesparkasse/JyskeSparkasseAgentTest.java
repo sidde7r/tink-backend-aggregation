@@ -12,7 +12,7 @@ public class JyskeSparkasseAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-jyskesparkasse-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-jyskesparkasse-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

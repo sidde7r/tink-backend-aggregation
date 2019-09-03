@@ -13,7 +13,7 @@ public class EnteAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-ente-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-ente-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

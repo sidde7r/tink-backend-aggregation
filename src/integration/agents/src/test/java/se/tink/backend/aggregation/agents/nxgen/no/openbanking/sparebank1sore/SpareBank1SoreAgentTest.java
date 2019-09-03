@@ -13,7 +13,7 @@ public class SpareBank1SoreAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sparebank1sore-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sparebank1sore-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

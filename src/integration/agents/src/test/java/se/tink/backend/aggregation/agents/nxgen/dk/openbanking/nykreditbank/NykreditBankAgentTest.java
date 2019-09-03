@@ -12,7 +12,7 @@ public class NykreditBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-nykreditbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-nykreditbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

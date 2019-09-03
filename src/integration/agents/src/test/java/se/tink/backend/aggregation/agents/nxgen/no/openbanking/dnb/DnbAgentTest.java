@@ -23,7 +23,7 @@ public class DnbAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("no", "no-dnb-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-dnb-ob")
                         .addCredentialField("PSU-ID", manager.get(Arg.PSU_ID))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)

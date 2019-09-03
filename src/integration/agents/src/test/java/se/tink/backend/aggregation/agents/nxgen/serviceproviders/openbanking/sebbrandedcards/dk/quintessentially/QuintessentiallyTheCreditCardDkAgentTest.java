@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 @Ignore
 public class QuintessentiallyTheCreditCardDkAgentTest extends SebAgentBaseTest {
 
-    private static final String PROVIDER_NAME = "dk-quintessentially-oauth2";
+    private static final String PROVIDER_NAME = "dk-quintessentially-ob";
 
     private static final String MARKET = "dk";
 

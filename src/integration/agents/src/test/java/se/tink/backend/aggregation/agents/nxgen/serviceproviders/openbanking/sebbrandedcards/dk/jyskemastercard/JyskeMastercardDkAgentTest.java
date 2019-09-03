@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 @Ignore
 public class JyskeMastercardDkAgentTest extends SebAgentBaseTest {
 
-    private static final String PROVIDER_NAME = "dk-jyskemastercard-oauth2";
+    private static final String PROVIDER_NAME = "dk-jyskemastercard-ob";
 
     private static final String MARKET = "dk";
 

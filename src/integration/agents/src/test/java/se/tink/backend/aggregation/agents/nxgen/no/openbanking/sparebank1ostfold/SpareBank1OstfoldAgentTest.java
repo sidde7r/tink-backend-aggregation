@@ -13,7 +13,7 @@ public class SpareBank1OstfoldAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sparebank1ostfold-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sparebank1ostfold-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

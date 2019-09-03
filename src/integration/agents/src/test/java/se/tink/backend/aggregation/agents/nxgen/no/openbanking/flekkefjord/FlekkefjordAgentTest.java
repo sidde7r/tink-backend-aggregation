@@ -13,7 +13,7 @@ public class FlekkefjordAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-fjekkefjord-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-fjekkefjord-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

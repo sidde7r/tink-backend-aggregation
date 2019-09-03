@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 @Ignore
 public class GlobecardDkAgentTest extends SebAgentBaseTest {
 
-    private static final String PROVIDER_NAME = "dk-globecard-oauth2";
+    private static final String PROVIDER_NAME = "dk-globecard-ob";
 
     private static final String MARKET = "dk";
 

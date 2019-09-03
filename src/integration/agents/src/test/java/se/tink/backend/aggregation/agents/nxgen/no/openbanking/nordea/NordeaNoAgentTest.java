@@ -13,7 +13,7 @@ public class NordeaNoAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("NO", "no-nordea-oauth2")
+                new AgentIntegrationTest.Builder("NO", "no-nordea-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

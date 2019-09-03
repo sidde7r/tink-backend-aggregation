@@ -13,7 +13,7 @@ public class OBOSAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-obos-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-obos-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

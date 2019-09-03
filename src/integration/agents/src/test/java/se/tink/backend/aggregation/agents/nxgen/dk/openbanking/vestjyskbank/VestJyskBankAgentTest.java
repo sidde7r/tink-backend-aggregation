@@ -12,7 +12,7 @@ public class VestJyskBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-vestjyskbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-vestjyskbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

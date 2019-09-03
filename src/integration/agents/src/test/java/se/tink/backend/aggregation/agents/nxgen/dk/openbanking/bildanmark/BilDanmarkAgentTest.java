@@ -12,7 +12,7 @@ public class BilDanmarkAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-bildanmark-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-bildanmark-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

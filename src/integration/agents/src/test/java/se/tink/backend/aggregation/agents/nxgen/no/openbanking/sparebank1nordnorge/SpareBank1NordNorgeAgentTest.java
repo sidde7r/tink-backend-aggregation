@@ -13,7 +13,7 @@ public class SpareBank1NordNorgeAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sparebank1nordnorge-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sparebank1nordnorge-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

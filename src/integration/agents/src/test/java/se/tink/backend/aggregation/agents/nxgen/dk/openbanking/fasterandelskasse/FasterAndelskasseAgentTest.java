@@ -12,7 +12,7 @@ public class FasterAndelskasseAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-fasterandelskasse-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-fasterandelskasse-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

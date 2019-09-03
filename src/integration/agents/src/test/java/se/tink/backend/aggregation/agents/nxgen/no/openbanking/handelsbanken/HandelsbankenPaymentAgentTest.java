@@ -21,7 +21,7 @@ public class HandelsbankenPaymentAgentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("no", "no-handelsbanken-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-handelsbanken-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -12,7 +12,7 @@ public class CoopBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-coopbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-coopbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

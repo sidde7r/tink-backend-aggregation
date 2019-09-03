@@ -12,7 +12,7 @@ public class SallingBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-sallingbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-sallingbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

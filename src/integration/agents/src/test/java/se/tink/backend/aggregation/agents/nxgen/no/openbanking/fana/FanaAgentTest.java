@@ -13,7 +13,7 @@ public class FanaAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-fana-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-fana-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

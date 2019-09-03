@@ -24,7 +24,7 @@ public class JyskeDKAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DK", "dk-jyskemastercarddk-oauth2")
+                new AgentIntegrationTest.Builder("DK", "dk-jyskemastercarddk-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

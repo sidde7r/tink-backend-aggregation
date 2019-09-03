@@ -22,7 +22,7 @@ public class DjurslandsAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-djurslands-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-djurslands-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .loadCredentialsBefore(false)
