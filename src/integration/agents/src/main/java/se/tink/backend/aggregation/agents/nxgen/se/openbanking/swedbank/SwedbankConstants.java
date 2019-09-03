@@ -78,16 +78,16 @@ public final class SwedbankConstants {
     }
 
     public static class QueryValues {
-        public static final String SCOPE = "PSD2";
-        public static final String RESPONSE_TYPE_TOKEN = "code";
-        public static final String GRANT_TYPE = "authorization_code";
-        public static final String BOOKING_STATUS = "both";
+        public static final String SCOPE_PSD2 = "PSD2";
+        public static final String RESPONSE_TYPE_CODE = "code";
+        public static final String GRANT_TYPE_CODE = "authorization_code";
+        public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
+        public static final String BOOKING_STATUS_BOTH = "both";
     }
 
     public static class HeaderKeys {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String CONSENT_ID = "Consent-ID";
-        public static final String DATE = "Date";
         public static final String FROM_DATE = "dateFrom";
         public static final String TO_DATE = "dateTo";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
@@ -133,10 +133,6 @@ public final class SwedbankConstants {
     public static class ConsentStatus {
         public static final String VALID = "valid";
         public static final String SIGNED = "signed";
-    }
-
-    public static class HeaderResponse {
-        public static final String LOCATION = "Location";
     }
 
     public static final class BodyParameter {
