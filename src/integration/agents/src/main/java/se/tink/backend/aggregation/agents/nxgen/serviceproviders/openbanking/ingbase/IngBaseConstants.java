@@ -18,10 +18,6 @@ public final class IngBaseConstants {
     public static class StorageKeys {
         public static final String BASE_URL = "BASE_URL";
         public static final String CLIENT_ID = "CLIENT_ID";
-        public static final String CLIENT_SIGNING_KEY_PATH = "CLIENT_SIGNING_KEY_PATH";
-        public static final String CLIENT_SIGNING_CERTIFICATE_PATH =
-                "CLIENT_SIGNING_CERTIFICATE_PATH";
-        public static final String REDIRECT_URL = "REDIRECT_URL";
         public static final String TOKEN = "TOKEN";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String APPLICATION_TOKEN = "APPLICATION_TOKEN";
@@ -43,8 +39,8 @@ public final class IngBaseConstants {
     public static class QueryValues {
         public static final String DATE_FORMAT = "yyyy-MM-dd";
         public static final String CODE = "code";
-        public static final String PAYMENT_ACCOUNTS_TRANSACTIONS_VIEW =
-                "payment-accounts:transactions:view";
+        public static final String PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW =
+                "payment-accounts:transactions:view payment-accounts:balances:view";
     }
 
     public static class HeaderKeys {
@@ -81,7 +77,6 @@ public final class IngBaseConstants {
         public static final String DIGEST_PREFIX = "SHA-256=";
         public static final String SIGNATURE = "Signature";
         public static final String KEY_ID_NAME = "keyId=";
-        public static final String SIGNING_ALGORITHM = "RSA";
         public static final String HEADERS = "headers=\"(request-target) date digest x-ing-reqid\"";
         public static final String SIGNATURE_NAME = "signature=";
         public static final String HTTP_METHOD_POST = "post";

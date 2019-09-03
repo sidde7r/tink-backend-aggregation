@@ -34,8 +34,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     public IngBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        final String market = request.getProvider().getMarket();
-        apiClient = new IngBaseApiClient(client, sessionStorage, market);
+        /*
+            ING in their documentation use country code in lowercase, however their API treat
+            lowercase as wrong country code and returns error that it's malformed
+        */
+        final String marketInUppercase = request.getProvider().getMarket();
+        apiClient = new IngBaseApiClient(client, sessionStorage, marketInUppercase);
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
