@@ -1,4 +1,19 @@
+build --host_javabase=@local_jdk//:jdk \
+       --javabase=@local_jdk//:jdk \
+       --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_hostjdk8 \
+       --java_toolchain=@bazel_tools//tools/jdk:toolchain_hostjdk8
+
 test --test_output=errors
 build --action_env=PATH
 build --action_env=LD_LIBRARY_PATH
 build --workspace_status_command $PWD/stamp.sh
+
+# Options set when running Bazel via IntelliJ, use the same options on the CLI to not discard the analysis cache as often.
+build --javacopt=-g
+build --action_env=PATH
+build --action_env=LD_LIBRARY_PATH
+
+# Required by rules_docker and rules_k8s https://github.com/bazelbuild/rules_docker/issues/842
+build --host_force_python=PY2
+test --host_force_python=PY2
+run --host_force_python=PY2
