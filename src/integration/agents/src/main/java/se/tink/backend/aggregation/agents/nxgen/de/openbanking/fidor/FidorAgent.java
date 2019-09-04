@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticat
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.configuration.FidorConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.FidorAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.FidorTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.utils.FidorUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -27,6 +27,7 @@ public final class FidorAgent extends NextGenerationAgent
     private final String clientName;
     private final FidorApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private FidorConfiguration fidorConfiguration;
 
     public FidorAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -39,11 +40,22 @@ public final class FidorAgent extends NextGenerationAgent
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        client.setSslClientCertificate(
-                FidorUtils.readFile(getClientConfiguration().getClientKeyStorePath()),
-                getClientConfiguration().getClinetKeyStorePassword());
-        apiClient.setConfiguration(getClientConfiguration());
+        super.setConfiguration(configuration); // x
+        fidorConfiguration =
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                FidorConstants.INTEGRATION_NAME,
+                                clientName,
+                                FidorConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "FidorBank configuration missing."));
+        apiClient.setConfiguration(fidorConfiguration);
+        final String certificateId = fidorConfiguration.getCertificateId();
+        final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
+        client.setEidasProxy(eidasProxyConfiguration, certificateId);
     }
 
     protected FidorConfiguration getClientConfiguration() {

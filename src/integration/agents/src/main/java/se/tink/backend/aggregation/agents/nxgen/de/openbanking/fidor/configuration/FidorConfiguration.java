@@ -16,6 +16,8 @@ public class FidorConfiguration implements ClientConfiguration {
     private String clientKeyStorePath;
     private String clinetKeyStorePassword;
     private String baseUrl;
+    private String certificateId;
+    private String redirectUrl;
 
     public String getClientKeyStorePath() {
         Preconditions.checkNotNull(
@@ -70,5 +72,19 @@ public class FidorConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client certificate path"));
 
         return clientCertificatePath;
+    }
+
+    public String getCertificateId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(certificateId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
+        return certificateId;
+    }
+
+    public String getRedirectUri() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "RedirectUri"));
+        return redirectUrl;
     }
 }
