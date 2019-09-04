@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -36,6 +38,8 @@ public final class RabobankAgent extends SubsequentGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
 
+    private static final Logger logger = LoggerFactory.getLogger(RabobankAgent.class);
+
     private final RabobankApiClient apiClient;
     private final String clientName;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -68,6 +72,9 @@ public final class RabobankAgent extends SubsequentGenerationAgent
 
         EidasIdentity eidasIdentity =
                 new EidasIdentity(context.getClusterId(), context.getAppId(), RabobankAgent.class);
+
+        logger.warn("Rabobank: Uncensoring Authorization header");
+        client.setCensorSensitiveHeaders(false); // TODO remove when MIYAG-737 is resolved
 
         apiClient =
                 new RabobankApiClient(
