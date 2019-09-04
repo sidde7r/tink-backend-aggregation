@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.IngBaseAuthenticator;
@@ -25,15 +27,17 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class IngBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor, ManualOrAutoAuth {
 
     private final String clientName;
     protected final IngBaseApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private AutoAuthenticationController authenticator;
 
     public IngBaseAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair
+    ) {
         super(request, context, signatureKeyPair);
         /*
             ING in their documentation use country code in lowercase, however their API treat
@@ -74,22 +78,22 @@ public abstract class IngBaseAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final IngBaseAuthenticator authenticator =
+        final IngBaseAuthenticator ingBaseAuthenticator =
                 new IngBaseAuthenticator(apiClient, sessionStorage);
         final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        authenticator,
+                        ingBaseAuthenticator,
                         credentials,
                         strongAuthenticationState);
-
-        return new AutoAuthenticationController(
+        authenticator = new AutoAuthenticationController(
                 request,
                 context,
                 new ThirdPartyAppAuthenticationController<>(
                         oAuth2AuthenticationController, supplementalInformationHelper),
                 oAuth2AuthenticationController);
+        return authenticator;
     }
 
     @Override
@@ -127,5 +131,13 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new IngSessionHandler();
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        if (authenticator != null) {
+            return ((ManualOrAutoAuth) authenticator).isManualAuthentication(credentials);
+        }
+        return false;
     }
 }
