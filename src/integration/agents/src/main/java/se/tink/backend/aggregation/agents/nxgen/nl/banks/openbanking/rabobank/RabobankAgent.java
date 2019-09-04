@@ -75,9 +75,6 @@ public final class RabobankAgent extends SubsequentGenerationAgent
         EidasIdentity eidasIdentity =
                 new EidasIdentity(context.getClusterId(), context.getAppId(), RabobankAgent.class);
 
-        logger.warn("Rabobank: Uncensoring Authorization header");
-        client.setCensorSensitiveHeaders(false); // TODO remove when MIYAG-737 is resolved
-
         apiClient =
                 new RabobankApiClient(
                         client,
@@ -106,6 +103,14 @@ public final class RabobankAgent extends SubsequentGenerationAgent
 
         progressiveAuthenticator = autoAuthenticationController;
         manualOrAutoAuthAuthenticator = autoAuthenticationController;
+    }
+
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+
+        logger.warn("Rabobank: Uncensoring Authorization header");
+        client.setCensorSensitiveHeaders(false); // TODO remove when MIYAG-737 is resolved
     }
 
     @Override
