@@ -69,7 +69,7 @@ java_library(
     ],
     deps = [
         "//src/integration/api",
-        "//src/libraries/user:rpc",
+        "//src/integration/user:rpc",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
