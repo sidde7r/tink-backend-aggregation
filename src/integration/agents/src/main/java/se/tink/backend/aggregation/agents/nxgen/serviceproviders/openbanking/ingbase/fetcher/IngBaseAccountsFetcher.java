@@ -30,28 +30,20 @@ public class IngBaseAccountsFetcher implements AccountFetcher<TransactionalAccou
                 .map(Optional::get)
                 .filter(account -> account.getAccountNumber().equals("NL69INGB0123456789"))
                 .collect(Collectors.toList());
+
     }
 
     private Optional<TransactionalAccount> enrichAccountWithBalance(AccountEntity account) {
-
-        Amount balance = new Amount();
-
-        // TODO - To avoid this account from being request to Sandbox (API bug)
-        if (account.getResourceId().equals("34dea1a9-0543-4711-b105-3492d1bbc8f6")) {
-            balance = new Amount(currency, 0);
-        } else {
-            balance =
-                    client.fetchBalances(account).getBalances().stream()
+        Amount balance = client.fetchBalances(account).getBalances().stream()
                             .filter(b -> b.getCurrency().equalsIgnoreCase(currency))
-                            .filter(
-                                    Predicates.or(
+                            .filter(Predicates.or(
                                             BalancesEntity::isExpected,
                                             BalancesEntity::isInterimBooked,
                                             BalancesEntity::isClosingBooked))
                             .map(BalancesEntity::getAmount)
                             .findFirst()
                             .orElse(new Amount(currency, 0));
-        }
+
         return account.toTinkAccount(balance);
     }
 }
