@@ -143,6 +143,7 @@ agentsServiceConfiguration:
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
         certificateId: "Tink"
+        qsealcPem: "dummyCertificateBase64"
       tink:
         clientId: "dummyClientId"
         clientSecret: "dummyClientSecret"
@@ -151,6 +152,7 @@ agentsServiceConfiguration:
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
         certificateId: "Tink"
+        qsealcPem: "dummyCertificateBase64"
     abnamro:
       tink:
         clientId: "dummyClientId"
