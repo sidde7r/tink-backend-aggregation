@@ -31,9 +31,9 @@ import se.tink.libraries.pair.Pair;
 
 public final class TransactionalAccountRefreshController
         implements AccountRefresher,
-        TransactionRefresher,
-        RefreshCheckingAccountsExecutor,
-        RefreshSavingsAccountsExecutor {
+                TransactionRefresher,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
     private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE =
             new MetricId.MetricLabels().add(AccountRefresher.METRIC_ACCOUNT_TYPE, "transactional");
 
@@ -70,10 +70,15 @@ public final class TransactionalAccountRefreshController
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
         // Short term fix for filtering out Savings accounts
-        List<Account> accounts = new ArrayList<>(
-                this.getCachedAccounts().stream().filter(account -> account.getType().equals(AccountTypes.CHECKING)
-                        || account.getType().equals(AccountTypes.OTHER))
-                        .collect(Collectors.toList()));
+        List<Account> accounts =
+                new ArrayList<>(
+                        this.getCachedAccounts().stream()
+                                .filter(
+                                        account ->
+                                                account.getType().equals(AccountTypes.CHECKING)
+                                                        || account.getType()
+                                                                .equals(AccountTypes.OTHER))
+                                .collect(Collectors.toList()));
 
         return new FetchAccountsResponse(accounts);
     }
@@ -91,9 +96,11 @@ public final class TransactionalAccountRefreshController
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
         // Short term fix for filtering out Checking & Other
-        List<Account> accounts = new ArrayList<>(
-                this.getCachedAccounts().stream().filter(account -> account.getType().equals(AccountTypes.SAVINGS))
-                        .collect(Collectors.toList()));
+        List<Account> accounts =
+                new ArrayList<>(
+                        this.getCachedAccounts().stream()
+                                .filter(account -> account.getType().equals(AccountTypes.SAVINGS))
+                                .collect(Collectors.toList()));
 
         return new FetchAccountsResponse(accounts);
     }
