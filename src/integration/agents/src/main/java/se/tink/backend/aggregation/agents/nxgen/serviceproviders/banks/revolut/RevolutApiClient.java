@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.a
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.UserExistResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc.WalletResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.rpc.BaseUserResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -73,6 +74,10 @@ public class RevolutApiClient {
     public AccountsResponse fetchAccounts() {
         return getUserAuthorizedRequest(RevolutConstants.Urls.TOPUP_ACCOUNTS)
                 .get(AccountsResponse.class);
+    }
+
+    public WalletResponse fetchWallet() {
+        return getUserAuthorizedRequest(RevolutConstants.Urls.WALLET).get(WalletResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(int count, String toDateMillis) {

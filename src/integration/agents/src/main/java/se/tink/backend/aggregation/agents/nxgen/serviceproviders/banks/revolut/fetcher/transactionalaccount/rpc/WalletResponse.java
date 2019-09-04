@@ -1,10 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities.PocketEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class WalletEntity {
+public class WalletResponse {
     private String id;
     private String ref;
     private String state;
