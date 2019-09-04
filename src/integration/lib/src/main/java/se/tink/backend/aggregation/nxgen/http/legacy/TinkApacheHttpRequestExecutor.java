@@ -4,6 +4,17 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpClientConnection;
@@ -27,18 +38,6 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtBodyEntity;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtHeaderEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 /*
    This HttpRequestExecutor is only necessary because of bugs in the underlying libraries (jersey and apache).
