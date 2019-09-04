@@ -44,8 +44,9 @@ public final class TransactionalAccountRefreshController
 
     private Collection<TransactionalAccount> accounts;
     private Collection<Account> cachedAccounts;
+    private Map<Account, List<Transaction>> cachedTransactions;
 
-    private boolean hasRefreshedCheckingTransactions = false;
+    private boolean hasRefreshedTransactions = false;
     private boolean hasRefreshedAccounts = false;
 
     public TransactionalAccountRefreshController(
@@ -67,6 +68,14 @@ public final class TransactionalAccountRefreshController
         return new ArrayList<>(this.cachedAccounts);
     }
 
+    private Map<Account, List<Transaction>> getCachedTransactions() {
+        if (!hasRefreshedTransactions) {
+            this.cachedTransactions = this.fetchTransactions();
+            hasRefreshedTransactions = true;
+        }
+        return this.cachedTransactions;
+    }
+
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
         // Short term fix for filtering out Savings accounts
@@ -85,12 +94,15 @@ public final class TransactionalAccountRefreshController
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        if (hasRefreshedCheckingTransactions) {
-            return new FetchTransactionsResponse(Collections.emptyMap());
-        }
-        hasRefreshedCheckingTransactions = true;
-
-        return new FetchTransactionsResponse(this.fetchTransactions());
+        return new FetchTransactionsResponse(
+                this.getCachedTransactions().entrySet().stream()
+                        .filter(
+                                account ->
+                                        account.getKey().getType().equals(AccountTypes.CHECKING)
+                                                || account.getKey()
+                                                        .getType()
+                                                        .equals(AccountTypes.OTHER))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     @Override
@@ -107,7 +119,10 @@ public final class TransactionalAccountRefreshController
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
-        return fetchCheckingTransactions();
+        return new FetchTransactionsResponse(
+                this.getCachedTransactions().entrySet().stream()
+                        .filter(account -> account.getKey().getType().equals(AccountTypes.SAVINGS))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     @Override
