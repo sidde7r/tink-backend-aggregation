@@ -28,8 +28,6 @@ data:
     substitute-secret AXA_PSD2_CLIENT_ID "$AXA_PSD2_CLIENT_ID"
     substitute-secret BPOST_PSD2_CLIENT_ID "$BPOST_PSD2_CLIENT_ID"
     substitute-secret CRELAN_PSD2_CLIENT_ID "$CRELAN_PSD2_CLIENT_ID"
-    substitute-secret NORDEA_CLIENT_ID "$NORDEA_CLIENT_ID"
-    substitute-secret NORDEA_CLIENT_SECRET "$NORDEA_CLIENT_SECRET"
     substitute-secret SEB_CLIENT_ID "$SEB_CLIENT_ID"
     substitute-secret SEB_CLIENT_SECRET "$SEB_CLIENT_SECRET"
     substitute-secret MONZO_CLIENT_ID "$MONZO_CLIENT_ID"

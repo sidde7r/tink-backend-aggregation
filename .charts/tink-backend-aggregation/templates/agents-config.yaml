@@ -84,16 +84,6 @@ data:
         {{- end }}
         {{- end }}
 
-        {{- if $agentsConfig.nordea }}
-        nordea:
-          tink:
-            clientId: "NORDEA_CLIENT_ID"
-            clientSecret: "NORDEA_CLIENT_SECRET"
-            redirectUrl: "{{ $agentsConfig.nordea.tink.redirectUrl }}"
-            eidasQwac: "{{ $agentsConfig.nordea.tink.eidasQwac }}"
-        {{- end }}
-
-
         {{- if $agentsConfig.belfius }}
         belfius:
           tink:
