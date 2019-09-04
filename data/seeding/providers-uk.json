@@ -595,6 +595,30 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
+        },
+        {
+            "className": "nxgen.uk.openbanking.tesco.TescoV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Tesco Bank",
+            "fields": [
+                {
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true,
+                    "name": "info",
+                    "value": "Connecting your bank"
+                }
+            ],
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "name": "uk-tesco-oauth2",
+            "passwordhelptext": "Authentication is done on external page",
+            "payload": "tink3:tesco",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         }
     ]
 }
