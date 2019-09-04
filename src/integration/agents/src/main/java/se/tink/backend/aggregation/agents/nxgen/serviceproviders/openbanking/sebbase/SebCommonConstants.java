@@ -44,7 +44,8 @@ public class SebCommonConstants {
     public static class QueryValues {
         public static final String RESPONSE_TYPE_TOKEN = "code";
         public static final String SCOPE = "psd2_accounts psd2_payments";
-        public static final String GRANT_TYPE = "authorization_code";
+        public static final String AUTH_CODE_GRANT = "authorization_code";
+        public static final String REFRESH_TOKEN_GRANT = "refresh_token";
         public static final String BOOKED_TRANSACTIONS = "booked";
         public static final String WITH_BALANCE = "true";
         public static final String PENDING_AND_BOOKED_TRANSACTIONS = "both";

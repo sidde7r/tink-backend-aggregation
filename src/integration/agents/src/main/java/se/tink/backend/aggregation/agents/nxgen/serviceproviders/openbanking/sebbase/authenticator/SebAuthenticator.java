@@ -49,7 +49,7 @@ public class SebAuthenticator implements OAuth2Authenticator {
                         configuration.getClientSecret(),
                         configuration.getRedirectUrl(),
                         code,
-                        SebCommonConstants.QueryValues.GRANT_TYPE,
+                        SebCommonConstants.QueryValues.AUTH_CODE_GRANT,
                         SebCommonConstants.QueryValues.SCOPE);
 
         return client.getToken(request);
@@ -64,7 +64,8 @@ public class SebAuthenticator implements OAuth2Authenticator {
                         refreshToken,
                         configuration.getClientId(),
                         configuration.getClientSecret(),
-                        configuration.getRedirectUrl());
+                        configuration.getRedirectUrl(),
+                        SebCommonConstants.QueryValues.REFRESH_TOKEN_GRANT);
 
         OAuth2Token token =
                 client.refreshToken(
