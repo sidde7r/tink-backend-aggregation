@@ -5,12 +5,12 @@ java_library(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//proto/agent_data_availability_tracker:lib",
         "//src/aggregation/aggregationcontroller_api",
         "//src/integration/account:enums",
         "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client:serialization",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
+        "//src/integration/agent_data_availability_tracker/proto:lib",
         "//src/integration/api",
         "//src/integration/lib:annotations",
         "//src/integration/models",

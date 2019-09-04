@@ -5,8 +5,8 @@ java_library(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//proto/tpp_secrets_service:lib",
         "//src/integration/lib:annotations",
+        "//src/integration/tpp_secrets_service/proto:lib",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
