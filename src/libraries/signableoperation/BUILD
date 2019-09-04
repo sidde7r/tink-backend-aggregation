@@ -9,9 +9,9 @@ java_library(
     srcs = glob(["src/main/**/rpc/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/generic_application",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
-        "//src/libraries/generic_application",
         "//src/libraries/serialization",
         "//src/libraries/signableoperation:enums",
         "//src/libraries/uuid",
