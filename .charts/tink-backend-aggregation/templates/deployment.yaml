@@ -30,11 +30,22 @@ spec:
       {{- if not (eq "local" .Values.Cluster) }}
       affinity:
         podAntiAffinity:
+          {{- if eq .Values.Environment "staging" }}
           requiredDuringSchedulingIgnoredDuringExecution:
             - topologyKey: "kubernetes.io/hostname"
               labelSelector:
                 matchLabels:
                   app: aggregation-service
+          {{- end }}
+          {{- if eq .Values.Environment "production" }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  app: aggregation-service
+          {{- end }}
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
