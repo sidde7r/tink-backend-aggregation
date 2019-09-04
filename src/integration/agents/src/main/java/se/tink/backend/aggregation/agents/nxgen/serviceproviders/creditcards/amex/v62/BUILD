@@ -5,12 +5,12 @@ java_library(
     deps = [
         "//src/integration/amount",
         "//src/integration/credentials:service",
+        "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/date",
         "//src/libraries/i18n",
-        "//src/libraries/identity_data",
         "//src/libraries/strings",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",

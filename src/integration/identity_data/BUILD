@@ -20,7 +20,7 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/identity_data",
+        "//src/integration/identity_data",
         "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
