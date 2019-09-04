@@ -626,14 +626,6 @@ spec:
               key: comdirect-client-id
               optional: true
         {{- end }}
-        {{- if $agentsConfig.commerzbank }}
-        - name: COMMERZBANK_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: commerzbank-client-id
-              optional: true
-        {{- end }}
         {{- if $agentsConfig.axa }}
         - name: AXA_PSD2_CLIENT_ID
           valueFrom:
