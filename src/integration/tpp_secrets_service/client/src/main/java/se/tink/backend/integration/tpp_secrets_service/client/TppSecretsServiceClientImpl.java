@@ -75,17 +75,29 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
                             .build();
 
             internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
+        } else {
+            log.warn(
+                    "Trying to start an instance of TppSecretsServiceClientImpl when the configuration says it is not enabled.");
         }
     }
 
     @Override
     public void stop() {
         if (enabled) {
-            try {
-                channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                log.warn("TppSecretsServiceClient channel was not able to shutdown gracefully.");
+            if (channel == null) {
+                log.warn(
+                        "Trying to shutdown the channel in an instance of TppSecretsServiceClientImpl where it wasn't instantiated.");
+            } else {
+                try {
+                    channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    log.warn(
+                            "TppSecretsServiceClient channel was not able to shutdown gracefully.");
+                }
             }
+        } else {
+            log.warn(
+                    "Trying to stop an instance of TppSecretsServiceClientImpl when the configuration says it is not enabled.");
         }
     }
 
@@ -94,6 +106,8 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
             String financialInstitutionId, String appId, String clusterId) {
 
         if (!enabled) {
+            log.warn(
+                    "Trying to call getAllSecrets for an instance of TppSecretsServiceClientImpl when the configuration says it is not enabled.");
             return Optional.empty();
         }
 
@@ -191,7 +205,6 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
             final KeyManagerFactory keyManagerFactory;
             if (OpenSsl.supportsKeyManagerFactory()) {
                 keyManagerFactory = new OpenSslX509KeyManagerFactory();
-
             } else {
                 keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
             }
