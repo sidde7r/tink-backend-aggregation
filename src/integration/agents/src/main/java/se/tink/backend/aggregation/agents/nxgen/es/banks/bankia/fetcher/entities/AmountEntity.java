@@ -53,7 +53,8 @@ public class AmountEntity {
 
     @JsonIgnore
     public ExactCurrencyAmount parseToExactCurrencyAmount() {
-        return new ExactCurrencyAmount(toTinkAmount().toBigDecimal(), coin.getShortName());
+        return new ExactCurrencyAmount(
+                BigDecimal.valueOf(unscaledValue, scale), coin.getShortName());
     }
 
     @JsonProperty("nombreMoneda")
