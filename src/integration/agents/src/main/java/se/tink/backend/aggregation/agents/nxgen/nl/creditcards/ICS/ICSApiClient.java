@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.utils.ICSUtil
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -55,6 +56,8 @@ public class ICSApiClient {
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
+
+        this.client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     public ICSConfiguration getConfiguration() {
