@@ -79,6 +79,9 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
                         context.getLogOutputStream(),
                         signatureKeyPair,
                         request.getProvider());
+        if (context.getAgentConfigurationController().isOpenBankingAgent()) {
+            client.disableSignatureRequestHeader();
+        }
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
         this.metricRefreshController =
                 new MetricRefreshController(
@@ -108,6 +111,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         client.setDebugOutput(configuration.getTestConfiguration().isDebugOutputEnabled());
         client.setCensorSensitiveHeaders(
                 configuration.getTestConfiguration().isCensorSensitiveHeadersEnabled());
+        client.setEidasProxyConfiguration(configuration.getEidasProxy());
     }
 
     @Override

@@ -55,18 +55,12 @@ public class DanskeBankDKAgent extends DanskeBankAgent
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-
-        configureHttpClient(client);
     }
 
     @Override
     protected DanskeBankApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankDKApiClient(client, (DanskeBankDKConfiguration) configuration);
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.disableSignatureRequestHeader();
     }
 
     @Override
