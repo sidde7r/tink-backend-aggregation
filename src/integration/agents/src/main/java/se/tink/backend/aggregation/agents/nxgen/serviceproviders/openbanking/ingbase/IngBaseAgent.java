@@ -27,7 +27,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class IngBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor, ManualOrAutoAuth {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                ManualOrAutoAuth {
 
     private final String clientName;
     protected final IngBaseApiClient apiClient;
@@ -36,8 +38,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     private AutoAuthenticationController authenticator;
 
     public IngBaseAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair
-    ) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         /*
             ING in their documentation use country code in lowercase, however their API treat
@@ -87,12 +88,13 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         ingBaseAuthenticator,
                         credentials,
                         strongAuthenticationState);
-        authenticator = new AutoAuthenticationController(
-                request,
-                context,
-                new ThirdPartyAppAuthenticationController<>(
-                        oAuth2AuthenticationController, supplementalInformationHelper),
-                oAuth2AuthenticationController);
+        authenticator =
+                new AutoAuthenticationController(
+                        request,
+                        context,
+                        new ThirdPartyAppAuthenticationController<>(
+                                oAuth2AuthenticationController, supplementalInformationHelper),
+                        oAuth2AuthenticationController);
         return authenticator;
     }
 
