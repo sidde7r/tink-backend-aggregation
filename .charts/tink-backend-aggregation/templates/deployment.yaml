@@ -629,14 +629,6 @@ spec:
               key: volksbank-ais-client-secret-abn
               optional: true
         {{- end }}
-        {{- if $agentsConfig.comdirect }}
-        - name: COMDIRECT_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: comdirect-client-id
-              optional: true
-        {{- end }}
         {{- if $agentsConfig.crosskey }}
         - name: CROSSKEY_CLIENT_ID
           valueFrom:

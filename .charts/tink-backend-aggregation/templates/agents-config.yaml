@@ -868,15 +868,6 @@ data:
             certificateId: "{{ $agentsConfig.cmcic.tink.certificateId }}"
         {{- end }}
 
-        {{- if $agentsConfig.comdirect }}
-        comdirect:
-          tink:
-            baseUrl: "https://xs2a-api.comdirect.de"
-            clientId: "COMDIRECT_CLIENT_ID_TAG"
-            certificateId: "{{ $agentsConfig.comdirect.tink.certificateId }}"
-            redirectUrl: "{{ $agentsConfig.comdirect.tink.redirectUrl }}"
-        {{- end }}
-
         {{- if $agentsConfig.handelsbanken }}
         handelsbanken:
           tink:

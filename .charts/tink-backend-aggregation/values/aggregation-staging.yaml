@@ -96,10 +96,6 @@ agents:
     tink:
       eidasCertId: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-  comdirect:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   swedbank:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
