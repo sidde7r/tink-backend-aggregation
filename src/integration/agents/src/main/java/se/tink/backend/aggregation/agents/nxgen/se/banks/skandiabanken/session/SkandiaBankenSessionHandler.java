@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.session;
 
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
@@ -54,8 +55,8 @@ public class SkandiaBankenSessionHandler implements SessionHandler {
         try {
             return apiClient.refreshToken(refreshToken).toOAuth2Token();
         } catch (HttpResponseException hre) {
-            final ErrorResponse error = hre.getResponse().getBody(ErrorResponse.class);
-            if (error.isUnauthorized()) {
+            if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                    || hre.getResponse().getBody(ErrorResponse.class).isUnauthorized()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
             throw hre;

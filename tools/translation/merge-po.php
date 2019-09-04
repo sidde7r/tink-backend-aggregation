@@ -8,7 +8,7 @@ require_once('onesky.php');
 $apiKey="E8omlD3G9COIQJQFAsFivgtQuoqmgEsK";
 $apiSecret="oMUiSmpQvFIiJo4iY1M9RdLkuo5K11ng";
 $projectId = "154300";
-$locales = $arr = array("sv", "fr", "en_GB", "nl", "da", "no", "fi", "de", "pt-PT");
+$locales = $arr = array("sv", "fr", "en_GB", "nl", "da", "no", "fi", "de", "pt-PT", "it");
 
 // Init the client.
 $client = new Onesky_Api();
