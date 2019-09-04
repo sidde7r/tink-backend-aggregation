@@ -28,7 +28,10 @@ public class SparebankenVestOneTimeActivationCodeAuthenticator implements Passwo
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
         apiClient.initLogin();
+
         try {
+            apiClient.preRegistration();
+
             DeviceRegistrationResponse deviceRegistrationResponse =
                     encapClient.registerDevice(username, password);
 
