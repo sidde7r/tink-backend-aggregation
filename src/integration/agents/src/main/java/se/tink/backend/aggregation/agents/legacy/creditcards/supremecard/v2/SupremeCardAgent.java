@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.SupremeCardApiConstants.TimeoutConfig;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model.AccountInfoResponse;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model.ErrorEntity;
@@ -44,6 +45,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.utils.jersey.JerseyTimeoutRetryFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.NoRedirectStrategy;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
@@ -76,7 +78,10 @@ public class SupremeCardAgent extends AbstractAgent
         TinkApacheHttpClient4 client =
                 clientFactory.createClientWithRedirectHandler(
                         context.getLogOutputStream(), new NoRedirectStrategy());
-
+        client.addFilter(
+                new JerseyTimeoutRetryFilter(
+                        TimeoutConfig.NUM_TIMEOUT_RETRIES,
+                        TimeoutConfig.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
         return SupremeCardApiAgent.createApiAgent(client);
     }
 
