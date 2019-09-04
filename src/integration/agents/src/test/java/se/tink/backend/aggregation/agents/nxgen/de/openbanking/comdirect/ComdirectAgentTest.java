@@ -26,7 +26,9 @@ public class ComdirectAgentTest {
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("comdirect")
+                        .setAppId("tink");
     }
 
     @Test
