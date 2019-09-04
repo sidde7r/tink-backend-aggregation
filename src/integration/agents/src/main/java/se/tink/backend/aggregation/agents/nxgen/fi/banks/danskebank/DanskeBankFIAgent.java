@@ -22,17 +22,12 @@ public class DanskeBankFIAgent extends DanskeBankAgent implements RefreshIdentit
     public DanskeBankFIAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new DanskeBankFIConfiguration());
-        configureHttpClient(client);
     }
 
     @Override
     protected DanskeBankApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankFIApiClient(client, (DanskeBankFIConfiguration) configuration);
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.disableSignatureRequestHeader();
     }
 
     @Override

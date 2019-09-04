@@ -37,7 +37,6 @@ public class NordeaNoAgent extends NordeaV17Agent {
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new NordeaNoFilter());
-        client.disableSignatureRequestHeader();
     }
 
     @Override

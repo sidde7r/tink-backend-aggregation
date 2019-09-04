@@ -91,6 +91,10 @@ public final class AgentConfigurationController {
         return this;
     }
 
+    public boolean isOpenBankingAgent() {
+        return isOpenBankingAgent;
+    }
+
     public boolean init() {
         if (tppSecretsServiceEnabled && isOpenBankingAgent) {
             try {
