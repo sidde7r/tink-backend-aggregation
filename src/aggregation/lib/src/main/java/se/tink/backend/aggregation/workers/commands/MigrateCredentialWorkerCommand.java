@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import io.vavr.collection.HashMap;
 import io.vavr.control.Try;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +75,7 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
     }
 
     private List<DataVersionMigration> getMigrationsForProvider(String providerName) {
-        return migrations.getOrDefault(providerName, Collections.EMPTY_LIST);
+        return migrations.getOrDefault(providerName, Lists.newArrayList());
     }
 
     boolean runMigrationChain() {
