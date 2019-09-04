@@ -233,6 +233,182 @@ clients:
     aggregatorIdentifier: "Zimpler"
   zimpler-test:
     aggregatorIdentifier: "Zimpler"
+  dk-andelskassen-oikos:
+    aggregatorIdentifier: "Andelskassen Oikos"
+  dk-borbjerg-sparekasse:
+    aggregatorIdentifier: "Borbjerg Sparekasse"
+  dk-din-andelskasse-ostervra:
+    aggregatorIdentifier: "Din Andelskasse Østervrå"
+  dk-fano-sparekasse:
+    aggregatorIdentifier: "Fanø Sparekasse"
+  dk-ikano-bank:
+    aggregatorIdentifier: "Ikano Bank"
+  dk-klim-sparekasse:
+    aggregatorIdentifier: "Klim Sparekasse"
+  dk-langa-sparekasse:
+    aggregatorIdentifier: "Langå Sparekasse"
+  dk-ronde-sparekasse:
+    aggregatorIdentifier: "Rønde Sparekasse"
+  dk-sparekassen-den-lille-bikube:
+    aggregatorIdentifier: "Sparekassen Den lille Bikube"
+  dk-stadil-sparekasse:
+    aggregatorIdentifier: "Stadil Sparekasse"
+  dk-sonderhaa-horsted-sparekasse:
+    aggregatorIdentifier: "Sønderhaa-Hørsted Sparekasse"
+  fo-nordoya-sparikassi:
+    aggregatorIdentifier: "Nordoya Sparikassi"
+  no-cultura-bank:
+    aggregatorIdentifier: "Cultura Bank"
+  no-maritime-merchants:
+    aggregatorIdentifier: "Maritime & Merchants"
+  no-mybank:
+    aggregatorIdentifier: "MyBank"
+  no-nordic-corporate-bank:
+    aggregatorIdentifier: "Nordic Corporate Bank"
+  no-naringsbanken:
+    aggregatorIdentifier: "Næringsbanken"
+  no-brabank-no:
+    aggregatorIdentifier: "BRABank NO"
+  no-avida-no:
+    aggregatorIdentifier: "Avida NO"
+  no-aasen-sparebank:
+    aggregatorIdentifier: "Aasen Sparebank"
+  no-andebu-sparebank:
+    aggregatorIdentifier: "Andebu Sparebank"
+  no-arendal-og-omegns-sparekasse:
+    aggregatorIdentifier: "Arendal og Omegns Sparekasse"
+  no-askim-og-spydeberg-sparebank:
+    aggregatorIdentifier: "Askim og Spydeberg Sparebank"
+  no-aurskog-sparebank:
+    aggregatorIdentifier: "Aurskog Sparebank"
+  no-bank2:
+    aggregatorIdentifier: "Bank2"
+  no-berg-sparebank:
+    aggregatorIdentifier: "Berg Sparebank"
+  no-bien-sparebank-as:
+    aggregatorIdentifier: "Bien Sparebank AS"
+  no-birkenes-sparebank:
+    aggregatorIdentifier: "Birkenes Sparebank"
+  no-bjugn-sparebank:
+    aggregatorIdentifier: "Bjugn Sparebank"
+  no-blaker-sparebank:
+    aggregatorIdentifier: "Blaker Sparebank"
+  no-drangedal-sparebank:
+    aggregatorIdentifier: "Drangedal Sparebank"
+  no-eidsberg-sparebank:
+    aggregatorIdentifier: "Eidsberg Sparebank"
+  no-etnedal-sparebank:
+    aggregatorIdentifier: "Etnedal Sparebank"
+  no-evje-og-hornnes-sparebank:
+    aggregatorIdentifier: "Evje og Hornnes Sparebank"
+  no-fornebu-sparebank:
+    aggregatorIdentifier: "Fornebu Sparebank"
+  no-gildeskal-sparebank:
+    aggregatorIdentifier: "Gildeskål Sparebank"
+  no-grong-sparebank:
+    aggregatorIdentifier: "Grong Sparebank"
+  no-grue-sparebank:
+    aggregatorIdentifier: "Grue Sparebank"
+  no-haltdalen-sparebank:
+    aggregatorIdentifier: "Haltdalen Sparebank"
+  no-hegra-sparebank:
+    aggregatorIdentifier: "Hegra Sparebank"
+  no-hjartdal-og-gransherad-sparebank:
+    aggregatorIdentifier: "Hjartdal og Gransherad Sparebank"
+  no-hjelmeland-sparebank:
+    aggregatorIdentifier: "Hjelmeland Sparebank"
+  no-holand-og-setskog-sparebank:
+    aggregatorIdentifier: "Høland og Setskog Sparebank"
+  no-honefoss-sparebank:
+    aggregatorIdentifier: "Hønefoss Sparebank"
+  no-jernbanepersonalets-bank:
+    aggregatorIdentifier: "Jernbanepersonalets bank"
+  no-jaren-sparebank:
+    aggregatorIdentifier: "Jæren Sparebank"
+  no-kvinesdal-sparebank:
+    aggregatorIdentifier: "Kvinesdal Sparebank"
+  no-larvikbanken:
+    aggregatorIdentifier: "Larvikbanken"
+  no-lillestrombanken:
+    aggregatorIdentifier: "LillestrømBanken"
+  no-marker-sparebank:
+    aggregatorIdentifier: "Marker Sparebank"
+  no-melhusbanken:
+    aggregatorIdentifier: "MelhusBanken"
+  no-nidaros-sparebank:
+    aggregatorIdentifier: "Nidaros Sparebank"
+  no-odal-sparebank:
+    aggregatorIdentifier: "Odal Sparebank"
+  no-ofoten-sparebank:
+    aggregatorIdentifier: "Ofoten Sparebank"
+  no-oppdalsbanken:
+    aggregatorIdentifier: "Oppdalsbanken"
+  no-orkla-sparebank:
+    aggregatorIdentifier: "Orkla Sparebank"
+  no-rindal-sparebank:
+    aggregatorIdentifier: "Rindal Sparebank"
+  no-romsdalsbanken:
+    aggregatorIdentifier: "Romsdalsbanken"
+  no-rorosbanken:
+    aggregatorIdentifier: "RørosBanken"
+  no-selbu-sparebank:
+    aggregatorIdentifier: "Selbu Sparebank"
+  no-skagerrak-sparebank:
+    aggregatorIdentifier: "Skagerrak Sparebank"
+  no-skue-sparebank:
+    aggregatorIdentifier: "Skue Sparebank"
+  no-sogn-sparebank:
+    aggregatorIdentifier: "Sogn Sparebank"
+  no-soknedal-sparebank:
+    aggregatorIdentifier: "Soknedal Sparebank"
+  no-sparebank-68-grader-nord:
+    aggregatorIdentifier: "Sparebank 68 Grader Nord"
+  no-sparebanken-din:
+    aggregatorIdentifier: "Sparebanken DIN"
+  no-hemne-sparebank:
+    aggregatorIdentifier: "Hemne Sparebank"
+  no-sparebanken-narvik:
+    aggregatorIdentifier: "Sparebanken Narvik"
+  no-stadsbygd-sparebank:
+    aggregatorIdentifier: "Stadsbygd Sparebank"
+  no-strommen-sparebank:
+    aggregatorIdentifier: "Strømmen Sparebank"
+  no-sunndal-sparebank:
+    aggregatorIdentifier: "Sunndal Sparebank"
+  no-surnadal-sparebank:
+    aggregatorIdentifier: "Surnadal Sparebank"
+  no-tinn-sparebank:
+    aggregatorIdentifier: "Tinn Sparebank"
+  no-tolga-os-sparebank:
+    aggregatorIdentifier: "Tolga-Os Sparebank"
+  no-trogstad-sparebank:
+    aggregatorIdentifier: "Trøgstad Sparebank"
+  no-tysnes-sparebank:
+    aggregatorIdentifier: "Tysnes Sparebank"
+  no-valdres-sparebank:
+    aggregatorIdentifier: "Valdres Sparebank"
+  no-valle-sparebank:
+    aggregatorIdentifier: "Valle Sparebank"
+  no-orland-sparebank:
+    aggregatorIdentifier: "Ørland Sparebank"
+  no-orskog-sparebank:
+    aggregatorIdentifier: "Ørskog Sparebank"
+  no-ostre-agder-sparebank:
+    aggregatorIdentifier: "Østre Agder Sparebank"
+  no-afjord-sparebank:
+    aggregatorIdentifier: "Åfjord Sparebank"
+  se-lan-og-spar-se:
+    aggregatorIdentifier: "Lån og Spar SE"
+  se-brabank-se:
+    aggregatorIdentifier: "BRABank SE"
+  se-skandiabanken:
+    aggregatorIdentifier: "Skandiabanken"
+  se-avida-finans-se:
+    aggregatorIdentifier: "Avida Finans SE"
+  se-jak-medlemsbank:
+    aggregatorIdentifier: "JAK Medlemsbank"
+  no-voss-veksel-og-landmandsbank:
+    aggregatorIdentifier: "Voss Veksel- Og Landmandsbank"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
