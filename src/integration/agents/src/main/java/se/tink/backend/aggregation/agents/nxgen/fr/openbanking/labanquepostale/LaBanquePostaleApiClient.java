@@ -44,7 +44,8 @@ public final class LaBanquePostaleApiClient
     @Override
     public AccountResponse fetchAccounts() {
         AccountResponse accountResponse =
-                buildRequestWithSignature(Urls.FETCH_ACCOUNTS, "").get(AccountResponse.class);
+                buildRequestWithSignature(getConfiguration().getBaseUrl() + Urls.FETCH_ACCOUNTS, "")
+                        .get(AccountResponse.class);
 
         accountResponse.getAccounts().forEach(this::populateBalanceForAccount);
         return accountResponse;
@@ -58,7 +59,7 @@ public final class LaBanquePostaleApiClient
             // so if the prefix exists it is removed in this line
         }
 
-        return buildRequestWithSignature(Urls.BASE_URL_WITH_SLASH + url, "")
+        return buildRequestWithSignature(getConfiguration().getBaseUrl() + "/" + url, "")
                 .get(TransactionResponse.class);
     }
 
@@ -117,7 +118,7 @@ public final class LaBanquePostaleApiClient
                         QueryValues.GRANT_TYPE,
                         redirectUri);
 
-        return client.request(Urls.GET_TOKEN)
+        return client.request(getConfiguration().getBaseUrl() + Urls.GET_TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .addBasicAuth(clientId, clientSecret)
@@ -140,7 +141,7 @@ public final class LaBanquePostaleApiClient
         final String clientId = getConfiguration().getClientId();
         final String redirectUrl = getConfiguration().getRedirectUrl();
 
-        return client.request(new URL(Urls.OAUTH))
+        return client.request(getConfiguration().getBaseUrl() + Urls.OAUTH)
                 .queryParam(BerlinGroupConstants.QueryKeys.CLIENT_ID, clientId)
                 .queryParam(BerlinGroupConstants.QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(
@@ -156,7 +157,7 @@ public final class LaBanquePostaleApiClient
         BalanceResponse balanceResponse =
                 buildRequestWithSignature(
                                 String.format(
-                                        Urls.FETCH_BALANCES,
+                                        getConfiguration().getBaseUrl() + Urls.FETCH_BALANCES,
                                         accountBaseEntityWithHref.getResourceId()),
                                 Payload.EMPTY)
                         .get(BalanceResponse.class);
@@ -165,19 +166,25 @@ public final class LaBanquePostaleApiClient
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
-        return buildRequestWithSignature(Urls.PAYMENT_INITIATION, Payload.EMPTY)
+        return buildRequestWithSignature(
+                        getConfiguration().getBaseUrl() + Urls.PAYMENT_INITIATION, Payload.EMPTY)
                 .header(HeaderKeys.CONTENT_TYPE, HeaderValues.CONTENT_TYPE)
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public GetPaymentResponse getPayment(int paymentId) {
-        return buildRequestWithSignature(String.format(Urls.GET_PAYMENT, paymentId), Payload.EMPTY)
+        return buildRequestWithSignature(
+                        String.format(
+                                getConfiguration().getBaseUrl() + Urls.GET_PAYMENT, paymentId),
+                        Payload.EMPTY)
                 .get(GetPaymentResponse.class);
     }
 
     public GetPaymentResponse confirmPayment(String paymentId) {
         return buildRequestWithSignature(
-                        String.format(Urls.CONFIRM_PAYMENT, paymentId), Payload.EMPTY)
+                        String.format(
+                                getConfiguration().getBaseUrl() + Urls.CONFIRM_PAYMENT, paymentId),
+                        Payload.EMPTY)
                 .post(GetPaymentResponse.class);
     }
 }
