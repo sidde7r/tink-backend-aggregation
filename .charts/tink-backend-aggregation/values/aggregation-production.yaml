@@ -188,6 +188,8 @@ clients:
     aggregatorIdentifier: "Jutlander Bank"
   dk-lan-spar-production:
     aggregatorIdentifier: "Lån & Spar"
+  dk-proveo-production:
+    aggregatorIdentifier: "proVeo"
   dk-rise-flemlose-sparekasse-production:
     aggregatorIdentifier: "Rise Flemløse Sparekasse"
   dk-sparekassen-balling-production:
