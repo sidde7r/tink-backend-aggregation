@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -81,7 +82,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .withAmount(payment.getAmount().doubleValue())
                         .withCounterPartAccount(payment.getCreditor().getAccountNumber())
                         .withCurrency(payment.getCurrency())
-                        .withTransferDate(payment.getExecutionDate().toString())
+                        .withTransferDate(getExecutionDateOrCurrentDate(payment))
                         .build();
 
         CreatePaymentRequest createPaymentRequest =
@@ -97,6 +98,13 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         getPaymentType(paymentRequest),
                         payment.getDebtor().getAccountNumber(),
                         payment.getCreditor().getAccountNumber());
+    }
+
+    private String getExecutionDateOrCurrentDate(Payment payment) {
+        LocalDate executionDate =
+                payment.getExecutionDate() == null ? LocalDate.now() : payment.getExecutionDate();
+
+        return executionDate.toString();
     }
 
     @Override
