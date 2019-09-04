@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
@@ -20,19 +18,11 @@ public class IngBaseTransactionsFetcher implements TransactionDatePaginator<Tran
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-
-        // TODO - Temporary setup Sandbox specification
-        Date from = new Date(), to = new Date();
-        try {
-            from = new SimpleDateFormat("yyyy/MM/dd").parse("2016/10/01");
-            to = new SimpleDateFormat("yyyy/MM/dd").parse("2016/11/21");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
         return apiClient
                 .fetchTransactions(
-                        account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL), from, to)
+                        account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL),
+                        fromDate,
+                        toDate)
                 .setFetchNextFunction(apiClient::fetchTransactions);
     }
 }

@@ -75,10 +75,7 @@ public class IngBaseApiClient {
     }
 
     public FetchBalancesResponse fetchBalances(final AccountEntity account) {
-        // TODO - Temporary fix: To replace a query in the URL set by Sandbox API
-        String balanceUrl =
-                account.getBalancesUrl().replaceAll("currency=EUR", "balanceType=expected");
-
+        String balanceUrl = account.getBalancesUrl();
         return buildRequestWithSignature(balanceUrl, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
@@ -91,18 +88,12 @@ public class IngBaseApiClient {
                 new URL(reqPath)
                         .queryParam(
                                 IngBaseConstants.QueryKeys.DATE_FROM, dateFormat.format(fromDate))
-                        .queryParam(IngBaseConstants.QueryKeys.DATE_TO, dateFormat.format(fromDate))
-                        .queryParam(
-                                QueryKeys.LIMIT,
-                                "10") // TODO - Temporary added for Sandbox specification
+                        .queryParam(IngBaseConstants.QueryKeys.DATE_TO, dateFormat.format(toDate))
                         .toString();
         return fetchTransactions(completeReqPath);
     }
 
-    public FetchTransactionsResponse fetchTransactions(String reqPath) {
-        // TODO - Temporary fix for Sandbnox API
-        String transactionUrl = reqPath.replaceAll("currency=EUR&", "");
-
+    public FetchTransactionsResponse fetchTransactions(String transactionUrl) {
         return buildRequestWithSignature(
                         transactionUrl, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
                 .addBearerToken(getTokenFromSession())
