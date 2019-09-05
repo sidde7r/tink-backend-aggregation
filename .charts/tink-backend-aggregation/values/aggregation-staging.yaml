@@ -32,10 +32,6 @@ agents:
     tink:
       eidasQwac: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-  axa:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   bankdata:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback

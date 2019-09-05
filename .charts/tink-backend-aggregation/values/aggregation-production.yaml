@@ -44,10 +44,6 @@ agents:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
-  axa:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   bankdata:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
