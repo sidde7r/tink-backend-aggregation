@@ -653,14 +653,6 @@ spec:
               key: bpost-psd2-client-id
               optional: true
         {{- end }}
-        {{- if $agentsConfig.crelan }}
-        - name: CRELAN_PSD2_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: crelan-psd2-client-id
-              optional: true
-        {{- end }}
         {{- if $agentsConfig.crosskey }}
         - name: CROSSKEY_CLIENT_ID
           valueFrom:
