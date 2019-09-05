@@ -124,7 +124,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
     @Override
     public boolean isManualAuthentication(Credentials credentials) {
         if (authenticator != null) {
-            return ((ManualOrAutoAuth) authenticator).isManualAuthentication(credentials);
+            return authenticator.isManualAuthentication(credentials);
         }
         return false;
     }
