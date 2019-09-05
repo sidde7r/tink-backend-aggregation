@@ -53,10 +53,6 @@ agents:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
     cgd:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-  comdirect:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   commerzbank:
     tink:
       certificateId: Tink

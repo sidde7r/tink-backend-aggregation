@@ -904,15 +904,6 @@ data:
             redirectUrl: "{{ $agentsConfig.comdirect.tink.redirectUrl }}"
         {{- end }}
 
-        {{- if $agentsConfig.commerzbank }}
-        comdirect:
-          tink:
-            baseUrl: "https://psd2.api.commerzbank.com"
-            clientId: "COMMERZBANK_CLIENT_ID_TAG"
-            certificateId: "{{ $agentsConfig.comdirect.tink.certificateId }}"
-            redirectUrl: "{{ $agentsConfig.comdirect.tink.redirectUrl }}"
-        {{- end }}
-
         {{- if $agentsConfig.handelsbanken }}
         handelsbanken:
           tink:
