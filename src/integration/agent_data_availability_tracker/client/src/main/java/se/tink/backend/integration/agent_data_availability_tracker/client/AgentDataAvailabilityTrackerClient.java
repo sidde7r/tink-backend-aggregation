@@ -8,7 +8,12 @@ public interface AgentDataAvailabilityTrackerClient extends Managed {
 
     void beginStream();
 
-    void sendAccount(final String agent, final Account account, final AccountFeatures features);
+    void sendAccount(
+            final String agent,
+            final String provider,
+            final String market,
+            final Account account,
+            final AccountFeatures features);
 
     void endStreamBlocking() throws InterruptedException;
 
