@@ -75,9 +75,9 @@
         {
             "className": "nxgen.nl.banks.openbanking.bunq.BunqAgent",
             "credentialsType": "PASSWORD",
-            "displayName": "Bunq",
+            "displayName": "Bunq Open Banking",
             "fields": [],
-            "financialInstitutionId": "fc00db4df3144d0a87827ddd6d1bee47",
+            "financialInstitutionId": "77afd60c061cd45209774d0e168dbd10",
             "multiFactor": false,
             "name": "nl-bunq-oauth2",
             "passwordHelpText": null,
@@ -114,9 +114,9 @@
         {
             "className": "nxgen.nl.banks.openbanking.bunq.BunqAgent",
             "credentialsType": "PASSWORD",
-            "displayName": "Bunq Sandbox",
+            "displayName": "Bunq Open Banking Sandbox",
             "fields": [],
-            "financialInstitutionId": "fc00db4df3144d0a87827ddd6d1bee47",
+            "financialInstitutionId": "77afd60c061cd45209774d0e168dbd10",
             "multiFactor": false,
             "name": "nl-bunq-sandbox-oauth2",
             "passwordHelpText": null,
