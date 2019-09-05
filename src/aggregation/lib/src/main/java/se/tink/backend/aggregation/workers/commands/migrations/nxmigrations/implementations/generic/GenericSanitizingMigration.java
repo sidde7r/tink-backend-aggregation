@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.implementations.avanza;
+package se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.implementations.generic;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
@@ -8,11 +8,17 @@ import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.DataVersionMigration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class Sanitizing_v1_v2 extends DataVersionMigration {
+public class GenericSanitizingMigration extends DataVersionMigration {
+
+    private final int fromVersion;
+
+    public GenericSanitizingMigration(int fromVersion) {
+        this.fromVersion = fromVersion;
+    }
 
     @Override
     public int getMigrationFromVersion() {
-        return 1;
+        return fromVersion;
     }
 
     @Override
