@@ -25,7 +25,6 @@ data:
     substitute-secret CREDITSAFE_USERNAME "$CREDITSAFE_USERNAME"
     substitute-secret CREDITSAFE_PASSWORD "$CREDITSAFE_PASSWORD"
     substitute-secret KEYSTORE_PASSWORD "$KEYSTORE_PASSWORD"
-    substitute-secret AXA_PSD2_CLIENT_ID "$AXA_PSD2_CLIENT_ID"
     substitute-secret BPOST_PSD2_CLIENT_ID "$BPOST_PSD2_CLIENT_ID"
     substitute-secret SEB_CLIENT_ID "$SEB_CLIENT_ID"
     substitute-secret SEB_CLIENT_SECRET "$SEB_CLIENT_SECRET"

@@ -22,10 +22,6 @@ agents:
   abnamro:
     tink:
       redirectUrl: https://localhost/auth
-  axa:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   bpost:
     tink:
       certificateId: Tink
