@@ -65,8 +65,9 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setAmount(
                         ExactCurrencyAmount.of(
-                                BigDecimal.valueOf(amount.getRawValue()),
-                                configuration.getCurrency()))
+                                        BigDecimal.valueOf(amount.getRawValue()),
+                                        configuration.getCurrency())
+                                .negate())
                 .setDate(getDate())
                 .setPending(isPending())
                 .setDescription(getDescriptionString())

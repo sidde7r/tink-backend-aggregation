@@ -28,8 +28,8 @@ public class CardEntity {
     public CreditCardAccount toCreditCardAccount(AmericanExpressV62Configuration config) {
         return CreditCardAccount.builder(
                         cardNumberDisplay,
-                        ExactCurrencyAmount.of(getTotalBalance(), config.getCurrency()),
-                        ExactCurrencyAmount.of(getAvailableCredit(), config.getCurrency()))
+                        ExactCurrencyAmount.of(getTotalBalance(), config.getCurrency()).negate(),
+                        ExactCurrencyAmount.of(getAvailableCredit(), config.getCurrency()).negate())
                 .setAccountNumber(cardNumberDisplay)
                 .setName(
                         cardProductName
