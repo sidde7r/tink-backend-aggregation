@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.starling;
 
 import org.junit.Ignore;
 import org.junit.Test;
