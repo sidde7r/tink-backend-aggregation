@@ -66,7 +66,6 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
                         context.getAggregatorInfo(),
                         metricContext.getMetricRegistry(),
                         context.getLogOutputStream(),
-                        signatureKeyPair,
                         request.getProvider());
         // When Java trusted certificates are updated this is probably no longer necessary:
         this.client.loadTrustMaterial(loadCustomTrustStore(), null);

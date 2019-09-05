@@ -89,7 +89,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         context.getAggregatorInfo(),
                         metricContext.getMetricRegistry(),
                         context.getLogOutputStream(),
-                        signatureKeyPair,
                         request.getProvider());
         tinkProvider = request.getProvider();
         this.wellKnownURL = wellKnownURL;

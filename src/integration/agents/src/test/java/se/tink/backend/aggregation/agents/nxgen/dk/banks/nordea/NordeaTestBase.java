@@ -37,7 +37,6 @@ public class NordeaTestBase {
                                 context.getAggregatorInfo(),
                                 context.getMetricRegistry(),
                                 context.getLogOutputStream(),
-                                null,
                                 null));
         tinkHttpClient.setDebugOutput(TestConfig.CLIENT_DEBUG_OUTPUT);
         tinkHttpClient.addFilter(new NordeaDkFilter());
