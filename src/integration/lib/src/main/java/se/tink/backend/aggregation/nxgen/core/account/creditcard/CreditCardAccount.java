@@ -64,6 +64,16 @@ public class CreditCardAccount extends Account {
                 .setExactBalance(balance)
                 .setAvailableCredit(availableCredit);
     }
+
+    public static Builder<?, ?> builder(
+            String uniqueIdentifier,
+            ExactCurrencyAmount balance,
+            ExactCurrencyAmount availableCredit) {
+        return builder(uniqueIdentifier)
+                .setExactBalance(balance)
+                .setExactAvailableCredit(availableCredit);
+    }
+
     /**
      * Variation of {@link #builderFromFullNumber(String, String)} for when there is no suitable
      * card alias.

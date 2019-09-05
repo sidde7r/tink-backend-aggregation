@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.ZERO;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Utils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.libraries.amount.ExactCurrencyAmount;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.ZERO;
 
 @JsonObject
 public class CardEntity {
@@ -28,8 +29,10 @@ public class CardEntity {
     public CreditCardAccount toCreditCardAccount(AmericanExpressV62Configuration config) {
         return CreditCardAccount.builder(
                         cardNumberDisplay,
-                        config.toAmount(getTotalBalance()),
-                        config.toAmount(getAvailableCredit()))
+                        ExactCurrencyAmount.of(
+                                BigDecimal.valueOf(getTotalBalance()), config.getCurrency()),
+                        ExactCurrencyAmount.of(
+                                BigDecimal.valueOf(getAvailableCredit()), config.getCurrency()))
                 .setAccountNumber(cardNumberDisplay)
                 .setName(
                         cardProductName
