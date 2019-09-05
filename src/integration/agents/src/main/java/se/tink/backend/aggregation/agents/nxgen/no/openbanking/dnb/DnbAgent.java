@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -25,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -53,10 +51,8 @@ public final class DnbAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        client.setSslClientCertificate(
-                readFile(getClientConfiguration().getClientKeyStorePath()),
-                getClientConfiguration().getClientKeyStorePassword());
-        apiClient.setConfiguration(getClientConfiguration());
+
+        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
     }
 
     private DnbConfiguration getClientConfiguration() {
@@ -113,7 +109,8 @@ public final class DnbAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController<>(
+                                transactionFetcher, 4, 90, ChronoUnit.DAYS)));
     }
 
     @Override
@@ -126,13 +123,5 @@ public final class DnbAgent extends NextGenerationAgent
         DndPaymentExecutor dndPaymentExecutor = new DndPaymentExecutor(apiClient);
 
         return Optional.of(new PaymentController(dndPaymentExecutor, dndPaymentExecutor));
-    }
-
-    private byte[] readFile(String path) {
-        try {
-            return Files.readAllBytes(Paths.get(path));
-        } catch (final IOException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
     }
 }

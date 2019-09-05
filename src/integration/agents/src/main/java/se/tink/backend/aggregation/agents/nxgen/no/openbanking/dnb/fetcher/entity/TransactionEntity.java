@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,15 +17,6 @@ public class TransactionEntity {
     @JsonProperty("_links")
     private TransactionLinksEntity links;
 
-    public boolean hasMore() {
-        return Optional.ofNullable(links).map(TransactionLinksEntity::hasNextLink).orElse(false);
-    }
-
-    public String getNextLink() {
-        return links.getNextLink();
-    }
-
-    @SuppressWarnings("Duplicates")
     public Collection<Transaction> toTinkTransactions() {
         return Stream.concat(
                         mapToTinkTransactionStream(booked), mapToTinkTransactionStream(pending))

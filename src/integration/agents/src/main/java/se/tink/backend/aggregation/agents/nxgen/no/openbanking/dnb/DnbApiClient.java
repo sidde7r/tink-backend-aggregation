@@ -28,10 +28,15 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.paym
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.TransactionResponse;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class DnbApiClient {
 
@@ -39,6 +44,7 @@ public final class DnbApiClient {
     private final SessionStorage sessionStorage;
     private final Credentials credentials;
     private DnbConfiguration configuration;
+    private EidasProxyConfiguration eidasProxyConfiguration;
 
     public DnbApiClient(
             final TinkHttpClient client,
@@ -54,24 +60,37 @@ public final class DnbApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    public void setConfiguration(DnbConfiguration configuration) {
+    public void setConfiguration(
+            DnbConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+        this.client.setEidasProxy(eidasProxyConfiguration, DnbConstants.CERTIFICATE_ID);
     }
 
     public AccountsResponse fetchAccounts() {
-        return createRequest(new URL(getConfiguration().getBaseUrl() + Urls.ACCOUNTS))
+        return createRequest(new URL(DnbConstants.BASE_URL.concat(Urls.ACCOUNTS)))
                 .header(DnbConstants.HeaderKeys.CONSENT_ID, getConsentId())
                 .get(AccountsResponse.class);
     }
 
-    public TransactionResponse fetchTransactions(final String accountId) {
-        return createRequest(
-                        new URL(
-                                getConfiguration().getBaseUrl()
-                                        + String.format(Urls.TRANSACTIONS, accountId)))
-                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                .header(HeaderKeys.CONSENT_ID, getConsentId())
-                .get(TransactionResponse.class);
+    public PaginatorResponse fetchTransactions(final String accountId, Date fromDate, Date toDate) {
+
+        try {
+            return createRequest(
+                            new URL(
+                                    DnbConstants.BASE_URL.concat(
+                                            String.format(Urls.TRANSACTIONS, accountId))))
+                    .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
+                    .queryParam(
+                            QueryKeys.FROM_DATE,
+                            ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                    .queryParam(
+                            QueryKeys.TO_DATE, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                    .header(HeaderKeys.CONSENT_ID, getConsentId())
+                    .get(TransactionResponse.class);
+        } catch (HttpResponseException e) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
     }
 
     public URL getAuthorizeUrl(final String state) {
@@ -83,8 +102,8 @@ public final class DnbApiClient {
     public BalancesResponse fetchBalance(final String accountId) {
         return createRequest(
                         new URL(
-                                getConfiguration().getBaseUrl()
-                                        + String.format(Urls.BALANCES, accountId)))
+                                DnbConstants.BASE_URL.concat(
+                                        String.format(Urls.BALANCES, accountId))))
                 .header(HeaderKeys.CONSENT_ID, getConsentId())
                 .get(BalancesResponse.class);
     }
@@ -97,7 +116,7 @@ public final class DnbApiClient {
                         .combinedServiceIndicator(false)
                         .validUntil(getValidUntilForConsent())
                         .build();
-        final URL url = new URL(getConfiguration().getBaseUrl() + Urls.CONSENTS);
+        final URL url = new URL(DnbConstants.BASE_URL.concat(Urls.CONSENTS));
 
         return createRequestWithRedirectStateAndCode(url)
                 .body(consentsRequest.toData())
@@ -124,8 +143,7 @@ public final class DnbApiClient {
     private RequestBuilder createRequestWithRedirectStateAndCode(final URL url) {
         final URL redirectUrl =
                 new URL(getConfiguration().getRedirectUrl())
-                        .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE))
-                        .queryParam(QueryKeys.CODE, "123456");
+                        .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE));
 
         return createRequestWithoutRedirectHeader(url)
                 .header(HeaderKeys.TPP_REDIRECT_URI, decodeUrl(redirectUrl));
@@ -163,7 +181,7 @@ public final class DnbApiClient {
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, DnbPaymentType dnbPaymentType) {
         return createRequestWithoutRedirectHeader(
-                        new URL(getConfiguration().getBaseUrl() + Urls.PAYMENTS)
+                        new URL(DnbConstants.BASE_URL.concat(Urls.PAYMENTS))
                                 .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString()))
                 .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .post(CreatePaymentResponse.class, createPaymentRequest);
@@ -171,7 +189,7 @@ public final class DnbApiClient {
 
     public GetPaymentResponse getPayment(DnbPaymentType dnbPaymentType, String paymentId) {
         return createRequestWithoutRedirectHeader(
-                        new URL(getConfiguration().getBaseUrl() + Urls.GET_PAYMENT)
+                        new URL(DnbConstants.BASE_URL.concat(Urls.GET_PAYMENT))
                                 .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString())
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
                 .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
