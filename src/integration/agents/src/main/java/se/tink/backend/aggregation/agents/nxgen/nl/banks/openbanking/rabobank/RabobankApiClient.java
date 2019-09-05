@@ -90,12 +90,10 @@ public final class RabobankApiClient {
     // TODO Remove when MIYAG-737 is resolved
     private static void debugPost(final URL url, final String clientId, final String clientSecret) {
 
-        if (clientId == null || clientSecret == null) {
-            logger.info(
-                    "Rabobank post MIYAG-737 : {} : client ID was {}, client secret was {}",
-                    url,
-                    clientId,
-                    clientSecret);
+        if (clientId == null) {
+            logger.info("Rabobank post MIYAG-737 : {} : client ID was missing", url);
+        } else if (clientSecret == null) {
+            logger.info("Rabobank post MIYAG-737 : {} : client secret was missing", url);
         } else {
             logger.info("Rabobank post MIYAG-737 : {} : client ID and secret are present", url);
         }
