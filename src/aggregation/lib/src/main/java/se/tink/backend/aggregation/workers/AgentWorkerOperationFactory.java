@@ -65,6 +65,7 @@ import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
@@ -94,6 +95,7 @@ public class AgentWorkerOperationFactory {
     private MetricRegistry metricRegistry;
     private SupplementalInformationController supplementalInformationController;
     private AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+    private TppSecretsServiceClient tppSecretsServiceClient;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -114,7 +116,8 @@ public class AgentWorkerOperationFactory {
             CuratorFramework coordinationClient,
             AgentsServiceConfiguration agentsServiceConfiguration,
             CredentialsEventProducer credentialsEventProducer,
-            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient) {
+            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
+            TppSecretsServiceClient tppSecretsServiceClient) {
         this.cacheClient = cacheClient;
 
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
@@ -137,6 +140,7 @@ public class AgentWorkerOperationFactory {
         this.agentsServiceConfiguration = agentsServiceConfiguration;
         this.credentialsEventProducer = credentialsEventProducer;
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
+        this.tppSecretsServiceClient = tppSecretsServiceClient;
     }
 
     /**
@@ -325,7 +329,9 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context));
+        commands.add(
+                new CreateAgentConfigurationControllerWorkerCommand(
+                        context, tppSecretsServiceClient));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -401,7 +407,9 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context));
+        commands.add(
+                new CreateAgentConfigurationControllerWorkerCommand(
+                        context, tppSecretsServiceClient));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -534,7 +542,8 @@ public class AgentWorkerOperationFactory {
                                         RefreshableItem.REFRESHABLE_ITEMS_ALL))),
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler),
-                new CreateAgentConfigurationControllerWorkerCommand(context),
+                new CreateAgentConfigurationControllerWorkerCommand(
+                        context, tppSecretsServiceClient),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
                 new LoginAgentWorkerCommand(
                         context, loginAgentWorkerCommandState, createCommandMetricState(request)),
@@ -644,7 +653,9 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context));
+        commands.add(
+                new CreateAgentConfigurationControllerWorkerCommand(
+                        context, tppSecretsServiceClient));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new KeepAliveAgentWorkerCommand(context));
@@ -790,7 +801,9 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context));
+        commands.add(
+                new CreateAgentConfigurationControllerWorkerCommand(
+                        context, tppSecretsServiceClient));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -881,7 +894,9 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context));
+        commands.add(
+                new CreateAgentConfigurationControllerWorkerCommand(
+                        context, tppSecretsServiceClient));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(

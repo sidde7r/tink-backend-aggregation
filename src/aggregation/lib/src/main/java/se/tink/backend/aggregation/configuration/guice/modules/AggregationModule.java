@@ -24,6 +24,8 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientImpl;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
@@ -45,6 +47,9 @@ public class AggregationModule extends AbstractModule {
         bind(AgentWorker.class).in(Scopes.SINGLETON);
         bind(AgentDataAvailabilityTrackerClient.class)
                 .to(AgentDataAvailabilityTrackerClientImpl.class)
+                .in(Scopes.SINGLETON);
+        bind(TppSecretsServiceClient.class)
+                .to(TppSecretsServiceClientImpl.class)
                 .in(Scopes.SINGLETON);
 
         if (Objects.nonNull(configuration.getS3StorageConfiguration())

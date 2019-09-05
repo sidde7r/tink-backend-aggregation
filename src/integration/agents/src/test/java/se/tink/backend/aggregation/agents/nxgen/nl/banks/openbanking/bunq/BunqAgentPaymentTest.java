@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -18,19 +18,25 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
 public class BunqAgentPaymentTest {
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Before
     public void before() {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("nl", "nl-bunq-sandbox-oauth2")
+                new AgentIntegrationTest.Builder("nl", "nl-bunq-oauth2")
                         .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                        .setFinancialInstitutionId("bunq")
+                        .setAppId("tink");
     }
 
     @Test
@@ -46,12 +52,12 @@ public class BunqAgentPaymentTest {
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn("NL05BUNQ9900269667").when(creditor).getAccountNumber();
+            doReturn(manager.get(Arg.CREDITOR_IBAN)).when(creditor).getAccountNumber();
             doReturn("bunq account").when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn("NL27BUNQ9900269659").when(debtor).getAccountNumber();
+            doReturn(manager.get(Arg.DEDTOR_IBAN)).when(debtor).getAccountNumber();
 
             Amount amount = Amount.inEUR(new Random().nextInt(50));
             LocalDate executionDate = LocalDate.now();
@@ -73,5 +79,7 @@ public class BunqAgentPaymentTest {
     private enum Arg {
         LOAD_BEFORE,
         SAVE_AFTER,
+        CREDITOR_IBAN,
+        DEDTOR_IBAN,
     }
 }

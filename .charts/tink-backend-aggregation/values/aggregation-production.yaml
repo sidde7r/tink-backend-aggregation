@@ -35,10 +35,6 @@ agents:
   collectorSubscriptionKey: true
   starling:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-  nordea:
-    tink:
-      eidasQwac: Tink
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   icabanken:
     tink:
       clientId: PSDSE-FINA-44059
@@ -127,6 +123,11 @@ agents:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       certificateId: Tink
+  belfius:
+    tink:
+      baseUrl: https://psd2.b2b.belfius.be:8443
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+      certificateId: Tink
   crosskey:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
@@ -134,6 +135,13 @@ agents:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
+  ing:
+    tink:
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+      certificateId: Tink
+    abn:
+      redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+      certificateId: abnamro-QSEALC
 
   proxyUri: http://10.88.12.185:8080
 
@@ -263,6 +271,6 @@ clients:
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
-  enabled: false
+  enabled: true
 
 debugLogFrequencyPercent: 20

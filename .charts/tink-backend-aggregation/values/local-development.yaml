@@ -30,11 +30,6 @@ agents:
     tink:
       certificateId: Tink
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-  bunq:
-    tink:
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-    abn:
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   crelan:
     tink:
       certificateId: Tink
@@ -59,6 +54,10 @@ agents:
     cgd:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   comdirect:
+    tink:
+      certificateId: Tink
+      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
+  commerzbank:
     tink:
       certificateId: Tink
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback

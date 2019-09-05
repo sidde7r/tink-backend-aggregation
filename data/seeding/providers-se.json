@@ -86,6 +86,7 @@
             "market": "SE",
             "multiFactor": true,
             "name": "avanza-bankid",
+            "financialInstitutionId": "deadbeefdeadbeefdeadbeefdeadbeef",
             "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
             "popular": false,
             "refreshFrequency": 0,

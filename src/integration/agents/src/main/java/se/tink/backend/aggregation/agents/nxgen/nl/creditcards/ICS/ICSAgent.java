@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAccountsExecutor {
@@ -35,16 +34,11 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
     public ICSAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        configureHttpClient(client);
         clientName = request.getProvider().getPayload().split(" ")[0];
         redirectUri = request.getProvider().getPayload().split(" ")[1];
         apiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
 
         creditCardRefreshController = constructCreditCardRefreshController();
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.disableSignatureRequestHeader();
     }
 
     @Override

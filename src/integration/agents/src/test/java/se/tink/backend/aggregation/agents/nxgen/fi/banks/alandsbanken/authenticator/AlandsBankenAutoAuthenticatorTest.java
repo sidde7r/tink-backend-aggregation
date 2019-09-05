@@ -101,7 +101,7 @@ public class AlandsBankenAutoAuthenticatorTest {
     public void cannotLoginWithUnknownUsernameAndPassword() throws Exception {
         expectIncorrectCredentials();
         username = "KALLE";
-        password = "kalle";
+        password = "registerDevicePhaseOne";
 
         testAuthenticate();
     }

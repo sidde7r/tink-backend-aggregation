@@ -401,6 +401,14 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         requestExecutor.disableSignatureRequestHeader();
     }
 
+    public void shouldQsealcJwt() {
+        requestExecutor.setShouldQsealcJwt(true);
+    }
+
+    public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
+        requestExecutor.setEidasProxyConfiguration(eidasProxyConfiguration);
+    }
+
     public void setTimeout(int milliseconds) {
         Preconditions.checkState(this.internalClient == null);
         // Note: Timeout on an initial proxy connection does not work (bug in library)

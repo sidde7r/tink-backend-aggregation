@@ -14,13 +14,17 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class UkOpenBankingV20Ais implements UkOpenBankingAis {
 
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
+    private final PersistentStorage persistentStorage;
 
-    public UkOpenBankingV20Ais(UkOpenBankingAisConfig ukOpenBankingAisConfig) {
+    public UkOpenBankingV20Ais(
+            UkOpenBankingAisConfig ukOpenBankingAisConfig, PersistentStorage persistentStorage) {
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
@@ -40,6 +44,7 @@ public class UkOpenBankingV20Ais implements UkOpenBankingAis {
         return new TransactionKeyPaginationController<>(
                 new UkOpenBankingTransactionPaginator<>(
                         ukOpenBankingAisConfig,
+                        persistentStorage,
                         apiClient,
                         AccountTransactionsV20Response.class,
                         AccountTransactionsV20Response::toAccountTransactionPaginationResponse));
@@ -72,6 +77,7 @@ public class UkOpenBankingV20Ais implements UkOpenBankingAis {
         return new TransactionKeyPaginationController<>(
                 new UkOpenBankingTransactionPaginator<>(
                         ukOpenBankingAisConfig,
+                        persistentStorage,
                         apiClient,
                         AccountTransactionsV20Response.class,
                         AccountTransactionsV20Response::toCreditCardPaginationResponse));

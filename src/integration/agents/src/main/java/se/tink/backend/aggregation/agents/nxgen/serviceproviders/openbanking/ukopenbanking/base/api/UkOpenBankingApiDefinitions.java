@@ -87,6 +87,7 @@ public class UkOpenBankingApiDefinitions {
                         .add(CLOSING_AVAILABLE)
                         .add(OPENING_BOOKED)
                         .add(CLOSING_BOOKED)
+                        .add(FORWARD_AVAILABLE)
                         .build();
 
         public static <T> Optional<T> getPreferredBalanceEntity(

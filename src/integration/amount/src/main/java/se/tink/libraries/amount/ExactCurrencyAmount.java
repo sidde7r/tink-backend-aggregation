@@ -1,5 +1,6 @@
 package se.tink.libraries.amount;
 
+import com.google.common.base.Preconditions;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
     private final String currencyCode;
 
     public ExactCurrencyAmount(BigDecimal value, String currencyCode) {
+        Preconditions.checkNotNull(value, "Value must not be null.");
         this.value = value;
         this.currencyCode = currencyCode;
     }

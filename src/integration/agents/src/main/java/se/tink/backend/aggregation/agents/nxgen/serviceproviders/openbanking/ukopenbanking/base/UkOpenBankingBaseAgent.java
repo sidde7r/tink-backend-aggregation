@@ -82,7 +82,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             boolean disableSslVerification) {
 
         super(request, context, signatureKeyPair);
-        configureHttpClient(client);
         this.disableSslVerification = disableSslVerification;
 
         this.paymentsHttpClient =
@@ -94,10 +93,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         request.getProvider());
         tinkProvider = request.getProvider();
         this.wellKnownURL = wellKnownURL;
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.disableSignatureRequestHeader();
     }
 
     private String getSoftwareStatementName() {

@@ -7,9 +7,9 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities.PocketEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities.WalletEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc.WalletResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.rpc.BaseUserResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -27,7 +27,7 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
 
         final AccountsResponse topUpAccountEntities = apiClient.fetchAccounts();
         final BaseUserResponse user = apiClient.fetchUser();
-        final WalletEntity wallet = user.getWallet();
+        final WalletResponse wallet = apiClient.fetchWallet();
         final String holderName = user.getUser().getFullName();
 
         // Most currencies will share iban.

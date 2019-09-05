@@ -1374,6 +1374,7 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "fadaee91c1f3453eb844c0b9e7a77c81",
             "groupDisplayName": "Commerzbank",
             "multiFactor": false,
             "name": "de-commerzbank-password",

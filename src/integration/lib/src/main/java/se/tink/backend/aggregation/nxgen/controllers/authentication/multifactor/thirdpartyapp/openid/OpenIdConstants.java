@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableList;
 public class OpenIdConstants {
 
     public static final String TINK_UKOPENBANKING_ORGID = "00158000016i44IAAQ";
+    public static final String TINK_TLS_AUTH_CLIENT_DN =
+            "/C=GB/O=OpenBanking/OU=00158000016i44IAAQ/CN=1hi7lvAZ6lVrKRCiOIjnXJ";
 
     public static class Scopes {
         public static final String OPEN_ID = "openid";
@@ -140,6 +142,7 @@ public class OpenIdConstants {
             public static final String EXPIRES_AT = "exp";
             public static final String AUDIENCE = "aud";
             public static final String JWT_ID = "jti";
+            public static final String TLS_CLIENT_AUTH_DN = "tls_client_auth_dn";
         }
     }
 }

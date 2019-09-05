@@ -62,7 +62,6 @@ public class AktiaAgent extends NextGenerationAgent
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(AktiaConstants.HttpHeaders.USER_AGENT);
-        client.disableSignatureRequestHeader();
     }
 
     @Override

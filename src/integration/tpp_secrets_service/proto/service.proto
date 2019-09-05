@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "se.tink.backend.secretservice.grpc";
+option java_outer_classname = "Protos";
+option go_package = "proto";
+
+service InternalCertificateService {
+    rpc GetQwacCertificateWithEncryptedPrivateKey (QwacCertificateRequest) returns (CertificateResponse) {}
+    rpc GetQsealcCertificateWithEncryptedPrivateKey (QsealcCertificateRequest) returns (CertificateResponse) {}
+    rpc Ping(PingMessage) returns (PingMessage) {}
+}
+
+service ExternalCertificateService {
+    rpc GetUploadKey (PublicKeyRequest) returns (PublicKeyResponse) {}
+    rpc ConvertEncryptedPrivateKey (ConvertEncryptedPrivateKeyRequest) returns (ConvertEncryptedPrivateKeyResponse) {}
+}
+
+service InternalSecretsService {
+    rpc GetAllSecrets (GetSecretsRequest) returns (GetAllSecretsResponse) {}
+}
+
+service ExternalSecretsService {
+    rpc GetUploadKey (PublicKeyRequest) returns (PublicKeyResponse) {}
+}
+
+enum CertType {
+    QWAC = 0;
+    QSEALC = 1;
+}
+
+message TppSecret {
+    string key = 1;
+    string value = 2;
+}
+
+message EncryptedTppSecret {
+    string key = 1;
+    string value = 2;
+}
+message GetSecretsRequest {
+    string appId = 1;
+    string financialInstitutionId = 2;
+    string clusterId = 3;
+}
+
+message GetAllSecretsResponse {
+    repeated TppSecret secrets = 1;
+    repeated TppSecret encryptedSecrets = 2;
+}
+
+message QwacCertificateRequest {
+    string appId = 1;
+    string certId = 2;
+    string clusterId = 3;
+}
+
+message CertificateResponse {
+    bytes certificate = 1;
+    bytes privateKeyInPlaintext = 2;
+    string encryptedPrivateKey = 3;
+    string resolvedAppId = 4;
+}
+
+message QsealcCertificateRequest {
+    string appId = 1;
+    string certId = 2;
+    string clusterId = 3;
+}
+
+message PublicKeyRequest {}
+
+message PublicKeyResponse {
+    string publicKey = 1;
+}
+
+message SignWithEncryptedQsealcRequest {
+    string appId = 1;
+    string certId = 2;
+    bytes dataToSign = 3;
+    bytes encryptedPrivateKey = 4;
+    string algorithm = 5;
+}
+
+message ConvertEncryptedPrivateKeyRequest {
+    string appId = 1;
+    string certId = 2;
+    CertType certType = 3;
+    string encryptedPrivateKey = 4;
+    string uploadKey = 5;
+}
+
+message ConvertEncryptedPrivateKeyResponse {
+    string encryptedPrivateKey = 1;
+}
+
+message PingMessage {
+}

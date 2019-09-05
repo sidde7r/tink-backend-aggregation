@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -33,10 +35,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class VolksbankAgent extends SubsequentGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                ProgressiveAuthAgent {
+                ProgressiveAuthAgent,
+                ManualOrAutoAuth {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final ProgressiveAuthenticator progressiveAuthenticator;
+    private final ManualOrAutoAuth manualOrAutoAuthAuthenticator;
 
     public VolksbankAgent(
             CredentialsRequest request,
@@ -111,13 +115,16 @@ public class VolksbankAgent extends SubsequentGenerationAgent
         OAuth2AuthenticationProgressiveController oAuth2AuthenticationController =
                 new OAuth2AuthenticationProgressiveController(
                         persistentStorage, authenticator, credentials, strongAuthenticationState);
-        progressiveAuthenticator =
+        final AutoAuthenticationProgressiveController autoAuthenticationController =
                 new AutoAuthenticationProgressiveController(
                         request,
                         context,
                         new ThirdPartyAppAuthenticationProgressiveController(
                                 oAuth2AuthenticationController),
                         oAuth2AuthenticationController);
+
+        progressiveAuthenticator = autoAuthenticationController;
+        manualOrAutoAuthAuthenticator = autoAuthenticationController;
     }
 
     @Override
@@ -154,5 +161,10 @@ public class VolksbankAgent extends SubsequentGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    public boolean isManualAuthentication(final Credentials credentials) {
+        return manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
     }
 }

@@ -1,9 +1,5 @@
 build_flags:
-  --javacopt="-g"
   --test_output=streamed
-  --action_env=PATH
-  --action_env=LD_LIBRARY_PATH
-  --incompatible_disable_depset_in_cc_user_flags=false
 
 directories:
   .
@@ -34,6 +30,7 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/santander
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/bunq
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/abnamro
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/bunq

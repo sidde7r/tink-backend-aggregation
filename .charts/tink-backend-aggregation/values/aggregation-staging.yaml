@@ -23,10 +23,6 @@ agents:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/mobilebanking
     openbanking:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/openbanking
-  nordea:
-    tink:
-      eidasQwac: Tink
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   icabanken:
     tink:
       clientId: PSDSE-FINA-44059
@@ -59,16 +55,13 @@ agents:
   abnamro:
     tink:
       redirectUrl: https://localhost/auth
-  bunq:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-    abn:
-      redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
   ing:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+      certificateId: Tink
     abn:
       redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+      certificateId: abnamro-QSEALC
   rabobank:
     tink_sandbox:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
@@ -119,11 +112,16 @@ agents:
     tink:
       certificateId: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+  commerzbank:
+    tink:
+      certificateId: Tink
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   swedbank:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
-      bypassTransactionConsent: true
+      bypassTransactionConsent: false
+      monthsToFetch: 25
   cbi:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback

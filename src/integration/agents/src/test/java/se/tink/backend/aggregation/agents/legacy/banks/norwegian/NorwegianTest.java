@@ -4,7 +4,7 @@ import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.banks.norwegian.model.AccountEntity;
+import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils;
 
 public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
@@ -26,14 +26,14 @@ public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
     }
 
     private void assertValidBankId(String accountNumber) {
-        AccountEntity account = new AccountEntity();
-        account.setAccountNumber(accountNumber);
+        CreditCardEntity account = new CreditCardEntity();
+        account.setCardNumberMasked(accountNumber);
         Assert.assertTrue(account.hasValidBankId());
     }
 
     private void assertInvalidBankId(String accountNumber) {
-        AccountEntity account = new AccountEntity();
-        account.setAccountNumber(accountNumber);
+        CreditCardEntity account = new CreditCardEntity();
+        account.setCardNumberMasked(accountNumber);
         Assert.assertFalse(account.hasValidBankId());
     }
 

@@ -6,12 +6,14 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -28,8 +30,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtBodyEntity;
+import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtHeaderEntity;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 /*
    This HttpRequestExecutor is only necessary because of bugs in the underlying libraries (jersey and apache).
@@ -58,6 +66,16 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private boolean shouldUseEidasProxy = false;
     private String legacyCertId;
     private EidasIdentity eidasIdentity;
+    private boolean shouldQsealcJwt = false;
+    private EidasProxyConfiguration eidasProxyConfiguration;
+
+    public void setShouldQsealcJwt(boolean shouldQsealcJwt) {
+        this.shouldQsealcJwt = shouldQsealcJwt;
+    }
+
+    public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+    }
 
     public void setEidasIdentity(EidasIdentity eidasIdentity) {
         this.eidasIdentity = eidasIdentity;
@@ -107,6 +125,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             // Requests to the EIDAS proxy do not need to be signed. The proxy will sign the request
             // on the way out if necessary.
             addRequestSignature(request);
+        } else if (shouldQsealcJwt) {
+            addQsealcSignature(request);
         }
 
         return super.execute(request, conn, context);
@@ -155,7 +175,53 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         request.addHeader("Cookie", cookieValue);
     }
 
+    private void addQsealcSignature(HttpRequest request) {
+
+        // TODO: adding the info header once verified
+
+        JwtBodyEntity jwtBody = new JwtBodyEntity();
+        RequestLine requestLine = request.getRequestLine();
+        jwtBody.setMethod(requestLine.getMethod());
+        jwtBody.setUri(requestLine.getUri());
+        getHttpHeadersHashAsBase64(request).ifPresent(jwtBody::setHeaders);
+
+        getHttpBodyHashAsBase64(request).ifPresent(jwtBody::setBody);
+        jwtBody.setNonce(UUID.randomUUID().toString());
+        jwtBody.setIat(OffsetDateTime.now().toEpochSecond());
+
+        String tokenBodyJson = SerializationUtils.serializeToString(jwtBody);
+        // TODO, idea is to use appId as keyId and upload cert to corresponding path on CDN
+        String tokenHeadJson =
+                SerializationUtils.serializeToString(new JwtHeaderEntity(eidasIdentity.getAppId()));
+
+        String baseTokenString =
+                Base64.getUrlEncoder()
+                                .encodeToString(
+                                        tokenHeadJson != null
+                                                ? tokenHeadJson.getBytes()
+                                                : new byte[0])
+                        + "."
+                        + Base64.getUrlEncoder()
+                                .encodeToString(
+                                        tokenBodyJson != null
+                                                ? tokenBodyJson.getBytes()
+                                                : new byte[0]);
+
+        QsealcSigner signer =
+                QsealcSigner.build(
+                        eidasProxyConfiguration.toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        eidasIdentity);
+
+        String signature = signer.getSignatureBase64(baseTokenString.getBytes());
+        String jwt = baseTokenString + "." + signature;
+        log.info("QSEALC Signature is :  {}", jwt);
+        request.addHeader(SIGNATURE_HEADER_KEY, jwt);
+    }
+
     private void addRequestSignature(HttpRequest request) {
+        // TODO remove the signatureKeyPair and algorithm
+
         if (signatureKeyPair == null || algorithm == null) {
             return;
         }

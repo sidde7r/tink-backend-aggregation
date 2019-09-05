@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +63,7 @@ public class AvanzaTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        final String accId = account.getBankIdentifier();
+        final String accId = account.getApiIdentifier();
         final String fromDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate);
         final String toDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
 
@@ -71,13 +72,13 @@ public class AvanzaTransactionalAccountFetcher
                         .filter(
                                 authSession ->
                                         apiClient.authSessionHasAccountId(authSession, accId))
+                        .findFirst()
                         .map(
                                 authSession ->
                                         apiClient.fetchTransactions(
                                                 accId, fromDateStr, toDateStr, authSession))
                         .map(TransactionsResponse::getTransactions)
-                        .flatMap(Collection::stream)
-                        .collect(Collectors.toList());
+                        .orElse(new ArrayList<>());
 
         return PaginatorResponseImpl.create(transactions);
     }

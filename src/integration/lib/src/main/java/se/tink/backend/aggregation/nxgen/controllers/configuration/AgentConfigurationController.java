@@ -15,10 +15,10 @@ import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
-import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceConfiguration;
 
 public final class AgentConfigurationController {
 
@@ -32,6 +32,7 @@ public final class AgentConfigurationController {
     private final String appId;
     private final String clusterId;
     private final String redirectUrl;
+    private final boolean isOpenBankingAgent;
     private Map<String, String> allSecrets;
     // For fallback
     private boolean fallback = false;
@@ -39,37 +40,41 @@ public final class AgentConfigurationController {
     private String clientName;
 
     public AgentConfigurationController(
-            TppSecretsServiceConfiguration tppSecretsServiceConfiguration,
+            TppSecretsServiceClient tppSecretsServiceClient,
             IntegrationsConfiguration integrationsConfiguration,
             String financialInstitutionId,
             String appId,
             String clusterId,
-            String redirectUrl) {
+            String redirectUrl,
+            AccessType accessType) {
         Preconditions.checkNotNull(
-                tppSecretsServiceConfiguration, "tppSecretsServiceConfiguration not found.");
+                tppSecretsServiceClient, "tppSecretsServiceClient cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(financialInstitutionId),
                 "financialInstitutionId cannot be empty/null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
-        // TODO: Enable preconditons once we get word from aggregation that all users have an appId.
-        // Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
 
-        this.tppSecretsServiceEnabled = tppSecretsServiceConfiguration.isEnabled();
-        if (tppSecretsServiceEnabled) {
-            this.tppSecretsServiceClient =
-                    new TppSecretsServiceClient(tppSecretsServiceConfiguration);
-        } else {
+        // TODO: Enable precondiction and remove logging when verified by Access team that we don't
+        //  get empty or null appIds.
+        // Preconditions.checkNotNull(Strings.emptyToNull(appId), "appId cannot be empty/null");
+        if (Strings.emptyToNull(appId) == null) {
+            log.warn("appId cannot be empty/null for clusterId : " + clusterId);
+        }
+
+        this.tppSecretsServiceEnabled = tppSecretsServiceClient.isEnabled();
+        this.tppSecretsServiceClient = tppSecretsServiceClient;
+        if (!tppSecretsServiceEnabled) {
             Preconditions.checkNotNull(
                     integrationsConfiguration,
                     "integrationsConfiguration cannot be null if tppSecretsService is not enabled.");
-            this.tppSecretsServiceClient = null;
         }
         this.integrationsConfiguration = integrationsConfiguration;
         this.financialInstitutionId = financialInstitutionId;
         this.appId = appId;
         this.clusterId = clusterId;
         this.redirectUrl = redirectUrl;
+        this.isOpenBankingAgent = AccessType.OPEN_BANKING == accessType;
     }
 
     public AgentConfigurationController withFallback(String integrationName, String clientName) {
@@ -86,12 +91,25 @@ public final class AgentConfigurationController {
         return this;
     }
 
+    public boolean isOpenBankingAgent() {
+        return isOpenBankingAgent;
+    }
+
     public boolean init() {
-        if (tppSecretsServiceEnabled) {
+        if (tppSecretsServiceEnabled && isOpenBankingAgent) {
             try {
-                allSecrets =
+                Optional<Map<String, String>> allSecretsOpt =
                         tppSecretsServiceClient.getAllSecrets(
                                 financialInstitutionId, appId, clusterId);
+
+                // TODO: Remove if once Access team confirms there are no null appIds around.
+                if (!allSecretsOpt.isPresent()) {
+                    log.warn(
+                            "Could not fetch secrets due to null or empty appId/financialInstitutionId");
+                    return true;
+                }
+
+                allSecrets = allSecretsOpt.get();
             } catch (RuntimeException e) {
                 if (e instanceof StatusRuntimeException) {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) e;
@@ -187,12 +205,6 @@ public final class AgentConfigurationController {
         allSecrets.remove(REDIRECT_URLS_KEY);
 
         return true;
-    }
-
-    public void shutdownTppSecretsServiceClient() {
-        if (tppSecretsServiceEnabled) {
-            Optional.ofNullable(tppSecretsServiceClient).ifPresent(client -> client.shutdown());
-        }
     }
 
     public <T extends ClientConfiguration> T getAgentConfiguration(

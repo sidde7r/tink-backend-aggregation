@@ -1,0 +1,21 @@
+java_library(
+    name = "enums",
+    srcs = glob(["src/main/**/enums/*.java"]),
+    visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "rpc",
+    srcs = glob(["src/main/**/rpc/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/generic_application",
+        "//src/integration/signableoperation:enums",
+        "//src/integration/transfer:rpc",
+        "//src/integration/user:rpc",
+        "//src/libraries/serialization",
+        "//src/libraries/uuid",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
+    ],
+)

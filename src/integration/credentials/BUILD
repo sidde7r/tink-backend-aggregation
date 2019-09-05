@@ -46,7 +46,7 @@ java_library(
     srcs = glob(["src/main/**/rpc/*.java"]),
     visibility = [
         "//src/aggregation:__subpackages__",
-        "//src/aggregationcontroller_api:__subpackages__",
+        "//src/aggregation/aggregationcontroller_api:__subpackages__",
         "//src/integration:__subpackages__",
     ],
     deps = [
@@ -69,7 +69,7 @@ java_library(
     ],
     deps = [
         "//src/integration/api",
-        "//src/libraries/user:rpc",
+        "//src/integration/user:rpc",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",

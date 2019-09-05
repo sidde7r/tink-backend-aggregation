@@ -12,10 +12,10 @@ java_library(
     srcs = glob(["src/main/**/rpc/*.java"]),
     visibility = [
         "//src/aggregation:__subpackages__",
-        "//src/aggregationcontroller_api:__pkg__",
+        "//src/aggregation/aggregationcontroller_api:__pkg__",
         "//src/integration:__subpackages__",
         "//src/integration/account:__pkg__",
-        "//src/libraries/signableoperation:__pkg__",
+        "//src/integration/signableoperation:__pkg__",
     ],
     deps = [
         "//src/integration/amount",

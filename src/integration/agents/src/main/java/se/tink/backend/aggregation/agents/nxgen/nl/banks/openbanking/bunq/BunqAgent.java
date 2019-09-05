@@ -44,14 +44,7 @@ public class BunqAgent extends BunqBaseAgent {
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         bunqConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                BunqConstants.Market.INTEGRATION_NAME,
-                                clientName,
-                                BunqConfiguration.class)
-                        .orElseThrow(
-                                () -> new IllegalStateException("Bunq configuration missing."));
+                getAgentConfigurationController().getAgentConfiguration(BunqConfiguration.class);
     }
 
     @Override
@@ -85,9 +78,8 @@ public class BunqAgent extends BunqBaseAgent {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(
-                new PaymentController(
-                        new BunqPaymentExecutor(
-                                sessionStorage, apiClient, supplementalInformationHelper)));
+        BunqPaymentExecutor bunqPaymentExecutor =
+                new BunqPaymentExecutor(sessionStorage, apiClient, supplementalInformationHelper);
+        return Optional.of(new PaymentController(bunqPaymentExecutor, bunqPaymentExecutor));
     }
 }
