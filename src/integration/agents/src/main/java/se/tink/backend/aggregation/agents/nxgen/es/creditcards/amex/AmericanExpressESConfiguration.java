@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmericanExpressESConfiguration implements AmericanExpressV62Configuration {
@@ -29,11 +28,6 @@ public class AmericanExpressESConfiguration implements AmericanExpressV62Configu
     @Override
     public String getBankId(CardEntity cardEntity) {
         return cardEntity.getCardNumberDisplay();
-    }
-
-    @Override
-    public Amount toAmount(Double amount) {
-        return Amount.inEUR(amount);
     }
 
     @Override

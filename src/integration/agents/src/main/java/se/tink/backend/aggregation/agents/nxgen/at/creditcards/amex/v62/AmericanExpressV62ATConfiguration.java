@@ -6,8 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmericanExpressV62ATConfiguration implements AmericanExpressV62Configuration {
@@ -33,20 +31,8 @@ public class AmericanExpressV62ATConfiguration implements AmericanExpressV62Conf
     }
 
     @Override
-    public Amount toAmount(Double value) {
-        // When the amount is 0.0 and we try to switch sign we end up with -0.0 what we would like
-        // to avoid
-        Amount amount = Amount.inEUR(value);
-        if (amount.isZero()) {
-            return amount;
-        }
-        // We are switching sign as Amex app shows values inversely to our standard
-        return amount.negate();
-    }
-
-    @Override
     public String getCurrency() {
-       return "EUR";
+        return "EUR";
     }
 
     @Override
