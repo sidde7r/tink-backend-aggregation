@@ -27,7 +27,6 @@ data:
     substitute-secret KEYSTORE_PASSWORD "$KEYSTORE_PASSWORD"
     substitute-secret AXA_PSD2_CLIENT_ID "$AXA_PSD2_CLIENT_ID"
     substitute-secret BPOST_PSD2_CLIENT_ID "$BPOST_PSD2_CLIENT_ID"
-    substitute-secret CRELAN_PSD2_CLIENT_ID "$CRELAN_PSD2_CLIENT_ID"
     substitute-secret SEB_CLIENT_ID "$SEB_CLIENT_ID"
     substitute-secret SEB_CLIENT_SECRET "$SEB_CLIENT_SECRET"
     substitute-secret MONZO_CLIENT_ID "$MONZO_CLIENT_ID"
