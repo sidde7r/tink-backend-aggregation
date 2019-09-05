@@ -1004,7 +1004,8 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
-                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
+                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper),
+                        false));
         commands.add(
                 new MigrateCredentialWorkerCommand(
                         context.getRequest(),

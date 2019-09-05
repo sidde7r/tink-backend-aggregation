@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.control.Try;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -22,7 +24,6 @@ import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.Data
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.DataVersionMigration.MigrationResult;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.MigrationFailedException;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.MigrationSkippedException;
-import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.implementations.avanza.Sanitizing_v1_v2;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
@@ -53,9 +54,7 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
     }
 
     private ImmutableMap<String, List<DataVersionMigration>> migrations =
-            new ImmutableMap.Builder<String, List<DataVersionMigration>>()
-                    .put("avanza-bankid", Lists.newArrayList(new Sanitizing_v1_v2()))
-                    .build();
+            new ImmutableMap.Builder<String, List<DataVersionMigration>>().build();
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
@@ -108,7 +107,9 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
 
                 return MigrationResult.ABORT;
             }
+        }
 
+        if (result == MigrationResult.MIGRATED || result == MigrationResult.SKIP) {
             credentials.setDataVersion(to);
         }
 
@@ -128,9 +129,35 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
         return Try.of(
                         () -> {
                             migrationResult = migration.migrate(request, clientInfo);
+                            HashMap.ofAll(migrationResult)
+                                    .map(
+                                            (account, newBankId) -> {
+                                                account.setBankId(newBankId);
+                                                return new Tuple2<>(account, newBankId);
+                                            })
+                                    .mapKeys(Account::getBankId)
+                                    .forEach(
+                                            (oldId, newId) ->
+                                                    logger.debug(
+                                                            "[c:{}]: Changing bankId from {} to {}",
+                                                            request.getCredentials().getId(),
+                                                            oldId,
+                                                            newId));
+
                             return MigrationResult.MIGRATED;
                         })
-                .recover(MigrationSkippedException.class, MigrationResult.SKIP)
+                .recover(
+                        MigrationSkippedException.class,
+                        e -> {
+                            migrationResult =
+                                    request.getAccounts().stream()
+                                            .collect(
+                                                    Collectors.toMap(
+                                                            account -> account,
+                                                            Account::getBankId));
+
+                            return MigrationResult.SKIP;
+                        })
                 .recover(MigrationFailedException.class, MigrationResult.ABORT)
                 .get();
     }

@@ -26,6 +26,8 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.DataVersionMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.DataVersionMigration.MigrationResult;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.MigrationFailedException;
+import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.implementations.generic.GenericIdFromAccountNumberMigration;
+import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.implementations.generic.GenericSanitizingMigration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 
@@ -278,31 +280,39 @@ public class MigrateCredentialWorkerCommandTest {
 
     @Test
     public void e2e() throws Exception {
-        Account acc1 = new Account();
-        Account acc2 = new Account();
-        acc1.setBankId("1-2-3");
-        acc2.setBankId("2-3-4");
+        Account acc = new Account();
+        acc.setAccountNumber("123-456");
+        acc.setBankId("2be65c23");
         Credentials credentials = new Credentials();
         credentials.setDataVersion(1);
-        credentials.setProviderName("avanza-bankid");
+        credentials.setProviderName("demo");
         final Provider provider = new Provider();
-        provider.setName("avanza-bankid");
+        provider.setName("demo");
+
+        ImmutableMap<String, List<DataVersionMigration>> migrations =
+                new ImmutableMap.Builder<String, List<DataVersionMigration>>()
+                        .put(
+                                "demo",
+                                Lists.newArrayList(
+                                        new GenericIdFromAccountNumberMigration(1),
+                                        new GenericSanitizingMigration(2)))
+                        .build();
 
         CredentialsRequest request = new MigrateCredentialsRequest(null, provider, credentials);
-        request.setAccounts(Lists.newArrayList(acc1, acc2));
+        request.setAccounts(Lists.newArrayList(acc));
 
         MigrateCredentialWorkerCommand command =
-                new MigrateCredentialWorkerCommand(request, null, 2, context, wrapper);
+                new MigrateCredentialWorkerCommand(request, null, 3, context, wrapper);
+        command.setMigrations(migrations);
 
         final AgentWorkerCommandResult execute = command.execute();
         assertEquals(AgentWorkerCommandResult.CONTINUE, execute);
-        assertEquals(2, credentials.getDataVersion());
+        assertEquals(3, credentials.getDataVersion());
 
         command.postProcess();
         verify(context, times(1))
                 .updateCredentialsExcludingSensitiveInformation(credentials, true, true);
-        verify(wrapper, times(1)).updateAccountMetaData(acc1.getId(), "123");
-        verify(wrapper, times(1)).updateAccountMetaData(acc2.getId(), "234");
+        verify(wrapper, times(1)).updateAccountMetaData(acc.getId(), "123456");
     }
 
     private static DataVersionMigration throwingMigration(int from) {
