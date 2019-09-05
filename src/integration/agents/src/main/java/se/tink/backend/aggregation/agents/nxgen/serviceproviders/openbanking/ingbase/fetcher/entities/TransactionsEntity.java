@@ -16,8 +16,7 @@ public class TransactionsEntity {
     public Stream<? extends Transaction> toTinkTransactions() {
         return Stream.concat(
                 getNonNullStream(booked).map(TransactionEntity::toBookedTinkTransaction),
-                getNonNullStream(pending)
-                        .map(TransactionEntity::toPendingTinkTransaction));
+                getNonNullStream(pending).map(TransactionEntity::toPendingTinkTransaction));
     }
 
     private Stream<? extends TransactionEntity> getNonNullStream(
