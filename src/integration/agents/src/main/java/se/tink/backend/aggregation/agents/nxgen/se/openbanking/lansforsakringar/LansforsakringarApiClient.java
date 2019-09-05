@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
-import javax.persistence.PersistenceException;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.IdTags;
@@ -20,9 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.TokenForm;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.AuthenticateResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.AuthorizePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.CrossBorderPaymentRequest;
@@ -55,9 +55,11 @@ public final class LansforsakringarApiClient {
     private final Credentials credentials;
     private final PersistentStorage persistentStorage;
 
-
     LansforsakringarApiClient(
-            TinkHttpClient client, SessionStorage sessionStorage, Credentials credentials, PersistentStorage persistentStorage) {
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            Credentials credentials,
+            PersistentStorage persistentStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
@@ -82,7 +84,9 @@ public final class LansforsakringarApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(LansforsakringarConstants.HeaderKeys.X_TINK_DEBUG, LansforsakringarConstants.HeaderValues.TRUST_ALL)
+                .header(
+                        LansforsakringarConstants.HeaderKeys.X_TINK_DEBUG,
+                        LansforsakringarConstants.HeaderValues.TRUST_ALL)
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
@@ -96,11 +100,78 @@ public final class LansforsakringarApiClient {
         return createRequestInSession(new URL(url));
     }
 
+    public ConsentResponse getConsent() {
+
+        return createRequest(new URL(LansforsakringarConstants.Urls.CONSENT))
+                .header(
+                        LansforsakringarConstants.HeaderKeys.PSU_ID,
+                        getCredentials().getField(Field.Key.USERNAME))
+                .header(
+                        LansforsakringarConstants.HeaderKeys.PSU_ID_TYPE,
+                        LansforsakringarConstants.HeaderValues.PSU_ID_TYPE)
+                .header(
+                        LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI,
+                        getConfiguration().getRedirectUrl())
+                .header(LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, false)
+                .post(ConsentResponse.class, LansforsakringarConstants.BodyValues.EMPTY_BODY);
+    }
+
+    public ConsentResponse authorizeConsent(String consentId) {
+
+        return createRequest(
+                        new URL(LansforsakringarConstants.Urls.CONSENT_PROVIDED)
+                                .parameter(LansforsakringarConstants.IdTags.CONSENT_ID, consentId))
+                .header(
+                        LansforsakringarConstants.HeaderKeys.PSU_ID,
+                        getCredentials().getField(Field.Key.USERNAME))
+                .header(
+                        LansforsakringarConstants.HeaderKeys.PSU_ID_TYPE,
+                        LansforsakringarConstants.HeaderValues.PSU_ID_TYPE)
+                .header(
+                        LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI,
+                        getConfiguration().getRedirectUrl())
+                .header(LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, false)
+                .post(ConsentResponse.class, LansforsakringarConstants.BodyValues.EMPTY_BODY);
+    }
+
+    public URL buildAuthorizeUrl(String state, String authorizationId) {
+        return createRequest(new URL(Urls.AUTHORIZATION))
+                .queryParam(
+                        LansforsakringarConstants.QueryKeys.CLIENT_ID,
+                        getConfiguration().getClientId())
+                .queryParam(
+                        LansforsakringarConstants.QueryKeys.RESPONSE_TYPE,
+                        LansforsakringarConstants.QueryValues.RESPONSE_TYPE)
+                .queryParam(LansforsakringarConstants.QueryKeys.AUTHORIZATION_ID, authorizationId)
+                .queryParam(
+                        LansforsakringarConstants.QueryKeys.REDIRECT_URI,
+                        getConfiguration().getRedirectUrl())
+                .queryParam(LansforsakringarConstants.QueryKeys.STATE, state)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .getUrl();
+    }
+
+    public OAuth2Token exchangeAuthorizationCode(String code) {
+        final TokenForm form =
+                TokenForm.builder()
+                        .setClientId(getConfiguration().getClientId())
+                        .setGrantType(FormValues.AUTHORIZATION_CODE)
+                        .setCode(code)
+                        .setClientSecret(getConfiguration().getClientSecret())
+                        .setRedirectUri(getConfiguration().getRedirectUrl())
+                        .build();
+
+        URL tokenUrl = new URL(Urls.TOKEN);
+        return postToken(form, tokenUrl);
+    }
+
     public OAuth2Token postToken(TokenForm form, URL tokenUrl) {
 
         return client.request(tokenUrl)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(LansforsakringarConstants.HeaderKeys.X_TINK_DEBUG, LansforsakringarConstants.HeaderValues.TRUST_ALL)
+                .header(
+                        LansforsakringarConstants.HeaderKeys.X_TINK_DEBUG,
+                        LansforsakringarConstants.HeaderValues.TRUST_ALL)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
                 .accept(MediaType.APPLICATION_JSON)
@@ -110,29 +181,18 @@ public final class LansforsakringarApiClient {
     }
 
     public Collection<TransactionalAccount> getAccounts() {
-        ConsentResponse consentResponse =
-                persistentStorage.get(LansforsakringarConstants.StorageKeys.CONSENT_ID, ConsentResponse.class)
-                        .orElseThrow(PersistenceException::new);
-
-        getConsentStatus(consentResponse);
-
         return createRequestInSession(Urls.GET_ACCOUNTS)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
-                .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .header(HeaderKeys.CONSENT_ID, configuration.getConsentId())
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
-                .header(HeaderKeys.AUTHORIZATION, HeaderValues.BEARER + getTokenFromStorage())
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .get(GetAccountsResponse.class)
                 .toTinkAccounts();
     }
 
     public TransactionKeyPaginatorResponse<String> getTransactionsForKey(String key) {
-        return createRequestInSession(Urls.BASE_URL + key)
-                .header(HeaderKeys.CONSENT_ID, configuration.getConsentId())
+        return createRequestInSession(Urls.BASE_API_URL + key)
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
     }
@@ -144,7 +204,7 @@ public final class LansforsakringarApiClient {
                         .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());
 
         return createRequestInSession(url)
-                .header(HeaderKeys.CONSENT_ID, configuration.getConsentId())
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
@@ -157,7 +217,7 @@ public final class LansforsakringarApiClient {
                 .get(StorageKeys.ACCESS_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () -> {
-                            LOGGER.warn("Failed to retrieve access token.");
+                            LOGGER.warn(ErrorMessages.MISSING_TOKEN);
                             return new IllegalStateException(
                                     SessionError.SESSION_EXPIRED.exception());
                         });
@@ -170,7 +230,7 @@ public final class LansforsakringarApiClient {
                                 .parameter(
                                         IdTags.PAYMENT_TYPE,
                                         PaymentTypes.DOMESTIC_CREDIT_TRANSFERS))
-                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUri())
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .post(DomesticPaymentResponse.class, domesticPaymentRequest);
     }
 
@@ -181,7 +241,7 @@ public final class LansforsakringarApiClient {
                                 .parameter(
                                         IdTags.PAYMENT_TYPE,
                                         PaymentTypes.CROSS_BORDER_CREDIT_TRANSFERS))
-                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUri())
+                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .post(CrossBorderPaymentResponse.class, crossBorderPaymentRequest);
     }
 
@@ -208,18 +268,24 @@ public final class LansforsakringarApiClient {
                 .post(AuthorizePaymentResponse.class);
     }
 
-    private void getConsentStatus(ConsentResponse consentResponse){
-        HttpResponse response = createRequestInSession(new URL(LansforsakringarConstants.Urls.BASE_URL.concat(consentResponse.getLinks().getScaStatus().getHref())))
-                .header(
-                        LansforsakringarConstants.HeaderKeys.PSU_ID,
-                        getCredentials().getField(Field.Key.USERNAME))
-                .header(
-                        LansforsakringarConstants.HeaderKeys.PSU_ID_TYPE,
-                        LansforsakringarConstants.HeaderValues.PSU_ID_TYPE)
-                .header(
-                        LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI,
-                        getConfiguration().getRedirectUri())
-                .header(LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, false)
-                .get(HttpResponse.class);
+    private void getConsentScaStatus(String consentId, String authorizationId) {
+        HttpResponse response =
+                createRequestInSession(
+                                new URL(Urls.SCA_STATUS)
+                                        .parameter(IdTags.CONSENT_ID, consentId)
+                                        .parameter(IdTags.AUTHORIZATION_ID, authorizationId))
+                        .header(
+                                LansforsakringarConstants.HeaderKeys.PSU_ID,
+                                getCredentials().getField(Field.Key.USERNAME))
+                        .header(
+                                LansforsakringarConstants.HeaderKeys.PSU_ID_TYPE,
+                                LansforsakringarConstants.HeaderValues.PSU_ID_TYPE)
+                        .header(
+                                LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI,
+                                getConfiguration().getRedirectUrl())
+                        .header(
+                                LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED,
+                                false)
+                        .get(HttpResponse.class);
     }
 }

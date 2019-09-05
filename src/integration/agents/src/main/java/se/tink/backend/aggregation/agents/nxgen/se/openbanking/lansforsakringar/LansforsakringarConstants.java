@@ -19,33 +19,53 @@ public abstract class LansforsakringarConstants {
                     .build();
 
     public static class Urls {
-        public static final String BASE_URL = "https://api.bank.lansforsakringar.se:443";
-        public static final String AUTHORIZATION =
-                "https://secure397.lansforsakringar.se/as/authorization.oauth2";
-        public static final String TOKEN = "https://api.bank.lansforsakringar.se:443/openbanking/ano/v1/oauth2/token";
-        public static final String CONSENT =
-                "https://api.bank.lansforsakringar.se:443/openbanking/ano/v1/consents";
+        public static final String BASE_API_URL = "https://api.bank.lansforsakringar.se:443";
+        public static final String BASE_AUTH_URL = "https://secure397.lansforsakringar.se";
+
+        public static final String AUTHORIZATION = BASE_AUTH_URL + Endpoints.AUTHORIZATION;
+        public static final String TOKEN = BASE_AUTH_URL + Endpoints.TOKEN;
+
+        public static final String CONSENT = BASE_API_URL + Endpoints.CONSENT;
+        public static final String CONSENT_STATUS = BASE_API_URL + Endpoints.CONSENT_STATUS;
+        public static final String CONSENT_PROVIDED = BASE_API_URL + Endpoints.CONSENT_PROVIDED;
+        public static final String SCA_STATUS = BASE_API_URL + Endpoints.SCA_STATUS;
+        public static final String GET_ACCOUNTS = BASE_API_URL + Endpoints.GET_ACCOUNTS;
+        public static final String GET_TRANSACTIONS = BASE_API_URL + Endpoints.GET_TRANSACTIONS;
+        public static final String CREATE_PAYMENT = BASE_API_URL + Endpoints.CREATE_PAYMENT;
+        public static final String GET_PAYMENT = BASE_API_URL + Endpoints.GET_PAYMENT;
+        public static final String GET_PAYMENT_STATUS = BASE_API_URL + Endpoints.GET_PAYMENT_STATUS;
+        public static final String SIGN_PAYMENT = BASE_API_URL + Endpoints.SIGN_PAYMENT;
+    }
+
+    public static class Endpoints {
+
+        public static final String AUTHORIZATION = "/as/authorization.oauth2";
+        public static final String TOKEN = "/as/token.oauth2";
+
+        public static final String CONSENT = "/openbanking/ano/v1/consents";
+        public static final String CONSENT_STATUS =
+                "/openbanking/sec/v1/consents/{consentId}/status";
         public static final String CONSENT_PROVIDED =
-                "https://api.bank.lansforsakringar.se:443/openbanking/ano/v1/consents/{consentId}/authorisations";
-        public static final String GET_ACCOUNTS = BASE_URL + "/openbanking/ais/v1/accounts";
+                "/openbanking/ano/v1/consents/{consentId}/authorisations";
+        public static final String SCA_STATUS =
+                "/openbanking/sec/v1/consents/{consentId}/authorisations/{authorizationId}";
+        public static final String GET_ACCOUNTS = "/openbanking/ais/v1/accounts";
         public static final String GET_TRANSACTIONS =
-                BASE_URL + "/openbanking/ais/v1/accounts/{accountId}/transactions";
-        public static final String CREATE_PAYMENT =
-                BASE_URL + "/openbanking/pis/v1/payments/{paymentType}";
-        public static final String GET_PAYMENT =
-                BASE_URL + "/openbanking/pis/v1/payments/{paymentId}";
+                "/openbanking/ais/v1/accounts/{accountId}/transactions";
+        public static final String CREATE_PAYMENT = "/openbanking/pis/v1/payments/{paymentType}";
+        public static final String GET_PAYMENT = "/openbanking/pis/v1/payments/{paymentId}";
         public static final String GET_PAYMENT_STATUS =
-                BASE_URL + "/openbanking/pis/v1/payments/{paymentId}/status";
+                "/openbanking/pis/v1/payments/{paymentId}/status";
         public static final String SIGN_PAYMENT =
-                BASE_URL + "/openbanking/pis/v1/payments/{paymentId}/authorisations";
+                "/openbanking/pis/v1/payments/{paymentId}/authorisations";
     }
 
     public static class StorageKeys {
         public static final String CLIENT_ID = "clientId";
         public static final String CLIENT_SECRET = "clientSecret";
-        public static final String CONSENT_ID = "consentId";
         public static final String ACCESS_TOKEN = "access-token";
         public static final String AUTHORIZATION_ID = "authorisationId";
+        public static final String CONSENT_ID = "consentId";
     }
 
     public static class QueryKeys {
@@ -99,7 +119,6 @@ public abstract class LansforsakringarConstants {
         public static final String GRANT_TYPE = "grant_type";
         public static final String SEPA = "SEPA";
         public static final String CODE = "code";
-        public static final String AUTH_ID = "AuthorisationID";
         public static final String REDIRECT_URI = "redirect_uri";
     }
 
@@ -118,6 +137,7 @@ public abstract class LansforsakringarConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_CREDENTIALS = "Client Credentials missing.";
         public static final String UNSUPPORTED_PAYMENT_TYPE = "Payment type is not supported.";
+        public static final String MISSING_TOKEN = "Failed to retrieve access token.";
     }
 
     public class Market {
@@ -129,6 +149,7 @@ public abstract class LansforsakringarConstants {
         public static final String PAYMENT_TYPE = "paymentType";
         public static final String PAYMENT_ID = "paymentId";
         public static final String CONSENT_ID = "consentId";
+        public static final String AUTHORIZATION_ID = "authorizationId";
     }
 
     public class PaymentTypes {

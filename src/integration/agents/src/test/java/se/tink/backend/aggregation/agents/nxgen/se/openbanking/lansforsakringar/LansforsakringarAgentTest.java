@@ -24,9 +24,9 @@ public class LansforsakringarAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-oauth2")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
-                        .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .expectLoggedIn(false);
     }
 
     @Test

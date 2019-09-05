@@ -37,7 +37,9 @@ public final class LansforsakringarAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new LansforsakringarApiClient(client, sessionStorage, credentials, persistentStorage);
+        apiClient =
+                new LansforsakringarApiClient(
+                        client, sessionStorage, credentials, persistentStorage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -67,11 +69,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
 
         LansforsakringarAuthenticator lansforsakringarAuthenticator =
-                new LansforsakringarAuthenticator(
-                        apiClient,
-                        sessionStorage,
-                        lansforsakringarConfiguration,
-                        persistentStorage);
+                new LansforsakringarAuthenticator(apiClient, sessionStorage, persistentStorage);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
