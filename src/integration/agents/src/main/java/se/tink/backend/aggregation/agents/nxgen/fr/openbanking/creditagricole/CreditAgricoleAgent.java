@@ -41,7 +41,6 @@ public final class CreditAgricoleAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        client.disableSignatureRequestHeader();
         apiClient.setConfiguration(getClientConfiguration());
     }
 
