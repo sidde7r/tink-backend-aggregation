@@ -62,6 +62,10 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
         return new ExactCurrencyAmount(this.getExactValue().abs(), this.getCurrencyCode());
     }
 
+    public ExactCurrencyAmount negate() {
+        return new ExactCurrencyAmount(this.getExactValue().negate(), this.getCurrencyCode());
+    }
+
     @Override
     public int compareTo(ExactCurrencyAmount other) {
         return compareTo(other.value);

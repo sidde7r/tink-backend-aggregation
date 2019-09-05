@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.Optional;
 
+@Deprecated
 public class Amount extends Number {
     @JsonIgnore
     private static final String CURRENCY_ERROR_MESSAGE = "The currencies must be the same.";
