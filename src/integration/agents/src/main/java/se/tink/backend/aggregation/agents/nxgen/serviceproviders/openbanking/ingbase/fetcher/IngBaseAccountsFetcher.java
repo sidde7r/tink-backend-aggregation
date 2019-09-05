@@ -21,14 +21,12 @@ public class IngBaseAccountsFetcher implements AccountFetcher<TransactionalAccou
         this.currency = currency;
     }
 
-    // TODO - Temporary fix due to Sandbox API bug
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return client.fetchAccounts().getAccounts(currency).stream()
                 .map(this::enrichAccountWithBalance)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .filter(account -> account.getAccountNumber().equals("NL69INGB0123456789"))
                 .collect(Collectors.toList());
     }
 
