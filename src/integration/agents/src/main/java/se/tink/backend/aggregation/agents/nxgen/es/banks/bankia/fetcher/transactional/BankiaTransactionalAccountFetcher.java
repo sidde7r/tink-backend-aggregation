@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transac
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -53,6 +54,8 @@ public class BankiaTransactionalAccountFetcher
                             return false;
                         })
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

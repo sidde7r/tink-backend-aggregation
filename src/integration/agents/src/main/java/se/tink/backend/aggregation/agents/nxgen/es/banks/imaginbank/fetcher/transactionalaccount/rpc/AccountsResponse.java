@@ -26,6 +26,8 @@ public class AccountsResponse {
     public List<TransactionalAccount> getTinkAccounts(HolderName holderName) {
         return Optional.ofNullable(account).orElseGet(Collections::emptyList).stream()
                 .map(account -> account.toTinkAccount(holderName))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

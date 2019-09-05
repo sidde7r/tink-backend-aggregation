@@ -6,6 +6,7 @@ import com.google.common.base.Strings;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -37,5 +38,10 @@ public class AmountEntity {
     @JsonIgnore
     private double getValueAsDouble() {
         return Strings.isNullOrEmpty(amount) ? 0d : StringUtils.parseAmount(amount);
+    }
+
+    @JsonIgnore
+    public ExactCurrencyAmount parseToExactCurrencyAmount() {
+        return new ExactCurrencyAmount(getTinkAmount().toBigDecimal(), currency);
     }
 }
