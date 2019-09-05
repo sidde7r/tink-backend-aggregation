@@ -31,6 +31,11 @@ public class AmericanExpressV62UKConfiguration implements AmericanExpressV62Conf
     }
 
     @Override
+    public String getCurrency() {
+        return AmericanExpressV62UKConstants.GBP;
+    }
+
+    @Override
     public TimelineRequest createTimelineRequest(Integer cardIndex) {
         TimelineUKRequest request = new TimelineUKRequest();
 

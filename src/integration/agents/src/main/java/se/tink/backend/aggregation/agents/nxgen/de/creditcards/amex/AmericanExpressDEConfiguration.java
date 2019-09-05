@@ -41,6 +41,11 @@ public class AmericanExpressDEConfiguration implements AmericanExpressV62Configu
     }
 
     @Override
+    public String getCurrency() {
+        return "EUR";
+    }
+
+    @Override
     public TimelineRequest createTimelineRequest(Integer cardIndex) {
         TimelineDERequest request = new TimelineDERequest();
         request.setSortedIndex(String.valueOf(cardIndex));

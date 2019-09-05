@@ -39,6 +39,11 @@ public class AmericanExpressITConfiguration implements AmericanExpressV62Configu
     }
 
     @Override
+    public String getCurrency() {
+        return "EUR";
+    }
+
+    @Override
     public TimelineRequest createTimelineRequest(Integer cardIndex) {
         TimelineITRequest request = new TimelineITRequest();
         request.setTimeZone(AmericanExpressV62Constants.RequestValue.TIME_ZONE);

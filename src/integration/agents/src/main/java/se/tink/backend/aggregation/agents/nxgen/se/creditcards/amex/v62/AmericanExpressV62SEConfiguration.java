@@ -34,6 +34,11 @@ public class AmericanExpressV62SEConfiguration implements AmericanExpressV62Conf
     }
 
     @Override
+    public String getCurrency() {
+        return "SEK";
+    }
+
+    @Override
     public TimelineRequest createTimelineRequest(Integer cardIndex) {
         TimelineSERequest request = new TimelineSERequest();
         request.setTimeZone(AmericanExpressV62Constants.RequestValue.TIME_ZONE);

@@ -15,7 +15,10 @@ public interface AmericanExpressV62Configuration {
     // == Credit Card Account ==
     String getBankId(CardEntity cardEntity);
 
+    @Deprecated
     Amount toAmount(Double amount);
+
+    String getCurrency();
 
     // == Timeline Api ==
     TimelineRequest createTimelineRequest(Integer cardIndex);
