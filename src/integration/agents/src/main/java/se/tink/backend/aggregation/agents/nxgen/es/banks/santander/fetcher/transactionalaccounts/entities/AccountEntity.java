@@ -169,12 +169,6 @@ public class AccountEntity {
         return AccountTypes.OTHER;
     }
 
-    /* @JsonIgnore
-    private String formatIban(String iban) {
-        return new DisplayAccountIdentifierFormatter()
-                .apply(AccountIdentifier.create(Type.IBAN, iban));
-    }*/
-
     @JsonIgnore
     public boolean isKnownAccountType() {
         // Add more account types as we discover more
