@@ -25,8 +25,8 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             Credentials credentials,
-            boolean requestIsManual) {
-        super(client, persistentStorage, credentials, requestIsManual);
+            boolean manualRequest) {
+        super(client, persistentStorage, credentials, manualRequest);
     }
 
     public void authenticate() {

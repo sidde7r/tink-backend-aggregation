@@ -48,17 +48,18 @@ public abstract class UnicreditBaseApiClient {
     protected final PersistentStorage persistentStorage;
     private UnicreditConfiguration configuration;
     private final Credentials credentials;
-    private final boolean requestIsManual;
+
+    private final boolean manualRequest;
 
     public UnicreditBaseApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             Credentials credentials,
-            boolean requestIsManual) {
+            boolean manualRequest) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
-        this.requestIsManual = requestIsManual;
+        this.manualRequest = manualRequest;
     }
 
     protected ConsentRequest getConsentRequest() {
@@ -106,11 +107,15 @@ public abstract class UnicreditBaseApiClient {
                         .header(HeaderKeys.CONSENT_ID, consentId);
 
         // This header must be present if the request was initiated by the PSU
-        if (requestIsManual) {
-            logger.info("Request is attended -- adding PSU header for {}", url);
+        if (manualRequest) {
+            logger.info(
+                    "Request is attended -- adding PSU header for requestId = {}",
+                    UnicreditBaseUtils.getRequestId());
             requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
         } else {
-            logger.info("Request is unattended -- omitting PSU header for {}", url);
+            logger.info(
+                    "Request is unattended -- omitting PSU header for requestId = {}",
+                    UnicreditBaseUtils.getRequestId());
         }
 
         return requestBuilder;
