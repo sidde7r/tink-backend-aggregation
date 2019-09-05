@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.ZERO;
 
 @JsonObject
 public class CardEntity {
@@ -29,10 +28,8 @@ public class CardEntity {
     public CreditCardAccount toCreditCardAccount(AmericanExpressV62Configuration config) {
         return CreditCardAccount.builder(
                         cardNumberDisplay,
-                        ExactCurrencyAmount.of(
-                                BigDecimal.valueOf(getTotalBalance()), config.getCurrency()),
-                        ExactCurrencyAmount.of(
-                                BigDecimal.valueOf(getAvailableCredit()), config.getCurrency()))
+                        ExactCurrencyAmount.of(getTotalBalance(), config.getCurrency()),
+                        ExactCurrencyAmount.of(getAvailableCredit(), config.getCurrency()))
                 .setAccountNumber(cardNumberDisplay)
                 .setName(
                         cardProductName
@@ -45,23 +42,23 @@ public class CardEntity {
     }
 
     @JsonIgnore
-    private double getTotalBalance() {
+    private BigDecimal getTotalBalance() {
         return Optional.ofNullable(financialTab)
                 .map(FinancialTab::getTotalBalance)
                 .map(TotalBalance::getValue)
                 .filter(AmericanExpressV62Utils::isValidAmount)
-                .map(AmericanExpressV62Utils::parseAmount)
-                .orElse(ZERO);
+                .map(AmericanExpressV62Utils::parseAmountToBigDecimal)
+                .orElse(BigDecimal.ZERO);
     }
 
     @JsonIgnore
-    private double getAvailableCredit() {
+    private BigDecimal getAvailableCredit() {
         return Optional.ofNullable(financialTab)
                 .map(FinancialTab::getAvailableCredit)
                 .map(AvailableCredit::getValue)
                 .filter(AmericanExpressV62Utils::isValidAmount)
-                .map(AmericanExpressV62Utils::parseAmount)
-                .orElse(ZERO);
+                .map(AmericanExpressV62Utils::parseAmountToBigDecimal)
+                .orElse(BigDecimal.ZERO);
     }
 
     public String getCardNumberDisplay() {
