@@ -118,7 +118,7 @@ public final class LaBanquePostaleApiClient
                         QueryValues.GRANT_TYPE,
                         redirectUri);
 
-        return client.request(getConfiguration().getBaseUrl() + Urls.GET_TOKEN)
+        return client.request(getConfiguration().getOauthBaseUrl() + Urls.GET_TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .addBasicAuth(clientId, clientSecret)
@@ -141,7 +141,7 @@ public final class LaBanquePostaleApiClient
         final String clientId = getConfiguration().getClientId();
         final String redirectUrl = getConfiguration().getRedirectUrl();
 
-        return client.request(getConfiguration().getBaseUrl() + Urls.OAUTH)
+        return client.request(getConfiguration().getOauthBaseUrl() + Urls.OAUTH)
                 .queryParam(BerlinGroupConstants.QueryKeys.CLIENT_ID, clientId)
                 .queryParam(BerlinGroupConstants.QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(
