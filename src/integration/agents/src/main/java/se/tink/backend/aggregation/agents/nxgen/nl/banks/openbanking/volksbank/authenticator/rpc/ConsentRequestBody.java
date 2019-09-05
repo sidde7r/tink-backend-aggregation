@@ -12,12 +12,13 @@ public class ConsentRequestBody {
     private Boolean recurringIndicator;
     private String validUntil;
 
-    public ConsentRequestBody(String validDate, Integer frequencyPerDay) {
+    public ConsentRequestBody(
+            String validDate, Integer frequencyPerDay, boolean recurringIndicator) {
         this.access = new AccessEntity();
-        this.recurringIndicator = false;
+        this.recurringIndicator = recurringIndicator;
         this.validUntil = validDate;
         this.frequencyPerDay = frequencyPerDay;
-        this.combinedServiceIndicator = false;
+        this.combinedServiceIndicator = false; // Volksbank only supports "false"
     }
 
     public AccessEntity getAccess() {

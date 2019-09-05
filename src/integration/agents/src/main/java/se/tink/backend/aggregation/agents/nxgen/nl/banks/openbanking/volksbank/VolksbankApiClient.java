@@ -112,7 +112,8 @@ public class VolksbankApiClient {
         final ConsentRequestBody body =
                 new ConsentRequestBody(
                         VolksbankUtils.getFutureDateAsString(ConsentParams.VALID_YEAR),
-                        ConsentParams.FREQUENCY_PER_DAY);
+                        ConsentParams.FREQUENCY_PER_DAY,
+                        ConsentParams.RECURRING_INDICATOR);
 
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
