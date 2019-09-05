@@ -28,6 +28,9 @@ agents:
       clientId: PSDSE-FINA-44059
       certificateId: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+  dnb:
+    tink:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   seb:
     tink:
       eidasQwac: Tink
