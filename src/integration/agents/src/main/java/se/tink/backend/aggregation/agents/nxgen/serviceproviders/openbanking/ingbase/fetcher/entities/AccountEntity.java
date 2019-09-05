@@ -35,12 +35,6 @@ public class AccountEntity {
     }
 
     public Optional<TransactionalAccount> toTinkAccount(Amount balance) {
-
-        // TODO - Temporary fix due to a bug from Sandbox
-        if (iban == null) {
-            iban = "NL69INGB9876543210";
-        }
-
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
