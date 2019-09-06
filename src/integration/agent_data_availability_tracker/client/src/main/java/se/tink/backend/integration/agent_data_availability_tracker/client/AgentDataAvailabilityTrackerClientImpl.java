@@ -9,7 +9,6 @@ import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.netty.handler.ssl.SslContext;
 import java.io.File;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +36,8 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     private final AccountDeque accountDeque;
     private final AbstractExecutionThreadService service;
 
-    private boolean sendingData;
-
     private final String host;
     private final int port;
-
-    private final Random random;
-    private static final float TRACKING_FRACTION = 0.80f; // 80% of requests
 
     @Inject
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
@@ -56,7 +50,6 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         this.host = host;
         this.port = port;
         this.accountDeque = new AccountDeque();
-        this.random = new Random();
         this.service =
                 new AbstractExecutionThreadService() {
                     @Override
@@ -128,12 +121,6 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     public void sendAccount(
             final String agent, final Account account, final AccountFeatures features) {
 
-        sendingData = sendingData();
-
-        if (!sendingData) {
-            return;
-        }
-
         AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
 
         if (features.getPortfolios() != null) {
@@ -173,13 +160,9 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
     }
 
-    private boolean sendingData() {
-        return random.nextFloat() < TRACKING_FRACTION;
-    }
-
     @Override
     public boolean sendingRealData() {
-        return this.sendingData;
+        return true;
     }
 
     @Override
