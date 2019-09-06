@@ -155,11 +155,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                     ukOpenBankingConfiguration.getRootCAPassword());
         }
 
-        apiClient =
-                createApiClient(
-                        client,
-                        softwareStatement,
-                        providerConfiguration);
+        apiClient = createApiClient(client, softwareStatement, providerConfiguration);
 
         // -    We cannot configure the paymentsHttpClient from `configureHttpClient()` because it
         // will be null
