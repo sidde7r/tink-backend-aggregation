@@ -40,6 +40,8 @@ public final class IngBaseConstants {
         public static final String CODE = "code";
         public static final String PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW =
                 "payment-accounts:transactions:view payment-accounts:balances:view";
+        public static final String TRANSACTION_FROM_DATE = "1970-01-01";
+        public static final int MAX_PERIOD_IN_DAYS = 89;
     }
 
     public static class HeaderKeys {

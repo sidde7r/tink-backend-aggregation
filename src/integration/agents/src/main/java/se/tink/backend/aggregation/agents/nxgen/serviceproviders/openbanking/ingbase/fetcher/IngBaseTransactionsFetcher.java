@@ -19,10 +19,7 @@ public class IngBaseTransactionsFetcher implements TransactionDatePaginator<Tran
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
         return apiClient
-                .fetchTransactions(
-                        account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL),
-                        fromDate,
-                        toDate)
+                .fetchTransactions(account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL))
                 .setFetchNextFunction(apiClient::fetchTransactions);
     }
 }

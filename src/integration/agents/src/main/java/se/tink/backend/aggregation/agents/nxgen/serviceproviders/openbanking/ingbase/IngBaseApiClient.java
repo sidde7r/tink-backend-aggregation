@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryKeys;
@@ -34,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class IngBaseApiClient {
 
@@ -44,11 +46,17 @@ public class IngBaseApiClient {
     private EidasIdentity eidasIdentity;
     private IngBaseConfiguration configuration;
     private EidasProxyConfiguration eidasProxyConfiguration;
+    private final boolean manualRequest;
 
-    public IngBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage, String market) {
+    public IngBaseApiClient(
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            String market,
+            boolean manualRequest) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.market = market;
+        this.manualRequest = manualRequest;
         dateFormat = new SimpleDateFormat(QueryValues.DATE_FORMAT);
     }
 
@@ -82,20 +90,15 @@ public class IngBaseApiClient {
                 .get(FetchBalancesResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactions(
-            final String reqPath, final Date fromDate, final Date toDate) {
+    public FetchTransactionsResponse fetchTransactions(final String transactionsUrl) {
         final String completeReqPath =
-                new URL(reqPath)
+                new URL(transactionsUrl)
+                        .queryParam(IngBaseConstants.QueryKeys.DATE_FROM, getTransactionsDateFrom())
                         .queryParam(
-                                IngBaseConstants.QueryKeys.DATE_FROM, dateFormat.format(fromDate))
-                        .queryParam(IngBaseConstants.QueryKeys.DATE_TO, dateFormat.format(toDate))
+                                IngBaseConstants.QueryKeys.DATE_TO, dateFormat.format(new Date()))
                         .toString();
-        return fetchTransactions(completeReqPath);
-    }
-
-    public FetchTransactionsResponse fetchTransactions(String transactionUrl) {
         return buildRequestWithSignature(
-                        transactionUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
+                        completeReqPath, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchTransactionsResponse.class);
@@ -167,6 +170,15 @@ public class IngBaseApiClient {
                         HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
                         getConfiguration().getClientCertificate())
                 .post(TokenResponse.class, payload);
+    }
+
+    private String getTransactionsDateFrom() {
+        if (manualRequest) {
+            return QueryValues.TRANSACTION_FROM_DATE;
+        } else {
+            return ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                    DateUtils.addDays(new Date(), -QueryValues.MAX_PERIOD_IN_DAYS));
+        }
     }
 
     private AuthorizationUrl getAuthorizationUrl(final TokenResponse tokenResponse) {

@@ -45,7 +45,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
             lowercase as wrong country code and returns error that it's malformed
         */
         final String marketInUppercase = request.getProvider().getMarket().toUpperCase();
-        apiClient = new IngBaseApiClient(client, sessionStorage, marketInUppercase);
+        apiClient =
+                new IngBaseApiClient(client, sessionStorage, marketInUppercase, request.isManual());
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
