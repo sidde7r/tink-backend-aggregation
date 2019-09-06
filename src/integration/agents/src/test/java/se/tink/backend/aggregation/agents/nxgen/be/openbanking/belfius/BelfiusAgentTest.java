@@ -16,7 +16,7 @@ public class BelfiusAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-belfius-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-belfius-ob")
                         .addCredentialField(CredentialKeys.USERNAME, manager.get(Arg.USERNAME))
                         .addCredentialField(CredentialKeys.PASSWORD, manager.get(Arg.PASSWORD))
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))

@@ -13,7 +13,7 @@ public class TargobankAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("de", "de-targobank-password")
+                new AgentIntegrationTest.Builder("de", "de-targobank-ob")
                         .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));

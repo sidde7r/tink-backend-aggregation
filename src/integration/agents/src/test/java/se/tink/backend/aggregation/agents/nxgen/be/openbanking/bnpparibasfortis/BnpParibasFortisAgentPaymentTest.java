@@ -23,7 +23,7 @@ public class BnpParibasFortisAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("be", "be-bnpparibasfortis-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-bnpparibasfortis-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)

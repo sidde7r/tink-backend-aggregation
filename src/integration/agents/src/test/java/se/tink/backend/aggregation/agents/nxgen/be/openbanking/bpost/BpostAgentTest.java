@@ -21,7 +21,7 @@ public class BpostAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-bpost-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-bpost-ob")
                         .addCredentialField(
                                 CredentialKeys.IBAN,
                                 manager.get(

@@ -22,7 +22,7 @@ public class BawagAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("at", "at-bawag-oauth2")
+                new AgentIntegrationTest.Builder("at", "at-bawag-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)

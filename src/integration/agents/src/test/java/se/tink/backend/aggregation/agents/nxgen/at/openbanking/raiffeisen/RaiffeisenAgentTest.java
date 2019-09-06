@@ -21,7 +21,7 @@ public class RaiffeisenAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("at", "at-raiffeisen-oauth2")
+                new AgentIntegrationTest.Builder("at", "at-raiffeisen-ob")
                         .addCredentialField(
                                 RaiffeisenConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)

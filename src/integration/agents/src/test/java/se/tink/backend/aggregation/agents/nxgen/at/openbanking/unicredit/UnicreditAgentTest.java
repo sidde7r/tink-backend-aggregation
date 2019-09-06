@@ -13,7 +13,7 @@ public class UnicreditAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("at", "at-unicredit-oauth2")
+                new AgentIntegrationTest.Builder("at", "at-unicredit-ob")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

@@ -32,7 +32,7 @@ public class FiduciaAgentPaymentTest {
         manager.before();
 
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("de", "de-fiducia-oauth2")
+                new AgentIntegrationTest.Builder("de", "de-fiducia-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .addCredentialField(CredentialKeys.PSU_ID, manager.get(Arg.PSU_ID))
                         .addCredentialField(CredentialKeys.PASSWORD, manager.get(Arg.PASSWORD))

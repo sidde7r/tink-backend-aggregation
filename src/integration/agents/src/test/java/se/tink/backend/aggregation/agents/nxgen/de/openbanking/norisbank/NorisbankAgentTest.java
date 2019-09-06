@@ -21,7 +21,7 @@ public class NorisbankAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("de", "de-norisbank-oauth2")
+                new AgentIntegrationTest.Builder("de", "de-norisbank-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .addCredentialField(CredentialKeys.PSU_ID, manager.get(Arg.PSU_ID))
                         .loadCredentialsBefore(false)

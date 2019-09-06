@@ -22,7 +22,7 @@ public class KbcAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("be", "be-kbc-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-kbc-ob")
                         .addCredentialField("IBAN", manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
