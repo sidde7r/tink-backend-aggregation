@@ -9,7 +9,7 @@ public final class IngBaseConstants {
     }
 
     public static class Urls {
-        public static final String ACCOUNTS = "/v3/accounts";
+        public static final String ACCOUNTS = "/v2/accounts";
         private static final String BASE_AUTH = "/oauth2";
         public static final String OAUTH = BASE_AUTH + "/authorization-server-url";
         public static final String TOKEN = BASE_AUTH + "/token";
@@ -33,7 +33,6 @@ public final class IngBaseConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String STATE = "state";
         public static final String RESPONSE_TYPE = "response_type";
-        public static final String LIMIT = "limit";
     }
 
     public static class QueryValues {
@@ -63,7 +62,6 @@ public final class IngBaseConstants {
         public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String EMPTY = "";
     }
 
     public static class Signature {
