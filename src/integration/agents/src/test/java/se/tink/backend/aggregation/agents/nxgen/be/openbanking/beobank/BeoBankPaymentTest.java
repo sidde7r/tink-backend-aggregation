@@ -24,7 +24,7 @@ public class BeoBankPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("be", "be-beobank-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-beobank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

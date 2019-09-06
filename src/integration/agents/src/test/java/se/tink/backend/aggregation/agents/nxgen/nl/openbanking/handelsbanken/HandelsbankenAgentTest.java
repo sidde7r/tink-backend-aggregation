@@ -13,7 +13,7 @@ public class HandelsbankenAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("nl", "nl-handelsbanken-oauth2")
+                new AgentIntegrationTest.Builder("nl", "nl-handelsbanken-ob")
                         .addCredentialField("accessToken", "MVBST0ZJTEVfTkxfUFJJVkFURV8z")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)

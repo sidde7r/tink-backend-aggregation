@@ -18,7 +18,7 @@ public class UnicreditAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("de", "de-unicredit-oauth2")
+                new AgentIntegrationTest.Builder("de", "de-unicredit-ob")
                         .addCredentialField(Key.USERNAME, TEST_USERNAME)
                         .addCredentialField(Key.PASSWORD, TEST_PASSWORD)
                         .addCredentialField(Key.OTP_INPUT, TEST_OTP)

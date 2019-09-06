@@ -22,7 +22,7 @@ public class TriodosAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("nl", "nl-triodos-oauth2")
+                new AgentIntegrationTest.Builder("nl", "nl-triodos-ob")
                         .addCredentialField("IBAN", manager.get(Arg.IBAN))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)

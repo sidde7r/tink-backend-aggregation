@@ -13,7 +13,7 @@ public class BeoBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("be", "be-beobank-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-beobank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

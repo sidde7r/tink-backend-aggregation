@@ -24,7 +24,7 @@ public class SantanderAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DE", "de-santander-oauth2")
+                new AgentIntegrationTest.Builder("DE", "de-santander-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

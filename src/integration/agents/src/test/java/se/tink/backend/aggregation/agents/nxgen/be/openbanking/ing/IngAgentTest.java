@@ -13,7 +13,7 @@ public class IngAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("be", "be-ing-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-ing-ob")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

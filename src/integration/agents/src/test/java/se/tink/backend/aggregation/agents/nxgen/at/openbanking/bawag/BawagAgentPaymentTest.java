@@ -24,7 +24,7 @@ public class BawagAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("AT", "at-bawag-oauth2")
+                new AgentIntegrationTest.Builder("AT", "at-bawag-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -24,7 +24,7 @@ public class HandelsbankenAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         HandelsbankenAgentIntegrationTest.Builder builder =
-                new HandelsbankenAgentIntegrationTest.Builder("nl", "nl-handelsbanken-oauth2")
+                new HandelsbankenAgentIntegrationTest.Builder("nl", "nl-handelsbanken-ob")
                         .addCredentialField(
                                 "accessToken",
                                 "QVQ6YTk3NTgyNjYtYzdjZi00ZDcwLTg3MjUtMDEwNGRhMjBlZmM2")
