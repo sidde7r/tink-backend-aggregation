@@ -3,11 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountResourceEntity {
@@ -35,26 +38,34 @@ public class AccountResourceEntity {
     @JsonProperty("_links")
     private AccountLinksEntity links = null;
 
-    public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(accountId.getIban())
-                .setAccountNumber(accountId.getIban())
-                .setBalance(getBalance())
-                .setAlias(name)
-                .addAccountIdentifier(new IbanIdentifier(accountId.getIban()))
+    public Optional<TransactionalAccount> toTinkAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withInferredAccountFlags()
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountId.getIban())
+                                .withAccountNumber(accountId.getIban())
+                                .withAccountName(name)
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.IBAN, accountId.getIban()))
+                                .build())
                 .setApiIdentifier(resourceId)
+                .setBankIdentifier(accountId.getIban())
                 .build();
     }
 
-    private Amount getBalance() {
+    private ExactCurrencyAmount getBalance() {
         return balances.stream()
                 .filter(item -> item.getBalanceType().equals(BalanceStatusEntity.XPCD))
                 .findFirst()
                 .map(
                         item ->
-                                new Amount(
-                                        item.getBalanceAmount().getCurrency(),
-                                        Double.parseDouble(item.getBalanceAmount().getAmount())))
+                                ExactCurrencyAmount.of(
+                                        item.getBalanceAmount().getAmount(),
+                                        item.getBalanceAmount().getCurrency()))
                 .orElseThrow(() -> new IllegalStateException("Balance not found"));
     }
 }
