@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstant
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.AccountIdentifier;
@@ -66,8 +65,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             UkOpenBankingPisConfig pisConfig,
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration,
-            TinkHttpClient httpClient,
-            URL wellKnownURL,
+            UkOpenBankingApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState) {
@@ -76,8 +74,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                 pisConfig,
                 softwareStatement,
                 providerConfiguration,
-                httpClient,
-                wellKnownURL,
+                apiClient,
                 supplementalInformationHelper,
                 credentials,
                 strongAuthenticationState,
@@ -88,8 +85,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             UkOpenBankingPisConfig pisConfig,
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration,
-            TinkHttpClient httpClient,
-            URL wellKnownURL,
+            UkOpenBankingApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
@@ -97,9 +93,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         this.pisConfig = pisConfig;
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
-        this.apiClient =
-                new UkOpenBankingApiClient(
-                        httpClient, softwareStatement, providerConfiguration, wellKnownURL);
+        this.apiClient = apiClient;
         this.ukOpenBankingPis = new UkOpenBankingV31Pis(pisConfig);
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.credentials = credentials;

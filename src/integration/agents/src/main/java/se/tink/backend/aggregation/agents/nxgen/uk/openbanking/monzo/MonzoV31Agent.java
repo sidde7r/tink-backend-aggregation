@@ -53,8 +53,7 @@ public class MonzoV31Agent extends UkOpenBankingBaseAgent {
                         pisConfig,
                         softwareStatement,
                         providerConfiguration,
-                        client,
-                        new URL(V31.WELL_KNOWN_URL),
+                        apiClient,
                         supplementalInformationHelper,
                         credentials,
                         strongAuthenticationState);
