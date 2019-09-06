@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -156,12 +155,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                     ukOpenBankingConfiguration.getRootCAPassword());
         }
 
-        apiClient =
-                createApiClient(
-                        client,
-                        softwareStatement,
-                        providerConfiguration,
-                        OpenIdConstants.ClientMode.ACCOUNTS);
+        apiClient = createApiClient(client, softwareStatement, providerConfiguration);
 
         // -    We cannot configure the paymentsHttpClient from `configureHttpClient()` because it
         // will be null
@@ -186,8 +180,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected UkOpenBankingApiClient createApiClient(
             TinkHttpClient httpClient,
             SoftwareStatement softwareStatement,
-            ProviderConfiguration providerConfiguration,
-            OpenIdConstants.ClientMode clientMode) {
+            ProviderConfiguration providerConfiguration) {
         return new UkOpenBankingApiClient(
                 httpClient, softwareStatement, providerConfiguration, wellKnownURL);
     }
