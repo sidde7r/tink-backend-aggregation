@@ -49,7 +49,7 @@ public abstract class UnicreditBaseApiClient {
     private UnicreditConfiguration configuration;
     private final Credentials credentials;
 
-    private final boolean manualRequest;
+    protected final boolean manualRequest;
 
     public UnicreditBaseApiClient(
             TinkHttpClient client,
