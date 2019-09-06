@@ -6,7 +6,6 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryValues;
@@ -68,7 +67,8 @@ public class IngBaseApiClient {
     }
 
     public FetchAccountsResponse fetchAccounts() {
-        return buildRequestWithSignature(Urls.ACCOUNTS, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+        return buildRequestWithSignature(
+                        Urls.ACCOUNTS, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchAccountsResponse.class);
@@ -76,7 +76,7 @@ public class IngBaseApiClient {
 
     public FetchBalancesResponse fetchBalances(final AccountEntity account) {
         String balanceUrl = account.getBalancesUrl();
-        return buildRequestWithSignature(balanceUrl, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+        return buildRequestWithSignature(balanceUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchBalancesResponse.class);
@@ -95,7 +95,7 @@ public class IngBaseApiClient {
 
     public FetchTransactionsResponse fetchTransactions(String transactionUrl) {
         return buildRequestWithSignature(
-                        transactionUrl, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+                        transactionUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchTransactionsResponse.class);
@@ -181,7 +181,7 @@ public class IngBaseApiClient {
                         .queryParam(QueryKeys.COUNTRY_CODE, market)
                         .toString();
 
-        return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+        return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(tokenResponse.toTinkToken())
                 .get(AuthorizationUrl.class);
     }
