@@ -95,7 +95,9 @@ public class CardEntity {
 
         // Some SEBKort providers do not supply card accounts. In that case we can't set
         // available credit. We also don't want to set available credit for sub cards.
-        if (Objects.isNull(account) || !cardContract.isOwned()) {
+        if (Objects.isNull(account)
+                || Objects.isNull(account.getDisposableAmount())
+                || !cardContract.isOwned()) {
             return ExactCurrencyAmount.of(BigDecimal.ZERO, cardContract.getCurrencyCode());
         }
 
