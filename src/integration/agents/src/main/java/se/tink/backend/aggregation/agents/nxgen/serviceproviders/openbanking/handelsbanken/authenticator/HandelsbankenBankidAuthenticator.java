@@ -1,14 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator;
 
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Errors;
@@ -25,8 +30,12 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<SessionResponse> {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(HandelsbankenBankidAuthenticator.class);
+
     private final HandelsbankenBaseApiClient apiClient;
     private final SessionStorage sessionStorage;
+
     private OAuth2Token token;
     private String autoStartToken;
 
@@ -38,7 +47,12 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
 
     @Override
     public SessionResponse init(String ssn)
-            throws BankIdException, BankServiceException, AuthorizationException {
+            throws BankIdException, BankServiceException, LoginException {
+
+        if (Strings.isNullOrEmpty(ssn)) {
+            logger.error("SSN was passed as empty or null!");
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
 
         try {
             SessionResponse response = apiClient.getSession(ssn);
