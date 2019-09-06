@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.BancoPostaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -16,13 +17,16 @@ public class BancoPostaAgent extends CbiGlobeAgent {
     public BancoPostaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
-        apiClient = new BancoPostaApiClient(client, persistentStorage, request.isManual());
     }
 
     @Override
     protected String getIntegrationName() {
         return BancoPostaConstants.INTEGRATION_NAME;
+    }
+
+    @Override
+    protected CbiGlobeApiClient getApiClient(boolean requestManual) {
+        return new BancoPostaApiClient(client, persistentStorage, requestManual);
     }
 
     @Override

@@ -40,12 +40,16 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new CbiGlobeApiClient(client, persistentStorage, request.isManual());
+        apiClient = getApiClient(request.isManual());
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected abstract String getIntegrationName();
+
+    protected CbiGlobeApiClient getApiClient(boolean requestManual) {
+        return new CbiGlobeApiClient(client, persistentStorage, requestManual);
+    }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
