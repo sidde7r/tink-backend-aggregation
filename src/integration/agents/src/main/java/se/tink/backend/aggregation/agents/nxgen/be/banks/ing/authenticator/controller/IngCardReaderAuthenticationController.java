@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.cont
 
 import com.google.common.base.Preconditions;
 import java.util.Arrays;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
@@ -23,7 +22,7 @@ public final class IngCardReaderAuthenticationController implements ProgressiveT
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps(Credentials credentials) {
+    public Iterable<? extends AuthenticationStep> authenticationSteps() {
         return Arrays.asList(
                 new OtpStep(supplementalInformationFormer),
                 new SignStep(supplementalInformationFormer, authenticator),

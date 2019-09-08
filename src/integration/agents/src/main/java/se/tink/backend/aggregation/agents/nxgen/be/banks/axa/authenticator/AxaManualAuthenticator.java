@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator;
 
 import java.util.Arrays;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaStorage;
@@ -30,8 +29,7 @@ public final class AxaManualAuthenticator implements ProgressiveTypedAuthenticat
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps(
-            final Credentials credentials) {
+    public Iterable<? extends AuthenticationStep> authenticationSteps() {
         return Arrays.asList(
                 new LoginStep(apiClient, storage, supplementalInformationFormer),
                 new FinalStep(apiClient, storage));
