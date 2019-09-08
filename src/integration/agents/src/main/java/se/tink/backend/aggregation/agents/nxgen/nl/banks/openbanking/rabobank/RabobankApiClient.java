@@ -10,7 +10,6 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
@@ -63,6 +62,8 @@ public final class RabobankApiClient {
         this.eidasProxyConf = eidasProxyConf;
         this.eidasIdentity = eidasIdentity;
         this.requestIsManual = requestIsManual;
+
+        client.addFilter(new AccessExceededFilter());
     }
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {
@@ -128,28 +129,20 @@ public final class RabobankApiClient {
 
         final RequestBuilder builder;
 
-        try {
-            final OAuth2Token oAuth2Token = RabobankUtils.getOauthToken(persistentStorage);
+        final OAuth2Token oAuth2Token = RabobankUtils.getOauthToken(persistentStorage);
 
-            debugBuildRequest(url, oAuth2Token, persistentStorage);
+        debugBuildRequest(url, oAuth2Token, persistentStorage);
 
-            builder =
-                    client.request(url)
-                            .addBearerToken(oAuth2Token)
-                            .header(QueryParams.IBM_CLIENT_ID, clientId)
-                            .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
-                            .header(QueryParams.REQUEST_ID, requestId)
-                            .header(QueryParams.DIGEST, digestHeader)
-                            .header(QueryParams.SIGNATURE, signatureHeader)
-                            .header(QueryParams.DATE, date)
-                            .accept(MediaType.APPLICATION_JSON_TYPE);
-        } catch (HttpResponseException e) {
-            final String message = e.getResponse().getBody(String.class);
-            if (message.toLowerCase().contains(ErrorMessages.ACCESS_EXCEEDED)) {
-                throw BankServiceError.ACCESS_EXCEEDED.exception();
-            }
-            throw e;
-        }
+        builder =
+                client.request(url)
+                        .addBearerToken(oAuth2Token)
+                        .header(QueryParams.IBM_CLIENT_ID, clientId)
+                        .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
+                        .header(QueryParams.REQUEST_ID, requestId)
+                        .header(QueryParams.DIGEST, digestHeader)
+                        .header(QueryParams.SIGNATURE, signatureHeader)
+                        .header(QueryParams.DATE, date)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
 
         // This header must be present iff the request was initiated by the PSU
         if (requestIsManual) {
