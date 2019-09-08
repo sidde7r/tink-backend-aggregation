@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveA
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -53,7 +53,7 @@ public final class AxaAgent extends SubsequentGenerationAgent
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         this.authenticator =
-                new AutoAuthenticationController(
+                new AutoAuthenticationProgressiveController(
                         request,
                         systemUpdater,
                         new AxaManualAuthenticator(

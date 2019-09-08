@@ -6,12 +6,10 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 
-public final class AxaManualAuthenticator
-        implements MultiFactorAuthenticator, ProgressiveAuthenticator {
+public final class AxaManualAuthenticator implements ProgressiveTypedAuthenticator {
 
     private final AxaApiClient apiClient;
     private final AxaStorage storage;
@@ -37,10 +35,5 @@ public final class AxaManualAuthenticator
         return Arrays.asList(
                 new LoginStep(apiClient, storage, supplementalInformationFormer),
                 new FinalStep(apiClient, storage));
-    }
-
-    @Override
-    public void authenticate(Credentials credentials) {
-        throw new AssertionError(); // Superseded by ProgressiveAuthenticator
     }
 }
