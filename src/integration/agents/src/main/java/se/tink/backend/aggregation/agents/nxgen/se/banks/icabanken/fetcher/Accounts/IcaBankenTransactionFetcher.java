@@ -6,7 +6,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.Error;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.entities.ResponseStatusEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.TransactionsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.UpcomingTransactionEntity;
@@ -16,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 /**
  * This class does the transaction fetching for both transactional accounts and credit card accounts
@@ -46,10 +51,20 @@ public class IcaBankenTransactionFetcher {
             return response;
         }
 
-        TransactionsBodyEntity transactionsBody = apiClient.fetchTransactionsWithDate(account, key);
+        try {
+            TransactionsBodyEntity transactionsBody =
+                    apiClient.fetchTransactionsWithDate(account, key);
 
-        response.setTransactions(parseTransactions(transactionsBody));
-        response.setNext(transactionsBody.getNextKey());
+            response.setTransactions(parseTransactions(transactionsBody));
+            response.setNext(transactionsBody.getNextKey());
+        } catch (HttpResponseException hre) {
+            if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                ResponseStatusEntity error = hre.getResponse().getBody(ResponseStatusEntity.class);
+                if (error.getCode() == Error.MULTIPLE_LOGIN_ERROR_CODE) {
+                    throw BankServiceError.MULTIPLE_LOGIN.exception();
+                }
+            }
+        }
 
         return response;
     }

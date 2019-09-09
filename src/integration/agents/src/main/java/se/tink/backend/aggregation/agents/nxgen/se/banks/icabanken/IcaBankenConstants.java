@@ -175,6 +175,10 @@ public class IcaBankenConstants {
         public static final String LOAN_TYPE = "icabanken_unknown_loan_type";
     }
 
+    public static final class Error {
+        public static final int MULTIPLE_LOGIN_ERROR_CODE = 1001;
+    }
+
     public enum UserMessage implements LocalizableEnum {
         KNOW_YOUR_CUSTOMER(
                 new LocalizableKey(
