@@ -19,6 +19,9 @@ public enum BankIdError implements AgentError {
     USER_VALIDATION_ERROR(
             new LocalizableKey("Your identity could not be validated. Please try again.")),
     AUTHORIZATION_REQUIRED(new LocalizableKey("Your BankID is not authorized for this service.")),
+    BANK_ID_UNAUTHORIZED_ISSUER(
+            new LocalizableKey(
+                    "Your BankID was not issued by the bank you are trying to authenticate with. This is not allowed by the bank. Please contact the bank to resolve this issue.")),
     BLOCKED(
             new LocalizableKey(
                     "Your BankID is blocked. Log in to the internet bank and reset/reorder BankID on mobile.")),
