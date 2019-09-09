@@ -46,6 +46,7 @@ public class OpBankSessionHandlerTest {
                                 context.getAggregatorInfo(),
                                 context.getMetricRegistry(),
                                 context.getLogOutputStream(),
+                                null,
                                 null));
         sessionStorage = new SessionStorage();
         OpBankPersistentStorage persistentStorage =

@@ -64,6 +64,7 @@ import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.MessageSignInterceptor;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
@@ -200,8 +201,9 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             @Nullable AggregatorInfo aggregatorInfo,
             @Nullable MetricRegistry metricRegistry,
             @Nullable ByteArrayOutputStream logOutPutStream,
+            @Nullable SignatureKeyPair signatureKeyPair,
             @Nullable Provider provider) {
-        this.requestExecutor = new TinkApacheHttpRequestExecutor();
+        this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
         this.internalRequestConfigBuilder = RequestConfig.custom();
@@ -240,7 +242,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
 
     public TinkHttpClient() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 
     public void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler) {
@@ -397,6 +399,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public void disableSignatureRequestHeader() {
         requestExecutor.disableSignatureRequestHeader();
+    }
+
+    public void shouldQsealcJwt() {
+        requestExecutor.setShouldQsealcJwt(true);
     }
 
     public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {

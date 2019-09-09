@@ -53,6 +53,7 @@ public class SpKeyCardAuthenticatorTest extends NextGenerationAgentTest {
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
+                        null,
                         null);
         client.setDebugOutput(true);
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());

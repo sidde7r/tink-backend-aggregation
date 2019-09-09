@@ -40,6 +40,7 @@ public class EncapClient {
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
+                        signatureKeyPair,
                         request.getProvider());
 
         // Encap does not like it when we send our signature header.
