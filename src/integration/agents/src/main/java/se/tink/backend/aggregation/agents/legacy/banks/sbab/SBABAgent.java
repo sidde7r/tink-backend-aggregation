@@ -81,7 +81,6 @@ public class SBABAgent extends AbstractAgent
 
     private static final int BANKID_MAX_ATTEMPTS = 100;
     public static final String INTEGRATION_NAME = "sbab";
-    public static final String AMORTIZATION_DOCUMENTATION = "amortization-documentation";
 
     private final AuthenticationClient authenticationClient;
     private final UserDataClient userDataClient;

@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.ws.rs.core.MediaType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,7 +19,6 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.LoanEntity;
-import se.tink.backend.aggregation.agents.banks.sbab.entities.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnacceptedTermsAndConditionsException;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.AccountsResponse;
@@ -30,7 +28,6 @@ import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.utils.json.JsonUtils;
-import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class UserDataClient extends SBABClient {
@@ -41,11 +38,6 @@ public class UserDataClient extends SBABClient {
             SECURE_BASE_URL + "/konto/kontoinformation?kontonummer=%s";
     private static final String ACCOUNTS_OVERVIEW_URL = SECURE_BASE_URL + "/meny/sparkontomeny";
     private static final String LOAN_URL = SECURE_BASE_URL + "/secure-rest/rest/lan";
-    private static final String AMORTIZATION_DOCUMENTATION_URL =
-            SECURE_BASE_URL + "/secure-rest/rest/amorteringskrav/ejomfattad/%s";
-    private static final String LOAN_DETAILS_URL =
-            SECURE_BASE_URL + "/privat/lan/mina_lan/detaljer.html?lanenummer=%s";
-    private static final String APPLICATION_PDF = "application/pdf";
 
     public UserDataClient(Client client, Credentials credentials, String userAgent) {
         super(client, credentials, userAgent);
@@ -73,25 +65,6 @@ public class UserDataClient extends SBABClient {
         String url = SECURE_BASE_URL + form.attr("action");
 
         throw new UnacceptedTermsAndConditionsException(url, getFormData(form));
-    }
-
-    public SignFormRequestBody initiateTermsAndConditionsSigning(
-            String url, MultivaluedMapImpl input) throws Exception {
-        ClientResponse initiateResponse =
-                createFormEncodedHtmlRequest(url).post(ClientResponse.class, input);
-
-        ClientResponse redirectResponse =
-                createGetRequest(getRedirectUrl(initiateResponse, SECURE_BASE_URL));
-
-        Document document = Jsoup.parse(redirectResponse.getEntity(String.class));
-
-        Element form = document.select("form[id=signFormNexus]").first();
-
-        if (form == null) {
-            throw new IllegalStateException("Could not find form to sign.");
-        }
-
-        return SignFormRequestBody.from(form);
     }
 
     private boolean hasMoreTransactions(Document searchResultPage, int pageNumber) {
@@ -272,19 +245,6 @@ public class UserDataClient extends SBABClient {
         }
 
         return accountLoanMap;
-    }
-
-    public DocumentContainer getAmortizationDocumentation(String loanId) throws Exception {
-        String url = String.format(AMORTIZATION_DOCUMENTATION_URL, loanId);
-
-        ClientResponse response =
-                createRequestWithOptionalTypeRefererAndBearerToken(
-                                url,
-                                String.format(LOAN_DETAILS_URL, loanId),
-                                MediaType.APPLICATION_OCTET_STREAM)
-                        .get(ClientResponse.class);
-
-        return new DocumentContainer(APPLICATION_PDF, response.getEntityInputStream());
     }
 
     private Optional<LoanResponse> getLoanResponse() throws Exception {
