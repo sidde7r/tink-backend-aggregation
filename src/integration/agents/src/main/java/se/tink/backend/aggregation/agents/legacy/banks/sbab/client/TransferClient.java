@@ -12,11 +12,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.Url;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.SavedRecipientEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.TransferEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.InitialTransferResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.MakeTransferResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.rpc.SavedRecipientsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -240,48 +242,8 @@ public class TransferClient extends SBABClient {
         return getRedirectUrl(response, SECURE_BASE_URL);
     }
 
-    public List<SavedRecipientEntity> getValidRecipients() throws Exception {
-        return getValidRecipients(getJsoupDocument(TRANSFER_PAGE_URL));
-    }
-
-    private List<SavedRecipientEntity> getValidRecipients(Document transferPage) {
-        List<SavedRecipientEntity> savedRecipients = Lists.newArrayList();
-
-        // Get the valid recipients for a transfer, including both own accounts and other saved
-        // destinations.
-        savedRecipients.addAll(getSavedRecipients(transferPage, true));
-        savedRecipients.addAll(getSavedRecipients(transferPage, false));
-
-        return savedRecipients;
-    }
-
-    private List<SavedRecipientEntity> getSavedRecipients(
-            Document transferPage, boolean chooseUserOwned) {
-        Elements recipientElements;
-
-        if (chooseUserOwned) {
-            recipientElements = transferPage.select("optgroup[id=mottagareSparkonton] > option");
-        } else {
-            recipientElements = transferPage.select("optgroup[id=mottagareSparadekonton] > option");
-        }
-
-        List<SavedRecipientEntity> recipients = Lists.newArrayList();
-
-        for (Element recipient : recipientElements) {
-            Optional<SavedRecipientEntity> recipientEntity =
-                    SavedRecipientEntity.createFromString(recipient.val());
-            if (recipientEntity.isPresent()) {
-                recipientEntity.get().setIsUserAccount(chooseUserOwned);
-                recipients.add(recipientEntity.get());
-            } else {
-                log.error(
-                        "Could not create recipient entity from string value ("
-                                + recipient.val()
-                                + "). New format?");
-            }
-        }
-
-        return recipients;
+    public List<SavedRecipientEntity> getSavedRecipients() throws Exception {
+        return createJsonRequestWithBearer(Url.SAVED_RECIPIENTS).get(SavedRecipientsResponse.class);
     }
 
     private List<String> getValidSourceAccountNumbers(Document transferPage) {

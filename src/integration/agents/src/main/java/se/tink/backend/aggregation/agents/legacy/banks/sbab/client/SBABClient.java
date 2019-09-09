@@ -67,7 +67,6 @@ public class SBABClient {
 
     Builder createJsonRequestWithBearer(String url) throws Exception {
         return createRequest(url)
-                .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + bearerToken);
     }

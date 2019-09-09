@@ -327,6 +327,7 @@ public class SBABAgent extends AbstractAgent
     private void fetchAndSetBearerToken() {
         String token = authenticationClient.getBearerToken();
         userDataClient.setBearerToken(token);
+        transferClient.setBearerToken(token);
     }
 
     private BankIdStatus signWithMobileBankId(SignFormRequestBody signFormRequestBody)
@@ -461,7 +462,7 @@ public class SBABAgent extends AbstractAgent
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         try {
             List<AccountEntity> accountEntities = getAccounts();
-            List<SavedRecipientEntity> recipientEntities = transferClient.getValidRecipients();
+            List<SavedRecipientEntity> recipientEntities = transferClient.getSavedRecipients();
 
             Map<Account, List<TransferDestinationPattern>> transferPatterns =
                     new TransferDestinationPatternBuilder()
