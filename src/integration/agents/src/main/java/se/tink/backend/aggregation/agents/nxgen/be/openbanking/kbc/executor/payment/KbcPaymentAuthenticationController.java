@@ -49,11 +49,11 @@ public class KbcPaymentAuthenticationController extends PaymentController {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
-    private ThirdPartyAppResponse<String> collect() {
+    private void collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+        ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
     private void openThirdPartyApp(URL authorizeUrl) {
