@@ -66,7 +66,6 @@ public final class BawagPskTransactionalAccountFetcherTest {
                                 context.getAggregatorInfo(),
                                 context.getMetricRegistry(),
                                 context.getLogOutputStream(),
-                                null,
                                 null),
                         new SessionStorage(),
                         new PersistentStorage(),

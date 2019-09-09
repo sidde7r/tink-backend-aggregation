@@ -72,7 +72,6 @@ public class OpBankAuthenticatorTest {
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
-                        null,
                         null);
         // tinkHttpClient.setDebugOutput(true);
         // tinkHttpClient.setProxy("http://127.0.0.1:8888");
@@ -204,7 +203,6 @@ public class OpBankAuthenticatorTest {
                                         context.getAggregatorInfo(),
                                         context.getMetricRegistry(),
                                         context.getLogOutputStream(),
-                                        null,
                                         null)));
         loginResultCaptor = new ResultCaptor<>();
         doAnswer(loginResultCaptor).when(bankClient).login(any());

@@ -30,7 +30,6 @@ public class HandelsbankenSEContentTypeFilterTest {
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
-                        null,
                         null);
         client.setDebugOutput(true);
         client.addFilter(new HandelsbankenSEContentTypeFilter());

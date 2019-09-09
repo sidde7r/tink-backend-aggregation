@@ -31,7 +31,6 @@ public class BankdataPinAuthenticatorTest {
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
-                        null,
                         null);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();

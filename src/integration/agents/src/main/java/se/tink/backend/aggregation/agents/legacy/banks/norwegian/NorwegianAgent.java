@@ -133,7 +133,6 @@ public class NorwegianAgent extends AbstractAgent
                         getAggregatorInfo(),
                         null,
                         context.getLogOutputStream(),
-                        signatureKeyPair,
                         request.getProvider());
     }
 
