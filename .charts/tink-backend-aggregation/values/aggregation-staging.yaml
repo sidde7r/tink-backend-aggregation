@@ -52,7 +52,7 @@ agents:
       certificateId: Tink
     abn:
       redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
-      certificateId: Tink
+      certificateId: abnamro-QSEALC
   rabobank:
     tink_sandbox:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
