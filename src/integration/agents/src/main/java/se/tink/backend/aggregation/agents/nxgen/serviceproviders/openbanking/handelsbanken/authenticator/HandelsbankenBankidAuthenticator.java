@@ -4,6 +4,7 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
@@ -22,10 +23,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.DecoupledResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<SessionResponse> {
@@ -47,7 +50,7 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
 
     @Override
     public SessionResponse init(String ssn)
-            throws BankIdException, BankServiceException, LoginException {
+            throws BankIdException, BankServiceException, LoginException, AuthorizationException {
 
         if (Strings.isNullOrEmpty(ssn)) {
             logger.error("SSN was passed as empty or null!");
@@ -61,6 +64,11 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
             return response;
         } catch (HttpClientException e) {
             throw new BankIdException(BankIdError.UNKNOWN);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                e.getResponse().getBody(ErrorResponse.class).handleErrors();
+            }
+            throw e;
         }
     }
 
