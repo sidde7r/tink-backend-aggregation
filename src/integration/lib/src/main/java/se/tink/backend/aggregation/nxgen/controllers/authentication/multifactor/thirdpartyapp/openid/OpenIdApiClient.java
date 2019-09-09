@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -33,6 +34,7 @@ public class OpenIdApiClient {
     private WellKnownResponse cachedWellKnownResponse;
     private JsonWebKeySet cachedProviderKeys;
     private OpenIdAuthenticatedHttpFilter authFilter;
+    private static final AggregationLogger log = new AggregationLogger(OpenIdApiClient.class);
 
     public OpenIdApiClient(
             TinkHttpClient httpClient,
@@ -258,6 +260,7 @@ public class OpenIdApiClient {
     public void attachAuthFilter(OAuth2Token token) {
         Preconditions.checkState(
                 Objects.isNull(authFilter), "Auth filter cannot be attached twice.");
+        log.debug("Adding the Auth Filter.");
         authFilter = new OpenIdAuthenticatedHttpFilter(token, providerConfiguration, null, null);
 
         httpClient.addFilter(authFilter);
@@ -268,8 +271,22 @@ public class OpenIdApiClient {
                 authFilter, "Auth filter must be attach before it can be detached.");
         try {
             httpClient.removeFilter(authFilter);
+            log.debug("Removed the Auth Filter.");
         } finally {
             authFilter = null;
+        }
+    }
+
+    public void detachAuthFilterIfAttached() {
+        log.debug("Trying to remove the Auth Filter");
+
+        if (Objects.nonNull(authFilter)) {
+            try {
+                httpClient.removeFilter(authFilter);
+                log.debug("Auth Filter removed successfully.");
+            } finally {
+                authFilter = null;
+            }
         }
     }
 
