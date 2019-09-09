@@ -30,9 +30,6 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
 
         NordeaBaseConfiguration nordeaConfiguration =
                 getAgentConfigurationController()
-                        .withFallback(
-                                NordeaBaseConstants.Market.INTEGRATION_NAME,
-                                request.getProvider().getPayload())
                         .getAgentConfiguration(NordeaBaseConfiguration.class);
 
         apiClient.setConfiguration(nordeaConfiguration);
