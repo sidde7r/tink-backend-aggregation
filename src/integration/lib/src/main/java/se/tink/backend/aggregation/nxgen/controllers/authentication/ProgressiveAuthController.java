@@ -28,7 +28,7 @@ public final class ProgressiveAuthController {
                 request.getPayload().withCredentials(credentials);
 
         final Iterator<? extends AuthenticationStep> steps =
-                authenticator.authenticationSteps(loadedRequest.getCredentials()).iterator();
+                authenticator.authenticationSteps().iterator();
 
         if (!request.getStep().isPresent()) {
             final AuthenticationStep step = steps.next();

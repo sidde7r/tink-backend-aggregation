@@ -37,8 +37,9 @@ public class AutoAuthenticationProgressiveController
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps(final Credentials credentials)
+    public Iterable<? extends AuthenticationStep> authenticationSteps()
             throws AuthenticationException, AuthorizationException {
+        final Credentials credentials = request.getCredentials();
         try {
             if (shouldDoManualAuthentication(credentials)) {
                 return manualProgressive(credentials);
@@ -85,7 +86,7 @@ public class AutoAuthenticationProgressiveController
             credentials.setType(manualAuthenticator.getType());
         }
         try {
-            return manualAuthenticator.authenticationSteps(credentials);
+            return manualAuthenticator.authenticationSteps();
         } finally {
             credentials.setType(CredentialsTypes.PASSWORD);
         }

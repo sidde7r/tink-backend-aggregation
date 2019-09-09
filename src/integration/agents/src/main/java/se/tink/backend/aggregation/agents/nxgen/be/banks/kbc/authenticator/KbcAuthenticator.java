@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 
 import com.google.common.base.Strings;
 import java.util.Arrays;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -45,8 +44,7 @@ public class KbcAuthenticator implements AutoAuthenticator, ProgressiveTypedAuth
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps(
-            final Credentials credentials) {
+    public Iterable<? extends AuthenticationStep> authenticationSteps() {
         return Arrays.asList(
                 new LoginStep(this, sessionStorage, apiClient, supplementalInformationFormer),
                 new SignStep(this, sessionStorage, apiClient, supplementalInformationFormer),
