@@ -569,6 +569,19 @@ spec:
               key: hendelsbanken-client-id
               optional: true
         {{- end }}
+        {{- if $agentsConfig.labanquepostale }}
+        - name: LABANQUEPOSTALE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: labanquepostale-client-id
+        - name: LABANQUEPOSTALE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: labanquepostale-client-secret
+              optional: true
+        {{- end }}
         {{- if $agentsConfig.cbi }}
         - name: CBI_CLIENT_ID
           valueFrom:

@@ -883,6 +883,18 @@ data:
             certificateId: "{{ $agentsConfig.cmcic.tink.certificateId }}"
         {{- end }}
 
+        {{- if $agentsConfig.labanquepostale }}
+        labanquepostale:
+          tink:
+            clientId: "LABANQUEPOSTALE_CLIENT_ID_TAG"
+            clientSecret: "LABANQUEPOSTALE_CLIENT_SECRET_TAG"
+            redirectUrl: "{{ $agentsConfig.labanquepostale.tink.redirectUrl }}"
+            baseUrl: "{{ $agentsConfig.labanquepostale.tink.baseUrl }}"
+            oauthBaseUrl: "{{ $agentsConfig.labanquepostale.tink.oauthBaseUrl }}"
+            certificateId: "{{ $agentsConfig.labanquepostale.tink.certificateId }}"
+            bankId: "{{ $agentsConfig.labanquepostale.tink.bankId }}"
+        {{- end }}
+
         {{- if $agentsConfig.handelsbanken }}
         handelsbanken:
           tink:
