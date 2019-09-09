@@ -22,7 +22,7 @@ public class TransactionsEntity {
         return Stream.concat(
                         Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
                                 .map(TransactionEntity::toBookedTransaction),
-                        Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
+                        Optional.ofNullable(pending).orElse(Collections.emptyList()).stream()
                                 .map(TransactionEntity::toPendingTransaction))
                 .collect(Collectors.toList());
     }
