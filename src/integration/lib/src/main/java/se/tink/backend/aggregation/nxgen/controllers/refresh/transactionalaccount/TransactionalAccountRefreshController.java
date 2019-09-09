@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -41,10 +43,11 @@ public final class TransactionalAccountRefreshController
     private final TransactionFetcher<TransactionalAccount> transactionFetcher;
 
     private Collection<TransactionalAccount> accounts;
+    private Collection<Account> cachedAccounts;
+    private Map<Account, List<Transaction>> cachedTransactions;
 
-    // Until we can refresh CHECKING and SAVING accounts & transactions separately.
-    private boolean hasRefreshedCheckingAccounts = false;
-    private boolean hasRefreshedCheckingTransactions = false;
+    private boolean hasRefreshedTransactions = false;
+    private boolean hasRefreshedAccounts = false;
 
     public TransactionalAccountRefreshController(
             MetricRefreshController metricController,
@@ -57,35 +60,69 @@ public final class TransactionalAccountRefreshController
         this.transactionFetcher = Preconditions.checkNotNull(transactionFetcher);
     }
 
+    private List<Account> getCachedAccounts() {
+        if (!hasRefreshedAccounts) {
+            this.cachedAccounts = fetchAccounts().keySet();
+            hasRefreshedAccounts = true;
+        }
+        return new ArrayList<>(this.cachedAccounts);
+    }
+
+    private Map<Account, List<Transaction>> getCachedTransactions() {
+        if (!hasRefreshedTransactions) {
+            this.cachedTransactions = this.fetchTransactions();
+            hasRefreshedTransactions = true;
+        }
+        return this.cachedTransactions;
+    }
+
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
-        if (hasRefreshedCheckingAccounts) {
-            return new FetchAccountsResponse(Collections.emptyList());
-        }
-        hasRefreshedCheckingAccounts = true;
+        // Short term fix for filtering out Savings accounts
+        List<Account> accounts =
+                new ArrayList<>(
+                        this.getCachedAccounts().stream()
+                                .filter(
+                                        account ->
+                                                account.getType().equals(AccountTypes.CHECKING)
+                                                        || account.getType()
+                                                                .equals(AccountTypes.OTHER))
+                                .collect(Collectors.toList()));
 
-        List<Account> accounts = new ArrayList<>(this.fetchAccounts().keySet());
         return new FetchAccountsResponse(accounts);
     }
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        if (hasRefreshedCheckingTransactions) {
-            return new FetchTransactionsResponse(Collections.emptyMap());
-        }
-        hasRefreshedCheckingTransactions = true;
-
-        return new FetchTransactionsResponse(this.fetchTransactions());
+        return new FetchTransactionsResponse(
+                this.getCachedTransactions().entrySet().stream()
+                        .filter(
+                                account ->
+                                        account.getKey().getType().equals(AccountTypes.CHECKING)
+                                                || account.getKey()
+                                                        .getType()
+                                                        .equals(AccountTypes.OTHER))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
-        return fetchCheckingAccounts();
+        // Short term fix for filtering out Checking & Other
+        List<Account> accounts =
+                new ArrayList<>(
+                        this.getCachedAccounts().stream()
+                                .filter(account -> account.getType().equals(AccountTypes.SAVINGS))
+                                .collect(Collectors.toList()));
+
+        return new FetchAccountsResponse(accounts);
     }
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
-        return fetchCheckingTransactions();
+        return new FetchTransactionsResponse(
+                this.getCachedTransactions().entrySet().stream()
+                        .filter(account -> account.getKey().getType().equals(AccountTypes.SAVINGS))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     @Override
