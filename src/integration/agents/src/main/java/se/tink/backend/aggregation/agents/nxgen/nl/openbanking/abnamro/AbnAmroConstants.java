@@ -9,6 +9,7 @@ public final class AbnAmroConstants {
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
     public static final int START_PAGE = 1;
     public static final String INTEGRATION_NAME = "abnamro";
+
     private AbnAmroConstants() {
         throw new AssertionError();
     }
