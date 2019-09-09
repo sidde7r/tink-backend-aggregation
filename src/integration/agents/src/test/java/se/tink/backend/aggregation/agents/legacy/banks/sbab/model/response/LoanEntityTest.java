@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.LoanEntity;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.LoanTermsEntity;
 import se.tink.backend.aggregation.agents.models.Loan;
 
 public class LoanEntityTest {

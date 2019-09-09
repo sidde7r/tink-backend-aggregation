@@ -9,7 +9,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.TransferEntity;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.TransferEntity;
 
 public class TransferClientParserTest {
 

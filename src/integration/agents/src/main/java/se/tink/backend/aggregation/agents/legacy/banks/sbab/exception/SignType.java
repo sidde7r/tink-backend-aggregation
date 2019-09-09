@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.sbab.model.response;
+package se.tink.backend.aggregation.agents.banks.sbab.exception;
 
 public enum SignType {
     MORTGAGE,

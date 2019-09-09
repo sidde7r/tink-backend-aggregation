@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.sbab.model.response;
+package se.tink.backend.aggregation.agents.banks.sbab.entities;
 
 import java.util.Optional;
 import java.util.regex.Matcher;

@@ -10,8 +10,8 @@ import org.jsoup.select.Elements;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitBankIdResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.PollBankIdResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.rpc.InitBankIdResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class AuthenticationClient extends SBABClient {

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.sbab.model.response;
+package se.tink.backend.aggregation.agents.banks.sbab.rpc;
 
 import com.google.api.client.util.Lists;
 import java.util.List;

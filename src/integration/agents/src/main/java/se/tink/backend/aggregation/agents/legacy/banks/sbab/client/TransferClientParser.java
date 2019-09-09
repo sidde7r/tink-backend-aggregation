@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.TransferEntity;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.TransferEntity;
 
 public class TransferClientParser {
 

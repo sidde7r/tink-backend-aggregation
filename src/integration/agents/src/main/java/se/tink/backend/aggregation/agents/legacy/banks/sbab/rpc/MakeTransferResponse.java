@@ -1,4 +1,6 @@
-package se.tink.backend.aggregation.agents.banks.sbab.model.response;
+package se.tink.backend.aggregation.agents.banks.sbab.rpc;
+
+import se.tink.backend.aggregation.agents.banks.sbab.entities.TransferEntity;
 
 public class MakeTransferResponse {
 

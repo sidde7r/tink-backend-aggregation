@@ -1,6 +1,7 @@
-package se.tink.backend.aggregation.agents.banks.sbab.model.response;
+package se.tink.backend.aggregation.agents.banks.sbab.rpc;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.SavedRecipientEntity;
 
 public class InitialTransferResponse {
 

@@ -1,8 +1,9 @@
-package se.tink.backend.aggregation.agents.banks.sbab.model.response;
+package se.tink.backend.aggregation.agents.banks.sbab.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.AccountEntity;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountsResponse {

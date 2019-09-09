@@ -7,10 +7,10 @@ import com.sun.jersey.api.client.WebResource;
 import org.eclipse.jetty.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnsupportedSignTypeException;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdPollResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdStartResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
+import se.tink.backend.aggregation.agents.banks.sbab.rpc.BankIdPollResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.rpc.BankIdStartResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class BankIdSignClient extends SBABClient {
