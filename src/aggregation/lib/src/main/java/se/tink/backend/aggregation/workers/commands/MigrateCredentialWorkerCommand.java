@@ -58,7 +58,7 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
-        return runMigrationChain()
+        return runMigrationChainIsSuccessful()
                 ? AgentWorkerCommandResult.CONTINUE
                 : AgentWorkerCommandResult.ABORT;
     }
@@ -77,7 +77,7 @@ public class MigrateCredentialWorkerCommand extends AgentWorkerCommand {
         return migrations.getOrDefault(providerName, Lists.newArrayList());
     }
 
-    boolean runMigrationChain() {
+    boolean runMigrationChainIsSuccessful() {
         final String providerName = request.getProvider().getName();
         return getMigrationsForProvider(providerName).stream()
                 .map(this::runDataVersionMigration)

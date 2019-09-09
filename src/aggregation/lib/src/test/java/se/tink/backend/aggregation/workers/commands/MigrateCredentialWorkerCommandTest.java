@@ -129,7 +129,7 @@ public class MigrateCredentialWorkerCommandTest {
                         .put("avanza-bankid", Lists.newArrayList(throwingMigration(1)))
                         .build());
 
-        assertTrue(command.runMigrationChain());
+        assertTrue(command.runMigrationChainIsSuccessful());
     }
 
     @Test
@@ -151,11 +151,14 @@ public class MigrateCredentialWorkerCommandTest {
                         .put("avanza-bankid", Lists.newArrayList(throwingMigration(1)))
                         .build());
 
-        assertTrue(command.runMigrationChain());
+        assertTrue(command.runMigrationChainIsSuccessful());
+        assertEquals(1, request.getCredentials().getDataVersion());
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void shouldInvokeMigrationFromV1toV2() {
+        // This test ensures that the migration is *invoked* by running a migration which always
+        // throws a runtime exception.
         Credentials credentials = new Credentials();
         credentials.setDataVersion(1);
         credentials.setProviderName("avanza-bankid");
@@ -172,7 +175,7 @@ public class MigrateCredentialWorkerCommandTest {
                         .put("avanza-bankid", Lists.newArrayList(throwingMigration(1)))
                         .build());
 
-        assertFalse(command.runMigrationChain());
+        assertFalse(command.runMigrationChainIsSuccessful());
     }
 
     @Test
@@ -188,9 +191,14 @@ public class MigrateCredentialWorkerCommandTest {
         MigrateCredentialWorkerCommand command =
                 new MigrateCredentialWorkerCommand(request, null, 2, context, wrapper);
 
-        command.setMigrations(migrations);
+        command.setMigrations(
+                new ImmutableMap.Builder<String, List<DataVersionMigration>>()
+                        .put(
+                                "avanza-bankid",
+                                Lists.newArrayList(migration_v1_v2, throwingMigration(2)))
+                        .build());
 
-        assertTrue(command.runMigrationChain());
+        assertTrue(command.runMigrationChainIsSuccessful());
         assertEquals(2, credentials.getDataVersion());
     }
 
@@ -209,7 +217,7 @@ public class MigrateCredentialWorkerCommandTest {
 
         command.setMigrations(migrations);
 
-        assertTrue(command.runMigrationChain());
+        assertTrue(command.runMigrationChainIsSuccessful());
         assertEquals(3, credentials.getDataVersion());
     }
 
@@ -279,7 +287,10 @@ public class MigrateCredentialWorkerCommandTest {
     }
 
     @Test
-    public void e2e() throws Exception {
+    public void successfulTwoStepMigration() throws Exception {
+        // Tests a migration chain with two data version migrations;
+        // - one from V1 to V2 which makes the account number the unique identifier
+        // - one from V2 to V3 which strips all non-alphanumeric characters from the uniqueId
         Account acc = new Account();
         acc.setAccountNumber("123-456");
         acc.setBankId("2be65c23");
@@ -305,6 +316,7 @@ public class MigrateCredentialWorkerCommandTest {
                 new MigrateCredentialWorkerCommand(request, null, 3, context, wrapper);
         command.setMigrations(migrations);
 
+        // Ensure system update commands are invoked correctly
         final AgentWorkerCommandResult execute = command.execute();
         assertEquals(AgentWorkerCommandResult.CONTINUE, execute);
         assertEquals(3, credentials.getDataVersion());
@@ -326,7 +338,8 @@ public class MigrateCredentialWorkerCommandTest {
             protected Map<Account, String> migrateData(
                     CredentialsRequest request, ClientInfo clientInfo)
                     throws MigrationFailedException {
-                throw new MigrationFailedException();
+                throw new IllegalStateException(
+                        "This data version migration should never be invoked.");
             }
         };
     }
