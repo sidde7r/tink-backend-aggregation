@@ -876,7 +876,7 @@ data:
           tink:
             baseUrl: "https://oauth2-apisi.e-i.com"
             basePath: "/monabanq/"
-            authBaseUrl: "https://www.creditmutuel.fr/oauth2/en/banque/oauth2_authorization.aspx"
+            authBaseUrl: "https://www.monabanq.fr/oauth2/fr/banque/oauth2_authorization.aspx"
             redirectUrl: "{{ $agentsConfig.cmcic.tink.redirectUrl }}"
             clientId: "MONABANQ_CLIENT_ID_TAG"
             keyId: "CMIC_KEY_ID_TAG"
