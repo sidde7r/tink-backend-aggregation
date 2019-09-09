@@ -36,6 +36,7 @@ public class BankdataTransactionFetcherTest {
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
+                        null,
                         null);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();

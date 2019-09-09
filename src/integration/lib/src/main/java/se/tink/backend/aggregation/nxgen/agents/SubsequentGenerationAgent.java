@@ -77,6 +77,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
                         context.getAggregatorInfo(),
                         metricContext.getMetricRegistry(),
                         context.getLogOutputStream(),
+                        signatureKeyPair,
                         request.getProvider());
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();

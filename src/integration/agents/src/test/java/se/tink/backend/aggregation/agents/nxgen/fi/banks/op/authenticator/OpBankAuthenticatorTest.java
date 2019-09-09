@@ -4,7 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig.PASSWORD;
 import static se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig.USERNAME;
 import static se.tink.libraries.strings.StringUtils.hashAsUUID;
@@ -66,6 +72,7 @@ public class OpBankAuthenticatorTest {
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
+                        null,
                         null);
         // tinkHttpClient.setDebugOutput(true);
         // tinkHttpClient.setProxy("http://127.0.0.1:8888");
@@ -197,6 +204,7 @@ public class OpBankAuthenticatorTest {
                                         context.getAggregatorInfo(),
                                         context.getMetricRegistry(),
                                         context.getLogOutputStream(),
+                                        null,
                                         null)));
         loginResultCaptor = new ResultCaptor<>();
         doAnswer(loginResultCaptor).when(bankClient).login(any());

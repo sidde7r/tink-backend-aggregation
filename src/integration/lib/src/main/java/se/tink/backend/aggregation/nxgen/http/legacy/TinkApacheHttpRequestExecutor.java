@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.nxgen.http.legacy;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -51,6 +56,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
+    private SignatureKeyPair signatureKeyPair;
+    private Algorithm algorithm;
     private boolean shouldAddRequestSignature = true;
 
     private String proxyUsername;
@@ -59,7 +66,12 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private boolean shouldUseEidasProxy = false;
     private String legacyCertId;
     private EidasIdentity eidasIdentity;
+    private boolean shouldQsealcJwt = false;
     private EidasProxyConfiguration eidasProxyConfiguration;
+
+    public void setShouldQsealcJwt(boolean shouldQsealcJwt) {
+        this.shouldQsealcJwt = shouldQsealcJwt;
+    }
 
     public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
         this.eidasProxyConfiguration = eidasProxyConfiguration;
@@ -69,7 +81,16 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         this.eidasIdentity = eidasIdentity;
     }
 
-    public TinkApacheHttpRequestExecutor() {}
+    public TinkApacheHttpRequestExecutor(SignatureKeyPair signatureKeyPair) {
+        if (signatureKeyPair == null || signatureKeyPair.getPrivateKey() == null) {
+            return;
+        }
+
+        this.signatureKeyPair = signatureKeyPair;
+
+        algorithm =
+                Algorithm.RSA256(signatureKeyPair.getPublicKey(), signatureKeyPair.getPrivateKey());
+    }
 
     public void setProxyCredentials(String username, String password) {
         this.proxyUsername = username;
@@ -103,8 +124,11 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             //
             // Requests to the EIDAS proxy do not need to be signed. The proxy will sign the request
             // on the way out if necessary.
+            addRequestSignature(request);
+        } else if (shouldQsealcJwt) {
             addQsealcSignature(request);
         }
+
         return super.execute(request, conn, context);
     }
 
@@ -153,11 +177,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
     private void addQsealcSignature(HttpRequest request) {
 
-        // This header needs to be added before we fetch the headers to create the signature.
-        // Note: This header can be removed if this URL is added to the JWT.
-        request.addHeader(
-                "X-Signature-Info",
-                "Visit https://cdn.tink.se/aggregation-signature/how-to-verify.txt for more info.");
+        // TODO: adding the info header once verified
 
         JwtBodyEntity jwtBody = new JwtBodyEntity();
         RequestLine requestLine = request.getRequestLine();
@@ -176,14 +196,12 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         String baseTokenString =
                 Base64.getUrlEncoder()
-                                .withoutPadding()
                                 .encodeToString(
                                         tokenHeadJson != null
                                                 ? tokenHeadJson.getBytes()
                                                 : new byte[0])
                         + "."
                         + Base64.getUrlEncoder()
-                                .withoutPadding()
                                 .encodeToString(
                                         tokenBodyJson != null
                                                 ? tokenBodyJson.getBytes()
@@ -199,6 +217,40 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         String jwt = baseTokenString + "." + signature;
         log.info("QSEALC Signature is :  {}", jwt);
         request.addHeader(SIGNATURE_HEADER_KEY, jwt);
+    }
+
+    private void addRequestSignature(HttpRequest request) {
+        // TODO remove the signatureKeyPair and algorithm
+
+        if (signatureKeyPair == null || algorithm == null) {
+            return;
+        }
+
+        // This header needs to be added before we fetch the headers to create the signature.
+        // Note: This header can be removed if this URL is added to the JWT.
+        request.addHeader(
+                "X-Signature-Info",
+                "Visit https://cdn.tink.se/aggregation-signature/how-to-verify.txt for more info.");
+
+        RequestLine requestLine = request.getRequestLine();
+
+        JWTCreator.Builder jwtBuilder =
+                JWT.create()
+                        .withIssuedAt(new Date())
+                        .withClaim("method", requestLine.getMethod())
+                        .withClaim("uri", requestLine.getUri());
+
+        // Only add keyId for request where we use signatureKeyPair
+        if (signatureKeyPair != null) {
+            jwtBuilder.withKeyId(signatureKeyPair.getKeyId());
+        }
+
+        getHttpHeadersHashAsBase64(request)
+                .ifPresent(hash -> jwtBuilder.withClaim("headers", hash));
+
+        getHttpBodyHashAsBase64(request).ifPresent(hash -> jwtBuilder.withClaim("body", hash));
+
+        request.addHeader(SIGNATURE_HEADER_KEY, jwtBuilder.sign(algorithm));
     }
 
     private Optional<String> getHttpBodyHashAsBase64(HttpRequest request) {

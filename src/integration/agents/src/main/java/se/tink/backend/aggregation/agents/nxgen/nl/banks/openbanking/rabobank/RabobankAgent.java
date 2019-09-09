@@ -71,6 +71,7 @@ public final class RabobankAgent extends SubsequentGenerationAgent
         final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
 
         client.setSslClientCertificate(p12, password);
+        client.shouldQsealcJwt();
         EidasIdentity eidasIdentity =
                 new EidasIdentity(context.getClusterId(), context.getAppId(), RabobankAgent.class);
 
