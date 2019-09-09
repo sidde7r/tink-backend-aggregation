@@ -259,6 +259,10 @@ clients:
     aggregatorIdentifier: "SBAB"
   se-ekobanken-medlemsbank-production:
     aggregatorIdentifier: "Ekobanken Medlemsbank"
+  se-entercard-production:
+    aggregatorIdentifier: "EnterCard"
+  se-entercard-testing:
+    aggregatorIdentifier: "EnterCard"
   se-lan-spar-sverige-testing:
     aggregatorIdentifier: "Lån & Spar Sverige"
   se-sparbanken-syd-production:
