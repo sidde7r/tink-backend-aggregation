@@ -542,6 +542,12 @@ spec:
               name: aggregation-secrets
               key: creditmutuel-client-id
               optional: true
+        - name: MONABANQ_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: monabanq-client-id
+              optional: true
         - name: CMCIC_KEY_ID
           valueFrom:
             secretKeyRef:

@@ -87,6 +87,7 @@ data:
     substitute-secret CIC_CLIENT_ID_TAG "$CIC_CLIENT_ID"
     substitute-secret CMCIC_KEY_ID_TAG "$CMCIC_KEY_ID"
     substitute-secret CREDITMUTUEL_CLIENT_ID_TAG "$CREDITMUTUEL_CLIENT_ID"
+    substitute-secret MONABANQ_CLIENT_ID_TAG "$MONABANQ_CLIENT_ID"
     substitute-secret SWEDBANK_CLIENT_ID "$SWEDBANK_CLIENT_ID"
     substitute-secret SWEDBANK_CLIENT_SECRET "$SWEDBANK_CLIENT_SECRET"
     substitute-secret CBI_CLIENT_ID_TINK_TAG "$CBI_CLIENT_ID"
