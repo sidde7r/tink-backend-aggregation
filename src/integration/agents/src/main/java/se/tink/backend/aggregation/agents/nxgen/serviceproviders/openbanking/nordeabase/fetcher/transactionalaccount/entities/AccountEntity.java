@@ -2,10 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -18,6 +14,11 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @JsonObject
 public class AccountEntity {
@@ -63,9 +64,68 @@ public class AccountEntity {
     @JsonProperty("value_dated_balance")
     private String valueDatedBalance;
 
+    public static AggregationLogger getLOG() {
+        return LOG;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public List<LinkEntity> getLinks() {
+        return links;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public List<AccountNumberEntity> getAccountNumbers() {
+        return accountNumbers;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public BankEntity getBank() {
+        return bank;
+    }
+
+    public String getBookedBalance() {
+        return bookedBalance;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getCreditLimit() {
+        return creditLimit;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getLatestTransactionBookingDate() {
+        return latestTransactionBookingDate;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getValueDatedBalance() {
+        return valueDatedBalance;
+    }
+
     public Optional<TransactionalAccount> toTinkAccount() {
         AccountIdentifier identifier = generalGetAccountIdentifier();
-
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         NordeaBaseConstants.ACCOUNT_TYPE_MAPPER,
@@ -74,7 +134,7 @@ public class AccountEntity {
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(getLast4Bban())
+                                .withUniqueIdentifier(getIban())
                                 .withAccountNumber(identifier.getIdentifier())
                                 .withAccountName(product)
                                 .addIdentifier(
@@ -109,7 +169,7 @@ public class AccountEntity {
         return AccountIdentifier.create(AccountIdentifier.Type.SE, getBban());
     }
 
-    private ExactCurrencyAmount getAvailableBalance() {
+    public ExactCurrencyAmount getAvailableBalance() {
         return new ExactCurrencyAmount(availableBalance, currency);
     }
 
@@ -125,11 +185,12 @@ public class AccountEntity {
                 .orElse(getIban());
     }
 
-    private String getLast4Bban() {
+    // Used by Nordea Sweden
+    public String getLast4Bban() {
         return getBban().substring(getBban().length() - 4);
     }
 
-    private String getIban() {
+    public String getIban() {
         return Optional.ofNullable(accountNumbers).orElse(Collections.emptyList()).stream()
                 .filter(
                         acc ->
