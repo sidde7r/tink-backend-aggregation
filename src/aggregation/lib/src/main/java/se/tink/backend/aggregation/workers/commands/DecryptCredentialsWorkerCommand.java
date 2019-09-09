@@ -9,6 +9,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
     private final AgentWorkerCommandContext context;
     private final CredentialsCrypto credentialsCrypto;
+    private final boolean doUpdateCredential;
 
     private boolean didDecryptCredential = false;
 
@@ -16,6 +17,16 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
             AgentWorkerCommandContext context, CredentialsCrypto credentialsCrypto) {
         this.context = context;
         this.credentialsCrypto = credentialsCrypto;
+        this.doUpdateCredential = true;
+    }
+
+    public DecryptCredentialsWorkerCommand(
+            AgentWorkerCommandContext context,
+            CredentialsCrypto credentialsCrypto,
+            boolean doUpdateCredential) {
+        this.context = context;
+        this.credentialsCrypto = credentialsCrypto;
+        this.doUpdateCredential = doUpdateCredential;
     }
 
     @Override
@@ -39,6 +50,6 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
 
         // Encrypt credential again.
         CredentialsRequest request = context.getRequest();
-        credentialsCrypto.encrypt(request, true);
+        credentialsCrypto.encrypt(request, doUpdateCredential);
     }
 }

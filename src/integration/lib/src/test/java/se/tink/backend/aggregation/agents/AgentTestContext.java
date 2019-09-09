@@ -286,6 +286,12 @@ public class AgentTestContext extends AgentContext {
         // nothing
     }
 
+    @Override
+    public void updateCredentialsExcludingSensitiveInformation(
+            Credentials credentials, boolean doUpdateStatus, boolean isMigrationUpdate) {
+        // nothing
+    }
+
     public CuratorFramework getCoordinationClient() {
         return null;
     }

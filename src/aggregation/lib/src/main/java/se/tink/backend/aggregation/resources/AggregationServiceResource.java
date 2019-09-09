@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -29,6 +31,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWra
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
+import se.tink.libraries.credentials.service.BatchMigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -217,5 +220,24 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         return HttpResponseHelper.ok();
+    }
+
+    @Override
+    public List<Credentials> batchMigrateCredentials(
+            BatchMigrateCredentialsRequest request, ClientInfo clientInfo) {
+        return request.getRequestList().stream()
+                .map(
+                        migrationRequest -> {
+                            AgentWorkerOperation migrateCredentialsOperation =
+                                    agentWorkerCommandFactory.createOperationMigrate(
+                                            migrationRequest,
+                                            clientInfo,
+                                            request.getTargetVersion());
+
+                            migrateCredentialsOperation.run();
+
+                            return migrateCredentialsOperation.getRequest().getCredentials();
+                        })
+                .collect(Collectors.toList());
     }
 }

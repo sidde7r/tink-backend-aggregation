@@ -10,6 +10,7 @@ public class UpdateAccountRequest {
     private AccountFeatures accountFeatures;
     private String user;
     private String credentialsId;
+    private int credentialsDataVersion;
 
     public String getCredentialsId() {
         return credentialsId;
@@ -44,5 +45,13 @@ public class UpdateAccountRequest {
 
     public void setAccountFeatures(AccountFeatures accountFeatures) {
         this.accountFeatures = accountFeatures;
+    }
+
+    public int getCredentialsDataVersion() {
+        return credentialsDataVersion;
+    }
+
+    public void setCredentialsDataVersion(int credentialsDataVersion) {
+        this.credentialsDataVersion = credentialsDataVersion;
     }
 }
