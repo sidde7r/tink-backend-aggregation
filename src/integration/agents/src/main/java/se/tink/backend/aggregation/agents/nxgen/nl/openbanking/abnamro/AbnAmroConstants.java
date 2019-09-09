@@ -5,31 +5,29 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class AbnAmroConstants {
 
-    private AbnAmroConstants() {
-        throw new AssertionError();
-    }
-
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
     public static final int START_PAGE = 1;
     public static final String INTEGRATION_NAME = "abnamro";
+    private AbnAmroConstants() {
+        throw new AssertionError();
+    }
 
     public static class URLs {
-        private static final URL API_ABNAMRO = new URL("https://api.abnamro.com");
-        private static final URL OAUTH2_ABNAMRO =
-                new URL("https://auth.connect.abnamro.com");
         public static final URL OAUTH2_ABNAMRO_SSL =
                 new URL("https://auth.connect.abnamro.com:8443");
-        public static final URL AUTHORIZE_ABNAMRO =
-                OAUTH2_ABNAMRO
-                        .concatWithSeparator("as")
-                        .concatWithSeparator("authorization.oauth2");
         public static final URL OAUTH2_TOKEN_ABNAMRO =
                 OAUTH2_ABNAMRO_SSL.concatWithSeparator("as").concatWithSeparator("token.oauth2");
+        private static final URL API_ABNAMRO = new URL("https://api.abnamro.com");
         public static final URL ABNAMRO_CONSENT_INFO =
                 API_ABNAMRO.concatWithSeparator("v1").concatWithSeparator("consentinfo");
         public static final URL ABNAMRO_ACCOUNTS =
                 API_ABNAMRO.concatWithSeparator("v1").concatWithSeparator("accounts");
+        private static final URL OAUTH2_ABNAMRO = new URL("https://auth.connect.abnamro.com");
+        public static final URL AUTHORIZE_ABNAMRO =
+                OAUTH2_ABNAMRO
+                        .concatWithSeparator("as")
+                        .concatWithSeparator("authorization.oauth2");
         private static final String ACCOUNT_DETAILS = "details";
         private static final String BALANCES_SUFFIX = "balances";
         private static final String TRANSACTIONS_SUFFIX = "transactions";

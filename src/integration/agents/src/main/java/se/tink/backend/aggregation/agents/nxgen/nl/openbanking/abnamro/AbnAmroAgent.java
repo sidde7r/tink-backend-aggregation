@@ -28,8 +28,8 @@ public class AbnAmroAgent extends NextGenerationAgent
 
     private final AbnAmroApiClient apiClient;
     private final String clientName;
-    private AbnAmroConfiguration configuration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private AbnAmroConfiguration configuration;
 
     public AbnAmroAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -63,7 +63,7 @@ public class AbnAmroAgent extends NextGenerationAgent
         apiClient.setConfiguration(abnAmroConfiguration);
 
         this.client.setEidasProxy(
-            configuration.getEidasProxy(), abnAmroConfiguration.getCertificateId());
+                configuration.getEidasProxy(), abnAmroConfiguration.getCertificateId());
     }
 
     @Override
