@@ -9,14 +9,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LaBanquePostaleConfiguration extends BerlinGroupConfiguration {
-    @JsonProperty private String apiKey;
+    @JsonProperty private String oauthBaseUrl;
 
-    public String getApiKey() {
+    public String getOauthBaseUrl() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(apiKey),
+                Strings.emptyToNull(oauthBaseUrl),
                 String.format(
-                        LaBanquePostaleConstants.ErrorMessages.INVALID_CONFIGURATION, "Api key"));
+                        LaBanquePostaleConstants.ErrorMessages.INVALID_CONFIGURATION,
+                        "oauth base url"));
 
-        return apiKey;
+        return oauthBaseUrl;
     }
 }
