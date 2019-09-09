@@ -143,7 +143,7 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
                 SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(
                         apiClient, supplementalInformationHelper);
         SibsPaymentExecutor sibsPaymentExecutor =
-                new SibsPaymentExecutor(apiClient, signPaymentStrategy);
+                new SibsPaymentExecutor(apiClient, signPaymentStrategy, strongAuthenticationState);
         return Optional.of(new PaymentController(sibsPaymentExecutor, sibsPaymentExecutor));
     }
 
