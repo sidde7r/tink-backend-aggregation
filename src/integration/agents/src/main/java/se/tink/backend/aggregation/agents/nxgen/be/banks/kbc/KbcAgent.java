@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveA
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -76,8 +76,8 @@ public final class KbcAgent extends NextGenerationAgent
                         persistentStorage,
                         apiClient,
                         supplementalInformationFormer);
-        final AutoAuthenticationController autoAuthenticationController =
-                new AutoAuthenticationController(
+        final AutoAuthenticationProgressiveController autoAuthenticationController =
+                new AutoAuthenticationProgressiveController(
                         request, systemUpdater, kbcAuthenticator, kbcAuthenticator);
         manualOrAutoAuthAuthenticator = autoAuthenticationController;
         progressiveAuthenticator = autoAuthenticationController;

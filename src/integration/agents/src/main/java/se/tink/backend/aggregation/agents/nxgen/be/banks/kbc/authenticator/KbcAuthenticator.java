@@ -19,15 +19,13 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class KbcAuthenticator
-        implements MultiFactorAuthenticator, AutoAuthenticator, ProgressiveAuthenticator {
+public class KbcAuthenticator implements AutoAuthenticator, ProgressiveTypedAuthenticator {
 
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
@@ -62,12 +60,6 @@ public class KbcAuthenticator
 
     static byte[] generateCipherKey() {
         return RandomUtils.secureRandom(KbcConstants.Encryption.AES_KEY_LENGTH);
-    }
-
-    @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        throw new AssertionError();
     }
 
     String verifyCredentialsNotNullOrEmpty(String value) throws LoginException {

@@ -10,6 +10,7 @@ public final class RabobankAgentTest {
     private enum Arg {
         LOAD_BEFORE,
         SAVE_AFTER,
+        IS_MANUAL,
     }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
@@ -29,6 +30,7 @@ public final class RabobankAgentTest {
         new AgentIntegrationTest.Builder("nl", "nl-rabobank-sandbox-oauth2")
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                 .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                .setRequestFlagManual(Boolean.parseBoolean(manager.get(Arg.IS_MANUAL)))
                 .expectLoggedIn(false)
                 .build()
                 .testRefresh();
@@ -39,6 +41,7 @@ public final class RabobankAgentTest {
         new AgentIntegrationTest.Builder("nl", "nl-rabobank-oauth2")
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                 .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                .setRequestFlagManual(Boolean.parseBoolean(manager.get(Arg.IS_MANUAL)))
                 .expectLoggedIn(false)
                 .build()
                 .testRefresh();
