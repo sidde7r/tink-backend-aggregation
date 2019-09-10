@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.PostbankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.PostbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
@@ -27,21 +26,11 @@ public final class PostbankAgent extends DeutscheBankAgent {
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
-        super(request, context, configuration, PostbankConstants.INTEGRATION_NAME);
-        String clientName = request.getProvider().getPayload();
+        super(request, context, configuration);
 
         DeutscheBankConfiguration postbankConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                PostbankConstants.INTEGRATION_NAME,
-                                clientName,
-                                DeutscheBankConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                DeutscheBankConstants.ErrorMessages
-                                                        .MISSING_CONFIGURATION));
+                getAgentConfigurationController()
+                        .getAgentConfiguration(DeutscheBankConfiguration.class);
 
         apiClient = new PostbankApiClient(client, sessionStorage, postbankConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();

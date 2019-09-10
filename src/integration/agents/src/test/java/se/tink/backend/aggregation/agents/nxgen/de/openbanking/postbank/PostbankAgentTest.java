@@ -25,6 +25,8 @@ public class PostbankAgentTest {
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .addCredentialField(CredentialKeys.USERNAME, manager.get(Arg.PSU_ID))
                         .addCredentialField(CredentialKeys.PASSWORD, manager.get(Arg.PASSWORD))
+                        .setFinancialInstitutionId("postbank")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false);

@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank;
 
 public final class PostbankConstants {
 
-    public static final String INTEGRATION_NAME = "postbank";
-
     public static class PollStatus {
         public static final int MAX_POLL_ATTEMPTS = 40;
         public static final String FINALISED = "finalised";
