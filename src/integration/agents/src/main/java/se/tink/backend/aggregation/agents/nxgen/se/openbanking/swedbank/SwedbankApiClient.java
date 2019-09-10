@@ -273,7 +273,7 @@ public final class SwedbankApiClient {
         String redirectUrl =
                 new URL(configuration.getRedirectUrl())
                         .queryParam(QueryKeys.STATE, state)
-                        .queryParam(QueryKeys.CODE, QueryValues.CODE)
+                        .queryParam(QueryKeys.CODE, QueryValues.RESPONSE_TYPE_CODE)
                         .toString();
 
         return getPaymentRequestBuilder(url)
