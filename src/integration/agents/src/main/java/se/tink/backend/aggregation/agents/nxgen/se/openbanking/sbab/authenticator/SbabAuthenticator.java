@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
 
     private final SbabApiClient apiClient;
-    private String autostarttoken;
+    private String autoStartToken;
     private OAuth2Token token;
     private PersistentStorage persistentStorage;
     private static final Logger logger = LoggerFactory.getLogger(SbabAuthenticator.class);
@@ -44,7 +44,7 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
         persistentStorage.remove(StorageKeys.PAGINATION_INDICATOR_REFRESHED_TOKEN);
         try {
             BankIdResponse response = apiClient.initBankId(ssn);
-            autostarttoken = response.getAutostartToken();
+            autoStartToken = response.getAutostartToken();
             return response;
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
@@ -77,7 +77,7 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
 
     @Override
     public Optional<String> getAutostartToken() {
-        return Optional.ofNullable(autostarttoken);
+        return Optional.ofNullable(autoStartToken);
     }
 
     @Override
