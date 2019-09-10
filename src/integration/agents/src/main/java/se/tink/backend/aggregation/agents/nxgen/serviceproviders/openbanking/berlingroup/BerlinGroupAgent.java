@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
@@ -36,11 +35,8 @@ public abstract class BerlinGroupAgent<
     protected abstract TApiCliient getApiClient();
 
     protected TConfiguration getConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        getIntegrationName(), clientName, getConfigurationClassDescription())
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController()
+                .getAgentConfiguration(getConfigurationClassDescription());
     }
 
     @Override
