@@ -15,7 +15,9 @@ public class HandelsbankenAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-handelsbanken-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("handelsbanken")
+                        .setAppId("tink");
     }
 
     @Test

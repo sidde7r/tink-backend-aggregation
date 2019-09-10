@@ -42,17 +42,8 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         handelsbankenBaseConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                HandelsbankenBaseConstants.INTEGRATION_NAME,
-                                clientName,
-                                HandelsbankenBaseConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                HandelsbankenBaseConstants.ExceptionMessages
-                                                        .CONFIG_MISSING));
+                getAgentConfigurationController()
+                        .getAgentConfiguration(HandelsbankenBaseConfiguration.class);
 
         apiClient.setConfiguration(handelsbankenBaseConfiguration);
         this.client.setEidasProxy(

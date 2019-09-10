@@ -30,6 +30,8 @@ public class SbabAgentTest {
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true)
+                        .setFinancialInstitutionId("sbab")
+                        .setAppId("tink")
                         .expectLoggedIn(false);
     }
 
