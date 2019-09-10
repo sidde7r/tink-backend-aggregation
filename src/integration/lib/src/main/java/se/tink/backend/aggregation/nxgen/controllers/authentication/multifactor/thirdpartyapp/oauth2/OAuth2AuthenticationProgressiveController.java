@@ -58,7 +58,7 @@ public class OAuth2AuthenticationProgressiveController implements AutoAuthentica
                 DEFAULT_TOKEN_LIFETIME_UNIT);
     }
 
-    public OAuth2AuthenticationProgressiveController(
+    private OAuth2AuthenticationProgressiveController(
             PersistentStorage persistentStorage,
             OAuth2Authenticator authenticator,
             Credentials credentials,
