@@ -33,6 +33,8 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
 
     private final String agentName;
+    private final String provider;
+    private final String market;
     private final boolean isEnabledMarket;
 
     public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
@@ -46,6 +48,8 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
         CredentialsRequest request = context.getRequest();
 
         this.agentName = request.getProvider().getClassName();
+        this.provider = request.getProvider().getName();
+        this.market = request.getProvider().getMarket();
 
         isEnabledMarket = TEST_MARKET.equalsIgnoreCase(request.getProvider().getMarket());
     }
@@ -69,7 +73,11 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                             .forEach(
                                     pair ->
                                             agentDataAvailabilityTrackerClient.sendAccount(
-                                                    agentName, pair.first, pair.second));
+                                                    agentName,
+                                                    provider,
+                                                    market,
+                                                    pair.first,
+                                                    pair.second));
 
                     action.completed();
                 } else {

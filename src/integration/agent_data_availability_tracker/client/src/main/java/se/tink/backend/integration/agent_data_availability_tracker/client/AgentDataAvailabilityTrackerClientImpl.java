@@ -119,7 +119,11 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     }
 
     public void sendAccount(
-            final String agent, final Account account, final AccountFeatures features) {
+            final String agent,
+            final String provider,
+            final String market,
+            final Account account,
+            final AccountFeatures features) {
 
         AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
 
@@ -136,7 +140,10 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         }
 
         TrackAccountRequest.Builder requestBuilder =
-                TrackAccountRequest.newBuilder().setAgent(agent);
+                TrackAccountRequest.newBuilder()
+                        .setAgent(agent)
+                        .setProvider(provider)
+                        .setMarket(market);
 
         // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
         serializer
