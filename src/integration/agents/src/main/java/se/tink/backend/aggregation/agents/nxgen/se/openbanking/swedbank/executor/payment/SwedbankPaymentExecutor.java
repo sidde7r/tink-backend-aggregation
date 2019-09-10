@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.util.AccountTypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -24,19 +25,21 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
-    private SwedbankApiClient apiClient;
+    private final SwedbankApiClient apiClient;
     private final SwedbankPaymentAuthenticator paymentAuthenticator;
-    private List<PaymentResponse> createdPaymentsList;
+    private final List<PaymentResponse> createdPaymentsList = new ArrayList<>();
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public SwedbankPaymentExecutor(
-            SwedbankApiClient apiClient, SwedbankPaymentAuthenticator paymentAuthenticator) {
+            SwedbankApiClient apiClient,
+            SwedbankPaymentAuthenticator paymentAuthenticator,
+            StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.paymentAuthenticator = paymentAuthenticator;
-        createdPaymentsList = new ArrayList<>();
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
@@ -79,19 +82,20 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
 
-        PaymentAuthorisationResponse paymentAuthorisationResponse =
-                apiClient.startPaymentAuthorisation(payment.getUniqueId());
+        String state = strongAuthenticationState.getState();
 
-        paymentAuthenticator.openThirdPartyApp(paymentAuthorisationResponse.getAuthorizationUrl());
+        PaymentAuthorisationResponse paymentAuthorisationResponse =
+                apiClient.startPaymentAuthorisation(payment.getUniqueId(), state);
+        paymentAuthenticator.openThirdPartyApp(
+                paymentAuthorisationResponse.getAuthorizationUrl(), state);
 
         GetPaymentStatusResponse getPaymentStatusResponse =
                 apiClient.getPaymentStatus(payment.getUniqueId());
 
-        PaymentStatus paymentStatus =
+        payment.setStatus(
                 SwedbankPaymentStatus.fromString(getPaymentStatusResponse.getTransactionStatus())
-                        .getTinkPaymentStatus();
+                        .getTinkPaymentStatus());
 
-        payment.setStatus(paymentStatus);
         return new PaymentMultiStepResponse(
                 payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
     }

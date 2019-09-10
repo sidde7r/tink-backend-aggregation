@@ -11,6 +11,8 @@ import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.Urls;
@@ -267,6 +269,18 @@ public final class SwedbankApiClient {
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, configuration.getRedirectUrl());
     }
 
+    private RequestBuilder getPaymentAuthorizationRequestBuilder(URL url, String state) {
+        String redirectUrl =
+                new URL(configuration.getRedirectUrl())
+                        .queryParam(QueryKeys.STATE, state)
+                        .queryParam(QueryKeys.CODE, QueryValues.RESPONSE_TYPE_CODE)
+                        .toString();
+
+        return getPaymentRequestBuilder(url)
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+    }
+
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, SwedbankPaymentType swedbankPaymentType) {
         return getPaymentRequestBuilder(
@@ -287,9 +301,10 @@ public final class SwedbankApiClient {
                 .get(GetPaymentStatusResponse.class);
     }
 
-    public PaymentAuthorisationResponse startPaymentAuthorisation(String paymentId) {
-        return getPaymentRequestBuilder(
-                        Urls.INITIATE_PAYMENT_AUTH.parameter(UrlParameters.PAYMENT_ID, paymentId))
+    public PaymentAuthorisationResponse startPaymentAuthorisation(String paymentId, String state) {
+        return getPaymentAuthorizationRequestBuilder(
+                        Urls.INITIATE_PAYMENT_AUTH.parameter(UrlParameters.PAYMENT_ID, paymentId),
+                        state)
                 .post(PaymentAuthorisationResponse.class);
     }
 
