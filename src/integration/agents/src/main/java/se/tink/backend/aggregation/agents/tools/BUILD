@@ -11,5 +11,6 @@ java_library(
         "//third_party:com_google_code_gson_gson",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_reflections_reflections",
+        "//third_party:org_yaml_snakeyaml",
     ],
 )

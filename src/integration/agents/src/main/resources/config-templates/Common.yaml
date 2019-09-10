@@ -1,0 +1,33 @@
+redirectUrl-description: |2
+    From https://www.oauth.com/oauth2-servers/redirect-uris/: Redirect URLs are a
+    critical part of the OAuth flow. After a user successfully authorizes an
+    application, the authorization server will redirect the user back to the
+    application with either an authorization code or access token in the URL.
+    Because the redirect URL will contain sensitive information, it is critical
+    that the service doesn’t redirect the user to arbitrary locations.
+
+redirectUrl-example: |2
+    https://api.tink.se/api/v1/credentials/third-party/callback
+
+clientId-description: |2
+    From https://www.oauth.com/oauth2-servers/client-registration/client-id-secret/: The
+    client_id is a public identifier for apps. Even though it’s public, it’s best that
+    it isn’t guessable by third parties, so many implementations use something like a
+    32-character hex string. It must also be unique across all clients that the
+    authorization server handles. If the client ID is guessable, it makes it slightly
+    easier to craft phishing attacks against arbitrary applications.
+
+clientId-example: |2
+    555d5513cb123456789050b90f06a18b21234567890a9cce977c5513734d3f41
+
+clientSecret-description: |2
+    From https://www.oauth.com/oauth2-servers/client-registration/client-id-secret/: The
+    client_secret is a secret known only to the application and the authorization server.
+    It must be sufficiently random to not be guessable, which means you should avoid
+    using common UUID libraries which often take into account the timestamp or MAC
+    address of the server generating it. A great way to generate a secure secret is to
+    use a cryptographically-secure library to generate a 256-bit value and converting it
+    to a hexadecimal representation.
+
+clientSecret-example: |2
+    042cfdf1234567890ad83d622d7563aa2412345678900d8fd891c490f183c6da

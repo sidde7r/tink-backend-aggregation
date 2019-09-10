@@ -2,22 +2,20 @@ package se.tink.backend.aggregation.agents.tools;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
+import org.yaml.snakeyaml.Yaml;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -59,6 +57,43 @@ public class ClientConfigurationTemplateBuilder {
         return replaceUnwantedCharacters(jsonString);
     }
 
+    private Map<String, String> readFieldsDescriptionsAndExamples(
+            Class<? extends ClientConfiguration> clientConfigurationClassForProvider) {
+
+        Yaml yaml = new Yaml();
+
+        // First we retrieve the common descriptions and examples.
+        String fieldsDescriptionsAndExamplesCommonPath = "config-templates/Common.yaml";
+
+        InputStream fieldsDescriptionsAndExamplesCommonStream =
+                clientConfigurationClassForProvider
+                        .getClassLoader()
+                        .getResourceAsStream(fieldsDescriptionsAndExamplesCommonPath);
+
+        Map<String, String> fieldsDescriptionAndExamplesCommon =
+                (Map<String, String>) yaml.load(fieldsDescriptionsAndExamplesCommonStream);
+
+        // Now we get the provider specific descriptions and examples, if there are any duplicates
+        // from the common ones, the provider specific ones will override the common ones.
+        String fieldsDescriptionsAndExamplesForProviderPath =
+                "config-templates/"
+                        + clientConfigurationClassForProvider.getCanonicalName().replace(".", "/")
+                        + ".yaml";
+
+        InputStream fieldsDescriptionsAndExamplesForProviderStream =
+                clientConfigurationClassForProvider
+                        .getClassLoader()
+                        .getResourceAsStream(fieldsDescriptionsAndExamplesForProviderPath);
+
+        Map<String, String> fieldsDescriptionAndExamplesForProvider =
+                (Map<String, String>) yaml.load(fieldsDescriptionsAndExamplesForProviderStream);
+
+        // Merge the common and the provider specific ones.
+        fieldsDescriptionAndExamplesCommon.putAll(fieldsDescriptionAndExamplesForProvider);
+
+        return fieldsDescriptionAndExamplesCommon;
+    }
+
     private String replaceUnwantedCharacters(String jsonString) {
         return StringEscapeUtils.unescapeJava(
                 jsonString.replace("\\n", "\n" + PRETTY_PRINTING_INDENT_PADDING));
@@ -72,15 +107,20 @@ public class ClientConfigurationTemplateBuilder {
         jsonConfigurationTemplate.add(financialInstitutionId, jsonTemplateForFinancialInstitution);
 
         List<Field> fields = Arrays.asList(clientConfigurationClassForProvider.getDeclaredFields());
-        JsonObject jsonSecrets = getSecretFields(fields);
-        JsonObject jsonSensitive = getSensitiveFields(fields);
+
+        Map<String, String> fieldsDescriptionsAndExamples =
+                readFieldsDescriptionsAndExamples(clientConfigurationClassForProvider);
+
+        JsonObject jsonSecrets = getSecretFields(fields, fieldsDescriptionsAndExamples);
+        JsonObject jsonSensitive = getSensitiveFields(fields, fieldsDescriptionsAndExamples);
         jsonTemplateForFinancialInstitution.add("secrets", jsonSecrets);
         jsonTemplateForFinancialInstitution.add("sensitive", jsonSensitive);
 
         return jsonConfigurationTemplate;
     }
 
-    private JsonObject getSensitiveFields(List<Field> fields) {
+    private JsonObject getSensitiveFields(
+            List<Field> fields, Map<String, String> fieldsDescriptionsAndExamples) {
         JsonObject sensitiveFieldsJson = new JsonObject();
 
         List<Field> sensitiveFieldsList =
@@ -96,12 +136,14 @@ public class ClientConfigurationTemplateBuilder {
                         sensitiveField ->
                                 sensitiveFieldsJson.addProperty(
                                         sensitiveField.getName(),
-                                        getDescriptionAndExample(sensitiveField)));
+                                        getDescriptionAndExample(
+                                                sensitiveField, fieldsDescriptionsAndExamples)));
 
         return sensitiveFieldsJson;
     }
 
-    private JsonObject getSecretFields(List<Field> fields) {
+    private JsonObject getSecretFields(
+            List<Field> fields, Map<String, String> fieldsDescriptionsAndExamples) {
         JsonObject secretFieldsJson = new JsonObject();
 
         List<Field> secretFieldsList =
@@ -117,56 +159,32 @@ public class ClientConfigurationTemplateBuilder {
                         secretField ->
                                 secretFieldsJson.addProperty(
                                         secretField.getName(),
-                                        getDescriptionAndExample(secretField)));
+                                        getDescriptionAndExample(
+                                                secretField, fieldsDescriptionsAndExamples)));
 
         return secretFieldsJson;
     }
 
-    private String getDescriptionAndExample(Field field) {
-        List<Method> candidateMethods = getCandidateMethodsDescriptionExample(field);
-
-        Optional<Method> descriptionMethod =
-                candidateMethods.stream()
-                        .filter(
-                                method ->
-                                        isMethodForFieldWithPrefix(
-                                                method, field.getName(), "getDescription"))
-                        .findFirst();
-
-        Optional<Method> exampleMethod =
-                candidateMethods.stream()
-                        .filter(
-                                method ->
-                                        isMethodForFieldWithPrefix(
-                                                method, field.getName(), "getExample"))
-                        .findFirst();
+    private String getDescriptionAndExample(
+            Field field, Map<String, String> fieldsDescriptionsAndExamples) {
 
         StringBuffer sb = new StringBuffer();
-        if (descriptionMethod.isPresent()) {
-            try {
-                sb.append(System.lineSeparator());
-                sb.append("Description:");
-                sb.append(System.lineSeparator());
-                sb.append(prettifyContentString((String) descriptionMethod.get().invoke(null)));
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                log.debug(
-                        "Could not add description, check that your description method has the right signature : "
-                                + getRightMethodSignature(descriptionMethod.get()));
-            }
+        String fieldName = field.getName();
+
+        String fieldDescriptionKey = fieldName + "-description";
+        if (fieldsDescriptionsAndExamples.containsKey(fieldDescriptionKey)) {
+            sb.append(System.lineSeparator());
+            sb.append("Description:");
+            sb.append(System.lineSeparator());
+            sb.append(fieldsDescriptionsAndExamples.get(fieldDescriptionKey));
         }
 
-        if (exampleMethod.isPresent()) {
-            try {
-                sb.append(System.lineSeparator());
-                sb.append("Example:");
-                sb.append(System.lineSeparator());
-                sb.append(prettifyContentString((String) exampleMethod.get().invoke(null)));
-                sb.append(System.lineSeparator());
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                log.debug(
-                        "Could not add example, check that your example method has the right signature : "
-                                + getRightMethodSignature(exampleMethod.get()));
-            }
+        String fieldExampleKey = fieldName + "-example";
+        if (fieldsDescriptionsAndExamples.containsKey(fieldExampleKey)) {
+            sb.append(System.lineSeparator());
+            sb.append("Example:");
+            sb.append(System.lineSeparator());
+            sb.append(fieldsDescriptionsAndExamples.get(fieldExampleKey));
         }
 
         if (sb.length() == 0) {
@@ -174,47 +192,6 @@ public class ClientConfigurationTemplateBuilder {
         }
 
         return sb.toString();
-    }
-
-    private List<Method> getCandidateMethodsDescriptionExample(Field field) {
-        List<Method> allCandidateMethods = new ArrayList<>();
-
-        List<Method> candidateMethodsFromClass =
-                filterMethodsBySignature(field.getDeclaringClass().getDeclaredMethods());
-        allCandidateMethods.addAll(candidateMethodsFromClass);
-
-        List<Method> candidateMethodsFromInterface =
-                filterMethodsBySignature(ClientConfiguration.class.getDeclaredMethods());
-        allCandidateMethods.addAll(candidateMethodsFromInterface);
-
-        return allCandidateMethods;
-    }
-
-    private List<Method> filterMethodsBySignature(Method[] declaredMethods) {
-        Predicate<Method> methodSignatureChecker =
-                method ->
-                        method.getReturnType().equals(String.class)
-                                && method.getParameterCount() == 0;
-
-        return Arrays.stream(declaredMethods)
-                .filter(methodSignatureChecker)
-                .filter(method -> Modifier.isStatic(method.getModifiers()))
-                .collect(Collectors.toList());
-    }
-
-    private String prettifyContentString(String content) {
-        return "  " + content.replace("\n", "\n  ");
-    }
-
-    private String getRightMethodSignature(Method method) {
-        return "public static String " + method.getName() + "()";
-    }
-
-    private boolean isMethodForFieldWithPrefix(Method method, String fieldName, String prefix) {
-        String camelCasedFieldName =
-                fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-
-        return method.getName().endsWith(prefix + camelCasedFieldName);
     }
 
     private boolean isFieldSecret(Field field) {
@@ -238,15 +215,16 @@ public class ClientConfigurationTemplateBuilder {
         Optional<Class<? extends ClientConfiguration>> closestConfigurationClass =
                 searchForClosestConfigurationClassInSamePackageTree(fullyQualifiedClassName);
 
-        // Otherwise we look among the superclasses of our agent class. This comes in handy
-        // when dealing with agents that inherit from service providers or when there is
-        // another reason for an agent to share a configuration class with a predecessor.
-        if (!closestConfigurationClass.isPresent()) {
-            closestConfigurationClass =
-                    searchForClosestConfigurationClassAmongSuperclasses(fullyQualifiedClassName);
-        }
-
-        return closestConfigurationClass.orElseThrow(noConfigurationClassFoundExceptionSupplier);
+        // We first look into the same package tree
+        return searchForClosestConfigurationClassInSamePackageTree(fullyQualifiedClassName)
+                // Otherwise we look among the superclasses of our agent class. This comes in handy
+                // when dealing with agents that inherit from service providers or when there is
+                // another reason for an agent to share a configuration class with a predecessor.
+                .orElseGet(
+                        () ->
+                                searchForClosestConfigurationClassAmongSuperclasses(
+                                                fullyQualifiedClassName)
+                                        .orElseThrow(noConfigurationClassFoundExceptionSupplier));
     }
 
     private Optional<Class<? extends ClientConfiguration>>
