@@ -20,4 +20,11 @@ public class ErrorResponse {
             throw BankIdError.BANK_ID_UNAUTHORIZED_ISSUER.exception();
         }
     }
+
+    public boolean isTimeout() {
+        if (Errors.MBID_ERROR.equalsIgnoreCase(error)) {
+            return true;
+        }
+        return false;
+    }
 }
