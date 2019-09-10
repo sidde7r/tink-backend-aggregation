@@ -2,12 +2,10 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.utils;
 
 import com.google.common.base.Strings;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class StrongAuthenticationState {
-    private static final Logger logger = LoggerFactory.getLogger(StrongAuthenticationState.class);
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
+    private static final String UUID_TINK_TAG = "feed";
 
     private final String state;
 
@@ -28,7 +26,10 @@ public class StrongAuthenticationState {
             // the state parameter. Known limitations:
             // - SDC only allow UUID.
             // - Barclays only allow ^(?!\s)(a-zA-Z0-9-_){1,255})$
-            return UUID.randomUUID().toString();
+
+            // Todo: Use se.tink.libraries.uuid.UUIDUtils once the repositories are merged.
+            String uuid = UUID.randomUUID().toString();
+            return uuid.substring(0, uuid.length() - UUID_TINK_TAG.length()) + UUID_TINK_TAG;
         }
 
         return appUriId;
