@@ -237,11 +237,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         RequestLine requestLine = request.getRequestLine();
 
         JWTCreator.Builder jwtBuilder =
-
-            JWT.create()
-                .withIssuedAt(new Date())
-                .withClaim("method", requestLine.getMethod())
-                .withClaim("uri", requestLine.getUri());
+                JWT.create()
+                        .withIssuedAt(new Date())
+                        .withClaim("method", requestLine.getMethod())
+                        .withClaim("uri", requestLine.getUri());
 
         // Only add keyId for request where we use signatureKeyPair
         if (signatureKeyPair != null) {
@@ -250,7 +249,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         getHttpHeadersHashAsBase64(request)
                 .ifPresent(hash -> jwtBuilder.withClaim("headers", hash));
-
 
         getHttpBodyHashAsBase64(request).ifPresent(hash -> jwtBuilder.withClaim("body", hash));
 
