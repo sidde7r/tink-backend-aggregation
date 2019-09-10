@@ -42,7 +42,8 @@ public class PaymentRequest {
 
         Reference referenceInRequest = null;
         if (TransferType.PAYMENT.equals(transfer.getType())
-                || TransferType.EINVOICE.equals(transfer.getType())) {
+                || TransferType.EINVOICE.equals(transfer.getType())
+                || TransferType.BANK_TRANSFER.equals(transfer.getType())) {
             referenceInRequest =
                     new Reference(transfer.getType().toString(), transfer.getDestinationMessage());
         }
