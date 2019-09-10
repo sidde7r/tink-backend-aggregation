@@ -115,6 +115,7 @@ java_library(
         "//third_party:org_seleniumhq_selenium_selenium_remote_driver",
         "//third_party:org_seleniumhq_selenium_selenium_support",
         "//third_party:org_slf4j_slf4j_api",
+        "//third_party:org_springframework_spring_core",
     ],
 )
 
