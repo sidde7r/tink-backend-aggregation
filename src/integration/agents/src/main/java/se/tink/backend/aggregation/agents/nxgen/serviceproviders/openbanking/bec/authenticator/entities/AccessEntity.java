@@ -7,11 +7,11 @@ public class AccessEntity {
 
     private String allPsd2;
 
-    public String getAllPsd2() {
-        return allPsd2;
-    }
-
     public AccessEntity(String allPsd2) {
         this.allPsd2 = allPsd2;
+    }
+
+    public String getAllPsd2() {
+        return allPsd2;
     }
 }

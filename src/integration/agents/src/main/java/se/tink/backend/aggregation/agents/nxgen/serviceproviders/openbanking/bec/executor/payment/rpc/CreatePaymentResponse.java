@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,5 +16,10 @@ public class CreatePaymentResponse {
 
     public String getPaymentId() {
         return paymentId;
+    }
+
+    @JsonIgnore
+    public String getScaRedirect() {
+        return links.getScaRedirect().getHref();
     }
 }

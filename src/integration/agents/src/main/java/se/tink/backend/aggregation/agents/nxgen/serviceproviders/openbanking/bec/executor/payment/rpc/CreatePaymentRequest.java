@@ -11,15 +11,18 @@ public class CreatePaymentRequest {
     private String creditorName;
     private AccountEntity debtorAccount;
     private AmountEntity instructedAmount;
+    private String requestedExecutionDate;
 
     public CreatePaymentRequest(
             AccountEntity creditorAccount,
             String creditorName,
             AccountEntity debtorAccount,
-            AmountEntity instructedAmount) {
+            AmountEntity instructedAmount,
+            String requestedExecutionDate) {
         this.creditorAccount = creditorAccount;
         this.creditorName = creditorName;
         this.debtorAccount = debtorAccount;
         this.instructedAmount = instructedAmount;
+        this.requestedExecutionDate = requestedExecutionDate;
     }
 }
