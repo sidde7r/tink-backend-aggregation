@@ -124,9 +124,11 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             //
             // Requests to the EIDAS proxy do not need to be signed. The proxy will sign the request
             // on the way out if necessary.
-            addRequestSignature(request);
-        } else if (shouldQsealcJwt) {
-            addQsealcSignature(request);
+            if (eidasIdentity != null && !eidasIdentity.getClusterId().contains("farnham")) {
+                addQsealcSignature(request);
+            } else {
+                addRequestSignature(request);
+            }
         }
 
         return super.execute(request, conn, context);
@@ -235,10 +237,11 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         RequestLine requestLine = request.getRequestLine();
 
         JWTCreator.Builder jwtBuilder =
-                JWT.create()
-                        .withIssuedAt(new Date())
-                        .withClaim("method", requestLine.getMethod())
-                        .withClaim("uri", requestLine.getUri());
+
+            JWT.create()
+                .withIssuedAt(new Date())
+                .withClaim("method", requestLine.getMethod())
+                .withClaim("uri", requestLine.getUri());
 
         // Only add keyId for request where we use signatureKeyPair
         if (signatureKeyPair != null) {
@@ -247,6 +250,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         getHttpHeadersHashAsBase64(request)
                 .ifPresent(hash -> jwtBuilder.withClaim("headers", hash));
+
 
         getHttpBodyHashAsBase64(request).ifPresent(hash -> jwtBuilder.withClaim("body", hash));
 
