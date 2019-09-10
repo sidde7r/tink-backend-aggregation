@@ -12,6 +12,10 @@ public class TransactionResponse implements PaginatorResponse {
 
     private TransactionEntity transactions;
 
+    public TransactionResponse() {
+        transactions = new TransactionEntity();
+    }
+
     public TransactionEntity getTransactions() {
         return transactions;
     }
