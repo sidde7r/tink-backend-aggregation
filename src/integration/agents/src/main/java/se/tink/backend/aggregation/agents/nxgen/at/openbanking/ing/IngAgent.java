@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
+package se.tink.backend.aggregation.agents.nxgen.at.openbanking.ing;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseAgent;
