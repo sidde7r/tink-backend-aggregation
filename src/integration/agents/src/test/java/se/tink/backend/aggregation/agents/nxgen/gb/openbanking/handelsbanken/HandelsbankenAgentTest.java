@@ -17,6 +17,8 @@ public class HandelsbankenAgentTest {
                         .addCredentialField("accessToken", "VUtfUFJJVkFURV9QUk9GSUxFX18z")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("handelsbanken")
+                        .setAppId("tink")
                         .expectLoggedIn(false);
     }
 
