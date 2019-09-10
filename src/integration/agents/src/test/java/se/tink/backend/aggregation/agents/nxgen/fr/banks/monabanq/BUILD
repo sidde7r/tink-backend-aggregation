@@ -15,7 +15,7 @@ junit_test(
     deps = [
         "//src/integration/agents",
         "//src/integration/api",
-        "//src/integration/lib:lib_test",
         "//src/integration/lib",
+        "//src/integration/lib:lib_test",
     ],
 )
