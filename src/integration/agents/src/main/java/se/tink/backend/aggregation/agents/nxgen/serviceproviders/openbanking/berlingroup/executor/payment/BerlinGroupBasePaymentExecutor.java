@@ -27,7 +27,7 @@ import se.tink.libraries.payment.rpc.Payment;
 public abstract class BerlinGroupBasePaymentExecutor
         implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private List<PaymentResponse> createdPaymentsList;
+    protected List<PaymentResponse> createdPaymentsList;
 
     protected BerlinGroupBasePaymentExecutor() {
         createdPaymentsList = new ArrayList<>();
