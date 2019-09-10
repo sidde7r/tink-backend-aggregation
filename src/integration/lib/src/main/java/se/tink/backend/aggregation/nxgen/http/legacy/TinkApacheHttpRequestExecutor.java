@@ -124,7 +124,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             //
             // Requests to the EIDAS proxy do not need to be signed. The proxy will sign the request
             // on the way out if necessary.
-            if (eidasIdentity != null && !eidasIdentity.getClusterId().contains("farnham")) {
+            // For now, only try the QSealC signing for oxford, as other clusters might not have
+            // the corresponding certificate uploaded
+            if (eidasIdentity != null && eidasIdentity.getClusterId().contains("oxford")) {
                 addQsealcSignature(request);
             } else {
                 addRequestSignature(request);
