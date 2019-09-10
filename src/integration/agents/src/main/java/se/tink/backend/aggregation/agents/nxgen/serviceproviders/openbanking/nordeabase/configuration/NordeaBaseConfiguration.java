@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.AgentType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
@@ -10,6 +11,7 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
     @JsonProperty private String clientSecret;
     @JsonProperty private String redirectUrl;
     @JsonProperty private String eidasQwac;
+    @JsonProperty private AgentType agentType = AgentType.CORPORATE;
 
     public String getClientId() {
         return clientId;
@@ -25,5 +27,9 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
 
     public String getEidasQwac() {
         return eidasQwac;
+    }
+
+    public AgentType getAgentType() {
+        return agentType;
     }
 }

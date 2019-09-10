@@ -36,6 +36,13 @@ public final class NordeaBaseConstants {
         public static final URL CONFIRM_PAYMENT = new URL(BASE_URL + ApiService.CONFIRM_PAYMENT);
         public static final URL GET_PAYMENT = new URL(BASE_URL + ApiService.GET_PAYMENT);
         public static final URL GET_PAYMENTS = new URL(BASE_URL + ApiService.GET_PAYMENTS);
+
+        public static final String BASE_CORPORATE_URL =
+                "https://api.nordeaopenbanking.com/xs2a-business";
+        public static final URL GET_CORPORATE_ACCOUNTS =
+                new URL(BASE_CORPORATE_URL + ApiService.GET_CORPORATE_ACCOUNTS);
+        public static final URL GET_CORPORATE_TRANSACTIONS =
+                new URL(BASE_CORPORATE_URL + ApiService.GET_CORPORATE_TRANSACTIONS);
     }
 
     public static class TransactionalAccounts {
@@ -55,6 +62,9 @@ public final class NordeaBaseConstants {
                 VERSION + "/payments/{paymentType}/{paymentId}/confirm";
         public static final String GET_PAYMENT = VERSION + "/payments/{paymentType}/{paymentId}";
         public static final String GET_PAYMENTS = VERSION + "/payments/{paymentType}";
+        public static final String GET_CORPORATE_ACCOUNTS = "/v2/accounts";
+        public static final String GET_CORPORATE_TRANSACTIONS =
+                "/v2/accounts/{accountId}/transactions";
     }
 
     public static class StorageKeys {
@@ -107,6 +117,7 @@ public final class NordeaBaseConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String PAYMENT_TYPE_NOT_FOUND =
                 "No PaymentType found for your AccountIdentifiers pair ";
+        public static final String UNKNOWN_AGENT_TYPE = "Unknown agent type.";
     }
 
     public static final class StatusResponse {
