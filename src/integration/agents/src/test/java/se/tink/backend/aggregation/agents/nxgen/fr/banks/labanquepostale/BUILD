@@ -1,0 +1,21 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "labanquepostale",
+    srcs = glob(["**/*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents",
+        "//src/integration/api",
+        "//src/integration/lib",
+        "//src/integration/lib:lib_test",
+    ],
+)
