@@ -41,7 +41,7 @@ public class ICSUtils {
         return c.getTime();
     }
 
-    // Can be max 90 days in the future
+    // Can be max 89 days in the future
     public static Date getExpirationDate() {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());

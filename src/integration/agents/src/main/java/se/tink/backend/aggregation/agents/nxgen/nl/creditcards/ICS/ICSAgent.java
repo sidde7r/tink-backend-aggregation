@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -45,16 +45,7 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
                 new ICSApiClient(
                         client, sessionStorage, persistentStorage, redirectUri, icsConfiguration);
 
-        creditCardRefreshController =
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new ICSAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(
-                                        new ICSCreditCardFetcher(apiClient), 0),
-                                null));
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -83,6 +74,18 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new ICSAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new ICSCreditCardFetcher(apiClient)),
+                        null));
     }
 
     @Override
