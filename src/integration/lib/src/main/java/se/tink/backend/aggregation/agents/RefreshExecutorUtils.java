@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
@@ -179,9 +180,13 @@ public final class RefreshExecutorUtils {
     }
 
     private static void logIfFetchedExtraAccounts(Agent agent, List<Account> accounts) {
+
         List<AccountTypes> accountTypesExceptCheckingAccounts =
                 accounts.stream()
-                        .filter(account -> account.getType() != AccountTypes.CHECKING)
+                        .filter(
+                                account ->
+                                        !ImmutableList.of(AccountTypes.CHECKING, AccountTypes.OTHER)
+                                                .contains(account.getType()))
                         .map(account -> account.getType())
                         .distinct()
                         .collect(Collectors.toList());
