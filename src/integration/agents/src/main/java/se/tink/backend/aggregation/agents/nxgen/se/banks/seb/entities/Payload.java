@@ -11,6 +11,8 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.DeviceIdentification;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
@@ -131,5 +133,23 @@ public class Payload {
     public List<UpcomingTransactionEntity> getUpcomingTransactions() {
         Preconditions.checkNotNull(vodb);
         return vodb.upcomingTransactions;
+    }
+
+    @JsonIgnore
+    public List<CreditCardEntity> getCreditCards() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.creditCards;
+    }
+
+    @JsonIgnore
+    public List<CreditCardTransactionEntity> getPendingCreditCardTransactions() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.pendingCreditCardTransactions;
+    }
+
+    @JsonIgnore
+    public List<CreditCardTransactionEntity> getBookedCreditCardTransactions() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.bookedCreditCardTransactions;
     }
 }
