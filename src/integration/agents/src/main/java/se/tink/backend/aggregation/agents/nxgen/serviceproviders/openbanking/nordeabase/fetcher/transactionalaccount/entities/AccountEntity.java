@@ -2,6 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -13,12 +17,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
+import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 @JsonObject
 public class AccountEntity {
@@ -125,7 +125,9 @@ public class AccountEntity {
     }
 
     public Optional<TransactionalAccount> toTinkAccount() {
-        AccountIdentifier identifier = generalGetAccountIdentifier();
+        AccountIdentifier identifier =
+                AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban());
+        DisplayAccountIdentifierFormatter formatter = new DisplayAccountIdentifierFormatter();
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         NordeaBaseConstants.ACCOUNT_TYPE_MAPPER,
@@ -136,10 +138,7 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(getIban())
                                 .withAccountNumber(identifier.getIdentifier())
-                                .withAccountName(product)
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN, getIban()))
+                                .withAccountName(accountName)
                                 .addIdentifier(identifier)
                                 .build())
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
