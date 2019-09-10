@@ -9,6 +9,7 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class PaymentRequest {
     private Payment payment;
@@ -56,7 +57,7 @@ public class PaymentRequest {
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withCurrency(transfer.getAmount().getCurrency())
                         .withReference(referenceInRequest)
-                        .withUniqueId(transfer.getId().toString())
+                        .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()))
                         .build();
 
         return new PaymentRequest(paymentInRequest);
