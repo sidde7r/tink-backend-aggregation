@@ -56,6 +56,7 @@ public class PaymentRequest {
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withCurrency(transfer.getAmount().getCurrency())
                         .withReference(referenceInRequest)
+                        .withUniqueId(transfer.getId().toString())
                         .build();
 
         return new PaymentRequest(paymentInRequest);
