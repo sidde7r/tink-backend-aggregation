@@ -10,10 +10,14 @@ public class RedsysAgentTest {
 
     private AgentIntegrationTest.Builder builder;
 
+    private String PROVIDER_NAME = "es-redsys-bbva-ob";
+
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("es", "es-redsys-oauth2")
+                new AgentIntegrationTest.Builder("es", PROVIDER_NAME)
+                        .setFinancialInstitutionId("redsys")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
