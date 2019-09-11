@@ -11,7 +11,7 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
     @JsonProperty private String clientSecret;
     @JsonProperty private String redirectUrl;
     @JsonProperty private String eidasQwac;
-    @JsonProperty private AgentType agentType = AgentType.CORPORATE;
+    @JsonProperty private AgentType agentType = AgentType.PERSONAL;
 
     public String getClientId() {
         return clientId;
