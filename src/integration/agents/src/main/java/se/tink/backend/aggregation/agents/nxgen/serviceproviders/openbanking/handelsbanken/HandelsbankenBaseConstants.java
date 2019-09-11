@@ -80,6 +80,7 @@ public final class HandelsbankenBaseConstants {
         public static final String STATE = "state";
         public static final String CODE = "code";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String PSU_ID_TYPE = "psu_id_type";
     }
 
     public static class Market {
