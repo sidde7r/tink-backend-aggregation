@@ -34,9 +34,7 @@ public class BnpParibasApiBaseClient {
 
     public URL getAuthorizeUrl(String state) {
 
-        return client.request(
-                        new URL(BnpParibasBaseConstants.Urls.AUTHENTICATION_URL)
-                                .parameter(BnpParibasBaseConstants.IdTags.BANK, bank))
+        return client.request(new URL(bnpParibasConfiguration.getAuthorizeUrl()))
                 .queryParam(
                         BnpParibasBaseConstants.QueryKeys.CLIENT_ID,
                         bnpParibasConfiguration.getClientId())
@@ -72,9 +70,7 @@ public class BnpParibasApiBaseClient {
     }
 
     public TokenResponse exchangeAuthorizationToken(TokenRequest request) {
-        return client.request(
-                        new URL(BnpParibasBaseConstants.Urls.TOKEN_URL)
-                                .parameter(BnpParibasBaseConstants.IdTags.BANK, bank))
+        return client.request(new URL(bnpParibasConfiguration.getTokenUrl()))
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(
                         BnpParibasBaseConstants.HeaderKeys.AUTHORIZATION,
@@ -86,9 +82,7 @@ public class BnpParibasApiBaseClient {
     }
 
     public OAuth2Token exchangeRefreshToken(RefreshRequest request) {
-        return client.request(
-                        new URL(BnpParibasBaseConstants.Urls.TOKEN_URL)
-                                .parameter(BnpParibasBaseConstants.IdTags.BANK, bank))
+        return client.request(new URL(bnpParibasConfiguration.getTokenUrl()))
                 .header(
                         BnpParibasBaseConstants.HeaderKeys.AUTHORIZATION,
                         BnpParibasBaseConstants.HeaderValues.BASIC
@@ -101,7 +95,11 @@ public class BnpParibasApiBaseClient {
 
     public AccountsResponse fetchAccounts(String signature, String reqId) {
         return createRequestInSession(
-                        new URL(BnpParibasBaseConstants.Urls.ACCOUNTS_PATH), signature, reqId)
+                        new URL(
+                                bnpParibasConfiguration.getBaseUrl()
+                                        + BnpParibasBaseConstants.Urls.ACCOUNTS_PATH),
+                        signature,
+                        reqId)
                 .get(AccountsResponse.class);
     }
 
@@ -120,7 +118,9 @@ public class BnpParibasApiBaseClient {
 
     public BalanceResponse getBalance(String resourceId, String signature, String reqId) {
         return createRequestInSession(
-                        new URL(BnpParibasBaseConstants.Urls.BALANCES_PATH)
+                        new URL(
+                                        bnpParibasConfiguration.getBaseUrl()
+                                                + BnpParibasBaseConstants.Urls.BALANCES_PATH)
                                 .parameter(
                                         BnpParibasBaseConstants.IdTags.ACCOUNT_RESOURCE_ID,
                                         resourceId),
@@ -138,7 +138,9 @@ public class BnpParibasApiBaseClient {
         sdf.setTimeZone(TimeZone.getTimeZone(BnpParibasBaseConstants.QueryValues.TIMEZONE));
 
         return createRequestInSession(
-                        new URL(BnpParibasBaseConstants.Urls.TRANSACTIONS_PATH)
+                        new URL(
+                                        bnpParibasConfiguration.getBaseUrl()
+                                                + BnpParibasBaseConstants.Urls.TRANSACTIONS_PATH)
                                 .parameter(
                                         BnpParibasBaseConstants.IdTags.ACCOUNT_RESOURCE_ID,
                                         resourceId),

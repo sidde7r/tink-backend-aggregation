@@ -11,6 +11,9 @@ public class BnpParibasConfiguration implements ClientConfiguration {
     private String redirectUrl;
     private String eidasQwac;
     private String keyId;
+    private String authorizeUrl;
+    private String tokenUrl;
+    private String baseUrl;
 
     public String getClientId() {
         return clientId;
@@ -30,5 +33,17 @@ public class BnpParibasConfiguration implements ClientConfiguration {
 
     public String getKeyId() {
         return keyId;
+    }
+
+    public String getTokenUrl() {
+        return tokenUrl;
+    }
+
+    public String getAuthorizeUrl() {
+        return authorizeUrl;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
     }
 }
