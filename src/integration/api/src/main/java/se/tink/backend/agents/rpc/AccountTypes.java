@@ -9,6 +9,7 @@ public enum AccountTypes {
     LOAN,
     DUMMY,
     PENSION,
+    @Deprecated
     OTHER,
     EXTERNAL
 }
