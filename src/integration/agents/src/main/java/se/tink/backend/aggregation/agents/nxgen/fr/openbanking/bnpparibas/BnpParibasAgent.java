@@ -8,9 +8,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class BnpParibasAgent extends BnpParibasBaseAgent {
     public BnpParibasAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(
-                request,
-                context,
-                signatureKeyPair);
+        super(request, context, signatureKeyPair);
     }
 }

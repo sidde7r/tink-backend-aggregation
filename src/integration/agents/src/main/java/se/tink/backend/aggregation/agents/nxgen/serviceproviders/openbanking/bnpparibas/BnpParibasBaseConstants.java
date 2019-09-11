@@ -106,8 +106,6 @@ public final class BnpParibasBaseConstants {
                             "SVGS")
                     .build();
 
-
-
     public static class RegisterUtils {
         public static final String REGISTER_URL =
                 "https://api-psd2.bddf.bnpparibas/as/psd2/register";

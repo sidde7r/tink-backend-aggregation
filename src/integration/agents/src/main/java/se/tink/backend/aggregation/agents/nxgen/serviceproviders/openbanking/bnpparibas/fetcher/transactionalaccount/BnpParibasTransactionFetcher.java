@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class BnpParibasTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
+public class BnpParibasTransactionFetcher
+        implements TransactionDatePaginator<TransactionalAccount> {
 
     private final BnpParibasApiBaseClient apiClient;
     private final SessionStorage sessionStorage;
@@ -32,7 +33,8 @@ public class BnpParibasTransactionFetcher implements TransactionDatePaginator<Tr
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         String reqId = UUID.randomUUID().toString();
         String signature =
                 BnpParibasUtils.buildSignatureHeader(

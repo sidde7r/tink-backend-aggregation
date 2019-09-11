@@ -24,8 +24,7 @@ public class BnpParibasApiBaseClient {
     private final TinkHttpClient client;
     private BnpParibasConfiguration bnpParibasConfiguration;
 
-    public BnpParibasApiBaseClient(
-            TinkHttpClient client, SessionStorage sessionStorage) {
+    public BnpParibasApiBaseClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
