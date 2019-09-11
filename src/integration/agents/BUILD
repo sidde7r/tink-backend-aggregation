@@ -2,7 +2,10 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "agents",
-    srcs = glob(["src/main/**/*.java"]) + ["@tink_backend_integration_openbanking//src/integration/agents:agents_srcs"],
+    srcs = glob(["src/main/java/**/*.java"]) + ["@tink_backend_integration_openbanking//src/integration/agents:agents_srcs"],
+    resources = [
+        "//src/integration/agents/src/main/resources:config-templates",
+    ],
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk",
@@ -37,6 +40,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex/v62",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
     ],
     deps = [
         "//src/integration/account:enums",
@@ -121,7 +125,7 @@ java_library(
 
 junit_test(
     name = "agents_test",
-    srcs = glob(["src/test/**/*.java"]),
+    srcs = glob(["src/test/java/**/*.java"]),
     data = [
         "//data:agent_unit_tests",
         "//data:agents",
@@ -134,6 +138,9 @@ junit_test(
         "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
     ],
+    resources = [
+        "//src/integration/agents/src/main/resources:config-templates",
+    ],
     tags = ["manual"],
     visibility = ["//visibility:public"],
     runtime_deps = [
@@ -145,6 +152,7 @@ junit_test(
         "//src/integration/account:enums",
         "//src/integration/account:rpc",
         "//src/integration/agents",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
         "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:demo",
