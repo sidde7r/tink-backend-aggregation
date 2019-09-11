@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -31,7 +32,7 @@ public class ClientConfigurationTemplateBuilder {
     private static final String PRETTY_PRINTING_INDENT_PADDING =
             new String(new char[NUM_SPACES_INDENT]).replace((char) 0, ' ');
 
-    private final Supplier<IllegalStateException> noConfigurationClassFoundExceptionSupplier;
+    private final Supplier<IllegalArgumentException> noConfigurationClassFoundExceptionSupplier;
     private final Provider provider;
     private final String financialInstitutionId;
 
@@ -40,7 +41,7 @@ public class ClientConfigurationTemplateBuilder {
         this.financialInstitutionId = provider.getFinancialInstitutionId();
         this.noConfigurationClassFoundExceptionSupplier =
                 () ->
-                        new IllegalStateException(
+                        new IllegalArgumentException(
                                 "No suitable subclass of ClientConfiguration class found for the specified provider : "
                                         + provider.getName());
     }
@@ -70,8 +71,14 @@ public class ClientConfigurationTemplateBuilder {
                         .getClassLoader()
                         .getResourceAsStream(fieldsDescriptionsAndExamplesCommonPath);
 
-        Map<String, String> fieldsDescriptionAndExamplesCommon =
-                (Map<String, String>) yaml.load(fieldsDescriptionsAndExamplesCommonStream);
+        final Map<String, String> fieldsDescriptionAndExamplesCommon;
+        try {
+            fieldsDescriptionAndExamplesCommon =
+                    (Map<String, String>) yaml.load(fieldsDescriptionsAndExamplesCommonStream);
+        } catch (YAMLException e) {
+            throw new IllegalStateException(
+                    "Problem when loading the common descriptions and examples template.", e);
+        }
 
         // Now we get the provider specific descriptions and examples, if there are any duplicates
         // from the common ones, the provider specific ones will override the common ones.
@@ -85,11 +92,13 @@ public class ClientConfigurationTemplateBuilder {
                         .getClassLoader()
                         .getResourceAsStream(fieldsDescriptionsAndExamplesForProviderPath);
 
-        Map<String, String> fieldsDescriptionAndExamplesForProvider =
-                (Map<String, String>) yaml.load(fieldsDescriptionsAndExamplesForProviderStream);
+        if (fieldsDescriptionsAndExamplesForProviderStream != null) {
+            Map<String, String> fieldsDescriptionAndExamplesForProvider =
+                    (Map<String, String>) yaml.load(fieldsDescriptionsAndExamplesForProviderStream);
 
-        // Merge the common and the provider specific ones.
-        fieldsDescriptionAndExamplesCommon.putAll(fieldsDescriptionAndExamplesForProvider);
+            // Merge the common and the provider specific ones.
+            fieldsDescriptionAndExamplesCommon.putAll(fieldsDescriptionAndExamplesForProvider);
+        }
 
         return fieldsDescriptionAndExamplesCommon;
     }
