@@ -18,4 +18,8 @@ public class GetAccountsResponse extends NordeaBaseResponse {
                 .map(AccountsResponseEntity::toTinkAccounts)
                 .orElse(Collections.emptyList());
     }
+
+    public AccountsResponseEntity getResponse() {
+        return response;
+    }
 }

@@ -24,6 +24,8 @@ public class DeutscheBankDEAgentTest {
                 new AgentIntegrationTest.Builder("de", "de-deutschebank-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .addCredentialField(CredentialKeys.PSU_ID, manager.get(Arg.PSU_ID))
+                        .setFinancialInstitutionId("deutschebank")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false);

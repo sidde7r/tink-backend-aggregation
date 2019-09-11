@@ -24,6 +24,8 @@ public class NorisbankAgentTest {
                 new AgentIntegrationTest.Builder("de", "de-norisbank-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .addCredentialField(CredentialKeys.PSU_ID, manager.get(Arg.PSU_ID))
+                        .setFinancialInstitutionId("norisbank")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false);

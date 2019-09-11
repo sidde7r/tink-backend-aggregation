@@ -24,4 +24,8 @@ public class AccountsResponseEntity {
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
+
+    public List<AccountEntity> getAccounts() {
+        return accounts;
+    }
 }
