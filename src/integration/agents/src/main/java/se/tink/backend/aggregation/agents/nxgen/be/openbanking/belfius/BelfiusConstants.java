@@ -34,6 +34,7 @@ public final class BelfiusConstants {
         public static final String FETCH_TRANSACTIONS_PATH = "/accounts/{logical_id}/transactions";
         public static final String CONSENT_PATH = "/consent-uris";
         public static final String TOKEN_PATH = "/token";
+        public static final String CREATE_PAYMENT = "/payments/sepa-credit-transfers";
     }
 
     public static class StorageKeys {
@@ -52,6 +53,8 @@ public final class BelfiusConstants {
         public static final String CODE_CHALLENGE = "Code-Challenge";
         public static final String CODE_CHALLENGE_METHOD = "Code-Challenge-Method";
         public static final String X_TINK_DEBUG = "X-Tink-Debug";
+        public static final String SIGNATURE = "Signature";
+        public static final String LOCATION = "Location";
     }
 
     public static class FormKeys {
@@ -65,6 +68,8 @@ public final class BelfiusConstants {
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String DATE_FORMAT = "yyyy-MM-dd";
+        public static final String FREE_TEXT = "FREETEXT";
     }
 
     public static class HeaderValues {
