@@ -119,6 +119,7 @@ public class HandelsbankenBaseApiClient {
                         .put(BodyKeys.GRANT_TYPE, BodyValues.CLIENT_CREDENTIALS)
                         .put(BodyKeys.SCOPE, BodyValues.AIS_SCOPE)
                         .put(BodyKeys.CLIENT_ID, clientId)
+                        .put(BodyKeys.PSU_ID_TYPE, "1")
                         .build();
 
         return client.request(Urls.TOKEN)
