@@ -13,7 +13,9 @@ public class BnpParibasAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fr", "fr-bnpparibas-oauth2")
+                new AgentIntegrationTest.Builder("fr", "fr-bnpparibas-ob")
+                        .setFinancialInstitutionId("bnpparibas")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

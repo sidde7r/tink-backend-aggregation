@@ -13,7 +13,9 @@ public class HelloBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fr", "fr-hellobank-oauth2")
+                new AgentIntegrationTest.Builder("fr", "fr-hellobank-ob")
+                        .setFinancialInstitutionId("hellobank")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

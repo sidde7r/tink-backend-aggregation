@@ -10,38 +10,10 @@ import se.tink.libraries.account.enums.AccountFlag;
 public final class BnpParibasBaseConstants {
     public static final String INTEGRATION_NAME = "bnpparibas";
 
-    public static class Banks {
-        public static final String BNPPARIBAS_HELLOBANK = "hellobank";
-        public static final String BNPPARIBAS_MABANQUE = "retail";
-    }
-
     public static class Urls {
-        private static final class Sandbox {
-            private static final String BASE_URL =
-                    "https://api-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/V1.4";
-            private static final String AUTHENTICATION_URL =
-                    "https://api-nav-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/authorize";
-            private static final String TOKEN_URL =
-                    "https://api-psd2.sandbox.bddf.bnpparibas/psd2-sandbox/{bank}/token";
-        }
-
-        private static final class Production {
-            private static final String BASE_URL =
-                    "https://api-psd2.bddf.bnpparibas/psd2/{bank}/V1.4";
-            private static final String AUTHENTICATION_URL =
-                    "https://api-nav-psd2.bddf.bnpparibas/psd2/{bank}/authorize";
-            private static final String TOKEN_URL =
-                    "https://api-psd2.bddf.bnpparibas/psd2/{bank}/token";
-        }
-
-        public static final String BASE_URL = Sandbox.BASE_URL;
-        public static final String AUTHENTICATION_URL = Sandbox.AUTHENTICATION_URL;
-        public static final String TOKEN_URL = Sandbox.TOKEN_URL;
-
-        public static final String ACCOUNTS_PATH = BASE_URL + "/accounts";
-        public static final String BALANCES_PATH = ACCOUNTS_PATH + "/{accountResourceId}/balances";
-        public static final String TRANSACTIONS_PATH =
-                ACCOUNTS_PATH + "/{accountResourceId}/transactions";
+        public static final String ACCOUNTS_PATH = "/accounts";
+        public static final String BALANCES_PATH = "/accounts/{accountResourceId}/balances";
+        public static final String TRANSACTIONS_PATH = "/accounts/{accountResourceId}/transactions";
     }
 
     public class QueryKeys {
