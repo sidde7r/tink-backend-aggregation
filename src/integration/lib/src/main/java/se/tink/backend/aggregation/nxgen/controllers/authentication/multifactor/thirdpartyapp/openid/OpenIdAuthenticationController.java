@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -113,7 +114,9 @@ public class OpenIdAuthenticationController
     public void autoAuthenticate() throws SessionException, BankServiceException {
         OAuth2Token accessToken =
                 persistentStorage
-                        .get(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                        .get(
+                                OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
+                                OAuth2Token.class)
                         .orElseThrow(
                                 () -> {
                                     logger.warn(
@@ -172,7 +175,7 @@ public class OpenIdAuthenticationController
                                     : "N/A"));
 
             // Store the new accessToken on the persistent storage again.
-            persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+            saveAccessToken(accessToken);
 
             // fall through.
         }
@@ -278,10 +281,22 @@ public class OpenIdAuthenticationController
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                         accessToken, tokenLifetime, tokenLifetimeUnit));
 
-        persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+        saveAccessToken(accessToken);
+
         apiClient.attachAuthFilter(accessToken);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+    }
+
+    private void saveAccessToken(OAuth2Token accessToken) {
+        switch (authenticator.getClientCredentialScope()) {
+            case PAYMENTS:
+                persistentStorage.put(PersistentStorageKeys.PIS_ACCESS_TOKEN, accessToken);
+                break;
+            case ACCOUNTS:
+            default:
+                persistentStorage.put(PersistentStorageKeys.AIS_ACCESS_TOKEN, accessToken);
+        }
     }
 
     @Override
