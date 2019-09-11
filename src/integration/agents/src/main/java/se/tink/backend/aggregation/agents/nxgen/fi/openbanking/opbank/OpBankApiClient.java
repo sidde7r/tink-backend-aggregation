@@ -21,8 +21,10 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.eidas.EcJwsProxySigner;
-import se.tink.backend.aggregation.eidas.Signer;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -35,6 +37,8 @@ public final class OpBankApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private OpBankConfiguration configuration;
+    private EidasProxyConfiguration eidasProxyConfiguration;
+    private EidasIdentity eidasIdentity;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -48,19 +52,24 @@ public final class OpBankApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(OpBankConfiguration configuration) {
+    protected void setConfiguration(
+            OpBankConfiguration configuration,
+            EidasProxyConfiguration eidasProxyConfiguration,
+            EidasIdentity eidasIdentity) {
         this.configuration = configuration;
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+        client.setEidasProxy(eidasProxyConfiguration, configuration.getEidasQwac());
+        this.eidasIdentity = eidasIdentity;
     }
 
     public TokenResponse fetchNewToken() {
-
         HttpResponse response =
                 client.request(Urls.OAUTH_TOKEN)
                         .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
                         .body(
                                 new TokenForm()
-                                        .setClientId(this.configuration.getClientId())
-                                        .setClientSecret(this.configuration.getClientSecret()),
+                                        .setClientId(configuration.getClientId())
+                                        .setClientSecret(configuration.getClientSecret()),
                                 MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .post(HttpResponse.class);
 
@@ -77,8 +86,8 @@ public final class OpBankApiClient {
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .body(AuthorizationRequest.expiresInDays(60))
-                        .header(HeaderKeys.X_API_KEY, this.configuration.getApiKey())
-                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, "test")
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, "tink")
                         .header(HeaderKeys.AUTHORIZATION, "Bearer " + bearerToken)
                         .post(HttpResponse.class);
 
@@ -90,11 +99,13 @@ public final class OpBankApiClient {
     }
 
     public String fetchSignature(String jwt) {
-        Signer ecJwsSigner =
-                new EcJwsProxySigner(
-                        new URL(configuration.getEidasProxyBaseUrl()),
+        QsealcSigner signer =
+                QsealcSigner.build(
+                        eidasProxyConfiguration.toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        eidasIdentity,
                         configuration.getEidasQsealc());
-        byte[] signatureBytes = ecJwsSigner.getSignature(jwt.getBytes(StandardCharsets.UTF_8));
+        byte[] signatureBytes = signer.getSignature(jwt.getBytes(StandardCharsets.UTF_8));
         return Base64.getUrlEncoder().encodeToString(signatureBytes);
     }
 
@@ -122,7 +133,7 @@ public final class OpBankApiClient {
                 client.request(Urls.GET_ACCOUNTS)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(HeaderKeys.X_API_KEY, this.configuration.getApiKey())
-                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, "test")
+                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, "tink")
                         .header(HeaderKeys.X_CUSTOMER_USER_AGENT, "tink")
                         .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, "127.0.0.1")
                         .addBearerToken(
@@ -138,10 +149,10 @@ public final class OpBankApiClient {
         }
     }
 
-    public GetTransactionsResponse getTransactions(String accountId) {
+    public GetTransactionsResponse getTransactions(URL url) {
 
         HttpResponse response =
-                createRequest(new URL(Urls.GET_TRANSACTIONS).parameter("accountId", accountId))
+                createRequest(url)
                         .header(HeaderKeys.X_API_KEY, this.configuration.getApiKey())
                         .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, "127.0.0.1")
                         .header(HeaderKeys.X_CUSTOMER_USER_AGENT, "tink")
@@ -156,7 +167,6 @@ public final class OpBankApiClient {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-        // TODO last login time?
     }
 
     private RequestBuilder createRequest(URL url) {

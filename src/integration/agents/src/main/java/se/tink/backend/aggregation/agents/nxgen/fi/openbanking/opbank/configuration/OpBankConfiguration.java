@@ -14,7 +14,6 @@ public class OpBankConfiguration implements ClientConfiguration {
     private String redirectUrl;
     private String apiKey;
 
-    private String eidasProxyBaseUrl;
     private String eidasQwac;
     private String eidasQsealc;
 
@@ -48,14 +47,6 @@ public class OpBankConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "API key"));
 
         return apiKey;
-    }
-
-    public String getEidasProxyBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasProxyBaseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "eIDAS Proxy base URL"));
-
-        return eidasProxyBaseUrl;
     }
 
     public String getEidasQwac() {

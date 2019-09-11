@@ -28,7 +28,7 @@ public final class OpBankConstants {
     }
 
     public static class Urls {
-        public static String BASE_URL = "https://mtls-apis.psd2-sandbox.op.fi";
+        public static String BASE_URL = "https://mtls.apis.op.fi";
         public static final String OAUTH_TOKEN = BASE_URL + "/oauth/token";
         public static final String ACCOUNTS_AUTHORIZATION =
                 BASE_URL + "/accounts-psd2/v1/authorizations";
@@ -41,9 +41,9 @@ public final class OpBankConstants {
         public static final String ACCOUNT_ID = "accountId";
     }
 
-    public static class QueryKeys {}
-
-    public static class QueryValues {}
+    public static class IdTags {
+        public static final String ACCOUNT_ID = "accountId";
+    }
 
     public static class HeaderKeys {
         public static final String X_API_KEY = "x-api-key";
@@ -53,10 +53,4 @@ public final class OpBankConstants {
         public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
         public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
     }
-
-    public static class FormKeys {}
-
-    public static class FormValues {}
-
-    public static class LogTags {}
 }
