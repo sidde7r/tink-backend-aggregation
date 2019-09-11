@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-public class ClientConfigurationTemplateBuildterForOneProviderTest {
+public class ClientConfigurationTemplateBuilderForOneProviderTest {
 
     private ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private ClientConfigurationTemplateBuilderTest clientConfigurationTemplateBuilderTest;

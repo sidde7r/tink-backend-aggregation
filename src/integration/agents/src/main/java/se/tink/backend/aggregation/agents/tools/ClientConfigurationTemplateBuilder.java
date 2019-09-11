@@ -264,7 +264,9 @@ public class ClientConfigurationTemplateBuilder {
                 return Optional.of(superclass);
             }
         } catch (ClassNotFoundException e) {
-            log.error("Could not find specified Class for : " + fullyQualifiedClassName, e);
+            log.error(
+                    "Could not find super class for specified class : " + fullyQualifiedClassName,
+                    e);
         }
         return Optional.empty();
     }
