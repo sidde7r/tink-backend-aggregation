@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Builder;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
@@ -65,6 +66,7 @@ public class FetchLoanDetailsResponse {
 
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
+        logLoanAccount();
         return LoanAccount.builder(maskAccountNumber(), getBalance().stripSign().negate())
                 .setName(getNickname())
                 .setAccountNumber(loanFormattedId)
@@ -163,5 +165,14 @@ public class FetchLoanDetailsResponse {
     @JsonIgnore
     private String maskAccountNumber() {
         return "************" + loanId.substring(loanId.length() - 4);
+    }
+
+    @JsonIgnore
+    private void logLoanAccount() {
+        LOG.info(
+                String.format(
+                        "%s - %s",
+                        NordeaSEConstants.LogTags.LOAN_ACCOUNT,
+                        SerializationUtils.serializeToString(this)));
     }
 }
