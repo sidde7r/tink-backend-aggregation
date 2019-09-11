@@ -23,13 +23,11 @@ public class BnpParibasApiBaseClient {
     private final SessionStorage sessionStorage;
     private final TinkHttpClient client;
     private BnpParibasConfiguration bnpParibasConfiguration;
-    private final String bank;
 
     public BnpParibasApiBaseClient(
-            TinkHttpClient client, SessionStorage sessionStorage, String bank) {
+            TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.bank = bank;
     }
 
     public URL getAuthorizeUrl(String state) {
@@ -62,7 +60,7 @@ public class BnpParibasApiBaseClient {
     }
 
     private RequestBuilder createRequestInSession(URL url, String signature, String reqId) {
-        return client.request(url.parameter(BnpParibasBaseConstants.IdTags.BANK, bank))
+        return client.request(url)
                 .addBearerToken(getTokenFromSession())
                 .header(BnpParibasBaseConstants.HeaderKeys.SIGNATURE, signature)
                 .header(BnpParibasBaseConstants.HeaderKeys.X_REQUEST_ID, reqId)

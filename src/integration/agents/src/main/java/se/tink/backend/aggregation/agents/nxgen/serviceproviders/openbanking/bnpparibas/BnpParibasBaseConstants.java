@@ -10,11 +10,6 @@ import se.tink.libraries.account.enums.AccountFlag;
 public final class BnpParibasBaseConstants {
     public static final String INTEGRATION_NAME = "bnpparibas";
 
-    public static class Banks {
-        public static final String BNPPARIBAS_HELLOBANK = "hellobank";
-        public static final String BNPPARIBAS_MABANQUE = "retail";
-    }
-
     public static class Urls {
         public static final String ACCOUNTS_PATH = "/accounts";
         public static final String BALANCES_PATH = "/accounts/{accountResourceId}/balances";
