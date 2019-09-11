@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.tools;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import java.io.InputStream;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -31,10 +33,14 @@ public class ClientConfigurationTemplateBuilder {
     private static final int NUM_SPACES_INDENT = 10;
     private static final String PRETTY_PRINTING_INDENT_PADDING =
             new String(new char[NUM_SPACES_INDENT]).replace((char) 0, ' ');
+    private static final ImmutableMap<String, String> specialFieldsMapper =
+            new ImmutableMap.Builder<String, String>().put("redirectUrl", "redirectUrls").build();
 
     private final Supplier<IllegalArgumentException> noConfigurationClassFoundExceptionSupplier;
     private final Provider provider;
     private final String financialInstitutionId;
+    private final Function<Field, String> fieldToFieldName =
+            field -> specialFieldsMapper.getOrDefault(field.getName(), field.getName());
 
     public ClientConfigurationTemplateBuilder(Provider provider) {
         this.provider = provider;
@@ -144,7 +150,7 @@ public class ClientConfigurationTemplateBuilder {
                 .forEach(
                         sensitiveField ->
                                 sensitiveFieldsJson.addProperty(
-                                        sensitiveField.getName(),
+                                        fieldToFieldName.apply(sensitiveField),
                                         getDescriptionAndExample(
                                                 sensitiveField, fieldsDescriptionsAndExamples)));
 
@@ -167,7 +173,7 @@ public class ClientConfigurationTemplateBuilder {
                 .forEach(
                         secretField ->
                                 secretFieldsJson.addProperty(
-                                        secretField.getName(),
+                                        fieldToFieldName.apply(secretField),
                                         getDescriptionAndExample(
                                                 secretField, fieldsDescriptionsAndExamples)));
 
@@ -176,9 +182,9 @@ public class ClientConfigurationTemplateBuilder {
 
     private String getDescriptionAndExample(
             Field field, Map<String, String> fieldsDescriptionsAndExamples) {
+        String fieldName = fieldToFieldName.apply(field);
 
         StringBuffer sb = new StringBuffer();
-        String fieldName = field.getName();
 
         String fieldDescriptionKey = fieldName + "-description";
         if (fieldsDescriptionsAndExamples.containsKey(fieldDescriptionKey)) {
