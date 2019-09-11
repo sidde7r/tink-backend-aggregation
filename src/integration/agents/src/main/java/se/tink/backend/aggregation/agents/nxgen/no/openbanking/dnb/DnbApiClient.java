@@ -111,7 +111,7 @@ public final class DnbApiClient {
     private ConsentResponse fetchConsent() {
         final ConsentRequest consentsRequest =
                 ConsentRequest.builder()
-                        .frequencyPerDay(5)
+                        .frequencyPerDay(4)
                         .recurringIndicator(true)
                         .combinedServiceIndicator(false)
                         .validUntil(getValidUntilForConsent())
