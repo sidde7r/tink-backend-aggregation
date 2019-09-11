@@ -21,6 +21,7 @@ public class ConsentBaseResponse {
         return links;
     }
 
+    @JsonIgnore
     public String getConsentStatus() {
         return consentStatus;
     }

@@ -5,8 +5,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ConsentStatusResponse {
 
+    @JsonProperty
     private String consentStatus;
 
+    @JsonIgnore
     public String getConsentStatus() {
         return consentStatus;
     }
