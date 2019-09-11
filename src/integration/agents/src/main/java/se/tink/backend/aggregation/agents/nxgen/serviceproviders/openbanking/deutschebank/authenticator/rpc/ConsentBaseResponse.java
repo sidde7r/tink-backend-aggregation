@@ -20,4 +20,8 @@ public class ConsentBaseResponse {
     public ConsentBaseLinksEntity getLinks() {
         return links;
     }
+
+    public String getConsentStatus() {
+        return consentStatus;
+    }
 }
