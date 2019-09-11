@@ -25,7 +25,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class BnpParibasBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private BnpParibasApiBaseClient apiClient;
     private BnpParibasConfiguration bnpParibasConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -38,7 +37,6 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        clientName = request.getProvider().getPayload();
         this.apiClient = new BnpParibasApiBaseClient(client, sessionStorage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -63,17 +61,8 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
     }
 
     private BnpParibasConfiguration getBnpParibasConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        BnpParibasBaseConstants.INTEGRATION_NAME,
-                        clientName,
-                        BnpParibasConfiguration.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        BnpParibasBaseConstants.ErrorMessages
-                                                .MISSING_CONFIGURATION));
+        return getAgentConfigurationController()
+                .getAgentConfiguration(BnpParibasConfiguration.class);
     }
 
     @Override
