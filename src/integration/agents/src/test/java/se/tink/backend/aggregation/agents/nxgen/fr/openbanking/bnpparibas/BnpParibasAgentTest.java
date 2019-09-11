@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bnpparibas;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
+
 public class BnpParibasAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -13,7 +12,7 @@ public class BnpParibasAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fr", "fr-bnpparibas-oauth2")
+                new AgentIntegrationTest.Builder("fr", "fr-bnpparibas-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
