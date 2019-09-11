@@ -20,7 +20,13 @@ import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public class AutoAuthenticationProgressiveController
         implements ProgressiveAuthenticator, ManualOrAutoAuth {
-    private final CredentialsRequest request;
+
+    private final Credentials credentials;
+    private final CredentialsRequestType credentialsRequestType;
+    private final boolean requestIsUpdate;
+    private final boolean requestIsCreate;
+    private final boolean requestIsManual;
+
     private final SystemUpdater systemUpdater;
     private final ProgressiveTypedAuthenticator manualAuthenticator;
     private final AutoAuthenticator autoAuthenticator;
@@ -30,7 +36,13 @@ public class AutoAuthenticationProgressiveController
             SystemUpdater systemUpdater,
             ProgressiveTypedAuthenticator manualAuthenticator,
             AutoAuthenticator autoAuthenticator) {
-        this.request = Preconditions.checkNotNull(request);
+        Preconditions.checkNotNull(request);
+        this.credentials = request.getCredentials();
+        this.credentialsRequestType = request.getType();
+        this.requestIsUpdate = request.isUpdate();
+        this.requestIsCreate = request.isCreate();
+        this.requestIsManual = request.isManual();
+
         this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
         this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);
         this.autoAuthenticator = Preconditions.checkNotNull(autoAuthenticator);
@@ -39,13 +51,12 @@ public class AutoAuthenticationProgressiveController
     @Override
     public Iterable<? extends AuthenticationStep> authenticationSteps()
             throws AuthenticationException, AuthorizationException {
-        final Credentials credentials = request.getCredentials();
         try {
             if (shouldDoManualAuthentication(credentials)) {
                 return manualProgressive(credentials);
             } else {
                 Preconditions.checkState(
-                        !Objects.equals(request.getType(), CredentialsRequestType.CREATE));
+                        !Objects.equals(credentialsRequestType, CredentialsRequestType.CREATE));
                 return auto(credentials);
             }
         } finally {
@@ -57,9 +68,9 @@ public class AutoAuthenticationProgressiveController
     private boolean shouldDoManualAuthentication(final Credentials credentials) {
         return !forceAutoAuthentication()
                         && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
-                                || (request.isUpdate()
+                                || (requestIsUpdate
                                         && !Objects.equals(
-                                                request.getType(),
+                                                credentialsRequestType,
                                                 CredentialsRequestType.TRANSFER)))
                 || credentials.forceManualAuthentication();
     }
@@ -72,13 +83,13 @@ public class AutoAuthenticationProgressiveController
     // TODO: Remove this when there is support for new MultiFactor credential types.
     private boolean forceAutoAuthentication() {
         return Objects.equals(manualAuthenticator.getType(), CredentialsTypes.PASSWORD)
-                && !request.isUpdate()
-                && !request.isCreate();
+                && !requestIsUpdate
+                && !requestIsCreate;
     }
 
     private Iterable<? extends AuthenticationStep> manualProgressive(final Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        if (!request.isManual()) {
+        if (!requestIsManual) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
@@ -98,7 +109,7 @@ public class AutoAuthenticationProgressiveController
             autoAuthenticator.autoAuthenticate();
             return Collections.singletonList(request -> AuthenticationResponse.empty());
         } catch (SessionException autoException) {
-            if (!request.isManual()) {
+            if (!requestIsManual) {
                 credentials.setType(manualAuthenticator.getType());
 
                 throw autoException;
