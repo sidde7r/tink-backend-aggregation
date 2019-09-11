@@ -2913,7 +2913,7 @@
             ],
             "multiFactor": true,
             "name": "no-sparebankensor-bankid",
-            "passwordHelpText": null,
+            "passwordHelpText": "In order to use this bank, please authenticate using a BankID.",
             "payload": "",
             "popular": false,
             "status": "ENABLED",
