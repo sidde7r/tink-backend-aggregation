@@ -13,9 +13,6 @@ public class SbabConfiguration implements ClientConfiguration {
     private String eidasCertId;
 
     public String getEidasCertId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasCertId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Cert Id"));
         return eidasCertId;
     }
 
