@@ -1,27 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account;
 
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.BalanceBaseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FetchBalancesResponse {
-    private List<AccountEntity> account;
-    private String psuMessage;
 
-    public List<AccountEntity> getAccount() {
-        return account;
-    }
+    private List<BalanceBaseEntity> balances;
 
-    public void setAccount(List<AccountEntity> account) {
-        this.account = account;
-    }
-
-    public String getPsuMessage() {
-        return psuMessage;
-    }
-
-    public void setPsuMessage(String psuMessage) {
-        this.psuMessage = psuMessage;
+    public List<BalanceBaseEntity> getBalances() {
+        return balances;
     }
 }

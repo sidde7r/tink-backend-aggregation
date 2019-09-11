@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
+import java.util.stream.Stream;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -24,4 +26,11 @@ public abstract class TransactionDetailsBaseEntity {
     protected Date valueDate;
 
     public abstract Transaction toTinkTransaction();
+
+    public String getDescription() {
+        return Stream.of(debtorName, creditorName, remittanceInformationUnstructured)
+                .filter(StringUtils::isNotBlank)
+                .findFirst()
+                .orElse("");
+    }
 }

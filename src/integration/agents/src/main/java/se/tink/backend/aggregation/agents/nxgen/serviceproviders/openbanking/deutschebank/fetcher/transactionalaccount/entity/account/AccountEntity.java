@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,13 +31,17 @@ public class AccountEntity {
     @JsonProperty("_links")
     private AccountLinksWithHrefEntity links;
 
-    public Optional<TransactionalAccount> toTinkAccount() {
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public Optional<TransactionalAccount> toTinkAccount(List<BalanceBaseEntity> balanceEntities) {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         DeutscheBankConstants.ACCOUNT_TYPE_MAPPER,
-                        cashAccountType,
-                        TransactionalAccountType.OTHER)
-                .withBalance(BalanceModule.of(getBalance()))
+                        Optional.ofNullable(cashAccountType).orElse(product),
+                        TransactionalAccountType.CHECKING)
+                .withBalance(BalanceModule.of(getBalance(balanceEntities)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier())
@@ -51,8 +55,10 @@ public class AccountEntity {
                 .build();
     }
 
-    private ExactCurrencyAmount getBalance() {
-        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
+    private ExactCurrencyAmount getBalance(List<BalanceBaseEntity> balanceEntities) {
+        return Stream.of(balanceEntities, balances)
+                .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
                 .map(BalanceBaseEntity::toAmount)
