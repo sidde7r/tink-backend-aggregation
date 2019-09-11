@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -61,7 +63,11 @@ public class TransactionEntity {
     @JsonIgnore
     public Transaction toTransaction(AmericanExpressV62Configuration configuration) {
         return Transaction.builder()
-                .setAmount(configuration.toAmount(amount.getRawValue()))
+                .setAmount(
+                        ExactCurrencyAmount.of(
+                                        BigDecimal.valueOf(amount.getRawValue()),
+                                        configuration.getCurrency())
+                                .negate())
                 .setDate(getDate())
                 .setPending(isPending())
                 .setDescription(getDescriptionString())
