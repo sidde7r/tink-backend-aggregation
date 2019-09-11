@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
@@ -94,5 +95,15 @@ public final class DeutscheBankConstants {
         public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
         public static final String CLBD = "CLBD";
         public static final String EXPECTED = "expected";
+    }
+
+    public static class StatusValues {
+        public static final String EXPIRED = "expired";
+        public static final String RECEIVED = "received";
+        public static final String VALID = "valid";
+        public static final String REVOKED_BY_PSU = "revokedByPsu";
+        public static final String TERMINATED_BY_TPP = "terminatedByTpp";
+        public static final ImmutableList<String> FAILED =
+                ImmutableList.of(EXPIRED, REVOKED_BY_PSU, TERMINATED_BY_TPP);
     }
 }
