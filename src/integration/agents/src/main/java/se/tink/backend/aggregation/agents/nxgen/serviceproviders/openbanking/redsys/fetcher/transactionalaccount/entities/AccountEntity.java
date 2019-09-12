@@ -20,10 +20,13 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
+    private static final DisplayAccountIdentifierFormatter IBAN_FORMATTER =
+            new DisplayAccountIdentifierFormatter();
     @JsonProperty private String resourceId;
     @JsonProperty private String iban;
     @JsonProperty private String bban;
@@ -56,16 +59,18 @@ public class AccountEntity {
             throw new IllegalStateException("Did not find balance for account.");
         }
 
+        final AccountIdentifier ibanIdentifier = AccountIdentifier.create(Type.IBAN, iban);
+        final String formattedIban = IBAN_FORMATTER.apply(ibanIdentifier);
         final IdModule idModule =
                 IdModule.builder()
-                        .withAccountNumber(iban)
                         .withUniqueIdentifier(getUniqueIdentifier(aspspConfiguration))
+                        .withAccountNumber(formattedIban)
                         .withAccountName(
                                 Option.of(name)
                                         .orElse(Option.of(product))
                                         .orElse(Option.of(details))
-                                        .getOrElse(iban))
-                        .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                        .getOrElse(formattedIban))
+                        .addIdentifier(ibanIdentifier)
                         .setProductName(Option.of(product).getOrElse(details))
                         .build();
 
