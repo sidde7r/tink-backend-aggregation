@@ -5,16 +5,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public final class IngBaseAuthenticator implements OAuth2Authenticator {
 
     private final IngBaseApiClient client;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
 
-    public IngBaseAuthenticator(IngBaseApiClient apiClient, SessionStorage sessionStorage) {
+    public IngBaseAuthenticator(IngBaseApiClient apiClient, PersistentStorage persistentStorage) {
         this.client = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
