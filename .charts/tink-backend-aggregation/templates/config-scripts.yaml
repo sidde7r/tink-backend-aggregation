@@ -95,8 +95,6 @@ data:
     substitute-secret SPAREBANK_TPP_ID "$SPAREBANK_TPP_ID"
     substitute-secret BEC_QSEALC "$BEC_QSEALC"
     substitute-secret BEC_KEY_ID "$BEC_KEY_ID"
-    substitute-secret HANDELSBANKEN_TPP_ID_TAG "$HANDELSBANKEN_TPP_ID"
-    substitute-secret HANDELSBANKEN_CLIENT_ID_TAG "$HANDELSBANKEN_CLIENT_ID"
     substitute-secret BELFIUS_CLIENT_ID_TAG "$BELFIUS_CLIENT_ID"
     substitute-secret BELFIUS_CLIENT_SECRET_TAG "$BELFIUS_CLIENT_SECRET"
     substitute-secret CROSSKEY_CLIENT_ID_TAG "$CROSSKEY_CLIENT_ID"
