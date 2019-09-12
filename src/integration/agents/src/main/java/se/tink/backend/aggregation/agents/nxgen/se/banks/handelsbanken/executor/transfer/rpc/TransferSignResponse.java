@@ -53,7 +53,7 @@ public class TransferSignResponse extends BaseResponse
     @JsonIgnore
     public void validateResponse(ExecutorExceptionResolver exceptionResolver) {
         if (!this.getErrors().isEmpty()) {
-            exceptionResolver.asException(this);
+            throw exceptionResolver.asException(this);
         }
     }
 }

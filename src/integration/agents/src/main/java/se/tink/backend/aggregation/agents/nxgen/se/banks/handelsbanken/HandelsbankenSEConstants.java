@@ -184,6 +184,7 @@ public class HandelsbankenSEConstants {
         public static class Statuses {
             public static final List<String> TRANSFER_APPROVAL_STATUSES =
                     Arrays.asList("OK", "E-fakturan är ändrad");
+            public static final String VERIFICATION_CONFIRMED_STATUS = "SIGN_CONFIRMED";
         }
     }
 
