@@ -1,8 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 
-public class DanskeBankDKConstants extends DanskeBankConstants {
+public class DanskeBankNOConstants extends DanskeBankConstants {
 
     /**
      * Other markets are using "https://apiebank.danskebank.com", but DK and NO uses
