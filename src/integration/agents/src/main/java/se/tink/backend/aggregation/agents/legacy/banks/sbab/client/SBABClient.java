@@ -57,24 +57,11 @@ public class SBABClient {
         return createRequest(url).accept(MediaType.TEXT_HTML);
     }
 
-    ClientResponse createGetRequest(String url) {
-        return createRequest(url).get(ClientResponse.class);
-    }
-
-    ClientResponse createGetRequestWithReferer(String url, String referer) {
-        return createRequest(url).header("Referer", referer).get(ClientResponse.class);
-    }
-
-    Builder createJsonRequestWithBearer(String url) throws Exception {
+    Builder createJsonRequestWithBearer(String url) {
         return createRequest(url)
+                .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + bearerToken);
-    }
-
-    Builder createFormEncodedJsonRequest(String url) throws Exception {
-        return createRequest(url)
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .accept(MediaType.APPLICATION_JSON);
     }
 
     Document getJsoupDocument(String url) {
@@ -87,15 +74,6 @@ public class SBABClient {
                 !Strings.isNullOrEmpty(location),
                 "Did not get redirect url in response from bank.");
         return hasHost(location) ? location : baseUrl + location;
-    }
-
-    /** Sometimes a referer must be set since the bank otherwise returns a CSRF error page. */
-    Document getJsoupDocumentWithReferer(String url, String referer) throws Exception {
-        return Jsoup.parse(
-                createRequest(url)
-                        .accept(MediaType.TEXT_HTML)
-                        .header("Referer", referer)
-                        .get(String.class));
     }
 
     String portletResponseToValidJson(String portletResponse) {
@@ -121,14 +99,6 @@ public class SBABClient {
 
     protected String getUrl(String baseUrl, String path, Object... args) {
         return String.format(getUrl(baseUrl, path), args);
-    }
-
-    protected String getSignUrl(String path) {
-        return getUrl(signBaseUrl, path);
-    }
-
-    protected String getSignUrl(String path, Object... args) {
-        return String.format(getSignUrl(path), args);
     }
 
     public void setBearerToken(String token) {
