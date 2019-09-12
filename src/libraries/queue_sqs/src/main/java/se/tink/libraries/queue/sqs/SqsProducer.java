@@ -12,7 +12,7 @@ import se.tink.libraries.queue.QueueProducer;
 public class SqsProducer implements QueueProducer {
 
     private static final int REQUEUE_DELAY_MIN = 0;
-    private static final int REQUEUE_DELAY_MAX = 900;
+    private static final int REQUEUE_DELAY_MAX = 180;
 
     private SqsQueue sqsQueue;
     private EncodingHandler encodingHandler;
