@@ -1396,6 +1396,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "9844198a59965cae9d2705911a054a60",
+            "financialInstitutionName": "SBAB",
             "market": "SE",
             "multiFactor": true,
             "name": "sbab-bankid",
