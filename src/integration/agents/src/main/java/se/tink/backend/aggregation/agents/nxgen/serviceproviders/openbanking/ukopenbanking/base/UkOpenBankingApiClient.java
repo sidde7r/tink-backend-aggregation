@@ -36,7 +36,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public <T> T createPaymentIntentId(
             UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createRequest(pisConfig.createPaymentsURL())
+        return createPisRequest(pisConfig.createPaymentsURL())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
@@ -47,7 +47,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public <T> T submitPayment(
             UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createRequest(pisConfig.createPaymentSubmissionURL())
+        return createPisRequest(pisConfig.createPaymentSubmissionURL())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
@@ -59,19 +59,19 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private <T extends AccountPermissionResponse> T createAccountIntentId(
             UkOpenBankingAisConfig aisConfig, Class<T> responseType) {
 
-        return createRequest(aisConfig.createConsentRequestURL())
+        return createAisRequest(aisConfig.createConsentRequestURL())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .body(AccountPermissionRequest.create())
                 .post(responseType);
     }
 
     public <T> T fetchAccounts(UkOpenBankingAisConfig aisConfig, Class<T> responseType) {
-        return createRequest(aisConfig.getBulkAccountRequestURL()).get(responseType);
+        return createAisRequest(aisConfig.getBulkAccountRequestURL()).get(responseType);
     }
 
     public <T> T fetchAccountBalance(
             UkOpenBankingAisConfig aisConfig, String accountId, Class<T> responseType) {
-        return createRequest(aisConfig.getAccountBalanceRequestURL(accountId)).get(responseType);
+        return createAisRequest(aisConfig.getAccountBalanceRequestURL(accountId)).get(responseType);
     }
 
     public <T> T fetchAccountTransactions(
@@ -81,14 +81,14 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         URL url = new URL(paginationKey);
         if (url.getScheme() == null) url = aisConfig.getApiBaseURL().concat(paginationKey);
 
-        return createRequest(url).get(responseType);
+        return createAisRequest(url).get(responseType);
     }
 
     public <T> T fetchUpcomingTransactions(
             UkOpenBankingAisConfig aisConfig, String accountId, Class<T> responseType) {
         try {
 
-            return createRequest(aisConfig.getUpcomingTransactionRequestURL(accountId))
+            return createAisRequest(aisConfig.getUpcomingTransactionRequestURL(accountId))
                     .get(responseType);
         } catch (Exception e) {
             // TODO: Ukob testdata has an error in it which makes some transactions impossible to
@@ -99,8 +99,18 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         }
     }
 
-    private RequestBuilder createRequest(URL url) {
-        return httpClient.request(url).accept(MediaType.APPLICATION_JSON_TYPE);
+    private RequestBuilder createPisRequest(URL url) {
+        return httpClient
+                .request(url)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .addFilter(getPisAuthFilter());
+    }
+
+    private RequestBuilder createAisRequest(URL url) {
+        return httpClient
+                .request(url)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .addFilter(getAisAuthFilter());
     }
 
     public String fetchIntentIdString(UkOpenBankingAisConfig aisConfig) {
@@ -111,15 +121,16 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     // General Payments Interface
 
     private RequestBuilder createPISRequest(URL url) {
-        return createRequest(url)
+        return createPisRequest(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
+                .addFilter(getPisAuthFilter())
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
                         RandomUtils.generateRandomHexEncoded(8));
     }
 
     private RequestBuilder createPISRequest(URL url, Object request) {
-        return createRequest(url)
+        return createPisRequest(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,

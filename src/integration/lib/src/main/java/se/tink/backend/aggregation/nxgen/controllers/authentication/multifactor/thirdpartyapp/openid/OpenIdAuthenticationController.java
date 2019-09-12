@@ -180,7 +180,8 @@ public class OpenIdAuthenticationController
             // fall through.
         }
 
-        apiClient.attachAuthFilter(accessToken);
+        // as AutoAuthenticate will only happen in case of Ais so need to instantiate Ais filter
+        apiClient.instantiateAisAuthFilter(accessToken);
     }
 
     @Override
@@ -205,15 +206,12 @@ public class OpenIdAuthenticationController
                         callbackUri,
                         appToAppRedirectURL);
 
-        apiClient.attachAuthFilter(clientAccessToken);
-        try {
-            // Let the agent add to or change the URL before we send it to the front-end.
-            authorizeUrl =
-                    authenticator.decorateAuthorizeUrl(
-                            authorizeUrl, strongAuthenticationState, nonce, callbackUri);
-        } finally {
-            apiClient.detachAuthFilter();
-        }
+        instantiateAuthFilter(clientAccessToken);
+
+        // Let the agent add to or change the URL before we send it to the front-end.
+        authorizeUrl =
+                authenticator.decorateAuthorizeUrl(
+                        authorizeUrl, strongAuthenticationState, nonce, callbackUri);
 
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
 
@@ -283,7 +281,7 @@ public class OpenIdAuthenticationController
 
         saveAccessToken(accessToken);
 
-        apiClient.attachAuthFilter(accessToken);
+        instantiateAuthFilter(accessToken);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
@@ -296,6 +294,17 @@ public class OpenIdAuthenticationController
             case ACCOUNTS:
             default:
                 persistentStorage.put(PersistentStorageKeys.AIS_ACCESS_TOKEN, accessToken);
+        }
+    }
+
+    private void instantiateAuthFilter(OAuth2Token oAuth2Token) {
+        switch (authenticator.getClientCredentialScope()) {
+            case PAYMENTS:
+                apiClient.instantiatePisAuthFilter(oAuth2Token);
+                break;
+            case ACCOUNTS:
+            default:
+                apiClient.instantiateAisAuthFilter(oAuth2Token);
         }
     }
 
