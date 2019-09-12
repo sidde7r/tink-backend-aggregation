@@ -204,7 +204,7 @@ public class PfmTransactionsEntity {
         return Transaction.builder()
                 .setAmount(new Amount(getAmount().getCurrency(), getAmount().getValue()))
                 .setDate((getDate()))
-                .setDescription(getDescription() + " | " + getTypeDescription())
+                .setDescription(getText())
                 .setPending(isUncleared())
                 .build();
     }
