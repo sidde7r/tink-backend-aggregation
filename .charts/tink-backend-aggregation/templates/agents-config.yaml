@@ -885,14 +885,6 @@ data:
             bankId: "{{ $agentsConfig.labanquepostale.tink.bankId }}"
         {{- end }}
 
-        {{- if $agentsConfig.crosskey }}
-        crosskey:
-          tink:
-            clientId: "CROSSKEY_CLIENT_ID_TAG"
-            clientSecret: "CROSSKEY_CLIENT_SECRET_TAG"
-            redirectUrl: "{{ $agentsConfig.crosskey.tink.redirectUrl }}"
-        {{- end }}
-
         {{- if $agentsConfig.finecobank }}
         finecobank:
           tink:
