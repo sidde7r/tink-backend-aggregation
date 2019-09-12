@@ -67,17 +67,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     }
 
     protected IngBaseConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        getIntegrationName(), clientName, IngBaseConfiguration.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        IngBaseConstants.ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController().getAgentConfiguration(IngBaseConfiguration.class);
     }
-
-    protected abstract String getIntegrationName();
 
     @Override
     protected Authenticator constructAuthenticator() {

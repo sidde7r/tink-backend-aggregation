@@ -14,6 +14,8 @@ public class IngAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("es", "es-ing-ob")
+                        .setFinancialInstitutionId("ing")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
