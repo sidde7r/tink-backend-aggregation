@@ -28,6 +28,7 @@ data:
       agentDataAvailabilityTrackerConfiguration:
         host: agent-data-availability-tracker.agent-data-availability-tracker.svc.cluster.local
         port: 443
+        caPath: /etc/client-certificate/ca.crt
       {{- end }}
 
       {{- if $tppSecretsServiceConfig }}
