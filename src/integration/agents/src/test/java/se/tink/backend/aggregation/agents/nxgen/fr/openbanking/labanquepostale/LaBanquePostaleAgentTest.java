@@ -13,7 +13,9 @@ public class LaBanquePostaleAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fr", "fr-labanquepostale-oauth2")
+                new AgentIntegrationTest.Builder("fr", "fr-labanquepostale-ob")
+                        .setFinancialInstitutionId("labanquepostale")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
