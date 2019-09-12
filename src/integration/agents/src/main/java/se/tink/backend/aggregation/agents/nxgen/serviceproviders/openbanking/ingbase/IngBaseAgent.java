@@ -46,7 +46,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         */
         final String marketInUppercase = request.getProvider().getMarket().toUpperCase();
         apiClient =
-                new IngBaseApiClient(client, sessionStorage, marketInUppercase, request.isManual());
+                new IngBaseApiClient(
+                        client, persistentStorage, marketInUppercase, request.isManual());
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -81,7 +82,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         final IngBaseAuthenticator ingBaseAuthenticator =
-                new IngBaseAuthenticator(apiClient, sessionStorage);
+                new IngBaseAuthenticator(apiClient, persistentStorage);
         final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,

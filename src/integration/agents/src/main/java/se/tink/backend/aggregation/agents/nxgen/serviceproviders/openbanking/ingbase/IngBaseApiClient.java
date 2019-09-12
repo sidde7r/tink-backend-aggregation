@@ -34,14 +34,14 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class IngBaseApiClient {
 
     private final SimpleDateFormat dateFormat;
     protected final TinkHttpClient client;
-    protected final SessionStorage sessionStorage;
+    protected final PersistentStorage persistentStorage;
     private final String market;
     private EidasIdentity eidasIdentity;
     private IngBaseConfiguration configuration;
@@ -50,11 +50,11 @@ public class IngBaseApiClient {
 
     public IngBaseApiClient(
             TinkHttpClient client,
-            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             String market,
             boolean manualRequest) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.market = market;
         this.manualRequest = manualRequest;
         dateFormat = new SimpleDateFormat(QueryValues.DATE_FORMAT);
@@ -96,6 +96,7 @@ public class IngBaseApiClient {
                         .queryParam(IngBaseConstants.QueryKeys.DATE_FROM, getTransactionsDateFrom())
                         .queryParam(
                                 IngBaseConstants.QueryKeys.DATE_TO, dateFormat.format(new Date()))
+                        .queryParam(IngBaseConstants.QueryKeys.LIMIT, "100")
                         .toString();
         return buildRequestWithSignature(
                         completeReqPath, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
@@ -134,7 +135,7 @@ public class IngBaseApiClient {
     }
 
     public void setTokenToSession(final OAuth2Token accessToken) {
-        sessionStorage.put(StorageKeys.TOKEN, accessToken);
+        persistentStorage.put(StorageKeys.TOKEN, accessToken);
     }
 
     private TokenResponse getApplicationAccessToken() {
@@ -236,27 +237,27 @@ public class IngBaseApiClient {
     }
 
     private OAuth2Token getApplicationTokenFromSession() {
-        return sessionStorage
+        return persistentStorage
                 .get(StorageKeys.APPLICATION_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
     private void setApplicationTokenToSession(OAuth2Token token) {
-        sessionStorage.put(StorageKeys.APPLICATION_TOKEN, token);
+        persistentStorage.put(StorageKeys.APPLICATION_TOKEN, token);
     }
 
     private void setClientIdToSession(final String clientId) {
-        sessionStorage.put(StorageKeys.CLIENT_ID, clientId);
+        persistentStorage.put(StorageKeys.CLIENT_ID, clientId);
     }
 
     private OAuth2Token getTokenFromSession() {
-        return sessionStorage
+        return persistentStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
     private String getClientIdFromSession() {
-        return sessionStorage
+        return persistentStorage
                 .get(StorageKeys.CLIENT_ID, String.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CLIENT_ID));
     }

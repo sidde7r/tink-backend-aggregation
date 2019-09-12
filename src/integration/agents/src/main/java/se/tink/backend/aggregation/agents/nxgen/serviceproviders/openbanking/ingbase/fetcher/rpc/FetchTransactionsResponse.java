@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.assertj.core.util.Strings;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -19,6 +19,8 @@ public class FetchTransactionsResponse implements PaginatorResponse {
 
     private TransactionsEntity transactions;
 
+    private AccountEntity account;
+
     @JsonProperty("_links")
     private LinkEntity links;
 
@@ -28,30 +30,21 @@ public class FetchTransactionsResponse implements PaginatorResponse {
     public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(transactions)
                 .map(TransactionsEntity::toTinkTransactions)
-                .map(ts -> Stream.concat(ts, fetchNext()))
                 .orElse(Stream.empty())
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(links == null ? false : true);
+        return Optional.empty();
     }
 
-    public FetchTransactionsResponse setFetchNextFunction(
-            Function<String, FetchTransactionsResponse> consumer) {
-        fetchNextFunction = consumer;
-        return this;
-    }
-
-    private Stream<? extends Transaction> fetchNext() {
-        return hasNextLink()
-                ? fetchNextFunction.apply(links.getHref()).setFetchNextFunction(fetchNextFunction)
-                        .getTinkTransactions().stream()
-                : Stream.empty();
-    }
-
-    private boolean hasNextLink() {
-        return links != null && !Strings.isNullOrEmpty(links.getHref());
+    public String getNextLink() {
+        return Optional.ofNullable(links)
+                .map(LinkEntity::getHref)
+                .orElse(
+                        Optional.ofNullable(transactions)
+                                .map(TransactionsEntity::getNextLink)
+                                .orElse(null));
     }
 }

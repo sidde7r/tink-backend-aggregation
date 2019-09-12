@@ -33,6 +33,7 @@ public final class IngBaseConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String STATE = "state";
         public static final String RESPONSE_TYPE = "response_type";
+        public static final String LIMIT = "limit";
     }
 
     public static class QueryValues {
