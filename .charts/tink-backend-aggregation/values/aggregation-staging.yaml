@@ -152,4 +152,4 @@ tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
 
-debugLogFrequencyPercent: 20
+debugLogFrequencyPercent: 50
