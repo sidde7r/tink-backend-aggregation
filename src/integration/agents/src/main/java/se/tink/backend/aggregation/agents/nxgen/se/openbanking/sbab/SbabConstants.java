@@ -118,4 +118,8 @@ public final class SbabConstants {
     public static class HeaderValues {
         public static final String PSU_IP_ADDRESS = "192.160.0.1";
     }
+
+    public static class Errors {
+        public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
+    }
 }

@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstant
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.DecoupledResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -87,11 +88,19 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
 
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
-        Optional<OAuth2Token> refreshedToken =
-                Optional.ofNullable(apiClient.refreshAccessToken(refreshToken).getAccessToken());
-        if (refreshedToken.isPresent()) {
-            persistentStorage.put(StorageKeys.PAGINATION_INDICATOR_REFRESHED_TOKEN, false);
+        try {
+            Optional<OAuth2Token> refreshedToken =
+                    Optional.ofNullable(
+                            apiClient.refreshAccessToken(refreshToken).getAccessToken());
+            if (refreshedToken.isPresent()) {
+                persistentStorage.put(StorageKeys.PAGINATION_INDICATOR_REFRESHED_TOKEN, false);
+            }
+            return refreshedToken;
+        } catch (HttpResponseException hre) {
+            if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                hre.getResponse().getBody(ErrorResponse.class).handleErrors();
+            }
+            throw hre;
         }
-        return refreshedToken;
     }
 }
