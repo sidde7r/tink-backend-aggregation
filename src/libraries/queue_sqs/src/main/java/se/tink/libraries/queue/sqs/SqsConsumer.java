@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.queue.QueueConsumer;
+import se.tink.libraries.queue.QueueProducer;
 
 public class SqsConsumer implements Managed, QueueConsumer {
 
@@ -24,11 +25,14 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private final int VISIBILITY_TIMEOUT_SECONDS = 300; // 5 minutes
     private static final Logger log = LoggerFactory.getLogger(SqsConsumer.class);
     private AtomicBoolean running = new AtomicBoolean(false);
+    private final QueueProducer producer;
 
     @Inject
-    public SqsConsumer(SqsQueue sqsQueue, QueueMessageAction queueMessageAction) {
+    public SqsConsumer(
+            SqsQueue sqsQueue, QueueMessageAction queueMessageAction, QueueProducer producer) {
         this.sqsQueue = sqsQueue;
         this.queueMessageAction = queueMessageAction;
+        this.producer = producer;
         this.service =
                 new AbstractExecutionThreadService() {
 
@@ -71,8 +75,8 @@ public class SqsConsumer implements Managed, QueueConsumer {
             consume(sqsMessage.getBody());
             sqsQueue.consumed();
         } catch (RejectedExecutionException e) {
-            log.warn("MessageID: {} rejected by executor-queue.", sqsMessage.getMessageId());
-            sqsQueue.rejected();
+            producer.requeue(sqsMessage.getBody());
+            sqsQueue.requeued();
         }
     }
 

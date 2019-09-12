@@ -34,14 +34,14 @@ public class SqsQueue {
     private static final MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
     private final Counter produced;
     private final Counter consumed;
-    private final Counter rejected;
+    private final Counter requeued;
     private AmazonSQS sqs;
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
         this.consumed = metricRegistry.meter(METRIC_ID_BASE.label("event", "consumed"));
         this.produced = metricRegistry.meter(METRIC_ID_BASE.label("event", "produced"));
-        this.rejected = metricRegistry.meter(METRIC_ID_BASE.label("event", "rejected"));
+        this.requeued = metricRegistry.meter(METRIC_ID_BASE.label("event", "requeued"));
 
         if (!configuration.isEnabled()
                 || Objects.isNull(configuration.getUrl())
@@ -151,8 +151,8 @@ public class SqsQueue {
         this.produced.inc();
     }
 
-    public void rejected() {
-        this.rejected.inc();
+    public void requeued() {
+        this.requeued.inc();
     }
 
     public AmazonSQS getSqs() {
