@@ -132,6 +132,7 @@ public final class SbabApiClient {
         RefreshTokenRequest tokenRequest =
                 new RefreshTokenRequest(QueryValues.REFRESH_TOKEN, refreshToken);
         return client.request(Urls.TOKEN)
+                .header(HeaderKeys.PSU_IP_ADDRESS, "")
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(DecoupledResponse.class, tokenRequest.toData());
