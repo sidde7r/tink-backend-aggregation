@@ -43,7 +43,7 @@ public class RateLimitedExecutorService implements Managed {
                                 new LoggingProviderRateLimiterFactory(
                                         new OverridingProviderRateLimiterFactory(
                                                 ImmutableMap.of(
-                                                        "fraud.CreditSafeAgent", 0.2,
+                                                        "fraud.CreditSafeAgent", 0.1,
                                                         "abnamro.ics.IcsAgent", 8.),
                                                 new DefaultProviderRateLimiterFactory(0.5)))));
 
