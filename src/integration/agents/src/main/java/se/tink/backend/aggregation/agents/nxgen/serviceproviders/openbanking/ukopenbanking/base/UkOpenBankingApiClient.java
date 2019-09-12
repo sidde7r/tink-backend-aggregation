@@ -123,7 +123,6 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private RequestBuilder createPISRequest(URL url) {
         return createPisRequest(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .addFilter(getPisAuthFilter())
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
                         RandomUtils.generateRandomHexEncoded(8));

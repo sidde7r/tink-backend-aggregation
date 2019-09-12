@@ -288,9 +288,6 @@ public class OpenIdAuthenticationController
 
     private void saveAccessToken(OAuth2Token accessToken) {
         switch (authenticator.getClientCredentialScope()) {
-            case PAYMENTS:
-                persistentStorage.put(PersistentStorageKeys.PIS_ACCESS_TOKEN, accessToken);
-                break;
             case ACCOUNTS:
             default:
                 persistentStorage.put(PersistentStorageKeys.AIS_ACCESS_TOKEN, accessToken);
