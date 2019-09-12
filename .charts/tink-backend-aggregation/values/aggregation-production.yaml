@@ -119,9 +119,6 @@ agents:
       baseUrl: https://psd2.b2b.belfius.be:8443
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
-  crosskey:
-    tink:
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   finecobank:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
