@@ -1,5 +1,6 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
+import com.google.common.base.Strings;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
 import io.grpc.ManagedChannel;
@@ -38,17 +39,23 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
 
     private final String host;
     private final int port;
+    private final String caPath;
 
     @Inject
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
     public AgentDataAvailabilityTrackerClientImpl(
             AgentDataAvailabilityTrackerConfiguration configuration) {
-        this(configuration.getHost(), configuration.getPort());
+        this(configuration.getHost(), configuration.getPort(), configuration.getCaPath());
     }
 
     public AgentDataAvailabilityTrackerClientImpl(String host, int port) {
+        this(host, port, null);
+    }
+
+    public AgentDataAvailabilityTrackerClientImpl(String host, int port, String caPath) {
         this.host = host;
         this.port = port;
+        this.caPath = caPath;
         this.accountDeque = new AccountDeque();
         this.service =
                 new AbstractExecutionThreadService() {
@@ -175,18 +182,19 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     @Override
     public void start() throws Exception {
 
-        SslContext sslContext =
-                GrpcSslContexts.forClient()
-                        .trustManager(new File("/etc/client-certificate/ca.crt"))
-                        .build();
+        NettyChannelBuilder channelBuilder = NettyChannelBuilder.forAddress(host, port);
+
+        if (!Strings.isNullOrEmpty(caPath)) {
+            SslContext sslContext =
+                    GrpcSslContexts.forClient().trustManager(new File(caPath)).build();
+
+            channelBuilder.useTransportSecurity().sslContext(sslContext).build();
+        }
+
+        channel = channelBuilder.build();
 
         log.debug(String.format("Opening connection: %s:%d", host, port));
 
-        channel =
-                NettyChannelBuilder.forAddress(host, port)
-                        .useTransportSecurity()
-                        .sslContext(sslContext)
-                        .build();
         agentctServiceStub = AgentDataAvailabilityTrackerServiceGrpc.newStub(channel);
 
         beginStream();
