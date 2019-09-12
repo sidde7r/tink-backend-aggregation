@@ -35,7 +35,7 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
     private AgentsServiceConfiguration agentsServiceConfiguration;
     private BnpParibasTransactionalAccountFetcher accountFetcher;
     private BnpParibasTransactionFetcher transactionFetcher;
-    private ManualOrAutoAuth manualOrAutoAuth;
+    private AutoAuthenticationController authenticator;
 
     public BnpParibasBaseAgent(
             final CredentialsRequest request,
@@ -48,6 +48,13 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
+        if (authenticator == null) {
+            authenticator = doConstructAuthenticator();
+        }
+        return authenticator;
+    }
+
+    private AutoAuthenticationController doConstructAuthenticator() {
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
                         persistentStorage,
@@ -57,20 +64,12 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                         credentials,
                         strongAuthenticationState);
 
-        AutoAuthenticationController autoAuthenticationController =
-                new AutoAuthenticationController(
-                        request,
-                        systemUpdater,
-                        new ThirdPartyAppAuthenticationController<>(
-                                controller, supplementalInformationHelper),
-                        controller);
-        this.manualOrAutoAuth = autoAuthenticationController;
-        return autoAuthenticationController;
-    }
-
-    private BnpParibasConfiguration getBnpParibasConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(BnpParibasConfiguration.class);
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
@@ -78,7 +77,9 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
         this.agentsServiceConfiguration = configuration;
 
-        bnpParibasConfiguration = getBnpParibasConfiguration();
+        bnpParibasConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(BnpParibasConfiguration.class);
         apiClient.setConfiguration(bnpParibasConfiguration);
         client.setEidasProxy(configuration.getEidasProxy(), bnpParibasConfiguration.getEidasQwac());
 
@@ -133,6 +134,6 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
 
     @Override
     public boolean isManualAuthentication(Credentials credentials) {
-        return manualOrAutoAuth.isManualAuthentication(credentials);
+        return ((ManualOrAutoAuth) constructAuthenticator()).isManualAuthentication(credentials);
     }
 }
