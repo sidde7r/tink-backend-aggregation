@@ -16,7 +16,10 @@ public class AuthenticateResponse {
     @JsonProperty("token_type")
     private String tokenType;
 
+    @JsonProperty("refresh_token")
+    private String refreshToken;
+
     public OAuth2Token toTinkToken() {
-        return OAuth2Token.create(tokenType, accessToken, null, expiresIn);
+        return OAuth2Token.create(tokenType, accessToken, refreshToken, expiresIn);
     }
 }
