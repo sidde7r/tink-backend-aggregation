@@ -41,4 +41,9 @@ public class BankiaAgent extends RedsysAgent {
     public Class<? extends BaseTransactionsResponse> getTransactionsResponseClass() {
         return BankiaTransactionsResponse.class;
     }
+
+    @Override
+    public boolean shouldReturnLowercaseAccountId() {
+        return true;
+    }
 }

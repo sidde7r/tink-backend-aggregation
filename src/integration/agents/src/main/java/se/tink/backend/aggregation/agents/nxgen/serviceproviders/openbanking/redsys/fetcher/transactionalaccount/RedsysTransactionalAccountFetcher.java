@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.BalanceEntity;
@@ -22,11 +23,15 @@ public class RedsysTransactionalAccountFetcher
                 TransactionKeyPaginator<TransactionalAccount, String> {
     private final RedsysApiClient apiClient;
     private final RedsysConsentController consentController;
+    private final AspspConfiguration aspspConfiguration;
 
     public RedsysTransactionalAccountFetcher(
-            RedsysApiClient apiClient, RedsysConsentController consentController) {
+            RedsysApiClient apiClient,
+            RedsysConsentController consentController,
+            AspspConfiguration aspspConfiguration) {
         this.apiClient = apiClient;
         this.consentController = consentController;
+        this.aspspConfiguration = aspspConfiguration;
     }
 
     @Override
@@ -50,7 +55,7 @@ public class RedsysTransactionalAccountFetcher
             final String consentId = consentController.getConsentId();
             accountBalances = apiClient.fetchAccountBalances(accountId, consentId).getBalances();
         }
-        return account.toTinkAccount(accountBalances);
+        return account.toTinkAccount(accountBalances, aspspConfiguration);
     }
 
     @Override

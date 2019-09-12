@@ -371,7 +371,9 @@ public final class RedsysApiClient {
     private void persistFetchedTransactionsUntil(String accountId) {
         final String key = StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId;
         final String value = sessionStorage.remove(key);
-        persistentStorage.put(key, value);
+        if (!Objects.isNull(value)) {
+            persistentStorage.put(key, value);
+        }
     }
 
     private BaseTransactionsResponse fetchTransactions(String accountId, RequestBuilder request) {
