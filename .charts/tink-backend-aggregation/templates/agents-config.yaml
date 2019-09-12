@@ -93,14 +93,6 @@ data:
             redirectUrl: "{{ $agentsConfig.dnb.tink.redirectUrl }}"
         {{- end }}
 
-        {{- if $agentsConfig.icabanken }}
-        icabanken:
-          tink:
-            clientId: "{{ $agentsConfig.icabanken.tink.clientId }}"
-            redirectUrl: "{{ $agentsConfig.icabanken.tink.redirectUrl }}"
-            certificateId: "{{ $agentsConfig.icabanken.tink.certificateId }}"
-        {{- end }}
-
         {{- if $agentsConfig.seb }}
         seb:
           tink:
