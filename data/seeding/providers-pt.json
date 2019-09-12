@@ -174,7 +174,7 @@
         },
         {
             "accessType": "OPEN_BANKING",
-            "className": "se.tink.backend.aggregation.agents.nxgen.pt.openbanking.caixa.CaixaRedirectAgent",
+            "className": "nxgen.pt.openbanking.caixa.CaixaRedirectAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caixa (Test)",
             "fields": [],
