@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Transfers.Statuses;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.ComponentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.ReceiptIndicatorEntity;
@@ -28,8 +28,9 @@ public class TransferApprovalResponse extends BaseResponse
 
     @JsonIgnore
     public void validateResult(ExecutorExceptionResolver exceptionResolver) {
-        if (!Stream.of("OK", "E-fakturan är ändrad").anyMatch(this.getStatus()::equalsIgnoreCase)) {
-            exceptionResolver.asException(this);
+        if (Statuses.TRANSFER_APPROVAL_STATUSES.stream()
+                .noneMatch(message -> message.equalsIgnoreCase(getStatus()))) {
+            throw exceptionResolver.asException(this);
         }
     }
 }

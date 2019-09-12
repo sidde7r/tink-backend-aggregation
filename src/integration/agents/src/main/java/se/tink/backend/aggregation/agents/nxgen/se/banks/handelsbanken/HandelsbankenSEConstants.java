@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
 import com.google.common.collect.ImmutableSet;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.models.Instrument;
@@ -178,6 +180,11 @@ public class HandelsbankenSEConstants {
                 Pattern.compile(".*\\d{1,7}-\\d").asPredicate();
         public static final LogTag LOG_TAG = LogTag.from("#se_handelsbanken_payment_context");
         public static final String UNDER_16 = "10573";
+
+        public static class Statuses {
+            public static final List<String> TRANSFER_APPROVAL_STATUSES =
+                    Arrays.asList("OK", "E-fakturan är ändrad");
+        }
     }
 
     public static class Executor {
