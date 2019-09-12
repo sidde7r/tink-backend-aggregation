@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.CrosskeyBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CreditCardAccountFetcher;
@@ -67,26 +66,18 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
         final CrosskeyBaseConfiguration crosskeyBaseConfiguration = getClientConfiguration();
-
         apiClient.setConfiguration(crosskeyBaseConfiguration, configuration.getEidasProxy());
     }
 
     private CrosskeyBaseConfiguration getClientConfiguration() {
-        CrosskeyBaseConfiguration crosskeyBaseConfiguration = getClientConfiguration("crosskey");
+        CrosskeyBaseConfiguration crosskeyBaseConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(CrosskeyBaseConfiguration.class);
         crosskeyBaseConfiguration.setBaseAPIUrl(getBaseAPIUrl());
         crosskeyBaseConfiguration.setBaseAuthUrl(getBaseAuthUrl());
         crosskeyBaseConfiguration.setxFapiFinancialId(getxFapiFinancialId());
         return crosskeyBaseConfiguration;
-    }
-
-    protected CrosskeyBaseConfiguration getClientConfiguration(String integrationName) {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        integrationName, clientName, CrosskeyBaseConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
