@@ -140,8 +140,33 @@ public class SebApiClient {
         final Request request =
                 new Request.Builder()
                         .addServiceInput(ServiceInputKeys.CUSTOMER_NUMBER, customerId)
-                        .addServiceInput(ServiceInputKeys.MAX_ROWS, 110)
+                        .addServiceInput(ServiceInputKeys.MAX_ROWS, ServiceInputValues.MAX_ROWS)
                         .build();
         return post(Urls.LIST_UPCOMING_TRANSACTIONS, request);
+    }
+
+    public Response fetchCreditCardAccounts() {
+        final Request request = new Request.Builder().build();
+        return post(Urls.LIST_CARDS, request);
+    }
+
+    public Response fetchPendingCreditCardTransactions(String uniqueId) {
+        final Request request =
+                new Request.Builder()
+                        .addServiceInput(ServiceInputKeys.CREDIT_CARD_HANDLE, uniqueId)
+                        .addServiceInput(
+                                ServiceInputKeys.PENDING_TRANSACTIONS, ServiceInputValues.YES)
+                        .build();
+
+        return post(Urls.LIST_PENDING_CREDIT_CARD_TRANSACTIONS, request);
+    }
+
+    public Response fetchBookedCreditCardTransactions(String uniqueId) {
+        final Request request =
+                new Request.Builder()
+                        .addServiceInput(ServiceInputKeys.CREDIT_CARD_HANDLE, uniqueId)
+                        .build();
+
+        return post(Urls.LIST_BOOKED_CREDIT_CARD_TRANSACTIONS, request);
     }
 }

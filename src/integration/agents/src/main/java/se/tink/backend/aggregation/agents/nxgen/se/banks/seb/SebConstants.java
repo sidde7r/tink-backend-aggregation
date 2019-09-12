@@ -20,12 +20,17 @@ public class SebConstants {
         public static final URL INITIATE_SESSION = new URL(BASE.concat(Endpoints.INITIATE_SESSION));
         public static final URL ACTIVATE_SESSION = new URL(BASE.concat(Endpoints.ACTIVATE_SESSION));
         public static final URL LIST_ACCOUNTS = new URL(BASE.concat(Endpoints.LIST_ACCOUNTS));
+        public static final URL LIST_CARDS = new URL(BASE.concat(Endpoints.LIST_CARDS));
         public static final URL LIST_TRANSACTIONS =
                 new URL(BASE.concat(Endpoints.LIST_TRANSACTIONS));
         public static final URL LIST_RESERVED_TRANSACTIONS =
                 new URL(BASE.concat(Endpoints.LIST_RESERVED_TRANSACTIONS));
         public static final URL LIST_UPCOMING_TRANSACTIONS =
                 new URL(BASE.concat(Endpoints.LIST_UPCOMING_TRANSACTIONS));
+        public static final URL LIST_PENDING_CREDIT_CARD_TRANSACTIONS =
+                new URL(BASE.concat(Endpoints.LIST_PENDING_CREDIT_CARD_TRANSACTIONS));
+        public static final URL LIST_BOOKED_CREDIT_CARD_TRANSACTIONS =
+                new URL(BASE.concat(Endpoints.LIST_BOOKED_CREDIT_CARD_TRANSACTIONS));
     }
 
     public static class Endpoints {
@@ -35,12 +40,17 @@ public class SebConstants {
         public static final String INITIATE_SESSION = API_BASE + "Init11Session01.asmx/Execute";
         public static final String ACTIVATE_SESSION = API_BASE + "Aktivera01Session01.asmx/Execute";
         public static final String LIST_ACCOUNTS = API_BASE + "Lista01Konton_privat01.asmx/Execute";
+        public static final String LIST_CARDS = API_BASE + "Lista11Kort_privat05.asmx/Execute";
         public static final String LIST_TRANSACTIONS =
                 API_BASE + "Lista01Rorelse_ftg03.asmx/Execute";
         public static final String LIST_RESERVED_TRANSACTIONS =
                 API_BASE + "Lista01Skydd01.asmx/Execute";
         private static final String LIST_UPCOMING_TRANSACTIONS =
                 API_BASE + "Lista11Komm_uppdrag02.asmx/Execute";
+        private static final String LIST_PENDING_CREDIT_CARD_TRANSACTIONS =
+                API_BASE + "Lista11Ofakt_korttran02.asmx/Execute";
+        private static final String LIST_BOOKED_CREDIT_CARD_TRANSACTIONS =
+                API_BASE + "Lista11Fakt_korttran02.asmx/Execute";
     }
 
     public static class HeaderKeys {
@@ -75,11 +85,15 @@ public class SebConstants {
         public static final String CUSTOMER_NUMBER = "SEB_KUND_ID";
         public static final String MAX_ROWS = "MAX_ROWS";
         public static final String ACCOUNT_NUMBER = "KONTO_NR";
+        public static final String CREDIT_CARD_HANDLE = "BILL_UNIT_HDL";
+        public static final String PENDING_TRANSACTIONS = "RESERVE_AMT_FL";
     }
 
     public static class ServiceInputValues {
         public static final String PRIVATE = "P";
+        public static final String YES = "Y";
         public static final String DEFAULT_ACCOUNT_TYPE = "ICKEFOND";
+        public static final int MAX_ROWS = 110;
     }
 
     // ROR_TYP field in TransactionEntity
@@ -98,6 +112,7 @@ public class SebConstants {
         public static final String SHORT_USERID = "shortUserId";
         public static final String SSN = "ssn";
         public static final String ACCOUNT_CUSTOMER_ID = "customerId";
+        public static final String CREDIT_CARD_ACCOUNT_HANDLE_PREFIX = "card_handle:";
     }
 
     public static class SystemCode {

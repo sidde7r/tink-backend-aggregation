@@ -12,6 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.Payload;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.ResultInfoMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.SystemStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInformation;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
@@ -108,5 +110,20 @@ public class Response {
     @JsonIgnore
     public Collection<UpcomingTransactionEntity> getUpcomingTransactions() {
         return payload.getUpcomingTransactions();
+    }
+
+    @JsonIgnore
+    public List<CreditCardEntity> getCreditCards() {
+        return payload.getCreditCards();
+    }
+
+    @JsonIgnore
+    public List<CreditCardTransactionEntity> getPendingCreditCardTransactions() {
+        return payload.getPendingCreditCardTransactions();
+    }
+
+    @JsonIgnore
+    public List<CreditCardTransactionEntity> getBookedCreditCardTransactions() {
+        return payload.getBookedCreditCardTransactions();
     }
 }
