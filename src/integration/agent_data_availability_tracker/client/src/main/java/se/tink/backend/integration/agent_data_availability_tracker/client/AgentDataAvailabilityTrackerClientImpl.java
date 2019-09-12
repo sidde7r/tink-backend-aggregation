@@ -25,7 +25,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.client.serial
 public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabilityTrackerClient {
 
     private static final Logger log =
-            LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientImpl.class);
+            LoggerFactory.getLogger(AgentDataAvailabilityTrackerClient.class);
 
     private static final long QUEUE_POLL_WAIT_SECONDS = 2;
 
@@ -192,13 +192,12 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         }
 
         channel = channelBuilder.build();
+        channel.notifyWhenStateChanged(channel.getState(true), this::logStateChange);
 
         log.debug(String.format("Opening connection: %s:%d", host, port));
-
         agentctServiceStub = AgentDataAvailabilityTrackerServiceGrpc.newStub(channel);
 
         beginStream();
-
         service.startAsync();
         service.awaitRunning(30, TimeUnit.SECONDS);
     }
@@ -209,5 +208,10 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         service.stopAsync();
         service.awaitTerminated(60, TimeUnit.SECONDS);
         endStreamBlocking();
+    }
+
+    private void logStateChange() {
+        log.debug("Channel changed state to: " + channel.getState(false));
+        channel.notifyWhenStateChanged(channel.getState(false), this::logStateChange);
     }
 }
