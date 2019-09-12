@@ -30,8 +30,8 @@ public class CommerzbankConstants {
 
     public static class VALUES {
         public static final String JSON = "application/json";
-        public static final String CCB_VALUE = "MobBkniOS+10.0.3+11.2";
-        public static final String USER_AGENT_VALUE = "MobBkniOS-10.0.3";
+        public static final String CCB_VALUE = "MobBkniOS+11.0+11.2";
+        public static final String USER_AGENT_VALUE = "MobBkniOS-11.0.0";
         public static final String SESSION_TOKEN_VALUE = "false";
         public static final String CURRENCY_VALUE = "EUR";
         public static final String AMOUNT_TYPE = "ALL";
