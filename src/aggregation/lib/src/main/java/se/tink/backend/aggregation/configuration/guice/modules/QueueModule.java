@@ -46,9 +46,9 @@ public class QueueModule extends AbstractModule {
     @Provides
     @Singleton
     public QueueConsumer manageQueueThread(
-            SqsQueue sqsQueue, QueueMessageAction queueMessageAction) {
+            SqsQueue sqsQueue, QueueMessageAction queueMessageAction, QueueProducer producer) {
 
-        SqsConsumer sqsConsumer = new SqsConsumer(sqsQueue, queueMessageAction);
+        SqsConsumer sqsConsumer = new SqsConsumer(sqsQueue, queueMessageAction, producer);
         if (sqsQueue.isAvailable()) {
             lifecycle.manage(sqsConsumer);
         }

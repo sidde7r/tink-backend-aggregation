@@ -15,15 +15,10 @@ import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.RunnableMdcWrapper;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.types.gauges.LastUpdateGauge;
 
 public class RateLimitedExecutorProxy extends AbstractExecutorService {
-
-    private static final MetricId QUEUE_CAPACITY = MetricId.newId("rate_limited_queue_capacity");
-
     private final MetricRegistry metricRegistry;
     private final MetricId.MetricLabels metricLabels;
-    private final LastUpdateGauge queueCapacityGauge;
 
     public interface RateLimiter {
         void acquire();
@@ -72,9 +67,6 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
                         1, 1, 0L, TimeUnit.MILLISECONDS, rateLimittedQueue, threadFactory);
         this.metricRegistry = metricRegistry;
         this.metricLabels = metricLabels;
-
-        this.queueCapacityGauge =
-                metricRegistry.lastUpdateGauge(QUEUE_CAPACITY.label("maxItems", maxQueueableItems));
     }
 
     @Override
@@ -93,9 +85,6 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
                         "rate-limitter",
                         metricLabels,
                         new RateLimitedRunnable(Preconditions.checkNotNull(command)));
-
-        final int queueCapacity = rateLimittedQueue.remainingCapacity();
-        queueCapacityGauge.update(queueCapacity);
 
         rateLimitedExecutorService.execute(instrumentedRunnable);
         instrumentedRunnable.submitted();

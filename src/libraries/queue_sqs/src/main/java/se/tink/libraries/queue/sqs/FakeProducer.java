@@ -8,6 +8,9 @@ public class FakeProducer implements QueueProducer {
     public void send(Object t) {}
 
     @Override
+    public void requeue(String encodedMessageBody) {}
+
+    @Override
     public boolean isAvailable() {
         return false;
     }
