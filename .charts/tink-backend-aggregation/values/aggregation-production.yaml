@@ -75,13 +75,6 @@ agents:
     abn:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
       certificateId: abnamro-QSEALC
-  redsys:
-    tink:
-      baseAuthUrl: https://hubpsd2.redsys.es/api-oauth-xs2a/services/rest
-      baseAPIUrl: https://psd2.redsys.es/api-entrada-xs2a/services
-      certificateId: Tink
-      tppIpAddress: 127.0.0.1
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   sibs:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
