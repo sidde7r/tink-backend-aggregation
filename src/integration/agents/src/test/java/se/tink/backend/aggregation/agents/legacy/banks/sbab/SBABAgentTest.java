@@ -42,6 +42,20 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     }
 
     @Test
+    public void testWholeTransferFlow() throws Exception {
+        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        transfer.setSource(new SwedishIdentifier("src account"));
+        transfer.setDestination(new SwedishIdentifier("dest account"));
+
+        new AgentIntegrationTest.Builder("se", "sbab-bankid")
+                .addCredentialField(Field.Key.USERNAME, "ssn")
+                .loadCredentialsBefore(true)
+                .saveCredentialsAfter(true)
+                .build()
+                .testBankTransfer(transfer);
+    }
+
+    @Test
     @Deprecated // This test is broken
     public void testLoginWithMobileBankIdAndRefreshAccounts() throws Exception {
         testAgent(credentials);
