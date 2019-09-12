@@ -161,10 +161,6 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                                         .addFieldName(entry.getName())
                                         .addFieldValue(entry.getValue()));
 
-        log.debug(
-                String.format(
-                        "Adding request to queue: %d | Service running: %b",
-                        accountDeque.size(), service.isRunning()));
         accountDeque.add(requestBuilder.build());
     }
 
@@ -192,7 +188,6 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         }
 
         channel = channelBuilder.build();
-        channel.notifyWhenStateChanged(channel.getState(true), this::logStateChange);
 
         log.debug(String.format("Opening connection: %s:%d", host, port));
         agentctServiceStub = AgentDataAvailabilityTrackerServiceGrpc.newStub(channel);
@@ -208,10 +203,5 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         service.stopAsync();
         service.awaitTerminated(60, TimeUnit.SECONDS);
         endStreamBlocking();
-    }
-
-    private void logStateChange() {
-        log.debug("Channel changed state to: " + channel.getState(false));
-        channel.notifyWhenStateChanged(channel.getState(false), this::logStateChange);
     }
 }
