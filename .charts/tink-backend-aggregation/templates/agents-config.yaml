@@ -62,14 +62,6 @@ data:
         {{- end }}
 
       integrations:
-        {{- if $agentsConfig.sbab }}
-        sbab:
-          signBaseUrl: https://secure.sbab.se
-          tink:
-            eidasCertId: "{{ $agentsConfig.sbab.tink.eidasCertId }}"
-            redirectUrl: "{{ $agentsConfig.sbab.tink.redirectUrl }}"
-        {{- end }}
-
         ukOpenBankingJson: |
           UKOPENBANKINGJSON
 
@@ -881,18 +873,6 @@ data:
             oauthBaseUrl: "{{ $agentsConfig.labanquepostale.tink.oauthBaseUrl }}"
             certificateId: "{{ $agentsConfig.labanquepostale.tink.certificateId }}"
             bankId: "{{ $agentsConfig.labanquepostale.tink.bankId }}"
-        {{- end }}
-
-        {{- if $agentsConfig.handelsbanken }}
-        handelsbanken:
-          tink:
-            tppId: "HANDELSBANKEN_TPP_ID_TAG"
-            clientId: "HANDELSBANKEN_CLIENT_ID_TAG"
-            psuIpAddress: "0.0.0.0"
-            redirectUrl: "{{ $agentsConfig.handelsbanken.tink.redirectUrl }}"
-            appName: "Tink"
-            appDesc: "Tink app"
-            certificateId: "{{ $agentsConfig.handelsbanken.tink.certificateId }}"
         {{- end }}
 
         {{- if $agentsConfig.crosskey }}

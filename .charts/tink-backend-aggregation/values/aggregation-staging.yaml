@@ -95,10 +95,6 @@ agents:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
       bankId: "lbp.53.fr.lbp"
-  sbab:
-    tink:
-      eidasCertId: Tink
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   swedbank:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
@@ -114,10 +110,6 @@ agents:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
-  handelsbanken:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
   belfius:
     tink:
       baseUrl: https://psd2.b2b.belfius.be:8443
