@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.control.Option;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.BalanceType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -41,7 +43,8 @@ public class AccountEntity {
     private Map<String, LinkEntity> links;
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(List<BalanceEntity> accountBalances) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            List<BalanceEntity> accountBalances, AspspConfiguration aspspConfiguration) {
         final ExactCurrencyAmount balance =
                 BalanceEntity.getBalanceOfType(
                         accountBalances,
@@ -55,8 +58,8 @@ public class AccountEntity {
 
         final IdModule idModule =
                 IdModule.builder()
-                        .withUniqueIdentifier(iban)
                         .withAccountNumber(iban)
+                        .withUniqueIdentifier(getUniqueIdentifier(aspspConfiguration))
                         .withAccountName(
                                 Option.of(name)
                                         .orElse(Option.of(product))
@@ -81,6 +84,15 @@ public class AccountEntity {
         }
 
         return builder.build();
+    }
+
+    @JsonIgnore
+    private String getUniqueIdentifier(AspspConfiguration aspspConfiguration) {
+        if (aspspConfiguration.shouldReturnLowercaseAccountId()) {
+            return iban.toLowerCase(Locale.ENGLISH);
+        } else {
+            return iban.toUpperCase(Locale.ENGLISH);
+        }
     }
 
     @JsonIgnore

@@ -122,7 +122,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final RedsysTransactionalAccountFetcher accountFetcher =
-                new RedsysTransactionalAccountFetcher(apiClient, consentController);
+                new RedsysTransactionalAccountFetcher(apiClient, consentController, this);
 
         final TransactionPaginator<TransactionalAccount> paginator =
                 new TransactionKeyPaginationController<>(accountFetcher);
@@ -164,5 +164,10 @@ public abstract class RedsysAgent extends NextGenerationAgent
     @Override
     public Class<? extends BaseTransactionsResponse> getTransactionsResponseClass() {
         return TransactionsResponse.class;
+    }
+
+    @Override
+    public boolean shouldReturnLowercaseAccountId() {
+        return false;
     }
 }

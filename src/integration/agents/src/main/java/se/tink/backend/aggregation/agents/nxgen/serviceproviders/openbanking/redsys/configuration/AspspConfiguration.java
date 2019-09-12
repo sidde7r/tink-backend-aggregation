@@ -21,4 +21,7 @@ public interface AspspConfiguration {
 
     /** Class to use for transactions response. This allows to customise transaction parsing. */
     Class<? extends BaseTransactionsResponse> getTransactionsResponseClass();
+
+    /** This should be true if the account ID in the RE agent is lowercase. */
+    boolean shouldReturnLowercaseAccountId();
 }
