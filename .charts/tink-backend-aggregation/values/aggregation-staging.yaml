@@ -33,11 +33,6 @@ agents:
   bankdata:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-  sparebank:
-    tink:
-      qwacCertId: Tink
-      qsealcCertId: evry
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   abnamro:
     tink:
       redirectUrl: https://localhost/auth

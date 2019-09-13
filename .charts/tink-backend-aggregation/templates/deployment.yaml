@@ -164,24 +164,6 @@ spec:
               name: aggregation-secrets
               key: bankdata-api-key
               optional: true
-        - name: SPAREBANK_CERTIFICATE
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: sparebank-certificate
-              optional: true
-        - name: SPAREBANK_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: sparebank-key-id
-              optional: true
-        - name: SPAREBANK_TPP_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: sparebank-tpp-id
-              optional: true
         - name: MONZO_CLIENT_ID
           valueFrom:
             secretKeyRef:
