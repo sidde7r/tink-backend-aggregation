@@ -32,7 +32,7 @@ public class LaBanquePostaleDualAgentIntegrationTest {
     @Test
     public void dualTest() throws Exception {
         DualAgentIntegrationTest.of(
-                        new AgentIntegrationTest.Builder("fr", "fr-labanquepostale-oauth2")
+                        new AgentIntegrationTest.Builder("fr", "fr-labanquepostale-ob")
                                 .expectLoggedIn(false)
                                 .loadCredentialsBefore(false)
                                 .saveCredentialsAfter(false)

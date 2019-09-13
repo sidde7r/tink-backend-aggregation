@@ -2340,7 +2340,7 @@
             "financialInstitutionId": "dummyFinancialInstitutionId"
         },
         {
-            "name": "fr-labanquepostale-oauth2",
+            "name": "fr-labanquepostale-ob",
             "displayName": "La Banque Postale (Test only)",
             "popular": true,
             "type": "BANK",
