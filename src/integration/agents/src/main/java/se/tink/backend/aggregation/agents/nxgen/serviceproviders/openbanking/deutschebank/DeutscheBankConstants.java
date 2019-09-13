@@ -106,4 +106,9 @@ public final class DeutscheBankConstants {
         public static final ImmutableList<String> FAILED =
                 ImmutableList.of(EXPIRED, REVOKED_BY_PSU, TERMINATED_BY_TPP);
     }
+
+    public static class FormValues {
+        public static final int MAX_POLLS_COUNTER = 50;
+        public static final String CURRENCY_TYPE = "EUR";
+    }
 }
