@@ -24,6 +24,8 @@ public class IcaBankenAgentTest {
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
                         .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("icabanken")
+                        .setAppId("tink")
                         .saveCredentialsAfter(false);
     }
 
