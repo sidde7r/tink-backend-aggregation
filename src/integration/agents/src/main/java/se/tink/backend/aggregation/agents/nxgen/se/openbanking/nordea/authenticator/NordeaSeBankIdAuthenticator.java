@@ -40,7 +40,8 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     }
 
     @Override
-    public AuthorizeResponse init(String ssn) throws BankServiceException, LoginException {
+    public AuthorizeResponse init(String ssn)
+            throws BankServiceException, LoginException, BankIdException {
         AuthorizeRequest authorizeRequest = getAuthorizeRequest(ssn);
         if (Strings.isNullOrEmpty(ssn)) {
             log.error("SSN was passed as empty or null!");
@@ -50,23 +51,30 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
         try {
             return apiClient.authorize(authorizeRequest);
         } catch (HttpResponseException e) {
-            if (isSsnInvalidError(e)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            HttpResponse response = e.getResponse();
+
+            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                handleKnownAuthorizationErrors(response.getBody(ErrorResponse.class));
             }
+
             throw e;
         }
     }
 
-    private boolean isSsnInvalidError(HttpResponseException e) {
-        if (e.getResponse().getStatus() != HttpStatus.SC_BAD_REQUEST) {
-            return false;
-        }
-        ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+    private void handleKnownAuthorizationErrors(ErrorResponse errorResponse)
+            throws LoginException, BankIdException {
+
         if (errorResponse == null) {
-            return false;
+            return;
         }
 
-        return errorResponse.isSsnInvalidError();
+        if (errorResponse.isSsnInvalidError()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        // Will throw bankID exception if the error is related to know bankID errors. Logs
+        // error code otherwise.
+        getBankIdErrorStatus(errorResponse);
     }
 
     @Override
