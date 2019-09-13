@@ -4,6 +4,7 @@ import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -35,7 +36,7 @@ public final class QsealcEidasProxySigner implements Signer {
         this.eidasProxyBaseUrl = new URL(proxyConfig.getHost());
         this.certificateId = certificateId;
         this.signingType = algorithm.getSigningType();
-        this.httpClient = new TinkHttpClient();
+        this.httpClient = new LegacyTinkHttpClient();
         this.httpClient.setEidasSign(proxyConfig);
         httpClient.setTimeout(TIMEOUT_MS);
         httpClient.setDebugOutput(true);

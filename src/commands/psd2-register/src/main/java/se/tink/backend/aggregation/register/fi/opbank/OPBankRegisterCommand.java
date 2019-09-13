@@ -4,6 +4,7 @@ import com.google.common.net.HttpHeaders;
 import com.nimbusds.jose.crypto.bc.BouncyCastleProviderSingleton;
 import java.security.Security;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.register.fi.opbank.OPBankRegisterConstants.Option;
 import se.tink.backend.aggregation.register.fi.opbank.utils.PSD2Utils;
@@ -12,7 +13,7 @@ public class OPBankRegisterCommand {
 
     public static void main(final String[] args) {
 
-        final TinkHttpClient client = new TinkHttpClient();
+        final TinkHttpClient client = new LegacyTinkHttpClient();
         Security.addProvider(BouncyCastleProviderSingleton.getInstance());
 
         client.setDebugOutput(true);

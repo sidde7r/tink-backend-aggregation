@@ -13,7 +13,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 
 public class NoEscapeOfBackslashMessageBodyWriterTest {
 
@@ -26,7 +26,7 @@ public class NoEscapeOfBackslashMessageBodyWriterTest {
 
         // a bit strange, but this way we can get the default message body writer for Json
         defaultMessageBodyWriter =
-                new TinkHttpClient()
+                new LegacyTinkHttpClient()
                         .getInternalClient()
                         .getMessageBodyWorkers()
                         .getMessageBodyWriter(

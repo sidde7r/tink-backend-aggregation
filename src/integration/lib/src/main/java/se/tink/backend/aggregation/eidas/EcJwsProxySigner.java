@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Algorithm;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Eidas;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -20,7 +21,7 @@ public class EcJwsProxySigner implements Signer {
     private final URL eidasProxyBaseUrl;
 
     public EcJwsProxySigner(final URL eidasProxyBaseUrl, final String certificateId) {
-        this.httpClient = new TinkHttpClient();
+        this.httpClient = new LegacyTinkHttpClient();
         this.eidasProxyBaseUrl = eidasProxyBaseUrl;
         this.certificateId = certificateId;
     }

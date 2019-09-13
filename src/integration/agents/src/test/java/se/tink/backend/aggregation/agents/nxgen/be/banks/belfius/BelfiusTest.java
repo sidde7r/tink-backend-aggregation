@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.B
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -31,7 +31,7 @@ public class BelfiusTest {
         this.apiClient =
                 spy(
                         new BelfiusApiClient(
-                                new TinkHttpClient(),
+                                new LegacyTinkHttpClient(),
                                 new BelfiusSessionStorage(new SessionStorage()),
                                 BelfiusConstants.Request.LOCALE_DUTCH));
         ProviderConfig marketProviders = readProvidersConfiguration("be");

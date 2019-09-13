@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
@@ -65,7 +65,7 @@ public class HandelsbankenSEBankPaymentExecutorTest {
         transfer.setDestinationMessage(message);
 
         HandelsbankenSEApiClient client =
-                spy(new HandelsbankenSEApiClient(new TinkHttpClient(), configuration));
+                spy(new HandelsbankenSEApiClient(new LegacyTinkHttpClient(), configuration));
         new BankIdAuthenticationController<>(
                         new AgentTestContext(credentials),
                         new HandelsbankenBankIdAuthenticator(

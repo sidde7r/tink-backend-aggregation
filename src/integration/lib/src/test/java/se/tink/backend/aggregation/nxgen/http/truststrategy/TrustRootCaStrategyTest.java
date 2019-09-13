@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.http.truststrategy;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -71,14 +72,14 @@ public class TrustRootCaStrategyTest {
 
     @Test(expected = HttpResponseException.class)
     public void testTrustedRootCa() {
-        TinkHttpClient httpClient = new TinkHttpClient();
+        TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.trustRootCaCertificate(JKS_DATA, JKS_PASSWORD);
         httpClient.request("https://modelobank2018.o3bank.co.uk:4201/token").get(String.class);
     }
 
     @Test(expected = HttpClientException.class)
     public void testNonTrustedRootCa() {
-        TinkHttpClient httpClient = new TinkHttpClient();
+        TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.request("https://modelobank2018.o3bank.co.uk:4201/token").get(String.class);
     }
 }

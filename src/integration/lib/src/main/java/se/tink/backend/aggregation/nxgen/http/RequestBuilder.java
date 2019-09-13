@@ -1,103 +1,29 @@
 package se.tink.backend.aggregation.nxgen.http;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.sun.jersey.core.header.OutBoundHeaders;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.Filterable;
 
-public class RequestBuilder extends Filterable<RequestBuilder> {
-    private final Filter finalFilter;
-    private final String headerAggregatorIdentifier;
-    private URL url;
-    private Object body;
-    private MultivaluedMap<String, Object> headers;
-    private List<String> cookies = new ArrayList<>();
-    private HttpResponseStatusHandler responseStatusHandler;
+public interface RequestBuilder extends Filterable<RequestBuilder> {
 
-    // TODO: REMOVE THIS ONCE AGGREGATOR IDENTIFIER IS VERIFIED
-    public static Logger logger = LoggerFactory.getLogger(RequestBuilder.class);
-
-    public RequestBuilder(
-            Filterable filterChain,
-            Filter finalFilter,
-            URL url,
-            String headerAggregatorIdentifier,
-            HttpResponseStatusHandler responseStatusHandler) {
-        this(filterChain, finalFilter, headerAggregatorIdentifier, responseStatusHandler);
-        this.url = url;
-    }
-
-    public RequestBuilder(
-            Filterable filterChain,
-            Filter finalFilter,
-            String headerAggregatorIdentifier,
-            HttpResponseStatusHandler responseStatusHandler) {
-        super(filterChain);
-        this.finalFilter = finalFilter;
-
-        // OutBoundHeaders is a case-insensitive MultivaluedMap
-        headers = new OutBoundHeaders();
-        this.headerAggregatorIdentifier = headerAggregatorIdentifier;
-        this.responseStatusHandler = responseStatusHandler;
-    }
-
-    public URL getUrl() {
-        return url;
-    }
+    public URL getUrl();
 
     /** @return Hashcode of request {@link URL} */
-    @Override
-    public int hashCode() {
-        return url.hashCode();
-    }
+    public int hashCode();
 
     /** @return Request {@link URL} in {@link String} format. */
     @Override
-    public String toString() {
-        return url.toString();
-    }
+    public String toString();
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj instanceof RequestBuilder) {
-            final RequestBuilder that = (RequestBuilder) obj;
-            return that.url.equals(this.url);
-        }
-        return false;
-    }
-
-    // UniformInterface
-    private HttpRequest build(HttpMethod method) {
-        return new HttpRequestImpl(method, url, headers, body);
-    }
-
-    /* package */ <T> T raw(Class<T> c, HttpRequest request)
-            throws HttpClientException, HttpResponseException {
-        return handle(c, request);
-    }
-
-    /* package */ void raw(HttpRequest request) throws HttpClientException, HttpResponseException {
-        handle(HttpResponse.class, request);
-    }
+    public boolean equals(Object obj);
 
     /**
      * Invoke the HEAD method.
@@ -105,9 +31,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @return the HTTP response.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public HttpResponse head() throws HttpClientException {
-        return handle(HttpResponse.class, build(HttpMethod.HEAD));
-    }
+    public HttpResponse head() throws HttpClientException;
 
     /**
      * Invoke the OPTIONS method.
@@ -119,9 +43,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T options(Class<T> c) throws HttpResponseException, HttpClientException {
-        return handle(c, build(HttpMethod.OPTIONS));
-    }
+    public <T> T options(Class<T> c) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the GET method.
@@ -133,9 +55,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T get(Class<T> c) throws HttpResponseException, HttpClientException {
-        return handle(c, build(HttpMethod.GET));
-    }
+    public <T> T get(Class<T> c) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the PUT method with no request body or response.
@@ -147,9 +67,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void put() throws HttpResponseException, HttpClientException {
-        voidHandle(build(HttpMethod.PUT));
-    }
+    public void put() throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the PUT method with a request body but no response.
@@ -162,10 +80,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void put(Object body) throws HttpResponseException, HttpClientException {
-        body(body).put();
-    }
-
+    public void put(Object body) throws HttpResponseException, HttpClientException;
     /**
      * Invoke the PUT method with no request body that returns a response.
      *
@@ -176,9 +91,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T put(Class<T> c) throws HttpResponseException, HttpClientException {
-        return handle(c, build(HttpMethod.PUT));
-    }
+    public <T> T put(Class<T> c) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the PUT method with a request body that returns a response.
@@ -191,9 +104,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T put(Class<T> c, Object body) throws HttpResponseException, HttpClientException {
-        return body(body).put(c);
-    }
+    public <T> T put(Class<T> c, Object body) throws HttpResponseException, HttpClientException;
 
     ///
 
@@ -207,9 +118,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void patch() throws HttpResponseException, HttpClientException {
-        voidHandle(build(HttpMethod.PATCH));
-    }
+    public void patch() throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the PATCH method with a request body but no response.
@@ -222,9 +131,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void patch(Object body) throws HttpResponseException, HttpClientException {
-        body(body).patch();
-    }
+    public void patch(Object body) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the PATCH method with no request body that returns a response.
@@ -236,10 +143,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T patch(Class<T> c) throws HttpResponseException, HttpClientException {
-        return handle(c, build(HttpMethod.PATCH));
-    }
-
+    public <T> T patch(Class<T> c) throws HttpResponseException, HttpClientException;
     /**
      * Invoke the PATCH method with a request body that returns a response.
      *
@@ -251,10 +155,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T patch(Class<T> c, Object body) throws HttpResponseException, HttpClientException {
-        return body(body).patch(c);
-    }
-
+    public <T> T patch(Class<T> c, Object body) throws HttpResponseException, HttpClientException;
     /**
      * Invoke the POST method with no request body or response.
      *
@@ -265,9 +166,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void post() throws HttpResponseException, HttpClientException {
-        voidHandle(build(HttpMethod.POST));
-    }
+    public void post() throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the POST method with a request body but no response.
@@ -280,9 +179,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void post(Object body) throws HttpResponseException, HttpClientException {
-        body(body).post();
-    }
+    public void post(Object body) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the POST method with no request body that returns a response.
@@ -294,9 +191,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T post(Class<T> c) throws HttpResponseException, HttpClientException {
-        return handle(c, build(HttpMethod.POST));
-    }
+    public <T> T post(Class<T> c) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the POST method with a request body that returns a response.
@@ -309,9 +204,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T post(Class<T> c, Object body) throws HttpResponseException, HttpClientException {
-        return body(body).post(c);
-    }
+    public <T> T post(Class<T> c, Object body) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the DELETE method with no request body or response.
@@ -323,10 +216,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void delete() throws HttpResponseException, HttpClientException {
-        voidHandle(build(HttpMethod.DELETE));
-    }
-
+    public void delete() throws HttpResponseException, HttpClientException;
     /**
      * Invoke the DELETE method with a request body but no response.
      *
@@ -338,9 +228,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void delete(Object body) throws HttpResponseException, HttpClientException {
-        body(body).delete();
-    }
+    public void delete(Object body) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the DELETE method with no request body that returns a response.
@@ -352,9 +240,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T delete(Class<T> c) throws HttpResponseException, HttpClientException {
-        return handle(c, build(HttpMethod.DELETE));
-    }
+    public <T> T delete(Class<T> c) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke the DELETE method with a request body that returns a response.
@@ -367,9 +253,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T delete(Class<T> c, Object body) throws HttpResponseException, HttpClientException {
-        return body(body).delete(c);
-    }
+    public <T> T delete(Class<T> c, Object body) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke a HTTP method with no request body or response.
@@ -382,9 +266,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void method(HttpMethod method) throws HttpResponseException, HttpClientException {
-        voidHandle(build(method));
-    }
+    public void method(HttpMethod method) throws HttpResponseException, HttpClientException;
 
     /**
      * Invoke a HTTP method with a request body but no response.
@@ -398,10 +280,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void method(HttpMethod method, Object body)
-            throws HttpResponseException, HttpClientException {
-        body(body).method(method);
-    }
+    public void method(HttpMethod method, Object body);
 
     /**
      * Invoke a HTTP method with no request body that returns a response.
@@ -414,10 +293,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      *     300 and <code>c</code> is not the type {@link HttpResponse}.
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T method(HttpMethod method, Class<T> c)
-            throws HttpResponseException, HttpClientException {
-        return handle(c, build(method));
-    }
+    public <T> T method(HttpMethod method, Class<T> c);
 
     /**
      * Invoke a HTTP method with a request body that returns a response.
@@ -432,19 +308,10 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public <T> T method(HttpMethod method, Class<T> c, Object body)
-            throws HttpResponseException, HttpClientException {
-        return body(body).method(method, c);
-    }
+            throws HttpResponseException, HttpClientException;
 
     /** AbstractForm and its subclasses handled specifically */
-    public RequestBuilder body(Object body) {
-        if (body instanceof AbstractForm) {
-            this.body = ((AbstractForm) body).getBodyValue();
-        } else {
-            this.body = body;
-        }
-        return this;
-    }
+    public RequestBuilder body(Object body);
 
     /**
      * Method that sets Content-Type header and payload of the request.
@@ -453,11 +320,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param type Predefined type defined in {@link MediaType}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder body(Object body, MediaType type) {
-        body(body);
-        type(type);
-        return this;
-    }
+    public RequestBuilder body(Object body, MediaType type);
 
     /**
      * Method that sets Content-Type header and payload of the request.
@@ -466,11 +329,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param type Content type that will be translated to {@link MediaType}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder body(Object body, String type) {
-        body(body);
-        type(type);
-        return this;
-    }
+    public RequestBuilder body(Object body, String type);
 
     /**
      * Method that sets Content-Type header of the request.
@@ -478,10 +337,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param type Predefined type defined in {@link MediaType}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder type(MediaType type) {
-        headers.putSingle("Content-Type", type);
-        return this;
-    }
+    public RequestBuilder type(MediaType type);
 
     /**
      * Method that sets Content-Type header of the request.
@@ -489,9 +345,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param type {@link String} that will be translated to {@link MediaType}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder type(String type) {
-        return type(MediaType.valueOf(type));
-    }
+    public RequestBuilder type(String type);
 
     /**
      * Method that sets what types from {@link MediaType} are accepted by the server in the
@@ -500,12 +354,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param types Comma separated values of type {@link MediaType}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder accept(MediaType... types) {
-        for (MediaType type : types) {
-            headers.add("Accept", type);
-        }
-        return this;
-    }
+    public RequestBuilder accept(MediaType... types);
 
     /**
      * Method that sets types accepted by the server. The types does not need to be defined in
@@ -514,12 +363,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param types Comma separated values of type {@link String}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder accept(String... types) {
-        for (String type : types) {
-            headers.add("Accept", type);
-        }
-        return this;
-    }
+    public RequestBuilder accept(String... types);
 
     /**
      * Method that sets Accept-Language headers of the request. One header per {@link Locale} will
@@ -528,12 +372,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param locales Comma separated values of type {@link Locale}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder acceptLanguage(Locale... locales) {
-        for (Locale locale : locales) {
-            headers.add("Accept-Language", locale);
-        }
-        return this;
-    }
+    public RequestBuilder acceptLanguage(Locale... locales);
     /**
      * Method that sets Accept-Language header of the request. One header per {@link String} will be
      * used.
@@ -541,12 +380,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param locales Comma separated values of type {@link Locale}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder acceptLanguage(String... locales) {
-        for (String locale : locales) {
-            headers.add("Accept-Language", locale);
-        }
-        return this;
-    }
+    public RequestBuilder acceptLanguage(String... locales);
 
     /**
      * Method setting Cookie header of the request. Format of the cookie is `{@param name}={@param
@@ -556,10 +390,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param value Value of the cookie.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder cookie(String name, String value) {
-        cookies.add(String.format("%s=%s", name, value));
-        return this;
-    }
+    public RequestBuilder cookie(String name, String value);
 
     /**
      * Method setting Cookie header of the request.
@@ -567,11 +398,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param cookie Properly prepared object of type {@link Cookie}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder cookie(Cookie cookie) {
-        cookies.add(cookie.toString());
-        return this;
-    }
-
+    public RequestBuilder cookie(Cookie cookie);
     /**
      * Method to adding a customized header of the request.
      *
@@ -579,21 +406,14 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param value Value of the header.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder header(String name, Object value) {
-        headers.add(name, value);
-        return this;
-    }
-
+    public RequestBuilder header(String name, Object value);
     /**
      * Method to adding a customized header of the request using predefined {@link HeaderEnum}.
      *
      * @param header Value of the header.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder header(HeaderEnum header) {
-        headers.add(header.getKey(), header.getValue());
-        return this;
-    }
+    public RequestBuilder header(HeaderEnum header);
 
     /**
      * Method to add customized headers to request. Each entry in map will be added as separate
@@ -602,10 +422,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param map {@link Map} with headers to be set on the request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder headers(Map<String, Object> map) {
-        map.forEach(this::header);
-        return this;
-    }
+    public RequestBuilder headers(Map<String, Object> map);
 
     /**
      * Method setting customized headers on the request, in case when some headers can occur
@@ -615,10 +432,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param map {@link MultivaluedMap} with headers to be set on the request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder headers(MultivaluedMap<String, Object> map) {
-        map.forEach((k, l) -> l.forEach(v -> header(k, v)));
-        return this;
-    }
+    public RequestBuilder headers(MultivaluedMap<String, Object> map);
 
     /**
      * Method adding query parameter to the request.
@@ -627,15 +441,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param value Value of the parameter to be set on request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder queryParam(String key, String value) {
-        url = url.queryParam(key, value);
-        return this;
-    }
+    public RequestBuilder queryParam(String key, String value);
 
-    public RequestBuilder queryParamRaw(String key, String value) {
-        url = url.queryParamRaw(key, value);
-        return this;
-    }
+    public RequestBuilder queryParamRaw(String key, String value);
 
     /**
      * Method adding query parameters to the request. Each entry in map will be added as separate
@@ -645,10 +453,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param queryParams {@link Map} containing query params to be added to the request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder queryParams(Map<String, String> queryParams) {
-        url = url.queryParams(queryParams);
-        return this;
-    }
+    public RequestBuilder queryParams(Map<String, String> queryParams);
 
     /**
      * Method setting customized headers on the request, in case when some of the quary parameters
@@ -658,10 +463,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param queryParams {@link MultivaluedMap} with query params to be set on the request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder queryParams(MultivaluedMap<String, String> queryParams) {
-        url = url.queryParams(queryParams);
-        return this;
-    }
+    public RequestBuilder queryParams(MultivaluedMap<String, String> queryParams);
 
     /**
      * Method for overriding header value. Note that if there are multiple values associated with
@@ -672,11 +474,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param value New value for the header specified with {@param name}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder overrideHeader(String name, Object value) {
-        headers.remove(name);
-        headers.add(name, value);
-        return this;
-    }
+    public RequestBuilder overrideHeader(String name, Object value);
 
     /**
      * Method setting value of `Authorization` header on the request. Format of the header value
@@ -687,15 +485,8 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param password Password needed for authorization.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder addBasicAuth(String username, String password) {
-        String value =
-                String.format(
-                        "Basic %s",
-                        Base64.getUrlEncoder()
-                                .encodeToString(
-                                        String.format("%s:%s", username, password).getBytes()));
-        return header(HttpHeaders.AUTHORIZATION, value);
-    }
+    public RequestBuilder addBasicAuth(String username, String password);
+
     /**
      * Method setting value of `Authorization` header on the request. Format of the header value
      * will be `Basic {@param username}`. Where `Basic` is a plain text while {@param username} is
@@ -704,14 +495,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param username Username needed for authentication.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder addBasicAuth(String username) {
-        String value =
-                String.format(
-                        "Basic %s",
-                        Base64.getUrlEncoder()
-                                .encodeToString(String.format("%s", username).getBytes()));
-        return header(HttpHeaders.AUTHORIZATION, value);
-    }
+    public RequestBuilder addBasicAuth(String username);
 
     /**
      * Method setting value of `Authorization` header on the request.
@@ -719,53 +503,5 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param token Ton of type {@link OAuth2Token} to be used for authorization of request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
-    public RequestBuilder addBearerToken(OAuth2Token token) {
-        return header(HttpHeaders.AUTHORIZATION, token.toAuthorizeHeader());
-    }
-
-    private void addCookiesToHeader() {
-        if (!cookies.isEmpty()) {
-            headers.add("Cookie", cookies.stream().collect(Collectors.joining("; ")));
-        }
-    }
-
-    private void addAggregatorToHeader() {
-
-        Preconditions.checkArgument(
-                !Strings.isNullOrEmpty(headerAggregatorIdentifier),
-                "Aggregator header identifier is null. The header should not be null");
-
-        if (!headers.containsKey("X-Aggregator")) {
-            headers.add("X-Aggregator", headerAggregatorIdentifier);
-        }
-    }
-
-    private <T> T handle(Class<T> c, HttpRequest httpRequest)
-            throws HttpClientException, HttpResponseException {
-        // Add the final filter so that we actually send the request
-        addFilter(finalFilter);
-
-        addCookiesToHeader();
-        addAggregatorToHeader();
-        HttpResponse httpResponse = getFilterHead().handle(httpRequest);
-
-        responseStatusHandler.handleResponse(httpRequest, httpResponse);
-
-        if (c == HttpResponse.class) {
-            return c.cast(httpResponse);
-        } else {
-            return httpResponse.getBody(c);
-        }
-    }
-
-    // This is what Jersey does. Since we are not interested in the response data we immediately
-    // close the connection.
-    private void voidHandle(HttpRequest httpRequest)
-            throws HttpClientException, HttpResponseException {
-        addCookiesToHeader();
-        addAggregatorToHeader();
-        HttpResponse httpResponse = handle(HttpResponse.class, httpRequest);
-
-        responseStatusHandler.handleResponseWithoutExpectedReturnBody(httpRequest, httpResponse);
-    }
+    public RequestBuilder addBearerToken(OAuth2Token token);
 }

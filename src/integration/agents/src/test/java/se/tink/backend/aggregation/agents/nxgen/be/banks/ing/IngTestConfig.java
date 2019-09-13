@@ -14,6 +14,7 @@ import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -55,7 +56,7 @@ public class IngTestConfig {
     }
 
     private IngApiClient createTestApiClient() {
-        TinkHttpClient httpClient = new TinkHttpClient();
+        TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.setFollowRedirects(false);
         httpClient.setUserAgent(USER_AGENT);
         return new IngApiClient(httpClient);

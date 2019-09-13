@@ -20,6 +20,7 @@ import org.apache.commons.cli.ParseException;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Algorithm;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.eidas.Signer;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Cli;
 import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Header;
@@ -128,7 +129,7 @@ public final class RabobankRegisterCommand {
 
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-        final TinkHttpClient client = new TinkHttpClient();
+        final TinkHttpClient client = new LegacyTinkHttpClient();
 
         client.setDebugOutput(true);
 

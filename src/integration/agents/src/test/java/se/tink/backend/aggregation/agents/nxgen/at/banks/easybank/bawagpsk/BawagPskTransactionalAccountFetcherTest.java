@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -62,7 +62,7 @@ public final class BawagPskTransactionalAccountFetcherTest {
 
         final BawagPskApiClient apiClient =
                 new BawagPskApiClient(
-                        new TinkHttpClient(
+                        new LegacyTinkHttpClient(
                                 context.getAggregatorInfo(),
                                 context.getMetricRegistry(),
                                 context.getLogOutputStream(),

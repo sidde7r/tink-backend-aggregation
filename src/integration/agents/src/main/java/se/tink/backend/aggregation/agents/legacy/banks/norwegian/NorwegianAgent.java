@@ -61,6 +61,7 @@ import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -129,7 +130,7 @@ public class NorwegianAgent extends AbstractAgent
         super(request, context);
 
         client =
-                new TinkHttpClient(
+                new LegacyTinkHttpClient(
                         getAggregatorInfo(),
                         null,
                         context.getLogOutputStream(),

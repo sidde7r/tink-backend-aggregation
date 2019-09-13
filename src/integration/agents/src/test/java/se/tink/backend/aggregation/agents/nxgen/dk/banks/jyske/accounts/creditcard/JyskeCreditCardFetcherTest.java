@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.JyskeAutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 
 public class JyskeCreditCardFetcherTest {
 
@@ -24,7 +24,7 @@ public class JyskeCreditCardFetcherTest {
         credentials.setType(CredentialsTypes.PASSWORD);
         credentials.setField(Field.Key.USERNAME, user.username);
         credentials.setField(Field.Key.PASSWORD, user.mobilCode);
-        JyskeApiClient apiClient = new JyskeApiClient(new TinkHttpClient());
+        JyskeApiClient apiClient = new JyskeApiClient(new LegacyTinkHttpClient());
         new JyskeAutoAuthenticator(apiClient, user.persistentStorage, credentials)
                 .autoAuthenticate();
 

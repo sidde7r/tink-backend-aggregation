@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.CrossKeyAutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public abstract class AlandsBankenTest {
@@ -30,7 +30,9 @@ public abstract class AlandsBankenTest {
         persistentStorage.put(
                 CrossKeyConstants.Storage.DEVICE_TOKEN, AlandsBankenTestConfig.DEVICE_TOKEN);
         client =
-                spy(new CrossKeyApiClient(new TinkHttpClient(), new AlandsBankenFIConfiguration()));
+                spy(
+                        new CrossKeyApiClient(
+                                new LegacyTinkHttpClient(), new AlandsBankenFIConfiguration()));
         CrossKeyAutoAuthenticator authenticator =
                 new CrossKeyAutoAuthenticator(
                         client, new CrossKeyPersistentStorage(persistentStorage), credentials);

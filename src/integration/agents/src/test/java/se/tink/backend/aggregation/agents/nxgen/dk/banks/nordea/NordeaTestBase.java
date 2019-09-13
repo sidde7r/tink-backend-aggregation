@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaNemIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.rpc.filter.NordeaDkFilter;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemidPasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -33,7 +34,7 @@ public class NordeaTestBase {
 
         tinkHttpClient =
                 spy(
-                        new TinkHttpClient(
+                        new LegacyTinkHttpClient(
                                 context.getAggregatorInfo(),
                                 context.getMetricRegistry(),
                                 context.getLogOutputStream(),
