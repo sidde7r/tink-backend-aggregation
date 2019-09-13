@@ -155,8 +155,6 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     }
 
     private PaymentResponse authenticateAndCreatePisConsent(PaymentRequest paymentRequest) {
-        // When AIS is done before PIS, then authFilter is attached which needs to be removed.
-        apiClient.detachAuthFilterIfAttached();
 
         UkOpenBankingPisAuthenticator paymentAuthenticator =
                 new UkOpenBankingPisAuthenticator(
