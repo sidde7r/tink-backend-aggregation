@@ -37,7 +37,7 @@ public final class BnpParibasBaseConstants {
         public static final String FULL_SCOPES = "aisp extended_transaction_history";
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String FORMATTER_MILLI_WITH_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+        public static final String FORMATTER_ISO8601_DATE = "yyyy-MM-dd";
         public static final String TIMEZONE = "CET";
     }
 
@@ -78,7 +78,8 @@ public final class BnpParibasBaseConstants {
 
     public class ResponseValues {
         public static final String PENDING_TRANSACTION = "pdng";
-        public static final String BALANCE_TYPE = "OTHR";
+        public static final String BALANCE_TYPE_OTHER = "OTHR";
+        public static final String BALANCE_TYPE_CLOSING = "CLBD";
         public static final String CREDIT_INDICATOR = "CRDT";
     }
 
