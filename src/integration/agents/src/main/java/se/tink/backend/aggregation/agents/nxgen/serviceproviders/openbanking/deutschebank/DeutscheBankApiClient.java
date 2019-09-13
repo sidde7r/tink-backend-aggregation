@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchAccountsResponse;
@@ -72,6 +73,13 @@ public class DeutscheBankApiClient {
                         new URL(configuration.getRedirectUrl()).queryParam(QueryKeys.STATE, state))
                 .type(MediaType.APPLICATION_JSON)
                 .post(ConsentBaseResponse.class, consentBaseRequest);
+    }
+
+    public ConsentStatusResponse getConsentStatus(String consentStatusLink) {
+        return createRequest(new URL(consentStatusLink))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                .get(ConsentStatusResponse.class);
     }
 
     public FetchAccountsResponse fetchAccounts() {
