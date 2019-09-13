@@ -73,9 +73,15 @@ public class ClientConfigurationTemplateBuilder {
         String fieldsDescriptionsAndExamplesCommonPath = "config-templates/Common.yaml";
 
         InputStream fieldsDescriptionsAndExamplesCommonStream =
-                clientConfigurationClassForProvider
-                        .getClassLoader()
-                        .getResourceAsStream(fieldsDescriptionsAndExamplesCommonPath);
+                Optional.of(
+                                clientConfigurationClassForProvider
+                                        .getClassLoader()
+                                        .getResourceAsStream(
+                                                fieldsDescriptionsAndExamplesCommonPath))
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find 'config-templates/Common.yaml', make sure it is included as a resource."));
 
         final Map<String, String> fieldsDescriptionAndExamplesCommon;
         try {
@@ -83,7 +89,9 @@ public class ClientConfigurationTemplateBuilder {
                     (Map<String, String>) yaml.load(fieldsDescriptionsAndExamplesCommonStream);
         } catch (YAMLException e) {
             throw new IllegalStateException(
-                    "Problem when loading the common descriptions and examples template.", e);
+                    "Problem when loading the common descriptions and examples template yaml file: "
+                            + fieldsDescriptionsAndExamplesCommonPath,
+                    e);
         }
 
         // Now we get the provider specific descriptions and examples, if there are any duplicates
@@ -99,8 +107,17 @@ public class ClientConfigurationTemplateBuilder {
                         .getResourceAsStream(fieldsDescriptionsAndExamplesForProviderPath);
 
         if (fieldsDescriptionsAndExamplesForProviderStream != null) {
-            Map<String, String> fieldsDescriptionAndExamplesForProvider =
-                    (Map<String, String>) yaml.load(fieldsDescriptionsAndExamplesForProviderStream);
+            final Map<String, String> fieldsDescriptionAndExamplesForProvider;
+            try {
+                fieldsDescriptionAndExamplesForProvider =
+                        (Map<String, String>)
+                                yaml.load(fieldsDescriptionsAndExamplesForProviderStream);
+            } catch (YAMLException e) {
+                throw new IllegalArgumentException(
+                        "Problem when loading yaml file: "
+                                + fieldsDescriptionsAndExamplesForProviderPath,
+                        e);
+            }
 
             // Merge the common and the provider specific ones.
             fieldsDescriptionAndExamplesCommon.putAll(fieldsDescriptionAndExamplesForProvider);
@@ -143,7 +160,7 @@ public class ClientConfigurationTemplateBuilder {
 
         if (sensitiveFieldsList.stream().anyMatch(this::isFieldSecret)) {
             throw new IllegalStateException(
-                    "A secret cannot be both non-sensitive and sensitive, revise the annotations in your configuration class");
+                    "A secret cannot be both non-sensitive and sensitive, revise the annotations in your configuration class.");
         }
 
         sensitiveFieldsList.stream()
@@ -166,7 +183,7 @@ public class ClientConfigurationTemplateBuilder {
 
         if (secretFieldsList.stream().anyMatch(this::isFieldSensitiveSecret)) {
             throw new IllegalStateException(
-                    "A secret cannot be both non-sensitive and sensitive, revise the annotations in your configuration class");
+                    "A secret cannot be both non-sensitive and sensitive, revise the annotations in your configuration class.");
         }
 
         secretFieldsList.stream()

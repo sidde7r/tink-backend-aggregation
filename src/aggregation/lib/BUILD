@@ -23,6 +23,7 @@ java_library(
         "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agents",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
         "//src/integration/api",
         "//src/integration/credentials:rpc",
         "//src/integration/credentials:service",

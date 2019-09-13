@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.tools.ClientConfigurationTemplateBuilder;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.SecretsTemplateRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.AgentWorker;
@@ -239,5 +241,10 @@ public class AggregationServiceResource implements AggregationService {
                             return migrateCredentialsOperation.getRequest().getCredentials();
                         })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getSecretsTemplate(SecretsTemplateRequest request) {
+        return new ClientConfigurationTemplateBuilder(request.getProvider()).buildTemplate();
     }
 }
