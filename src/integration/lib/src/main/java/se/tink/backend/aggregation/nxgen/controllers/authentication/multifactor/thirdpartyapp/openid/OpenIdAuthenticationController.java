@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
@@ -287,10 +288,9 @@ public class OpenIdAuthenticationController
     }
 
     private void saveAccessToken(OAuth2Token accessToken) {
-        switch (authenticator.getClientCredentialScope()) {
-            case ACCOUNTS:
-            default:
-                persistentStorage.put(PersistentStorageKeys.AIS_ACCESS_TOKEN, accessToken);
+        // only need to save the AIS toke in storage as we dont use pis token after payment is done.
+        if (authenticator.getClientCredentialScope().equals(ClientMode.ACCOUNTS)) {
+            persistentStorage.put(PersistentStorageKeys.AIS_ACCESS_TOKEN, accessToken);
         }
     }
 
