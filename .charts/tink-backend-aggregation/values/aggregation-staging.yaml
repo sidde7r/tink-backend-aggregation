@@ -76,13 +76,6 @@ agents:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
-  labanquepostale:
-    tink:
-      baseUrl: https://api.labanquepostale.com/v1
-      oauthBaseUrl: https://oauth2.labanquepostale.com
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
-      bankId: "lbp.53.fr.lbp"
   swedbank:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
