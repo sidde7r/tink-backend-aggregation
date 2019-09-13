@@ -96,5 +96,10 @@ public final class IngBaseConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find Token!";
         public static final String MISSING_CLIENT_ID = "Cannot find client id!";
+        public static final int NOT_FOUND = 404;
+    }
+
+    public static class Retry {
+        public static final int MAX_ATTEMPTS = 3;
     }
 }
