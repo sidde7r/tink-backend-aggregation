@@ -61,7 +61,7 @@ public class SparebankApiClient {
             EidasIdentity eidasIdentity) {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
-        client.setEidasProxy(eidasProxyConfiguration, "Tink");
+        client.setEidasProxy(eidasProxyConfiguration, "");
         this.eidasIdentity = eidasIdentity;
     }
 
