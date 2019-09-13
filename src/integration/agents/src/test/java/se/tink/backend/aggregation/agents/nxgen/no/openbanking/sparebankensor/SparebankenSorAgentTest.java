@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebankensor;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
+@Ignore
 public class SparebankenSorAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -13,6 +15,8 @@ public class SparebankenSorAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("no", "no-sparebankensor-ob")
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("sparebank")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
