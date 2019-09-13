@@ -145,7 +145,7 @@ public interface AggregationService {
 
     @POST
     @Path("secrets-template")
-    @TeamOwnership(Team.AGGREGATION)
+    @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     String getSecretsTemplate(SecretsTemplateRequest request);
