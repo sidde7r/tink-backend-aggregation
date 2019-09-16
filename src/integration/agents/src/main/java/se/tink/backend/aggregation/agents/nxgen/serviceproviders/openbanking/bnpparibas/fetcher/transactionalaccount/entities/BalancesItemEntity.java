@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.ResponseValues;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -32,7 +32,11 @@ public class BalancesItemEntity {
         return amountEntity;
     }
 
-    public boolean isAvailableBalance() {
-        return BnpParibasBaseConstants.ResponseValues.BALANCE_TYPE.equalsIgnoreCase(balanceType);
+    boolean isFutureBalance() {
+        return ResponseValues.BALANCE_TYPE_OTHER.equalsIgnoreCase(balanceType);
+    }
+
+    boolean isClosingBalance() {
+        return ResponseValues.BALANCE_TYPE_CLOSING.equalsIgnoreCase(balanceType);
     }
 }
