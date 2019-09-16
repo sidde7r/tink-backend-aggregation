@@ -117,7 +117,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         Optional<Credentials> optionalCredential =
-                AgentTestServerClient.loadCredential(provider.getName(), credential.getId());
+                context.getAgentTestServerClient()
+                        .loadCredential(provider.getName(), credential.getId());
 
         optionalCredential.ifPresent(c -> this.credential = c);
 
@@ -134,7 +135,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         // Tell the agent to store data onto the credential (cookies etcetera)
         persistentAgent.persistLoginSession();
 
-        AgentTestServerClient.saveCredential(provider.getName(), credential);
+        context.getAgentTestServerClient().saveCredential(provider.getName(), credential);
     }
 
     private RefreshInformationRequest createRefreshInformationRequest() {

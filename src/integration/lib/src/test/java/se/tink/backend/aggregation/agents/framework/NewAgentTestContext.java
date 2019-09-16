@@ -65,6 +65,7 @@ public final class NewAgentTestContext extends AgentContext {
 
     private final User user;
     private final Credentials credential;
+    private final AgentTestServerClient agentTestServerClient;
 
     // configuration
     private final int transactionsToPrint;
@@ -80,9 +81,14 @@ public final class NewAgentTestContext extends AgentContext {
         this.transactionsToPrint = transactionsToPrint;
         this.setClusterId(MoreObjects.firstNonNull(clusterId, TEST_CLUSTERID));
         this.setAppId(MoreObjects.firstNonNull(appId, TEST_APPID));
+        agentTestServerClient = AgentTestServerClient.getInstance();
 
         setTestContext(true);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
+    }
+
+    AgentTestServerClient getAgentTestServerClient() {
+        return agentTestServerClient;
     }
 
     @Override
@@ -156,7 +162,7 @@ public final class NewAgentTestContext extends AgentContext {
     public Optional<String> waitForSupplementalInformation(
             String key, long waitFor, TimeUnit unit) {
         return Optional.ofNullable(
-                AgentTestServerClient.waitForSupplementalInformation(key, waitFor, unit));
+                agentTestServerClient.waitForSupplementalInformation(key, waitFor, unit));
     }
 
     @Override
@@ -170,7 +176,7 @@ public final class NewAgentTestContext extends AgentContext {
             case AWAITING_SUPPLEMENTAL_INFORMATION:
                 displaySupplementalInformation(credentials);
 
-                AgentTestServerClient.initiateSupplementalInformation(
+                agentTestServerClient.initiateSupplementalInformation(
                         credentials.getId(), credentials.getSupplementalInformation());
 
                 if (!wait) {
@@ -187,7 +193,7 @@ public final class NewAgentTestContext extends AgentContext {
                 // Do nothing as we cannot communicate to the app to open BankId.
                 return null;
             case AWAITING_THIRD_PARTY_APP_AUTHENTICATION:
-                AgentTestServerClient.openThirdPartyApp(credentials.getSupplementalInformation());
+                agentTestServerClient.openThirdPartyApp(credentials.getSupplementalInformation());
                 return null;
             default:
                 Assert.fail(
@@ -206,7 +212,7 @@ public final class NewAgentTestContext extends AgentContext {
                     String.format(
                             "[CredentialsId:%s]: Sending autoStartToken to test server: %s",
                             credential.getId(), autoStartToken));
-            AgentTestServerClient.sendBankIdAutoStartToken(autoStartToken);
+            agentTestServerClient.sendBankIdAutoStartToken(autoStartToken);
         }
     }
 
