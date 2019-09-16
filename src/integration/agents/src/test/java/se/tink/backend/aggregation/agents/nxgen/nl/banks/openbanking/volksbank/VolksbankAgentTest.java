@@ -34,21 +34,21 @@ public final class VolksbankAgentTest {
 
     @Test
     public void testSnsBank() throws Exception {
-        createAgentTest("nl-snsbank-oauth2").testRefresh();
+        createAgentTest("nl-snsbank-ob").testRefresh();
     }
 
     @Test
     public void testAsnBank() throws Exception {
-        createAgentTest("nl-asnbank-oauth2").testRefresh();
+        createAgentTest("nl-asnbank-ob").testRefresh();
     }
 
     @Test
     public void testRegioBank() throws Exception {
-        createAgentTest("nl-regiobank-oauth2").testRefresh();
+        createAgentTest("nl-regiobank-ob").testRefresh();
     }
 
     @Test
     public void testSnsBankSandbox() throws Exception {
-        createAgentTest("nl-snsbank-sandbox-oauth2").testRefresh();
+        createAgentTest("nl-snsbank-sandbox-ob").testRefresh();
     }
 }

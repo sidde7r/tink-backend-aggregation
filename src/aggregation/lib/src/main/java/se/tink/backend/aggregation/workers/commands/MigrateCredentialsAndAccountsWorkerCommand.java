@@ -68,7 +68,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
                     .put("skandiabanken-ssn-bankid", new SkandiaBankenSanitizingMigration())
                     .put("avanza-bankid", new AvanzaStripClearingMigration())
                     .put("icabanken-bankid", new IcaBankenSanitizingMigration())
-                    .put("nl-ics-oauth2", new ICSSanitizingMigration())
+                    .put("nl-ics-ob", new ICSSanitizingMigration())
                     .put("nordea-bankid", new NordeaSanitizingMigration())
                     .build();
 
