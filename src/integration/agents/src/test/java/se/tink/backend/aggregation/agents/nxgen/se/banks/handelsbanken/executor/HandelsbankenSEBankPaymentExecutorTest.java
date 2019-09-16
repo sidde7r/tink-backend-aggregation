@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.payment.HandelsbankenSEPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -77,10 +76,11 @@ public class HandelsbankenSEBankPaymentExecutorTest {
 
         Catalog catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn(ERROR_MESSAGE);
-        HandelsbankenSEPaymentExecutor executor =
-                new HandelsbankenSEPaymentExecutor(
-                        client, sessionStorage, new ExecutorExceptionResolver(catalog));
-
-        executor.executePayment(transfer);
+        //        HandelsbankenSEPaymentExecutor executor =
+        //                new HandelsbankenSEPaymentExecutor(
+        //                        supplementalclient, sessionStorage, new
+        // ExecutorExceptionResolver(catalog));
+        //
+        //        executor.executePayment(transfer);
     }
 }

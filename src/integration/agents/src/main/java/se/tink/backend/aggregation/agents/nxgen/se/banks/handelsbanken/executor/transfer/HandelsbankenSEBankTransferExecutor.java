@@ -35,13 +35,13 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
             HandelsbankenSEApiClient client,
             HandelsbankenSessionStorage sessionStorage,
             ExecutorExceptionResolver exceptionResolver,
-            TransferMessageFormatter transferMessageFormatter) {
+            TransferMessageFormatter transferMessageFormatter,
+            HandelsbankenSEPaymentExecutor paymentExecutor) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.exceptionResolver = exceptionResolver;
         this.transferMessageFormatter = transferMessageFormatter;
-        this.paymentExecutor =
-                new HandelsbankenSEPaymentExecutor(client, sessionStorage, exceptionResolver);
+        this.paymentExecutor = paymentExecutor;
     }
 
     @Override
