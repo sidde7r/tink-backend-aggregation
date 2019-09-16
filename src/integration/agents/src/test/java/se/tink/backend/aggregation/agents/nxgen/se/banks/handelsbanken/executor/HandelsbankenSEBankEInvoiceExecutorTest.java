@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.HandelsbankenSEEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -90,10 +89,10 @@ public class HandelsbankenSEBankEInvoiceExecutorTest {
                         credentials)
                 .authenticate(credentials);
 
-        HandelsbankenSEEInvoiceExecutor seeInvoiceExecutor =
-                new HandelsbankenSEEInvoiceExecutor(
-                        client, sessionStorage, new ExecutorExceptionResolver(catalog));
-
-        seeInvoiceExecutor.approveEInvoice(transfer);
+//        HandelsbankenSEEInvoiceExecutor seeInvoiceExecutor =
+//                new HandelsbankenSEEInvoiceExecutor(
+//                        client, sessionStorage, new ExecutorExceptionResolver(catalog));
+//
+//        seeInvoiceExecutor.approveEInvoice(transfer);
     }
 }
