@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentResponse;
@@ -201,6 +202,11 @@ public final class RedsysApiClient {
                         .map(LinkEntity::getHref)
                         .get();
         return new Pair<>(consentId, new URL(consentRedirectUrl));
+    }
+
+    public ConsentResponse fetchConsent(String consentId) {
+        final String url = makeApiUrl(Urls.CONSENT, consentId);
+        return createSignedRequest(url).get(ConsentResponse.class);
     }
 
     public ConsentStatus fetchConsentStatus(String consentId) {
