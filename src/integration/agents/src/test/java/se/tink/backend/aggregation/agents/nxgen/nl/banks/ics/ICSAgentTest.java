@@ -9,7 +9,7 @@ public class ICSAgentTest {
 
     @Test
     public void refresh() throws Exception {
-        new AgentIntegrationTest.Builder("nl", "nl-ics-ob")
+        new AgentIntegrationTest.Builder("nl", "nl-ics-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
