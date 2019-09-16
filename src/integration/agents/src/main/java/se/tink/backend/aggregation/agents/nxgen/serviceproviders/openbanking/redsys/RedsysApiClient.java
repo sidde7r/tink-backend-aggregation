@@ -370,8 +370,13 @@ public final class RedsysApiClient {
     }
 
     private void setFetchingTransactionsUntil(String accountId, LocalDate date) {
-        final String fetchedUntilDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
-        sessionStorage.put(StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
+        final String key = StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId;
+        if (Objects.isNull(date)) {
+            sessionStorage.remove(key);
+        } else {
+            final String fetchedUntilDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+            sessionStorage.put(key, fetchedUntilDate);
+        }
     }
 
     private void persistFetchedTransactionsUntil(String accountId) {
@@ -418,6 +423,7 @@ public final class RedsysApiClient {
         final Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
         headers.put(HeaderKeys.CONSENT_ID, consentId);
+        setFetchingTransactionsUntil(accountId, null);
 
         final RequestBuilder request =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
