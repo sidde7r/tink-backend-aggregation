@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -22,12 +24,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.SubAgreementsItem;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Builder;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.builder.LoanModuleBuildStep;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
@@ -73,35 +76,44 @@ public class FetchLoanDetailsResponse {
 
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
-        return LoanAccount.builder(maskAccountNumber(), getBalance())
-                .setName(getNickname())
-                .setAccountNumber(loanFormattedId)
-                .setBankIdentifier(maskAccountNumber())
-                .setInterestRate(getInterestRate().doubleValue())
-                .setDetails(getLoanDetails())
-                .setHolderName(getHolderName())
+        return LoanAccount.nxBuilder()
+                .withLoanDetails(getLoanModule())
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(maskAccountNumber())
+                                .withAccountNumber(loanFormattedId)
+                                .withAccountName(getNickname())
+                                .addIdentifier(new SwedishIdentifier(loanId))
+                                .setProductName(productCode)
+                                .build())
+                .addHolderName(getHolderName())
                 .build();
     }
 
     @JsonIgnore
-    private LoanDetails getLoanDetails() {
-        Builder loanDetailsBuilder =
-                LoanDetails.builder(getLoanType())
+    private LoanModule getLoanModule() {
+        LoanModuleBuildStep builder =
+                LoanModule.builder()
+                        .withType(getLoanType())
+                        .withBalance(getBalance())
+                        .withInterestRate(getInterestRate().doubleValue())
                         .setAmortized(getPaid())
+                        .setInitialBalance(getInitialBalance())
                         .setApplicants(getApplicants())
                         .setCoApplicant(getApplicants().size() > 1)
-                        .setInitialBalance(getInitialBalance())
-                        .setInitialDate(firstDrawDownDate)
-                        .setLoanNumber(loanId)
-                        .setNextDayOfTermsChange(interest.getDiscountedRateEndDate());
-        getInstalmentValue().ifPresent(loanDetailsBuilder::setMonthlyAmortization);
-        return loanDetailsBuilder.build();
+                        .setInitialDate(convertDateToLocalDate(firstDrawDownDate))
+                        .setLoanNumber(loanId);
+        if (!Objects.isNull(getInterest().getDiscountedRateEndDate())) {
+            builder.setNextDayOfTermsChange(
+                    convertDateToLocalDate(getInterest().getDiscountedRateEndDate()));
+        }
+        return builder.build();
     }
 
     @JsonIgnore
-    private BigDecimal getInterestRate() {
+    private InterestEntity getInterest() {
         if (!Objects.isNull(interest) && !Objects.isNull(interest.getRate())) {
-            return interest.getRate();
+            return interest;
         } else {
             if (!isSubAgreementsInterestRatesSame()) {
                 throw new IllegalStateException(
@@ -109,9 +121,18 @@ public class FetchLoanDetailsResponse {
             }
             return subAgreements.stream()
                     .map(SubAgreementsItem::getInterest)
-                    .map(InterestEntity::getRate)
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException("No interest rate found."));
+        }
+    }
+
+    @JsonIgnore
+    private BigDecimal getInterestRate() {
+        InterestEntity interest = getInterest();
+        if (!Objects.isNull(interest.getRate())) {
+            return interest.getRate();
+        } else {
+            throw new IllegalStateException("No interest rate found.");
         }
     }
 
@@ -140,17 +161,23 @@ public class FetchLoanDetailsResponse {
     }
 
     @JsonIgnore
-    private HolderName getHolderName() {
+    private String getHolderName() {
         if (getOwners().size() > 0) {
             return getOwners().get(0).getName();
         }
-
         return null;
     }
 
     @JsonIgnore
     private String getNickname() {
         return Strings.nullToEmpty(nickname);
+    }
+
+    private LocalDate convertDateToLocalDate(Date dateToConvert) {
+        if (Objects.isNull(dateToConvert)) {
+            return null;
+        }
+        return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @JsonIgnore

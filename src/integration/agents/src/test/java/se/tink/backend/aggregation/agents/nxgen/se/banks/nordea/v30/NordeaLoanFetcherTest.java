@@ -179,6 +179,7 @@ public class NordeaLoanFetcherTest {
                 new Amount("SEK", 1678750.0).negate(),
                 loanAccount.getDetails().getInitialBalance());
         Assert.assertEquals(new HolderName("NAME SURNAME"), loanAccount.getHolderName());
+        Assert.assertTrue(loanAccount.isUniqueIdentifierEqual("************8901"));
     }
 
     @Test
@@ -198,6 +199,7 @@ public class NordeaLoanFetcherTest {
                 new Amount("SEK", 1625000.00).negate(),
                 loanAccount.getDetails().getInitialBalance());
         Assert.assertEquals(new HolderName("NAME MIDDLENAME SURNAME"), loanAccount.getHolderName());
+        Assert.assertTrue(loanAccount.isUniqueIdentifierEqual("************7727"));
     }
 
     @Test
