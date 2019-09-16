@@ -16,6 +16,7 @@ import static se.tink.backend.aggregation.agents.TransferExecutionException.EndU
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.entities.DetailedPermissions;
@@ -41,19 +42,26 @@ import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePaymentExecutor {
 
+    private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
     private final HandelsbankenSEApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;
     private final ExecutorExceptionResolver exceptionResolver;
 
     public HandelsbankenSEPaymentExecutor(
+            SupplementalRequester supplementalRequester,
+            Catalog catalog,
             HandelsbankenSEApiClient client,
             HandelsbankenSessionStorage sessionStorage,
             ExecutorExceptionResolver exceptionResolver) {
+        this.supplementalRequester = supplementalRequester;
+        this.catalog = catalog;
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.exceptionResolver = exceptionResolver;

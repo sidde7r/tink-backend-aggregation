@@ -148,7 +148,8 @@ public class HandelsbankenSEAgent
         ExecutorExceptionResolver exceptionResolver = new ExecutorExceptionResolver(catalog);
 
         HandelsbankenSEPaymentExecutor paymentExecutor =
-                new HandelsbankenSEPaymentExecutor(client, sessionStorage, exceptionResolver);
+                new HandelsbankenSEPaymentExecutor(
+                        supplementalRequester, catalog, client, sessionStorage, exceptionResolver);
 
         return Optional.of(
                 new TransferController(
@@ -160,9 +161,10 @@ public class HandelsbankenSEAgent
                                 new TransferMessageFormatter(
                                         catalog,
                                         TransferMessageLengthConfig.createWithMaxLength(14, 12),
-                                        new StringNormalizerSwedish(",.-?!/+"))),
+                                        new StringNormalizerSwedish(",.-?!/+")),
+                                paymentExecutor),
                         new HandelsbankenSEEInvoiceExecutor(
-                                client, sessionStorage, exceptionResolver),
+                                client, sessionStorage, exceptionResolver, paymentExecutor),
                         paymentExecutor));
     }
 
