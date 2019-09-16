@@ -49,7 +49,7 @@ public class DeutscheBankApiClient {
                 .type(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createRequestInSession(URL url) {
+    protected RequestBuilder createRequestInSession(URL url) {
         String consentId = sessionStorage.get(StorageKeys.CONSENT_ID);
         String uuid = UUID.randomUUID().toString();
 
