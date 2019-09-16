@@ -13,17 +13,22 @@ import static se.tink.backend.aggregation.agents.TransferExecutionException.EndU
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.PAYMENT_UPDATE_SOURCE;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.PAYMENT_UPDATE_SOURCE_MESSAGE;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Transfers;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.entities.DetailedPermissions;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.payment.rpc.PaymentSignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.UpdatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmInfoResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmVerificationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferApprovalRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferApprovalResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignResponse;
@@ -187,15 +192,22 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
     public void confirmTransfer(
             TransferSignResponse transferSignResponse,
             TransferApprovalRequest transferApprovalRequest) {
+
         ConfirmInfoResponse confirmInfoResponse =
                 client.getConfirmInfo(
                         transferSignResponse.getConfirmTransferLink(exceptionResolver));
 
-        ConfirmVerificationResponse confirmVerificationResponse =
-                client.postConfirmVerification(
+        ConfirmTransferResponse confirmTransferResponse =
+                client.postConfirmTransfer(
                         confirmInfoResponse.getConfirmationVerificationLink(exceptionResolver));
 
-        confirmVerificationResponse.validateResult(exceptionResolver);
+        if (confirmInfoResponse.needsBankIdSign()) {
+            supplementalRequester.openBankId();
+
+            collectBankId(confirmTransferResponse);
+        } else {
+            confirmTransferResponse.validateResult(exceptionResolver);
+        }
 
         TransferApprovalResponse transferApprovalResponse =
                 client.postApproveTransfer(
@@ -203,6 +215,43 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                         transferApprovalRequest);
 
         transferApprovalResponse.validateResult(exceptionResolver);
+    }
+
+    private void collectBankId(ConfirmTransferResponse confirmTransferResponse) {
+        URL confirmExecuteUrl = confirmTransferResponse.getConfirmExecuteLink(exceptionResolver);
+
+        ConfirmTransferResponse pollBankIdResponse;
+        BankIdStatus status;
+
+        for (int i = 0; i < Transfers.BANKID_MAX_ATTEMPTS; i++) {
+            pollBankIdResponse = client.postConfirmTransfer(confirmExecuteUrl);
+            status = pollBankIdResponse.getBankIdStatus();
+
+            switch (status) {
+                case DONE:
+                    return;
+                case WAITING:
+                    break;
+                case CANCELLED:
+                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                            .setMessage(catalog.getString(EndUserMessage.BANKID_CANCELLED))
+                            .setEndUserMessage(catalog.getString(EndUserMessage.BANKID_CANCELLED))
+                            .build();
+                case FAILED_UNKNOWN:
+                    throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                            .setMessage(catalog.getString(EndUserMessage.BANKID_TRANSFER_FAILED))
+                            .setEndUserMessage(
+                                    catalog.getString(EndUserMessage.BANKID_TRANSFER_FAILED))
+                            .build();
+            }
+
+            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
+        }
+
+        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(catalog.getString(EndUserMessage.BANKID_NO_RESPONSE))
+                .setEndUserMessage(catalog.getString(EndUserMessage.BANKID_NO_RESPONSE))
+                .build();
     }
 
     // Made public since it's used to update e-invoices during approval

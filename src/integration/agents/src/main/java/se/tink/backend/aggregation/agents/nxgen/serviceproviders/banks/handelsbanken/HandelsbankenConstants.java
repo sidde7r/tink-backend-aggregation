@@ -55,6 +55,7 @@ public class HandelsbankenConstants {
             CARDS("cards"),
             CHECK_AGREEMENT("checkAgreement"),
             COMMIT_PROFILE("commitProfile"),
+            CONFIRM_EXECUTE("confirmexecute"),
             CONFIRM_SIGN("confirmsign"),
             CREATE("create"),
             CREATE_PINCODE("createPincode"),

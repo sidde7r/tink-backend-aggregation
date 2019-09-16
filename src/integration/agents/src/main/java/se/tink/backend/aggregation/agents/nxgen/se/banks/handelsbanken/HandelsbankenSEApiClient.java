@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.BaseSignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.UpdatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmInfoResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmVerificationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.HandelsbankenSETransferContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferApprovalRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferApprovalResponse;
@@ -273,8 +273,8 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
         return response;
     }
 
-    public ConfirmVerificationResponse postConfirmVerification(URL url) {
-        return createPostRequest(url).post(ConfirmVerificationResponse.class);
+    public ConfirmTransferResponse postConfirmTransfer(URL url) {
+        return createPostRequest(url).post(ConfirmTransferResponse.class);
     }
 
     public TransferApprovalResponse postApproveTransfer(
