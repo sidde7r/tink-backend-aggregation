@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentResponse;
@@ -203,6 +204,11 @@ public final class RedsysApiClient {
         return new Pair<>(consentId, new URL(consentRedirectUrl));
     }
 
+    public ConsentResponse fetchConsent(String consentId) {
+        final String url = makeApiUrl(Urls.CONSENT, consentId);
+        return createSignedRequest(url).get(ConsentResponse.class);
+    }
+
     public ConsentStatus fetchConsentStatus(String consentId) {
         // If valid, cache it for the session
         if (cachedConsentStatus == ConsentStatus.VALID) {
@@ -364,8 +370,13 @@ public final class RedsysApiClient {
     }
 
     private void setFetchingTransactionsUntil(String accountId, LocalDate date) {
-        final String fetchedUntilDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
-        sessionStorage.put(StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
+        final String key = StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId;
+        if (Objects.isNull(date)) {
+            sessionStorage.remove(key);
+        } else {
+            final String fetchedUntilDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+            sessionStorage.put(key, fetchedUntilDate);
+        }
     }
 
     private void persistFetchedTransactionsUntil(String accountId) {
@@ -412,6 +423,7 @@ public final class RedsysApiClient {
         final Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
         headers.put(HeaderKeys.CONSENT_ID, consentId);
+        setFetchingTransactionsUntil(accountId, null);
 
         final RequestBuilder request =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
