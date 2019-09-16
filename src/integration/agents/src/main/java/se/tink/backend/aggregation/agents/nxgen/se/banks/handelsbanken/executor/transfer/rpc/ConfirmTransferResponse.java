@@ -52,14 +52,12 @@ public class ConfirmTransferResponse extends BaseResponse
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
         }
-
     }
 
     private BankIdStatus checkCodeForReason() {
         String errorCode = getCode();
 
-        if (!Strings.isNullOrEmpty(errorCode)
-                && Statuses.CANCELLED.equalsIgnoreCase(errorCode)) {
+        if (!Strings.isNullOrEmpty(errorCode) && Statuses.CANCELLED.equalsIgnoreCase(errorCode)) {
             return BankIdStatus.CANCELLED;
         }
 

@@ -23,8 +23,7 @@ public class HandelsbankenTransferFlowTest {
         DEST_ACCOUNT
     }
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(
-            Arg.values());
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
     @Before
     public void setUp() throws Exception {

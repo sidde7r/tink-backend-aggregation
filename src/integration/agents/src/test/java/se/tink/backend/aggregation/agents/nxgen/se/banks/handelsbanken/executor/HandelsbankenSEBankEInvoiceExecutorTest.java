@@ -89,10 +89,10 @@ public class HandelsbankenSEBankEInvoiceExecutorTest {
                         credentials)
                 .authenticate(credentials);
 
-//        HandelsbankenSEEInvoiceExecutor seeInvoiceExecutor =
-//                new HandelsbankenSEEInvoiceExecutor(
-//                        client, sessionStorage, new ExecutorExceptionResolver(catalog));
-//
-//        seeInvoiceExecutor.approveEInvoice(transfer);
+        //        HandelsbankenSEEInvoiceExecutor seeInvoiceExecutor =
+        //                new HandelsbankenSEEInvoiceExecutor(
+        //                        client, sessionStorage, new ExecutorExceptionResolver(catalog));
+        //
+        //        seeInvoiceExecutor.approveEInvoice(transfer);
     }
 }

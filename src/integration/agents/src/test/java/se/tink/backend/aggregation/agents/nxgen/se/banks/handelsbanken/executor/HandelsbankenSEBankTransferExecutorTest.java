@@ -89,13 +89,13 @@ public class HandelsbankenSEBankTransferExecutorTest {
                 .authenticate(credentials);
         Catalog catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn(ERROR_MESSAGE);
-//        HandelsbankenSEBankTransferExecutor executor =
-//                new HandelsbankenSEBankTransferExecutor(
-//                        client,
-//                        sessionStorage,
-//                        new ExecutorExceptionResolver(catalog),
-//                        messageFormatter);
+        //        HandelsbankenSEBankTransferExecutor executor =
+        //                new HandelsbankenSEBankTransferExecutor(
+        //                        client,
+        //                        sessionStorage,
+        //                        new ExecutorExceptionResolver(catalog),
+        //                        messageFormatter);
 
-//        executor.executeTransfer(transfer);
+        //        executor.executeTransfer(transfer);
     }
 }

@@ -76,10 +76,11 @@ public class HandelsbankenSEBankPaymentExecutorTest {
 
         Catalog catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn(ERROR_MESSAGE);
-//        HandelsbankenSEPaymentExecutor executor =
-//                new HandelsbankenSEPaymentExecutor(
-//                        supplementalclient, sessionStorage, new ExecutorExceptionResolver(catalog));
-//
-//        executor.executePayment(transfer);
+        //        HandelsbankenSEPaymentExecutor executor =
+        //                new HandelsbankenSEPaymentExecutor(
+        //                        supplementalclient, sessionStorage, new
+        // ExecutorExceptionResolver(catalog));
+        //
+        //        executor.executePayment(transfer);
     }
 }
