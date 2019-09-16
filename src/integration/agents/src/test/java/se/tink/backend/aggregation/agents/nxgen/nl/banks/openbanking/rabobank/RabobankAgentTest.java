@@ -27,7 +27,7 @@ public final class RabobankAgentTest {
 
     @Test
     public void refreshSandbox() throws Exception {
-        new AgentIntegrationTest.Builder("nl", "nl-rabobank-sandbox-ob")
+        new AgentIntegrationTest.Builder("nl", "nl-rabobank-sandbox-oauth2")
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                 .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
                 .setRequestFlagManual(Boolean.parseBoolean(manager.get(Arg.IS_MANUAL)))
@@ -38,7 +38,7 @@ public final class RabobankAgentTest {
 
     @Test
     public void refreshProduction() throws Exception {
-        new AgentIntegrationTest.Builder("nl", "nl-rabobank-ob")
+        new AgentIntegrationTest.Builder("nl", "nl-rabobank-oauth2")
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                 .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
                 .setRequestFlagManual(Boolean.parseBoolean(manager.get(Arg.IS_MANUAL)))
