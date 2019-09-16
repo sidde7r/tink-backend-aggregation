@@ -73,8 +73,6 @@ public class FetchLoanDetailsResponse {
 
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
-
-        logLoanAccount();
         return LoanAccount.builder(maskAccountNumber(), getBalance())
                 .setName(getNickname())
                 .setAccountNumber(loanFormattedId)
@@ -200,14 +198,5 @@ public class FetchLoanDetailsResponse {
     @JsonIgnore
     private String maskAccountNumber() {
         return "************" + loanId.substring(loanId.length() - 4);
-    }
-
-    @JsonIgnore
-    private void logLoanAccount() {
-        LOG.info(
-                String.format(
-                        "%s - %s",
-                        NordeaSEConstants.LogTags.LOAN_ACCOUNT,
-                        SerializationUtils.serializeToString(this)));
     }
 }
