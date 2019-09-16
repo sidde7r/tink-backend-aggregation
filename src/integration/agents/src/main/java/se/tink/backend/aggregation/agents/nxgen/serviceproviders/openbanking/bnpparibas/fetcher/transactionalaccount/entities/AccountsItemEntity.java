@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Iterables;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.BalanceResponse;
@@ -86,13 +88,16 @@ public class AccountsItemEntity {
     }
 
     private ExactCurrencyAmount getAvailableBalance(BalanceResponse balanceResponse) {
+        List<BalancesItemEntity> balancesList =
+                Optional.ofNullable(balanceResponse.getBalances()).orElse(Collections.emptyList());
 
-        return Optional.ofNullable(balanceResponse.getBalances()).orElse(Collections.emptyList())
-                .stream()
-                .filter(BalancesItemEntity::isAvailableBalance)
-                .findFirst()
-                .map(BalancesItemEntity::getAmountEntity)
-                .map(AmountEntity::toAmount)
-                .orElseThrow(IllegalStateException::new);
+        return Iterables.tryFind(balancesList, BalancesItemEntity::isFutureBalance)
+                .or(Iterables.tryFind(balancesList, BalancesItemEntity::isClosingBalance))
+                .transform(BalancesItemEntity::getAmountEntity)
+                .transform(AmountEntity::toAmount)
+                .or(
+                        () -> {
+                            throw new IllegalStateException();
+                        });
     }
 }

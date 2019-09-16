@@ -32,8 +32,11 @@ public class BalancesItemEntity {
         return amountEntity;
     }
 
-    public boolean isAvailableBalance() {
-        return ResponseValues.BALANCE_TYPE_OTHER.equalsIgnoreCase(balanceType)
-                || ResponseValues.BALANCE_TYPE_CLOSING.equalsIgnoreCase(balanceType);
+    boolean isFutureBalance() {
+        return ResponseValues.BALANCE_TYPE_OTHER.equalsIgnoreCase(balanceType);
+    }
+
+    boolean isClosingBalance(){
+        return ResponseValues.BALANCE_TYPE_CLOSING.equalsIgnoreCase(balanceType);
     }
 }

@@ -37,7 +37,6 @@ public final class BnpParibasBaseConstants {
         public static final String FULL_SCOPES = "aisp extended_transaction_history";
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String FORMATTER_ISO8601_DATE = "yyyy-MM-dd";
         public static final String TIMEZONE = "CET";
     }
 

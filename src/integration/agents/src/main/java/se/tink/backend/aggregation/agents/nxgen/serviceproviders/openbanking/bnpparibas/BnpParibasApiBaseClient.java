@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang.time.DateFormatUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.TokenResponse;
@@ -143,8 +144,7 @@ public class BnpParibasApiBaseClient {
 
     private TransactionsResponse getTransactionsBatch(
             String resourceId, String signature, String reqId, Date dateFrom, Date dateTo) {
-        SimpleDateFormat sdf =
-                new SimpleDateFormat(BnpParibasBaseConstants.QueryValues.FORMATTER_ISO8601_DATE);
+        SimpleDateFormat sdf = new SimpleDateFormat(DateFormatUtils.ISO_DATE_FORMAT.getPattern());
 
         return createRequestInSession(
                         new URL(
