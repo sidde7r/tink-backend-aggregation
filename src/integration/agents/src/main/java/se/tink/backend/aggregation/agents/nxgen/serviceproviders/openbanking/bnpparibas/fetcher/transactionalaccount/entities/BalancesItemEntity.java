@@ -36,7 +36,7 @@ public class BalancesItemEntity {
         return ResponseValues.BALANCE_TYPE_OTHER.equalsIgnoreCase(balanceType);
     }
 
-    boolean isClosingBalance(){
+    boolean isClosingBalance() {
         return ResponseValues.BALANCE_TYPE_CLOSING.equalsIgnoreCase(balanceType);
     }
 }
