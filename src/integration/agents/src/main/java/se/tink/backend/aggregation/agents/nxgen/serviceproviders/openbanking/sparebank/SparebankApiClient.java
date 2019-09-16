@@ -207,8 +207,7 @@ public class SparebankApiClient {
                 QsealcSigner.build(
                         eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        configuration.getQsealcCertId());
+                        eidasIdentity);
 
         StringBuilder signedWithHeaderKeys = new StringBuilder();
         StringBuilder signedWithHeaderKeyValues = new StringBuilder();
