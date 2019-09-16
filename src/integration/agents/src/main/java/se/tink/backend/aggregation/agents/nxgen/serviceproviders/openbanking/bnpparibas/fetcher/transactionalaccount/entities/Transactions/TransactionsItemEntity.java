@@ -59,7 +59,7 @@ public class TransactionsItemEntity {
 
     public Transaction toTinkTransactions() {
         return Transaction.builder()
-                .setAmount(transactionAmount.toAmount(creditDebitIndicator))
+                .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)
                 .setDescription(
                         remittanceInformation.stream()
