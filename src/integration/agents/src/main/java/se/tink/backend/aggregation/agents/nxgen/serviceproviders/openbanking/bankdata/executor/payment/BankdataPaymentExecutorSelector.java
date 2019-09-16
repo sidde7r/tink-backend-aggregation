@@ -127,7 +127,7 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
                 break;
             default:
                 throw new IllegalStateException(
-                        String.format("Uknown step %s", paymentMultiStepRequest.getStep()));
+                        String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
         }
         return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
     }

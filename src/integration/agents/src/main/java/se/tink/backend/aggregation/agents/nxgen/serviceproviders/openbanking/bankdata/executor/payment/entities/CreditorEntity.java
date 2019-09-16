@@ -51,8 +51,8 @@ public class CreditorEntity {
     public Creditor toTinkCreditor(PaymentType paymentType) {
         if (paymentType == PaymentType.SEPA) {
             return new Creditor(AccountIdentifier.create(Type.IBAN, iban));
-        } else {
-            return new Creditor(AccountIdentifier.create(Type.DK, bban));
         }
+
+        return new Creditor(AccountIdentifier.create(Type.DK, bban));
     }
 }

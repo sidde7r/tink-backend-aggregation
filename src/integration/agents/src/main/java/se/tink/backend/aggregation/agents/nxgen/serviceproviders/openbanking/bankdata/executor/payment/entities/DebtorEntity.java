@@ -51,8 +51,8 @@ public class DebtorEntity {
     public Debtor toTinkDebtor(PaymentType type) {
         if (type == PaymentType.SEPA) {
             return new Debtor(AccountIdentifier.create(Type.IBAN, iban));
-        } else {
-            return new Debtor(AccountIdentifier.create(Type.DK, bban));
         }
+
+        return new Debtor(AccountIdentifier.create(Type.DK, bban));
     }
 }
