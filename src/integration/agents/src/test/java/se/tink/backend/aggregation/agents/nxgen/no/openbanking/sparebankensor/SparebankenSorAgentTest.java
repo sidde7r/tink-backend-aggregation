@@ -15,6 +15,8 @@ public class SparebankenSorAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("no", "no-sparebankensor-ob")
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("sparebank")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
