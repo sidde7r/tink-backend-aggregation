@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Iterables;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -91,13 +90,21 @@ public class AccountsItemEntity {
         List<BalancesItemEntity> balancesList =
                 Optional.ofNullable(balanceResponse.getBalances()).orElse(Collections.emptyList());
 
-        return Iterables.tryFind(balancesList, BalancesItemEntity::isFutureBalance)
-                .or(Iterables.tryFind(balancesList, BalancesItemEntity::isClosingBalance))
-                .transform(BalancesItemEntity::getAmountEntity)
-                .transform(AmountEntity::toAmount)
-                .or(
-                        () -> {
-                            throw new IllegalStateException();
-                        });
+        Optional<BalancesItemEntity> futureBalance =
+                balancesList.stream().filter(BalancesItemEntity::isFutureBalance).findFirst();
+
+        Optional<BalancesItemEntity> closingBalance =
+                balancesList.stream().filter(BalancesItemEntity::isClosingBalance).findFirst();
+
+        BalancesItemEntity availableBalance;
+        if (futureBalance.isPresent()) {
+            availableBalance = futureBalance.get();
+        } else if (closingBalance.isPresent()) {
+            availableBalance = closingBalance.get();
+        } else {
+            throw new IllegalStateException();
+        }
+
+        return availableBalance.getAmountEntity().toAmount();
     }
 }
