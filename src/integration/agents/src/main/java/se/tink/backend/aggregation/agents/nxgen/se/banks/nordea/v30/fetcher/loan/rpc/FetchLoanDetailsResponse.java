@@ -9,22 +9,23 @@ import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.CreditEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.FollowingPaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.InterestEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.OwnersEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.RepaymentSchedule;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.SubAgreementsItem;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Builder;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -64,14 +65,21 @@ public class FetchLoanDetailsResponse {
 
     @JsonProperty private List<OwnersEntity> owners;
 
+    @JsonProperty("sub_agreements")
+    private List<SubAgreementsItem> subAgreements;
+
+    @JsonProperty("repayment_schedule")
+    private RepaymentSchedule repaymentSchedule;
+
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
+
         logLoanAccount();
-        return LoanAccount.builder(maskAccountNumber(), getBalance().stripSign().negate())
+        return LoanAccount.builder(maskAccountNumber(), getBalance())
                 .setName(getNickname())
                 .setAccountNumber(loanFormattedId)
                 .setBankIdentifier(maskAccountNumber())
-                .setInterestRate(AgentParsingUtils.parsePercentageFormInterest(interest.getRate()))
+                .setInterestRate(getInterestRate().doubleValue())
                 .setDetails(getLoanDetails())
                 .setHolderName(getHolderName())
                 .build();
@@ -84,7 +92,7 @@ public class FetchLoanDetailsResponse {
                         .setAmortized(getPaid())
                         .setApplicants(getApplicants())
                         .setCoApplicant(getApplicants().size() > 1)
-                        .setInitialBalance(getInitialBalance().stripSign().negate())
+                        .setInitialBalance(getInitialBalance())
                         .setInitialDate(firstDrawDownDate)
                         .setLoanNumber(loanId)
                         .setNextDayOfTermsChange(interest.getDiscountedRateEndDate());
@@ -93,8 +101,35 @@ public class FetchLoanDetailsResponse {
     }
 
     @JsonIgnore
-    public Amount getBalance() {
-        return new Amount(NordeaSEConstants.CURRENCY, amount.getBalance());
+    private BigDecimal getInterestRate() {
+        if (!Objects.isNull(interest) && !Objects.isNull(interest.getRate())) {
+            return interest.getRate();
+        } else {
+            if (!isSubAgreementsInterestRatesSame()) {
+                throw new IllegalStateException(
+                        "Interest rates were different for sub loans. Could not map to loan model.");
+            }
+            return subAgreements.stream()
+                    .map(SubAgreementsItem::getInterest)
+                    .map(InterestEntity::getRate)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("No interest rate found."));
+        }
+    }
+
+    @JsonIgnore
+    private boolean isSubAgreementsInterestRatesSame() {
+        return subAgreements.stream()
+                        .map(SubAgreementsItem::getInterest)
+                        .map(InterestEntity::getRate)
+                        .distinct()
+                        .count()
+                == 1;
+    }
+
+    @JsonIgnore
+    public ExactCurrencyAmount getBalance() {
+        return new ExactCurrencyAmount(amount.getBalance(), NordeaSEConstants.CURRENCY).negate();
     }
 
     @JsonSetter(nulls = Nulls.AS_EMPTY)
@@ -121,15 +156,15 @@ public class FetchLoanDetailsResponse {
     }
 
     @JsonIgnore
-    private Amount getInitialBalance() {
-        double initialBalance =
+    private ExactCurrencyAmount getInitialBalance() {
+        BigDecimal initialBalance =
                 Optional.ofNullable(credit).map(CreditEntity::getLimit).orElse(amount.getGranted());
-        return new Amount(NordeaSEConstants.CURRENCY, initialBalance);
+        return new ExactCurrencyAmount(initialBalance, NordeaSEConstants.CURRENCY).negate();
     }
 
     @JsonIgnore
-    private Amount getPaid() {
-        return new Amount(NordeaSEConstants.CURRENCY, amount.getPaid());
+    private ExactCurrencyAmount getPaid() {
+        return new ExactCurrencyAmount(amount.getPaid(), NordeaSEConstants.CURRENCY);
     }
 
     @JsonIgnore

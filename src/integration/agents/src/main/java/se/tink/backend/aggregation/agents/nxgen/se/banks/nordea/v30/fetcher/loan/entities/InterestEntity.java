@@ -2,12 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loa
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class InterestEntity {
-    @JsonProperty private String rate;
+    @JsonProperty private BigDecimal rate;
 
     @JsonProperty("reference_rate_type")
     private String referenceRateType;
@@ -20,9 +21,9 @@ public class InterestEntity {
     private Date discountedRateEndDate;
 
     @JsonProperty("base_rate")
-    private double baseRate;
+    private BigDecimal baseRate;
 
-    public String getRate() {
+    public BigDecimal getRate() {
         return rate;
     }
 
@@ -34,7 +35,7 @@ public class InterestEntity {
         return periodStartDate;
     }
 
-    public double getBaseRate() {
+    public BigDecimal getBaseRate() {
         return baseRate;
     }
 
