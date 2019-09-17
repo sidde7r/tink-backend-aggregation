@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.sbab;
 
+import static se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.INTEGRATION_NAME;
+
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -69,8 +71,6 @@ public class SBABAgent extends AbstractAgent
     private final Credentials credentials;
     private final Catalog catalog;
 
-    public static final String INTEGRATION_NAME = "sbab";
-
     private final AuthenticationClient authenticationClient;
     private final UserDataClient userDataClient;
     private final TransferClient transferClient;
@@ -114,7 +114,10 @@ public class SBABAgent extends AbstractAgent
                                 request.getProvider().getPayload(),
                                 TypeReferences.MAP_OF_STRING_STRING);
 
-        if (payload != null && Objects.equal(payload.get("isSwitchMortgageProviderTest"), "true")) {
+        if (payload != null
+                && Objects.equal(
+                        payload.get(SBABConstants.IS_MORTGAGE_SWITCH_PROVIDER_TEST),
+                        SBABConstants.TRUE)) {
             clientWithoutSSL = clientFactory.createCookieClientWithoutSSL();
         } else {
             clientWithoutSSL = null;

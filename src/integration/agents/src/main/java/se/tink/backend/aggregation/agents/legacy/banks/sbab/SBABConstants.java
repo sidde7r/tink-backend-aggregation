@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.sbab;
 
 public class SBABConstants {
+    public static final String INTEGRATION_NAME = "sbab";
+    public static final String IS_MORTGAGE_SWITCH_PROVIDER_TEST = "isSwitchMortgageProviderTest";
+    public static final String TRUE = "true";
 
     public static class Url {
         private static final String HOST = "https://secure.sbab.se/";
