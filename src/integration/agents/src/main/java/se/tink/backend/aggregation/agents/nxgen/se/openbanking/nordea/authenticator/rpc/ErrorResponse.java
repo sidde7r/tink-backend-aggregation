@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentic
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities.Error;
