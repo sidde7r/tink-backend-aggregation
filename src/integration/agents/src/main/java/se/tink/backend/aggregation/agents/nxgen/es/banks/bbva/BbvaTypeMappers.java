@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public final class BbvaTypeMappers {
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
                     .put(
                             AccountTypes.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "0000015109", // CUENTA PERSONALES - CUENTA VA CONTIGO
                             "0000011954", // CUENTA NEGOCIOS - "personal" business account
                             "0CA0000079", // CUENTA BLUE

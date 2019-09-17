@@ -2,20 +2,25 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transacti
 
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaPredicates.IS_TRANSACTIONAL_ACCOUNT;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaTypeMappers.ACCOUNT_TYPE_MAPPER;
-import static se.tink.libraries.account.AccountIdentifier.Type.IBAN;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
+import java.math.BigDecimal;
+import java.util.Locale;
 import java.util.Objects;
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
@@ -33,7 +38,7 @@ public class AccountEntity {
     private String typeDescription;
     private String familyCode;
     private String currency;
-    private Double availableBalance;
+    private BigDecimal availableBalance;
     private List<BalanceEntity> availableBalances;
     private String branch;
     private String accountProductId;
@@ -42,19 +47,24 @@ public class AccountEntity {
     private double actualBalance;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(String holder) {
-        final String normalizedIban = iban.replaceAll(" ", "").toUpperCase();
-        final HolderName holderName = Option.of(holder).map(HolderName::new).getOrNull();
+    public Optional<TransactionalAccount> toTinkAccount(String holderName) {
+        final AccountIdentifier ibanIdentifier =
+                AccountIdentifier.create(Type.IBAN, iban.replaceAll("\\s+", ""));
+        final DisplayAccountIdentifierFormatter formatter = new DisplayAccountIdentifierFormatter();
+        final String formattedIban = ibanIdentifier.getIdentifier(formatter);
 
-        return TransactionalAccount.builder(
-                        getTinkAccountType(),
-                        normalizedIban,
-                        new Amount(currency, availableBalance))
-                .setAccountNumber(iban)
-                .setName(name)
-                .setHolderName(holderName)
-                .putInTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID, id)
-                .addIdentifier(AccountIdentifier.create(IBAN, normalizedIban))
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(ACCOUNT_TYPE_MAPPER, accountProductId)
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getUniqueIdentifier())
+                                .withAccountNumber(formattedIban)
+                                .withAccountName(name)
+                                .addIdentifier(ibanIdentifier)
+                                .build())
+                .addHolderName(holderName)
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, id)
                 .build();
     }
 
@@ -76,15 +86,19 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private AccountTypes getTinkAccountType() {
-        return Option.ofOptional(ACCOUNT_TYPE_MAPPER.translate(accountProductId))
-                .getOrElse(AccountTypes.OTHER);
-    }
-
-    @JsonIgnore
     // until we have seen more than on account we do this
     public boolean isCreditCard() {
         return BbvaConstants.AccountType.CREDIT_CARD.equalsIgnoreCase(subfamilyTypeCode);
+    }
+
+    @JsonIgnore
+    private ExactCurrencyAmount getBalance() {
+        return ExactCurrencyAmount.of(availableBalance, currency);
+    }
+
+    @JsonIgnore
+    private String getUniqueIdentifier() {
+        return iban.replaceAll("\\s+", "").toUpperCase(Locale.ENGLISH);
     }
 
     public List<BalanceEntity> getAvailableBalances() {
@@ -107,7 +121,7 @@ public class AccountEntity {
         return currency;
     }
 
-    public double getAvailableBalance() {
+    public BigDecimal getAvailableBalance() {
         return availableBalance;
     }
 
