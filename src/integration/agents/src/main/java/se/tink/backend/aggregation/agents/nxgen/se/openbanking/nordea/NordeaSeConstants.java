@@ -45,6 +45,7 @@ public final class NordeaSeConstants {
 
     public static class ErrorCode {
         public static final String SERVER_ERROR = "error.server";
+        public static final String VALIDATION_ERROR = "error.validation";
     }
 
     public class ErrorMessage {
@@ -53,7 +54,12 @@ public final class NordeaSeConstants {
         public static final String TIME_OUT_ERROR = "nsp.returncode.cava.expired_transaction_error";
         public static final String BANK_ID_IN_PROGRESS =
                 "nsp.returncode.cava.already_in_progress_error";
-        public static final String UNEXPECTED_ERROR = "Unexpected error happened while processing the request.";
+        public static final String UNEXPECTED_ERROR =
+                "Unexpected error happened while processing the request.";
+        public static final String SSN_LENGTH_INCORRECT =
+                "The SSN number must be a 12-digit string";
+        public static final String PSU_ID = "psuId";
+        public static final String PATTERN = "Pattern";
     }
 
     public static final class Tags {

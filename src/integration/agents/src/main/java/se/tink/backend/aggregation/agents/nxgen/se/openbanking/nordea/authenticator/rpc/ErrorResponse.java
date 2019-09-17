@@ -43,11 +43,12 @@ public class ErrorResponse {
         return error.getFailures().stream()
                 .anyMatch(
                         failure ->
-                                "error.validation".equals(failure.getCode())
-                                        && "The SSN number must be a 12-digit string"
-                                                .equalsIgnoreCase(failure.getDescription())
-                                        && "psuId".equalsIgnoreCase(failure.getPath())
-                                        && "Pattern".equalsIgnoreCase(failure.getType()));
+                                ErrorCode.VALIDATION_ERROR.equals(failure.getCode())
+                                        && ErrorMessage.SSN_LENGTH_INCORRECT.equalsIgnoreCase(
+                                                failure.getDescription())
+                                        && ErrorMessage.PSU_ID.equalsIgnoreCase(failure.getPath())
+                                        && ErrorMessage.PATTERN.equalsIgnoreCase(
+                                                failure.getType()));
     }
 
     @JsonIgnore
