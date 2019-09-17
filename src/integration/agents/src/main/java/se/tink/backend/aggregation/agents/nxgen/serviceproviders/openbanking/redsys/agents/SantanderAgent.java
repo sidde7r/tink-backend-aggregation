@@ -28,4 +28,9 @@ public class SantanderAgent extends RedsysAgent {
     public boolean supportsPendingTransactions() {
         return false;
     }
+
+    @Override
+    public boolean shouldReturnLowercaseAccountId() {
+        return true;
+    }
 }

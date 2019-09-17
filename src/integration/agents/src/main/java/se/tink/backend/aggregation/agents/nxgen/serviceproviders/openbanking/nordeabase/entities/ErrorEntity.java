@@ -18,7 +18,12 @@ public class ErrorEntity {
     private List<FailuresEntity> failures;
 
     @JsonIgnore
-    public void parseAndThrow(Throwable cause) throws PaymentException {
+    public boolean isBankSideFailure() {
+        return failures.stream().anyMatch(FailuresEntity::isBankSideFailure);
+    }
+
+    @JsonIgnore
+    public void parseAndThrowPis(Throwable cause) throws PaymentException {
         if ("ExternalError".equals(type)) {
             if (failures.isEmpty()) {
                 throw new IllegalStateException(

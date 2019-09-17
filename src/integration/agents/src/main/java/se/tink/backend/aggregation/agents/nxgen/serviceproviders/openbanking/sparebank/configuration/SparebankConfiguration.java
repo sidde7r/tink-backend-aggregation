@@ -9,10 +9,8 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class SparebankConfiguration implements ClientConfiguration {
 
-    private String qwacCertId;
     private String redirectUrl;
     private String keyId;
-    private String qsealcCertId;
     private String certificate;
     private String tppId;
 
@@ -37,24 +35,10 @@ public class SparebankConfiguration implements ClientConfiguration {
         return tppId;
     }
 
-    public String getQwacCertId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(qwacCertId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Qwac Cert ID"));
-        return qwacCertId;
-    }
-
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect Url"));
         return redirectUrl;
-    }
-
-    public String getQsealcCertId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(qsealcCertId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "QsealC Cert ID"));
-        return qsealcCertId;
     }
 }

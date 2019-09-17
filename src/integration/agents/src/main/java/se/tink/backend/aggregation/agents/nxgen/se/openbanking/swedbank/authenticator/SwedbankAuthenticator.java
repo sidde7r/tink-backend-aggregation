@@ -27,7 +27,7 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-        return apiClient.getToken(code);
+        return apiClient.exchangeCodeForToken(code);
     }
 
     @Override

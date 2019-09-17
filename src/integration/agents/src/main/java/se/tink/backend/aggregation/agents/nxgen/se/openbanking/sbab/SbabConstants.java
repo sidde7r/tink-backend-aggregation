@@ -21,6 +21,8 @@ public final class SbabConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String UNKNOWN_ACCOUNT_TYPE = "Unknown account type.";
+        public static final String MISSING_PAYMENT_REDIRECT_INFO =
+                "Missing payment redirect information";
     }
 
     public static class Urls {
@@ -40,11 +42,11 @@ public final class SbabConstants {
 
     public static class Endpoints {
         public static final String INITIATE_PAYMENT =
-                "/sandbox/psd2/savings/2.0/accounts/{accountNumber}/transfers";
+                "/savings/2.0/accounts/{accountNumber}/transfers";
         public static final String GET_PAYMENT =
-                "/sandbox/psd2/savings/2.0/accounts/{accountNumber}/transfers/status/{referenceId}";
+                "/savings/2.0/accounts/{accountNumber}/transfers/status/{referenceId}";
         public static final String SIGN_PAYMENT =
-                "/sandbox/psd2/savings/2.0/accounts/transfers/sign/{referenceId}";
+                "/savings/2.0/accounts/transfers/sign/{referenceId}";
         public static final String BASE_URL = "https://psd.sbab.se/psd2";
         public static final String AUTHORIZATION = "/auth/1.0/authorize";
         public static final String AUTHENTICATION = "/auth/1.0/authenticate";
@@ -65,7 +67,7 @@ public final class SbabConstants {
     public static class QueryKeys {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String GRANT_TYPE = "grant_type";
-        public static final String CODE = "pending_code";
+        public static final String REDIRECT_CODE = "pending_code";
         public static final String START_DATE = "startDate";
         public static final String END_DATE = "endDate";
         public static final String USER_ID = "user_id";
@@ -73,6 +75,7 @@ public final class SbabConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String RESPONSE_TYPE = "response_type";
         public static final String SCOPE = "scope";
+        public static final String STATE = "state";
     }
 
     public static class QueryValues {
@@ -80,6 +83,7 @@ public final class SbabConstants {
         public static final String SCOPE = "AIS,PIS";
         public static final String PENDING_AUTHORIZATION_CODE = "pending_authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String REDIRECT_CODE = "code";
     }
 
     public static class HeaderKeys {
@@ -113,5 +117,9 @@ public final class SbabConstants {
 
     public static class HeaderValues {
         public static final String PSU_IP_ADDRESS = "192.160.0.1";
+    }
+
+    public static class Errors {
+        public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
     }
 }

@@ -13,7 +13,7 @@ public class NordeaDkAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("DK", "dk-nordea-oauth2")
+                new AgentIntegrationTest.Builder("DK", "dk-nordea-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -13,7 +13,7 @@ public class GjensidigeAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-gjensidige-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-gjensidige-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

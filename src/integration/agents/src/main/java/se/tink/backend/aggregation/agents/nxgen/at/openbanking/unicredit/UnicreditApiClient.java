@@ -18,8 +18,8 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             Credentials credentials,
-            boolean requestIsManual) {
-        super(client, persistentStorage, credentials, requestIsManual);
+            boolean manualRequest) {
+        super(client, persistentStorage, credentials, manualRequest);
     }
 
     @Override
@@ -34,7 +34,11 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
 
     @Override
     protected String getTransactionsDateFrom() {
-        return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                DateUtils.addDays(new Date(), -QueryValues.MAX_PERIOD_IN_DAYS));
+        if (manualRequest) {
+            return QueryValues.TRANSACTION_FROM_DATE;
+        } else {
+            return ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                    DateUtils.addDays(new Date(), -QueryValues.MAX_PERIOD_IN_DAYS));
+        }
     }
 }

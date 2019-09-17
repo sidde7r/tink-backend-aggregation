@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -33,6 +35,8 @@ public class NordeaBaseApiClient implements TokenInterface {
     public NordeaBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+
+        this.client.addFilter(new BankSideFailureFilter());
     }
 
     public NordeaBaseConfiguration getConfiguration() {
@@ -108,6 +112,23 @@ public class NordeaBaseApiClient implements TokenInterface {
                 .get(GetAccountsResponse.class);
     }
 
+    public GetAccountsResponse getCorporateAccounts() {
+        return createRequestInSession(Urls.GET_CORPORATE_ACCOUNTS).get(GetAccountsResponse.class);
+    }
+
+    public GetTransactionsResponse getCorporateTransactions(
+            TransactionalAccount account, String key) {
+        URL url =
+                Optional.ofNullable(key)
+                        .map(k -> new URL(Urls.BASE_CORPORATE_URL + k))
+                        .orElse(
+                                NordeaBaseConstants.Urls.GET_CORPORATE_TRANSACTIONS.parameter(
+                                        NordeaBaseConstants.IdTags.ACCOUNT_ID,
+                                        account.getApiIdentifier()));
+
+        return createRequestInSession(url).get(GetTransactionsResponse.class);
+    }
+
     public GetTransactionsResponse getTransactions(TransactionalAccount account, String key) {
         URL url =
                 Optional.ofNullable(key)
@@ -142,7 +163,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                     paymentType.toString()))
                     .post(CreatePaymentResponse.class, createPaymentRequest);
         } catch (HttpResponseException e) {
-            handleHttpResponseException(e);
+            handleHttpPisResponseException(e);
             throw e;
         }
     }
@@ -158,7 +179,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                     .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
                     .put(ConfirmPaymentResponse.class);
         } catch (HttpResponseException e) {
-            handleHttpResponseException(e);
+            handleHttpPisResponseException(e);
             throw e;
         }
     }
@@ -174,7 +195,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                     .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
                     .get(GetPaymentResponse.class);
         } catch (HttpResponseException e) {
-            handleHttpResponseException(e);
+            handleHttpPisResponseException(e);
             throw e;
         }
     }
@@ -187,19 +208,19 @@ public class NordeaBaseApiClient implements TokenInterface {
                                     paymentType.toString()))
                     .get(GetPaymentsResponse.class);
         } catch (HttpResponseException e) {
-            handleHttpResponseException(e);
+            handleHttpPisResponseException(e);
             throw e;
         }
     }
 
-    private void handleHttpResponseException(HttpResponseException httpResponseException)
+    private void handleHttpPisResponseException(HttpResponseException httpResponseException)
             throws PaymentException {
         if (httpResponseException.getResponse().hasBody()) {
             try {
                 httpResponseException
                         .getResponse()
                         .getBody(NordeaErrorResponse.class)
-                        .checkError(httpResponseException);
+                        .checkPisError(httpResponseException);
             } catch (HttpClientException | HttpResponseException d) {
                 throw httpResponseException;
             }

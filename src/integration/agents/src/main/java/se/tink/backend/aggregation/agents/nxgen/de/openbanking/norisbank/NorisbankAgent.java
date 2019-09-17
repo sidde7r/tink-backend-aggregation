@@ -11,6 +11,6 @@ public final class NorisbankAgent extends DeutscheBankAgent {
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
-        super(request, context, configuration, NorisbankConstants.INTEGRATION_NAME);
+        super(request, context, configuration);
     }
 }

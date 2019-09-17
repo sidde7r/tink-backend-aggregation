@@ -22,7 +22,7 @@ public class KreditbankenAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-kreditbanken-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-kreditbanken-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .loadCredentialsBefore(false)

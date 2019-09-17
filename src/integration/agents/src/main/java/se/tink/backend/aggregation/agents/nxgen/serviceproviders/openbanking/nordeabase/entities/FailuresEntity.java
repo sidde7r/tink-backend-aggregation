@@ -63,6 +63,11 @@ public class FailuresEntity {
     }
 
     @JsonIgnore
+    public boolean isBankSideFailure() {
+        return "error.server".equalsIgnoreCase(code);
+    }
+
+    @JsonIgnore
     @Override
     public String toString() {
         return "FailuresEntity[code : "

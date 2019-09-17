@@ -23,7 +23,7 @@ public class ErstebankAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("AT", "at-erstebank-oauth2")
+                new AgentIntegrationTest.Builder("AT", "at-erstebank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

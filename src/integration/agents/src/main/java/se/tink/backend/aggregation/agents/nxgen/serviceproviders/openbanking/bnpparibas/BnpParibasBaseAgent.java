@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.BnpParibasAuthenticator;
@@ -23,29 +25,36 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BnpParibasBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                ManualOrAutoAuth {
 
-    private final String clientName;
     private BnpParibasApiBaseClient apiClient;
     private BnpParibasConfiguration bnpParibasConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AgentsServiceConfiguration agentsServiceConfiguration;
     private BnpParibasTransactionalAccountFetcher accountFetcher;
     private BnpParibasTransactionFetcher transactionFetcher;
+    private AutoAuthenticationController authenticator;
 
     public BnpParibasBaseAgent(
             final CredentialsRequest request,
             final AgentContext context,
-            final SignatureKeyPair signatureKeyPair,
-            final String bank) {
+            final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        clientName = request.getProvider().getPayload();
-        this.apiClient = new BnpParibasApiBaseClient(client, sessionStorage, bank);
+        this.apiClient = new BnpParibasApiBaseClient(client, sessionStorage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
+        if (authenticator == null) {
+            authenticator = doConstructAuthenticator();
+        }
+        return authenticator;
+    }
+
+    private AutoAuthenticationController doConstructAuthenticator() {
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
                         persistentStorage,
@@ -63,26 +72,14 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 controller);
     }
 
-    private BnpParibasConfiguration getBnpParibasConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        BnpParibasBaseConstants.INTEGRATION_NAME,
-                        clientName,
-                        BnpParibasConfiguration.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        BnpParibasBaseConstants.ErrorMessages
-                                                .MISSING_CONFIGURATION));
-    }
-
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         this.agentsServiceConfiguration = configuration;
 
-        bnpParibasConfiguration = getBnpParibasConfiguration();
+        bnpParibasConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(BnpParibasConfiguration.class);
         apiClient.setConfiguration(bnpParibasConfiguration);
         client.setEidasProxy(configuration.getEidasProxy(), bnpParibasConfiguration.getEidasQwac());
 
@@ -133,5 +130,10 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(transactionFetcher)));
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        return ((ManualOrAutoAuth) constructAuthenticator()).isManualAuthentication(credentials);
     }
 }

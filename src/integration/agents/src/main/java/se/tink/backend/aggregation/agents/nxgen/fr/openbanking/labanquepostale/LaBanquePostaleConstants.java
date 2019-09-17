@@ -4,15 +4,14 @@ public final class LaBanquePostaleConstants {
     public static final String INTEGRATION_NAME = "labanquepostale";
 
     public static class Urls {
-        private static final String BASE_URL = "https://sandbox.labanquepostale.com";
-        public static final String OAUTH = BASE_URL + "/authorize";
-        public static final String GET_TOKEN = BASE_URL + "/token";
-        public static final String FETCH_ACCOUNTS = BASE_URL + "/accounts";
-        public static final String FETCH_BALANCES = BASE_URL + "/accounts/%s/balances";
-        public static final String BASE_URL_WITH_SLASH = BASE_URL + "/";
-        public static final String PAYMENT_INITIATION = BASE_URL + "/payment-requests";
-        public static final String GET_PAYMENT = BASE_URL + "/payment-requests/%s";
-        public static final String CONFIRM_PAYMENT = BASE_URL + "/payment-requests/%s/confirmation";
+
+        public static final String OAUTH = "/authorize";
+        public static final String GET_TOKEN = "/token";
+        public static final String FETCH_ACCOUNTS = "/accounts";
+        public static final String FETCH_BALANCES = "/accounts/%s/balances";
+        public static final String PAYMENT_INITIATION = "/payment-requests";
+        public static final String GET_PAYMENT = "/payment-requests/%s";
+        public static final String CONFIRM_PAYMENT = "/payment-requests/%s/confirmation";
     }
 
     public static class StorageKeys {

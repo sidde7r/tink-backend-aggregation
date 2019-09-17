@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public final class DnbConstants {
 
     public static final String INTEGRATION_NAME = "dnb";
+    public static final String BASE_URL = "https://api.psd.dnb.no";
+    public static final String CERTIFICATE_ID = "Tink";
 
     private DnbConstants() {
         throw new AssertionError();
@@ -61,6 +63,8 @@ public final class DnbConstants {
         public static final String STATE = "state";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String CODE = "code";
+        public static final String FROM_DATE = "dateFrom";
+        public static final String TO_DATE = "dateTo";
     }
 
     public static class QueryValues {

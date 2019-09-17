@@ -12,7 +12,7 @@ public class SebAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-seb-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-seb-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -13,7 +13,7 @@ public class SwedbankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-swedbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-swedbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

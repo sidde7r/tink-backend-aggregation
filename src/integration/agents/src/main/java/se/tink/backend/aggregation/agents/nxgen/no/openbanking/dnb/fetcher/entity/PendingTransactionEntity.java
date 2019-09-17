@@ -10,7 +10,7 @@ public class PendingTransactionEntity extends TransactionDetailsEntity {
                 .setPending(true)
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)
-                .setDescription(remittanceInformationUnstructured)
+                .setDescription(additionalInformation)
                 .build();
     }
 }

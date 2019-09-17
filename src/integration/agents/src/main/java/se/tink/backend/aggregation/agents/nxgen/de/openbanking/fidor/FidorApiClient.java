@@ -112,6 +112,8 @@ public final class FidorApiClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                .header("TPP-Redirect-URI", new URL(configuration.getRedirectUri()))
+                .header("TPP-Redirect-Preferred", "false")
                 .addBearerToken(authToken);
     }
 

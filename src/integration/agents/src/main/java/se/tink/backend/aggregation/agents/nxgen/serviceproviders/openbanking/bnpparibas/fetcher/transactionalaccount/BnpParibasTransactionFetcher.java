@@ -9,10 +9,11 @@ import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class BnpParibasTransactionFetcher implements TransactionDatePaginator {
+public class BnpParibasTransactionFetcher
+        implements TransactionDatePaginator<TransactionalAccount> {
 
     private final BnpParibasApiBaseClient apiClient;
     private final SessionStorage sessionStorage;
@@ -32,7 +33,8 @@ public class BnpParibasTransactionFetcher implements TransactionDatePaginator {
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(Account account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         String reqId = UUID.randomUUID().toString();
         String signature =
                 BnpParibasUtils.buildSignatureHeader(

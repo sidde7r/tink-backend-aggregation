@@ -13,7 +13,7 @@ public class LusterAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-lustersand-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-lustersand-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -94,25 +94,18 @@ public final class SbabApiClient {
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, String debtorAccountNumber) {
         return createRequest(
-                        SbabConstants.Urls.INITIATE_PAYMENT.parameter(
-                                IdTags.ACCOUNT_NUMBER, debtorAccountNumber))
+                        Urls.INITIATE_PAYMENT.parameter(IdTags.ACCOUNT_NUMBER, debtorAccountNumber))
                 .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public GetPaymentResponse getPayment(String transferId, String debtorId) {
         return createRequest(
-                        SbabConstants.Urls.GET_PAYMENT
+                        Urls.GET_PAYMENT
                                 .parameter(IdTags.ACCOUNT_NUMBER, debtorId)
                                 .parameter(IdTags.PAYMENT_ID, transferId))
                 .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
                 .get(GetPaymentResponse.class);
-    }
-
-    public String signPayment(String paymentId) {
-        return createRequest(Urls.SIGN_PAYMENT.parameter(IdTags.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
-                .put(String.class);
     }
 
     public BankIdResponse initBankId(String ssn) {
@@ -139,6 +132,7 @@ public final class SbabApiClient {
         RefreshTokenRequest tokenRequest =
                 new RefreshTokenRequest(QueryValues.REFRESH_TOKEN, refreshToken);
         return client.request(Urls.TOKEN)
+                .header(HeaderKeys.PSU_IP_ADDRESS, "")
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(DecoupledResponse.class, tokenRequest.toData());

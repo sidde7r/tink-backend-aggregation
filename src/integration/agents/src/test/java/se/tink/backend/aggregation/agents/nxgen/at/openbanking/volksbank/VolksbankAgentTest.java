@@ -26,7 +26,7 @@ public class VolksbankAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("at", "at-volksbank-oauth2")
+                new AgentIntegrationTest.Builder("at", "at-volksbank-ob")
                         .addCredentialField(Key.LOGIN_INPUT, manager.get(Arg.PSU_ID))
                         .addCredentialField(Key.LOGIN_DESCRIPTION, manager.get(Arg.PSU_ID_TYPE))
                         .loadCredentialsBefore(false)

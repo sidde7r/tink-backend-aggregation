@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher;
 
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class DnbTransactionFetcher
-        implements TransactionKeyPaginator<TransactionalAccount, String> {
+public class DnbTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
 
     private final DnbApiClient apiClient;
 
@@ -15,8 +15,8 @@ public class DnbTransactionFetcher
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
-            final TransactionalAccount account, final String nextUrl) {
-        return apiClient.fetchTransactions(account.getApiIdentifier());
+    public PaginatorResponse getTransactionsFor(
+            final TransactionalAccount account, Date fromDate, Date toDate) {
+        return apiClient.fetchTransactions(account.getApiIdentifier(), fromDate, toDate);
     }
 }

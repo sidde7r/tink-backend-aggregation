@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
@@ -78,15 +77,8 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
     protected abstract String getIntegrationName();
 
     private Xs2aDevelopersConfiguration getClientConfiguration() {
-        return getClientConfiguration(getIntegrationName());
-    }
-
-    private Xs2aDevelopersConfiguration getClientConfiguration(String integrationName) {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        integrationName, clientName, Xs2aDevelopersConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController()
+                .getAgentConfiguration(Xs2aDevelopersConfiguration.class);
     }
 
     @Override

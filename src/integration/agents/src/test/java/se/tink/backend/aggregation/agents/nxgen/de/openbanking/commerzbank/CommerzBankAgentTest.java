@@ -21,11 +21,13 @@ public class CommerzBankAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("de", "de-commerzbank-oauth2")
+                new AgentIntegrationTest.Builder("de", "de-commerzbank-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                        .setFinancialInstitutionId("commerzbank")
+                        .setAppId("tink");
     }
 
     @Test

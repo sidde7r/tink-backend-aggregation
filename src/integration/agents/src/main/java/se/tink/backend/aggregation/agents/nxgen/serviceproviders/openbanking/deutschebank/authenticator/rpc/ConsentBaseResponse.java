@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities.ConsentBaseLinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -19,5 +20,10 @@ public class ConsentBaseResponse {
 
     public ConsentBaseLinksEntity getLinks() {
         return links;
+    }
+
+    @JsonIgnore
+    public String getConsentStatus() {
+        return consentStatus;
     }
 }

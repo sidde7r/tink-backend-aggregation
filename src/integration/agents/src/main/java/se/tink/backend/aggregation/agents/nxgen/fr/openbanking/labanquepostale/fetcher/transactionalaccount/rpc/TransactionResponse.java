@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.TransactionalLinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -26,15 +25,8 @@ public class TransactionResponse implements TransactionKeyPaginatorResponse<Stri
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        Stream<Transaction> bookedTransactionsStream =
-                transactions.stream()
-                        .filter(TransactionEntity::isBooked)
-                        .map(TransactionEntity::toTinkTransaction);
-        Stream<Transaction> pendingTransactionStream =
-                transactions.stream()
-                        .filter(transaction -> !transaction.isBooked())
-                        .map(TransactionEntity::toTinkTransaction);
-        return Stream.concat(bookedTransactionsStream, pendingTransactionStream)
+        return transactions.stream()
+                .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 

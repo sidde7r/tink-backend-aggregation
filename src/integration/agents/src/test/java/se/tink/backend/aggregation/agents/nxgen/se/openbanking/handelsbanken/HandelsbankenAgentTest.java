@@ -26,6 +26,8 @@ public class HandelsbankenAgentTest {
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("handelsbanken")
+                        .setAppId("tink")
                         .expectLoggedIn(false);
     }
 

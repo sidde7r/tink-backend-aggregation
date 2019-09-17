@@ -13,7 +13,9 @@ public class SPankkiAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fi", "fi-spankki-oauth2")
+                new AgentIntegrationTest.Builder("fi", "fi-spankki-ob")
+                        .setFinancialInstitutionId("SPankki")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

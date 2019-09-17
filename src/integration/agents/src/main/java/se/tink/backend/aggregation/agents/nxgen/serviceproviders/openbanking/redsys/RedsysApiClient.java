@@ -13,12 +13,15 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HttpErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.QueryValues.BookingStatus;
@@ -30,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentResponse;
@@ -42,6 +46,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.AccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.filters.ErrorFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
@@ -80,6 +85,12 @@ public final class RedsysApiClient {
         this.persistentStorage = persistentStorage;
         this.aspspConfiguration = aspspConfiguration;
         this.eidasIdentity = eidasIdentity;
+
+        client.addFilter(
+                new ErrorFilter(
+                        HttpErrorCodes.TOO_MANY_REQUESTS,
+                        ErrorCodes.ACCESS_EXCEEDED,
+                        BankServiceError.ACCESS_EXCEEDED));
     }
 
     private RedsysConfiguration getConfiguration() {
@@ -191,6 +202,11 @@ public final class RedsysApiClient {
                         .map(LinkEntity::getHref)
                         .get();
         return new Pair<>(consentId, new URL(consentRedirectUrl));
+    }
+
+    public ConsentResponse fetchConsent(String consentId) {
+        final String url = makeApiUrl(Urls.CONSENT, consentId);
+        return createSignedRequest(url).get(ConsentResponse.class);
     }
 
     public ConsentStatus fetchConsentStatus(String consentId) {
@@ -354,14 +370,21 @@ public final class RedsysApiClient {
     }
 
     private void setFetchingTransactionsUntil(String accountId, LocalDate date) {
-        final String fetchedUntilDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
-        sessionStorage.put(StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId, fetchedUntilDate);
+        final String key = StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId;
+        if (Objects.isNull(date)) {
+            sessionStorage.remove(key);
+        } else {
+            final String fetchedUntilDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+            sessionStorage.put(key, fetchedUntilDate);
+        }
     }
 
     private void persistFetchedTransactionsUntil(String accountId) {
         final String key = StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId;
         final String value = sessionStorage.remove(key);
-        persistentStorage.put(key, value);
+        if (!Objects.isNull(value)) {
+            persistentStorage.put(key, value);
+        }
     }
 
     private BaseTransactionsResponse fetchTransactions(String accountId, RequestBuilder request) {
@@ -400,6 +423,7 @@ public final class RedsysApiClient {
         final Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
         headers.put(HeaderKeys.CONSENT_ID, consentId);
+        setFetchingTransactionsUntil(accountId, null);
 
         final RequestBuilder request =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)

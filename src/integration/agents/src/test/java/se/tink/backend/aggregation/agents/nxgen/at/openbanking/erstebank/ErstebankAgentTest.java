@@ -13,7 +13,7 @@ public class ErstebankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("at", "at-erstebank-oauth2")
+                new AgentIntegrationTest.Builder("at", "at-erstebank-ob")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

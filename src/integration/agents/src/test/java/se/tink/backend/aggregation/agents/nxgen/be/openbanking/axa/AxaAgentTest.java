@@ -25,7 +25,9 @@ public class AxaAgentTest {
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("axa")
+                        .setAppId("tink");
     }
 
     @Test

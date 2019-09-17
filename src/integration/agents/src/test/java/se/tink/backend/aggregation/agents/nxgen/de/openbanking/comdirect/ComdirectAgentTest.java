@@ -22,11 +22,13 @@ public class ComdirectAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("de", "de-comdirect-oauth2")
+                new AgentIntegrationTest.Builder("de", "de-comdirect-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("comdirect")
+                        .setAppId("tink");
     }
 
     @Test

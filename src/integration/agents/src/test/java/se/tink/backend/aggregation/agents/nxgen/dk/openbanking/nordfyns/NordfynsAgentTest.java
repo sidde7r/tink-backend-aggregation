@@ -22,7 +22,7 @@ public class NordfynsAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-nordfyns-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-nordfyns-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .loadCredentialsBefore(false)

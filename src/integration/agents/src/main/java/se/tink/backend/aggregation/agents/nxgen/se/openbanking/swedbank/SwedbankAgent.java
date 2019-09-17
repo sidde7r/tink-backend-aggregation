@@ -137,10 +137,10 @@ public final class SwedbankAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         SwedbankPaymentAuthenticator paymentAuthenticator =
-                new SwedbankPaymentAuthenticator(
-                        supplementalInformationHelper, strongAuthenticationState);
+                new SwedbankPaymentAuthenticator(supplementalInformationHelper);
         SwedbankPaymentExecutor swedbankPaymentExecutor =
-                new SwedbankPaymentExecutor(apiClient, paymentAuthenticator);
+                new SwedbankPaymentExecutor(
+                        apiClient, paymentAuthenticator, strongAuthenticationState);
 
         return Optional.of(new PaymentController(swedbankPaymentExecutor, swedbankPaymentExecutor));
     }

@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 @Ignore
 public class VolvoMastercardNoAgentTest extends SebAgentBaseTest {
 
-    private static final String PROVIDER_NAME = "no-volvomastercard-oauth2";
+    private static final String PROVIDER_NAME = "no-volvomastercard-ob";
 
     private static final String MARKET = "no";
 

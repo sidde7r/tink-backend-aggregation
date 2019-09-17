@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.BecAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.BecController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.configuration.BecConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.BecPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.BecPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.BecTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -117,9 +118,14 @@ public class BecAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        BecPaymentExecutor becPaymentExecutor = new BecPaymentExecutor(apiClient);
+        BecPaymentExecutor becPaymentExecutor = new BecPaymentExecutor(apiClient, sessionStorage);
 
-        return Optional.of(new PaymentController(becPaymentExecutor, becPaymentExecutor));
+        return Optional.of(
+                new BecPaymentController(
+                        becPaymentExecutor,
+                        becPaymentExecutor,
+                        supplementalInformationHelper,
+                        sessionStorage));
     }
 
     protected SessionHandler constructSessionHandler() {

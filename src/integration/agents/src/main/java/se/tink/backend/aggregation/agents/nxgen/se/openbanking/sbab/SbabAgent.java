@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.SbabPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.SbabPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountTransactionFetcher;
@@ -55,17 +55,19 @@ public final class SbabAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        SbabPaymentExecutor sbabPaymentExecutor = new SbabPaymentExecutor(apiClient);
+        SbabPaymentExecutor sbabPaymentExecutor =
+                new SbabPaymentExecutor(apiClient, getClientConfiguration(), sessionStorage);
 
-        return Optional.of(new PaymentController(sbabPaymentExecutor, sbabPaymentExecutor));
+        return Optional.of(
+                new SbabPaymentController(
+                        sbabPaymentExecutor,
+                        sbabPaymentExecutor,
+                        supplementalInformationHelper,
+                        sessionStorage));
     }
 
     protected SbabConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        SbabConstants.INTEGRATION_NAME, clientName, SbabConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController().getAgentConfiguration(SbabConfiguration.class);
     }
 
     @Override

@@ -32,7 +32,7 @@ public enum SparebankPaymentStatus {
         sparebankPaymentStatusToTinkMapper.put(ACTC, PaymentStatus.PENDING);
         sparebankPaymentStatusToTinkMapper.put(ACWC, PaymentStatus.PENDING);
         sparebankPaymentStatusToTinkMapper.put(ACWP, PaymentStatus.PENDING);
-        sparebankPaymentStatusToTinkMapper.put(RCVD, PaymentStatus.CREATED);
+        sparebankPaymentStatusToTinkMapper.put(RCVD, PaymentStatus.PENDING);
         sparebankPaymentStatusToTinkMapper.put(PDNG, PaymentStatus.PENDING);
         sparebankPaymentStatusToTinkMapper.put(RJCT, PaymentStatus.REJECTED);
         sparebankPaymentStatusToTinkMapper.put(CANC, PaymentStatus.CANCELLED);

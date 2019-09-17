@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
@@ -18,38 +17,34 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class BerlinGroupAgent<
-                TApiCliient extends BerlinGroupApiClient,
+                TApiCliient extends BerlinGroupApiClient<TConfiguration>,
                 TConfiguration extends BerlinGroupConfiguration>
         extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
     private final String clientName;
-    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BerlinGroupAgent(
             final CredentialsRequest request,
             final AgentContext context,
             final AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-
         clientName = request.getProvider().getPayload();
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        client.setEidasProxy(configuration.getEidasProxy(), getConfiguration().getEidasQwac());
     }
 
     protected abstract TApiCliient getApiClient();
 
     protected TConfiguration getConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        getIntegrationName(), clientName, getConfigurationClassDescription())
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController()
+                .getAgentConfiguration(getConfigurationClassDescription());
     }
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         getApiClient().setConfiguration(getConfiguration());
+        client.setEidasProxy(configuration.getEidasProxy(), getConfiguration().getEidasQwac());
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected abstract String getIntegrationName();

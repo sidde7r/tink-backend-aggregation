@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeadersToSign;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.IdTags;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.PaymentTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.PaymentProducts;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.StorageKeys;
@@ -47,9 +47,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class BecApiClient {
     private final TinkHttpClient client;
-    private String state;
     private final String baseUrl;
     private final PersistentStorage persistentStorage;
+    private String state;
     private BecConfiguration becConfiguration;
     private AgentsServiceConfiguration config;
     private EidasIdentity eidasIdentity;
@@ -95,6 +95,29 @@ public final class BecApiClient {
         return headers;
     }
 
+    private Map<String, Object> getPisHeaders(String requestId, String digest) {
+        String redirectUrl =
+                new URL(becConfiguration.getRedirectUrl())
+                        .queryParam(QueryKeys.STATE, state)
+                        .toString();
+
+        Map<String, Object> headers =
+                new HashMap<String, Object>() {
+                    {
+                        put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
+                        put(HeaderKeys.X_REQUEST_ID, requestId);
+                        put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+                        put(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+                        put(HeaderKeys.DIGEST, digest);
+                        put(
+                                HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
+                                becConfiguration.getQsealCertificate());
+                    }
+                };
+
+        return headers;
+    }
+
     public RequestBuilder createRequest(URL url, String requestBody) {
         String requestId = UUID.randomUUID().toString();
         String digest = createDigest(requestBody);
@@ -106,8 +129,23 @@ public final class BecApiClient {
                 .header(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
     }
 
+    public RequestBuilder createPisRequest(URL url, String requestBody) {
+        String requestId = UUID.randomUUID().toString();
+        String digest = createDigest(requestBody);
+        Map<String, Object> headers = getPisHeaders(requestId, digest);
+
+        return client.request(url)
+                .type(MediaType.APPLICATION_JSON)
+                .headers(headers)
+                .header(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
+    }
+
     public RequestBuilder createRequest(URL url) {
         return createRequest(url, FormValues.EMPTY_STRING);
+    }
+
+    public RequestBuilder createPisRequest(URL url) {
+        return createPisRequest(url, FormValues.EMPTY_STRING);
     }
 
     public ConsentResponse getConsent(String state) throws HttpResponseException {
@@ -169,17 +207,21 @@ public final class BecApiClient {
                 .get(GetTransactionsResponse.class);
     }
 
-    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
-        return createRequest(
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, String state) {
+        this.state = state;
+
+        return createPisRequest(
                         new URL(baseUrl.concat(ApiService.CREATE_PAYMENT))
                                 .parameter(
                                         IdTags.PAYMENT_TYPE,
-                                        PaymentTypes.INSTANT_DANISH_DOMESTIC_CREDIT_TRANSFER))
+                                        PaymentProducts.DOMESTIC_CREDIT_TRANSFER),
+                        SerializationUtils.serializeToString(createPaymentRequest))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public GetPaymentResponse getPayment(String paymentId) {
-        return createRequest(
+        return createPisRequest(
                         new URL(baseUrl.concat(ApiService.GET_PAYMENT))
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
                 .get(GetPaymentResponse.class);

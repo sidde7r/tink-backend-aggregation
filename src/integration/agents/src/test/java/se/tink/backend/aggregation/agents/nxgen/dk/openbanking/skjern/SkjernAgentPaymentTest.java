@@ -24,7 +24,7 @@ public class SkjernAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DK", "dk-skjern-oauth2")
+                new AgentIntegrationTest.Builder("DK", "dk-skjern-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

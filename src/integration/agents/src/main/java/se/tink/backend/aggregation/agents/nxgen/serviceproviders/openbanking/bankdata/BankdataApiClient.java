@@ -73,7 +73,7 @@ public final class BankdataApiClient {
             BankdataConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.client.setEidasProxy(eidasProxyConfiguration, "Tink");
+        this.client.setEidasProxy(eidasProxyConfiguration, "");
     }
 
     protected void pisSetConfiguration(BankdataConfiguration configuration) {
@@ -249,11 +249,7 @@ public final class BankdataApiClient {
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
-                /**
-                 * It should be BOTH (not BOOKED) but currently the bank only supports BOOKED. This
-                 * makes us unable to fetch pending transactions.
-                 */
-                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(TransactionResponse.class);
     }
 

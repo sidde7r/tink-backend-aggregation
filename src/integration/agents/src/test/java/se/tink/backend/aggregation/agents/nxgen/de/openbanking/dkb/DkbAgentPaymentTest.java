@@ -28,7 +28,7 @@ public class DkbAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DE", "de-dkb-password")
+                new AgentIntegrationTest.Builder("DE", "de-dkb-ob")
                         .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
                         .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
                         .addCredentialField(CredentialKeys.IBAN, TEST_IBAN)

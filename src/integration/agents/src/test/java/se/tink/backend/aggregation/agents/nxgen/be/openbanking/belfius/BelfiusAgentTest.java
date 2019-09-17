@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -11,14 +12,17 @@ public class BelfiusAgentTest {
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
+
     @Before
     public void setup() {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-belfius-oauth2")
-                        .addCredentialField(CredentialKeys.USERNAME, manager.get(Arg.USERNAME))
-                        .addCredentialField(CredentialKeys.PASSWORD, manager.get(Arg.PASSWORD))
+                new AgentIntegrationTest.Builder("be", "be-belfius-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
@@ -31,8 +35,6 @@ public class BelfiusAgentTest {
     }
 
     private enum Arg {
-        USERNAME,
-        PASSWORD,
         IBAN
     }
 }

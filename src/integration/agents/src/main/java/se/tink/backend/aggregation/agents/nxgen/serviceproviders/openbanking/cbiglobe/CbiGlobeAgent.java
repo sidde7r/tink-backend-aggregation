@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
@@ -29,22 +31,30 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class CbiGlobeAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                ManualOrAutoAuth {
 
     protected final String clientName;
     protected CbiGlobeAuthenticationController controller;
     protected CbiGlobeApiClient apiClient;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private AutoAuthenticationController autoAuthenticationController;
 
     public CbiGlobeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new CbiGlobeApiClient(client, persistentStorage, request.isManual());
+        apiClient = getApiClient(request.isManual());
         clientName = request.getProvider().getPayload();
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected abstract String getIntegrationName();
+
+    protected CbiGlobeApiClient getApiClient(boolean requestManual) {
+        return new CbiGlobeApiClient(client, persistentStorage, requestManual);
+    }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -79,14 +89,14 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
                                 apiClient, persistentStorage, getClientConfiguration()),
                         new StrongAuthenticationState(request.getAppUriId()));
 
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        return new AutoAuthenticationController(
-                request,
-                systemUpdater,
-                new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                controller);
+        autoAuthenticationController =
+                new AutoAuthenticationController(
+                        request,
+                        systemUpdater,
+                        new ThirdPartyAppAuthenticationController<>(
+                                controller, supplementalInformationHelper),
+                        controller);
+        return autoAuthenticationController;
     }
 
     @Override
@@ -133,5 +143,13 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
                 new CbiGlobePaymentExecutor(
                         apiClient, supplementalInformationHelper, persistentStorage);
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        if (autoAuthenticationController != null) {
+            return autoAuthenticationController.isManualAuthentication(credentials);
+        }
+        return false;
     }
 }

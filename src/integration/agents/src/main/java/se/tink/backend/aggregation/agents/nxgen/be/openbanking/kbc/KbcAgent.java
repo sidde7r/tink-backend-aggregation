@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.executor.payment.KbcPaymentAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.executor.payment.KbcPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.fetcher.KbcTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
@@ -62,9 +63,12 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
                         supplementalInformationHelper, strongAuthenticationState);
 
         KbcPaymentExecutor kbcPaymentExecutor =
-                new KbcPaymentExecutor(apiClient, paymentAuthenticator, getConfiguration());
+                new KbcPaymentExecutor(
+                        apiClient, paymentAuthenticator, getConfiguration(), sessionStorage);
 
-        return Optional.of(new PaymentController(kbcPaymentExecutor, kbcPaymentExecutor));
+        return Optional.of(
+                new KbcPaymentAuthenticationController(
+                        kbcPaymentExecutor, supplementalInformationHelper, sessionStorage));
     }
 
     @Override

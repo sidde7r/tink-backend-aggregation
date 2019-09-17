@@ -22,7 +22,7 @@ public class RingkjobingLandbobankAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-ringkjobinglandbobank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-ringkjobinglandbobank-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .loadCredentialsBefore(false)

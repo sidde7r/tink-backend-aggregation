@@ -23,7 +23,7 @@ public class SantanderAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("de", "de-santander-oauth2")
+                new AgentIntegrationTest.Builder("de", "de-santander-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)

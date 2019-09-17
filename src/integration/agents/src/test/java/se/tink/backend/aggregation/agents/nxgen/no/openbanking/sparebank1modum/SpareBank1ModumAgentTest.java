@@ -13,7 +13,7 @@ public class SpareBank1ModumAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sparebank1modum-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sparebank1modum-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

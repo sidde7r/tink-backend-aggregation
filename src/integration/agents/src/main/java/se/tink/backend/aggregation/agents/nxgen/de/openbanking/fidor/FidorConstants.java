@@ -29,7 +29,7 @@ public final class FidorConstants {
     }
 
     public static class Urls {
-        private static final String BASE_URL = "https://xs2a.sandbox.fidorsolutions.cloud";
+        private static final String BASE_URL = "https://xs2a.fidor.de";
         public static final String CONSENTS = BASE_URL + "/v1/consents";
         public static final String ONBOARDING = BASE_URL + "/hello";
         public static final String CREATE_ACCOUNT = BASE_URL + "/customers";

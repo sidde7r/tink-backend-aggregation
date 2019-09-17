@@ -32,22 +32,14 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
     public DeutscheBankAgent(
             CredentialsRequest request,
             AgentContext context,
-            AgentsServiceConfiguration configuration,
-            String integrationName) {
+            AgentsServiceConfiguration configuration) {
         super(request, context, configuration.getSignatureKeyPair());
 
         clientName = request.getProvider().getPayload();
 
         deutscheBankConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                integrationName, clientName, DeutscheBankConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                DeutscheBankConstants.ErrorMessages
-                                                        .MISSING_CONFIGURATION));
+                getAgentConfigurationController()
+                        .getAgentConfiguration(DeutscheBankConfiguration.class);
 
         apiClient = new DeutscheBankApiClient(client, sessionStorage, deutscheBankConfiguration);
 

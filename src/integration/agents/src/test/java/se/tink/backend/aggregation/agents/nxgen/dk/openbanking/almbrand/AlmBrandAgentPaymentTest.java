@@ -24,7 +24,7 @@ public class AlmBrandAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("DK", "dk-almbrand-oauth2")
+                new AgentIntegrationTest.Builder("DK", "dk-almbrand-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

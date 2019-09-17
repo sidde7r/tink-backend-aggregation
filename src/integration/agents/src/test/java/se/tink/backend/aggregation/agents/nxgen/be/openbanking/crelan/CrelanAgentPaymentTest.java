@@ -28,7 +28,7 @@ public class CrelanAgentPaymentTest {
         manager.before();
 
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("be", "be-crelan-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-crelan-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)

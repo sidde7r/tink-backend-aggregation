@@ -12,7 +12,7 @@ public class FrorupAndelskasseAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-frorupandelskasse-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-frorupandelskasse-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

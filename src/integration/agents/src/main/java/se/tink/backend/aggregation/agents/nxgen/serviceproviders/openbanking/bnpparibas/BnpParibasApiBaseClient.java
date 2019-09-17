@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bn
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
-import java.util.TimeZone;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang.time.DateFormatUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.TokenResponse;
@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BnpParibasApiBaseClient {
@@ -23,20 +24,15 @@ public class BnpParibasApiBaseClient {
     private final SessionStorage sessionStorage;
     private final TinkHttpClient client;
     private BnpParibasConfiguration bnpParibasConfiguration;
-    private final String bank;
 
-    public BnpParibasApiBaseClient(
-            TinkHttpClient client, SessionStorage sessionStorage, String bank) {
+    public BnpParibasApiBaseClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.bank = bank;
     }
 
     public URL getAuthorizeUrl(String state) {
 
-        return client.request(
-                        new URL(BnpParibasBaseConstants.Urls.AUTHENTICATION_URL)
-                                .parameter(BnpParibasBaseConstants.IdTags.BANK, bank))
+        return client.request(new URL(bnpParibasConfiguration.getAuthorizeUrl()))
                 .queryParam(
                         BnpParibasBaseConstants.QueryKeys.CLIENT_ID,
                         bnpParibasConfiguration.getClientId())
@@ -64,7 +60,7 @@ public class BnpParibasApiBaseClient {
     }
 
     private RequestBuilder createRequestInSession(URL url, String signature, String reqId) {
-        return client.request(url.parameter(BnpParibasBaseConstants.IdTags.BANK, bank))
+        return client.request(url)
                 .addBearerToken(getTokenFromSession())
                 .header(BnpParibasBaseConstants.HeaderKeys.SIGNATURE, signature)
                 .header(BnpParibasBaseConstants.HeaderKeys.X_REQUEST_ID, reqId)
@@ -72,9 +68,7 @@ public class BnpParibasApiBaseClient {
     }
 
     public TokenResponse exchangeAuthorizationToken(TokenRequest request) {
-        return client.request(
-                        new URL(BnpParibasBaseConstants.Urls.TOKEN_URL)
-                                .parameter(BnpParibasBaseConstants.IdTags.BANK, bank))
+        return client.request(new URL(bnpParibasConfiguration.getTokenUrl()))
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(
                         BnpParibasBaseConstants.HeaderKeys.AUTHORIZATION,
@@ -86,9 +80,7 @@ public class BnpParibasApiBaseClient {
     }
 
     public OAuth2Token exchangeRefreshToken(RefreshRequest request) {
-        return client.request(
-                        new URL(BnpParibasBaseConstants.Urls.TOKEN_URL)
-                                .parameter(BnpParibasBaseConstants.IdTags.BANK, bank))
+        return client.request(new URL(bnpParibasConfiguration.getTokenUrl()))
                 .header(
                         BnpParibasBaseConstants.HeaderKeys.AUTHORIZATION,
                         BnpParibasBaseConstants.HeaderValues.BASIC
@@ -101,7 +93,11 @@ public class BnpParibasApiBaseClient {
 
     public AccountsResponse fetchAccounts(String signature, String reqId) {
         return createRequestInSession(
-                        new URL(BnpParibasBaseConstants.Urls.ACCOUNTS_PATH), signature, reqId)
+                        new URL(
+                                bnpParibasConfiguration.getBaseUrl()
+                                        + BnpParibasBaseConstants.Urls.ACCOUNTS_PATH),
+                        signature,
+                        reqId)
                 .get(AccountsResponse.class);
     }
 
@@ -120,7 +116,9 @@ public class BnpParibasApiBaseClient {
 
     public BalanceResponse getBalance(String resourceId, String signature, String reqId) {
         return createRequestInSession(
-                        new URL(BnpParibasBaseConstants.Urls.BALANCES_PATH)
+                        new URL(
+                                        bnpParibasConfiguration.getBaseUrl()
+                                                + BnpParibasBaseConstants.Urls.BALANCES_PATH)
                                 .parameter(
                                         BnpParibasBaseConstants.IdTags.ACCOUNT_RESOURCE_ID,
                                         resourceId),
@@ -132,20 +130,33 @@ public class BnpParibasApiBaseClient {
     public TransactionsResponse getTransactions(
             String resourceId, String signature, String reqId, Date dateFrom, Date dateTo) {
 
-        SimpleDateFormat sdf =
-                new SimpleDateFormat(
-                        BnpParibasBaseConstants.QueryValues.FORMATTER_MILLI_WITH_TIMEZONE);
-        sdf.setTimeZone(TimeZone.getTimeZone(BnpParibasBaseConstants.QueryValues.TIMEZONE));
+        try {
+            return getTransactionsBatch(resourceId, signature, reqId, dateFrom, dateTo);
+        } catch (HttpResponseException e) {
+            // 204 means that there is no more transactions for given criteria, so empty response
+            // should be returned
+            if (e.getResponse().getStatus() == 204) {
+                return new TransactionsResponse();
+            }
+            throw e;
+        }
+    }
+
+    private TransactionsResponse getTransactionsBatch(
+            String resourceId, String signature, String reqId, Date dateFrom, Date dateTo) {
+        SimpleDateFormat sdf = new SimpleDateFormat(DateFormatUtils.ISO_DATE_FORMAT.getPattern());
 
         return createRequestInSession(
-                        new URL(BnpParibasBaseConstants.Urls.TRANSACTIONS_PATH)
+                        new URL(
+                                        bnpParibasConfiguration.getBaseUrl()
+                                                + BnpParibasBaseConstants.Urls.TRANSACTIONS_PATH)
                                 .parameter(
                                         BnpParibasBaseConstants.IdTags.ACCOUNT_RESOURCE_ID,
                                         resourceId),
                         signature,
                         reqId)
-                .queryParamRaw(BnpParibasBaseConstants.QueryKeys.DATE_FROM, sdf.format(dateFrom))
-                .queryParamRaw(BnpParibasBaseConstants.QueryKeys.DATE_TO, sdf.format(dateTo))
+                .queryParam(BnpParibasBaseConstants.QueryKeys.DATE_FROM, sdf.format(dateFrom))
+                .queryParam(BnpParibasBaseConstants.QueryKeys.DATE_TO, sdf.format(dateTo))
                 .get(TransactionsResponse.class);
     }
 }

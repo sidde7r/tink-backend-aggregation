@@ -13,8 +13,10 @@ public class SparebankenSorAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sparebankensor-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sparebankensor-ob")
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("sparebank")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }

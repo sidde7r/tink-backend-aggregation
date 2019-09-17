@@ -13,7 +13,7 @@ public class SogneOgGreipstadAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sogneoggreipstad-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sogneoggreipstad-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

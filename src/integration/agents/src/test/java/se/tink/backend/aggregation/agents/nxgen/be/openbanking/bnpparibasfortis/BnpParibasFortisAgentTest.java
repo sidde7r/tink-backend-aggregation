@@ -13,7 +13,7 @@ public class BnpParibasFortisAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("be", "be-bnpparibasfortis-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-bnpparibasfortis-ob")
                         .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false);

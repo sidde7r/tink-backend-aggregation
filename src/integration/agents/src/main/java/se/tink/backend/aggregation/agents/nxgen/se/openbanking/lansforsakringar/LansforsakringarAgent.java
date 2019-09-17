@@ -16,6 +16,9 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -28,12 +31,15 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
     private final LansforsakringarApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private LansforsakringarConfiguration lansforsakringarConfiguration;
 
     public LansforsakringarAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new LansforsakringarApiClient(client, sessionStorage);
+        apiClient =
+                new LansforsakringarApiClient(
+                        client, sessionStorage, credentials, persistentStorage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -42,7 +48,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final LansforsakringarConfiguration lansConfiguration =
+        lansforsakringarConfiguration =
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
@@ -54,12 +60,30 @@ public final class LansforsakringarAgent extends NextGenerationAgent
                                         new IllegalStateException(
                                                 ErrorMessages.MISSING_CONFIGURATION));
 
-        apiClient.setConfiguration(lansConfiguration);
+        client.setEidasProxy(
+                configuration.getEidasProxy(), lansforsakringarConfiguration.getEidasQwac());
+        apiClient.setConfiguration(lansforsakringarConfiguration);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new LansforsakringarAuthenticator(apiClient, sessionStorage);
+
+        LansforsakringarAuthenticator lansforsakringarAuthenticator =
+                new LansforsakringarAuthenticator(apiClient, sessionStorage, persistentStorage);
+        OAuth2AuthenticationController oAuth2AuthenticationController =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        lansforsakringarAuthenticator,
+                        credentials,
+                        strongAuthenticationState);
+
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 
     @Override

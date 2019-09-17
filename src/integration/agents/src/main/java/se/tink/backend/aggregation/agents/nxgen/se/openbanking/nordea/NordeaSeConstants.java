@@ -45,7 +45,10 @@ public final class NordeaSeConstants {
 
     public class ErrorMessage {
         public static final String CANCEL_ERROR = "nsp.returncode.cava.user_cancel_error";
+        public static final String CANCELLED_ERROR = "nsp.returncode.cava.cancelled_error";
         public static final String TIME_OUT_ERROR = "nsp.returncode.cava.expired_transaction_error";
+        public static final String BANK_ID_IN_PROGRESS =
+                "nsp.returncode.cava.already_in_progress_error";
     }
 
     public static final class Tags {

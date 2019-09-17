@@ -24,7 +24,9 @@ public class LaBanquePostaleAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("fr", "fr-labanquepostale-oauth2")
+                new AgentIntegrationTest.Builder("fr", "fr-labanquepostale-ob")
+                        .setFinancialInstitutionId("labanquepostale")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

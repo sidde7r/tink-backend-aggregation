@@ -11,6 +11,6 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent {
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
-        super(request, context, configuration, DeutscheBankDEConstants.INTEGRATION_NAME);
+        super(request, context, configuration);
     }
 }

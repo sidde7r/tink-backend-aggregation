@@ -34,6 +34,7 @@ public final class RedsysConstants {
         public static final String TOKEN = "/token";
         public static final String REFRESH = "/token";
         public static final String CONSENTS = "/v1/consents";
+        public static final String CONSENT = "/v1/consents/%s";
         public static final String CONSENT_STATUS = "/v1/consents/%s/status";
         public static final String ACCOUNTS = "/v1/accounts";
         public static final String TRANSACTIONS = "/v1/accounts/%s/transactions";
@@ -158,7 +159,12 @@ public final class RedsysConstants {
     }
 
     public static class ErrorCodes {
+        public static final String ACCESS_EXCEEDED = "ACCESS_EXCEEDED";
         public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
+    }
+
+    public static class HttpErrorCodes {
+        public static final int TOO_MANY_REQUESTS = 429;
     }
 
     public static class BalanceType {

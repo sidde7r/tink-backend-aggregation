@@ -22,11 +22,13 @@ public class CrelanAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-crelan-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-crelan-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("crelan")
+                        .setAppId("tink");
     }
 
     @Test

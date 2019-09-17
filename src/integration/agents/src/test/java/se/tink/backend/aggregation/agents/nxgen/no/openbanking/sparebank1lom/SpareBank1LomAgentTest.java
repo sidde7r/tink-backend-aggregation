@@ -13,7 +13,7 @@ public class SpareBank1LomAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sparebank1lom-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sparebank1lom-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

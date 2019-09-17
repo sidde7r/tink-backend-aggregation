@@ -15,6 +15,10 @@ public class BalanceBaseEntity {
                 || balanceType.equalsIgnoreCase(Accounts.CLBD);
     }
 
+    public boolean isExpected() {
+        return balanceType.equalsIgnoreCase(Accounts.EXPECTED);
+    }
+
     public boolean isInCurrency(final String currency) {
         return balanceAmount.getCurrency().equalsIgnoreCase(currency);
     }

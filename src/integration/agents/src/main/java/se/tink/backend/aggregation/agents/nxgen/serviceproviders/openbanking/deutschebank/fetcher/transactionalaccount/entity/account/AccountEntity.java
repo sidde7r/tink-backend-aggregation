@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,6 +20,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class AccountEntity {
     private String resourceId;
+    private String product;
     private String iban;
     private String currency;
     private String status;
@@ -28,18 +31,22 @@ public class AccountEntity {
     @JsonProperty("_links")
     private AccountLinksWithHrefEntity links;
 
-    public Optional<TransactionalAccount> toTinkAccount() {
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public Optional<TransactionalAccount> toTinkAccount(List<BalanceBaseEntity> balanceEntities) {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         DeutscheBankConstants.ACCOUNT_TYPE_MAPPER,
-                        cashAccountType,
-                        TransactionalAccountType.OTHER)
-                .withBalance(BalanceModule.of(getBalance()))
+                        Optional.ofNullable(cashAccountType).orElse(product),
+                        TransactionalAccountType.CHECKING)
+                .withBalance(BalanceModule.of(getBalance(balanceEntities)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier())
                                 .withAccountNumber(getAccountNumber())
-                                .withAccountName(Optional.ofNullable(name).orElse(cashAccountType))
+                                .withAccountName(getAccountName())
                                 .addIdentifier(getIdentifier())
                                 .build())
                 .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
@@ -48,8 +55,10 @@ public class AccountEntity {
                 .build();
     }
 
-    private ExactCurrencyAmount getBalance() {
-        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
+    private ExactCurrencyAmount getBalance(List<BalanceBaseEntity> balanceEntities) {
+        return Stream.of(balanceEntities, balances)
+                .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
                 .map(BalanceBaseEntity::toAmount)
@@ -57,7 +66,8 @@ public class AccountEntity {
     }
 
     private boolean doesMatchWithAccountCurrency(final BalanceBaseEntity balance) {
-        return balance.isClosingBooked() && balance.isInCurrency(currency);
+        return (balance.isClosingBooked() || balance.isExpected())
+                && balance.isInCurrency(currency);
     }
 
     private String getTransactionLink() {
@@ -67,7 +77,7 @@ public class AccountEntity {
     }
 
     private String getUniqueIdentifier() {
-        return resourceId;
+        return iban;
     }
 
     private AccountIdentifier getIdentifier() {
@@ -76,5 +86,12 @@ public class AccountEntity {
 
     private String getAccountNumber() {
         return iban;
+    }
+
+    private String getAccountName() {
+        return Stream.of(name, cashAccountType, product)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -21,7 +21,7 @@ public class BpostAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-bpost-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-bpost-ob")
                         .addCredentialField(
                                 CredentialKeys.IBAN,
                                 manager.get(
@@ -29,7 +29,9 @@ public class BpostAgentTest {
                                                 .bpost.BpostAgentTest.Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("bpost")
+                        .setAppId("tink");
     }
 
     @Test

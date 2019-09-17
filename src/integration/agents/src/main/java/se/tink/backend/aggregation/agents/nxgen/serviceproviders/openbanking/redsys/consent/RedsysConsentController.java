@@ -55,7 +55,7 @@ public class RedsysConsentController {
         supplementalInformationHelper.waitForSupplementalInformation(
                 supplementalKey, 10, TimeUnit.MINUTES);
 
-        if (apiClient.fetchConsentStatus(consentId) == ConsentStatus.VALID) {
+        if (apiClient.fetchConsent(consentId).getConsentStatus() == ConsentStatus.VALID) {
             consentStorage.useConsentId(consentId);
         } else {
             // timed out or failed

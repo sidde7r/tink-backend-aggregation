@@ -10,8 +10,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -72,11 +75,28 @@ public class DeutscheBankApiClient {
                 .post(ConsentBaseResponse.class, consentBaseRequest);
     }
 
-    public FetchAccountsResponse fetchAccounts() {
+    public ConsentStatusResponse getConsentStatus(String consentStatusLink) {
+        return createRequest(new URL(consentStatusLink))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                .get(ConsentStatusResponse.class);
+    }
 
+    public FetchAccountsResponse fetchAccounts() {
         return createRequestInSession(new URL(configuration.getBaseUrl().concat(Urls.ACCOUNTS)))
-                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
                 .get(FetchAccountsResponse.class);
+    }
+
+    public FetchBalancesResponse fetchBalances(AccountEntity accountEntity) {
+        return createRequestInSession(
+                        new URL(
+                                configuration
+                                        .getBaseUrl()
+                                        .concat(
+                                                String.format(
+                                                        Urls.BALANCES,
+                                                        accountEntity.getResourceId()))))
+                .get(FetchBalancesResponse.class);
     }
 
     public TransactionKeyPaginatorResponse<String> fetchTransactionsForAccount(

@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.control.Option;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.BalanceType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -18,10 +20,13 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
+    private static final DisplayAccountIdentifierFormatter IBAN_FORMATTER =
+            new DisplayAccountIdentifierFormatter();
     @JsonProperty private String resourceId;
     @JsonProperty private String iban;
     @JsonProperty private String bban;
@@ -41,7 +46,8 @@ public class AccountEntity {
     private Map<String, LinkEntity> links;
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(List<BalanceEntity> accountBalances) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            List<BalanceEntity> accountBalances, AspspConfiguration aspspConfiguration) {
         final ExactCurrencyAmount balance =
                 BalanceEntity.getBalanceOfType(
                         accountBalances,
@@ -53,16 +59,18 @@ public class AccountEntity {
             throw new IllegalStateException("Did not find balance for account.");
         }
 
+        final AccountIdentifier ibanIdentifier = AccountIdentifier.create(Type.IBAN, iban);
+        final String formattedIban = IBAN_FORMATTER.apply(ibanIdentifier);
         final IdModule idModule =
                 IdModule.builder()
-                        .withUniqueIdentifier(iban)
-                        .withAccountNumber(iban)
+                        .withUniqueIdentifier(getUniqueIdentifier(aspspConfiguration))
+                        .withAccountNumber(formattedIban)
                         .withAccountName(
                                 Option.of(name)
                                         .orElse(Option.of(product))
                                         .orElse(Option.of(details))
-                                        .getOrElse(iban))
-                        .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                        .getOrElse(formattedIban))
+                        .addIdentifier(ibanIdentifier)
                         .setProductName(Option.of(product).getOrElse(details))
                         .build();
 
@@ -81,6 +89,15 @@ public class AccountEntity {
         }
 
         return builder.build();
+    }
+
+    @JsonIgnore
+    private String getUniqueIdentifier(AspspConfiguration aspspConfiguration) {
+        if (aspspConfiguration.shouldReturnLowercaseAccountId()) {
+            return iban.toLowerCase(Locale.ENGLISH);
+        } else {
+            return iban.toUpperCase(Locale.ENGLISH);
+        }
     }
 
     @JsonIgnore

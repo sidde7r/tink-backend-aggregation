@@ -13,7 +13,7 @@ public class SparebankenSognAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-sparebankensogn-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-sparebankensogn-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

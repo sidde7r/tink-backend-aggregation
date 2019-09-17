@@ -12,7 +12,7 @@ public class MollerupSparkasseAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-mollerupsparkasse-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-mollerupsparkasse-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

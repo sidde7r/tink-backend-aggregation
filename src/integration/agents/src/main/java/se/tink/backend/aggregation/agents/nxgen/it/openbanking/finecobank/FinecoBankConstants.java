@@ -33,6 +33,14 @@ public final class FinecoBankConstants {
                 "Could not fetch transactions, because the consent is invalid. Please try again with a full consent.";
         public static final int ACCESS_EXCEEDED_ERROR_CODE = 429;
         public static final int PERIOD_INVALID_ERROR = 400;
+        public static final String UNKNOWN_SIGNING_STEP = "Unknown step %s";
+        public static final String MISSING_SIGNING_LINK = "Signing link is missing";
+        public static final String MAPPING_STATUS_TO_TINK_STATUS_ERROR =
+                "Cannot map: %s to Fineco payment status";
+        public static final String FINECO_STATUS_MAPPING_ERROR =
+                "Cannot map: %s to Fineco payment status";
+        public static final String STATE_MISSING_ERROR =
+                "State could not be retrieved from storage";
     }
 
     public static class Urls {
@@ -45,6 +53,11 @@ public final class FinecoBankConstants {
         public static final URL CARD_TRANSACTIONS = new URL(BASE_URL + Endpoints.CARD_TRANSACTIONS);
         public static final URL CONSENT_AUTHORIZATIONS =
                 new URL(BASE_URL + Endpoints.CONSENT_AUTHORIZATIONS);
+        public static final URL PAYMENT_INITIATION =
+                new URL(BASE_URL + Endpoints.PAYMENT_INITIATION);
+        public static final URL GET_PAYMENT = new URL(BASE_URL + Endpoints.GET_PAYMENT);
+        public static final URL GET_PAYMENT_STATUS =
+                new URL(BASE_URL + Endpoints.GET_PAYMENT_STATUS);
     }
 
     public static class Endpoints {
@@ -55,6 +68,10 @@ public final class FinecoBankConstants {
         public static final String CARD_ACCOUNTS = "/card-accounts";
         public static final String CARD_TRANSACTIONS = "/card-accounts/{account-id}/transactions";
         public static final String CONSENT_AUTHORIZATIONS = "/consents/{consentId}";
+        public static final String PAYMENT_INITIATION = "/payments/{paymentProduct}";
+        public static final String GET_PAYMENT = "/payments/{paymentProduct}/{paymentId}";
+        public static final String GET_PAYMENT_STATUS =
+                "/payments/{paymentProduct}/{paymentId}/status";
     }
 
     public static class StorageKeys {
@@ -64,6 +81,7 @@ public final class FinecoBankConstants {
         public static final String CARD_ID = "cardId";
         public static final String TRANSACTION_ACCOUNTS = "transactionAccounts";
         public static final String BALANCE_ACCOUNTS = "balanceAccounts";
+        public static final String STATE = "STATE";
     }
 
     public static class QueryKeys {
@@ -103,6 +121,12 @@ public final class FinecoBankConstants {
 
     public static class ParameterKeys {
         public static final String ACCOUNT_ID = "account-id";
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String PAYMENT_ID = "paymentId";
+    }
+
+    public static class FinecoBankSignSteps {
+        public static final String SAMPLE_STEP = "SAMPLE_STEP";
     }
 
     public static class HeaderValues {
@@ -110,6 +134,12 @@ public final class FinecoBankConstants {
         public static final String X_REQUEST_ID_TRANSACTIONS =
                 "123e4567-e89b-42d3-a456-556642440071";
         public static final String CONSENT_ID = "76b908cc-4605-4d06-8869-4387f5daa318";
+        public static final String X_REQUEST_ID_PAYMENT_INITIATION =
+                "4e0c57ba-e655-4ebd-9574-9aeeee104e7f";
+        public static final String X_REQUEST_ID_GET_PAYMENT =
+                "07bc32b0-d3a0-4261-9df3-acf7e21ca149";
+        public static final String X_REQUEST_ID_GET_PAYMENT_STATUS =
+                "d5997372-c072-47ce-89c9-e41f5562d582";
     }
 
     public static class FormValues {

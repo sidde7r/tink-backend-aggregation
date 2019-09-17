@@ -13,7 +13,7 @@ public class HaugesundAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-haugesund-oauth2")
+                new AgentIntegrationTest.Builder("no", "no-haugesund-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

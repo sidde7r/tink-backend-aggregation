@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.IcaBankenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.IcaBankenSandboxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
@@ -79,16 +78,8 @@ public final class IcaBankenAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         icaBankenConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                IcaBankenConstants.INTEGRATION_NAME,
-                                clientName,
-                                IcaBankenConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+                getAgentConfigurationController()
+                        .getAgentConfiguration(IcaBankenConfiguration.class);
 
         apiClient.setConfiguration(icaBankenConfiguration);
 

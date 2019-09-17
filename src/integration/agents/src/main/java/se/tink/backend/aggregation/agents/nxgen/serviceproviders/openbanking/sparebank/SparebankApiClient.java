@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank;
 
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class SparebankApiClient {
 
@@ -60,7 +61,7 @@ public class SparebankApiClient {
             EidasIdentity eidasIdentity) {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
-        client.setEidasProxy(eidasProxyConfiguration, configuration.getQwacCertId());
+        client.setEidasProxy(eidasProxyConfiguration, "");
         this.eidasIdentity = eidasIdentity;
     }
 
@@ -106,22 +107,33 @@ public class SparebankApiClient {
     }
 
     public TransactionResponse fetchTransactions(String resourceId, Date fromDate, Date toDate) {
-        return createRequest(
-                        new URL(getBaseUrl() + Urls.FETCH_TRANSACTIONS)
-                                .parameter(IdTags.RESOURCE_ID, resourceId))
-                .queryParam(
-                        SparebankConstants.QueryKeys.DATE_FROM,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(
-                        SparebankConstants.QueryKeys.DATE_TO,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                .queryParam(
-                        SparebankConstants.QueryKeys.LIMIT,
-                        SparebankConstants.QueryValues.TRANSACTION_LIMIT)
-                .queryParam(
-                        SparebankConstants.QueryKeys.BOOKING_STATUS,
-                        SparebankConstants.QueryValues.BOOKING_STATUS)
-                .get(TransactionResponse.class);
+
+        /*
+           Since we have bank-side errors that prevent us from being able to fetch transactions
+           properly and customers that will be using this agent do not care about fetching
+           transactions, we temporarily disabled API call to fetch transactions and return
+           empty response instead. We are contacting with the bank to fix the issue and test
+           it locally. After it works locally, we will enable the API call again.
+        */
+
+        return new TransactionResponse();
+
+        /*return createRequest(
+                new URL(getBaseUrl() + Urls.FETCH_TRANSACTIONS)
+                        .parameter(IdTags.RESOURCE_ID, resourceId))
+        .queryParam(
+                SparebankConstants.QueryKeys.DATE_FROM,
+                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+        .queryParam(
+                SparebankConstants.QueryKeys.DATE_TO,
+                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+        .queryParam(
+                SparebankConstants.QueryKeys.LIMIT,
+                SparebankConstants.QueryValues.TRANSACTION_LIMIT)
+        .queryParam(
+                SparebankConstants.QueryKeys.BOOKING_STATUS,
+                SparebankConstants.QueryValues.BOOKING_STATUS)
+        .get(TransactionResponse.class);*/
     }
 
     public CreatePaymentResponse createPayment(
@@ -132,7 +144,7 @@ public class SparebankApiClient {
                         new URL(baseUrl + Urls.CREATE_PAYMENT)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct),
                         Optional.of(digest))
-                .header(HeaderKeys.DIGEST, digest)
+                .type(MediaType.APPLICATION_JSON)
                 .post(CreatePaymentResponse.class, paymentRequest);
     }
 
@@ -195,8 +207,7 @@ public class SparebankApiClient {
                 QsealcSigner.build(
                         eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        configuration.getQsealcCertId());
+                        eidasIdentity);
 
         StringBuilder signedWithHeaderKeys = new StringBuilder();
         StringBuilder signedWithHeaderKeyValues = new StringBuilder();
@@ -215,8 +226,16 @@ public class SparebankApiClient {
         String signature =
                 signer.getSignatureBase64(signedWithHeaderKeyValues.toString().trim().getBytes());
 
-        return String.format(
-                "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"",
-                configuration.getKeyId(), signedWithHeaderKeys.toString(), signature);
+        String encodedSignature =
+                Base64.getEncoder()
+                        .encodeToString(
+                                String.format(
+                                                "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"",
+                                                configuration.getKeyId(),
+                                                signedWithHeaderKeys.toString(),
+                                                signature)
+                                        .getBytes(StandardCharsets.UTF_8));
+
+        return String.format("=?utf-8?B?%s?=", encodedSignature);
     }
 }

@@ -13,7 +13,7 @@ public class MajBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-majbank-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-majbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

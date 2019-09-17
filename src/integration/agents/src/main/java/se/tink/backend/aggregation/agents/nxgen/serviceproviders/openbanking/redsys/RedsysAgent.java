@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
@@ -71,21 +70,16 @@ public abstract class RedsysAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+        final RedsysConfiguration redsysConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(RedsysConfiguration.class);
+        apiClient.setConfiguration(redsysConfiguration, configuration.getEidasProxy());
         if (request.isManual()) {
-            apiClient.setPsuIpAddress(getClientConfiguration().getTppIpAddress());
+            apiClient.setPsuIpAddress(redsysConfiguration.getTppIpAddress());
         }
     }
 
     protected String getIntegrationName() {
         return RedsysConstants.INTEGRATION_NAME;
-    }
-
-    protected RedsysConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(getIntegrationName(), clientName, RedsysConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
@@ -128,7 +122,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final RedsysTransactionalAccountFetcher accountFetcher =
-                new RedsysTransactionalAccountFetcher(apiClient, consentController);
+                new RedsysTransactionalAccountFetcher(apiClient, consentController, this);
 
         final TransactionPaginator<TransactionalAccount> paginator =
                 new TransactionKeyPaginationController<>(accountFetcher);
@@ -170,5 +164,10 @@ public abstract class RedsysAgent extends NextGenerationAgent
     @Override
     public Class<? extends BaseTransactionsResponse> getTransactionsResponseClass() {
         return TransactionsResponse.class;
+    }
+
+    @Override
+    public boolean shouldReturnLowercaseAccountId() {
+        return false;
     }
 }

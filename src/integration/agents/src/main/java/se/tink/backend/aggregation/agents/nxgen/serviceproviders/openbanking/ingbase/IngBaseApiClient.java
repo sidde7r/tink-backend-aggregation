@@ -4,8 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryValues;
@@ -33,21 +34,29 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class IngBaseApiClient {
 
     private final SimpleDateFormat dateFormat;
     protected final TinkHttpClient client;
-    protected final SessionStorage sessionStorage;
+    protected final PersistentStorage persistentStorage;
     private final String market;
+    private EidasIdentity eidasIdentity;
     private IngBaseConfiguration configuration;
-    private EidasProxyConfiguration eidasConf;
+    private EidasProxyConfiguration eidasProxyConfiguration;
+    private final boolean manualRequest;
 
-    public IngBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage, String market) {
+    public IngBaseApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            String market,
+            boolean manualRequest) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.market = market;
+        this.manualRequest = manualRequest;
         dateFormat = new SimpleDateFormat(QueryValues.DATE_FORMAT);
     }
 
@@ -57,51 +66,40 @@ public class IngBaseApiClient {
     }
 
     public void setConfiguration(
-            IngBaseConfiguration configuration, EidasProxyConfiguration eidasConf) {
+            IngBaseConfiguration configuration,
+            EidasProxyConfiguration eidasProxyConfiguration,
+            EidasIdentity eidasIdentity) {
         this.configuration = configuration;
-        this.eidasConf = eidasConf;
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+        this.eidasIdentity = eidasIdentity;
     }
 
     public FetchAccountsResponse fetchAccounts() {
-        return buildRequestWithSignature(Urls.ACCOUNTS, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+        return buildRequestWithSignature(
+                        Urls.ACCOUNTS, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchAccountsResponse.class);
     }
 
     public FetchBalancesResponse fetchBalances(final AccountEntity account) {
-
-        // TODO - Temporary fix: To replace a query in the URL set by Sandbox API
-        String balanceUrl =
-                account.getBalancesUrl().replaceAll("currency=EUR", "balanceType=expected");
-
-        return buildRequestWithSignature(balanceUrl, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+        String balanceUrl = account.getBalancesUrl();
+        return buildRequestWithSignature(balanceUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchBalancesResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactions(
-            final String reqPath, final Date fromDate, final Date toDate) {
+    public FetchTransactionsResponse fetchTransactions(final String transactionsUrl) {
         final String completeReqPath =
-                new URL(reqPath)
+                new URL(transactionsUrl)
+                        .queryParam(IngBaseConstants.QueryKeys.DATE_FROM, getTransactionsDateFrom())
                         .queryParam(
-                                IngBaseConstants.QueryKeys.DATE_FROM, dateFormat.format(fromDate))
-                        .queryParam(IngBaseConstants.QueryKeys.DATE_TO, dateFormat.format(fromDate))
-                        .queryParam(
-                                QueryKeys.LIMIT,
-                                "10") // TODO - Temporary added for Sandbox specification
+                                IngBaseConstants.QueryKeys.DATE_TO, dateFormat.format(new Date()))
+                        .queryParam(IngBaseConstants.QueryKeys.LIMIT, "100")
                         .toString();
-        return fetchTransactions(completeReqPath);
-    }
-
-    public FetchTransactionsResponse fetchTransactions(String reqPath) {
-
-        // TODO - Temporary fix for Sandbnox API
-        String transactionUrl = reqPath.replaceAll("currency=EUR&", "");
-
         return buildRequestWithSignature(
-                        transactionUrl, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+                        completeReqPath, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchTransactionsResponse.class);
@@ -109,13 +107,14 @@ public class IngBaseApiClient {
 
     public URL getAuthorizeUrl(final String state) {
         final TokenResponse tokenResponse = getApplicationAccessToken();
-
         setApplicationTokenToSession(tokenResponse.toTinkToken());
         setClientIdToSession(tokenResponse.getClientId());
 
         return new URL(getAuthorizationUrl(tokenResponse).getLocation())
                 .queryParam(QueryKeys.CLIENT_ID, tokenResponse.getClientId())
-                .queryParam(QueryKeys.SCOPE, tokenResponse.getScope())
+                .queryParam(
+                        QueryKeys.SCOPE,
+                        QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REDIRECT_URI, getConfiguration().getRedirectUrl())
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE);
@@ -136,18 +135,27 @@ public class IngBaseApiClient {
     }
 
     public void setTokenToSession(final OAuth2Token accessToken) {
-        sessionStorage.put(StorageKeys.TOKEN, accessToken);
+        persistentStorage.put(StorageKeys.TOKEN, accessToken);
     }
 
     private TokenResponse getApplicationAccessToken() {
         final String reqId = IngBaseUtils.getRequestId();
         final String date = getFormattedDate();
+
+        /*
+           ING According to documentation expects here grant_type with scope
+           grant_type=client_credentials&scope=<scope of the token>
+           however even if it accepts the scope, it returns full scope of the token
+           which we actually can handle that by passing hardcoded (allowed for us scope) later in the flow
+           IngBaseConstants.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW
+           After fix on their side we can use scope returned by token to have more elastic solution.
+        */
         final String payload = new ApplicationTokenRequest().toData();
         final String digest = generateDigest(payload);
 
         final String authHeader =
                 Signature.SIGNATURE
-                        + " "
+                        + StringUtils.SPACE
                         + getAuthorization(
                                 getConfiguration().getClientCertificateSerial(),
                                 Signature.HTTP_METHOD_POST,
@@ -165,17 +173,28 @@ public class IngBaseApiClient {
                 .post(TokenResponse.class, payload);
     }
 
+    private String getTransactionsDateFrom() {
+        if (manualRequest) {
+            return QueryValues.TRANSACTION_FROM_DATE;
+        } else {
+            return ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                    DateUtils.addDays(new Date(), -QueryValues.MAX_PERIOD_IN_DAYS));
+        }
+    }
+
     private AuthorizationUrl getAuthorizationUrl(final TokenResponse tokenResponse) {
         final String redirectUrl = getConfiguration().getRedirectUrl();
 
         final String reqPath =
                 new URL(Urls.OAUTH)
                         .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                        .queryParam(QueryKeys.SCOPE, QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_VIEW)
-                        // .queryParam(QueryKeys.COUNTRY_CODE, market)
+                        .queryParam(
+                                QueryKeys.SCOPE,
+                                QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW)
+                        .queryParam(QueryKeys.COUNTRY_CODE, market)
                         .toString();
 
-        return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+        return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(tokenResponse.toTinkToken())
                 .get(AuthorizationUrl.class);
     }
@@ -218,27 +237,27 @@ public class IngBaseApiClient {
     }
 
     private OAuth2Token getApplicationTokenFromSession() {
-        return sessionStorage
+        return persistentStorage
                 .get(StorageKeys.APPLICATION_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
     private void setApplicationTokenToSession(OAuth2Token token) {
-        sessionStorage.put(StorageKeys.APPLICATION_TOKEN, token);
+        persistentStorage.put(StorageKeys.APPLICATION_TOKEN, token);
     }
 
     private void setClientIdToSession(final String clientId) {
-        sessionStorage.put(StorageKeys.CLIENT_ID, clientId);
+        persistentStorage.put(StorageKeys.CLIENT_ID, clientId);
     }
 
     private OAuth2Token getTokenFromSession() {
-        return sessionStorage
+        return persistentStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
     private String getClientIdFromSession() {
-        return sessionStorage
+        return persistentStorage
                 .get(StorageKeys.CLIENT_ID, String.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CLIENT_ID));
     }
@@ -267,11 +286,11 @@ public class IngBaseApiClient {
 
         QsealcSigner proxySigner =
                 QsealcSigner.build(
-                        eidasConf.toInternalConfig(),
+                        eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        new EidasIdentity(
-                                "oxford-staging", "5f98e87106384b2981c0354a33b51590", "ing"),
-                        "Tink");
+                        eidasIdentity,
+                        configuration.getCertificateId());
+
         return proxySigner.getSignatureBase64(signatureEntity.toString().getBytes());
     }
 
