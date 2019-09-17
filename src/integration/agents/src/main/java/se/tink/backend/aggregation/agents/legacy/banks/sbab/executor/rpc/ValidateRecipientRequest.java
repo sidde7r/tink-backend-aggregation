@@ -11,13 +11,12 @@ public class ValidateRecipientRequest {
     private static final SBABDestinationAccountIdentifierFormatter ACCOUNT_IDENTIFIER_FORMATTER =
             new SBABDestinationAccountIdentifierFormatter();
 
-    private String accountNumber;
-    private String description;
+    private final String accountNumber;
+    private final String description = "";
 
     @JsonIgnore
     private ValidateRecipientRequest(Transfer transfer) {
         this.accountNumber = transfer.getDestination().getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
-        this.description = "";
     }
 
     @JsonIgnore
