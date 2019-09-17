@@ -4,6 +4,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.GetTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.filter.NordeaSeFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
@@ -26,6 +27,8 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
             PersistentStorage persistentStorage) {
         super(client, sessionStorage);
         this.persistentStorage = persistentStorage;
+
+        this.client.addFilter(new NordeaSeFilter());
     }
 
     private RequestBuilder createRequestWithTppToken(URL url, String token) {
