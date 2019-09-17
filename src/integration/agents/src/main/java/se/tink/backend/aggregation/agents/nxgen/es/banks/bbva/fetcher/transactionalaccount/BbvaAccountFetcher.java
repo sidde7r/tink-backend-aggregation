@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountEntity;
@@ -29,6 +31,8 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
                 .filter(AccountEntity::isTransactionalAccount)
                 .filter(AccountEntity::hasBalance)
                 .map(account -> account.toTinkAccount(holderName))
-                .asJava();
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 }
