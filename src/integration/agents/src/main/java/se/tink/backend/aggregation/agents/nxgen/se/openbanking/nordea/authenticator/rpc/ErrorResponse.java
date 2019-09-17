@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentic
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.ErrorCode;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities.Error;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities.FailuresItem;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities.GroupHeader;
@@ -40,11 +42,26 @@ public class ErrorResponse {
         return error.getFailures().stream()
                 .anyMatch(
                         failure ->
-                                "error.validation".equals(failure.getCode())
-                                        && "The SSN number must be a 12-digit string"
-                                                .equalsIgnoreCase(failure.getDescription())
-                                        && "psuId".equalsIgnoreCase(failure.getPath())
-                                        && "Pattern".equalsIgnoreCase(failure.getType()));
+                                ErrorCode.VALIDATION_ERROR.equals(failure.getCode())
+                                        && ErrorMessage.SSN_LENGTH_INCORRECT.equalsIgnoreCase(
+                                                failure.getDescription())
+                                        && ErrorMessage.PSU_ID.equalsIgnoreCase(failure.getPath())
+                                        && ErrorMessage.PATTERN.equalsIgnoreCase(
+                                                failure.getType()));
+    }
+
+    @JsonIgnore
+    public boolean isKnownBankServiceError() {
+        if (error == null || error.getFailures().isEmpty()) {
+            return false;
+        }
+
+        return error.getFailures().stream()
+                .anyMatch(
+                        failure ->
+                                ErrorCode.SERVER_ERROR.equalsIgnoreCase(failure.getCode())
+                                        && ErrorMessage.UNEXPECTED_ERROR.equalsIgnoreCase(
+                                                failure.getDescription()));
     }
 
     @JsonIgnore
