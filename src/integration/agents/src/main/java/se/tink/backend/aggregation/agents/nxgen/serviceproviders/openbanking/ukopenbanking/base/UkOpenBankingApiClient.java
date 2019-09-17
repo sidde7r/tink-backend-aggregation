@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.utils.crypto.PS256;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -38,6 +39,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class UkOpenBankingApiClient extends OpenIdApiClient {
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(UkOpenBankingApiClient.class);
 
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
@@ -160,7 +163,10 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                             .getAlgorithm()
                             .getName();
         } catch (ParseException e) {
-            // Ideallly this should never happen but if this happens we will consider it as RS256
+            LOGGER.error(
+                    "Not able to parse algorithm from Software Statement so defaulting to RS256. "
+                            + "This should never happen. "
+                            + Arrays.toString(e.getStackTrace()));
         }
 
         ObjectMapper oMapper = new ObjectMapper();
