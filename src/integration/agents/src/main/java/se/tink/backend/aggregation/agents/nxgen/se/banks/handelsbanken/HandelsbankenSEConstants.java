@@ -188,6 +188,11 @@ public class HandelsbankenSEConstants {
         }
     }
 
+    public static class ErrorMessage {
+        public static final String ERROR_OCCURRED_TRY_AGAIN_LATER =
+                "Ett fel har tyvärr inträffat. Försök igen senare.";
+    }
+
     public static class Executor {
         public enum ExceptionMessages implements ExecutorExceptionResolver.ExceptionMessage {
             TRANSFER_AMOUNT_TOO_SMALL("Transfer amount is too small"),

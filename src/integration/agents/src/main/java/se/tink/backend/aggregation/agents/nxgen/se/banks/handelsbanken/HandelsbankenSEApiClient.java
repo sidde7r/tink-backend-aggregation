@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.httpclient.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdResponse;
@@ -38,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.PaymentDetails;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.interfaces.UpdatablePayment;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.HandelsbankenSEPaymentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PaymentRecipient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PendingTransactionsResponse;
@@ -51,6 +53,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.InitNewProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -205,9 +208,20 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     }
 
     public Optional<CustodyAccountResponse> custodyAccount(CustodyAccount custodyAccount) {
-        return custodyAccount
-                .getCustodyAccountUrl()
-                .map(url -> createRequest(url).get(CustodyAccountResponse.class));
+        try {
+            return custodyAccount
+                    .getCustodyAccountUrl()
+                    .map(url -> createRequest(url).get(CustodyAccountResponse.class));
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isTmpBankSideFailure()) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+
+            throw e;
+        }
     }
 
     public Optional<PensionDetailsResponse> pensionDetails(CustodyAccount custodyAccount) {
