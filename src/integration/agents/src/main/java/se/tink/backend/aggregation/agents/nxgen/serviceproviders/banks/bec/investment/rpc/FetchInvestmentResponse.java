@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.inve
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.entities.DepositAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.entities.StockOrderEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -10,13 +11,13 @@ public class FetchInvestmentResponse {
     private List<DepositAccountEntity> depositAccounts;
 
     @JsonProperty("stockorders")
-    private List<Object> stockOrders;
+    private List<StockOrderEntity> stockOrders;
 
     public List<DepositAccountEntity> getDepositAccounts() {
         return depositAccounts;
     }
 
-    public List<Object> getStockOrders() {
+    public List<StockOrderEntity> getStockOrders() {
         return stockOrders;
     }
 }
