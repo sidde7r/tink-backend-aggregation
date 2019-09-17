@@ -103,7 +103,7 @@ public class BankiaApiClient {
                 account.getFromTemporaryStorage(BankiaConstants.StorageKey.COUNTRY));
         accountIdentifier.setControlDigits(
                 account.getFromTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS));
-        accountIdentifier.setIdentifier(account.getBankIdentifier());
+        accountIdentifier.setIdentifier(account.getApiIdentifier());
 
         SearchCriteriaEntity searchCriteria = new SearchCriteriaEntity();
         searchCriteria.setDateOperationFrom(DateEntity.of(fromDate));

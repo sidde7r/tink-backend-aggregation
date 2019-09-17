@@ -33,6 +33,7 @@ public class DisplayAccountIdentifierFormatter implements AccountIdentifierForma
     private String formatIban(IbanIdentifier identifier) {
         return identifier
                 .getIban()
+                .replaceAll("\\s+", "")
                 .replaceAll("(.{4})(?!$)", "$1 "); // Format in groups of four from the beginning
     }
 

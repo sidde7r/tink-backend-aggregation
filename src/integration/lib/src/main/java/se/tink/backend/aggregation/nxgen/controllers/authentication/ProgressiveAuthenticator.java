@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 
@@ -11,6 +10,6 @@ public interface ProgressiveAuthenticator {
      * request to an authentication response. A collection of n steps implies that supplemental
      * information is requested n-1 times, where n >= 2.
      */
-    Iterable<? extends AuthenticationStep> authenticationSteps(Credentials credentials)
+    Iterable<? extends AuthenticationStep> authenticationSteps()
             throws AuthenticationException, AuthorizationException;
 }

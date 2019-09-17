@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31AisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.NatWestConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.NatWestConstants.Urls.V31;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -55,8 +54,7 @@ public class NatWestV31Agent extends UkOpenBankingBaseAgent {
                         pisConfig,
                         softwareStatement,
                         providerConfiguration,
-                        client,
-                        new URL(Urls.V31.WELL_KNOWN_URL),
+                        apiClient,
                         supplementalInformationHelper,
                         credentials,
                         strongAuthenticationState);

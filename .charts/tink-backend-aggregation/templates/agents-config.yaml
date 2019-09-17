@@ -28,6 +28,7 @@ data:
       agentDataAvailabilityTrackerConfiguration:
         host: agent-data-availability-tracker.agent-data-availability-tracker.svc.cluster.local
         port: 443
+        caPath: /etc/client-certificate/ca.crt
       {{- end }}
 
       {{- if $tppSecretsServiceConfig }}
@@ -62,14 +63,6 @@ data:
         {{- end }}
 
       integrations:
-        {{- if $agentsConfig.sbab }}
-        sbab:
-          signBaseUrl: https://secure.sbab.se
-          tink:
-            eidasCertId: "{{ $agentsConfig.sbab.tink.eidasCertId }}"
-            redirectUrl: "{{ $agentsConfig.sbab.tink.redirectUrl }}"
-        {{- end }}
-
         ukOpenBankingJson: |
           UKOPENBANKINGJSON
 
@@ -94,12 +87,10 @@ data:
             certificateId: "{{ $agentsConfig.belfius.tink.certificateId }}"
         {{- end }}
 
-        {{- if $agentsConfig.icabanken }}
-        icabanken:
+        {{- if $agentsConfig.dnb }}
+        dnb:
           tink:
-            clientId: "{{ $agentsConfig.icabanken.tink.clientId }}"
-            redirectUrl: "{{ $agentsConfig.icabanken.tink.redirectUrl }}"
-            certificateId: "{{ $agentsConfig.icabanken.tink.certificateId }}"
+            redirectUrl: "{{ $agentsConfig.dnb.tink.redirectUrl }}"
         {{- end }}
 
         {{- if $agentsConfig.seb }}
@@ -111,39 +102,12 @@ data:
             eidasQwac: "{{ $agentsConfig.seb.tink.eidasQwac }}"
         {{- end }}
 
-        {{- if $agentsConfig.axa }}
-        axa:
-          tink:
-            clientId: "AXA_PSD2_CLIENT_ID"
-            redirectUrl: "{{ $agentsConfig.axa.tink.redirectUrl }}"
-            certificateId: "{{ $agentsConfig.axa.tink.certificateId }}"
-            baseUrl: "https://api-dailybanking.axabank.be"
-        {{- end }}
-
         {{- if $agentsConfig.bankdata }}
         bankdata:
           tink:
             clientId: "BANKDATA_CLIENT_ID"
             apiKey: "BANKDATA_API_KEY"
             redirectUrl: "{{ $agentsConfig.bankdata.tink.redirectUrl }}"
-        {{- end }}
-
-        {{- if $agentsConfig.bpost }}
-        bpost:
-          tink:
-            clientId: "BPOST_PSD2_CLIENT_ID"
-            redirectUrl: "{{ $agentsConfig.bpost.tink.redirectUrl }}"
-            certificateId: "{{ $agentsConfig.bpost.tink.certificateId }}"
-            baseUrl: "https://api.psd2.bpostbank.be"
-        {{- end }}
-
-        {{- if $agentsConfig.crelan }}
-        crelan:
-          tink:
-            clientId: "CRELAN_PSD2_CLIENT_ID"
-            redirectUrl: "{{ $agentsConfig.crelan.tink.redirectUrl }}"
-            certificateId: "{{ $agentsConfig.crelan.tink.certificateId }}"
-            baseUrl: "https://api.crelan.be"
         {{- end }}
 
         {{- if $agentsConfig.sparebank }}
@@ -262,18 +226,6 @@ data:
             clientSSLKeyPassword: ""
             qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
             certificateId: "{{ $agentsConfig.rabobank.abn.certificateId }}"
-        {{- end }}
-
-        {{- if $agentsConfig.redsys }}
-        redsys:
-          tink:
-            baseAuthUrl: "{{ $agentsConfig.redsys.tink.baseAuthUrl }}"
-            baseAPIUrl: "{{ $agentsConfig.redsys.tink.baseAPIUrl }}"
-            clientId: "REDSYS_CLIENT_ID_TAG"
-            clientSigningCertificate: "REDSYS_QSEALC_TAG"
-            certificateId: "{{ $agentsConfig.redsys.tink.certificateId }}"
-            tppIpAddress: "{{ $agentsConfig.redsys.tink.tppIpAddress }}"
-            redirectUrl: "{{ $agentsConfig.redsys.tink.redirectUrl }}"
         {{- end }}
 
         {{- if $agentsConfig.sibs }}
@@ -430,6 +382,25 @@ data:
             redirectUrl: "{{ $agentsConfig.sibs.cgd.redirectUrl }}"
             aspspCode: "BPG"
         caixa-pt:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: "{{ $agentsConfig.sibs.tink.certificateId }}"
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
+            aspspCode: "CGDPT"
+          cgd:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            certificateId: "{{ $agentsConfig.sibs.cgd.certificateId }}"
+            clientId: "SIBS_CLIENT_ID_CGD_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_CGD_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_CGD_TAG"
+            redirectUrl: "{{ $agentsConfig.sibs.cgd.redirectUrl }}"
+            aspspCode: "CGDPT"
+        caixa-redirect-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.tink.certificateId }}"
@@ -659,22 +630,6 @@ data:
             aspspCode: "UNICR"
         {{- end }}
 
-        {{- if $agentsConfig.ing }}
-        ing:
-          tink:
-            baseUrl: "https://api.ing.com"
-            clientCertificateSerial: "ING_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
-            clientCertificate: "ING_CERTIFICATE_P12_TINK_TAG"
-            redirectUrl: "{{ $agentsConfig.ing.tink.redirectUrl }}"
-            certificateId: "{{ $agentsConfig.ing.tink.certificateId }}"
-          abn:
-            baseUrl: "https://api.ing.com"
-            clientCertificateSerial: "ING_CERTIFICATE_SERIAL_NUMBER_ABN_TAG"
-            clientCertificate: "ING_CERTIFICATE_P12_ABN_TAG"
-            redirectUrl: "{{ $agentsConfig.ing.abn.redirectUrl }}"
-            certificateId: "{{ $agentsConfig.ing.abn.certificateId }}"
-        {{- end }}
-
         {{- if $agentsConfig.swedbank }}
         swedbank:
           tink:
@@ -893,44 +848,15 @@ data:
             clientId: "CREDITMUTUEL_CLIENT_ID_TAG"
             keyId: "CMCIC_KEY_ID_TAG"
             certificateId: "{{ $agentsConfig.cmcic.tink.certificateId }}"
-        {{- end }}
-
-        {{- if $agentsConfig.comdirect }}
-        comdirect:
+        monabanq:
           tink:
-            baseUrl: "https://xs2a-api.comdirect.de"
-            clientId: "COMDIRECT_CLIENT_ID_TAG"
-            certificateId: "{{ $agentsConfig.comdirect.tink.certificateId }}"
-            redirectUrl: "{{ $agentsConfig.comdirect.tink.redirectUrl }}"
-        {{- end }}
-
-        {{- if $agentsConfig.commerzbank }}
-        comdirect:
-          tink:
-            baseUrl: "https://psd2.api.commerzbank.com"
-            clientId: "COMMERZBANK_CLIENT_ID_TAG"
-            certificateId: "{{ $agentsConfig.comdirect.tink.certificateId }}"
-            redirectUrl: "{{ $agentsConfig.comdirect.tink.redirectUrl }}"
-        {{- end }}
-
-        {{- if $agentsConfig.handelsbanken }}
-        handelsbanken:
-          tink:
-            tppId: "HANDELSBANKEN_TPP_ID_TAG"
-            clientId: "HANDELSBANKEN_CLIENT_ID_TAG"
-            psuIpAddress: "0.0.0.0"
-            redirectUrl: "{{ $agentsConfig.handelsbanken.tink.redirectUrl }}"
-            appName: "Tink"
-            appDesc: "Tink app"
-            certificateId: "{{ $agentsConfig.handelsbanken.tink.certificateId }}"
-        {{- end }}
-
-        {{- if $agentsConfig.crosskey }}
-        crosskey:
-          tink:
-            clientId: "CROSSKEY_CLIENT_ID_TAG"
-            clientSecret: "CROSSKEY_CLIENT_SECRET_TAG"
-            redirectUrl: "{{ $agentsConfig.crosskey.tink.redirectUrl }}"
+            baseUrl: "https://oauth2-apisi.e-i.com"
+            basePath: "/monabanq/"
+            authBaseUrl: "https://www.monabanq.fr/oauth2/fr/banque/oauth2_authorization.aspx"
+            redirectUrl: "{{ $agentsConfig.cmcic.tink.redirectUrl }}"
+            clientId: "MONABANQ_CLIENT_ID_TAG"
+            keyId: "CMIC_KEY_ID_TAG"
+            certificateId: "{{ $agentsConfig.cmcic.tink.certificateId }}"
         {{- end }}
 
         {{- if $agentsConfig.finecobank }}

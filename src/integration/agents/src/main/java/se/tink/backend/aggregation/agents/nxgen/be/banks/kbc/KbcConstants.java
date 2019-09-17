@@ -274,7 +274,9 @@ public class KbcConstants {
         public static final String INCORRECT_LOGIN_CODE_TWO_ATTEMPT_LEFT = "D9FE50";
         public static final String INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT = "D9E028";
         public static final String INCORRECT_CARD_NUMBER = "D93058";
-        public static final String CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC = "D9FE51";
+        public static final String[] CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC = {
+            "D9FE51", "D93060"
+        };
     }
 
     public enum UserMessage implements LocalizableEnum {

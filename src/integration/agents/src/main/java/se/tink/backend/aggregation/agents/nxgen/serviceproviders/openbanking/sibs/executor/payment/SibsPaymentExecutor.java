@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAccountReferenceEntity;
@@ -10,7 +9,17 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentInitiationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategy;
-import se.tink.backend.aggregation.nxgen.controllers.payment.*;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -18,11 +27,15 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
     private SibsBaseApiClient apiClient;
     private SignPaymentStrategy signPaymentStrategy;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public SibsPaymentExecutor(
-            SibsBaseApiClient apiClient, SignPaymentStrategy signPaymentStrategy) {
+            SibsBaseApiClient apiClient,
+            SignPaymentStrategy signPaymentStrategy,
+            StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.signPaymentStrategy = signPaymentStrategy;
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
@@ -35,10 +48,13 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                                 SibsAmountEntity.of(paymentRequest.getPayment().getAmount()))
                         .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
                         .build();
-        String state = UUID.randomUUID().toString().replace("-", "");
+
         return apiClient
-                .createPayment(sibsPaymentRequest, getPaymentType(paymentRequest), state)
-                .toTinkPaymentResponse(paymentRequest, state);
+                .createPayment(
+                        sibsPaymentRequest,
+                        getPaymentType(paymentRequest),
+                        strongAuthenticationState.getState())
+                .toTinkPaymentResponse(paymentRequest, strongAuthenticationState.getState());
     }
 
     private SibsAccountReferenceEntity fromCreditor(Payment payment) {

@@ -15,6 +15,8 @@ message Void {
 
 message TrackAccountRequest {
     string agent = 1;
-    repeated string fieldName = 2;
-    repeated string fieldValue = 3;
+    string provider = 2;
+    string market = 3;
+    repeated string fieldName = 4;
+    repeated string fieldValue = 5;
 }

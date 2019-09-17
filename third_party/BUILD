@@ -1494,7 +1494,19 @@ java_library(
 java_library(
     name = "org_reflections_reflections",
     visibility = ["//visibility:public"],
-    exports = ["@org_reflections_reflections//jar"],
+    exports = [
+        "@org_reflections_reflections//jar",
+    ],
+    runtime_deps = [
+        "@com_google_code_findbugs_jsr305//jar",
+        "@com_google_code_gson_gson//jar",
+        "@com_google_guava_guava//jar",
+        "@dom4j_dom4j//jar",
+        "@javax_servlet_javax_servlet_api//jar",
+        "@junit_junit//jar",
+        "@org_javassist_javassist//jar",
+        "@org_slf4j_slf4j_api//jar",
+    ],
 )
 
 java_library(

@@ -10,7 +10,6 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
@@ -31,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -62,6 +62,8 @@ public final class RabobankApiClient {
         this.eidasProxyConf = eidasProxyConf;
         this.eidasIdentity = eidasIdentity;
         this.requestIsManual = requestIsManual;
+
+        client.addFilter(new AccessExceededFilter());
     }
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {
@@ -76,12 +78,43 @@ public final class RabobankApiClient {
         final String clientId = rabobankConfiguration.getClientId();
         final String clientSecret = rabobankConfiguration.getClientSecret();
 
+        debugPost(rabobankConfiguration.getUrls().getOauth2TokenUrl(), clientId, clientSecret);
+
         return client.request(rabobankConfiguration.getUrls().getOauth2TokenUrl())
                 .body(request.serialize())
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addBasicAuth(clientId, clientSecret)
                 .post(TokenResponse.class);
+    }
+
+    // TODO Remove when MIYAG-737 is resolved
+    private static void debugPost(final URL url, final String clientId, final String clientSecret) {
+
+        if (clientId == null) {
+            logger.info("Rabobank post MIYAG-737 : {} : client ID was missing", url);
+        } else if (clientSecret == null) {
+            logger.info("Rabobank post MIYAG-737 : {} : client secret was missing", url);
+        } else {
+            logger.info("Rabobank post MIYAG-737 : {} : client ID and secret are present", url);
+        }
+    }
+
+    // TODO Remove when MIYAG-737 is resolved
+    private static void debugBuildRequest(
+            final URL url, final OAuth2Token oauth2Token, final PersistentStorage storage) {
+
+        if (oauth2Token == null) {
+            logger.info(
+                    "Rabobank buildRequest MIYAG-737 : {} : Authorization token was NULL, persistentStorage was {}",
+                    url,
+                    storage);
+        } else {
+            logger.info(
+                    "Rabobank buildRequest MIYAG-737 : {} : Authorization: {}",
+                    url,
+                    oauth2Token.toAuthorizeHeader());
+        }
     }
 
     private RequestBuilder buildRequest(
@@ -96,24 +129,20 @@ public final class RabobankApiClient {
 
         final RequestBuilder builder;
 
-        try {
-            builder =
-                    client.request(url)
-                            .addBearerToken(RabobankUtils.getOauthToken(persistentStorage))
-                            .header(QueryParams.IBM_CLIENT_ID, clientId)
-                            .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
-                            .header(QueryParams.REQUEST_ID, requestId)
-                            .header(QueryParams.DIGEST, digestHeader)
-                            .header(QueryParams.SIGNATURE, signatureHeader)
-                            .header(QueryParams.DATE, date)
-                            .accept(MediaType.APPLICATION_JSON_TYPE);
-        } catch (HttpResponseException e) {
-            final String message = e.getResponse().getBody(String.class);
-            if (message.toLowerCase().contains(ErrorMessages.ACCESS_EXCEEDED)) {
-                throw BankServiceError.ACCESS_EXCEEDED.exception();
-            }
-            throw e;
-        }
+        final OAuth2Token oAuth2Token = RabobankUtils.getOauthToken(persistentStorage);
+
+        debugBuildRequest(url, oAuth2Token, persistentStorage);
+
+        builder =
+                client.request(url)
+                        .addBearerToken(oAuth2Token)
+                        .header(QueryParams.IBM_CLIENT_ID, clientId)
+                        .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
+                        .header(QueryParams.REQUEST_ID, requestId)
+                        .header(QueryParams.DIGEST, digestHeader)
+                        .header(QueryParams.SIGNATURE, signatureHeader)
+                        .header(QueryParams.DATE, date)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
 
         // This header must be present iff the request was initiated by the PSU
         if (requestIsManual) {

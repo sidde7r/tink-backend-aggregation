@@ -7,6 +7,7 @@ public class AgentDataAvailabilityTrackerConfiguration {
 
     private String host;
     private int port;
+    private String caPath;
 
     public String getHost() {
         return host;
@@ -14,5 +15,9 @@ public class AgentDataAvailabilityTrackerConfiguration {
 
     public int getPort() {
         return port;
+    }
+
+    public String getCaPath() {
+        return caPath;
     }
 }

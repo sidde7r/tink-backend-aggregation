@@ -171,6 +171,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                                 .ProcessAccountsRequest();
         processAccountsRequest.setAccountIds(accountIds);
         processAccountsRequest.setCredentialsId(credentials.getId());
+        processAccountsRequest.setCredentialsDataVersion(credentials.getDataVersion());
         processAccountsRequest.setUserId(request.getUser().getId());
 
         controllerWrapper.processAccounts(processAccountsRequest);
@@ -314,15 +315,18 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     public void processTransferDestinationPatterns() {
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc
                         .UpdateTransferDestinationPatternsRequest
-                request =
+                updateRequest =
                         new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
                                 .UpdateTransferDestinationPatternsRequest();
 
-        request.setDestinationsBySouce(destinationBySource(transferDestinationPatternsByAccount));
-        request.setUserId(this.request.getUser().getId());
+        updateRequest.setDestinationsBySouce(
+                destinationBySource(transferDestinationPatternsByAccount));
+        updateRequest.setUserId(request.getUser().getId());
+        updateRequest.setCredentialsId(request.getCredentials().getId());
+        updateRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
 
         if (!transferDestinationPatternsByAccount.isEmpty()) {
-            controllerWrapper.updateTransferDestinationPatterns(request);
+            controllerWrapper.updateTransferDestinationPatterns(updateRequest);
         }
     }
 
@@ -349,6 +353,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                                 .UpdateTransfersRequest();
         updateTransfersRequest.setUserId(request.getUser().getId());
         updateTransfersRequest.setCredentialsId(request.getCredentials().getId());
+        updateTransfersRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
         updateTransfersRequest.setTransfers(transfers);
 
         controllerWrapper.processEinvoices(updateTransfersRequest);

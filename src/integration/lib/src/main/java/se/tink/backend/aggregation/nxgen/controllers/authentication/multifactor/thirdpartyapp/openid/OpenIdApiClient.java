@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
-import com.google.common.base.Preconditions;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -32,7 +32,9 @@ public class OpenIdApiClient {
     // Internal caching. Do not use these fields directly, always use the getters!
     private WellKnownResponse cachedWellKnownResponse;
     private JsonWebKeySet cachedProviderKeys;
-    private OpenIdAuthenticatedHttpFilter authFilter;
+    private OpenIdAuthenticatedHttpFilter aisAuthFilter;
+    private OpenIdAuthenticatedHttpFilter pisAuthFilter;
+    private static final AggregationLogger log = new AggregationLogger(OpenIdApiClient.class);
 
     public OpenIdApiClient(
             TinkHttpClient httpClient,
@@ -68,6 +70,14 @@ public class OpenIdApiClient {
                 SerializationUtils.deserializeFromString(response, WellKnownResponse.class);
 
         return cachedWellKnownResponse;
+    }
+
+    public OpenIdAuthenticatedHttpFilter getAisAuthFilter() {
+        return aisAuthFilter;
+    }
+
+    public OpenIdAuthenticatedHttpFilter getPisAuthFilter() {
+        return pisAuthFilter;
     }
 
     public SoftwareStatement getSoftwareStatement() {
@@ -255,22 +265,14 @@ public class OpenIdApiClient {
                 .queryParam(OpenIdConstants.Params.REDIRECT_URI, redirectUri);
     }
 
-    public void attachAuthFilter(OAuth2Token token) {
-        Preconditions.checkState(
-                Objects.isNull(authFilter), "Auth filter cannot be attached twice.");
-        authFilter = new OpenIdAuthenticatedHttpFilter(token, providerConfiguration, null, null);
-
-        httpClient.addFilter(authFilter);
+    public void instantiateAisAuthFilter(OAuth2Token token) {
+        log.debug("Instantiating the Ais Auth Filter.");
+        aisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, providerConfiguration, null, null);
     }
 
-    public void detachAuthFilter() {
-        Preconditions.checkNotNull(
-                authFilter, "Auth filter must be attach before it can be detached.");
-        try {
-            httpClient.removeFilter(authFilter);
-        } finally {
-            authFilter = null;
-        }
+    public void instantiatePisAuthFilter(OAuth2Token token) {
+        log.debug("Instantiating the Pis Auth Filter.");
+        pisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, providerConfiguration, null, null);
     }
 
     public static String registerClient(

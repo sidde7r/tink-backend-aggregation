@@ -9,7 +9,6 @@ import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
@@ -24,8 +23,10 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Builder;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
@@ -65,6 +66,7 @@ public class FetchLoanDetailsResponse {
 
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
+        logLoanAccount();
         return LoanAccount.builder(maskAccountNumber(), getBalance().stripSign().negate())
                 .setName(getNickname())
                 .setAccountNumber(loanFormattedId)
@@ -77,16 +79,17 @@ public class FetchLoanDetailsResponse {
 
     @JsonIgnore
     private LoanDetails getLoanDetails() {
-        return LoanDetails.builder(getLoanType())
-                .setAmortized(getPaid())
-                .setApplicants(getApplicants())
-                .setCoApplicant(getApplicants().size() > 1)
-                .setInitialBalance(getInitialBalance().stripSign().negate())
-                .setInitialDate(firstDrawDownDate)
-                .setLoanNumber(loanId)
-                .setMonthlyAmortization(getInstalmentValue())
-                .setNextDayOfTermsChange(interest.getDiscountedRateEndDate())
-                .build();
+        Builder loanDetailsBuilder =
+                LoanDetails.builder(getLoanType())
+                        .setAmortized(getPaid())
+                        .setApplicants(getApplicants())
+                        .setCoApplicant(getApplicants().size() > 1)
+                        .setInitialBalance(getInitialBalance().stripSign().negate())
+                        .setInitialDate(firstDrawDownDate)
+                        .setLoanNumber(loanId)
+                        .setNextDayOfTermsChange(interest.getDiscountedRateEndDate());
+        getInstalmentValue().ifPresent(loanDetailsBuilder::setMonthlyAmortization);
+        return loanDetailsBuilder.build();
     }
 
     @JsonIgnore
@@ -135,12 +138,13 @@ public class FetchLoanDetailsResponse {
     }
 
     @JsonIgnore
-    private ExactCurrencyAmount getInstalmentValue() {
-        BigDecimal amount = null;
-        if (Objects.nonNull(followingPayment)) {
-            amount = BigDecimal.valueOf(followingPayment.getInstalment());
-        }
-        return new ExactCurrencyAmount(amount, NordeaSEConstants.CURRENCY);
+    private Optional<ExactCurrencyAmount> getInstalmentValue() {
+        return Optional.ofNullable(followingPayment)
+                .map(
+                        payment ->
+                                new ExactCurrencyAmount(
+                                        BigDecimal.valueOf(payment.getInstalment()),
+                                        NordeaSEConstants.CURRENCY));
     }
 
     // TODO: Map all the different Nordea loan type accounts
@@ -161,5 +165,14 @@ public class FetchLoanDetailsResponse {
     @JsonIgnore
     private String maskAccountNumber() {
         return "************" + loanId.substring(loanId.length() - 4);
+    }
+
+    @JsonIgnore
+    private void logLoanAccount() {
+        LOG.info(
+                String.format(
+                        "%s - %s",
+                        NordeaSEConstants.LogTags.LOAN_ACCOUNT,
+                        SerializationUtils.serializeToString(this)));
     }
 }

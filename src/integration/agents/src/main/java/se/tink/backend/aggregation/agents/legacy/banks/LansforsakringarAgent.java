@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.banks;
 
-import static se.tink.libraries.credentials.service.RefreshableItem.*;
+import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_ACCOUNTS;
+import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_TRANSACTIONS;
+import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_ACCOUNTS;
+import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_TRANSACTIONS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -1747,8 +1750,9 @@ public class LansforsakringarAgent extends AbstractAgent
 
         try {
             Map<Account, AccountFeatures> iskAccounts = refreshIskAccountsCopy();
-            assert iskAccounts != null;
-            investmentAccounts.putAll(iskAccounts);
+            if (iskAccounts != null) {
+                investmentAccounts.putAll(iskAccounts);
+            }
 
             Optional<Pair<Account, AccountFeatures>> fundDepot = refreshFundDepotCopy();
             fundDepot.ifPresent(pair -> investmentAccounts.put(pair.first, pair.second));

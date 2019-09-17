@@ -26,7 +26,7 @@ public class SparebankenVestAgentTest {
                 new AgentIntegrationTest.Builder("no", "no-sparebankenvest-activationcode")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
                         .expectLoggedIn(false);
 

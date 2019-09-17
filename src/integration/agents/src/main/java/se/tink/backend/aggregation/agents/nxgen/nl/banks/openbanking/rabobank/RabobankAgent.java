@@ -106,14 +106,6 @@ public final class RabobankAgent extends SubsequentGenerationAgent
     }
 
     @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        logger.warn("Rabobank: Uncensoring Authorization header");
-        client.setCensorSensitiveHeaders(false); // TODO remove when MIYAG-737 is resolved
-    }
-
-    @Override
     public boolean login() {
         throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
     }

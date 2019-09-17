@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,8 @@ public class SantanderEsAccountFetcher implements AccountFetcher<TransactionalAc
         return loginResponse.getAccountList().stream()
                 .filter(AccountEntity::isKnownAccountType)
                 .map(accountEntity -> accountEntity.toTinkAccount(loginResponse))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

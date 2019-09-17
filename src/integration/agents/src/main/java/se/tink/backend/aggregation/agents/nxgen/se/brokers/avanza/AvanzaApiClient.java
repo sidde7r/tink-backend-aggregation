@@ -97,9 +97,8 @@ public class AvanzaApiClient {
     }
 
     public AccountDetailsResponse fetchAccountDetails(String accountId, String authSession) {
-        final String detailsUrl = Urls.ACCOUNT_DETAILS(accountId);
-
-        return createRequestInSession(detailsUrl, authSession).get(AccountDetailsResponse.class);
+        return createRequestInSession(Urls.ACCOUNT_DETAILS(accountId), authSession)
+                .get(AccountDetailsResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(

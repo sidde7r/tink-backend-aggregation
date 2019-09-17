@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactio
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebApiClient;
@@ -16,9 +17,10 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
     private final SebApiClient apiClient;
     private final SebSessionStorage sessionStorage;
 
-    public TransactionalAccountFetcher(SebApiClient apiClient, SebSessionStorage sessionStorage) {
-        this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+    public TransactionalAccountFetcher(
+            final SebApiClient apiClient, final SebSessionStorage sessionStorage) {
+        this.apiClient = Objects.requireNonNull(apiClient);
+        this.sessionStorage = Objects.requireNonNull(sessionStorage);
     }
 
     @Override

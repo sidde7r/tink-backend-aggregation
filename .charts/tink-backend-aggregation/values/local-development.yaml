@@ -22,18 +22,6 @@ agents:
   abnamro:
     tink:
       redirectUrl: https://localhost/auth
-  axa:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-  bpost:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-  crelan:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   rabobank:
     tink_sandbox:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
@@ -52,10 +40,6 @@ agents:
     tink:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
     cgd:
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-  comdirect:
-    tink:
-      certificateId: Tink
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   commerzbank:
     tink:

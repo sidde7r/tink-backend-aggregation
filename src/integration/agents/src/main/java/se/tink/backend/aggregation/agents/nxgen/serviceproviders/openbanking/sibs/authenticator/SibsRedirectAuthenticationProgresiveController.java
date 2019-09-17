@@ -79,7 +79,7 @@ public class SibsRedirectAuthenticationProgresiveController implements AutoAuthe
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
       URL authorizeUrl = this.authenticator.buildAuthorizeUrl(this.strongAuthenticationState);
-      return new ThirdPartyAppAuthenticationPayload();
+      return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override

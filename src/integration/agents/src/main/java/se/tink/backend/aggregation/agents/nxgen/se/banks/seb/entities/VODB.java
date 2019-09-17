@@ -7,6 +7,8 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.DeviceIdentification;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
@@ -48,4 +50,13 @@ class VODB {
 
     @JsonProperty("PCBW1361")
     public List<UpcomingTransactionEntity> upcomingTransactions;
+
+    @JsonProperty("PCBW3211")
+    public List<CreditCardEntity> creditCards;
+
+    @JsonProperty("PCBW3241")
+    public List<CreditCardTransactionEntity> pendingCreditCardTransactions;
+
+    @JsonProperty("PCBW3243")
+    public List<CreditCardTransactionEntity> bookedCreditCardTransactions;
 }

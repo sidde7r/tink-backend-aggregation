@@ -49,7 +49,7 @@ git_repository(
 
 git_repository(
     name = "tink_backend_integration_openbanking",
-    commit = "64d926da94c41eaf1340f7cee920657d45351d67",
+    commit = "616f0197390d21e511136366955cc13dca428655",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
     shallow_since = "1562076445 +0000",
 )
@@ -653,12 +653,6 @@ maven_jar(
     name = "org_eclipse_jetty_jetty_websocket",
     artifact = "org.eclipse.jetty:jetty-websocket:8.1.7.v20120910",
     sha1 = "eb4b9d23ef55cfe271383656a99013840baefba0",
-)
-
-maven_jar(
-    name = "javax_servlet_javax_servlet_api",
-    artifact = "javax.servlet:javax.servlet-api:3.0.1",
-    sha1 = "6bf0ebb7efd993e222fc1112377b5e92a13b38dd",
 )
 
 maven_jar(
@@ -2086,8 +2080,8 @@ bind(
 
 maven_jar(
     name = "org_reflections_reflections",
-    artifact = "org.reflections:reflections:0.9.9-RC2",
-    sha1 = "98049bff327d2c02bfe78ac5acba1b83bf061297",
+    artifact = "org.reflections:reflections:0.9.11",
+    sha1 = "4c686033d918ec1727e329b7222fcb020152e32b",
 )
 
 maven_jar(
@@ -2359,6 +2353,18 @@ maven_jar(
     name = "com_google_crypto_tink",
     artifact = "com.google.crypto.tink:tink:1.2.2",
     sha1 = "db27fd32f842b436ad07aecbe2934524473dc0ac",
+)
+
+maven_jar(
+    name = "javax_servlet_javax_servlet_api",
+    artifact = "javax.servlet:javax.servlet-api:4.0.1",
+    sha1 = "a27082684a2ff0bf397666c3943496c44541d1ca",
+)
+
+maven_jar(
+    name = "org_slf4j_slf4j_simple",
+    artifact = "org.slf4j:slf4j-simple:1.7.27",
+    sha1 = "59661ca47034c6a72e255e5803ae4019d2bd55c9",
 )
 
 ### === END === Java Spark dependencies

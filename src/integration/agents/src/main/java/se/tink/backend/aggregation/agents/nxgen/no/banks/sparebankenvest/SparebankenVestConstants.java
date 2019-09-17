@@ -12,6 +12,7 @@ public class SparebankenVestConstants {
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "Brukskonto")
+                    .put(AccountTypes.SAVINGS, "bsu")
                     .put(AccountTypes.OTHER, "Uspesifisert")
                     .build();
 

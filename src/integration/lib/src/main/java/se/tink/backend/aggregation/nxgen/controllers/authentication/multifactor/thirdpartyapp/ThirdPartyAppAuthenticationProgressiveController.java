@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp;
 
 import java.util.Arrays;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
@@ -23,8 +22,7 @@ public class ThirdPartyAppAuthenticationProgressiveController
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps(
-            final Credentials credentials) {
+    public Iterable<? extends AuthenticationStep> authenticationSteps() {
         return Arrays.asList(
                 new OpenThirdPartyAppStep(authenticator),
                 new RedirectStep(authenticator),

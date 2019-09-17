@@ -132,6 +132,16 @@ def thirdparty_open():
     return "", 204
 
 
+def verify_state_parameter(state):
+    # This logic can be improved to verify that it's an actual uuid.
+    # Note: The code in our main /callback endpoint has more
+    # logic handling the uuid and should be used as a source for this
+    # work. Some banks remove the dashes in the uuid for example (!).
+
+    uuid_tag = "feed"
+    return state.lower().endswith(uuid_tag)
+
+
 # This endpoint will be accessed/opened by the web browser as a result
 # of a redirect from the bank's backend.
 @app.route("/api/v1/thirdparty/callback", methods=("GET", "POST"))
@@ -165,6 +175,13 @@ def thirdparty_callback():
         </script>
     </head>
 </html>"""
+
+    if not verify_state_parameter(state):
+        print("[!] Invalid state parameter: ", state)
+        print("[!] Possible reasons:")
+        print("[!]   - The agent has generated its own state.")
+        print("[!]   - The bank has modified the original state.")
+        return "", 400
 
     # turn it into a dict from a ImmutableMultiDict (we don't expect or
     # support lists)
@@ -236,12 +253,12 @@ def main():
     if (args.cert and not args.key) or (args.key and not args.cert):
         print("Both certificate and key must be passed.")
         sys.exit(1)
-    
+
     if (args.cert and args.key):
         sslContext = (args.cert, args.key)
     else:
         sslContext = "adhoc"
-    
+
     app.run(threaded=True, ssl_context=sslContext, host=args.bind, port=args.port, load_dotenv=False)
     return 0
 

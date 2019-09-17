@@ -2,16 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.cont
 
 import com.google.common.base.Preconditions;
 import java.util.Arrays;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 
-public final class IngCardReaderAuthenticationController
-        implements MultiFactorAuthenticator, ProgressiveAuthenticator {
+public final class IngCardReaderAuthenticationController implements ProgressiveTypedAuthenticator {
 
     private final IngCardReaderAuthenticator authenticator;
     private final SupplementalInformationFormer supplementalInformationFormer;
@@ -25,7 +22,7 @@ public final class IngCardReaderAuthenticationController
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps(Credentials credentials) {
+    public Iterable<? extends AuthenticationStep> authenticationSteps() {
         return Arrays.asList(
                 new OtpStep(supplementalInformationFormer),
                 new SignStep(supplementalInformationFormer, authenticator),
@@ -35,11 +32,5 @@ public final class IngCardReaderAuthenticationController
     @Override
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
-    }
-
-    // TODO auth: remove when ProgressiveAuthenticator remove extension from Authenticator
-    @Override
-    public void authenticate(Credentials credentials) {
-        throw new AssertionError();
     }
 }

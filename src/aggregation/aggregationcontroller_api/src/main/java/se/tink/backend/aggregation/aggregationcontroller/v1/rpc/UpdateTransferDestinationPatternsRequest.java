@@ -18,6 +18,8 @@ public class UpdateTransferDestinationPatternsRequest {
 
     private String userId;
     private List<AccountWithDestinations> destinationsBySouce;
+    private String credentialsId;
+    private int credentialsDataVersion;
 
     public Map<Account, List<TransferDestinationPattern>> getDestinationsBySouce() {
         if (destinationsBySouce == null) {
@@ -52,6 +54,22 @@ public class UpdateTransferDestinationPatternsRequest {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCredentialsId() {
+        return credentialsId;
+    }
+
+    public void setCredentialsId(String credentialsId) {
+        this.credentialsId = credentialsId;
+    }
+
+    public int getCredentialsDataVersion() {
+        return credentialsDataVersion;
+    }
+
+    public void setCredentialsDataVersion(int credentialsDataVersion) {
+        this.credentialsDataVersion = credentialsDataVersion;
     }
 
     private static class AccountWithDestinations {

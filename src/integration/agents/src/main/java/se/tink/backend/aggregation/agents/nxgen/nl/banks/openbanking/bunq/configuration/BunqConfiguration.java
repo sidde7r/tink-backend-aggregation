@@ -5,22 +5,24 @@ import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class BunqConfiguration implements ClientConfiguration {
 
-    @JsonProperty private String redirectUrl;
+    @JsonProperty @Secret private String redirectUrl;
 
-    @JsonProperty private String psd2ApiKey;
+    @JsonProperty @Secret private String psd2ApiKey;
 
-    @JsonProperty private String clientId;
+    @JsonProperty @Secret private String clientId;
 
-    @JsonProperty private String clientSecret;
+    @JsonProperty @SensitiveSecret private String clientSecret;
 
-    @JsonProperty private String psd2InstallationKeyPair;
+    @JsonProperty @Secret private String psd2InstallationKeyPair;
 
-    @JsonProperty private String psd2ClientAuthToken;
+    @JsonProperty @Secret private String psd2ClientAuthToken;
 
     public String getPsd2InstallationKeyPair() {
         Preconditions.checkNotNull(

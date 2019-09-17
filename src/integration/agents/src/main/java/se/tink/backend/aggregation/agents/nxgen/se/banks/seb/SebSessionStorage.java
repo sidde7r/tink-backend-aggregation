@@ -41,6 +41,20 @@ public class SebSessionStorage {
         sessionStorage.put(StorageKeys.SSN, ssn);
     }
 
+    public void putCardHandle(String uniqueId, String handle) {
+        if (Strings.isNullOrEmpty(uniqueId)) {
+            throw new IllegalStateException("Did not get card uniqueId");
+        }
+        if (Strings.isNullOrEmpty(handle)) {
+            throw new IllegalStateException("Did not get card handle");
+        }
+        sessionStorage.put(StorageKeys.CREDIT_CARD_ACCOUNT_HANDLE_PREFIX + uniqueId, handle);
+    }
+
+    public String getCardHandle(String uniqueId) {
+        return sessionStorage.get(StorageKeys.CREDIT_CARD_ACCOUNT_HANDLE_PREFIX + uniqueId);
+    }
+
     public String getCustomerNumber() {
         return sessionStorage.get(StorageKeys.CUSTOMER_NUMBER);
     }

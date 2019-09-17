@@ -333,6 +333,12 @@ public final class NewAgentTestContext extends AgentContext {
         // noop
     }
 
+    @Override
+    public void updateCredentialsExcludingSensitiveInformation(
+            Credentials credentials, boolean doStatusUpdate, boolean isMigrationUpdate) {
+        // noop
+    }
+
     public CuratorFramework getCoordinationClient() {
         return null;
     }

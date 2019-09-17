@@ -15,7 +15,9 @@ public enum BankServiceError implements AgentRuntimeError {
     CONSENT_REVOKED(
             new LocalizableKey(
                     "The consent given to us to access your data has been revoked by the bank. ")),
-    ;
+    MULTIPLE_LOGIN(
+            new LocalizableKey(
+                    "You were automatically logged out because you logged in to another channel; Logout is done for your security."));
 
     private final LocalizableKey userMessage;
 

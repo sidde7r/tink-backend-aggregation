@@ -1,5 +1,6 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
+import com.google.common.base.Strings;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
 import io.grpc.ManagedChannel;
@@ -9,7 +10,6 @@ import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.netty.handler.ssl.SslContext;
 import java.io.File;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.client.serial
 public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabilityTrackerClient {
 
     private static final Logger log =
-            LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientImpl.class);
+            LoggerFactory.getLogger(AgentDataAvailabilityTrackerClient.class);
 
     private static final long QUEUE_POLL_WAIT_SECONDS = 2;
 
@@ -37,26 +37,26 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     private final AccountDeque accountDeque;
     private final AbstractExecutionThreadService service;
 
-    private boolean sendingData;
-
     private final String host;
     private final int port;
-
-    private final Random random;
-    private static final float TRACKING_FRACTION = 0.80f; // 80% of requests
+    private final String caPath;
 
     @Inject
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
     public AgentDataAvailabilityTrackerClientImpl(
             AgentDataAvailabilityTrackerConfiguration configuration) {
-        this(configuration.getHost(), configuration.getPort());
+        this(configuration.getHost(), configuration.getPort(), configuration.getCaPath());
     }
 
     public AgentDataAvailabilityTrackerClientImpl(String host, int port) {
+        this(host, port, null);
+    }
+
+    public AgentDataAvailabilityTrackerClientImpl(String host, int port, String caPath) {
         this.host = host;
         this.port = port;
+        this.caPath = caPath;
         this.accountDeque = new AccountDeque();
-        this.random = new Random();
         this.service =
                 new AbstractExecutionThreadService() {
                     @Override
@@ -126,13 +126,11 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     }
 
     public void sendAccount(
-            final String agent, final Account account, final AccountFeatures features) {
-
-        sendingData = sendingData();
-
-        if (!sendingData) {
-            return;
-        }
+            final String agent,
+            final String provider,
+            final String market,
+            final Account account,
+            final AccountFeatures features) {
 
         AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
 
@@ -149,7 +147,10 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         }
 
         TrackAccountRequest.Builder requestBuilder =
-                TrackAccountRequest.newBuilder().setAgent(agent);
+                TrackAccountRequest.newBuilder()
+                        .setAgent(agent)
+                        .setProvider(provider)
+                        .setMarket(market);
 
         // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
         serializer
@@ -160,10 +161,6 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                                         .addFieldName(entry.getName())
                                         .addFieldValue(entry.getValue()));
 
-        log.debug(
-                String.format(
-                        "Adding request to queue: %d | Service running: %b",
-                        accountDeque.size(), service.isRunning()));
         accountDeque.add(requestBuilder.build());
     }
 
@@ -173,34 +170,29 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
     }
 
-    private boolean sendingData() {
-        return random.nextFloat() < TRACKING_FRACTION;
-    }
-
     @Override
     public boolean sendingRealData() {
-        return this.sendingData;
+        return true;
     }
 
     @Override
     public void start() throws Exception {
 
-        SslContext sslContext =
-                GrpcSslContexts.forClient()
-                        .trustManager(new File("/etc/client-certificate/ca.crt"))
-                        .build();
+        NettyChannelBuilder channelBuilder = NettyChannelBuilder.forAddress(host, port);
+
+        if (!Strings.isNullOrEmpty(caPath)) {
+            SslContext sslContext =
+                    GrpcSslContexts.forClient().trustManager(new File(caPath)).build();
+
+            channelBuilder.useTransportSecurity().sslContext(sslContext).build();
+        }
+
+        channel = channelBuilder.build();
 
         log.debug(String.format("Opening connection: %s:%d", host, port));
-
-        channel =
-                NettyChannelBuilder.forAddress(host, port)
-                        .useTransportSecurity()
-                        .sslContext(sslContext)
-                        .build();
         agentctServiceStub = AgentDataAvailabilityTrackerServiceGrpc.newStub(channel);
 
         beginStream();
-
         service.startAsync();
         service.awaitRunning(30, TimeUnit.SECONDS);
     }

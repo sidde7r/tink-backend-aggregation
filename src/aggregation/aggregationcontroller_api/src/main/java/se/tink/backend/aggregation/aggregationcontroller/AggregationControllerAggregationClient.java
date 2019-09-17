@@ -155,6 +155,7 @@ public class AggregationControllerAggregationClient {
                 new UpdateCredentialsSensitiveRequest()
                         .setUserId(credentials.getUserId())
                         .setCredentialsId(credentials.getId())
+                        .setCredentialsDataVersion(credentials.getDataVersion())
                         .setSensitiveData(sensitiveData);
 
         return getCredentialsService(hostConfiguration).updateSensitive(request);

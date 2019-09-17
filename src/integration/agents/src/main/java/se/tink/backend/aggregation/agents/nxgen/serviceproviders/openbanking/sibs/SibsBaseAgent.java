@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -37,14 +39,16 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SibsBaseAgent extends NextGenerationAgent
-    implements RefreshTransferDestinationExecutor,
-    RefreshCheckingAccountsExecutor,
-    RefreshSavingsAccountsExecutor {
+        implements RefreshTransferDestinationExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                ManualOrAutoAuth {
 
     private final String clientName;
     protected final SibsBaseApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    protected AutoAuthenticationController authenticator;
 
     public SibsBaseAgent(
         CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -60,13 +64,16 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+        SibsConfiguration sibsConfiguration = getClientConfiguration();
+        apiClient.setConfiguration(sibsConfiguration, configuration.getEidasProxy());
         client.setMessageSignInterceptor(
-            new SibsMessageSignInterceptor(
-                getClientConfiguration(),
-                configuration.getEidasProxy(),
-                new EidasIdentity(
-                    context.getClusterId(), context.getAppId(), this.getAgentClass())));
+                new SibsMessageSignInterceptor(
+                        sibsConfiguration,
+                        configuration.getEidasProxy(),
+                        new EidasIdentity(
+                                context.getClusterId(), context.getAppId(), this.getAgentClass())));
+
+        client.setEidasProxy(configuration.getEidasProxy(), sibsConfiguration.getCertificateId());
     }
 
     protected SibsConfiguration getClientConfiguration() {
@@ -80,16 +87,18 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
 
         final SibsRedirectAuthenticationController controller =
-            new SibsRedirectAuthenticationController(
-                supplementalInformationHelper,
-                new SibsAuthenticator(apiClient, credentials),
-                strongAuthenticationState);
-        return new AutoAuthenticationController(
-            request,
-            systemUpdater,
-            new ThirdPartyAppAuthenticationController<>(
-                controller, supplementalInformationHelper),
-            controller);
+                new SibsRedirectAuthenticationController(
+                        supplementalInformationHelper,
+                        new SibsAuthenticator(apiClient, credentials),
+                        strongAuthenticationState);
+        authenticator =
+                new AutoAuthenticationController(
+                        request,
+                        systemUpdater,
+                        new ThirdPartyAppAuthenticationController<>(
+                                controller, supplementalInformationHelper),
+                        controller);
+        return authenticator;
     }
 
     @Override
@@ -143,7 +152,7 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
             SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(
                 apiClient, context);
         SibsPaymentExecutor sibsPaymentExecutor =
-            new SibsPaymentExecutor(apiClient, signPaymentStrategy);
+                new SibsPaymentExecutor(apiClient, signPaymentStrategy, strongAuthenticationState);
         return Optional.of(new PaymentController(sibsPaymentExecutor, sibsPaymentExecutor));
     }
 
@@ -151,5 +160,13 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
             accounts, AccountIdentifier.Type.SEPA_EUR, AccountIdentifier.Type.IBAN);
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        if (authenticator != null) {
+            return authenticator.isManualAuthentication(credentials);
+        }
+        return false;
     }
 }

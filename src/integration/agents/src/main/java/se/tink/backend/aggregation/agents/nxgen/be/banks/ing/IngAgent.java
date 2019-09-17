@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveA
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
@@ -75,7 +75,7 @@ public class IngAgent extends SubsequentGenerationAgent
                 constructTransactionalAccountRefreshController();
 
         authenticator =
-                new AutoAuthenticationController(
+                new AutoAuthenticationProgressiveController(
                         request,
                         systemUpdater,
                         new IngCardReaderAuthenticationController(

@@ -439,20 +439,6 @@ spec:
               key: rabobank-qsealc-abn
               optional: true
         {{- end }}
-        {{- if $agentsConfig.redsys }}
-        - name: REDSYS_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: redsys-client-id
-              optional: true
-        - name: REDSYS_QSEALC
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: redsys-qsealc
-              optional: true
-        {{- end }}
         {{- if $agentsConfig.sibs }}
         - name: SIBS_CLIENT_ID_TINK
           valueFrom:
@@ -503,32 +489,6 @@ spec:
               key: sibs-certificate-serial-number-cgd
               optional: true
         {{- end }}
-        {{- if $agentsConfig.ing }}
-        - name: ING_CERTIFICATE_SERIAL_NUMBER_TINK
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: ing-certificate-serial-number-tink
-              optional: true
-        - name: ING_CERTIFICATE_P12_TINK
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: ing-certificate-p12-tink
-              optional: true
-        - name: ING_CERTIFICATE_SERIAL_NUMBER_ABN
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: ing-certificate-serial-number-abn
-              optional: true
-        - name: ING_CERTIFICATE_P12_ABN
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: ing-certificate-p12-abn
-              optional: true
-        {{- end }}
         {{- if $agentsConfig.cmcic }}
         - name: CIC_CLIENT_ID
           valueFrom:
@@ -542,25 +502,17 @@ spec:
               name: aggregation-secrets
               key: creditmutuel-client-id
               optional: true
+        - name: MONABANQ_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: monabanq-client-id
+              optional: true
         - name: CMCIC_KEY_ID
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
               key: cmcic-key-id
-              optional: true
-        {{- end }}
-        {{- if $agentsConfig.handelsbanken }}
-        - name: HANDELSBANKEN_TPP_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: hendelsbanken-tpp-id
-              optional: true
-        - name: HANDELSBANKEN_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: hendelsbanken-client-id
               optional: true
         {{- end }}
         {{- if $agentsConfig.cbi }}
@@ -627,60 +579,6 @@ spec:
             secretKeyRef:
               name: aggregation-secrets
               key: volksbank-ais-client-secret-abn
-              optional: true
-        {{- end }}
-        {{- if $agentsConfig.comdirect }}
-        - name: COMDIRECT_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: comdirect-client-id
-              optional: true
-        {{- end }}
-        {{- if $agentsConfig.commerzbank }}
-        - name: COMMERZBANK_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: commerzbank-client-id
-              optional: true
-        {{- end }}
-        {{- if $agentsConfig.axa }}
-        - name: AXA_PSD2_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: axa-psd2-client-id
-              optional: true
-        {{- end }}
-        {{- if $agentsConfig.bpost }}
-        - name: BPOST_PSD2_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: bpost-psd2-client-id
-              optional: true
-        {{- end }}
-        {{- if $agentsConfig.crelan }}
-        - name: CRELAN_PSD2_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: crelan-psd2-client-id
-              optional: true
-        {{- end }}
-        {{- if $agentsConfig.crosskey }}
-        - name: CROSSKEY_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: crosskey-client-id
-              optional: true
-        - name: CROSSKEY_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: crosskey-client-secret
               optional: true
         {{- end }}
         {{- if $agentsConfig.finecobank }}

@@ -2336,7 +2336,24 @@
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionId": "dummyFinancialInstitutionId"
+        },
+        {
+            "name": "fr-labanquepostale-ob",
+            "displayName": "La Banque Postale (Test only)",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.fr.openbanking.labanquepostale.LaBanquePostaleAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": true,
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink",
+            "financialInstitutionId": "dummyFinancialInstitutionId"
         },
         {
             "className": "nxgen.fr.banks.lcl.LclAgent",
@@ -2387,7 +2404,25 @@
             "status": "ENABLED",
             "transactional": "true",
             "tutorialUrl": null,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionId":"dummy"
+        },
+        {
+            "name": "fr-monabanq-oauth2",
+            "displayName": "Monabanq (Test)",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "THIRD_PARTY_APP",
+            "multiFactor": false,
+            "className": "nxgen.fr.openbanking.monabanq.MonabanqAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": true,
+            "payload": "tink",
+            "tutorialUrl": null,
+            "fields": [],
+            "accessType": "OPEN_BANKING",
+            "financialInstitutionId":"dummy"
         },
         {
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",

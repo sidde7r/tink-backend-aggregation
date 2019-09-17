@@ -23,6 +23,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -113,7 +115,9 @@ public class OpenIdAuthenticationController
     public void autoAuthenticate() throws SessionException, BankServiceException {
         OAuth2Token accessToken =
                 persistentStorage
-                        .get(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                        .get(
+                                OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
+                                OAuth2Token.class)
                         .orElseThrow(
                                 () -> {
                                     logger.warn(
@@ -172,12 +176,13 @@ public class OpenIdAuthenticationController
                                     : "N/A"));
 
             // Store the new accessToken on the persistent storage again.
-            persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+            saveAccessToken(accessToken);
 
             // fall through.
         }
 
-        apiClient.attachAuthFilter(accessToken);
+        // as AutoAuthenticate will only happen in case of Ais so need to instantiate Ais filter
+        apiClient.instantiateAisAuthFilter(accessToken);
     }
 
     @Override
@@ -202,15 +207,12 @@ public class OpenIdAuthenticationController
                         callbackUri,
                         appToAppRedirectURL);
 
-        apiClient.attachAuthFilter(clientAccessToken);
-        try {
-            // Let the agent add to or change the URL before we send it to the front-end.
-            authorizeUrl =
-                    authenticator.decorateAuthorizeUrl(
-                            authorizeUrl, strongAuthenticationState, nonce, callbackUri);
-        } finally {
-            apiClient.detachAuthFilter();
-        }
+        instantiateAuthFilter(clientAccessToken);
+
+        // Let the agent add to or change the URL before we send it to the front-end.
+        authorizeUrl =
+                authenticator.decorateAuthorizeUrl(
+                        authorizeUrl, strongAuthenticationState, nonce, callbackUri);
 
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
 
@@ -278,10 +280,29 @@ public class OpenIdAuthenticationController
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                         accessToken, tokenLifetime, tokenLifetimeUnit));
 
-        persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
-        apiClient.attachAuthFilter(accessToken);
+        saveAccessToken(accessToken);
+
+        instantiateAuthFilter(accessToken);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+    }
+
+    private void saveAccessToken(OAuth2Token accessToken) {
+        // only need to save the AIS toke in storage as we dont use pis token after payment is done.
+        if (authenticator.getClientCredentialScope().equals(ClientMode.ACCOUNTS)) {
+            persistentStorage.put(PersistentStorageKeys.AIS_ACCESS_TOKEN, accessToken);
+        }
+    }
+
+    private void instantiateAuthFilter(OAuth2Token oAuth2Token) {
+        switch (authenticator.getClientCredentialScope()) {
+            case PAYMENTS:
+                apiClient.instantiatePisAuthFilter(oAuth2Token);
+                break;
+            case ACCOUNTS:
+            default:
+                apiClient.instantiateAisAuthFilter(oAuth2Token);
+        }
     }
 
     @Override

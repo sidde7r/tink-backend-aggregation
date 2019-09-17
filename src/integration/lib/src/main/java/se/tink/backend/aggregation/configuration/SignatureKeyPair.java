@@ -43,7 +43,7 @@ public final class SignatureKeyPair {
     @JsonIgnore
     public RSAPrivateKey getPrivateKey() {
         if (Strings.isNullOrEmpty(privateKeyPath)) {
-            log.error(
+            log.info(
                     "The path to get the private key was null / empty. Make sure to add a path to the config.");
             return null;
         }
@@ -58,7 +58,7 @@ public final class SignatureKeyPair {
     @JsonIgnore
     public RSAPublicKey getPublicKey() {
         if (Strings.isNullOrEmpty(publicKeyPath)) {
-            log.error(
+            log.info(
                     "The path to get the public key was null / empty. Make sure to add a path to the config.");
             return null;
         }

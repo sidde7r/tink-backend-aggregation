@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -10,6 +12,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.tools.ClientConfigurationTemplateBuilder;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
@@ -20,6 +23,7 @@ import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.SecretsTemplateRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.AgentWorker;
@@ -29,6 +33,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWra
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
+import se.tink.libraries.credentials.service.BatchMigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -217,5 +222,29 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         return HttpResponseHelper.ok();
+    }
+
+    @Override
+    public List<Credentials> batchMigrateCredentials(
+            BatchMigrateCredentialsRequest request, ClientInfo clientInfo) {
+        return request.getRequestList().stream()
+                .map(
+                        migrationRequest -> {
+                            AgentWorkerOperation migrateCredentialsOperation =
+                                    agentWorkerCommandFactory.createOperationMigrate(
+                                            migrationRequest,
+                                            clientInfo,
+                                            request.getTargetVersion());
+
+                            migrateCredentialsOperation.run();
+
+                            return migrateCredentialsOperation.getRequest().getCredentials();
+                        })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getSecretsTemplate(SecretsTemplateRequest request) {
+        return new ClientConfigurationTemplateBuilder(request.getProvider()).buildTemplate();
     }
 }

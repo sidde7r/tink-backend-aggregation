@@ -8,6 +8,7 @@ public class UpdateTransactionsRequest {
     private List<Transaction> transactions;
     private String user;
     private String credentials;
+    private int credentialsDataVersion;
     private boolean userTriggered;
     private String topic;
 
@@ -49,6 +50,14 @@ public class UpdateTransactionsRequest {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public int getCredentialsDataVersion() {
+        return credentialsDataVersion;
+    }
+
+    public void setCredentialsDataVersion(int credentialsDataVersion) {
+        this.credentialsDataVersion = credentialsDataVersion;
     }
 
     @Override

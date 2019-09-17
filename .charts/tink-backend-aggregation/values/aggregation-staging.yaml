@@ -23,29 +23,15 @@ agents:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/mobilebanking
     openbanking:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/openbanking
-  icabanken:
+  dnb:
     tink:
-      clientId: PSDSE-FINA-44059
-      certificateId: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   seb:
     tink:
       eidasQwac: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-  axa:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   bankdata:
     tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-  bpost:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-  crelan:
-    tink:
-      certificateId: Tink
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   sparebank:
     tink:
@@ -55,13 +41,6 @@ agents:
   abnamro:
     tink:
       redirectUrl: https://localhost/auth
-  ing:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
-    abn:
-      redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
-      certificateId: abnamro-QSEALC
   rabobank:
     tink_sandbox:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
@@ -79,13 +58,6 @@ agents:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
       eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
       certificateId: abnamro-QSEALC
-  redsys:
-    tink:
-      baseAuthUrl: https://hubpsd2.redsys.es/api-oauth-xs2a/services/rest
-      baseAPIUrl: https://psd2.redsys.es/api-entrada-xs2a/services
-      certificateId: Tink
-      tppIpAddress: 127.0.0.1
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   sibs:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
@@ -104,18 +76,6 @@ agents:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
-  sbab:
-    tink:
-      eidasCertId: Tink
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-  comdirect:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-  commerzbank:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   swedbank:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
@@ -131,18 +91,11 @@ agents:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
-  handelsbanken:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
   belfius:
     tink:
       baseUrl: https://psd2.b2b.belfius.be:8443
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
-  crosskey:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   finecobank:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
@@ -162,4 +115,4 @@ tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
 
-debugLogFrequencyPercent: 20
+debugLogFrequencyPercent: 50

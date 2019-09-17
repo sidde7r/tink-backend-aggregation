@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -43,6 +44,11 @@ public class AmountEntity {
         }
 
         return Amount.inEUR(amount);
+    }
+
+    @JsonIgnore
+    public ExactCurrencyAmount parseToExactCurrencyAmount() {
+        return new ExactCurrencyAmount(parseToTinkAmount().toBigDecimal(), currency);
     }
 
     @JsonIgnore

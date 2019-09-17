@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OAuth2AuthenticationProgressiveController implements AutoAuthenticator,
@@ -61,7 +60,7 @@ public class OAuth2AuthenticationProgressiveController implements AutoAuthentica
                 DEFAULT_TOKEN_LIFETIME_UNIT);
     }
 
-    public OAuth2AuthenticationProgressiveController(
+    private OAuth2AuthenticationProgressiveController(
             PersistentStorage persistentStorage,
             OAuth2Authenticator authenticator,
             Credentials credentials,
@@ -164,10 +163,6 @@ public class OAuth2AuthenticationProgressiveController implements AutoAuthentica
         authenticator.useAccessToken(accessToken);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
-    }
-
-    public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
-        return Optional.empty();
     }
 
     private Optional<String> getCallbackElement(Map<String, String> callbackData, String key) {

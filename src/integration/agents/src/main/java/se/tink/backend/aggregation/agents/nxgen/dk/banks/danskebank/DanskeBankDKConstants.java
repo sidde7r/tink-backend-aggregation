@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 public class DanskeBankDKConstants extends DanskeBankConstants {
 
     /**
-     * Other markets are using "https://apiebank.danskebank.com", but DK uses
+     * Other markets are using "https://apiebank.danskebank.com", but DK and NO uses
      * "https://apiebank3.danskebank.com"
      *
      * @return host to be used for the bank API

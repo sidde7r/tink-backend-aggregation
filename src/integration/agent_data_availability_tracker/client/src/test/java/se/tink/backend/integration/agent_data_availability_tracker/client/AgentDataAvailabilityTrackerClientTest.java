@@ -57,7 +57,8 @@ public class AgentDataAvailabilityTrackerClientTest {
 
         for (int i = 0; i < 50; i++) {
 
-            client.sendAccount("TestBank", buildAccount(), new AccountFeatures());
+            client.sendAccount(
+                    "TestBank", "test-test", "SE", buildAccount(), new AccountFeatures());
         }
 
         System.out.println("Sent 50 accounts.");

@@ -17,7 +17,6 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class RateLimitedExecutorProxy extends AbstractExecutorService {
-
     private final MetricRegistry metricRegistry;
     private final MetricId.MetricLabels metricLabels;
 
@@ -86,6 +85,7 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
                         "rate-limitter",
                         metricLabels,
                         new RateLimitedRunnable(Preconditions.checkNotNull(command)));
+
         rateLimitedExecutorService.execute(instrumentedRunnable);
         instrumentedRunnable.submitted();
     }

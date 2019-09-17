@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.ZERO;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Utils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CardEntity {
@@ -28,8 +28,8 @@ public class CardEntity {
     public CreditCardAccount toCreditCardAccount(AmericanExpressV62Configuration config) {
         return CreditCardAccount.builder(
                         cardNumberDisplay,
-                        config.toAmount(getTotalBalance()),
-                        config.toAmount(getAvailableCredit()))
+                        ExactCurrencyAmount.of(getTotalBalance(), config.getCurrency()).negate(),
+                        ExactCurrencyAmount.of(getAvailableCredit(), config.getCurrency()).negate())
                 .setAccountNumber(cardNumberDisplay)
                 .setName(
                         cardProductName
@@ -42,23 +42,23 @@ public class CardEntity {
     }
 
     @JsonIgnore
-    private double getTotalBalance() {
+    private BigDecimal getTotalBalance() {
         return Optional.ofNullable(financialTab)
                 .map(FinancialTab::getTotalBalance)
                 .map(TotalBalance::getValue)
                 .filter(AmericanExpressV62Utils::isValidAmount)
-                .map(AmericanExpressV62Utils::parseAmount)
-                .orElse(ZERO);
+                .map(AmericanExpressV62Utils::parseAmountToBigDecimal)
+                .orElse(BigDecimal.ZERO);
     }
 
     @JsonIgnore
-    private double getAvailableCredit() {
+    private BigDecimal getAvailableCredit() {
         return Optional.ofNullable(financialTab)
                 .map(FinancialTab::getAvailableCredit)
                 .map(AvailableCredit::getValue)
                 .filter(AmericanExpressV62Utils::isValidAmount)
-                .map(AmericanExpressV62Utils::parseAmount)
-                .orElse(ZERO);
+                .map(AmericanExpressV62Utils::parseAmountToBigDecimal)
+                .orElse(BigDecimal.ZERO);
     }
 
     public String getCardNumberDisplay() {

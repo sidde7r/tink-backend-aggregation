@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class MovementEntity {
@@ -28,7 +29,7 @@ public class MovementEntity {
     private String movStatus;
 
     @JsonProperty("importeMov")
-    private Amount amount;
+    private BigDecimal amount;
 
     @JsonProperty("fechaLiqMov")
     private String leahMoe;
@@ -65,16 +66,12 @@ public class MovementEntity {
     @JsonProperty("accesoDetalleMovimiento")
     private String accessDetailMovement;
 
-    public void setAmount(double money) {
-        this.amount = new Amount(LaCaixaConstants.CURRENCY, money);
-    }
-
     public CreditCardTransaction toTinkTransaction() {
 
         CreditCardTransaction.Builder builder = CreditCardTransaction.builder();
 
         builder.setDate(transactionDate, DATE_FORMATTER);
-        builder.setAmount(amount);
+        builder.setAmount(ExactCurrencyAmount.of(amount.negate(), LaCaixaConstants.CURRENCY));
         builder.setDescription(description);
 
         return builder.build();

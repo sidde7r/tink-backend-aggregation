@@ -138,19 +138,30 @@ agentsServiceConfiguration:
       tink-sandbox:
         clientId: "dummyClientId"
         clientSecret: "dummyClientSecret"
-        redirectUrl: "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
+        redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
         baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
         certificateId: "Tink"
+        qsealcPem: "dummyCertificateBase64"
       tink:
+        clientId: "dummyClientId"
+        clientSecret: "dummyClientSecret"
+        redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
+        baseUrl: "https://api.rabobank.nl/openapi"
+        clientSSLP12: "dummyCertificateBase64"
+        clientSSLKeyPassword: ""
+        certificateId: "Tink"
+        qsealcPem: "dummyCertificateBase64"
+      abnamro:
         clientId: "dummyClientId"
         clientSecret: "dummyClientSecret"
         redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
         baseUrl: "https://api.rabobank.nl/openapi"
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
-        certificateId: "Tink"
+        certificateId: "abnamro"
+        qsealcPem: "dummyCertificateBase64"
     abnamro:
       tink:
         clientId: "dummyClientId"

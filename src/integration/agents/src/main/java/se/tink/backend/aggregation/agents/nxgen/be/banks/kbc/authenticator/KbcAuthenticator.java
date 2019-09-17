@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 
 import com.google.common.base.Strings;
 import java.util.Arrays;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -19,15 +18,13 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class KbcAuthenticator
-        implements MultiFactorAuthenticator, AutoAuthenticator, ProgressiveAuthenticator {
+public class KbcAuthenticator implements AutoAuthenticator, ProgressiveTypedAuthenticator {
 
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
@@ -47,8 +44,7 @@ public class KbcAuthenticator
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps(
-            final Credentials credentials) {
+    public Iterable<? extends AuthenticationStep> authenticationSteps() {
         return Arrays.asList(
                 new LoginStep(this, sessionStorage, apiClient, supplementalInformationFormer),
                 new SignStep(this, sessionStorage, apiClient, supplementalInformationFormer),
@@ -62,12 +58,6 @@ public class KbcAuthenticator
 
     static byte[] generateCipherKey() {
         return RandomUtils.secureRandom(KbcConstants.Encryption.AES_KEY_LENGTH);
-    }
-
-    @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        throw new AssertionError();
     }
 
     String verifyCredentialsNotNullOrEmpty(String value) throws LoginException {
@@ -161,8 +151,9 @@ public class KbcAuthenticator
     }
 
     boolean isIncorrectCard(IllegalStateException e) {
-        return matchesErrorMessage(
-                e, KbcConstants.HeaderErrorMessage.CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC);
+        return Arrays.stream(
+                        KbcConstants.HeaderErrorMessage.CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC)
+                .allMatch(Arrays.asList(e.getMessage().split(" "))::contains);
     }
 
     private boolean possibleUnhandledErrorCodeLogAndCheckTextMessage(

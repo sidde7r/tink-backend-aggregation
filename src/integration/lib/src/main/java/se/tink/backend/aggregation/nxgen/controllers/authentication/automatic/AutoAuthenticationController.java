@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.automatic;
 
 import com.google.common.base.Preconditions;
-import java.util.Collections;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -11,16 +10,12 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
-public class AutoAuthenticationController
-        implements TypedAuthenticator, ProgressiveAuthenticator, ManualOrAutoAuth {
+public class AutoAuthenticationController implements TypedAuthenticator, ManualOrAutoAuth {
     private final CredentialsRequest request;
     private final SystemUpdater systemUpdater;
     private final MultiFactorAuthenticator manualAuthenticator;
@@ -35,24 +30,6 @@ public class AutoAuthenticationController
         this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
         this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);
         this.autoAuthenticator = Preconditions.checkNotNull(autoAuthenticator);
-    }
-
-    @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps(final Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        try {
-            if (shouldDoManualAuthentication(credentials)) {
-                return manualProgressive(credentials);
-            } else {
-                Preconditions.checkState(
-                        !Objects.equals(request.getType(), CredentialsRequestType.CREATE));
-                auto(credentials);
-                return Collections.singletonList(request -> AuthenticationResponse.empty());
-            }
-        } finally {
-            // TODO auth: move it up layer
-            systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
-        }
     }
 
     @Override
@@ -98,24 +75,6 @@ public class AutoAuthenticationController
         return Objects.equals(manualAuthenticator.getType(), CredentialsTypes.PASSWORD)
                 && !request.isUpdate()
                 && !request.isCreate();
-    }
-
-    private Iterable<? extends AuthenticationStep> manualProgressive(final Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        if (!request.isManual()) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-
-        if (!Objects.equals(manualAuthenticator.getType(), credentials.getType())) {
-            credentials.setType(manualAuthenticator.getType());
-        }
-        try {
-            // TODO auth: remove the cast
-            return ((ProgressiveAuthenticator) manualAuthenticator)
-                    .authenticationSteps(credentials);
-        } finally {
-            credentials.setType(CredentialsTypes.PASSWORD);
-        }
     }
 
     private void manual(Credentials credentials)

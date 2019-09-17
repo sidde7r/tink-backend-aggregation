@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Transfers.Statuses;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -19,8 +20,8 @@ public class ConfirmVerificationResponse extends BaseResponse
 
     @JsonIgnore
     public void validateResult(ExecutorExceptionResolver exceptionResolver) {
-        if (!"SIGN_CONFIRMED".equalsIgnoreCase(result)) {
-            exceptionResolver.asException(this);
+        if (!Statuses.VERIFICATION_CONFIRMED_STATUS.equalsIgnoreCase(result)) {
+            throw exceptionResolver.asException(this);
         }
     }
 }

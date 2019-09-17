@@ -207,6 +207,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateTransactionsRequest.setTransactions(transactions);
         updateTransactionsRequest.setUser(credentials.getUserId());
         updateTransactionsRequest.setCredentials(credentials.getId());
+        updateTransactionsRequest.setCredentialsDataVersion(credentials.getDataVersion());
         updateTransactionsRequest.setUserTriggered(request.isManual());
 
         controllerWrapper.updateTransactionsAsynchronously(updateTransactionsRequest);
@@ -354,6 +355,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setAccount(CoreAccountMapper.fromAggregation(account));
         updateAccountRequest.setAccountFeatures(accountFeatures);
         updateAccountRequest.setCredentialsId(request.getCredentials().getId());
+        updateAccountRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
 
         Account updatedAccount;
         try {
@@ -400,6 +402,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setAccount(CoreAccountMapper.fromAggregation(account));
         updateAccountRequest.setAccountFeatures(accountFeatures);
         updateAccountRequest.setCredentialsId(request.getCredentials().getId());
+        updateAccountRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
 
         Account updatedAccount;
         try {
@@ -422,6 +425,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void updateCredentialsExcludingSensitiveInformation(
             Credentials credentials, boolean doStatusUpdate) {
+        updateCredentialsExcludingSensitiveInformation(credentials, doStatusUpdate, false);
+    }
+
+    @Override
+    public void updateCredentialsExcludingSensitiveInformation(
+            Credentials credentials, boolean doStatusUpdate, boolean isMigrationUpdate) {
         // Execute any event-listeners.
 
         for (AgentEventListener eventListener : eventListeners) {
@@ -445,6 +454,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setUserId(credentials.getUserId());
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
+        updateCredentialsStatusRequest.setMigrationUpdate(isMigrationUpdate);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }

@@ -12,7 +12,6 @@ public final class AmericanExpressV62Constants {
     public static final String NOT_APPLICABLE = "n/a";
     public static final String DASH = "-";
     public static final String NUMBER_REGEX = "[^0-9,.]";
-    public static final double ZERO = 0d;
 
     public enum ConstantValueHeaders implements HeaderEnum {
         CHARSET("charset", "UTF-8"),

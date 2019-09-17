@@ -35,19 +35,13 @@ agents:
   collectorSubscriptionKey: true
   starling:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-  icabanken:
+  dnb:
     tink:
-      clientId: PSDSE-FINA-44059
-      certificateId: Tink
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   seb:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
-  axa:
-    tink:
-      certificateId: Tink
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   bankdata:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
@@ -76,13 +70,6 @@ agents:
     abn:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
       certificateId: abnamro-QSEALC
-  redsys:
-    tink:
-      baseAuthUrl: https://hubpsd2.redsys.es/api-oauth-xs2a/services/rest
-      baseAPIUrl: https://psd2.redsys.es/api-entrada-xs2a/services
-      certificateId: Tink
-      tppIpAddress: 127.0.0.1
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   sibs:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
@@ -101,10 +88,6 @@ agents:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       certificateId: Tink
-  sbab:
-    tink:
-      eidasCertId: Tink
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   swedbank:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
@@ -119,18 +102,11 @@ agents:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       eidasQwac: Tink
-  handelsbanken:
-    tink:
-      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
-      certificateId: Tink
   belfius:
     tink:
       baseUrl: https://psd2.b2b.belfius.be:8443
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
       certificateId: Tink
-  crosskey:
-    tink:
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   finecobank:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
@@ -188,6 +164,8 @@ clients:
     aggregatorIdentifier: "Jutlander Bank"
   dk-lan-spar-production:
     aggregatorIdentifier: "Lån & Spar"
+  dk-proveo-production:
+    aggregatorIdentifier: "proVeo"
   dk-rise-flemlose-sparekasse-production:
     aggregatorIdentifier: "Rise Flemløse Sparekasse"
   dk-sparekassen-balling-production:
@@ -260,6 +238,10 @@ clients:
     aggregatorIdentifier: "SBAB"
   se-ekobanken-medlemsbank-production:
     aggregatorIdentifier: "Ekobanken Medlemsbank"
+  se-entercard-production:
+    aggregatorIdentifier: "EnterCard"
+  se-entercard-testing:
+    aggregatorIdentifier: "EnterCard"
   se-lan-spar-sverige-testing:
     aggregatorIdentifier: "Lån & Spar Sverige"
   se-sparbanken-syd-production:
@@ -273,4 +255,4 @@ tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
 
-debugLogFrequencyPercent: 20
+debugLogFrequencyPercent: 50

@@ -248,14 +248,15 @@ public class AccountEntity {
         Optional<AccountTypes> type =
                 SparebankenVestConstants.ACCOUNT_TYPE_MAPPER.translate(accountType);
 
-        // todo: should I throw this here?
         if (!type.isPresent()) {
-            throw new IllegalStateException("Account type " + type + " not mapped.");
+            return Optional.empty();
         }
 
         switch (type.get()) {
             case CHECKING:
                 return toCheckingAccount();
+            case SAVINGS:
+                return toSavingsAccount();
             default:
                 // If the account is something else then a checking or savings account
                 // we should ignore it while parsing Transactional Accounts.
@@ -284,6 +285,25 @@ public class AccountEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
+                .withBalance(getBalanceModule())
+                .withId(ID_MODULE)
+                .setApiIdentifier(accountNumber)
+                .addHolderName(accountHolderName)
+                .build();
+    }
+
+    private Optional<TransactionalAccount> toSavingsAccount() {
+        IdModule ID_MODULE =
+                IdModule.builder()
+                        .withUniqueIdentifier(accountNumber)
+                        .withAccountNumber(accountNumber)
+                        .withAccountName(accountName)
+                        .addIdentifier(new NorwegianIdentifier(accountNumber))
+                        .build();
+
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.SAVINGS)
                 .withPaymentAccountFlag()
                 .withBalance(getBalanceModule())
                 .withId(ID_MODULE)

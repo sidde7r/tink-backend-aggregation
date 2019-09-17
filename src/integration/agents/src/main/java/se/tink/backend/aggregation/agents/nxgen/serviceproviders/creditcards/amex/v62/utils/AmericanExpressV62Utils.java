@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditca
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.NOT_APPLICABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.NUMBER_REGEX;
 
+import java.math.BigDecimal;
 import se.tink.libraries.strings.StringUtils;
 
 public class AmericanExpressV62Utils {
@@ -13,5 +14,9 @@ public class AmericanExpressV62Utils {
 
     public static double parseAmount(final String value) {
         return StringUtils.parseAmount(value.replaceAll(NUMBER_REGEX, ""));
+    }
+
+    public static BigDecimal parseAmountToBigDecimal(final String value) {
+        return BigDecimal.valueOf(StringUtils.parseAmount(value.replaceAll(NUMBER_REGEX, "")));
     }
 }
