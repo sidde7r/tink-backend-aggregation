@@ -16,21 +16,31 @@ public class PS256 {
 
     public static String sign(JWSHeader header, byte[] payloadObject, RSAPrivateKey signingKey) {
         Payload payload = new Payload(payloadObject);
-        return sign(header, signingKey, payload);
+        return sign(header, signingKey, payload, Boolean.FALSE);
     }
 
     public static String sign(JWSHeader header, String payloadObject, RSAPrivateKey signingKey) {
         Payload payload = new Payload(payloadObject);
-        return sign(header, signingKey, payload);
+        return sign(header, signingKey, payload, Boolean.FALSE);
     }
 
     public static String sign(
             JWSHeader header, JSONObject payloadObject, RSAPrivateKey signingKey) {
         Payload payload = new Payload(SerializationUtils.serializeToString(payloadObject));
-        return sign(header, signingKey, payload);
+        return sign(header, signingKey, payload, Boolean.FALSE);
     }
 
-    private static String sign(JWSHeader header, RSAPrivateKey signingKey, Payload payload) {
+    public static String sign(
+            JWSHeader header,
+            JSONObject payloadObject,
+            RSAPrivateKey signingKey,
+            Boolean detatched) {
+        Payload payload = new Payload(SerializationUtils.serializeToString(payloadObject));
+        return sign(header, signingKey, payload, detatched);
+    }
+
+    private static String sign(
+            JWSHeader header, RSAPrivateKey signingKey, Payload payload, Boolean detatchedPayload) {
         JWSObject signed = new JWSObject(header, payload);
         JWSSigner signer = new RSASSASigner(signingKey);
         try {
@@ -40,6 +50,6 @@ public class PS256 {
             throw new IllegalStateException(
                     "Signing request with PS256 failed." + Arrays.toString(e.getStackTrace()));
         }
-        return signed.serialize();
+        return detatchedPayload.equals(Boolean.TRUE) ? signed.serialize(true) : signed.serialize();
     }
 }

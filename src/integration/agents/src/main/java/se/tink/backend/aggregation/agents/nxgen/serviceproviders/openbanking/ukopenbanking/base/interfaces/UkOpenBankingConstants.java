@@ -51,6 +51,7 @@ public abstract class UkOpenBankingConstants extends OpenbankConstants {
             public static final String KID = "kid";
             public static final String IAT = "http://openbanking.org.uk/iat";
             public static final String ISS = "http://openbanking.org.uk/iss";
+            public static final String TAN = "http://openbanking.org.uk/tan";
             public static final String B64 = "b64";
             public static final String CRIT = "crit";
         }
