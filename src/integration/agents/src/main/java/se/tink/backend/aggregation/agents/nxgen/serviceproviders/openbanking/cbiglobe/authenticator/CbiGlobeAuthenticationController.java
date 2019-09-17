@@ -48,7 +48,7 @@ public class CbiGlobeAuthenticationController
         waitForSuplementalInformation(consentState);
 
         // account fetching in AUTHENTICATING phase due to two times consent authentication flow
-        GetAccountsResponse getAccountsResponse = accountFetch();
+        GetAccountsResponse getAccountsResponse = authenticator.fetchAccounts();
         openThirdPartyApp(getAccountsResponse);
 
         // Consent for transactions and balances
@@ -83,10 +83,6 @@ public class CbiGlobeAuthenticationController
         ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
         Preconditions.checkNotNull(payload);
         this.supplementalInformationHelper.openThirdPartyApp(payload);
-    }
-
-    private GetAccountsResponse accountFetch() {
-        return authenticator.fetchAccounts();
     }
 
     private void waitForSuplementalInformation(StrongAuthenticationState state) {

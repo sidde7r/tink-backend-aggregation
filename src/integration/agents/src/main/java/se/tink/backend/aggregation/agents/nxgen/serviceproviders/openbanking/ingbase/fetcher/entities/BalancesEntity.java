@@ -15,9 +15,6 @@ public class BalancesEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date referenceDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date lastChangeDateTime;
-
     public boolean isExpected() {
         return balanceType.equalsIgnoreCase(IngBaseConstants.BalanceTypes.EXPECTED);
     }
