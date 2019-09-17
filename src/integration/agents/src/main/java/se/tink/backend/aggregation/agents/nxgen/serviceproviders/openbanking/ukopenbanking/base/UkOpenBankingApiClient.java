@@ -220,7 +220,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         object.put(PAYLOAD.RISK, payloadClaims.get(PAYLOAD.RISK));
         object.put(PAYLOAD.DATA, payloadClaims.get(PAYLOAD.DATA));
 
-        return PS256.sign(jwsHeader, object, softwareStatement.getSigningKey(), Boolean.TRUE);
+        return PS256.sign(jwsHeader, object, softwareStatement.getSigningKey(), true);
     }
 
     public <T> T createDomesticPaymentConsent(

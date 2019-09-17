@@ -16,31 +16,31 @@ public class PS256 {
 
     public static String sign(JWSHeader header, byte[] payloadObject, RSAPrivateKey signingKey) {
         Payload payload = new Payload(payloadObject);
-        return sign(header, signingKey, payload, Boolean.FALSE);
+        return sign(header, signingKey, payload, false);
     }
 
     public static String sign(JWSHeader header, String payloadObject, RSAPrivateKey signingKey) {
         Payload payload = new Payload(payloadObject);
-        return sign(header, signingKey, payload, Boolean.FALSE);
+        return sign(header, signingKey, payload, false);
     }
 
     public static String sign(
             JWSHeader header, JSONObject payloadObject, RSAPrivateKey signingKey) {
         Payload payload = new Payload(SerializationUtils.serializeToString(payloadObject));
-        return sign(header, signingKey, payload, Boolean.FALSE);
+        return sign(header, signingKey, payload, false);
     }
 
     public static String sign(
             JWSHeader header,
             JSONObject payloadObject,
             RSAPrivateKey signingKey,
-            Boolean detatched) {
+            boolean detachedPayload) {
         Payload payload = new Payload(SerializationUtils.serializeToString(payloadObject));
-        return sign(header, signingKey, payload, detatched);
+        return sign(header, signingKey, payload, detachedPayload);
     }
 
     private static String sign(
-            JWSHeader header, RSAPrivateKey signingKey, Payload payload, Boolean detatchedPayload) {
+            JWSHeader header, RSAPrivateKey signingKey, Payload payload, boolean detachedPayload) {
         JWSObject signed = new JWSObject(header, payload);
         JWSSigner signer = new RSASSASigner(signingKey);
         try {
@@ -50,6 +50,6 @@ public class PS256 {
             throw new IllegalStateException(
                     "Signing request with PS256 failed." + Arrays.toString(e.getStackTrace()));
         }
-        return detatchedPayload.equals(Boolean.TRUE) ? signed.serialize(true) : signed.serialize();
+        return signed.serialize(detachedPayload);
     }
 }
