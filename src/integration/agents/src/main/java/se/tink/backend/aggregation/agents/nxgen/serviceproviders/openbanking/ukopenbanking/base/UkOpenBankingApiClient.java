@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.SIGNING_ALGORITHM;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.OpenIdSignUtils;
@@ -167,6 +168,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                     "Not able to parse algorithm from Software Statement so defaulting to RS256. "
                             + "This should never happen. "
                             + Arrays.toString(e.getStackTrace()));
+            jwsAlgorithm = SIGNING_ALGORITHM.RS256.name();
         }
 
         ObjectMapper oMapper = new ObjectMapper();
