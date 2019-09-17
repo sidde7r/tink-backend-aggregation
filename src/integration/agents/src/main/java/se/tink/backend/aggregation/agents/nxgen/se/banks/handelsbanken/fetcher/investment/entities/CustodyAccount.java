@@ -50,15 +50,15 @@ public class CustodyAccount extends BaseResponse {
         return Optional.empty();
     }
 
-    public Optional<URL> toFundHoldings() {
+    public Optional<URL> getFundHoldingsUrl() {
         return searchLink(HandelsbankenConstants.URLS.Links.FUND_HOLDINGS);
     }
 
-    public Optional<URL> toCustodyAccount() {
+    public Optional<URL> getCustodyAccountUrl() {
         return searchLink(HandelsbankenConstants.URLS.Links.CUSTODY_ACCOUNT);
     }
 
-    public Optional<URL> toPensionDetails() {
+    public Optional<URL> getPensionDetailsUrl() {
         return searchLink(HandelsbankenConstants.URLS.Links.PENSION_DETAILS);
     }
 
