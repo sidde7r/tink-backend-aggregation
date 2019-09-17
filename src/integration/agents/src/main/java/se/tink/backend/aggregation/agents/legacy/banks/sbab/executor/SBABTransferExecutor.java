@@ -96,7 +96,7 @@ public class SBABTransferExecutor {
         SignProcessResponse signProcessResponse =
                 transferClient.initiateSignProcess(transferRequest);
 
-        signTransfer(signProcessResponse.getBankIdRef());
+        signTransfer(signProcessResponse);
 
         TransferRequest confirmTransferRequest =
                 transferRequest.setSignatureProcessResponse(signProcessResponse);
@@ -116,7 +116,9 @@ public class SBABTransferExecutor {
         }
     }
 
-    private void signTransfer(String bankIdRef) {
+    private void signTransfer(SignProcessResponse signProcessResponse) {
+        String bankIdRef = signProcessResponse.getBankIdRefOrThrowIfNotPresent(catalog);
+
         InitiateSignResponse initiateSignResponse = transferClient.initiateBankIdSign(bankIdRef);
         String initStatus = initiateSignResponse.getStatus();
 
