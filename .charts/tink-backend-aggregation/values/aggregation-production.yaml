@@ -42,9 +42,6 @@ agents:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
-  bankdata:
-    tink:
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   monzo:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   bunq:
