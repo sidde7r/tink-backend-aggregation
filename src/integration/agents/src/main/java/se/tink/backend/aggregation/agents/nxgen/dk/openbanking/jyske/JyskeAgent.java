@@ -21,9 +21,4 @@ public final class JyskeAgent extends BankdataAgent {
     protected String getBaseAuthUrl() {
         return JyskeConstants.BASE_AUTH_URL;
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return JyskeConstants.INTEGRATION_NAME;
-    }
 }

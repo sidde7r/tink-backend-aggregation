@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.BankdataAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.configuration.BankdataConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.BankdataPaymentController;
@@ -30,7 +29,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class BankdataAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final BankdataApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -39,8 +37,6 @@ public abstract class BankdataAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         apiClient = new BankdataApiClient(client, sessionStorage);
-        clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -54,25 +50,14 @@ public abstract class BankdataAgent extends NextGenerationAgent
         apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
     }
 
-    protected abstract String getIntegrationName();
-
     private BankdataConfiguration getClientConfiguration() {
-        BankdataConfiguration bankdataConfiguration =
-                getClientConfiguration(BankdataConstants.INTEGRATION_NAME);
-        bankdataConfiguration.setBaseUrl(getBaseUrl());
-        bankdataConfiguration.setBaseAuthUrl(getBaseAuthUrl());
-        return bankdataConfiguration;
-    }
 
-    private BankdataConfiguration pisGetClientConfiguration() {
-        return getClientConfiguration(getIntegrationName());
-    }
-
-    protected BankdataConfiguration getClientConfiguration(String integrationName) {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(integrationName, clientName, BankdataConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        BankdataConfiguration config =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(BankdataConfiguration.class);
+        config.setBaseUrl(getBaseUrl());
+        config.setBaseAuthUrl(getBaseAuthUrl());
+        return config;
     }
 
     @Override

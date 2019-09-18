@@ -21,9 +21,4 @@ public final class KreditbankenAgent extends BankdataAgent {
     protected String getBaseAuthUrl() {
         return KreditbankenConstants.BASE_AUTH_URL;
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return KreditbankenConstants.INTEGRATION_NAME;
-    }
 }

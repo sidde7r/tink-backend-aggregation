@@ -4,7 +4,6 @@ public final class NordfynsConstants {
 
     public static final String BASE_URL = "https://api.nordfynsbank.dk";
     public static final String BASE_AUTH_URL = "https://auth.nordfynsbank.dk";
-    public static final String INTEGRATION_NAME = "nordfyns";
 
     private NordfynsConstants() {
         throw new AssertionError();

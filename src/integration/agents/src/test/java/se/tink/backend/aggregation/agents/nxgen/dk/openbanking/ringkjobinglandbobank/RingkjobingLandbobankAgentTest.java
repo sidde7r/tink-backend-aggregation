@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.ringkjobinglandb
 
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
 
+@Ignore
 public class RingkjobingLandbobankAgentTest {
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
@@ -25,6 +27,8 @@ public class RingkjobingLandbobankAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-ringkjobinglandbobank-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                        .setFinancialInstitutionId("ringkjobinglandbobank")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
