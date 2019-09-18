@@ -4,7 +4,6 @@ public final class KreditbankenConstants {
 
     public static final String BASE_URL = "https://api.kreditbanken.dk";
     public static final String BASE_AUTH_URL = "https://auth.kreditbanken.dk";
-    public static final String INTEGRATION_NAME = "kreditbanken";
 
     private KreditbankenConstants() {
         throw new AssertionError();

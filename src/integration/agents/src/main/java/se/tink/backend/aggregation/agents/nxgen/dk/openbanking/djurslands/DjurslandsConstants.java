@@ -4,7 +4,6 @@ public final class DjurslandsConstants {
 
     public static final String BASE_URL = "https://api.djurslandsbank.dk";
     public static final String BASE_AUTH_URL = "https://auth.djurslandsbank.dk";
-    public static final String INTEGRATION_NAME = "djurslands";
 
     private DjurslandsConstants() {
         throw new AssertionError();

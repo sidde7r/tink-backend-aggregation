@@ -13,11 +13,6 @@ public final class SkjernAgent extends BankdataAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return SkjernConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected String getBaseUrl() {
         return SkjernConstants.BASE_URL;
     }

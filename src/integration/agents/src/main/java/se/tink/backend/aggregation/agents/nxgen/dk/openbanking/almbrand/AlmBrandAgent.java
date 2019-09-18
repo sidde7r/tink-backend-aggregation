@@ -21,9 +21,4 @@ public final class AlmBrandAgent extends BankdataAgent {
     protected String getBaseAuthUrl() {
         return AlmBrandConstants.BASE_AUTH_URL;
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return AlmBrandConstants.INTEGRATION_NAME;
-    }
 }

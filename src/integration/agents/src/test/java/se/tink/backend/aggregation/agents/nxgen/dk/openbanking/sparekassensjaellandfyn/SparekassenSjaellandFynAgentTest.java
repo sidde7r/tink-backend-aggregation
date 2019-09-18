@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sparekassensjael
 
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
 
+@Ignore
 public class SparekassenSjaellandFynAgentTest {
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
@@ -25,6 +27,8 @@ public class SparekassenSjaellandFynAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-sparekassensjaellandfyn-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                        .setFinancialInstitutionId("sparekassensjaellandfyn")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

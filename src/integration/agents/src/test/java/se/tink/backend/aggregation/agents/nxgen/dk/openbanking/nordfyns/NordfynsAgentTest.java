@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordfyns;
 
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
 
+@Ignore
 public class NordfynsAgentTest {
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
@@ -25,6 +27,8 @@ public class NordfynsAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-nordfyns-ob")
                         .addCredentialField(
                                 BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                        .setFinancialInstitutionId("nordfyns")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
