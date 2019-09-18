@@ -38,10 +38,6 @@ agents:
   dnb:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-  seb:
-    tink:
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
   monzo:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   bunq:
