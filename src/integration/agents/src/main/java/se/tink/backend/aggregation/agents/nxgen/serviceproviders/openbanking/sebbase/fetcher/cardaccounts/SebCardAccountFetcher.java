@@ -16,6 +16,6 @@ public class SebCardAccountFetcher<A extends Account> implements AccountFetcher<
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return client.fetchCardAccounts();
+        return client.fetchCardAccounts().toTinkAccounts();
     }
 }

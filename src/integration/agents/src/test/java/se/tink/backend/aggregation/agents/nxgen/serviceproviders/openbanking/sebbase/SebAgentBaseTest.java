@@ -21,7 +21,11 @@ public abstract class SebAgentBaseTest {
 
     @Before
     public void setup() {
-        builder = new AgentIntegrationTest.Builder(market, providerName).expectLoggedIn(true);
+        builder =
+                new AgentIntegrationTest.Builder(market, providerName)
+                        .expectLoggedIn(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("seb");
     }
 
     @Test

@@ -58,7 +58,6 @@ public class CardAccountEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkAccount() {
-
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
@@ -79,6 +78,7 @@ public class CardAccountEntity {
                                                 maskedPan))
                                 .build())
                 .setApiIdentifier(resourceId)
+                .addHolderName(name)
                 .build();
     }
 
