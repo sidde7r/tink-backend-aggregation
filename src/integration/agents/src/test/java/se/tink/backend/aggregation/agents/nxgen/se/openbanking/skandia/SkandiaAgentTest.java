@@ -15,6 +15,7 @@ public class SkandiaAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-skandia-oauth2")
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("skandia")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
