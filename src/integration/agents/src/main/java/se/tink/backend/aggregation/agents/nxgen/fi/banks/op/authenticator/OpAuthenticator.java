@@ -62,7 +62,8 @@ public class OpAuthenticator implements KeyCardAuthenticator {
         }
 
         OpBankAuthenticateResponse aResponse = apiClient.authenticate();
-
+        apiClient.instance(authToken);
+        apiClient.auth(authToken);
         apiClient.adobeAnalyticsConfig(authToken, persistentStorage);
 
         credentials.setField(Field.Key.USERNAME, username);
