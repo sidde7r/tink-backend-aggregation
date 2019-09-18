@@ -19,14 +19,19 @@ public class CreateSessionRequest {
     @JsonProperty("birthday")
     private LocalDate birthday;
 
-    private CreateSessionRequest(LoginDocument loginDocument, LocalDate birthday) {
+    @JsonProperty("deviceId")
+    private String deviceId;
+
+    private CreateSessionRequest(LoginDocument loginDocument, LocalDate birthday, String deviceId) {
         this.loginDocument = loginDocument;
         this.birthday = birthday;
+        this.deviceId = deviceId;
     }
 
     public static CreateSessionRequest create(
-            String username, int usernameType, LocalDate birthday) {
-        return new CreateSessionRequest(LoginDocument.create(username, usernameType), birthday);
+            String username, int usernameType, LocalDate birthday, String deviceId) {
+        return new CreateSessionRequest(
+                LoginDocument.create(username, usernameType), birthday, deviceId);
     }
 
     public String getBirthday() {

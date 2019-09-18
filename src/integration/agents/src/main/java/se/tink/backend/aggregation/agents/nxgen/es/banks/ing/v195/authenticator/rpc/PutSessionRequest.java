@@ -7,13 +7,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PutSessionRequest {
 
     private List<Integer> pinPositions;
+    private String processId;
 
-    private PutSessionRequest(List<Integer> pinPositions) {
+    private PutSessionRequest(List<Integer> pinPositions, String processId) {
         this.pinPositions = pinPositions;
+        this.processId = processId;
     }
 
-    public static PutSessionRequest create(List<Integer> pinPositions) {
-        return new PutSessionRequest(pinPositions);
+    public static PutSessionRequest create(List<Integer> pinPositions, String processId) {
+        return new PutSessionRequest(pinPositions, processId);
     }
 
     public List<Integer> getPinPositions() {

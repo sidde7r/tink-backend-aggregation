@@ -16,10 +16,13 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Logging;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutRestSessionResponse;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class IngAuthenticator implements Authenticator {
@@ -28,11 +31,13 @@ public class IngAuthenticator implements Authenticator {
     private static final Pattern NIF_PATTERN = Pattern.compile("^[0-9]{8}[a-zA-Z]$");
     private static final Pattern NIE_PATTERN = Pattern.compile("^[a-zA-Z][0-9]{7}[a-zA-Z]$");
     private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
+    private final PersistentStorage persistentStorage;
 
     private IngApiClient apiClient;
 
-    public IngAuthenticator(IngApiClient apiClient) {
+    public IngAuthenticator(IngApiClient apiClient, PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
@@ -51,7 +56,8 @@ public class IngAuthenticator implements Authenticator {
         }
 
         CreateSessionResponse response =
-                apiClient.postLoginRestSession(username, getUsernameType(username), dob);
+                apiClient.postLoginRestSession(
+                        username, getUsernameType(username), dob, getDeviceId());
 
         List<Integer> pinPositions =
                 getPinPositionsForPassword(
@@ -59,7 +65,8 @@ public class IngAuthenticator implements Authenticator {
                         response.getPinPadNumbers(),
                         response.getPinPositions());
 
-        PutRestSessionResponse putSessionResponse = apiClient.putLoginRestSession(pinPositions);
+        PutRestSessionResponse putSessionResponse =
+                apiClient.putLoginRestSession(pinPositions, response.getProcessId());
 
         apiClient.postLoginAuthResponse(putSessionResponse.getTicket());
     }
@@ -165,5 +172,12 @@ public class IngAuthenticator implements Authenticator {
 
         // Shouldn't happen since the same regex is in the provider configuration for username
         throw LoginError.INCORRECT_CREDENTIALS.exception();
+    }
+
+    private String getDeviceId() {
+        if (!persistentStorage.containsKey(Storage.DEVICE_ID)) {
+            persistentStorage.put(Storage.DEVICE_ID, RandomUtils.generateRandomHexEncoded(20));
+        }
+        return persistentStorage.get(Storage.DEVICE_ID);
     }
 }
