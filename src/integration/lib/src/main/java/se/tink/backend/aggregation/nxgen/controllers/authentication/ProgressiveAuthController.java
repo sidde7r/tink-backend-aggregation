@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
+import com.google.common.collect.Lists;
 import java.util.Iterator;
+import java.util.LinkedList;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -24,38 +26,33 @@ public final class ProgressiveAuthController {
     public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
+        LinkedList<? extends AuthenticationStep> authSteps = Lists.newLinkedList(authenticator.authenticationSteps());
+        return executeStep(authSteps, determineStepClassToExecute(authSteps, request), request);
+    }
+
+    private Class<? extends AuthenticationStep> determineStepClassToExecute(LinkedList<? extends AuthenticationStep> authenticationSteps, SteppableAuthenticationRequest request) {
+        return request.getStep().orElse(authenticationSteps.getFirst().getClass());
+    }
+
+    private SteppableAuthenticationResponse executeStep(LinkedList<? extends AuthenticationStep> authenticationSteps, final Class<? extends AuthenticationStep> stepClassToExecute, final SteppableAuthenticationRequest request)
+        throws AuthenticationException, AuthorizationException {
         final AuthenticationRequest loadedRequest =
-                request.getPayload().withCredentials(credentials);
-
-        final Iterator<? extends AuthenticationStep> steps =
-                authenticator.authenticationSteps().iterator();
-
-        if (!request.getStep().isPresent()) {
-            final AuthenticationStep step = steps.next();
-            if (steps.hasNext()) {
-                final AuthenticationStep upcomingStep = steps.next();
-                return SteppableAuthenticationResponse.intermediateResponse(
-                        upcomingStep.getClass(), step.respond(loadedRequest));
-            } else {
-                return SteppableAuthenticationResponse.finalResponse(step.respond(loadedRequest));
-            }
+            request.getPayload().withCredentials(credentials);
+        AuthenticationStep stepToExecute = authenticationSteps.stream()
+            .filter(step -> stepClassToExecute.isInstance(step))
+            .findAny()
+            .orElseThrow(() -> new IllegalStateException("The agent seems to have defined no steps"));
+        if (isLastStep(stepToExecute, authenticationSteps)) {
+            return SteppableAuthenticationResponse.finalResponse(
+                stepToExecute.respond(loadedRequest));
+        } else {
+            final AuthenticationStep upcomingStep = authenticationSteps.get(authenticationSteps.indexOf(stepToExecute)+1);
+            return SteppableAuthenticationResponse.intermediateResponse(
+                upcomingStep.getClass(), stepToExecute.respond(loadedRequest));
         }
+    }
 
-        final Class<? extends AuthenticationStep> cls = request.getStep().get();
-
-        while (steps.hasNext()) {
-            final AuthenticationStep step = steps.next();
-            if (cls.isInstance(step)) {
-                if (steps.hasNext()) {
-                    final AuthenticationStep upcomingStep = steps.next();
-                    return SteppableAuthenticationResponse.intermediateResponse(
-                            upcomingStep.getClass(), step.respond(loadedRequest));
-                } else {
-                    return SteppableAuthenticationResponse.finalResponse(
-                            step.respond(loadedRequest));
-                }
-            }
-        }
-        throw new IllegalStateException("The agent seems to have defined no steps");
+    private boolean isLastStep(final AuthenticationStep step, LinkedList<? extends AuthenticationStep> authenticationSteps) {
+        return authenticationSteps.getLast().equals(step);
     }
 }
