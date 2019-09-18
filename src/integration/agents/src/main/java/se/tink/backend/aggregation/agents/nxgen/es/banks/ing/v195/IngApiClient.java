@@ -2,8 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.cookie.Cookie;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Cookies;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ClientResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CommunicationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionRequest;
@@ -28,11 +32,11 @@ public class IngApiClient {
     }
 
     public CreateSessionResponse postLoginRestSession(
-            String username, int usernameType, String dob) {
+            String username, int usernameType, String dob, String deviceId) {
 
         LocalDate birthday = LocalDate.parse(dob, IngUtils.BIRTHDAY_INPUT);
         CreateSessionRequest request =
-                CreateSessionRequest.create(username, usernameType, birthday);
+                CreateSessionRequest.create(username, usernameType, birthday, deviceId);
 
         return client.request(IngConstants.Url.LOGIN_REST_SESSION)
                 .type(MediaType.APPLICATION_JSON)
@@ -40,11 +44,14 @@ public class IngApiClient {
                 .post(CreateSessionResponse.class, request);
     }
 
-    public PutRestSessionResponse putLoginRestSession(List<Integer> pinPositions) {
+    public PutRestSessionResponse putLoginRestSession(
+            List<Integer> pinPositions, String processId) {
         return client.request(IngConstants.Url.LOGIN_REST_SESSION)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .put(PutRestSessionResponse.class, PutSessionRequest.create(pinPositions));
+                .put(
+                        PutRestSessionResponse.class,
+                        PutSessionRequest.create(pinPositions, processId));
     }
 
     public boolean postLoginAuthResponse(String ticket) {
@@ -57,6 +64,7 @@ public class IngApiClient {
                                 .put(IngConstants.Form.DEVICE, IngConstants.Default.MOBILE_PHONE)
                                 .build()
                                 .serialize());
+        removeDuplicateSessionCookie();
 
         return true;
     }
@@ -123,5 +131,23 @@ public class IngApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .delete(String.class);
+    }
+
+    private void removeDuplicateSessionCookie() {
+        // Hack to work around our http client not sorting cookies according to RFC 6265
+        final List<Cookie> cookies = client.getCookies();
+        final List<Cookie> sessionCookies =
+                cookies.stream()
+                        .filter(c -> c.getName().equalsIgnoreCase(Cookies.SESSION_ID))
+                        .collect(Collectors.toList());
+        if (sessionCookies.size() > 1) {
+            // keep cookie with longest path ("/genoma_api/")
+            sessionCookies.sort(Comparator.comparingInt(c -> c.getPath().length()));
+            final List<Cookie> cookiesToRemove =
+                    sessionCookies.subList(0, sessionCookies.size() - 1);
+            cookies.removeAll(cookiesToRemove);
+            client.clearCookies();
+            client.addCookie(cookies.toArray(new Cookie[0]));
+        }
     }
 }

@@ -140,4 +140,12 @@ public class IngConstants {
         public static final LogTag NON_NUMERIC_PASSWORD =
                 LogTag.from("IngDirect_ES_Auth_Non_numeric_password");
     }
+
+    public static class Storage {
+        public static final String DEVICE_ID = "deviceId";
+    }
+
+    public static class Cookies {
+        public static final String SESSION_ID = "genoma-session-id";
+    }
 }
