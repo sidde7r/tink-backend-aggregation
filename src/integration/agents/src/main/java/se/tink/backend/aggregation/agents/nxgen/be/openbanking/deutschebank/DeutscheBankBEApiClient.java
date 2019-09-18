@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.rpc.ConsentBaseRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankBEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
@@ -21,7 +20,7 @@ public class DeutscheBankBEApiClient extends DeutscheBankApiClient {
     public DeutscheBankBEApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            DeutscheBankBEConfiguration configuration) {
+            DeutscheBankConfiguration configuration) {
         super(client, sessionStorage, configuration);
         this.client = client;
         this.sessionStorage = sessionStorage;

@@ -5,8 +5,10 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankBEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankMultifactorAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -18,8 +20,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class DeutscheBankBEAgent extends DeutscheBankAgent {
 
-    private final DeutscheBankBEConfiguration deutscheBankBEConfiguration;
-    private final DeutscheBankBEApiClient apiClient;
+    private final DeutscheBankConfiguration deutscheBankBEConfiguration;
+    private final DeutscheBankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public DeutscheBankBEAgent(

@@ -111,14 +111,4 @@ public final class DeutscheBankConstants {
         public static final int MAX_POLLS_COUNTER = 50;
         public static final String CURRENCY_TYPE = "EUR";
     }
-
-    public static class RegionPsuIdType {
-        public static final String BE = "BE_ONLB_DB";
-        public static final String DE = "DE_ONLB_DB";
-    }
-
-    public static class RegionEndpoint {
-        public static final String BE = "/BE/DB";
-        public static final String DE = "/DE/PFB";
-    }
 }
