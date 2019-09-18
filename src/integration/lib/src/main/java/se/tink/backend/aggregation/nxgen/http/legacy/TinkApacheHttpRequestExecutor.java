@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.OffsetDateTime;
@@ -56,6 +57,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
+    private static final ImmutableSet<String> ALLOWED_APPIDS_FOR_QSEALCSIGN =
+        // TinkApp, Zimpler Test Appid. TODO, remove Zimpler one once tested
+            ImmutableSet.of("e643eb7981d24acfb47834ef338a4e2a", "6bb8cc19b3be4f329800caf45ce96c92");
+
     private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
     private boolean shouldAddRequestSignature = true;
@@ -66,12 +71,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private boolean shouldUseEidasProxy = false;
     private String legacyCertId;
     private EidasIdentity eidasIdentity;
-    private boolean shouldQsealcJwt = false;
     private EidasProxyConfiguration eidasProxyConfiguration;
-
-    public void setShouldQsealcJwt(boolean shouldQsealcJwt) {
-        this.shouldQsealcJwt = shouldQsealcJwt;
-    }
 
     public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
         this.eidasProxyConfiguration = eidasProxyConfiguration;
@@ -128,8 +128,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             // as other clusters might not have the corresponding certificate uploaded, and we found
             // 2019-09-10 there are some issue with decryption of 726c95011c994aaf9e3a9c3ca25911b0
             // (Zimpler)
-            if (eidasIdentity != null
-                    && "e643eb7981d24acfb47834ef338a4e2a".equals(eidasIdentity.getAppId())) {
+
+            if (eidasIdentity != null && eidasIdentity.getAppId() != null
+                    && ALLOWED_APPIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getAppId())) {
                 addQsealcSignature(request);
                 if (eidasIdentity.getAppId() == null) {
                     log.warn("AppId is null");
