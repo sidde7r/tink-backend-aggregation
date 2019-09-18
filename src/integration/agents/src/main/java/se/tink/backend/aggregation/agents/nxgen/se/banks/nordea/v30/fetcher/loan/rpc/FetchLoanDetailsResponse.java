@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.CreditEntity;
@@ -130,7 +131,7 @@ public class FetchLoanDetailsResponse {
     private BigDecimal getInterestRate() {
         InterestEntity interest = getInterest();
         if (!Objects.isNull(interest.getRate())) {
-            return interest.getRate();
+            return AgentParsingUtils.parsePercentageFormInterest(interest.getRate());
         } else {
             throw new IllegalStateException("No interest rate found.");
         }
