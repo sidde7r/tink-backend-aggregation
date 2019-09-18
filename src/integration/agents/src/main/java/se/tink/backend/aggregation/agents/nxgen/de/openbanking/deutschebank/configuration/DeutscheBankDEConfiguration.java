@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 
 public class DeutscheBankDEConfiguration extends DeutscheBankConfiguration {
     private String baseUrl;
+    public static final String REGION_ENDPOINT_DE = "/DE/PFB";
+    public static final String REGION_PSU_ID_DE = "DE_ONLB_DB";
 
     @Override
     public String getBaseUrl() {
@@ -14,11 +16,11 @@ public class DeutscheBankDEConfiguration extends DeutscheBankConfiguration {
                 Strings.emptyToNull(baseUrl),
                 String.format(
                         DeutscheBankConstants.ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
-        return baseUrl.concat(DeutscheBankConstants.RegionEndpoint.DE);
+        return baseUrl.concat(REGION_ENDPOINT_DE);
     }
 
     @Override
     public String getPsuIdType() {
-        return DeutscheBankConstants.RegionPsuIdType.DE;
+        return REGION_PSU_ID_DE;
     }
 }
