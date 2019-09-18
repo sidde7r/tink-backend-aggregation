@@ -30,7 +30,7 @@ public class GetPaymentResponse {
                                 new Amount(
                                         instructedAmount.getCurrency(),
                                         instructedAmount.getAmount()))
-                        .withExecutionDate(LocalDate.parse(startDate))
+                        .withExecutionDate(LocalDate.parse(requestedExecutionDate))
                         .withCurrency(instructedAmount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(

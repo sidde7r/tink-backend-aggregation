@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
@@ -32,7 +31,7 @@ public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
         return apiClient.buildAuthorizeUrl(
                 state,
                 "PIS:" + persistentStorage.get(StorageKeys.PAYMENT_ID),
-                configuration.getBaseUrl() + ApiServices.AUTHORIZE);
+                persistentStorage.get(StorageKeys.AUTHORISATION_URL));
     }
 
     @Override
@@ -41,7 +40,7 @@ public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
                 GetTokenForm.builder()
                         .setClientId(configuration.getClientId())
                         .setCode(code)
-                        .setCodeVerifier(FormValues.CODE_VERIFIER)
+                        .setCodeVerifier(persistentStorage.get(StorageKeys.CODE_VERIFIER))
                         .setGrantType(FormValues.AUTHORIZATION_CODE)
                         .setRedirectUri(configuration.getRedirectUrl())
                         .setValidRequest(true)

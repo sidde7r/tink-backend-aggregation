@@ -6,9 +6,6 @@ import static org.mockito.Mockito.mock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -31,10 +28,12 @@ public class AxaAgentPaymentTest {
                 new AgentIntegrationTest.Builder("be", "be-axa-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("axa")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
-        builder.build().testGenericPayment(createListMockedDomesticPayment(4));
+        builder.build().testGenericPayment(createListMockedDomesticPayment(1));
     }
 
     private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
@@ -43,14 +42,14 @@ public class AxaAgentPaymentTest {
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.BE).toString()).when(creditor).getAccountNumber();
-            doReturn("Creditor name").when(creditor).getName();
+            doReturn(Arg.CREDITORS_IBAN).when(creditor).getAccountNumber();
+            doReturn(Arg.CREDITORS_NAME).when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.BE).toString()).when(debtor).getAccountNumber();
+            doReturn(Arg.DEBTORS_IBAN).when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inSEK(new Random().nextInt(50000));
+            Amount amount = Amount.inEUR(1);
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 
@@ -69,5 +68,8 @@ public class AxaAgentPaymentTest {
 
     private enum Arg {
         IBAN,
+        CREDITORS_NAME,
+        CREDITORS_IBAN,
+        DEBTORS_IBAN
     }
 }

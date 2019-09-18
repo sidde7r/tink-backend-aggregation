@@ -4,8 +4,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
-    private String scaOAuth;
-    private String scaStatus;
-    private String self;
-    private String status;
+    private HrefEntity scaOAuth;
+    private HrefEntity scaStatus;
+    private HrefEntity self;
+    private HrefEntity status;
+
+    public String getScaOAuth() {
+        return scaOAuth.getHref();
+    }
 }
