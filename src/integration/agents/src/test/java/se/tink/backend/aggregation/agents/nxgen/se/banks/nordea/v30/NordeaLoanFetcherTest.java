@@ -168,7 +168,7 @@ public class NordeaLoanFetcherTest {
                 SerializationUtils.deserializeFromString(
                                 LOAN_WITH_SUBLOAN_RESPONSE, FetchLoanDetailsResponse.class)
                         .toTinkLoanAccount();
-        Assert.assertEquals(new Double(1.47), loanAccount.getInterestRate());
+        Assert.assertEquals(new Double(1.47 / 100), loanAccount.getInterestRate());
         Assert.assertEquals(
                 ExactCurrencyAmount.of(new BigDecimal(1583282.0).negate(), "SEK"),
                 loanAccount.getExactBalance());
@@ -188,7 +188,7 @@ public class NordeaLoanFetcherTest {
                 SerializationUtils.deserializeFromString(
                                 LOAN_RESPONSE, FetchLoanDetailsResponse.class)
                         .toTinkLoanAccount();
-        Assert.assertEquals(new Double(0.500), loanAccount.getInterestRate());
+        Assert.assertEquals(new Double(0.500 / 100), loanAccount.getInterestRate());
         Assert.assertEquals(
                 ExactCurrencyAmount.of(new BigDecimal(1345973.00).negate(), "SEK"),
                 loanAccount.getExactBalance());
