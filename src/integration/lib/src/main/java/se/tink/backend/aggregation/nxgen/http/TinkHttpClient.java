@@ -401,10 +401,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         requestExecutor.disableSignatureRequestHeader();
     }
 
-    public void shouldQsealcJwt() {
-        requestExecutor.setShouldQsealcJwt(true);
-    }
-
     public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
         requestExecutor.setEidasProxyConfiguration(eidasProxyConfiguration);
     }
