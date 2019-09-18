@@ -58,7 +58,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
     private static final ImmutableSet<String> ALLOWED_APPIDS_FOR_QSEALCSIGN =
-        // TinkApp, Zimpler Test Appid. TODO, remove Zimpler one once tested
+            // TinkApp, Zimpler Test Appid. TODO, remove Zimpler one once tested
             ImmutableSet.of("e643eb7981d24acfb47834ef338a4e2a", "6bb8cc19b3be4f329800caf45ce96c92");
 
     private SignatureKeyPair signatureKeyPair;
@@ -129,7 +129,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             // 2019-09-10 there are some issue with decryption of 726c95011c994aaf9e3a9c3ca25911b0
             // (Zimpler)
 
-            if (eidasIdentity != null && eidasIdentity.getAppId() != null
+            if (eidasIdentity != null
+                    && eidasIdentity.getAppId() != null
                     && ALLOWED_APPIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getAppId())) {
                 addQsealcSignature(request);
                 if (eidasIdentity.getAppId() == null) {
