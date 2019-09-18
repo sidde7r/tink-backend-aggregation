@@ -36,9 +36,7 @@ public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     public Collection<InvestmentAccount> fetchAccounts() {
         try {
             FetchInvestmentResponse fetchInvestmentResponse = apiClient.fetchInvestment();
-            return Stream.concat(
-                            parseDeposits(fetchInvestmentResponse.getDepositAccounts()),
-                            parseStocks(fetchInvestmentResponse.getStockOrders()))
+            return parseDeposits(fetchInvestmentResponse.getDepositAccounts())
                     .collect(Collectors.toList());
         } catch (HttpResponseException hre) {
             HttpResponse httpResponse = hre.getResponse();
@@ -66,15 +64,6 @@ public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
                             return depositAccount.toTinkInvestmentAccount(
                                     Collections.singletonList(portfolio));
                         });
-    }
-
-    private Stream<InvestmentAccount> parseStocks(List<Object> stockOrders) {
-        if (!stockOrders.isEmpty()) {
-            log.infoExtraLong(
-                    SerializationUtils.serializeToString(stockOrders),
-                    BecConstants.Log.INVESTMENT_STOCKS);
-        }
-        return Stream.empty();
     }
 
     private List<Instrument> parseInstruments(DepositAccountEntity depositAccount) {

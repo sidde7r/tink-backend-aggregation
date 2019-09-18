@@ -110,17 +110,6 @@ data:
             redirectUrl: "{{ $agentsConfig.bankdata.tink.redirectUrl }}"
         {{- end }}
 
-        {{- if $agentsConfig.sparebank }}
-        sparebank:
-          tink:
-            qwacCertId: "{{ $agentsConfig.sparebank.tink.qwacCertId }}"
-            qsealcCertId: "{{ $agentsConfig.sparebank.tink.qsealcCertId }}"
-            certificate: "SPAREBANK_CERTIFICATE"
-            keyId: "SPAREBANK_KEY_ID"
-            redirectUrl: "{{ $agentsConfig.sparebank.tink.redirectUrl }}"
-            tppId: "SPAREBANK_TPP_ID"
-        {{- end }}
-
         {{- if $agentsConfig.monzo }}
         monzo:
           tink:
@@ -307,7 +296,7 @@ data:
             aspspCode: "BCTT"
         bancomontepio:
           tink:
-            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.tink.certificateId }}"
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -326,7 +315,7 @@ data:
             aspspCode: "CEMG"
         bankinter:
           tink:
-            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.tink.certificateId }}"
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -535,7 +524,7 @@ data:
             aspspCode: "BIC"
         millenniumbcp:
           tink:
-            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.tink.certificateId }}"
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"

@@ -18,6 +18,13 @@ public class SBABDestinationAccountIdentifierFormatter implements AccountIdentif
         return identifier.getIdentifier(DEFAULT_FORMATTER);
     }
 
+    /**
+     * SBAB requires differnt lengths for different banks. According to their web page the shorter
+     * account numbers have to be padded with zeros.
+     *
+     * @param swedishIdentifier
+     * @return Account number as string, padded with 0 to required length.
+     */
     public String toSBABDestination(SwedishIdentifier swedishIdentifier) {
         String accountNumber = swedishIdentifier.getAccountNumber();
         String clearingNumber = swedishIdentifier.getClearingNumber();

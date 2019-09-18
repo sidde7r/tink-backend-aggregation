@@ -41,12 +41,12 @@ public class HandelsbankenSEEInvoiceExecutor implements ApproveEInvoiceExecutor 
     public HandelsbankenSEEInvoiceExecutor(
             HandelsbankenSEApiClient client,
             HandelsbankenSessionStorage sessionStorage,
-            ExecutorExceptionResolver exceptionResolver) {
+            ExecutorExceptionResolver exceptionResolver,
+            HandelsbankenSEPaymentExecutor paymentExecutor) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.exceptionResolver = exceptionResolver;
-        this.paymentExecutor =
-                new HandelsbankenSEPaymentExecutor(client, sessionStorage, exceptionResolver);
+        this.paymentExecutor = paymentExecutor;
     }
 
     @Override

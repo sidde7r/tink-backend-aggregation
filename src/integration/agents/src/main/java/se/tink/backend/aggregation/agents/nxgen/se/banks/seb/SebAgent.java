@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
@@ -29,7 +31,8 @@ public class SebAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                ManualOrAutoAuth {
     private final SebApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SebSessionStorage sebSessionStorage;
@@ -108,5 +111,10 @@ public class SebAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        return true;
     }
 }

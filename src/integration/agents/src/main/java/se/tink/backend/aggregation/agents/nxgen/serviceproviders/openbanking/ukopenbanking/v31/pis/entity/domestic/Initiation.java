@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -17,15 +20,8 @@ public class Initiation {
     private String instructionIdentification;
     private String endToEndIdentification;
     private InstructedAmount instructedAmount;
-    /**
-     * IF debtorAccount is NOT specified in the request:
-     *
-     * <p>The merchant has not specified the Debtor Account details for the PSU. The PSU will select
-     * their account during the authorisation of consent.
-     *
-     * <p>We will always specify it in order to not have to go through an extra step. This can be
-     * made configurable
-     */
+    /**  {@link DebtorAccount} is not mandatory so added the null support. */
+    @JsonInclude(Include.NON_NULL)
     private DebtorAccount debtorAccount;
 
     private CreditorAccount creditorAccount;
@@ -41,7 +37,8 @@ public class Initiation {
         this.endToEndIdentification = payment.getUniqueId();
 
         this.instructedAmount = new InstructedAmount(payment.getAmount());
-        this.debtorAccount = new DebtorAccount(payment.getDebtor());
+        this.debtorAccount =
+                Objects.isNull(payment.getDebtor()) ? null : new DebtorAccount(payment.getDebtor());
         this.creditorAccount = new CreditorAccount(payment.getCreditor());
         this.remittanceInformation =
                 new RemittanceInformation(payment.getUniqueId(), payment.getReference());
@@ -53,7 +50,7 @@ public class Initiation {
 
     @JsonIgnore
     public Debtor getDebtor() {
-        return debtorAccount.toDebtor();
+        return Objects.isNull(debtorAccount) ? null : debtorAccount.toDebtor();
     }
 
     @JsonIgnore

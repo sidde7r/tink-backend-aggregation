@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.slf4j.Logger;
@@ -19,11 +21,6 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private static final Logger log =
             LoggerFactory.getLogger(SendAccountsToDataAvailabilityTrackerAgentWorkerCommand.class);
 
-    /*
-     *  Temporary limitation to prevent client running on all providers.
-     */
-    private static final String TEST_MARKET = "SE";
-
     private static final String METRIC_NAME = "data_availability_tracker_refresh";
     private static final String METRIC_ACTION = "send_accounts_to_data_availability_tracker";
 
@@ -35,7 +32,9 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final String agentName;
     private final String provider;
     private final String market;
-    private final boolean isEnabledMarket;
+
+    private final ImmutableSet<String> ENABLED_MARKETS =
+            ImmutableSet.<String>builder().add("SE", "GB").build();
 
     public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -50,8 +49,6 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
         this.agentName = request.getProvider().getClassName();
         this.provider = request.getProvider().getName();
         this.market = request.getProvider().getMarket();
-
-        isEnabledMarket = TEST_MARKET.equalsIgnoreCase(request.getProvider().getMarket());
     }
 
     @Override
@@ -67,7 +64,8 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
             try {
 
-                if (isEnabledMarket) {
+                if (!Strings.isNullOrEmpty(market)
+                        && ENABLED_MARKETS.contains(market.toUpperCase())) {
 
                     context.getCachedAccountsWithFeatures()
                             .forEach(

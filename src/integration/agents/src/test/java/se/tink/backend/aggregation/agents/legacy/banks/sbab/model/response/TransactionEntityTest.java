@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.banks.sbab.model.response;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.TransactionEntity;
 
 public class TransactionEntityTest {
 

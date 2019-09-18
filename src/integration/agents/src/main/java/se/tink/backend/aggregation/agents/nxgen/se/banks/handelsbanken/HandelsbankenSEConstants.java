@@ -180,12 +180,22 @@ public class HandelsbankenSEConstants {
                 Pattern.compile(".*\\d{1,7}-\\d").asPredicate();
         public static final LogTag LOG_TAG = LogTag.from("#se_handelsbanken_payment_context");
         public static final String UNDER_16 = "10573";
+        public static final String BANKID_SIGN_NEEDED = "9";
+        public static final int BANKID_MAX_ATTEMPTS = 90;
 
         public static class Statuses {
             public static final List<String> TRANSFER_APPROVAL_STATUSES =
                     Arrays.asList("OK", "E-fakturan är ändrad");
-            public static final String VERIFICATION_CONFIRMED_STATUS = "SIGN_CONFIRMED";
+
+            public static final String SIGN_CONFIRMED = "SIGN_CONFIRMED";
+            public static final String CONTINUE = "CONTINUE";
+            public static final String CANCELLED = "101";
         }
+    }
+
+    public static class ErrorMessage {
+        public static final String ERROR_OCCURRED_TRY_AGAIN_LATER =
+                "Ett fel har tyvärr inträffat. Försök igen senare.";
     }
 
     public static class Executor {

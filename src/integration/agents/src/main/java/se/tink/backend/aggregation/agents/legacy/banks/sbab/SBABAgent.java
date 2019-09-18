@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.sbab;
 
+import static se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.INTEGRATION_NAME;
+
 import com.google.common.base.Objects;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
@@ -15,13 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.math3.util.Precision;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.BankIdMessage;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -33,21 +29,18 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.BankId;
 import se.tink.backend.aggregation.agents.banks.sbab.client.AuthenticationClient;
-import se.tink.backend.aggregation.agents.banks.sbab.client.BankIdSignClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.IdentityDataClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.TransferClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.UserDataClient;
 import se.tink.backend.aggregation.agents.banks.sbab.configuration.SBABConfiguration;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.SavedRecipientEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnsupportedTransferException;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.AccountEntity;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdStartResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitBankIdResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitialTransferResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.MakeTransferResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.SavedRecipientEntity;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
+import se.tink.backend.aggregation.agents.banks.sbab.executor.SBABTransferExecutor;
+import se.tink.backend.aggregation.agents.banks.sbab.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -66,7 +59,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SBABAgent extends AbstractAgent
@@ -79,19 +71,16 @@ public class SBABAgent extends AbstractAgent
     private final Credentials credentials;
     private final Catalog catalog;
 
-    private static final int BANKID_MAX_ATTEMPTS = 100;
-    public static final String INTEGRATION_NAME = "sbab";
-    public static final String AMORTIZATION_DOCUMENTATION = "amortization-documentation";
-
     private final AuthenticationClient authenticationClient;
     private final UserDataClient userDataClient;
     private final TransferClient transferClient;
-    private final BankIdSignClient bankIdSignClient;
     private final IdentityDataClient identityDataClient;
 
     private final Client client;
     private final Client clientWithoutSSL;
     private final LocalDate lastCredentialsUpdate;
+
+    private final SBABTransferExecutor transferExecutor;
 
     // cache
     private List<AccountEntity> accountEntities = null;
@@ -125,15 +114,13 @@ public class SBABAgent extends AbstractAgent
                                 request.getProvider().getPayload(),
                                 TypeReferences.MAP_OF_STRING_STRING);
 
-        if (payload != null && Objects.equal(payload.get("isSwitchMortgageProviderTest"), "true")) {
+        if (payload != null
+                && Objects.equal(
+                        payload.get(SBABConstants.IS_MORTGAGE_SWITCH_PROVIDER_TEST),
+                        SBABConstants.TRUE)) {
             clientWithoutSSL = clientFactory.createCookieClientWithoutSSL();
-            bankIdSignClient =
-                    new BankIdSignClient(
-                            clientWithoutSSL, credentials, CommonHeaders.DEFAULT_USER_AGENT);
         } else {
             clientWithoutSSL = null;
-            bankIdSignClient =
-                    new BankIdSignClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
         }
 
         authenticationClient =
@@ -143,6 +130,9 @@ public class SBABAgent extends AbstractAgent
                 new IdentityDataClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
         transferClient =
                 new TransferClient(client, credentials, catalog, CommonHeaders.DEFAULT_USER_AGENT);
+
+        this.transferExecutor =
+                new SBABTransferExecutor(transferClient, catalog, supplementalRequester);
     }
 
     @Override
@@ -155,7 +145,6 @@ public class SBABAgent extends AbstractAgent
                 .ifPresent(
                         cfg -> {
                             authenticationClient.setConfiguration(cfg);
-                            bankIdSignClient.setConfiguration(cfg);
                             transferClient.setConfiguration(cfg);
                             userDataClient.setConfiguration(cfg);
                         });
@@ -163,6 +152,7 @@ public class SBABAgent extends AbstractAgent
 
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
+
         switch (credentials.getType()) {
             case MOBILE_BANKID:
                 return Objects.equal(loginWithMobileBankId(), BankIdStatus.DONE);
@@ -191,7 +181,7 @@ public class SBABAgent extends AbstractAgent
     public void execute(Transfer transfer) throws Exception, TransferExecutionException {
         switch (transfer.getType()) {
             case BANK_TRANSFER:
-                executeBankTransfer(transfer);
+                transferExecutor.executeBankTransfer(transfer);
                 break;
             default:
                 throw new UnsupportedTransferException(transfer.getType());
@@ -199,95 +189,8 @@ public class SBABAgent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception, TransferExecutionException {
+    public void update(Transfer transfer) throws Exception {
         throw new UnsupportedTransferException(transfer.getType());
-    }
-
-    private void executeBankTransfer(Transfer transfer) throws Exception {
-        InitialTransferResponse initialResponse = transferClient.initiateProcess();
-        Optional<String> sourceAccount =
-                transferClient.tryFindSourceAccount(transfer, initialResponse);
-
-        if (!sourceAccount.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(
-                            "Could not find the source account number in the list from the bank. New format?")
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
-                    .build();
-        }
-
-        if (!accountIsSolvent(sourceAccount.get(), transfer)) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Amount is larger than what is available at the account.")
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
-                    .build();
-        }
-
-        Optional<SavedRecipientEntity> recipient =
-                transferClient.tryFindRecipient(transfer, initialResponse);
-        MakeTransferResponse makeResponse =
-                transferClient.makeTransfer(transfer, recipient, initialResponse);
-
-        try {
-            if (makeResponse.isBetweenUserAccounts()) {
-                transferClient.acceptTransfer(makeResponse);
-            } else {
-                signTransfer(makeResponse);
-            }
-        } catch (Exception e) {
-            if (e instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-            }
-
-            transferClient.deleteTransfer(makeResponse);
-            throw e;
-        }
-    }
-
-    private boolean accountIsSolvent(final String sourceAccountNumber, Transfer transfer)
-            throws Exception {
-        // Fetch accounts to get the current balance of the accounts
-        List<Account> accounts = toTinkAccounts(getAccounts());
-        ImmutableList<Account> account =
-                FluentIterable.from(accounts)
-                        .filter(
-                                account1 ->
-                                        Objects.equal(account1.getBankId(), sourceAccountNumber))
-                        .toList();
-
-        Account sourceAccount = Iterables.getOnlyElement(account);
-        return Precision.compareTo(
-                        sourceAccount.getBalance(), transfer.getAmount().getValue(), 0.001)
-                >= 0;
-    }
-
-    private void signTransfer(MakeTransferResponse makeResponse) throws Exception {
-        SignFormRequestBody signFormRequestBody = transferClient.initiateSignProcess(makeResponse);
-
-        BankIdStatus bankIdStatus = signWithMobileBankId(signFormRequestBody);
-
-        switch (bankIdStatus) {
-            case DONE:
-                transferClient.checkTransferSuccess(makeResponse, true);
-                log.info("Successfully signed transfer");
-                return;
-            case CANCELLED:
-                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage(catalog.getString(BankIdMessage.BANKID_CANCELLED))
-                        .build();
-            case TIMEOUT:
-                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage(catalog.getString(BankIdMessage.BANKID_NO_RESPONSE))
-                        .build();
-            case FAILED_UNKNOWN:
-                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED).build();
-            default:
-                break;
-        }
     }
 
     private BankIdStatus loginWithMobileBankId() throws BankIdException {
@@ -298,7 +201,7 @@ public class SBABAgent extends AbstractAgent
         credentials.setSupplementalInformation(null);
         supplementalRequester.openBankId(autostartToken, false);
 
-        for (int i = 0; i < BANKID_MAX_ATTEMPTS; i++) {
+        for (int i = 0; i < BankId.BANKID_MAX_ATTEMPTS; i++) {
             BankIdStatus bankIdStatus = authenticationClient.getLoginStatus(pendingAuthCode);
 
             switch (bankIdStatus) {
@@ -328,26 +231,7 @@ public class SBABAgent extends AbstractAgent
     private void fetchAndSetBearerToken() {
         String token = authenticationClient.getBearerToken();
         userDataClient.setBearerToken(token);
-    }
-
-    private BankIdStatus signWithMobileBankId(SignFormRequestBody signFormRequestBody)
-            throws Exception {
-        BankIdStartResponse startResponse = bankIdSignClient.initiateSign(signFormRequestBody);
-
-        requestBankIdSupplemental();
-
-        for (int i = 0; i < BANKID_MAX_ATTEMPTS; i++) {
-            BankIdStatus bankIdStatus =
-                    bankIdSignClient.getStatus(signFormRequestBody, startResponse.getOrderRef());
-
-            if (!Objects.equal(bankIdStatus, BankIdStatus.WAITING)) {
-                return bankIdStatus;
-            }
-
-            Thread.sleep(2000);
-        }
-
-        return BankIdStatus.TIMEOUT;
+        transferClient.setBearerToken(token);
     }
 
     private List<Transaction> fetchTransactions(Account account) throws Exception {
@@ -394,12 +278,6 @@ public class SBABAgent extends AbstractAgent
         }
 
         return accounts;
-    }
-
-    private void requestBankIdSupplemental() {
-        credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     @Override
@@ -462,7 +340,7 @@ public class SBABAgent extends AbstractAgent
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         try {
             List<AccountEntity> accountEntities = getAccounts();
-            List<SavedRecipientEntity> recipientEntities = transferClient.getValidRecipients();
+            List<SavedRecipientEntity> recipientEntities = transferClient.getSavedRecipients();
 
             Map<Account, List<TransferDestinationPattern>> transferPatterns =
                     new TransferDestinationPatternBuilder()
