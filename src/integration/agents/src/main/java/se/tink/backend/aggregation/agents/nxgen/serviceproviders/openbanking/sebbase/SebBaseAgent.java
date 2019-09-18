@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.session.SebSessionHandler;
@@ -37,13 +36,7 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
         super.setConfiguration(configuration);
 
         sebConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                SebConstants.Market.INTEGRATION_NAME,
-                                SebConstants.Market.CLIENT_NAME,
-                                SebConfiguration.class)
-                        .orElseThrow(() -> new IllegalStateException("SEB configuration missing."));
+                getAgentConfigurationController().getAgentConfiguration(SebConfiguration.class);
 
         apiClient.setConfiguration(sebConfiguration);
         client.setEidasProxy(configuration.getEidasProxy(), sebConfiguration.getEidasQwac());

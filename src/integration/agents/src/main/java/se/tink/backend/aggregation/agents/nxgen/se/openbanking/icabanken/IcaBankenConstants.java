@@ -75,9 +75,6 @@ public final class IcaBankenConstants {
         public static final String CONTENT_TYPE = "Content-Type";
         public static final String AUTHORIZATION = "authorization";
         public static final String SCOPE = "scope";
-
-        public static final String TINK_DEBUG = "X-Tink-Debug";
-        public static final String TRUST_ALL = "trust_all";
     }
 
     public static class HeaderValues {

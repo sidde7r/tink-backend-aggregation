@@ -54,14 +54,12 @@ public final class IcaBankenApiClient {
     public TokenResponse exchangeAuthorizationCode(AuthorizationRequest request) {
         return client.request(new URL(ProductionUrls.TOKEN_PATH))
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
-                .header(HeaderKeys.TINK_DEBUG, HeaderKeys.TRUST_ALL)
                 .post(TokenResponse.class);
     }
 
     public TokenResponse exchangeRefreshToken(RefreshTokenRequest request) {
         return client.request(new URL(ProductionUrls.TOKEN_PATH))
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
-                .header(HeaderKeys.TINK_DEBUG, HeaderKeys.TRUST_ALL)
                 .post(TokenResponse.class);
     }
 
@@ -74,7 +72,6 @@ public final class IcaBankenApiClient {
                         HeaderValues.BEARER + sessionStorage.get(StorageKeys.TOKEN))
                 .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
                 .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.TINK_DEBUG, HeaderKeys.TRUST_ALL)
                 .get(FetchAccountsResponse.class);
     }
 
@@ -93,7 +90,6 @@ public final class IcaBankenApiClient {
                         HeaderKeys.AUTHORIZATION,
                         HeaderValues.BEARER + sessionStorage.get(StorageKeys.TOKEN))
                 .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
-                .header(HeaderKeys.TINK_DEBUG, HeaderKeys.TRUST_ALL)
                 .get(FetchTransactionsResponse.class);
     }
 
