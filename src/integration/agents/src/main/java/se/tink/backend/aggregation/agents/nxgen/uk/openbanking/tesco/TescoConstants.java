@@ -10,9 +10,9 @@ final class TescoConstants {
             public static final String AIS_API_URL =
                     "https://ob.api.tescobank.com/open-banking/v3.1/aisp";
             public static final String PIS_AUTH_URL =
-                    "https://ob.api.developer.tescobank.com/open-banking/v3.1/pisp";
+                    "https://ob.api.tescobank.com/open-banking/v3.1/pisp";
             public static final String PIS_API_URL =
-                    "https://ob.api.developer.tescobank.com/open-banking/v3.1/pisp";
+                    "https://ob.api.tescobank.com/open-banking/v3.1/pisp";
             public static final String WELL_KNOWN_URL =
                     "https://identity.tescobank.com/ext/open-banking/.well-known/openid-configuration";
         }
