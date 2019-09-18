@@ -29,8 +29,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class OAuth2AuthenticationProgressiveController implements AutoAuthenticator,
-    ThirdPartyAppStrongAuthenticator<String> {
+public class OAuth2AuthenticationProgressiveController
+        implements AutoAuthenticator, ThirdPartyAppStrongAuthenticator<String> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(OAuth2AuthenticationProgressiveController.class);

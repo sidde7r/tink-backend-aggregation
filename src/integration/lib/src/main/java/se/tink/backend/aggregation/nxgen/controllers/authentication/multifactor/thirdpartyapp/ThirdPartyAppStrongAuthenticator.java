@@ -10,12 +10,11 @@ public interface ThirdPartyAppStrongAuthenticator<T> {
     ThirdPartyAppResponse<T> init();
 
     ThirdPartyAppResponse<T> collect(final Map<String, String> callbackData)
-        throws AuthenticationException, AuthorizationException;
+            throws AuthenticationException, AuthorizationException;
 
     ThirdPartyAppAuthenticationPayload getAppPayload();
 
     String getStrongAuthenticationStateSupplementalKey();
 
     long getWaitForMinutes();
-
 }

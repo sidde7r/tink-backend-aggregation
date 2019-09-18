@@ -6,13 +6,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -27,9 +24,7 @@ public class SibsRedirectCallbackHandler {
      * @param unit total time to wait for a callback
      */
     public SibsRedirectCallbackHandler(
-            SupplementalRequester supplementalRequester,
-            long waitFor,
-            TimeUnit unit) {
+            SupplementalRequester supplementalRequester, long waitFor, TimeUnit unit) {
         this.supplementalRequester = supplementalRequester;
         this.waitFor = waitFor;
         this.unit = unit;
@@ -73,18 +68,15 @@ public class SibsRedirectCallbackHandler {
         AuthenticationResponse.openThirdPartyApp(payload);
         final String supplementalInformationKey = OAuthUtils.formatSupplementalKey(scaState);
         SupplementalWaitRequest waitRequest =
-            new SupplementalWaitRequest(
-                supplementalInformationKey,
-                waitFor,
-                unit);
+                new SupplementalWaitRequest(supplementalInformationKey, waitFor, unit);
         AuthenticationResponse.requestWaitingForSupplementalInformation(waitRequest);
         return supplementalRequester
-            .waitForSupplementalInformation(supplementalInformationKey, waitFor, unit)
-            .map(SibsRedirectCallbackHandler::stringToMap);
+                .waitForSupplementalInformation(supplementalInformationKey, waitFor, unit)
+                .map(SibsRedirectCallbackHandler::stringToMap);
     }
 
     private static Map<String, String> stringToMap(final String string) {
         return SerializationUtils.deserializeFromString(
-            string, new TypeReference<HashMap<String, String>>() {});
+                string, new TypeReference<HashMap<String, String>>() {});
     }
 }

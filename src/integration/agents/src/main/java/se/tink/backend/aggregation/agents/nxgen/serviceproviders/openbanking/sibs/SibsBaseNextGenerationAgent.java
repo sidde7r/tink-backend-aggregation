@@ -51,7 +51,7 @@ public abstract class SibsBaseNextGenerationAgent extends NextGenerationAgent
     protected AutoAuthenticationController authenticator;
 
     public SibsBaseNextGenerationAgent(
-        CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new SibsBaseApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
@@ -78,9 +78,9 @@ public abstract class SibsBaseNextGenerationAgent extends NextGenerationAgent
 
     protected SibsConfiguration getClientConfiguration() {
         return configuration
-            .getIntegrations()
-            .getClientConfiguration(getIntegrationName(), clientName, SibsConfiguration.class)
-            .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                .getIntegrations()
+                .getClientConfiguration(getIntegrationName(), clientName, SibsConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
@@ -123,17 +123,17 @@ public abstract class SibsBaseNextGenerationAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final SibsTransactionalAccountAccountFetcher accountFetcher =
-            new SibsTransactionalAccountAccountFetcher(apiClient);
+                new SibsTransactionalAccountAccountFetcher(apiClient);
         final SibsTransactionalAccountTransactionFetcher transactionFetcher =
-            new SibsTransactionalAccountTransactionFetcher(apiClient);
+                new SibsTransactionalAccountTransactionFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
-            metricRefreshController,
-            updateController,
-            accountFetcher,
-            new TransactionFetcherController<>(
-                transactionPaginationHelper,
-                new TransactionKeyPaginationController<>(transactionFetcher)));
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 
     @Override
@@ -149,8 +149,7 @@ public abstract class SibsBaseNextGenerationAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         SignPaymentStrategy signPaymentStrategy =
-            SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(
-                apiClient, context);
+                SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(apiClient, context);
         SibsPaymentExecutor sibsPaymentExecutor =
                 new SibsPaymentExecutor(apiClient, signPaymentStrategy, strongAuthenticationState);
         return Optional.of(new PaymentController(sibsPaymentExecutor, sibsPaymentExecutor));
@@ -159,7 +158,7 @@ public abstract class SibsBaseNextGenerationAgent extends NextGenerationAgent
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
-            accounts, AccountIdentifier.Type.SEPA_EUR, AccountIdentifier.Type.IBAN);
+                accounts, AccountIdentifier.Type.SEPA_EUR, AccountIdentifier.Type.IBAN);
     }
 
     @Override

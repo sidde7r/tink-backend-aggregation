@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 
 final class RedirectStep implements AuthenticationStep {
 

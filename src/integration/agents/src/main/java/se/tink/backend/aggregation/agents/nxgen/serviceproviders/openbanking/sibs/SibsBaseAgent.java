@@ -41,9 +41,9 @@ import se.tink.libraries.account.AccountIdentifier;
 
 public abstract class SibsBaseAgent extends SubsequentGenerationAgent
         implements RefreshTransferDestinationExecutor,
-    RefreshCheckingAccountsExecutor,
-    RefreshSavingsAccountsExecutor,
-    ProgressiveAuthAgent {
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                ProgressiveAuthAgent {
 
     private final String clientName;
     protected final SibsBaseApiClient apiClient;
@@ -51,7 +51,9 @@ public abstract class SibsBaseAgent extends SubsequentGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public SibsBaseAgent(
-        se.tink.libraries.credentials.service.CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            se.tink.libraries.credentials.service.CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new SibsBaseApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
@@ -66,32 +68,30 @@ public abstract class SibsBaseAgent extends SubsequentGenerationAgent
         super.setConfiguration(configuration);
         apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
         client.setMessageSignInterceptor(
-            new SibsMessageSignInterceptor(
-                getClientConfiguration(),
-                configuration.getEidasProxy(),
-                new EidasIdentity(
-                    context.getClusterId(), context.getAppId(), this.getAgentClass())));
+                new SibsMessageSignInterceptor(
+                        getClientConfiguration(),
+                        configuration.getEidasProxy(),
+                        new EidasIdentity(
+                                context.getClusterId(), context.getAppId(), this.getAgentClass())));
     }
 
     protected SibsConfiguration getClientConfiguration() {
         return configuration
-            .getIntegrations()
-            .getClientConfiguration(getIntegrationName(), clientName, SibsConfiguration.class)
-            .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                .getIntegrations()
+                .getClientConfiguration(getIntegrationName(), clientName, SibsConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     protected ProgressiveAuthenticator constructAuthenticator() {
 
         final SibsRedirectAuthenticationProgresiveController controller =
-            new SibsRedirectAuthenticationProgresiveController(
-                new SibsAuthenticator(apiClient, credentials),
-                strongAuthenticationState);
+                new SibsRedirectAuthenticationProgresiveController(
+                        new SibsAuthenticator(apiClient, credentials), strongAuthenticationState);
         return new AutoAuthenticationProgressiveController(
-            request,
-            systemUpdater,
-            new ThirdPartyAppAuthenticationProgressiveController(
-                controller),
-            controller);
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationProgressiveController(controller),
+                controller);
     }
 
     @Override
@@ -116,17 +116,17 @@ public abstract class SibsBaseAgent extends SubsequentGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final SibsTransactionalAccountAccountFetcher accountFetcher =
-            new SibsTransactionalAccountAccountFetcher(apiClient);
+                new SibsTransactionalAccountAccountFetcher(apiClient);
         final SibsTransactionalAccountTransactionFetcher transactionFetcher =
-            new SibsTransactionalAccountTransactionFetcher(apiClient);
+                new SibsTransactionalAccountTransactionFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
-            metricRefreshController,
-            updateController,
-            accountFetcher,
-            new TransactionFetcherController<>(
-                transactionPaginationHelper,
-                new TransactionKeyPaginationController<>(transactionFetcher)));
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 
     @Override
@@ -142,22 +142,21 @@ public abstract class SibsBaseAgent extends SubsequentGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         SignPaymentStrategy signPaymentStrategy =
-            SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(
-                apiClient, context);
+                SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(apiClient, context);
         SibsPaymentExecutor sibsPaymentExecutor =
-            new SibsPaymentExecutor(apiClient, signPaymentStrategy, strongAuthenticationState);
+                new SibsPaymentExecutor(apiClient, signPaymentStrategy, strongAuthenticationState);
         return Optional.of(new PaymentController(sibsPaymentExecutor, sibsPaymentExecutor));
     }
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
-            accounts, AccountIdentifier.Type.SEPA_EUR, AccountIdentifier.Type.IBAN);
+                accounts, AccountIdentifier.Type.SEPA_EUR, AccountIdentifier.Type.IBAN);
     }
 
     @Override
     public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
-        throws Exception {
+            throws Exception {
         return ProgressiveAuthController.of(constructAuthenticator(), credentials).login(request);
     }
 

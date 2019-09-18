@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 
 final class PostRedirectStep implements AuthenticationStep {
 
