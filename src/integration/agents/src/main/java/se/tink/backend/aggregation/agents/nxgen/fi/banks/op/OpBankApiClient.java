@@ -4,6 +4,7 @@ import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.InitRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.InitResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankAdobeAnalyticsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankAuthenticateCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankAuthenticateResponse;
@@ -42,6 +43,18 @@ public class OpBankApiClient {
     public InitResponseEntity init(InitRequestEntity requestEntity) {
         return createRequest(OpBankConstants.Urls.INIT_URI)
                 .post(InitResponseEntity.class, requestEntity);
+    }
+
+    public OpAuthResponse auth(String authToken) {
+        return createRequest(OpBankConstants.Urls.AUTH)
+                .queryParam("authToken", authToken)
+                .get(OpAuthResponse.class);
+    }
+
+    public OpBankResponseEntity instance(String authToken) {
+        return createRequest(OpBankConstants.Urls.INSTANCE)
+                .queryParam("authToken", authToken)
+                .get(OpBankResponseEntity.class);
     }
 
     public OpBankLoginResponseEntity login(OpBankLoginRequestEntity requestEntity) {
@@ -118,8 +131,8 @@ public class OpBankApiClient {
                 .queryParam(
                         OpBankConstants.RequestParameters.ENCRYPTED_TRX_ID, previousTransactionId)
                 .queryParam(
-                        OpBankConstants.RequestParameters.MAX_PAST_PARAM,
-                        OpBankConstants.RequestParameters.MAX_PAST_VALUE)
+                        OpBankConstants.RequestParameters.MAX_FUTURE,
+                        OpBankConstants.RequestParameters.MAX_FUTURE_VALUE)
                 .get(OpBankTransactionsResponse.class);
     }
 
@@ -249,6 +262,9 @@ public class OpBankApiClient {
                 .header(
                         OpBankConstants.Headers.API_VERSION_KEY,
                         OpBankConstants.Headers.API_VERSION_VALUE)
+                .header(
+                        OpBankConstants.Headers.ACCEPT_LANGUAGE,
+                        OpBankConstants.Headers.ACCEPT_LANGUAGE_VALUE)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }
