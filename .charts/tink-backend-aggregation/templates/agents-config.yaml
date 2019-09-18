@@ -102,14 +102,6 @@ data:
             eidasQwac: "{{ $agentsConfig.seb.tink.eidasQwac }}"
         {{- end }}
 
-        {{- if $agentsConfig.bankdata }}
-        bankdata:
-          tink:
-            clientId: "BANKDATA_CLIENT_ID"
-            apiKey: "BANKDATA_API_KEY"
-            redirectUrl: "{{ $agentsConfig.bankdata.tink.redirectUrl }}"
-        {{- end }}
-
         {{- if $agentsConfig.monzo }}
         monzo:
           tink:
