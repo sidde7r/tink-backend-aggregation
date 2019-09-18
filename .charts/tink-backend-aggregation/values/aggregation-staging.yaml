@@ -26,10 +26,6 @@ agents:
   dnb:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-  seb:
-    tink:
-      eidasQwac: Tink
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   abnamro:
     tink:
       redirectUrl: https://localhost/auth
