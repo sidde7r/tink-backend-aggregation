@@ -23,7 +23,7 @@ public class DnbAgentTest {
                 new AgentIntegrationTest.Builder("no", "no-dnb-ob")
                         .addCredentialField("PSU-ID", manager.get(Arg.PSU_ID))
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .saveCredentialsAfter(true)
                         .expectLoggedIn(false);
     }
 
