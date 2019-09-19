@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguratio
 public class DanskeBankConstants {
 
     public String getHostUrl() {
-        return "https://apiebank.danskebank.com";
+        return "https://apiebank3.danskebank.com";
     }
 
     public String getBaseUrl() {
