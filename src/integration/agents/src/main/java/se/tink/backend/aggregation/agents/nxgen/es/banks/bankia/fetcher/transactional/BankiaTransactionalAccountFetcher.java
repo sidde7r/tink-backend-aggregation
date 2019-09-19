@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.date.DateUtils;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BankiaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -37,7 +36,6 @@ public class BankiaTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.getAccounts().stream()
-
                 .map(AccountEntity::toTinkAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)

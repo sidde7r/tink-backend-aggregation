@@ -121,6 +121,7 @@ public abstract class BankiaConstants {
                             "10600",
                             "11186",
                             "11239",
+                            "11355",
                             "11359", // Non-adult account
                             "11590",
                             "11594",
@@ -153,7 +154,7 @@ public abstract class BankiaConstants {
         public static final LogTag UNKNOWN_TRANSACTIONAL_ACCOUNT_TYPE =
                 LogTag.from("bankia_unknown_transactional_account_type");
         public static final LogTag UNKNOWN_INVESTMENT_ACCOUNT_TYPE =
-            LogTag.from("bankia_unknown_investment_account_type");
+                LogTag.from("bankia_unknown_investment_account_type");
         public static final LogTag LOAN = LogTag.from("bankia_loan");
         public static final LogTag UNKNOWN_INSTRUMENT_TYPE =
                 LogTag.from("bankia_unknown_instrument_type");
