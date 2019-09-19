@@ -47,7 +47,7 @@ public class LoanDetailsAggregate {
         final LoanAccount loanAccount =
                 LoanAccount.builder(loanEntity.getContractNumber())
                         .setInterestRate(interestRate)
-                        .setAccountNumber(loanDetailsResponse.getRelatedAccountNumber())
+                        .setAccountNumber(loanEntity.getContractNumber())
                         .setBalance(amountToPay)
                         .setName(loanEntity.getContractDescription())
                         .setDetails(loanDetails)
