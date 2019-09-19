@@ -279,7 +279,7 @@ data:
             aspspCode: "BCTT"
         bancomontepio:
           tink:
-            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.tink.certificateId }}"
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -298,7 +298,7 @@ data:
             aspspCode: "CEMG"
         bankinter:
           tink:
-            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.tink.certificateId }}"
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
@@ -507,7 +507,7 @@ data:
             aspspCode: "BIC"
         millenniumbcp:
           tink:
-            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.tink.certificateId }}"
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
