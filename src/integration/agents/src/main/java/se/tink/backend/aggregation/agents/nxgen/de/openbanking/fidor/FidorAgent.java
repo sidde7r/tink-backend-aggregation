@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -68,7 +70,20 @@ public final class FidorAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new FidorAuthenticator(apiClient, persistentStorage, getClientConfiguration());
+        FidorAuthenticator fidorAuthenticator =
+                new FidorAuthenticator(
+                        supplementalInformationHelper,
+                        strongAuthenticationState,
+                        apiClient,
+                        persistentStorage,
+                        getClientConfiguration(),
+                        credentials);
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        fidorAuthenticator, supplementalInformationHelper),
+                fidorAuthenticator);
     }
 
     @Override
