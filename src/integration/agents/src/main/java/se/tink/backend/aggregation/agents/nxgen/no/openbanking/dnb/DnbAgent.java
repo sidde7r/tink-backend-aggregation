@@ -110,7 +110,7 @@ public final class DnbAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                transactionFetcher, 4, 90, ChronoUnit.DAYS)));
+                                transactionFetcher, 3, 6, ChronoUnit.MONTHS)));
     }
 
     @Override
