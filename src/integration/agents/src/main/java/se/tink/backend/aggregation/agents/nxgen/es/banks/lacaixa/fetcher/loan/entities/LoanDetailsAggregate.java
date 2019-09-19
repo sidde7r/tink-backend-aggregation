@@ -74,7 +74,7 @@ public class LoanDetailsAggregate {
     }
 
     private Double getInterestRate() {
-        return StringUtils.parseAmount(this.loanDetailsResponse.getNominalInterest());
+        return StringUtils.parseAmount(this.loanDetailsResponse.getNominalInterest()) / 100d;
     }
 
     private ExactCurrencyAmount getInitialBalance() {
