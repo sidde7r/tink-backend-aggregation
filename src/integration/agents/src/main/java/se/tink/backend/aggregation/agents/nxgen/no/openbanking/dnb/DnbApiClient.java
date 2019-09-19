@@ -44,7 +44,6 @@ public final class DnbApiClient {
     private final SessionStorage sessionStorage;
     private final Credentials credentials;
     private DnbConfiguration configuration;
-    private EidasProxyConfiguration eidasProxyConfiguration;
 
     public DnbApiClient(
             final TinkHttpClient client,
@@ -63,7 +62,6 @@ public final class DnbApiClient {
     public void setConfiguration(
             DnbConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.client.setEidasProxy(eidasProxyConfiguration, DnbConstants.CERTIFICATE_ID);
     }
 
