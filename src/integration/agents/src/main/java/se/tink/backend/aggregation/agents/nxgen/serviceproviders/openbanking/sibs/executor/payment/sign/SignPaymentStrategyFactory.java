@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
 public class SignPaymentStrategyFactory {
 
@@ -12,11 +12,12 @@ public class SignPaymentStrategyFactory {
     private SignPaymentStrategyFactory() {}
 
     public static SignPaymentStrategy buildSignPaymentRedirectStrategy(
-            SibsBaseApiClient apiClient, SupplementalRequester supplementalRequester) {
+            SibsBaseApiClient apiClient,
+            SupplementalInformationHelper supplementalInformationHelper) {
         TimeUnit unit = TimeUnit.SECONDS;
         SibsRedirectCallbackHandler redirectCallbackHandler =
                 new SibsRedirectCallbackHandler(
-                        supplementalRequester, WAIT_FOR_RESPONSE_IN_SECONDS, unit);
+                        supplementalInformationHelper, WAIT_FOR_RESPONSE_IN_SECONDS, unit);
         SibsRedirectSignPaymentStrategy redirectSignPaymentStrategy =
                 new SibsRedirectSignPaymentStrategy(apiClient, redirectCallbackHandler);
         return redirectSignPaymentStrategy;

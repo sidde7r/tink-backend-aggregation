@@ -114,24 +114,29 @@ public class OAuth2AuthenticationProgressiveController
         authenticator.useAccessToken(accessToken);
     }
 
+    @Override
     public ThirdPartyAppResponse<String> init() {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
+    @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         URL authorizeUrl = authenticator.buildAuthorizeUrl(strongAuthenticationState);
 
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
+    @Override
     public final String getStrongAuthenticationStateSupplementalKey() {
         return strongAuthenticationStateSupplementalKey;
     }
 
+    @Override
     public final long getWaitForMinutes() {
         return ThirdPartyAppConstants.WAIT_FOR_MINUTES;
     }
 
+    @Override
     public ThirdPartyAppResponse<String> collect(final Map<String, String> callbackData)
             throws AuthenticationException, AuthorizationException {
 

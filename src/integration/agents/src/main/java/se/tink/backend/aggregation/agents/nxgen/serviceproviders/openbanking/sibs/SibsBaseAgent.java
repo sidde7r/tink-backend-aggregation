@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsRedirectAuthenticationProgresiveController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsRedirectAuthenticationProgressiveController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.SibsPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategy;
@@ -22,9 +22,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
@@ -38,8 +38,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class SibsBaseAgent extends SubsequentGenerationAgent
+public abstract class SibsBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -51,21 +52,13 @@ public abstract class SibsBaseAgent extends SubsequentGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public SibsBaseAgent(
-            se.tink.libraries.credentials.service.CredentialsRequest request,
+            CredentialsRequest request,
             AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            AgentsServiceConfiguration configuration) {
+        super(request, context, configuration.getSignatureKeyPair());
+        setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
-
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-    }
-
-    protected abstract String getIntegrationName();
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
         apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
         client.setMessageSignInterceptor(
                 new SibsMessageSignInterceptor(
@@ -73,7 +66,12 @@ public abstract class SibsBaseAgent extends SubsequentGenerationAgent
                         configuration.getEidasProxy(),
                         new EidasIdentity(
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
+
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        client.setDebugOutput(true);
     }
+
+    protected abstract String getIntegrationName();
 
     protected SibsConfiguration getClientConfiguration() {
         return configuration
@@ -82,10 +80,15 @@ public abstract class SibsBaseAgent extends SubsequentGenerationAgent
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected ProgressiveAuthenticator constructAuthenticator() {
+    @Override
+    protected Authenticator constructAuthenticator() {
+        throw new AssertionError(); // Never called because Agent::login is never called
+    }
 
-        final SibsRedirectAuthenticationProgresiveController controller =
-                new SibsRedirectAuthenticationProgresiveController(
+    private ProgressiveAuthenticator constructProgressiveAuthenticator() {
+
+        final SibsRedirectAuthenticationProgressiveController controller =
+                new SibsRedirectAuthenticationProgressiveController(
                         new SibsAuthenticator(apiClient, credentials), strongAuthenticationState);
         return new AutoAuthenticationProgressiveController(
                 request,
@@ -142,7 +145,8 @@ public abstract class SibsBaseAgent extends SubsequentGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         SignPaymentStrategy signPaymentStrategy =
-                SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(apiClient, context);
+                SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(
+                        apiClient, supplementalInformationHelper);
         SibsPaymentExecutor sibsPaymentExecutor =
                 new SibsPaymentExecutor(apiClient, signPaymentStrategy, strongAuthenticationState);
         return Optional.of(new PaymentController(sibsPaymentExecutor, sibsPaymentExecutor));
@@ -157,11 +161,12 @@ public abstract class SibsBaseAgent extends SubsequentGenerationAgent
     @Override
     public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
             throws Exception {
-        return ProgressiveAuthController.of(constructAuthenticator(), credentials).login(request);
+        return ProgressiveAuthController.of(constructProgressiveAuthenticator(), credentials)
+                .login(request);
     }
 
     @Override
-    public boolean login() throws Exception {
+    public boolean login() {
         throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
     }
 }

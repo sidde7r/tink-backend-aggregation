@@ -14,9 +14,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class CaixaNextGenerationAgent extends SibsBaseNextGenerationAgent {
+public class CaixaAgent extends SibsBaseNextGenerationAgent {
 
-    public CaixaNextGenerationAgent(
+    public CaixaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }

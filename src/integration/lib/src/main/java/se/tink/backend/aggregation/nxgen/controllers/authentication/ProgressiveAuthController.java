@@ -62,7 +62,7 @@ public final class ProgressiveAuthController {
         }
     }
 
-    private boolean isLastStep(
+    private static boolean isLastStep(
             final AuthenticationStep step,
             LinkedList<? extends AuthenticationStep> authenticationSteps) {
         return authenticationSteps.getLast().equals(step);

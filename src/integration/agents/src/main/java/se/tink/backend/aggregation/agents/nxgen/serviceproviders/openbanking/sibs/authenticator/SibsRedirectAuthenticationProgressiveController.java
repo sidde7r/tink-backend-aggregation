@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +19,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.libraries.i18n.LocalizableKey;
 
-public class SibsRedirectAuthenticationProgresiveController
+public class SibsRedirectAuthenticationProgressiveController
         implements AutoAuthenticator, ThirdPartyAppStrongAuthenticator<String> {
     private static final Logger logger =
             LoggerFactory.getLogger(SibsRedirectAuthenticationController.class);
@@ -34,7 +32,7 @@ public class SibsRedirectAuthenticationProgresiveController
     private final Retryer<ConsentStatus> consentStatusRetryer =
             SibsUtils.getConsentStatusRetryer(SLEEP_TIME, RETRY_ATTEMPTS);
 
-    public SibsRedirectAuthenticationProgresiveController(
+    public SibsRedirectAuthenticationProgressiveController(
             SibsAuthenticator authenticator, StrongAuthenticationState strongAuthenticationState) {
         this.authenticator = authenticator;
 
@@ -84,9 +82,5 @@ public class SibsRedirectAuthenticationProgresiveController
     @Override
     public long getWaitForMinutes() {
         return SLEEP_TIME;
-    }
-
-    public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
-        return Optional.empty();
     }
 }

@@ -149,7 +149,8 @@ public abstract class SibsBaseNextGenerationAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         SignPaymentStrategy signPaymentStrategy =
-                SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(apiClient, context);
+                SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(
+                        apiClient, supplementalInformationHelper);
         SibsPaymentExecutor sibsPaymentExecutor =
                 new SibsPaymentExecutor(apiClient, signPaymentStrategy, strongAuthenticationState);
         return Optional.of(new PaymentController(sibsPaymentExecutor, sibsPaymentExecutor));
