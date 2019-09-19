@@ -329,6 +329,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "b336c76bd8314b48873b1883654bfd51",
+            "financialInstitutionName": "CaixaBank",
             "name": "es-lacaixa-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
