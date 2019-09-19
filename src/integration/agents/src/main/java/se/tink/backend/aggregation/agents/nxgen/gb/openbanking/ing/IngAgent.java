@@ -7,10 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngAgent extends IngBaseAgent {
 
-  public IngAgent(
-      CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-    super(request, context, signatureKeyPair);
-  }
-
+    public IngAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
+    }
 }
-
