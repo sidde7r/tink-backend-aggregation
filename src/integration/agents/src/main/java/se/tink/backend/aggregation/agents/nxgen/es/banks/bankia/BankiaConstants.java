@@ -106,7 +106,7 @@ public abstract class BankiaConstants {
                     .put(LoanDetails.Type.BLANCO, "10060") // CREDITO INMEDIATO
                     .build();
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+    public static final TypeMapper<AccountTypes> INVESTMENT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.INVESTMENT, "31000")
                     .put(AccountTypes.OTHER, "11658")
@@ -117,21 +117,21 @@ public abstract class BankiaConstants {
                     .put(
                             TransactionalAccountType.CHECKING,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
-                            "11594",
                             "10300",
+                            "10600",
                             "11186",
                             "11239",
-                            "11660",
+                            "11355",
+                            "11359", // Non-adult account
                             "11590",
-                            "10600",
-                            "11359" // Non-adult account
-                            )
+                            "11594",
+                            "11660")
                     .put(
                             TransactionalAccountType.SAVINGS,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "10450",
                             "11403")
-                    .put(TransactionalAccountType.OTHER, "11658")
+                    .ignoreKeys("11658")
                     .build();
 
     public static class CardTypes {
@@ -151,8 +151,10 @@ public abstract class BankiaConstants {
     }
 
     public static class Logging {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
-                LogTag.from("bankia_unknown_account_type");
+        public static final LogTag UNKNOWN_TRANSACTIONAL_ACCOUNT_TYPE =
+                LogTag.from("bankia_unknown_transactional_account_type");
+        public static final LogTag UNKNOWN_INVESTMENT_ACCOUNT_TYPE =
+                LogTag.from("bankia_unknown_investment_account_type");
         public static final LogTag LOAN = LogTag.from("bankia_loan");
         public static final LogTag UNKNOWN_INSTRUMENT_TYPE =
                 LogTag.from("bankia_unknown_instrument_type");

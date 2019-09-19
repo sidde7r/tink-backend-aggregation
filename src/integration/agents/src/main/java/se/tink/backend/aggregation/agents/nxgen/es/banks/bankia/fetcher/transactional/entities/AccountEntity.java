@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transac
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.Logging;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,9 +17,12 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class AccountEntity {
+    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
+
     @JsonProperty("contrato")
     private ContractEntity contract;
 
@@ -34,17 +39,6 @@ public class AccountEntity {
         return contract.getProductCode();
     }
 
-    public boolean isAccountTypeTransactional() {
-        return BankiaConstants.ACCOUNT_TYPE_MAPPER.isOneOf(
-                getBankiaAccountType(), TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
-    }
-
-    private AccountTypes getTinkAccountType() {
-        return BankiaConstants.ACCOUNT_TYPE_MAPPER
-                .translate(getBankiaAccountType())
-                .orElse(AccountTypes.OTHER);
-    }
-
     private String getAccountName(String iban) {
         // The bank app shows the account name as: "[ALIAS] *[LAST_FOUR_DIGITS_OF_IBAN]"
         return String.format(
@@ -52,7 +46,19 @@ public class AccountEntity {
     }
 
     @JsonIgnore
+    private void logAccountDataIfUnknownType() {
+        if (!BankiaConstants.PSD2_TYPE_MAPPER.translate(contract.getProductCode()).isPresent()) {
+            log.info(
+                    "{} - {} Unknown account type: {}",
+                    Logging.UNKNOWN_TRANSACTIONAL_ACCOUNT_TYPE,
+                    SerializationUtils.serializeToString(this),
+                    getBankiaAccountType());
+        }
+    }
+
+    @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount() {
+        logAccountDataIfUnknownType();
         final String iban = contract.getIdentifierProductContract();
 
         // These are used to fetch transactions for the account.
