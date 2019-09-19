@@ -2269,6 +2269,11 @@ public class SEBApiAgent extends AbstractAgent
 
     private boolean isTransferSigned(
             MatchableTransferRequestEntity transfer, SebResponse response) {
+
+        if (java.util.Objects.isNull(response.d.VODB)) {
+            return false;
+        }
+
         List<TransferListEntity> transferEntities = response.d.VODB.getTransfers();
 
         if (transferEntities.isEmpty()) {
