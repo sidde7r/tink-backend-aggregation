@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.entities;
 
-import java.util.Arrays;
+import java.math.BigDecimal;
+import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
@@ -8,7 +9,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.La
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
@@ -24,38 +28,36 @@ public class LoanDetailsAggregate {
     }
 
     public LoanAccount toTinkLoanAccount() {
-        final Amount amount =
-                new Amount(
-                        loanEntity.getCurrency(),
-                        StringUtils.parseAmount(loanEntity.getTotalAmount()));
-
-        final Amount amountToPay =
-                new Amount(
-                                loanEntity.getCurrencyToPay(),
-                                StringUtils.parseAmount(loanEntity.getAmountToPay()))
-                        .negate();
-
-        final Double interestRate =
-                StringUtils.parseAmount(this.loanDetailsResponse.getNominalInterest());
-
-        final LoanDetails loanDetails =
-                LoanDetails.builder(getLoanType())
-                        .setInitialBalance(amount)
-                        .setApplicants(Arrays.asList(loanDetailsResponse.getTitle()))
+        LoanAccount loanAccount =
+                LoanAccount.nxBuilder()
+                        .withLoanDetails(getLoanModule())
+                        .withId(getIdModule())
+                        .addHolderName(loanDetailsResponse.getTitle())
                         .build();
 
-        final LoanAccount loanAccount =
-                LoanAccount.builder(loanEntity.getContractNumber())
-                        .setInterestRate(interestRate)
-                        .setAccountNumber(loanEntity.getContractNumber())
-                        .setBalance(amountToPay)
-                        .setName(loanEntity.getContractDescription())
-                        .setDetails(loanDetails)
-                        .build();
-
-        logLoanData(loanAccount, loanEntity, loanDetailsResponse);
+        logUnknownLoanAccounts(loanAccount, loanEntity, loanDetailsResponse);
 
         return loanAccount;
+    }
+
+    private LoanModule getLoanModule() {
+        return LoanModule.builder()
+                .withType(getLoanType())
+                .withBalance(getBalance())
+                .withInterestRate(getInterestRate())
+                .setInitialBalance(getInitialBalance())
+                .setApplicants(Collections.singletonList(loanDetailsResponse.getTitle()))
+                .build();
+    }
+
+    private IdModule getIdModule() {
+        return IdModule.builder()
+                .withUniqueIdentifier(loanEntity.getContractNumber())
+                .withAccountNumber(loanEntity.getContractNumber())
+                .withAccountName(loanEntity.getContractDescription())
+                .addIdentifier(new IbanIdentifier(loanDetailsResponse.getRelatedAccountNumber()))
+                .setProductName(loanEntity.getContractDescription())
+                .build();
     }
 
     private LoanDetails.Type getLoanType() {
@@ -64,8 +66,26 @@ public class LoanDetailsAggregate {
                 .orElse(LoanDetails.Type.OTHER);
     }
 
+    private ExactCurrencyAmount getBalance() {
+        return new ExactCurrencyAmount(
+                        BigDecimal.valueOf(StringUtils.parseAmount(loanEntity.getAmountToPay())),
+                        loanEntity.getCurrencyToPay())
+                .negate();
+    }
+
+    private Double getInterestRate() {
+        return StringUtils.parseAmount(this.loanDetailsResponse.getNominalInterest());
+    }
+
+    private ExactCurrencyAmount getInitialBalance() {
+        return new ExactCurrencyAmount(
+                        BigDecimal.valueOf(StringUtils.parseAmount(loanEntity.getInitialBalance())),
+                        loanEntity.getCurrency())
+                .negate();
+    }
+
     // logging method to discover different types of loans than mortgage
-    private void logLoanData(
+    private void logUnknownLoanAccounts(
             LoanAccount loanAccount,
             LoanEntity loanEntity,
             LoanDetailsResponse loanDetailsResponse) {

@@ -20,7 +20,7 @@ public class LoanEntity {
     private String productCode;
 
     @JsonProperty("importeConcedido")
-    private String totalAmount;
+    private String initialBalance;
 
     @JsonProperty("monedaImporteConcedido")
     private String currency;
@@ -50,8 +50,8 @@ public class LoanEntity {
         return contractNumber;
     }
 
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getInitialBalance() {
+        return initialBalance;
     }
 
     public String getCurrency() {
