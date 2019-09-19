@@ -14,7 +14,8 @@ public class LoanEntity {
     @JsonProperty("descContrato")
     private String contractDescription;
 
-    private String nomAplicacion;
+    @JsonProperty("nomAplicacion")
+    private String applicationName;
 
     @JsonProperty("codProducto")
     private String productCode;
@@ -40,6 +41,10 @@ public class LoanEntity {
 
     public String getContractDescription() {
         return contractDescription;
+    }
+
+    public String getApplicationName() {
+        return applicationName == null ? "" : applicationName;
     }
 
     public String getContractId() {

@@ -31,8 +31,14 @@ public class LaCaixaConstants {
                             "11410", // online
                             "21919", // "canal"
                             "14090", // micro personal
-                            "11407") // consumer loan
+                            "11407", // consumer loan
+                            "10097") // consumer loan
                     .build();
+
+    public static class LoanTypeName {
+        public static final String MORTGAGE = "PRS";
+        public static final String CONSUMER_LOAN = "CRV";
+    }
 
     public static class ErrorCode {
         public static String EMPTY_LIST = "ERR_TRXM01_007";
@@ -51,10 +57,11 @@ public class LaCaixaConstants {
                 new URL(BASE + "login/loginInicio"); // Gets session id. Needed before login.
         public static final URL SUBMIT_LOGIN = new URL(BASE + "login/loginResultado");
         public static final URL LOGOUT = new URL(BASE + "login/logout");
-        public static final URL MAIN_ACCOUNT = new URL(BASE + "dashboardApp/cuentaPrincipal?");
         public static final URL KEEP_ALIVE = new URL(BASE + "smartContent/consultaFoto");
-        public static final URL USER_DATA = new URL(BASE + "login/loginDatosUsuario");
+
+        public static final URL MAIN_ACCOUNT = new URL(BASE + "dashboardApp/cuentaPrincipal?");
         public static final URL ACCOUNT_TRANSACTIONS = new URL(BASE + "cuentas/extracto?");
+
         public static final URL CARDS = new URL(BASE + "tarjetas/listadoTarjetasGenerica");
         public static final URL CARD_TRANSACTIONS =
                 new URL(BASE + "tarjetasHCE/listaMovimientosGenerica");
@@ -63,7 +70,8 @@ public class LaCaixaConstants {
                 new URL(BASE + "tarjetas/detalleLiquidacion");
 
         public static final URL LOAN_LIST = new URL(BASE + "posGlobal/listaPrestamos");
-        public static final URL LOAN_DETAILS = new URL(BASE + "prestamos/prestamodetalle");
+        public static final URL MORTGAGE_DETAILS = new URL(BASE + "prestamos/prestamodetalle");
+        public static final URL CONSUMER_LOAN_DETAILS = new URL(BASE + "prestamos/creditodetalle");
 
         public static final URL ENGAGEMENTS =
                 new URL(BASE + "posGlobal/posicionGlobalProductosAplicacion");
@@ -72,6 +80,8 @@ public class LaCaixaConstants {
                 new URL(BASE + "valores/depositosValores/detalle");
         public static final URL FUND_LIST = new URL(BASE + "fondos/posicionGlobalLista");
         public static final URL FUND_DETAILS = new URL(BASE + "fondos/detalleFondos");
+
+        public static final URL USER_DATA = new URL(BASE + "login/loginDatosUsuario");
     }
 
     public static class DefaultRequestParams {
@@ -127,6 +137,8 @@ public class LaCaixaConstants {
 
     public static class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("lacaixa_unknown-accountype");
+        public static final LogTag UNKNOWN_LOAN_CATEGORY =
+                LogTag.from("lacaixa_unknown_loan_category");
     }
 
     public static class Sign {

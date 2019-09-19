@@ -84,8 +84,7 @@ public class LaCaixaApiClient {
 
     public ListAccountsResponse fetchAccountList() {
 
-        return createRequest(LaCaixaConstants.Urls.MAIN_ACCOUNT)
-                .get(ListAccountsResponse.class);
+        return createRequest(LaCaixaConstants.Urls.MAIN_ACCOUNT).get(ListAccountsResponse.class);
     }
 
     public UserDataResponse fetchIdentityData() {
@@ -141,8 +140,7 @@ public class LaCaixaApiClient {
     }
 
     public PositionValuesResponse fetchDepositList() {
-        return createRequest(LaCaixaConstants.Urls.DEPOSIT_LIST)
-                .get(PositionValuesResponse.class);
+        return createRequest(LaCaixaConstants.Urls.DEPOSIT_LIST).get(PositionValuesResponse.class);
     }
 
     public PositionValuesResponse fetchDeposit(String depositId, boolean moreData) {
@@ -193,11 +191,18 @@ public class LaCaixaApiClient {
                 .get(LoanListResponse.class);
     }
 
-    public LoanDetailsResponse fetchLoanDetails(String loanId) {
+    public LoanDetailsResponse fetchMortgageDetails(String loanId) {
+        return fetchLoanDetails(Urls.MORTGAGE_DETAILS, loanId);
+    }
+
+    public LoanDetailsResponse fetchConsumerLoanDetails(String loanId) {
+        return fetchLoanDetails(Urls.CONSUMER_LOAN_DETAILS, loanId);
+    }
+
+    private LoanDetailsResponse fetchLoanDetails(URL url, String loanId) {
         LoanDetailsRequest loanDetailsRequest = new LoanDetailsRequest(loanId);
 
-        return createRequest(LaCaixaConstants.Urls.LOAN_DETAILS)
-                .post(LoanDetailsResponse.class, loanDetailsRequest);
+        return createRequest(url).post(LoanDetailsResponse.class, loanDetailsRequest);
     }
 
     public boolean isAlive() {
