@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.UkOpenBankingV30Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.transaction.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.BaseV31Response;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -29,7 +29,7 @@ public class AccountTransactionsV31Response extends BaseV31Response<List<Transac
     }
 
     private String nextKey() {
-        return searchLink(UkOpenBankingV30Constants.Links.NEXT).orElse(null);
+        return searchLink(UkOpenBankingV31Constants.Links.NEXT).orElse(null);
     }
 
     private List<? extends Transaction> toTinkTransactions() {
