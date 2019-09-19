@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.Logging;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.InvestmentAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.QualificationEntity;
@@ -46,8 +47,8 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
                             }
 
                             log.info(
-                                    "{} Unknown account type or missing fields: {}",
-                                    BankiaConstants.Logging.UNKNOWN_ACCOUNT_TYPE.toString(),
+                                    "{} - {} Unknown account type or missing fields: {}",
+                                    Logging.UNKNOWN_INVESTMENT_ACCOUNT_TYPE.toString(),
                                     account.getContract().getProductCode(),
                                     SerializationUtils.serializeToString(account));
 

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.ACCOUNT_TYPE_MAPPER;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.INVESTMENT_TYPE_MAPPER;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,7 +34,7 @@ public class InvestmentAccountEntity {
         return Optional.ofNullable(contract)
                 .filter(hasInternalProductIdentifier())
                 .map(ContractEntity::getProductCode)
-                .flatMap(ACCOUNT_TYPE_MAPPER::translate)
+                .flatMap(INVESTMENT_TYPE_MAPPER::translate)
                 .filter(InvestmentAccount.ALLOWED_ACCOUNT_TYPES::contains)
                 .isPresent();
     }

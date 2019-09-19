@@ -37,22 +37,7 @@ public class BankiaTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.getAccounts().stream()
-                .filter(
-                        account -> {
-                            // Temporary logging of unknown types.
-                            // Todo: change this to
-                            // `.filter(AccountEntity::isAccountTypeTransactional)`
 
-                            if (account.isAccountTypeTransactional()) {
-                                return true;
-                            }
-
-                            log.info(
-                                    "{} Unknown account type: {}",
-                                    SerializationUtils.serializeToString(account),
-                                    account.getBankiaAccountType());
-                            return false;
-                        })
                 .map(AccountEntity::toTinkAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
