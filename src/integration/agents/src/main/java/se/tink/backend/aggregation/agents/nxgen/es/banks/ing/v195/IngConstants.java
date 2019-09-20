@@ -144,8 +144,4 @@ public class IngConstants {
     public static class Storage {
         public static final String DEVICE_ID = "deviceId";
     }
-
-    public static class Cookies {
-        public static final String SESSION_ID = "genoma-session-id";
-    }
 }
