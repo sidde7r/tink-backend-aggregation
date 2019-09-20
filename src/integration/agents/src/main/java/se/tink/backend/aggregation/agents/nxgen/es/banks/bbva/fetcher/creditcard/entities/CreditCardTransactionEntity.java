@@ -20,7 +20,11 @@ public class CreditCardTransactionEntity {
 
     private String transactionTypeIndicator;
     private BasicEntity concept;
+    // The amount in the currency where the purchase was made. (This AmountEntity currency is not
+    // always the same across all transactions)
     private AmountEntity amount;
+    // The amount in the currency of the account holder. (This AmountEntity currency is the same
+    // across transactions)
     private AmountEntity holderAmount;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
@@ -63,7 +67,7 @@ public class CreditCardTransactionEntity {
 
         // TODO: Add info if transaction is pending as we did not see such yet
         return CreditCardTransaction.builder()
-                .setAmount(amount.toTinkAmount())
+                .setAmount(holderAmount.toTinkAmount())
                 .setDate(transactionDate)
                 .setDescription(shop.getName())
                 .build();

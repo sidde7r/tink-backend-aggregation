@@ -4,22 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.vavr.control.Option;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
-    private double amount;
+    private BigDecimal amount;
     private String currency;
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
 
     @JsonSetter
     public void setCurrency(JsonNode jsonNode) {
@@ -30,7 +23,12 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public Amount toTinkAmount() {
-        return new Amount(getCurrency(), amount);
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
+    }
+
+    @JsonIgnore
+    public double getAmount() {
+        return amount.doubleValue();
     }
 }

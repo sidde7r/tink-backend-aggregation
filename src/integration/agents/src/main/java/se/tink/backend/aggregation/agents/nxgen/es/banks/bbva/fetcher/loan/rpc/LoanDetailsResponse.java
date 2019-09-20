@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entit
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class LoanDetailsResponse {
@@ -146,7 +146,7 @@ public class LoanDetailsResponse {
         final Date interestReviewDate =
                 getFirstInterestEntity().map(InterestEntity::getReviewDate).getOrNull();
 
-        final Amount initialBalance = initialAmount.toTinkAmount().negate();
+        final ExactCurrencyAmount initialBalance = initialAmount.toTinkAmount().negate();
 
         final LoanDetails loanDetails =
                 LoanDetails.builder(loan.getTinkLoanType())
