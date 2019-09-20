@@ -3,18 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
+import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsRedirectAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsRedirectAuthenticationProgressiveController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.SibsPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategy;
@@ -23,12 +22,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -38,43 +40,38 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class SibsBaseNextGenerationAgent extends NextGenerationAgent
+public abstract class SibsNewBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                ManualOrAutoAuth {
+                ProgressiveAuthAgent {
 
     private final String clientName;
     protected final SibsBaseApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    protected AutoAuthenticationController authenticator;
 
-    public SibsBaseNextGenerationAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    public SibsNewBaseAgent(
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration configuration) {
+        super(request, context, configuration.getSignatureKeyPair());
+        setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
-
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-    }
-
-    protected abstract String getIntegrationName();
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        SibsConfiguration sibsConfiguration = getClientConfiguration();
-        apiClient.setConfiguration(sibsConfiguration, configuration.getEidasProxy());
+        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
         client.setMessageSignInterceptor(
                 new SibsMessageSignInterceptor(
-                        sibsConfiguration,
+                        getClientConfiguration(),
                         configuration.getEidasProxy(),
                         new EidasIdentity(
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
 
-        client.setEidasProxy(configuration.getEidasProxy(), sibsConfiguration.getCertificateId());
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        client.setDebugOutput(true);
     }
+
+    protected abstract String getIntegrationName();
 
     protected SibsConfiguration getClientConfiguration() {
         return configuration
@@ -85,20 +82,19 @@ public abstract class SibsBaseNextGenerationAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
+        throw new AssertionError(); // Never called because Agent::login is never called
+    }
 
-        final SibsRedirectAuthenticationController controller =
-                new SibsRedirectAuthenticationController(
-                        supplementalInformationHelper,
-                        new SibsAuthenticator(apiClient, credentials),
-                        strongAuthenticationState);
-        authenticator =
-                new AutoAuthenticationController(
-                        request,
-                        systemUpdater,
-                        new ThirdPartyAppAuthenticationController<>(
-                                controller, supplementalInformationHelper),
-                        controller);
-        return authenticator;
+    private ProgressiveAuthenticator constructProgressiveAuthenticator() {
+
+        final SibsRedirectAuthenticationProgressiveController controller =
+                new SibsRedirectAuthenticationProgressiveController(
+                        new SibsAuthenticator(apiClient, credentials), strongAuthenticationState);
+        return new AutoAuthenticationProgressiveController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationProgressiveController(controller),
+                controller);
     }
 
     @Override
@@ -163,10 +159,14 @@ public abstract class SibsBaseNextGenerationAgent extends NextGenerationAgent
     }
 
     @Override
-    public boolean isManualAuthentication(Credentials credentials) {
-        if (authenticator != null) {
-            return authenticator.isManualAuthentication(credentials);
-        }
-        return false;
+    public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
+            throws Exception {
+        return ProgressiveAuthController.of(constructProgressiveAuthenticator(), credentials)
+                .login(request);
+    }
+
+    @Override
+    public boolean login() {
+        throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
     }
 }
