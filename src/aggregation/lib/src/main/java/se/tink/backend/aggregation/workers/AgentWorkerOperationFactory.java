@@ -42,7 +42,6 @@ import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.MigrateCredentialWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
@@ -70,7 +69,6 @@ import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceC
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
-import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -118,8 +116,8 @@ public class AgentWorkerOperationFactory {
             CuratorFramework coordinationClient,
             AgentsServiceConfiguration agentsServiceConfiguration,
             CredentialsEventProducer credentialsEventProducer,
-            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
-            TppSecretsServiceClient tppSecretsServiceClient) {
+            TppSecretsServiceClient tppSecretsServiceClient,
+            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient) {
         this.cacheClient = cacheClient;
 
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
@@ -331,9 +329,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
-                new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context, tppSecretsServiceClient));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -409,9 +405,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
-                new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context, tppSecretsServiceClient));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -423,8 +417,45 @@ public class AgentWorkerOperationFactory {
                 agentWorkerOperationState, metricsName, request, commands, context);
     }
 
+    private AgentWorkerOperation createOperationExecuteTransferWithoutRefresh(
+            TransferRequest request,
+            ClientInfo clientInfo,
+            AgentWorkerCommandContext context,
+            ControllerWrapper controllerWrapper) {
+
+        String operationName = "execute-transfer";
+        List<AgentWorkerCommand> commands =
+                createTransferWithoutRefreshBaseCommands(
+                        clientInfo, request, context, operationName, controllerWrapper);
+        return new AgentWorkerOperation(
+                agentWorkerOperationState, operationName, request, commands, context);
+    }
+
+    private AgentWorkerOperation createOperationExecuteTransferWithRefresh(
+            TransferRequest request,
+            ClientInfo clientInfo,
+            AgentWorkerCommandContext context,
+            ControllerWrapper controllerWrapper) {
+
+        String operationName = "execute-transfer";
+        List<AgentWorkerCommand> commands =
+                createTransferBaseCommands(
+                        clientInfo, request, context, operationName, controllerWrapper);
+        commands.addAll(
+                createRefreshAccountsCommands(
+                        request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+        commands.add(new SelectAccountsToAggregateCommand(context, request));
+        commands.addAll(
+                createOrderedRefreshableItemsCommands(
+                        request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+
+        return new AgentWorkerOperation(
+                agentWorkerOperationState, operationName, request, commands, context);
+    }
+
     public AgentWorkerOperation createOperationExecuteTransfer(
             TransferRequest request, ClientInfo clientInfo) {
+
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
@@ -441,8 +472,48 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
 
-        String operationName = "execute-transfer";
+        if (request.isShouldRefresh()) {
+            return createOperationExecuteTransferWithRefresh(
+                    request, clientInfo, context, controllerWrapper);
+        } else {
+            return createOperatoinExecuteTransferWithoutRefresh(
+                    request, clientInfo, context, controllerWrapper);
+        }
 
+    }
+
+    private AgentWorkerOperation createOperationExecuteTransferWithoutRefresh(
+            TransferRequest request,
+            ClientInfo clientInfo,
+            AgentWorkerCommandContext context,
+            ControllerWrapper controllerWrapper) {
+        String operationName = "execute-transfer";
+        List<AgentWorkerCommand> commands =
+                createTransferWithoutRefreshBaseCommands(
+                        clientInfo, request, context, operationName, controllerWrapper);
+        return new AgentWorkerOperation(
+                agentWorkerOperationState, operationName, request, commands, context);
+    }
+
+    private AgentWorkerOperation createOperationExecuteTransferWithoutRefresh(
+            TransferRequest request,
+            ClientInfo clientInfo,
+            AgentWorkerCommandContext context,
+            ControllerWrapper controllerWrapper) {
+        String operationName = "execute-transfer";
+        List<AgentWorkerCommand> commands =
+                createTransferWithoutRefreshBaseCommands(
+                        clientInfo, request, context, operationName, controllerWrapper);
+        return new AgentWorkerOperation(
+                agentWorkerOperationState, operationName, request, commands, context);
+    }
+
+    private AgentWorkerOperation createOperationExecuteTransferWithRefresh(
+            TransferRequest request,
+            ClientInfo clientInfo,
+            AgentWorkerCommandContext context,
+            ControllerWrapper controllerWrapper) {
+        String operationName = "execute-transfer";
         List<AgentWorkerCommand> commands =
                 createTransferBaseCommands(
                         clientInfo, request, context, operationName, controllerWrapper);
@@ -453,7 +524,6 @@ public class AgentWorkerOperationFactory {
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
                         request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
-
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationName, request, commands, context);
     }
@@ -544,14 +614,110 @@ public class AgentWorkerOperationFactory {
                                         RefreshableItem.REFRESHABLE_ITEMS_ALL))),
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler),
-                new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient),
+                new CreateAgentConfigurationControllerWorkerCommand(context, tppSecretsServiceClient),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
                 new LoginAgentWorkerCommand(
                         context, loginAgentWorkerCommandState, createCommandMetricState(request)),
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request)));
     }
+
+    private List<AgentWorkerCommand> createTransferWithoutRefreshBaseCommands(
+            ClientInfo clientInfo,
+            TransferRequest request,
+            AgentWorkerCommandContext context,
+            String operationName,
+            ControllerWrapper controllerWrapper) {
+
+        CryptoWrapper cryptoWrapper =
+                cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
+        CredentialsCrypto credentialsCrypto =
+                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
+
+        return Lists.newArrayList(
+                new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
+                new ExpireSessionAgentWorkerCommand(
+                        request.isManual(),
+                        context,
+                        request.getCredentials(),
+                        request.getProvider()),
+                new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
+                new LockAgentWorkerCommand(context),
+                new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
+                new UpdateCredentialsStatusAgentWorkerCommand(
+                        controllerWrapper,
+                        request.getCredentials(),
+                        request.getProvider(),
+                        context,
+                        c -> true), // is it enough to return true in this predicate?
+                new ReportProviderMetricsAgentWorkerCommand(
+                        context, operationName, reportMetricsAgentWorkerCommandState),
+                new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
+                new SendDataForProcessingAgentWorkerCommand( // todo @majid investigate if this is
+                        // needed?
+                        context,
+                        createCommandMetricState(request),
+                        ProcessableItem.fromRefreshableItems(
+                                RefreshableItem.convertLegacyItems(
+                                        RefreshableItem.REFRESHABLE_ITEMS_ALL))),
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler),
+                new CreateAgentConfigurationControllerWorkerCommand(context, tppSecretsServiceClient),
+                new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
+                new LoginAgentWorkerCommand(
+                        context, loginAgentWorkerCommandState, createCommandMetricState(request)),
+                new TransferAgentWorkerCommand(
+                        context, request, createCommandMetricState(request)));
+    }
+
+    private List<AgentWorkerCommand> createTransferWithoutRefreshBaseCommands(
+            ClientInfo clientInfo,
+            TransferRequest request,
+            AgentWorkerCommandContext context,
+            String operationName,
+            ControllerWrapper controllerWrapper) {
+
+        CryptoWrapper cryptoWrapper =
+                cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
+        CredentialsCrypto credentialsCrypto =
+                new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper);
+
+        return Lists.newArrayList(
+                new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
+                new ExpireSessionAgentWorkerCommand(
+                        request.isManual(),
+                        context,
+                        request.getCredentials(),
+                        request.getProvider()),
+                new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
+                new LockAgentWorkerCommand(context),
+                new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
+                new UpdateCredentialsStatusAgentWorkerCommand(
+                        controllerWrapper,
+                        request.getCredentials(),
+                        request.getProvider(),
+                        context,
+                        c -> true), // is it enough to return true in this predicate?
+                new ReportProviderMetricsAgentWorkerCommand(
+                        context, operationName, reportMetricsAgentWorkerCommandState),
+                new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
+
+                new SendDataForProcessingAgentWorkerCommand( // todo @majid investigate if this is needed?
+                        context,
+                        createCommandMetricState(request),
+                        ProcessableItem.fromRefreshableItems(
+                                RefreshableItem.convertLegacyItems(
+                                        RefreshableItem.REFRESHABLE_ITEMS_ALL))),
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler),
+                new CreateAgentConfigurationControllerWorkerCommand(context, tppSecretsServiceClient),
+                new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
+                new LoginAgentWorkerCommand(
+                        context, loginAgentWorkerCommandState, createCommandMetricState(request)),
+                new TransferAgentWorkerCommand(
+                        context, request, createCommandMetricState(request)));
+    }
+
 
     public AgentWorkerOperation createOperationCreateCredentials(
             CredentialsRequest request, ClientInfo clientInfo) {
@@ -655,9 +821,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
-                new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context, tppSecretsServiceClient));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new KeepAliveAgentWorkerCommand(context));
@@ -803,9 +967,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
-                new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context, tppSecretsServiceClient));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -896,9 +1058,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
-                new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
+        commands.add(new CreateAgentConfigurationControllerWorkerCommand(context, tppSecretsServiceClient));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -970,52 +1130,5 @@ public class AgentWorkerOperationFactory {
                                                 context, item, createCommandMetricState(request))));
         // === END REFRESHING ===
         return commands.build();
-    }
-
-    public AgentWorkerOperation createOperationMigrate(
-            MigrateCredentialsRequest request, ClientInfo clientInfo, int targetVersion) {
-
-        log.debug("Creating migration operation chain for credential");
-
-        ControllerWrapper controllerWrapper =
-                controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
-
-        AgentWorkerCommandContext context =
-                new AgentWorkerCommandContext(
-                        request,
-                        metricRegistry,
-                        coordinationClient,
-                        agentsServiceConfiguration,
-                        aggregatorInfoProvider.createAggregatorInfoFor(
-                                clientInfo.getAggregatorId()),
-                        supplementalInformationController,
-                        controllerWrapper,
-                        clientInfo.getClusterId(),
-                        clientInfo.getAppId());
-        CryptoWrapper cryptoWrapper =
-                cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
-
-        // Please be aware that the order of adding commands is meaningful
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        String metricsName = "batch-migrate";
-
-        commands.add(new LockAgentWorkerCommand(context));
-        commands.add(
-                new DecryptCredentialsWorkerCommand(
-                        context,
-                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper),
-                        false));
-        commands.add(
-                new MigrateCredentialWorkerCommand(
-                        context.getRequest(),
-                        clientInfo,
-                        targetVersion,
-                        context,
-                        controllerWrapper));
-
-        log.debug("Created migration operation chain for credential");
-        return new AgentWorkerOperation(
-                agentWorkerOperationState, metricsName, request, commands, context);
     }
 }

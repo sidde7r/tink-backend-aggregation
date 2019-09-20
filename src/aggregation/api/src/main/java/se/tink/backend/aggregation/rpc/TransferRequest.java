@@ -13,6 +13,7 @@ public class TransferRequest extends CredentialsRequest {
 
     private SignableOperation signableOperation;
     private boolean update;
+    private boolean shouldRefresh = true;
 
     public TransferRequest() {}
 
@@ -59,5 +60,13 @@ public class TransferRequest extends CredentialsRequest {
     @Override
     public void setUpdate(boolean update) {
         this.update = update;
+    }
+
+    public boolean isShouldRefresh() {
+        return shouldRefresh;
+    }
+
+    public void setShouldRefresh(boolean shouldRefresh) {
+        this.shouldRefresh = shouldRefresh;
     }
 }
