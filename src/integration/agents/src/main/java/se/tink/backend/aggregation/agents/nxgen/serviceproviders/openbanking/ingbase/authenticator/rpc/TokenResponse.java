@@ -30,7 +30,16 @@ public class TokenResponse {
 
     public OAuth2Token toTinkToken() {
         return OAuth2Token.create(
-                tokenType, accessToken, refreshToken, expiresIn, refreshTokenExpiresIn);
+                this.tokenType,
+                this.accessToken,
+                this.refreshToken,
+                this.expiresIn,
+                this.refreshTokenExpiresIn);
+    }
+
+    public OAuth2Token toTinkToken(OAuth2Token token) {
+        token.updateAccessToken(this.accessToken, this.expiresIn);
+        return token;
     }
 
     public String getScope() {

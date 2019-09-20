@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -120,7 +121,10 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                new IngBaseTransactionsFetcher(apiClient))));
+                                new IngBaseTransactionsFetcher(apiClient),
+                                2,
+                                IngBaseConstants.Transaction.PERIOD_IN_DAYS,
+                                ChronoUnit.DAYS)));
     }
 
     @Override
