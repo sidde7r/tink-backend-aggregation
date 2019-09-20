@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.LaCaixaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanDetailsResponse;
@@ -74,7 +75,8 @@ public class LoanDetailsAggregate {
     }
 
     private Double getInterestRate() {
-        return StringUtils.parseAmount(this.loanDetailsResponse.getNominalInterest()) / 100d;
+        return AgentParsingUtils.parsePercentageFormInterest(
+                this.loanDetailsResponse.getNominalInterest());
     }
 
     private ExactCurrencyAmount getInitialBalance() {
