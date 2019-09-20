@@ -142,7 +142,7 @@ public class LoanEntity {
     @JsonIgnore
     private LoanAccount.Builder buildTinkLoanAccount() {
         return LoanAccount.builder(digit)
-                .setBalance(pendingamount.toTinkAmount().negate())
+                .setExactBalance(pendingamount.toTinkAmount().negate())
                 .setBankIdentifier(digit)
                 .setAccountNumber(digit)
                 .setName(product.getDescription());

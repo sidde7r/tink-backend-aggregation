@@ -58,7 +58,7 @@ public class SecurityEntity {
             String securityCode) {
         SecurityProfitabilityResponse profitabilityResponse =
                 apiClient.fetchSecurityProfitability(portfolioId, securityCode);
-        double marketValue = totalAmount.toTinkAmount().doubleValue();
+        double marketValue = totalAmount.toTinkAmount().getDoubleValue();
         double totalProfit = profitabilityResponse.getTotalProfit();
         double averageAcquisitionPrice = getAverageAcquisitionPrice(marketValue - totalProfit);
 

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.HashMap;
@@ -27,26 +28,32 @@ public class UserDataResponse {
         }
     }
 
+    @JsonIgnore
     public HolderName getHolderName() {
         return new HolderName(dataMap.get(LaCaixaConstants.UserData.FULL_HOLDER_NAME));
     }
 
+    @JsonIgnore
     public String getDNI() {
         return dataMap.get(LaCaixaConstants.UserData.DNI);
     }
 
+    @JsonIgnore
     public String getDateOfBirth() {
         return dataMap.get(LaCaixaConstants.UserData.DATE_OF_BIRTH);
     }
 
+    @JsonIgnore
     public String getFirstName() {
         return dataMap.get(LaCaixaConstants.UserData.FIRST_NAME);
     }
 
+    @JsonIgnore
     public String getFirstSurName() {
         return dataMap.get(LaCaixaConstants.UserData.FIRST_SUR_NAME);
     }
 
+    @JsonIgnore
     public String getSecondSurName() {
         return dataMap.get(LaCaixaConstants.UserData.SECOND_SUR_NAME);
     }

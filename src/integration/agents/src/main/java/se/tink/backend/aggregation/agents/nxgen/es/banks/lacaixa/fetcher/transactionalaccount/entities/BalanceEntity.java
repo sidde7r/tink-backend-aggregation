@@ -1,14 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-public class BalanceEntity extends Amount {
+public class BalanceEntity {
+    @JsonProperty("moneda")
+    private String currency;
 
-    public BalanceEntity(
-            @JsonProperty("moneda") String currency, @JsonProperty("importe") double value) {
-        super(currency, value);
+    @JsonProperty("importe")
+    private BigDecimal amount;
+
+    @JsonIgnore
+    public ExactCurrencyAmount toExactCurrencyAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
+    }
+
+    @JsonIgnore
+    public String getCurrency() {
+        return currency;
+    }
+
+    @JsonIgnore
+    public double doubleValue() {
+        return amount.doubleValue();
     }
 }

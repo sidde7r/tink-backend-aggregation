@@ -35,6 +35,7 @@ public class BbvaAgentTest {
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
+                .setFinancialInstitutionId("BBVA")
                 .build()
                 .testRefresh();
     }

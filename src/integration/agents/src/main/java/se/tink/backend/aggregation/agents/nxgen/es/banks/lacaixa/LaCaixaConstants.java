@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public class LaCaixaConstants {
 
@@ -16,10 +18,13 @@ public class LaCaixaConstants {
                     .put(Instrument.Type.FUND, "10060")
                     .build();
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.SAVINGS, "LIBRETA")
-                    .put(AccountTypes.CHECKING, "CUENTA CORRIENTE")
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.SAVINGS, AccountFlag.PSD2_PAYMENT_ACCOUNT, "LIBRETA")
+                    .put(
+                            AccountTypes.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "CUENTA CORRIENTE")
                     .build();
 
     public static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
