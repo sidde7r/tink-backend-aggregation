@@ -38,7 +38,7 @@ public class IngBaseTransactionsFetcher implements TransactionDatePaginator<Tran
             return response;
         } else {
             temporaryStorage.remove(account_number);
-            return PaginatorResponseImpl.create(response.getTinkTransactions(),false);
+            return PaginatorResponseImpl.create(response.getTinkTransactions(), false);
         }
     }
 }
