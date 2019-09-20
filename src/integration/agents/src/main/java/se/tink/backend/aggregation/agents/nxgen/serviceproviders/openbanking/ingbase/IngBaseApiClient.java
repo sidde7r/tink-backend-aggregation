@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryKeys;
@@ -38,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class IngBaseApiClient {
 
@@ -87,8 +85,11 @@ public class IngBaseApiClient {
                         .type(MediaType.APPLICATION_JSON)
                         .get(FetchAccountsResponse.class);
             } catch (HttpResponseException e) {
-                if (e.getResponse().getStatus() == ErrorMessages.NOT_FOUND) {
+                if (e.getResponse().getStatus() == ErrorMessages.NOT_FOUND
+                        && i < IngBaseConstants.Retry.MAX_ATTEMPTS - 1) {
                     Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
+                } else {
+                    throw e;
                 }
             }
         }
@@ -103,12 +104,13 @@ public class IngBaseApiClient {
                 .get(FetchBalancesResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactions(final String transactionsUrl) {
+    public FetchTransactionsResponse fetchTransactions(
+            final String transactionsUrl, Date fromDate, Date toDate) {
         final String completeReqPath =
                 new URL(transactionsUrl)
-                        .queryParam(IngBaseConstants.QueryKeys.DATE_FROM, getTransactionsDateFrom())
                         .queryParam(
-                                IngBaseConstants.QueryKeys.DATE_TO, dateFormat.format(new Date()))
+                                IngBaseConstants.QueryKeys.DATE_FROM, dateFormat.format(fromDate))
+                        .queryParam(IngBaseConstants.QueryKeys.DATE_TO, dateFormat.format(toDate))
                         .queryParam(IngBaseConstants.QueryKeys.LIMIT, "100")
                         .toString();
         return buildRequestWithSignature(
@@ -137,14 +139,15 @@ public class IngBaseApiClient {
         final String redirectUrl = getConfiguration().getRedirectUrl();
 
         final String payload = new CustomerTokenRequest(code, redirectUrl).toData();
-
-        return fetchToken(payload);
+        return fetchToken(payload).toTinkToken();
     }
 
     public OAuth2Token refreshToken(final String refreshToken) {
-        final String payload = new RefreshTokenRequest(refreshToken).toData();
+        final TokenResponse tokenResponse = getApplicationAccessToken();
+        setApplicationTokenToSession(tokenResponse.toTinkToken());
 
-        return fetchToken(payload);
+        final String payload = new RefreshTokenRequest(refreshToken).toData();
+        return fetchToken(payload).toTinkToken(getTokenFromSession());
     }
 
     public void setTokenToSession(final OAuth2Token accessToken) {
@@ -186,15 +189,6 @@ public class IngBaseApiClient {
                 .post(TokenResponse.class, payload);
     }
 
-    private String getTransactionsDateFrom() {
-        if (manualRequest) {
-            return QueryValues.TRANSACTION_FROM_DATE;
-        } else {
-            return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                    DateUtils.addDays(new Date(), -QueryValues.MAX_PERIOD_IN_DAYS));
-        }
-    }
-
     private AuthorizationUrl getAuthorizationUrl(final TokenResponse tokenResponse) {
         final String redirectUrl = getConfiguration().getRedirectUrl();
 
@@ -212,12 +206,11 @@ public class IngBaseApiClient {
                 .get(AuthorizationUrl.class);
     }
 
-    private OAuth2Token fetchToken(final String payload) {
+    private TokenResponse fetchToken(final String payload) {
         return buildRequestWithSignature(Urls.TOKEN, Signature.HTTP_METHOD_POST, payload)
                 .addBearerToken(getApplicationTokenFromSession())
                 .body(payload, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class)
-                .toTinkToken();
+                .post(TokenResponse.class);
     }
 
     private RequestBuilder buildRequestWithSignature(

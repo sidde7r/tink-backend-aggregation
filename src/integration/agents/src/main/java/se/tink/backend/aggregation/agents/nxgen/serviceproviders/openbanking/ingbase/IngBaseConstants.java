@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 public final class IngBaseConstants {
 
-    public static final String INTEGRATION_NAME = "ing";
-
     private IngBaseConstants() {
         throw new AssertionError();
     }
@@ -15,8 +13,12 @@ public final class IngBaseConstants {
         public static final String TOKEN = BASE_AUTH + "/token";
     }
 
+    public static class Transaction {
+        public static final int PERIOD_IN_DAYS = 89;
+        public static final int MAX_IN_DAYS = 730;
+    }
+
     public static class StorageKeys {
-        public static final String BASE_URL = "BASE_URL";
         public static final String CLIENT_ID = "CLIENT_ID";
         public static final String TOKEN = "TOKEN";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
@@ -41,8 +43,6 @@ public final class IngBaseConstants {
         public static final String CODE = "code";
         public static final String PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW =
                 "payment-accounts:transactions:view payment-accounts:balances:view";
-        public static final String TRANSACTION_FROM_DATE = "1970-01-01";
-        public static final int MAX_PERIOD_IN_DAYS = 89;
     }
 
     public static class HeaderKeys {
@@ -96,6 +96,7 @@ public final class IngBaseConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find Token!";
         public static final String MISSING_CLIENT_ID = "Cannot find client id!";
+        public static final int FORBIDDEN = 403;
         public static final int NOT_FOUND = 404;
     }
 
