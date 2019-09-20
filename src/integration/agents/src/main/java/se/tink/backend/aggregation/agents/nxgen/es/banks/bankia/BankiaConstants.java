@@ -150,6 +150,12 @@ public abstract class BankiaConstants {
         public static final String CARD_NUMBER_UNMASKED = "[0-9]{16}";
     }
 
+    public static class Errors {
+        public static final String NO_DATA_FOR_ENQUIRY_CODE = "VAVC003E";
+        public static final String NO_DATA_FOR_ENQUIRY_MESSAGE =
+                "There is no data for the enquiry.";
+    }
+
     public static class Logging {
         public static final LogTag UNKNOWN_TRANSACTIONAL_ACCOUNT_TYPE =
                 LogTag.from("bankia_unknown_transactional_account_type");
