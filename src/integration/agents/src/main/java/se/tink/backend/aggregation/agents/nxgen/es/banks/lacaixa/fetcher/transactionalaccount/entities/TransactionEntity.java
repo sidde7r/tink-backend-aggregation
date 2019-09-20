@@ -56,7 +56,7 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(amount)
+                .setAmount(amount.toExactCurrencyAmount())
                 .setDescription(description)
                 .setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))
                 .build();
