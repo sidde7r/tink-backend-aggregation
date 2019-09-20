@@ -190,7 +190,6 @@ public class SwedbankAuthenticationController
     private void handleSwedbankFlow() {
         ConsentResponse initConsent = authenticator.getConsentForAllAccounts();
         authenticator.useConsent(initConsent);
-
         List<String> ibanList = authenticator.getAccountList();
 
         ConsentResponse consentResponseIbanList = authenticator.getConsentForIbanList();
