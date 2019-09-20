@@ -84,8 +84,7 @@ public class LaCaixaApiClient {
 
     public ListAccountsResponse fetchAccountList() {
 
-        return createRequest(LaCaixaConstants.Urls.FETCH_MAIN_ACCOUNT)
-                .get(ListAccountsResponse.class);
+        return createRequest(LaCaixaConstants.Urls.MAIN_ACCOUNT).get(ListAccountsResponse.class);
     }
 
     public UserDataResponse fetchIdentityData() {
@@ -103,7 +102,7 @@ public class LaCaixaApiClient {
                         UserData.SECOND_SUR_NAME);
 
         UserDataResponse userDataResponse =
-                createRequest(Urls.FETCH_USER_DATA).post(UserDataResponse.class, request);
+                createRequest(Urls.USER_DATA).post(UserDataResponse.class, request);
 
         userDataCache = userDataResponse;
         return userDataResponse;
@@ -112,14 +111,14 @@ public class LaCaixaApiClient {
     public AccountTransactionResponse fetchNextAccountTransactions(
             String accountReference, boolean fromBegin) {
 
-        return createRequest(LaCaixaConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
+        return createRequest(LaCaixaConstants.Urls.ACCOUNT_TRANSACTIONS)
                 .queryParam(LaCaixaConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
                 .queryParam(LaCaixaConstants.QueryParams.ACCOUNT_NUMBER, accountReference)
                 .get(AccountTransactionResponse.class);
     }
 
     public EngagementResponse fetchEngagements(String globalPositionType) {
-        return createRequest(LaCaixaConstants.Urls.FETCH_ENGAGEMENTS)
+        return createRequest(LaCaixaConstants.Urls.ENGAGEMENTS)
                 .queryParam(
                         LaCaixaConstants.QueryParams.ZERO_BALANCE_CONTRACTS,
                         LaCaixaConstants.DefaultRequestParams.ZERO_BALANCE_CONTRACTS)
@@ -129,38 +128,37 @@ public class LaCaixaApiClient {
 
     public FundsListResponse fetchFundList(boolean moreData) {
         FundsListRequest request = new FundsListRequest(moreData);
-        return createRequest(LaCaixaConstants.Urls.FETCH_FUNDS_LIST)
+        return createRequest(LaCaixaConstants.Urls.FUND_LIST)
                 .post(FundsListResponse.class, request);
     }
 
     public FundDetailsResponse fetchFundDetails(
             String fundReference, String fundCode, String currency) {
         FundDetailsRequest request = new FundDetailsRequest(fundReference, fundCode, currency);
-        return createRequest(LaCaixaConstants.Urls.FETCH_FUND_DETAILS)
+        return createRequest(LaCaixaConstants.Urls.FUND_DETAILS)
                 .post(FundDetailsResponse.class, request);
     }
 
     public PositionValuesResponse fetchDepositList() {
-        return createRequest(LaCaixaConstants.Urls.FETCH_DEPOSITS_LIST)
-                .get(PositionValuesResponse.class);
+        return createRequest(LaCaixaConstants.Urls.DEPOSIT_LIST).get(PositionValuesResponse.class);
     }
 
     public PositionValuesResponse fetchDeposit(String depositId, boolean moreData) {
-        return createRequest(LaCaixaConstants.Urls.FETCH_DEPOSITS_LIST)
+        return createRequest(LaCaixaConstants.Urls.DEPOSIT_LIST)
                 .queryParam(LaCaixaConstants.QueryParams.DEPOSIT_ID, depositId)
                 .queryParam(LaCaixaConstants.QueryParams.MORE_DATA, Boolean.toString(moreData))
                 .get(PositionValuesResponse.class);
     }
 
     public PositionDetailsResponse fetchPositionDetails(String depositId, String depositContentId) {
-        return createRequest(LaCaixaConstants.Urls.FETCH_DEPOSIT_DETAILS)
+        return createRequest(LaCaixaConstants.Urls.DEPOSIT_DETAILS)
                 .queryParam(LaCaixaConstants.QueryParams.DEPOSIT_CONTENT_ID, depositContentId)
                 .queryParam(LaCaixaConstants.QueryParams.DEPOSIT_ID, depositId)
                 .get(PositionDetailsResponse.class);
     }
 
     public GenericCardsResponse fetchCards() {
-        return createRequest(LaCaixaConstants.Urls.FETCH_CARDS)
+        return createRequest(LaCaixaConstants.Urls.CARDS)
                 .body(
                         new GenericCardsRequest(
                                 true, LaCaixaConstants.DefaultRequestParams.NUM_CARDS))
@@ -168,36 +166,43 @@ public class LaCaixaApiClient {
     }
 
     public CardTransactionsResponse fetchCardTransactions(String cardId, boolean start) {
-        return createRequest(LaCaixaConstants.Urls.FETCH_CARD_TRANSACTIONS)
+        return createRequest(LaCaixaConstants.Urls.CARD_TRANSACTIONS)
                 .body(new CardTransactionsRequest(cardId, start))
                 .post(CardTransactionsResponse.class);
     }
 
     public CardLiquidationsResponse fetchCardLiquidations(String contractRefVal, boolean start) {
-        return createRequest(LaCaixaConstants.Urls.FETCH_CARD_LIQUIDATIONS)
+        return createRequest(LaCaixaConstants.Urls.CARD_LIQUIDATIONS)
                 .body(new CardLiquidationsRequest(contractRefVal, start))
                 .post(CardLiquidationsResponse.class);
     }
 
     public LiquidationDetailResponse fetchCardLiquidationDetail(
             String contractRefNum, String liquidationDate) {
-        return createRequest(Urls.FETCH_CARD_LIQUIDATION_DETAILS)
+        return createRequest(Urls.CARD_LIQUIDATION_DETAILS)
                 .body(new LiquidationDetailRequest(contractRefNum, liquidationDate))
                 .post(LiquidationDetailResponse.class);
     }
 
     public LoanListResponse fetchLoansList(boolean fromBegin) {
 
-        return createRequest(LaCaixaConstants.Urls.FETCH_LOANS_LIST)
+        return createRequest(LaCaixaConstants.Urls.LOAN_LIST)
                 .queryParam(LaCaixaConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
                 .get(LoanListResponse.class);
     }
 
-    public LoanDetailsResponse fetchLoanDetails(String loanId) {
+    public LoanDetailsResponse fetchMortgageDetails(String loanId) {
+        return fetchLoanDetails(Urls.MORTGAGE_DETAILS, loanId);
+    }
+
+    public LoanDetailsResponse fetchConsumerLoanDetails(String loanId) {
+        return fetchLoanDetails(Urls.CONSUMER_LOAN_DETAILS, loanId);
+    }
+
+    private LoanDetailsResponse fetchLoanDetails(URL url, String loanId) {
         LoanDetailsRequest loanDetailsRequest = new LoanDetailsRequest(loanId);
 
-        return createRequest(LaCaixaConstants.Urls.FETCH_LOANS_DETAILS)
-                .post(LoanDetailsResponse.class, loanDetailsRequest);
+        return createRequest(url).post(LoanDetailsResponse.class, loanDetailsRequest);
     }
 
     public boolean isAlive() {

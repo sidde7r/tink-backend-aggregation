@@ -14,13 +14,14 @@ public class LoanEntity {
     @JsonProperty("descContrato")
     private String contractDescription;
 
-    private String nomAplicacion;
+    @JsonProperty("nomAplicacion")
+    private String applicationName;
 
     @JsonProperty("codProducto")
     private String productCode;
 
     @JsonProperty("importeConcedido")
-    private String totalAmount;
+    private String initialBalance;
 
     @JsonProperty("monedaImporteConcedido")
     private String currency;
@@ -42,6 +43,10 @@ public class LoanEntity {
         return contractDescription;
     }
 
+    public String getApplicationName() {
+        return applicationName == null ? "" : applicationName;
+    }
+
     public String getContractId() {
         return contractId;
     }
@@ -50,8 +55,8 @@ public class LoanEntity {
         return contractNumber;
     }
 
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getInitialBalance() {
+        return initialBalance;
     }
 
     public String getCurrency() {

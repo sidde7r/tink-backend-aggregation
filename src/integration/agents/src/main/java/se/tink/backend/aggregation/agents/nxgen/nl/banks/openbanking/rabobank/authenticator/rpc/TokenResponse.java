@@ -20,6 +20,9 @@ public class TokenResponse {
     @JsonProperty("refresh_token")
     private String refreshToken;
 
+    @JsonProperty("refresh_token_expires_in")
+    private String refreshTokenExpiresIn;
+
     public String getAccessToken() {
         return accessToken;
     }
@@ -40,8 +43,16 @@ public class TokenResponse {
         return refreshToken;
     }
 
+    public long getRefreshTokenExpiresIn() {
+        return Long.parseLong(refreshTokenExpiresIn);
+    }
+
     public OAuth2Token toOauthToken() {
         return OAuth2Token.create(
-                getTokenType(), getAccessToken(), getRefreshToken(), getExpiresIn());
+                getTokenType(),
+                getAccessToken(),
+                getRefreshToken(),
+                getExpiresIn(),
+                getRefreshTokenExpiresIn());
     }
 }
