@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.caixa;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseNextGenerationAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsDecoupledAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.SibsPaymentExecutor;
@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class CaixaAgent extends SibsBaseAgent {
+public class CaixaAgent extends SibsBaseNextGenerationAgent {
 
     public CaixaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {

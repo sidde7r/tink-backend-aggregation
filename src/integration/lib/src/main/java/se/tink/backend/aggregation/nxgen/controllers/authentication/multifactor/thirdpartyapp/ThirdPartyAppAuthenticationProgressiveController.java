@@ -4,15 +4,14 @@ import java.util.Arrays;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 
 public class ThirdPartyAppAuthenticationProgressiveController
         implements ProgressiveTypedAuthenticator {
 
-    private final OAuth2AuthenticationProgressiveController authenticator;
+    private final ThirdPartyAppStrongAuthenticator authenticator;
 
     public ThirdPartyAppAuthenticationProgressiveController(
-            OAuth2AuthenticationProgressiveController authenticator) {
+            ThirdPartyAppStrongAuthenticator authenticator) {
         this.authenticator = authenticator;
     }
 

@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStrongAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.ErrorType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
@@ -28,7 +29,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class OAuth2AuthenticationProgressiveController implements AutoAuthenticator {
+public class OAuth2AuthenticationProgressiveController
+        implements AutoAuthenticator, ThirdPartyAppStrongAuthenticator<String> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(OAuth2AuthenticationProgressiveController.class);
@@ -112,24 +114,29 @@ public class OAuth2AuthenticationProgressiveController implements AutoAuthentica
         authenticator.useAccessToken(accessToken);
     }
 
+    @Override
     public ThirdPartyAppResponse<String> init() {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
+    @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         URL authorizeUrl = authenticator.buildAuthorizeUrl(strongAuthenticationState);
 
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
+    @Override
     public final String getStrongAuthenticationStateSupplementalKey() {
         return strongAuthenticationStateSupplementalKey;
     }
 
+    @Override
     public final long getWaitForMinutes() {
         return ThirdPartyAppConstants.WAIT_FOR_MINUTES;
     }
 
+    @Override
     public ThirdPartyAppResponse<String> collect(final Map<String, String> callbackData)
             throws AuthenticationException, AuthorizationException {
 
