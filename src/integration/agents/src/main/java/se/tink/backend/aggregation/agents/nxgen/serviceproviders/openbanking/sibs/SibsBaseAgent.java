@@ -59,7 +59,8 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
         setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
-        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+        SibsConfiguration sibsConfiguration = getClientConfiguration();
+        apiClient.setConfiguration(sibsConfiguration, configuration.getEidasProxy());
         client.setMessageSignInterceptor(
                 new SibsMessageSignInterceptor(
                         getClientConfiguration(),
@@ -68,7 +69,7 @@ public abstract class SibsBaseAgent extends NextGenerationAgent
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-        client.setDebugOutput(true);
+        client.setEidasProxy(configuration.getEidasProxy(), sibsConfiguration.getCertificateId());
     }
 
     protected abstract String getIntegrationName();
