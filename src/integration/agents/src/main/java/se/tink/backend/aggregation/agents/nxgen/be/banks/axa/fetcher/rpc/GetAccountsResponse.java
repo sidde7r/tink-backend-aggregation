@@ -63,8 +63,8 @@ public final class GetAccountsResponse {
 
         final TypeMapper<Supplier<TransactionalAccount>> accountTypeMapper =
                 TypeMapper.<Supplier<TransactionalAccount>>builder()
-                        .put(checkingAccount, "1047")
-                        .put(savingsAccount, "0016", "1135")
+                        .put(checkingAccount, "0002", "0340", "1047")
+                        .put(savingsAccount, "0015", "0016", "0386", "1135")
                         .build();
 
         return accountTypeMapper.translate(accountEntity.getAccountType()).map(Supplier::get);
