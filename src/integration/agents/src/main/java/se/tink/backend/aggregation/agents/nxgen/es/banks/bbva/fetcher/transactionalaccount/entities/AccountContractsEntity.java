@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transacti
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountContractsEntity {
@@ -32,7 +32,7 @@ public class AccountContractsEntity {
     }
 
     @JsonIgnore
-    public Amount getAvailableBalanceAsTinkAmount() {
+    public ExactCurrencyAmount getAvailableBalanceAsTinkAmount() {
         return account.getCurrentBalance().getAvailableBalance().toTinkAmount();
     }
 }

@@ -18,6 +18,8 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
     private CreditCardTransactionsPaginationEntity pagination;
     private List<CreditCardTransactionEntity> items;
 
+    public CreditCardTransactionsResponse() {}
+
     @JsonIgnore
     @Override
     public Collection<CreditCardTransaction> getTinkTransactions() {
