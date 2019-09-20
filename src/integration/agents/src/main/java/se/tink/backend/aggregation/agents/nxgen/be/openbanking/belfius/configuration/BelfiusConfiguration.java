@@ -14,6 +14,7 @@ public class BelfiusConfiguration implements ClientConfiguration {
     private String baseUrl;
     private String certificateId;
     private String clientSecret;
+    private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -53,5 +54,13 @@ public class BelfiusConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;
+    }
+
+    public String getEidasQwac() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(eidasQwac),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
+
+        return eidasQwac;
     }
 }
