@@ -288,7 +288,7 @@ data:
             redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
             aspspCode: "CEMG"
           cgd:
-            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.cgd.certificateId }}"
             clientId: "SIBS_CLIENT_ID_CGD_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
@@ -307,7 +307,7 @@ data:
             redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
             aspspCode: "BNKI"
           cgd:
-            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.cgd.certificateId }}"
             clientId: "SIBS_CLIENT_ID_CGD_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
@@ -516,7 +516,7 @@ data:
             redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
             aspspCode: "BCPPT"
           cgd:
-            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.cgd.certificateId }}"
             clientId: "SIBS_CLIENT_ID_CGD_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
