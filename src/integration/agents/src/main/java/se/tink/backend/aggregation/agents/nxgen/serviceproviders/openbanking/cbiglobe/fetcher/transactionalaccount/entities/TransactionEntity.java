@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -15,7 +16,7 @@ public class TransactionEntity {
     private String remittanceInformationUnstructured;
     private AmountEntity transactionAmount;
     private String transactionId;
-    private String valueDate;
+    private Date valueDate;
     private String debtorName;
     private String creditorName;
 
@@ -29,7 +30,7 @@ public class TransactionEntity {
 
     private Transaction toTinkTransaction(boolean pending) {
         return Transaction.builder()
-                .setDate(bookingDate)
+                .setDate(Optional.ofNullable(bookingDate).orElse(valueDate))
                 .setPending(pending)
                 .setAmount(transactionAmount.toAmount())
                 .setDescription(createDescription())
