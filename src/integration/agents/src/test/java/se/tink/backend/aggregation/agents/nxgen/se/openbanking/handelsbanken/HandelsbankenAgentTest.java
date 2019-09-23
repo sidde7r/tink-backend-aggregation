@@ -22,7 +22,7 @@ public class HandelsbankenAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("se", "se-handelsbanken-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-handelsbanken-ob")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)

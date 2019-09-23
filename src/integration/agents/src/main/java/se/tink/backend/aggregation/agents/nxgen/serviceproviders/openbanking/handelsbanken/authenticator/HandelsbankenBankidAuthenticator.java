@@ -8,8 +8,6 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -20,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Status;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.DecoupledResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.TokenResponse;
@@ -50,7 +49,7 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
 
     @Override
     public SessionResponse init(String ssn)
-            throws BankIdException, BankServiceException, LoginException, AuthorizationException {
+            throws BankIdException, BankServiceException, LoginException {
 
         if (Strings.isNullOrEmpty(ssn)) {
             logger.error("SSN was passed as empty or null!");
@@ -58,7 +57,11 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
         }
 
         try {
-            SessionResponse response = apiClient.getSession(ssn);
+            TokenResponse tokenResponse = apiClient.requestClientCredentialGrantToken();
+            AuthorizationResponse authorizationResponse =
+                    apiClient.initiateConsent(tokenResponse.getAccessToken());
+            SessionResponse response =
+                    apiClient.initDecoupledAuthorization(ssn, authorizationResponse.getConsentId());
             this.autoStartToken = response.getAutoStartToken();
             Uninterruptibles.sleepUninterruptibly(response.getSleepTime(), TimeUnit.MILLISECONDS);
             return response;
@@ -73,8 +76,7 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
     }
 
     @Override
-    public BankIdStatus collect(SessionResponse reference)
-            throws AuthenticationException, AuthorizationException {
+    public BankIdStatus collect(SessionResponse reference) {
 
         DecoupledResponse decoupledResponse =
                 apiClient.getDecoupled(new URL(reference.getLinks().getTokenEntity().getHref()));
