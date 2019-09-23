@@ -13,6 +13,7 @@ public class CreditCardEntityTestData {
                     + "  \"name\": \""
                     + NAME
                     + "\",\n"
+                    + "  \"pan\": \"1234567890123456\",\n"
                     + "  \"productDescription\": \"PACK DUO BBVA - DESPUES\",\n"
                     + "  \"iban\": null,\n"
                     + "  \"productFamilyCode\": \"cards\",\n"
