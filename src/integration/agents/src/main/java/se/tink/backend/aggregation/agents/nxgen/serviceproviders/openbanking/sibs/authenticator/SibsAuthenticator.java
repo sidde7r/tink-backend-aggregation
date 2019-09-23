@@ -49,12 +49,15 @@ public class SibsAuthenticator {
     }
 
     public void autoAuthenticate() throws SessionException {
+        ConsentStatus consentStatus;
         try {
-            getConsentStatus();
-            throw SessionError.SESSION_EXPIRED.exception();
+            consentStatus = getConsentStatus();
         } catch (HttpResponseException e) {
             handleInvalidConsents(e);
             return;
+        }
+        if (!consentStatus.isAcceptedStatus()) {
+            throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 
