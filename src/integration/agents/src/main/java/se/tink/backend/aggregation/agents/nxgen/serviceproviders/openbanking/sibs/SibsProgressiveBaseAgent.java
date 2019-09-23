@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class SibsNewBaseAgent extends NextGenerationAgent
+public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -51,7 +51,7 @@ public abstract class SibsNewBaseAgent extends NextGenerationAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public SibsNewBaseAgent(
+    public SibsProgressiveBaseAgent(
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
