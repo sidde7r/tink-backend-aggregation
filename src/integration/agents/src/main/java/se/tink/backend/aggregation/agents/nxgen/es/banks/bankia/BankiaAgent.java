@@ -34,6 +34,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class BankiaAgent extends NextGenerationAgent
@@ -55,6 +57,7 @@ public final class BankiaAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         apiClient = new BankiaApiClient(client, persistentStorage);
+        configureHttpClient(client);
 
         BankiaInvestmentFetcher fetcher = new BankiaInvestmentFetcher(apiClient);
         investmentRefreshController =
@@ -174,5 +177,12 @@ public final class BankiaAgent extends NextGenerationAgent
     public FetchIdentityDataResponse fetchIdentityData() {
         final IdentityDataFetcher fetcher = new BankiaIdentityDataFetcher(apiClient);
         return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
+    }
+
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        BankiaConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        BankiaConstants.TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }
 }
