@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 
@@ -162,6 +164,7 @@ public class AccountDetailsEntity {
                 .setName(getTinkAccountName())
                 .setBankIdentifier(number)
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
+                .addIdentifier(AccountIdentifier.create(Type.NO, number))
                 .build();
     }
 

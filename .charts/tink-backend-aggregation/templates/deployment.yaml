@@ -140,30 +140,6 @@ spec:
               name: aggregation-secrets
               key: nordea-client-secret
               optional: true
-        - name: SEB_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: seb-client-id
-              optional: true
-        - name: SEB_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: seb-client-secret
-              optional: true
-        - name: BANKDATA_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: bankdata-client-id
-              optional: true
-        - name: BANKDATA_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: bankdata-api-key
-              optional: true
         - name: MONZO_CLIENT_ID
           valueFrom:
             secretKeyRef:

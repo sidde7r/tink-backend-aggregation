@@ -8,7 +8,7 @@ public class InitRequestEntity {
 
     private String osVersion = OpBankConstants.Init.OS_VERSION;
     private String os = OpBankConstants.Init.OS_NAME;
-    private boolean rooted = OpBankConstants.Init.ROOTED;
+    private String rooted = OpBankConstants.Init.ROOTED;
     private String appVersion = OpBankConstants.Init.APP_VERSION;
     private String hwType = OpBankConstants.Init.HW_TYPE;
 }

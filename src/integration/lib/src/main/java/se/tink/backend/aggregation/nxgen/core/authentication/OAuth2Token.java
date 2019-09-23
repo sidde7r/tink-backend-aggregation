@@ -66,6 +66,14 @@ public class OAuth2Token {
         return create(BEARER, accessToken, refreshToken, accessExpiresInSeconds);
     }
 
+    public void updateAccessToken(String accessToken, long accessExpiresInSeconds) {
+        long currentTime = getCurrentEpoch();
+        this.accessToken = accessToken;
+        this.expiresInSeconds = accessExpiresInSeconds;
+        this.refreshExpiresInSeconds = issuedAt + this.refreshExpiresInSeconds - currentTime;
+        this.issuedAt = currentTime;
+    }
+
     public String getTokenType() {
         return tokenType;
     }

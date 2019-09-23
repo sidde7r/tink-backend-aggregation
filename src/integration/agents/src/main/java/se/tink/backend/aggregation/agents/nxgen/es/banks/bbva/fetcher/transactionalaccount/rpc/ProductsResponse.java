@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transacti
 
 import io.vavr.collection.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities.CreditCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities.PensionPlansEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities.StockAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.InternationalFundsPortfoliosEntity;
@@ -11,7 +12,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ProductsResponse extends BbvaResponse {
     private List<AccountEntity> accounts;
+    private List<Object> balanceDistribution;
+    private Object balances;
     private List<CreditCardEntity> cards;
+    private List<PensionPlansEntity> pensionPlans;
     private List<StockAccountEntity> stockAccounts;
     private List<InternationalFundsPortfoliosEntity> internationalFundsPortfolios;
     private List<Object> workingCapitalLoansLimits;
@@ -20,6 +24,8 @@ public class ProductsResponse extends BbvaResponse {
     private List<Object> singleInsurance;
     private List<Object> wealthDepositaryPortfolios;
     private List<Object> managedFundsPortfolios;
+    private List<Object> mortgages;
+    private List<Object> insurances;
 
     public List<AccountEntity> getAccounts() {
         return accounts;
@@ -59,5 +65,9 @@ public class ProductsResponse extends BbvaResponse {
 
     public List<StockAccountEntity> getStockAccounts() {
         return stockAccounts;
+    }
+
+    public List<PensionPlansEntity> getPensionPlans() {
+        return pensionPlans;
     }
 }

@@ -14,7 +14,7 @@ public class OpBankConstants {
 
     public static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final String LANGUAGE_CODE = "en";
-    public static final String AUTH_TOKEN_PREFIX = "G";
+    public static final String AUTH_TOKEN_PREFIX = "F";
     public static final int ONE_WEEK_AGO_IN_DAYS = -7;
     public static final int KEYCARD_PIN_LENGTH = 4;
 
@@ -48,6 +48,9 @@ public class OpBankConstants {
         public static final URL REPRESENTATION_TYPE =
                 new URL(BASE_URL + "/authentication/common/rest/select-representation");
         public static final URL POSTLOGIN = new URL(BASE_URL + "/mobile/postlogin");
+        public static final URL AUTH = new URL(BASE_URL + "/mobile/device/applicationInstanceId");
+        public static final URL INSTANCE =
+                new URL(BASE_URL + "/mobile/configuration/mob/APP_INSTANCE_ID");
         public static final URL AUTH_TOKEN_CONFIG =
                 new URL(BASE_URL + "/mobile/configuration/{identifier}/adobeAnalytics");
 
@@ -115,7 +118,9 @@ public class OpBankConstants {
 
     public static class Headers {
         public static final String API_VERSION_KEY = "api-version";
-        public static final String API_VERSION_VALUE = "57";
+        public static final String API_VERSION_VALUE = "60";
+        public static final String ACCEPT_LANGUAGE = "Accept-Language";
+        public static final String ACCEPT_LANGUAGE_VALUE = "en";
     }
 
     public static class IdTags {
@@ -127,9 +132,9 @@ public class OpBankConstants {
 
     public static class Init {
         public static final String OS_NAME = "ios";
-        public static final String OS_VERSION = "10.3.1";
-        public static final boolean ROOTED = false;
-        public static final String APP_VERSION = "25.0";
+        public static final String OS_VERSION = "11.2.1";
+        public static final String ROOTED = "false";
+        public static final String APP_VERSION = "27.0";
         public static final String HW_TYPE = "mobile";
         public static final String CORE = "KR2";
         public static final String APPLICATION_GROUP_ID = "mob";
@@ -152,6 +157,7 @@ public class OpBankConstants {
         public static final int RAND_INT_B = 362436069;
         public static final int RAND_INT_C = 521288629;
         public static final int RAND_INT_D = 88675123;
+        public static final String SALT = "f944972f20ea3de522f312d4a5baf0f9";
     }
 
     public static class LoginConstants {
@@ -182,6 +188,8 @@ public class OpBankConstants {
         public static final String TYPE_PARAM = "type";
         public static final String TYPE_VALUE = "all";
         public static final String MAX_PAST_PARAM = "maxPast";
+        public static final String MAX_FUTURE = "maxFuture";
+        public static final String MAX_FUTURE_VALUE = "0";
         public static final String MAX_PAST_VALUE = "30";
         public static final String ENCRYPTED_TRX_ID = "encryptedTransactionId";
     }

@@ -8,16 +8,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.Logging;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.InvestmentAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.QualificationEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.rpc.PositionWalletResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -46,8 +49,8 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
                             }
 
                             log.info(
-                                    "{} Unknown account type or missing fields: {}",
-                                    BankiaConstants.Logging.UNKNOWN_ACCOUNT_TYPE.toString(),
+                                    "{} - {} Unknown account type or missing fields: {}",
+                                    Logging.UNKNOWN_INVESTMENT_ACCOUNT_TYPE.toString(),
                                     account.getContract().getProductCode(),
                                     SerializationUtils.serializeToString(account));
 
@@ -118,6 +121,13 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
 
     private void handleInvestmentFetchingError(
             PositionWalletResponse response, int pagesFetched, HttpResponseException hre) {
+        if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+            ErrorResponse error = hre.getResponse().getBody(ErrorResponse.class);
+            // This just means no investment data was found and is fine.
+            if (error.isNoDataForEnquiry()) {
+                return;
+            }
+        }
         log.error(BankiaConstants.Logging.INSTRUMENT_FETCHING_ERROR.toString(), hre);
         log.info(
                 "{} Instrument fetching error. Last successful page: {}",

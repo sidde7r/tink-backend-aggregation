@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public class LaCaixaConstants {
 
@@ -16,10 +18,13 @@ public class LaCaixaConstants {
                     .put(Instrument.Type.FUND, "10060")
                     .build();
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.SAVINGS, "LIBRETA")
-                    .put(AccountTypes.CHECKING, "CUENTA CORRIENTE")
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.SAVINGS, AccountFlag.PSD2_PAYMENT_ACCOUNT, "LIBRETA")
+                    .put(
+                            AccountTypes.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "CUENTA CORRIENTE")
                     .build();
 
     public static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
@@ -31,36 +36,13 @@ public class LaCaixaConstants {
                             "11410", // online
                             "21919", // "canal"
                             "14090", // micro personal
-                            "11407") // consumer loan
+                            "11407", // consumer loan
+                            "10097") // consumer loan
                     .build();
 
-    public static class ApiService {
-        static final String LOGIN_INIT_PATH = "login/loginInicio";
-        static final String LOGIN_SUBMIT_PATH = "login/loginResultado";
-        static final String LOGOUT_PATH = "login/logout";
-        static final String MAIN_ACCOUNT_PATH = "dashboardApp/cuentaPrincipal?";
-        static final String CHECK_FOTO_PATH =
-                "smartContent/consultaFoto"; // Used for keep alive. TODO: Evaluate
-        static final String USER_DATA_PATH = "login/loginDatosUsuario";
-        static final String ACCOUNT_TRANSACTION_PATH = "cuentas/extracto?";
-        static final String GENERIC_CARDS_PATH = "tarjetas/listadoTarjetasGenerica";
-        static final String CARD_TRANSACTIONS_PATH = "tarjetasHCE/listaMovimientosGenerica";
-        static final String CARD_LIQUIDATIONS_PATH = "tarjetas/listaLiquidaciones";
-        static final String CARD_LIQUIDATION_DETAILS_PATH = "tarjetas/detalleLiquidacion";
-
-        // engagements
-        static final String ENGAGEMENTS_PATH = "posGlobal/posicionGlobalProductosAplicacion";
-        // deposits, portfolio for stocks with list of instruments
-        static final String DEPOSITS_LIST_PATH = "valores/posicionValores/lista";
-        // instruments
-        static final String DEPOSIT_DETAILS_PATH = "valores/depositosValores/detalle";
-        // funds list
-        static final String FUNDS_LIST_PATH = "fondos/posicionGlobalLista";
-        // fund details
-        static final String FUND_DETAILS_PATH = "fondos/detalleFondos";
-        // loans
-        static final String LOAN_LIST_PATH = "posGlobal/listaPrestamos";
-        static final String LOAN_DETAILS_PATH = "prestamos/prestamodetalle";
+    public static class LoanTypeName {
+        public static final String MORTGAGE = "PRS";
+        public static final String CONSUMER_LOAN = "CRV";
     }
 
     public static class ErrorCode {
@@ -77,31 +59,34 @@ public class LaCaixaConstants {
         private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
 
         public static final URL INIT_LOGIN =
-                new URL(BASE + ApiService.LOGIN_INIT_PATH); // Gets session id. Needed before login.
-        public static final URL SUBMIT_LOGIN = new URL(BASE + ApiService.LOGIN_SUBMIT_PATH);
-        public static final URL LOGOUT = new URL(BASE + ApiService.LOGOUT_PATH);
-        public static final URL FETCH_MAIN_ACCOUNT = new URL(BASE + ApiService.MAIN_ACCOUNT_PATH);
-        public static final URL KEEP_ALIVE = new URL(BASE + ApiService.CHECK_FOTO_PATH);
-        public static final URL FETCH_USER_DATA = new URL(BASE + ApiService.USER_DATA_PATH);
-        public static final URL FETCH_ACCOUNT_TRANSACTION =
-                new URL(BASE + ApiService.ACCOUNT_TRANSACTION_PATH);
-        public static final URL FETCH_CARDS = new URL(BASE + ApiService.GENERIC_CARDS_PATH);
-        public static final URL FETCH_CARD_TRANSACTIONS =
-                new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
-        public static final URL FETCH_CARD_LIQUIDATIONS =
-                new URL(BASE + ApiService.CARD_LIQUIDATIONS_PATH);
-        public static final URL FETCH_CARD_LIQUIDATION_DETAILS =
-                new URL(BASE + ApiService.CARD_LIQUIDATION_DETAILS_PATH);
+                new URL(BASE + "login/loginInicio"); // Gets session id. Needed before login.
+        public static final URL SUBMIT_LOGIN = new URL(BASE + "login/loginResultado");
+        public static final URL LOGOUT = new URL(BASE + "login/logout");
+        public static final URL KEEP_ALIVE = new URL(BASE + "smartContent/consultaFoto");
 
-        public static final URL FETCH_LOANS_LIST = new URL(BASE + ApiService.LOAN_LIST_PATH);
-        public static final URL FETCH_LOANS_DETAILS = new URL(BASE + ApiService.LOAN_DETAILS_PATH);
+        public static final URL MAIN_ACCOUNT = new URL(BASE + "dashboardApp/cuentaPrincipal?");
+        public static final URL ACCOUNT_TRANSACTIONS = new URL(BASE + "cuentas/extracto?");
 
-        public static final URL FETCH_ENGAGEMENTS = new URL(BASE + ApiService.ENGAGEMENTS_PATH);
-        public static final URL FETCH_DEPOSITS_LIST = new URL(BASE + ApiService.DEPOSITS_LIST_PATH);
-        public static final URL FETCH_DEPOSIT_DETAILS =
-                new URL(BASE + ApiService.DEPOSIT_DETAILS_PATH);
-        public static final URL FETCH_FUNDS_LIST = new URL(BASE + ApiService.FUNDS_LIST_PATH);
-        public static final URL FETCH_FUND_DETAILS = new URL(BASE + ApiService.FUND_DETAILS_PATH);
+        public static final URL CARDS = new URL(BASE + "tarjetas/listadoTarjetasGenerica");
+        public static final URL CARD_TRANSACTIONS =
+                new URL(BASE + "tarjetasHCE/listaMovimientosGenerica");
+        public static final URL CARD_LIQUIDATIONS = new URL(BASE + "tarjetas/listaLiquidaciones");
+        public static final URL CARD_LIQUIDATION_DETAILS =
+                new URL(BASE + "tarjetas/detalleLiquidacion");
+
+        public static final URL LOAN_LIST = new URL(BASE + "posGlobal/listaPrestamos");
+        public static final URL MORTGAGE_DETAILS = new URL(BASE + "prestamos/prestamodetalle");
+        public static final URL CONSUMER_LOAN_DETAILS = new URL(BASE + "prestamos/creditodetalle");
+
+        public static final URL ENGAGEMENTS =
+                new URL(BASE + "posGlobal/posicionGlobalProductosAplicacion");
+        public static final URL DEPOSIT_LIST = new URL(BASE + "valores/posicionValores/lista");
+        public static final URL DEPOSIT_DETAILS =
+                new URL(BASE + "valores/depositosValores/detalle");
+        public static final URL FUND_LIST = new URL(BASE + "fondos/posicionGlobalLista");
+        public static final URL FUND_DETAILS = new URL(BASE + "fondos/detalleFondos");
+
+        public static final URL USER_DATA = new URL(BASE + "login/loginDatosUsuario");
     }
 
     public static class DefaultRequestParams {
@@ -157,6 +142,8 @@ public class LaCaixaConstants {
 
     public static class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("lacaixa_unknown-accountype");
+        public static final LogTag UNKNOWN_LOAN_CATEGORY =
+                LogTag.from("lacaixa_unknown_loan_category");
     }
 
     public static class Sign {

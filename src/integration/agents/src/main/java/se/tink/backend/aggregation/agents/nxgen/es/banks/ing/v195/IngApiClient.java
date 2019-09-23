@@ -28,11 +28,11 @@ public class IngApiClient {
     }
 
     public CreateSessionResponse postLoginRestSession(
-            String username, int usernameType, String dob) {
+            String username, int usernameType, String dob, String deviceId) {
 
         LocalDate birthday = LocalDate.parse(dob, IngUtils.BIRTHDAY_INPUT);
         CreateSessionRequest request =
-                CreateSessionRequest.create(username, usernameType, birthday);
+                CreateSessionRequest.create(username, usernameType, birthday, deviceId);
 
         return client.request(IngConstants.Url.LOGIN_REST_SESSION)
                 .type(MediaType.APPLICATION_JSON)
@@ -40,11 +40,14 @@ public class IngApiClient {
                 .post(CreateSessionResponse.class, request);
     }
 
-    public PutRestSessionResponse putLoginRestSession(List<Integer> pinPositions) {
+    public PutRestSessionResponse putLoginRestSession(
+            List<Integer> pinPositions, String processId) {
         return client.request(IngConstants.Url.LOGIN_REST_SESSION)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .put(PutRestSessionResponse.class, PutSessionRequest.create(pinPositions));
+                .put(
+                        PutRestSessionResponse.class,
+                        PutSessionRequest.create(pinPositions, processId));
     }
 
     public boolean postLoginAuthResponse(String ticket) {

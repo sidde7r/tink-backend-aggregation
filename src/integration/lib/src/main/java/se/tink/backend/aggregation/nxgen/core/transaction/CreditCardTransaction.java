@@ -38,6 +38,10 @@ public final class CreditCardTransaction extends Transaction {
         return Optional.ofNullable(creditAccount);
     }
 
+    public Optional<CreditCard> getCreditCard() {
+        return Optional.ofNullable(creditCard);
+    }
+
     @Override
     public TransactionTypes getType() {
         return TransactionTypes.CREDIT_CARD;

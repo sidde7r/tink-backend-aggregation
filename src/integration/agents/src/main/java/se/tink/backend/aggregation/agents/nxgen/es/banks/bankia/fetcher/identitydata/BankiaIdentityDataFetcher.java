@@ -11,7 +11,7 @@ import se.tink.libraries.identitydata.countries.EsIdentityData;
 
 public class BankiaIdentityDataFetcher implements IdentityDataFetcher {
     private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm:ss a");
+            DateTimeFormatter.ofPattern("MMM d, yyyy hh:mm:ss a");
 
     private final BankiaApiClient apiClient;
 

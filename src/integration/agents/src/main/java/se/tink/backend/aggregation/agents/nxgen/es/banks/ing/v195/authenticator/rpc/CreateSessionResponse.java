@@ -15,6 +15,7 @@ public class CreateSessionResponse {
     private Long contactId;
     private Long corpContactId;
     private List<String> pinpad;
+    private String processId;
 
     public List<Integer> getPinPositions() {
         return pinPositions;
@@ -50,5 +51,9 @@ public class CreateSessionResponse {
 
     public List<String> getPinpad() {
         return pinpad;
+    }
+
+    public String getProcessId() {
+        return processId;
     }
 }

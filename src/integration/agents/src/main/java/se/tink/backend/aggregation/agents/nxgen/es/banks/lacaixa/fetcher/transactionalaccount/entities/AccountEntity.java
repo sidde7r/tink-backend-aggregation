@@ -8,7 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstant
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
@@ -42,15 +47,25 @@ public class AccountEntity {
             return Optional.empty();
         }
 
-        return Optional.of(
-                TransactionalAccount.builder(type, identifiers.getIban(), balance)
-                        .setAccountNumber(identifiers.getIban())
-                        .setName(alias)
-                        .addIdentifiers(identifiers.getIdentifiers())
-                        .putInTemporaryStorage(
-                                LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE,
-                                identifiers.getAccountReference())
-                        .setHolderName(holderName)
-                        .build());
+        final AccountIdentifier ibanIdentifier =
+                AccountIdentifier.create(Type.IBAN, identifiers.getIban());
+        final DisplayAccountIdentifierFormatter formatter = new DisplayAccountIdentifierFormatter();
+        final String formattedIban = ibanIdentifier.getIdentifier(formatter);
+
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(LaCaixaConstants.ACCOUNT_TYPE_MAPPER, accountType)
+                .withBalance(BalanceModule.of(balance.toExactCurrencyAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(identifiers.getIban())
+                                .withAccountNumber(formattedIban)
+                                .withAccountName(alias)
+                                .addIdentifier(ibanIdentifier)
+                                .build())
+                .addHolderName(holderName.toString())
+                .putInTemporaryStorage(
+                        LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE,
+                        identifiers.getAccountReference())
+                .build();
     }
 }

@@ -48,6 +48,10 @@ public final class AgentParsingUtils {
         return TypeGuesser.SWEDISH.guessAccountType(account.getName());
     }
 
+    public static BigDecimal parsePercentageFormInterest(BigDecimal interest) {
+        return interest.divide(new BigDecimal(100)).setScale(6, RoundingMode.HALF_UP);
+    }
+
     public static Double parsePercentageFormInterest(String interestString) {
         if (Strings.isNullOrEmpty(interestString)) {
             return null;
@@ -55,9 +59,7 @@ public final class AgentParsingUtils {
 
         // Using BigDecimal for the division to not end up with stuff like 0.016200000000000003
         BigDecimal interest = new BigDecimal(parseAmount(interestString.replace("%", "")));
-        interest = interest.divide(new BigDecimal(100)).setScale(6, RoundingMode.HALF_UP);
-
-        return interest.doubleValue();
+        return parsePercentageFormInterest(interest).doubleValue();
     }
 
     public static double parseAmountTrimCurrency(String text) {

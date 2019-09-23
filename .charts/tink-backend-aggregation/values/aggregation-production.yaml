@@ -38,13 +38,6 @@ agents:
   dnb:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-  seb:
-    tink:
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
-  bankdata:
-    tink:
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   monzo:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   bunq:
@@ -426,4 +419,4 @@ tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
 
-debugLogFrequencyPercent: 50
+debugLogFrequencyPercent: 70

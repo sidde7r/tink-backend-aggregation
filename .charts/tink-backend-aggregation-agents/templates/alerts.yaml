@@ -11,9 +11,9 @@ spec:
     # SE
   - alert: LoginSuccessRateLowWithAttemptLimitSE
     expr: |
-        # Successful/Cancelled attempts above 95%
+        # Successful/Cancelled attempts above 90%
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE"}[30m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE"}[30m])) by (action,className) < 0.95)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE"}[30m])) by (action,className) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE"}[30m])) by (action,className) > 2
     for: 5m
@@ -21,17 +21,17 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Login success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Login success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitSE
     expr: |
-        # Successful attempts above 95%
+        # Successful attempts above 90%
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className) < 0.95)
+            / sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className) > 30
     for: 5m
@@ -39,18 +39,18 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Refresh success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Refresh success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
       # BE
   - alert: LoginSuccessRateLowWithAttemptLimitBE
     expr: |
-        # Successful/Cancelled attempts above 95%
+        # Successful/Cancelled attempts above 90%
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="BE"}[30m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[30m])) by (action,className) < 0.95)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[30m])) by (action,className) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[30m])) by (action,className) > 2
     for: 5m
@@ -58,17 +58,17 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Login success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Login success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitBE
     expr: |
-      # Successful attempts above 95%
+      # Successful attempts above 90%
       (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="BE"}[30m])) by (className)
-          / sum(increase(tink_agent_refresh_total{market="BE"}[30m])) by (className) < 0.95)
+          / sum(increase(tink_agent_refresh_total{market="BE"}[30m])) by (className) < 0.90)
       # At least this many attempts.
       and sum(increase(tink_agent_refresh_total{market="BE"}[30m])) by (className) > 10
     for: 5m
@@ -76,18 +76,18 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Refresh success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Refresh success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
     # GB
   - alert: LoginSuccessRateLowWithAttemptLimitGB
     expr: |
-        # Successful/Cancelled attempts above 95%
+        # Successful/Cancelled attempts above 90%
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="GB"}[30m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[30m])) by (action,className) < 0.95)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[30m])) by (action,className) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[30m])) by (action,className) > 2
     for: 5m
@@ -95,17 +95,17 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Login success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Login success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitGB
     expr: |
-        # Successful attempts above 95%
+        # Successful attempts above 90%
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="GB"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="GB"}[30m])) by (className) < 0.95)
+            / sum(increase(tink_agent_refresh_total{market="GB"}[30m])) by (className) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="GB"}[30m])) by (className) > 10
     for: 5m
@@ -113,9 +113,9 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Refresh success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Refresh success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
@@ -196,9 +196,9 @@ spec:
     # DK
   - alert: LoginSuccessRateLowWithAttemptLimitDK
     expr: |
-        # Successful/Cancelled attempts above 95%
+        # Successful/Cancelled attempts above 90%
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="DK"}[30m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[30m])) by (action,className) < 0.95)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[30m])) by (action,className) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[30m])) by (action,className) > 2
     for: 5m
@@ -206,17 +206,17 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Login success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Login success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitDK
     expr: |
-        # Successful attempts above 95%
+        # Successful attempts above 90%
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="DK"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="DK"}[30m])) by (className) < 0.95)
+            / sum(increase(tink_agent_refresh_total{market="DK"}[30m])) by (className) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="DK"}[30m])) by (className) > 5
     for: 5m
@@ -224,9 +224,9 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Refresh success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Refresh success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
@@ -418,9 +418,9 @@ spec:
     # NO
   - alert: LoginSuccessRateLowWithAttemptLimitNO
     expr: |
-        # Successful/Cancelled attempts above 95%
+        # Successful/Cancelled attempts above 90%
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="NO"}[30m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[30m])) by (action,className) < 0.95)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[30m])) by (action,className) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[30m])) by (action,className) > 2
     for: 5m
@@ -428,17 +428,17 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Login success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Login success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitNO
     expr: |
-        # Successful attempts above 95%
+        # Successful attempts above 90%
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NO"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="NO"}[30m])) by (className) < 0.95)
+            / sum(increase(tink_agent_refresh_total{market="NO"}[30m])) by (className) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="NO"}[30m])) by (className) > 10
     for: 5m
@@ -446,9 +446,9 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Refresh success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Refresh success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 

@@ -70,7 +70,7 @@ public class IngAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new IngAuthenticator(this.ingApiClient);
+        return new IngAuthenticator(this.ingApiClient, persistentStorage);
     }
 
     @Override

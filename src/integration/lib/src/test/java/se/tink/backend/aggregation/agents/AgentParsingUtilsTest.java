@@ -34,7 +34,7 @@ public class AgentParsingUtilsTest {
         d = AgentParsingUtils.parsePercentageFormInterest("15%");
         Assert.assertEquals(d, 0.15, 0.00001);
 
-        d = AgentParsingUtils.parsePercentageFormInterest(null);
+        d = AgentParsingUtils.parsePercentageFormInterest((String) null);
         Assert.assertNull(d);
     }
 
