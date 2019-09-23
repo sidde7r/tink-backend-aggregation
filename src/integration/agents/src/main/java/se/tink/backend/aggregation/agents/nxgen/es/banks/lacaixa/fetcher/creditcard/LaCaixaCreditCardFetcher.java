@@ -51,7 +51,7 @@ public class LaCaixaCreditCardFetcher
             // set balance for first card in contract, zero for the others
             return cardsResponse.getCards().stream()
                     .filter(GenericCardEntity::isCreditCard)
-                    .map(card -> mapCreditCardAccount(card, contracts))
+                    .map(card -> mapCreditCardAccount(card, contracts.get(card.getContract())))
                     .collect(Collectors.toList());
         } catch (HttpResponseException hre) {
 
@@ -70,8 +70,7 @@ public class LaCaixaCreditCardFetcher
     }
 
     private CreditCardAccount mapCreditCardAccount(
-            GenericCardEntity card, Map<String, List<GenericCardEntity>> contracts) {
-        final List<GenericCardEntity> cardsInContract = contracts.get(card.getContract());
+            GenericCardEntity card, List<GenericCardEntity> cardsInContract) {
         boolean isFirstCardOnContract = cardsInContract.get(0).equals(card);
         if (!isFirstCardOnContract) {
             return card.toTinkCard(
