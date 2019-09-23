@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants;
@@ -21,6 +22,7 @@ public class CreditCardTransactionEntity {
     @JsonProperty("Importe")
     private double amount;
 
+    @JsonIgnore
     public CreditCardTransaction toTinkTransaction() {
         return CreditCardTransaction.builder()
                 .setAmount(new Amount(IberCajaConstants.currency, amount))

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ public class FetchAccountResponse {
     @JsonProperty("Productos")
     private List<AccountEntity> accounts;
 
+    @JsonIgnore
     public List<TransactionalAccount> getAccounts() {
         return accounts.stream()
                 .filter(AccountEntity::isTransactionalAccount)
@@ -22,6 +24,7 @@ public class FetchAccountResponse {
                 .collect(Collectors.toList());
     }
 
+    @JsonIgnore
     public List<InvestmentAccount> getInvestmentAccounts() {
         return accounts.stream()
                 .filter(AccountEntity::isInvestmentAccount)
@@ -29,6 +32,7 @@ public class FetchAccountResponse {
                 .collect(Collectors.toList());
     }
 
+    @JsonIgnore
     public List<CreditCardAccount> getCreditCardAccounts() {
         return accounts.stream()
                 .filter(AccountEntity::isCreditCardAccount)
