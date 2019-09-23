@@ -6,6 +6,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.StorageKeys;
@@ -112,8 +113,8 @@ public final class FidorApiClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
-                .header("TPP-Redirect-URI", new URL(configuration.getRedirectUri()))
-                .header("TPP-Redirect-Preferred", "true")
+                .header(HeaderKeys.TPP_REDIRECT_URI, new URL(configuration.getRedirectUri()))
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
                 .addBearerToken(authToken);
     }
 

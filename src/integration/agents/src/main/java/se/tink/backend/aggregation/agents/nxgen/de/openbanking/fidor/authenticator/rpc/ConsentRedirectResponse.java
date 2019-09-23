@@ -8,16 +8,18 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ConsentRedirectResponse {
 
-    private String consentStatus;
-    private String consentId;
+    @JsonProperty private String consentStatus;
+    @JsonProperty private String consentId;
 
     @JsonProperty("_links")
     private ConsentBaseLinksEntity links;
 
+    @JsonIgnore
     public String getConsentId() {
         return consentId;
     }
 
+    @JsonIgnore
     public ConsentBaseLinksEntity getLinks() {
         return links;
     }
