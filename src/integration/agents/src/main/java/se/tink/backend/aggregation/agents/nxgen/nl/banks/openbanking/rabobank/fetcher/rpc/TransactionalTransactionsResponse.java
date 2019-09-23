@@ -68,7 +68,8 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
                         transaction.getDebtorName(),
                         transaction.getCreditorName(),
                         transaction.getRemittanceInformationUnstructured(),
-                        transaction.getRemittanceInformationStructured())
+                        transaction.getRemittanceInformationStructured(),
+                        transaction.getInitiatingPartyName())
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
