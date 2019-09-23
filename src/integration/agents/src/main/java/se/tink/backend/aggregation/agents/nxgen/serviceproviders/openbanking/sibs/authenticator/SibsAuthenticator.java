@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.MessageCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -19,6 +20,12 @@ public class SibsAuthenticator {
     private static final int NINETY_DAYS = 90;
     private final SibsBaseApiClient apiClient;
     private final Credentials credentials;
+
+    private enum AuthenticationState{
+        MANUAL_ON_GOING,
+        MANUAL_SUCCEEDED,
+        AUTO;
+    }
 
     public SibsAuthenticator(SibsBaseApiClient apiClient, Credentials credentials) {
         this.apiClient = apiClient;
@@ -30,16 +37,34 @@ public class SibsAuthenticator {
     }
 
     public ConsentStatus getConsentStatus() {
+        return mapToConsentStatus(apiClient.getConsentStatus());
+    }
+
+    private AuthenticationState getCurrentAuthenticationState() {
+        ConsentStatus consentStatus = getConsentStatus();
+        final boolean manualAuthenticationInProgress = apiClient.isManualAuthenticationInProgress();
+        if(manualAuthenticationInProgress) {
+            if(consentStatus.isAcceptedStatus()) {
+                return AuthenticationState.MANUAL_SUCCEEDED;
+            } else {
+                return AuthenticationState.MANUAL_ON_GOING;
+            }
+
+        }
+        return AuthenticationState.AUTO;
+    }
+
+    private ConsentStatus mapToConsentStatus(final ConsentStatusResponse response) {
         String consentStatusString = "unknown state";
         try {
-            consentStatusString = apiClient.getConsentStatus().getTransactionStatus();
+            consentStatusString = response.getTransactionStatus();
             return ConsentStatus.valueOf(consentStatusString);
         } catch (IllegalArgumentException e) {
             throw new IllegalStateException(
-                    SibsConstants.ErrorMessages.UNKNOWN_TRANSACTION_STATE
-                            + "="
-                            + consentStatusString,
-                    e);
+                SibsConstants.ErrorMessages.UNKNOWN_TRANSACTION_STATE
+                    + "="
+                    + consentStatusString,
+                e);
         }
     }
 
@@ -49,14 +74,22 @@ public class SibsAuthenticator {
     }
 
     public void autoAuthenticate() throws SessionException {
-        try {
-            getConsentStatus();
-            throw SessionError.SESSION_EXPIRED.exception();
+        try{
+            AuthenticationState authenticationState = getCurrentAuthenticationState();
+            if(authenticationState == AuthenticationState.AUTO) {
+                return;
+            } else {
+                if(authenticationState == AuthenticationState.MANUAL_SUCCEEDED) {
+                    apiClient.markManualAuthenticationFinished();
+                }
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
         } catch (HttpResponseException e) {
             handleInvalidConsents(e);
             return;
         }
     }
+
 
     public void setSessionExpiryDateIfAccepted(ConsentStatus consentStatus) {
         if (consentStatus.isAcceptedStatus()) {

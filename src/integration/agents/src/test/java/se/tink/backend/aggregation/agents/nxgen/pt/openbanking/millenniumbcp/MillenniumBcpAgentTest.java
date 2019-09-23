@@ -13,8 +13,8 @@ public class MillenniumBcpAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-millenniumbcp-oauth2")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true)
                         .expectLoggedIn(false);
     }
 
