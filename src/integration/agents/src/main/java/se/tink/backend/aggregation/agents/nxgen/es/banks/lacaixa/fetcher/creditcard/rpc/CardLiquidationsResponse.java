@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.credit
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.CardLiquidationDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.DateEntity;
@@ -21,6 +22,9 @@ public class CardLiquidationsResponse {
 
     @JsonIgnore
     public Optional<String> getNextFutureLiquidationDate() {
+        if (Objects.isNull(liquidationsList)) {
+            return Optional.empty();
+        }
         return liquidationsList
                 .getNextFutureLiquidation()
                 .map(CardLiquidationDataEntity::getEndDate)
