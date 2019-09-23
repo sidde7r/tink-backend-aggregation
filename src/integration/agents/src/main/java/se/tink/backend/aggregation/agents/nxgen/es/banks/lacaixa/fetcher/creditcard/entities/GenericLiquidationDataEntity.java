@@ -1,20 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class GenericLiquidationDataEntity {
 
     @JsonProperty("saldoPrepago")
-    private double prepaidAmount;
+    private BigDecimal prepaidAmount;
 
     @JsonProperty("saldoDisponible")
-    private double availableCredit;
+    private BigDecimal availableCredit;
 
     @JsonProperty("saldoDispuesto")
-    private double balance;
+    private BigDecimal balance;
 
     @JsonProperty("gastoMesDebito")
     private String spendingMonthDebit;
@@ -22,11 +22,15 @@ public class GenericLiquidationDataEntity {
     @JsonProperty("datosUltimoMovimiento")
     private LastMovementDataEntity lastMovementData;
 
-    public Amount getPrepaidAmount() {
-        return Amount.inEUR(prepaidAmount);
+    public BigDecimal getPrepaidAmount() {
+        return prepaidAmount;
     }
 
-    public Amount getAvailableCredit() {
-        return Amount.inEUR(availableCredit);
+    public BigDecimal getAvailableCredit() {
+        return availableCredit;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
     }
 }

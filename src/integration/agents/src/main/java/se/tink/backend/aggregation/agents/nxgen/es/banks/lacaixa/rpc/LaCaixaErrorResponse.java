@@ -43,4 +43,11 @@ public class LaCaixaErrorResponse {
                 .trim()
                 .equalsIgnoreCase(LaCaixaConstants.ErrorCode.NO_OWN_CARDS);
     }
+
+    @JsonIgnore
+    public boolean isCurrentlyUnavailable() {
+        return Strings.nullToEmpty(code)
+                .trim()
+                .equalsIgnoreCase(LaCaixaConstants.ErrorCode.UNAVAILABLE);
+    }
 }

@@ -1,12 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class GenericCardEntity {
+    private static final Logger LOG = LoggerFactory.getLogger(GenericCardEntity.class);
 
     @JsonProperty("numeroTarjeta")
     private String cardNumber;
@@ -112,14 +120,16 @@ public class GenericCardEntity {
     @JsonProperty("idProveedorTarMovil")
     private String idMobileTarSupplier;
 
-    public CreditCardAccount toTinkCard(Amount balance) {
+    @JsonIgnore
+    public CreditCardAccount toTinkCard(ExactCurrencyAmount balance) {
         return CreditCardAccount.builderFromFullNumber(cardNumber, description)
-                .setBalance(balance)
-                .setAvailableCredit(this.getAvailableCredit())
+                .setExactBalance(balance)
+                .setExactAvailableCredit(getAvailableCredit())
                 .setBankIdentifier(refValNumtarjeta)
                 .build();
     }
 
+    @JsonIgnore
     public boolean isCreditCard() {
         // P = prepaid (treated as credit card, since it's not a debit card linked to one of the
         // checking accounts)
@@ -128,8 +138,15 @@ public class GenericCardEntity {
         return "C".equalsIgnoreCase(cardType) || "P".equalsIgnoreCase(cardType);
     }
 
-    public Amount getAvailableCredit() {
-        return liquidationData.getAvailableCredit();
+    @JsonIgnore
+    public ExactCurrencyAmount getAvailableCredit() {
+        final BigDecimal availableCredit = liquidationData.getAvailableCredit();
+        if (Objects.isNull(availableCredit)) {
+            LOG.warn("Available credit is null: {}", SerializationUtils.serializeToString(this));
+            return ExactCurrencyAmount.of(BigDecimal.ZERO, LaCaixaConstants.CURRENCY);
+        } else {
+            return ExactCurrencyAmount.of(availableCredit, LaCaixaConstants.CURRENCY);
+        }
     }
 
     public String getRefValIdContract() {
@@ -138,5 +155,10 @@ public class GenericCardEntity {
 
     public String getContract() {
         return contract;
+    }
+
+    @JsonIgnore
+    public BigDecimal getBalance() {
+        return liquidationData.getBalance();
     }
 }
