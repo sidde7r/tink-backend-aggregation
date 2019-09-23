@@ -9,17 +9,17 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 @Ignore
 public class SdcAgentTest {
 
-    private static final String TEST_SSN = "199011097236";
+    private static final String TEST_SSN = "";
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("se", "se-sdc-oauth2")
+                new AgentIntegrationTest.Builder("dk", "dk-sdc-ob")
                         .addCredentialField(Key.LOGIN_INPUT, TEST_SSN)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .saveCredentialsAfter(true)
                         .expectLoggedIn(false);
     }
 
