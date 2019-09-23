@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.InvestmentAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.entities.LoanAccountEntity;
@@ -27,7 +29,7 @@ public class ContractsResponse {
     }
 
     public List<CardEntity> getCards() {
-        return listCards;
+        return Optional.ofNullable(listCards).orElse(Collections.emptyList());
     }
 
     public List<InvestmentAccountEntity> getInvestments() {
