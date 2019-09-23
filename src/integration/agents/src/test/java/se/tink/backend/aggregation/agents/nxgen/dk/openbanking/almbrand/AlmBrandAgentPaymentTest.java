@@ -6,13 +6,10 @@ import static org.mockito.Mockito.mock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -29,7 +26,7 @@ public class AlmBrandAgentPaymentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
-        builder.build().testGenericPayment(createListMockedDomesticPayment(4));
+        builder.build().testGenericPayment(createListMockedDomesticPayment(1));
     }
 
     private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
@@ -37,16 +34,17 @@ public class AlmBrandAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.AT).toString()).when(creditor).getAccountNumber();
+            doReturn(Type.DK).when(creditor).getAccountIdentifierType();
+            doReturn("").when(creditor).getAccountNumber();
+            doReturn("").when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.DK).toString()).when(debtor).getAccountNumber();
+            doReturn(Type.DK).when(debtor).getAccountIdentifierType();
+            doReturn("").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inEUR(new Random().nextInt(50000));
+            Amount amount = Amount.inDKK(2);
             LocalDate executionDate = LocalDate.now();
-            String currency = "EUR";
+            String currency = "DKK";
 
             listOfMockedPayments.add(
                     new Payment.Builder()

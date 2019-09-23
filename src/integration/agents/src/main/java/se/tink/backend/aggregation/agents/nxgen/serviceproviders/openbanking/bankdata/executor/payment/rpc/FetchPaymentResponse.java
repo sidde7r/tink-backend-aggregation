@@ -33,11 +33,9 @@ public class FetchPaymentResponse {
     public PaymentResponse toTinkPayment(String paymentId, PaymentType type) {
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
-                        .withCreditor(creditorAccount.toTinkCreditor())
-                        .withDebtor(debtorAccount.toTinkDebtor())
+                        .withCreditor(creditorAccount.toTinkCreditor(type))
+                        .withDebtor(debtorAccount.toTinkDebtor(type))
                         .withAmount(instructedAmount.toAmount())
-                        .withExecutionDate(
-                                DateUtils.convertToLocalDateViaInstant(requestedExecutionDate))
                         .withCurrency(instructedAmount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(
@@ -45,8 +43,17 @@ public class FetchPaymentResponse {
                                         .getPaymentStatus())
                         .withType(type);
 
+        if (type == PaymentType.DOMESTIC) {
+            buildingPaymentResponse.withExecutionDate(
+                    DateUtils.convertToLocalDateViaInstant(requestedExecutionDate));
+        }
+
         Payment tinkPayment = buildingPaymentResponse.build();
 
         return new PaymentResponse(tinkPayment);
+    }
+
+    public void setTransactionStatus(String transactionStatus) {
+        this.transactionStatus = transactionStatus;
     }
 }

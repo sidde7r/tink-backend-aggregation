@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
@@ -43,7 +44,7 @@ public class BankdataPaymentController extends PaymentController {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
-    public ThirdPartyAppResponse<String> collect(String reference) {
+    public ThirdPartyAppResponse<String> collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 strongAuthenticationState.getSupplementalKey(),
                 ThirdPartyAppConstants.WAIT_FOR_MINUTES,
@@ -58,7 +59,6 @@ public class BankdataPaymentController extends PaymentController {
         this.supplementalInformationHelper.openThirdPartyApp(payload);
     }
 
-    @SuppressWarnings("Duplicates")
     private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
@@ -74,13 +74,23 @@ public class BankdataPaymentController extends PaymentController {
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
 
-        ThirdPartyAppResponse<String> ref = init();
-
-        String id = paymentMultiStepRequest.getPayment().getUniqueId();
-        URL authorizeUrl = new URL(sessionStorage.get(id));
-        openThirdPartyApp(authorizeUrl);
-        collect(ref.getReference());
+        if (paymentMultiStepRequest.getStep() == AuthenticationStepConstants.STEP_INIT) {
+            PaymentMultiStepResponse multiStepResponse = super.sign(paymentMultiStepRequest);
+            init();
+            openThirdPartyApp(
+                    new URL(
+                            getSigningUrlFromSession(
+                                    paymentMultiStepRequest.getPayment().getUniqueId())));
+            collect();
+            return multiStepResponse;
+        }
 
         return super.sign(paymentMultiStepRequest);
+    }
+
+    private String getSigningUrlFromSession(String paymentId) {
+        return sessionStorage
+                .get(paymentId, String.class)
+                .orElseThrow(() -> new IllegalStateException("Signing url could not be retrived"));
     }
 }

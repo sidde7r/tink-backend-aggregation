@@ -64,6 +64,7 @@ public final class BankdataConstants {
                 PIS_PRODUCT + "/v1/payments/cross-border-credit-transfers";
         public static final String AUTHORIZE_PAYMENT = "/{paymentId}" + "/authorisations";
         public static final String PAYMENT_ID = "/{paymentId}";
+        public static final String GET_PAYMENT_STATUS = "/{paymentProduct}/{paymentId}/status";
     }
 
     public static class StorageKeys {
@@ -150,17 +151,13 @@ public final class BankdataConstants {
     }
 
     public static class PaymentRequests {
-        public static final String CHARGE_BEARER = "SHAR";
-        public static final String AGENT = "ARABBHBMMAN";
-        public static final String CREDITOR_NAME = "Bahrain International circuit";
-        public static final String STREET = "Streetname";
-        public static final String BUILDING = "123";
-        public static final String CITY = "Netropolis";
-        public static final String POSTAL_CODE = "889900";
         public static final String COUNTRY = "BH";
-        public static final String REMITTANCE = "Text message to creditor";
         public static final String EUR = "EUR";
         public static final String IDENTIFICATION = "endToEndIdentification";
+    }
+
+    public static class SIGNING_STEPS {
+        public static final String CHECK_STATUS_STEP = "Checking_status_step";
     }
 
     public static class LogTags {

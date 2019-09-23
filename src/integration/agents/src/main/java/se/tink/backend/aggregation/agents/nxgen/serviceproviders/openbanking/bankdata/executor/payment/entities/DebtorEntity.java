@@ -1,58 +1,58 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Debtor;
 
 @JsonObject
+@JsonInclude(Include.NON_NULL)
 public class DebtorEntity {
     private String bban;
-    private String currency;
+    private String iban;
 
     public DebtorEntity() {}
 
-    private DebtorEntity(Builder builder) {
-        this.bban = builder.iban;
-        this.currency = builder.currency;
+    public DebtorEntity(Debtor debtor, PaymentType type) {
+        switch (type) {
+            case SEPA:
+                setUpIban(debtor);
+                break;
+            default:
+                setUpBban(debtor);
+        }
     }
 
-    public static DebtorEntity of(PaymentRequest paymentRequest) {
-        return new DebtorEntity.Builder()
-                .withIban(paymentRequest.getPayment().getDebtor().getAccountNumber())
-                .withCurrency(paymentRequest.getPayment().getCurrency())
-                .build();
+    @JsonIgnore
+    private void setUpIban(Debtor debtor) {
+        this.iban = debtor.getAccountNumber();
     }
 
-    public Debtor toTinkDebtor() {
+    @JsonIgnore
+    private void setUpBban(Debtor debtor) {
+        if (debtor.getAccountIdentifierType() == Type.IBAN) {
+            this.bban = debtor.getAccountNumber().substring(4);
+        } else {
+            this.bban = debtor.getAccountNumber();
+        }
+    }
+
+    @JsonIgnore
+    public static DebtorEntity of(PaymentRequest paymentRequest, PaymentType type) {
+        return new DebtorEntity(paymentRequest.getPayment().getDebtor(), type);
+    }
+
+    @JsonIgnore
+    public Debtor toTinkDebtor(PaymentType type) {
+        if (type == PaymentType.SEPA) {
+            return new Debtor(AccountIdentifier.create(Type.IBAN, iban));
+        }
+
         return new Debtor(AccountIdentifier.create(Type.DK, bban));
-    }
-
-    public String getBban() {
-        return bban;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public static class Builder {
-        private String iban;
-        private String currency;
-
-        public Builder withIban(String iban) {
-            this.iban = iban;
-            return this;
-        }
-
-        public Builder withCurrency(String currency) {
-            this.currency = currency;
-            return this;
-        }
-
-        public DebtorEntity build() {
-            return new DebtorEntity(this);
-        }
     }
 }
