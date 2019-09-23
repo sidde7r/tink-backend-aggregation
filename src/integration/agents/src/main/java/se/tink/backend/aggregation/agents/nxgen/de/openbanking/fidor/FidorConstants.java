@@ -72,6 +72,12 @@ public final class FidorConstants {
         public static final String X_REQUEST_ID = "X-Request-Id";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String CONSENT_ID = "Consent-ID";
+        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
+        public static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
+    }
+
+    public static class HeaderValues {
+        public static final String TPP_REDIRECT_PREFERRED = "true";
     }
 
     public static class FormKeys {}

@@ -6,13 +6,14 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc.AuthorizationConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc.AutorizationConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc.ConsentRedirectResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc.CreateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc.TokenResponse;
@@ -70,14 +71,14 @@ public final class FidorApiClient {
                 .put(AuthorizationConsentResponse.class, requestBody);
     }
 
-    public ConsentResponse getConsent(String iban, String bban) {
+    public ConsentRedirectResponse getConsent(String iban, String bban) {
         // iban and bban are passed through test, as they represent iban and bban of individual user
         // the third param represents how long the consent is valid, the inserted value means as
         // much as possible which is 90 days
         // the last param states number of requests per day, maximum is 4
         CreateConsentRequest request = new CreateConsentRequest(iban, bban, "9999-12-31", true, 4);
-
-        return createRequestInSession(new URL(Urls.CONSENTS)).post(ConsentResponse.class, request);
+        return createRequestInSession(new URL(Urls.CONSENTS))
+                .post(ConsentRedirectResponse.class, request);
     }
 
     public AccountFetchResponse fetchAccouns() {
@@ -112,8 +113,8 @@ public final class FidorApiClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
-                .header("TPP-Redirect-URI", new URL(configuration.getRedirectUri()))
-                .header("TPP-Redirect-Preferred", "false")
+                .header(HeaderKeys.TPP_REDIRECT_URI, new URL(configuration.getRedirectUri()))
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
                 .addBearerToken(authToken);
     }
 
