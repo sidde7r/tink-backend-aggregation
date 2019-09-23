@@ -4,6 +4,7 @@ import io.vavr.CheckedPredicate;
 import java.util.function.Predicate;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Messages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
@@ -27,7 +28,8 @@ public final class BbvaPredicates {
             response -> response.contains(Messages.LOGIN_SUCCESS);
 
     public static final CheckedPredicate<String> IS_LOGIN_WRONG_CREDENTIALS =
-            response -> response.contains(Messages.LOGIN_WRONG_CREDENTIAL_CODE);
+            response ->
+                    StringUtils.containsIgnoreCase(response, Messages.LOGIN_WRONG_CREDENTIAL_CODE);
 
     public static final Predicate<AccountTypes> IS_TRANSACTIONAL_ACCOUNT =
             accountType ->
