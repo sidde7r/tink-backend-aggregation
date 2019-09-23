@@ -160,6 +160,8 @@ public final class BbvaConstants {
     }
 
     public static final class ErrorMessages {
+        public static final String TEMPORARILY_UNAVAILABLE =
+                "El servicio no est&aacute; disponible temporalmente.";
         public static final String MAX_TRY_ATTEMPTS =
                 String.format("Reached max retry attempts of %d", Fetchers.MAX_TRY_ATTEMPTS);
     }

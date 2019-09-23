@@ -8,10 +8,13 @@ import static io.vavr.control.Try.run;
 import io.vavr.control.Try;
 import java.util.Collection;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
@@ -52,8 +55,32 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
     private Consumer<HttpResponseException> handleFetchLoanDetailsException(LoanEntity loan) {
         return e -> {
             final HttpResponse res = e.getResponse();
-            Match(res.getStatus()).of(Case($(409), run(() -> logLoanDetailsError(res, loan))));
+            Match(res.getStatus())
+                    .of(
+                            Case($(409), run(() -> logLoanDetailsError(res, loan))),
+                            Case($(500), run(() -> handleBankServiceError(res))),
+                            // Throw e if we have no match.
+                            Case(
+                                    $(),
+                                    () -> {
+                                        throw e;
+                                    }));
         };
+    }
+
+    private void handleBankServiceError(HttpResponse res) {
+        if (findTempUnavailableText(res)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+    }
+
+    private boolean findTempUnavailableText(HttpResponse res) {
+        String htmlBody = res.getBody(String.class);
+        return Pattern.compile(
+                        Pattern.quote(ErrorMessages.TEMPORARILY_UNAVAILABLE),
+                        Pattern.CASE_INSENSITIVE)
+                .matcher(htmlBody)
+                .find();
     }
 
     private void logLoanDetailsError(HttpResponse res, LoanEntity loan) {
