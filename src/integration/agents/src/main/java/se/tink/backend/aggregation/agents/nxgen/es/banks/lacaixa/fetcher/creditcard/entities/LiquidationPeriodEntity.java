@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -33,7 +34,7 @@ public class LiquidationPeriodEntity {
     private double liquidationPrevious;
 
     @JsonProperty("miDeuda")
-    private double myDebt;
+    private BigDecimal myDebt;
 
     @JsonProperty("deudaPendiente")
     private double pendingDebt;
@@ -41,7 +42,7 @@ public class LiquidationPeriodEntity {
     @JsonProperty("importeAPagar")
     private double amountToPay;
 
-    public double getMyDebt() {
+    public BigDecimal getMyDebt() {
         return myDebt;
     }
 }
