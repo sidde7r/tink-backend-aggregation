@@ -46,19 +46,23 @@ public class AccountEntity {
     @JsonProperty("IBAN")
     private String iban;
 
+    @JsonIgnore
     public boolean isTransactionalAccount() {
         return ACCOUNT_TYPE_MAPPER.isOneOf(getType(), TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
+    @JsonIgnore
     public boolean isInvestmentAccount() {
         return ACCOUNT_TYPE_MAPPER.isOneOf(getType(), InvestmentAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
+    @JsonIgnore
     public boolean isCreditCardAccount() {
         return ACCOUNT_TYPE_MAPPER.isOf(getType(), AccountTypes.CREDIT_CARD)
                 && CARD_TYPE_MAPPER.isOf(getTypeCard(), AccountTypes.CREDIT_CARD);
     }
 
+    @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(
                         ACCOUNT_TYPE_MAPPER.translate(getType()).get(),
@@ -72,6 +76,7 @@ public class AccountEntity {
                 .build();
     }
 
+    @JsonIgnore
     public InvestmentAccount toTinkInvestmentAccount() {
         final Portfolio portfolio = toTinkPortfolio();
 
@@ -85,6 +90,7 @@ public class AccountEntity {
                 .build();
     }
 
+    @JsonIgnore
     private Portfolio toTinkPortfolio() {
         // Ibercaja seem to use the same model for all types of accounts, can not find more
         // portfolio data
@@ -104,6 +110,7 @@ public class AccountEntity {
         return portfolio;
     }
 
+    @JsonIgnore
     public CreditCardAccount toTinkCreditCardAccount() {
         return CreditCardAccount.builder(
                         number,

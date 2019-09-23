@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
@@ -17,6 +18,7 @@ public class CreditCardResponse implements PaginatorResponse {
     private List<CreditCardTransactionEntity> transactions;
 
     @Override
+    @JsonIgnore
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.stream()
                 .map(CreditCardTransactionEntity::toTinkTransaction)
