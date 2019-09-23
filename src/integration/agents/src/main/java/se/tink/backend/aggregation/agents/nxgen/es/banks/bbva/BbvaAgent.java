@@ -33,6 +33,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BbvaAgent extends NextGenerationAgent
@@ -52,6 +54,7 @@ public class BbvaAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new BbvaApiClient(client, sessionStorage);
+        configureHttpClient(client);
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
@@ -155,5 +158,12 @@ public class BbvaAgent extends NextGenerationAgent
     public FetchIdentityDataResponse fetchIdentityData() {
         final IdentityDataFetcher fetcher = new BbvaIdentityDataFetcher(apiClient, sessionStorage);
         return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
+    }
+
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        BbvaConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        BbvaConstants.TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }
 }
