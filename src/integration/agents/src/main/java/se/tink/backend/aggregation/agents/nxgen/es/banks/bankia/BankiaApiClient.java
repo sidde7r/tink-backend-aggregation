@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
+import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.RsaKeyResponse;
@@ -91,10 +95,23 @@ public class BankiaApiClient {
     }
 
     private ContractsResponse getServicesContracts() {
-        return createInSessionRequest(BankiaConstants.Url.SERVICES_CONTRACTS)
-                .queryParam(BankiaConstants.Query.GROUP_BY_FAMILIA, BankiaConstants.Default.TRUE)
-                .queryParam(BankiaConstants.Query.ID_VISTA, BankiaConstants.Default._1)
-                .get(ContractsResponse.class);
+        try {
+            return createInSessionRequest(BankiaConstants.Url.SERVICES_CONTRACTS)
+                    .queryParam(
+                            BankiaConstants.Query.GROUP_BY_FAMILIA, BankiaConstants.Default.TRUE)
+                    .queryParam(BankiaConstants.Query.ID_VISTA, BankiaConstants.Default._1)
+                    .get(ContractsResponse.class);
+        } catch (HttpResponseException exception) {
+            if (exception.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                RsaKeyResponse rsaKeyResponse =
+                        exception.getResponse().getBody(RsaKeyResponse.class);
+                if (!Objects.isNull(rsaKeyResponse)
+                        && !Strings.isNullOrEmpty(rsaKeyResponse.getResponseUrl())) {
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                }
+            }
+            throw exception;
+        }
     }
 
     public AcountTransactionsResponse getTransactions(Account account, Date fromDate, Date toDate) {
