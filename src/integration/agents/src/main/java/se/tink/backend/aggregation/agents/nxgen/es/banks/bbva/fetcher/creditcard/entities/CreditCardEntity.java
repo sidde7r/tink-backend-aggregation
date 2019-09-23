@@ -35,7 +35,7 @@ public class CreditCardEntity {
         return CreditCardAccount.builder(uniqueId)
                 // Using as number the ID created in previous step as that's how it's shown in the
                 // app
-                .setAccountNumber(uniqueId)
+                .setAccountNumber(getMaskedPan().orElse(uniqueId))
                 .putInTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID, id)
                 .setBalance(new Amount(currency, StringUtils.parseAmount(availableBalance)))
                 .setName(name)
@@ -58,6 +58,11 @@ public class CreditCardEntity {
                     .orElseThrow(
                             () -> new NoSuchElementException("can't determine the card number"));
         }
+    }
+
+    @JsonIgnore
+    private Optional<String> getMaskedPan() {
+        return getPanLast4Digits().map(pan -> "************" + pan);
     }
 
     @JsonIgnore
