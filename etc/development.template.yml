@@ -142,7 +142,6 @@ agentsServiceConfiguration:
         baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
-        certificateId: "Tink"
         qsealcPem: "dummyCertificateBase64"
       tink:
         clientId: "dummyClientId"
@@ -151,7 +150,6 @@ agentsServiceConfiguration:
         baseUrl: "https://api.rabobank.nl/openapi"
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
-        certificateId: "Tink"
         qsealcPem: "dummyCertificateBase64"
       abnamro:
         clientId: "dummyClientId"
@@ -160,7 +158,6 @@ agentsServiceConfiguration:
         baseUrl: "https://api.rabobank.nl/openapi"
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
-        certificateId: "abnamro"
         qsealcPem: "dummyCertificateBase64"
     abnamro:
       tink:
