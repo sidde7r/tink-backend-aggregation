@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -11,6 +13,7 @@ import se.tink.libraries.strings.StringUtils;
 public class CreditCardEntity {
     private String id;
     private String name;
+    private String pan;
     private String productDescription;
     private String productFamilyCode;
     private String subfamilyCode;
@@ -32,7 +35,7 @@ public class CreditCardEntity {
         return CreditCardAccount.builder(uniqueId)
                 // Using as number the ID created in previous step as that's how it's shown in the
                 // app
-                .setAccountNumber(uniqueId)
+                .setAccountNumber(getMaskedPan().orElse(uniqueId))
                 .putInTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID, id)
                 .setBalance(new Amount(currency, StringUtils.parseAmount(availableBalance)))
                 .setName(name)
@@ -46,6 +49,26 @@ public class CreditCardEntity {
 
     @JsonIgnore
     private String createUniqueIdFromName() {
-        return name.split("[*]")[1];
+        String[] nameParts = name.split("[*]");
+        if (nameParts.length > 1) {
+            return nameParts[1];
+        } else {
+            // use last 4 digits of pan
+            return getPanLast4Digits()
+                    .orElseThrow(
+                            () -> new NoSuchElementException("can't determine the card number"));
+        }
+    }
+
+    @JsonIgnore
+    private Optional<String> getMaskedPan() {
+        return getPanLast4Digits().map(pan -> "************" + pan);
+    }
+
+    @JsonIgnore
+    private Optional<String> getPanLast4Digits() {
+        return Optional.ofNullable(pan)
+                .filter(pan -> pan.length() >= 4)
+                .map(pan -> pan.substring(pan.length() - 4));
     }
 }
