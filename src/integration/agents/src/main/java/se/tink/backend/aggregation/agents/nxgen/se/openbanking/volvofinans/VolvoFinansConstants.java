@@ -30,9 +30,8 @@ public final class VolvoFinansConstants {
     }
 
     public static class Endpoints {
-        public static final String BASE_AUTH = "https://secure.sandbox.volvofinans.se";
-        public static final String BASE_URL = "https://api.sandbox.volvofinans.se";
-        public static final String AIS = "/openbanking";
+        public static final String BASE_AUTH = "https://secure.volvofinans.se/openbanking";
+        public static final String BASE_URL = "https://openbanking.api.volvofinans.se";
         public static final String AUTH = "/oauth/auth";
         public static final String TOKEN = "/oauth/token";
         public static final String ACCOUNTS = "/openbanking/v1/accounts";
@@ -62,9 +61,7 @@ public final class VolvoFinansConstants {
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
         public static final String SCOPE = "oauth2";
-        public static final String SANDBOX = "sandbox";
         public static final Object GRANT_TYPE = "authorization_code";
-        public static final String SANDBOX_CLIENT = "openbanking";
         public static final String TRUE = "true";
         public static final String BOOKED = "booked";
     }
@@ -86,8 +83,6 @@ public final class VolvoFinansConstants {
 
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
-        public static final String CLIENT_ID = "openbanking";
-        public static final String CLIENT_SECRET = "sandbox";
     }
 
     public static class IdTags {

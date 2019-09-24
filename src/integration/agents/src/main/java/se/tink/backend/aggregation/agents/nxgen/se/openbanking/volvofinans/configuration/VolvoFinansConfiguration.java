@@ -12,6 +12,7 @@ public class VolvoFinansConfiguration implements ClientConfiguration {
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
+    private String certificateId;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -35,5 +36,9 @@ public class VolvoFinansConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
+    }
+
+    public String getCertificateId() {
+        return certificateId;
     }
 }

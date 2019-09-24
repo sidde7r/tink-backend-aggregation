@@ -49,17 +49,13 @@ public final class VolvoFinansApiClient {
 
     public URL getAuthorizeUrl(String state) {
         final String clientId = getConfiguration().getClientId();
-        final String clientSecret = getConfiguration().getClientSecret();
         final String redirectUri = getConfiguration().getRedirectUrl() + "?state=" + state;
 
-        // TODO For productions use the real clientId and clientSecret instead of constants
         return createRequest(Urls.AUTH)
-                .queryParam(QueryKeys.CLIENT_ID, QueryValues.SANDBOX_CLIENT)
+                .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
-                .queryParam(QueryKeys.CLIENT_SECRET, QueryValues.SANDBOX)
-                .queryParam(QueryKeys.STATE, state)
                 .getUrl();
     }
 
@@ -68,14 +64,9 @@ public final class VolvoFinansApiClient {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
 
-        // TODO For productions use the real clientId and clientSecret instead of constants
         TokenRequest request =
                 new TokenRequest(
-                        FormValues.AUTHORIZATION_CODE,
-                        code,
-                        redirectUri,
-                        FormValues.CLIENT_ID,
-                        FormValues.CLIENT_SECRET);
+                        FormValues.AUTHORIZATION_CODE, code, redirectUri, clientId, clientSecret);
 
         return client.request(Urls.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)

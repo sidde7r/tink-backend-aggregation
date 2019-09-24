@@ -44,7 +44,10 @@ public final class VolvoFinansAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        apiClient.setConfiguration(getClientConfiguration());
+        VolvoFinansConfiguration volvoFinansConfiguration = getClientConfiguration();
+        apiClient.setConfiguration(volvoFinansConfiguration);
+        this.client.setEidasProxy(
+                configuration.getEidasProxy(), volvoFinansConfiguration.getCertificateId());
     }
 
     protected VolvoFinansConfiguration getClientConfiguration() {
