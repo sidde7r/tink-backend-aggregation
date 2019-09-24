@@ -25,7 +25,7 @@ public class BookedEntity {
     private String creditorName;
     private TransactionAccountEntity creditorAccount;
     private String remittanceInformationStructured;
-    private String remittanceInformationUnStructured;
+    private String remittanceInformationUnstructured;
     private String proprietaryBankTransactionCode;
     private LinksEntity links;
     private String debtorName;
@@ -43,8 +43,8 @@ public class BookedEntity {
     private String getDescription() {
         if (!Strings.isNullOrEmpty(remittanceInformationStructured)) {
             return remittanceInformationStructured;
-        } else if (!Strings.isNullOrEmpty(remittanceInformationUnStructured)) {
-            return remittanceInformationUnStructured;
+        } else if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+            return remittanceInformationUnstructured;
         } else if (!Strings.isNullOrEmpty(proprietaryBankTransactionCode)) {
             return proprietaryBankTransactionCode;
         }
