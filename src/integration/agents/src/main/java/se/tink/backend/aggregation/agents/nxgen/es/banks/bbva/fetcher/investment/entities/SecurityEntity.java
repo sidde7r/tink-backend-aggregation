@@ -82,7 +82,7 @@ public class SecurityEntity {
 
     @JsonIgnore
     private Double getPrice() {
-        return new BigDecimal(totalAmount.getAmount() / quantity)
+        return new BigDecimal(totalAmount.getAmountAsDouble() / quantity)
                 .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .doubleValue();
     }
