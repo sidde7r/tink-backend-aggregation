@@ -38,6 +38,40 @@
             "supplementalFields": [],
             "transactional": true,
             "type": "BANK"
+        },
+        {
+            "className": "nxgen.mx.banks.citibanamex.CitiBanaMexAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "MXN",
+            "displayName": "CitiBanaMex",
+            "fields": [
+                {
+                    "description": "Client Id",
+                    "immutable": true,
+                    "maxLength": 16,
+                    "numeric": true,
+                    "name": "username",
+                    "sensitive": true
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "maxLength": 8,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "market": "MX",
+            "multiFactor": false,
+            "name": "mx-citibana-password",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 0,
+            "status": "DISABLED",
+            "supplementalFields": [],
+            "transactional": true,
+            "type": "BANK"
         }
     ]
 }
