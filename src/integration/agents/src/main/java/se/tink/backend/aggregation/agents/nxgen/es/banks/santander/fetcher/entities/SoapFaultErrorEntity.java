@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
@@ -48,9 +49,8 @@ public class SoapFaultErrorEntity {
 
     @JsonIgnore
     public boolean matchesErrorMessage(String errorMessage) {
-        // normalize error description
-        String errordesc = Optional.ofNullable(errorDescription).orElse("").toLowerCase();
-
-        return errordesc.startsWith(errorMessage);
+        return Pattern.compile(Pattern.quote(errorMessage), Pattern.CASE_INSENSITIVE)
+                .matcher(errorDescription)
+                .find();
     }
 }

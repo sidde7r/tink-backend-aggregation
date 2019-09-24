@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -15,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.LocalDateToXml;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-@Ignore
 public class SantanderEsAgentTest {
     private enum Arg {
         USERNAME,
