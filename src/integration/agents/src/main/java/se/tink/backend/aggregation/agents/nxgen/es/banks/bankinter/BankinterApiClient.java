@@ -94,6 +94,7 @@ public final class BankinterApiClient {
         final HttpResponse response =
                 client.request(url)
                         .header(HeaderKeys.JSF_REQUEST, HeaderValues.JSF_PARTIAL)
+                        .header(HeaderKeys.REQUESTED_WITH, HeaderValues.REQUESTED_WITH)
                         .body(
                                 formBuilder.build().serialize(),
                                 MediaType.APPLICATION_FORM_URLENCODED)

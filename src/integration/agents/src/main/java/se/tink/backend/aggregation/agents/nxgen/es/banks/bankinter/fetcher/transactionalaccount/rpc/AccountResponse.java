@@ -4,11 +4,15 @@ import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -23,6 +27,11 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class AccountResponse extends HtmlResponse {
     private static final Logger LOG = LoggerFactory.getLogger(AccountResponse.class);
+    private static final Pattern TRANSACTIONS_JSF_SOURCE_PATTERN =
+            Pattern.compile("source:'(j_id[_0-9a-f]+:cargaRemotaMovimientos)'");
+    private static final Pattern ACCOUNT_INFO_JSF_SOURCE_PATTERN =
+            Pattern.compile(
+                    "source:'movimientos-cabecera:(j_id[_0-9a-f]+)'\\s*,process:'@all',update:'movimientos-cabecera:head-datos-detalle");
 
     public AccountResponse(HttpResponse response) {
         super(response);
@@ -88,7 +97,9 @@ public class AccountResponse extends HtmlResponse {
                                         .withAccountName(getAccountName())
                                         .addIdentifier(accountIdentifier)
                                         .build())
-                        .setApiIdentifier(Integer.toString(accountIndex));
+                        .setApiIdentifier(Integer.toString(accountIndex))
+                        .putInTemporaryStorage(
+                                StorageKeys.FIRST_PAGINATION_KEY, getFirstPaginationKey());
 
         final List<String> holderNames = getHolderNames(accountInfo);
         for (String name : holderNames) {
@@ -96,5 +107,26 @@ public class AccountResponse extends HtmlResponse {
         }
 
         return builder.build();
+    }
+
+    public String getAccountInfoJsfSource() {
+        final Matcher matcher = ACCOUNT_INFO_JSF_SOURCE_PATTERN.matcher(body);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            throw new IllegalStateException("Could not get JSF source for account info.");
+        }
+    }
+
+    private PaginationKey getFirstPaginationKey() {
+        final Matcher matcher = TRANSACTIONS_JSF_SOURCE_PATTERN.matcher(body);
+        if (matcher.find()) {
+            final String jsfSource = matcher.group(1);
+            final String formId = jsfSource.split(":")[0];
+            final String viewState = getViewState(formId);
+            return new PaginationKey(jsfSource, viewState, 0);
+        } else {
+            throw new IllegalStateException("Could not get pagination key for transactions.");
+        }
     }
 }

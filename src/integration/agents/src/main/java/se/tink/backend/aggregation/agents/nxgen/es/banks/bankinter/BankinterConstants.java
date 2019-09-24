@@ -38,14 +38,8 @@ public final class BankinterConstants {
 
     public static class FormValues {
         public static final String ACCOUNT_HEADER = "movimientos-cabecera";
-        public static final String TRANSACTIONS = "j_id591600677_4_3cc72c6c";
         public static final String TRUE = "true";
         public static final String JSF_EXECUTE_ALL = "@all";
-    }
-
-    public static class JsfSource {
-        public static final String ACCOUNT_INFO = "movimientos-cabecera:j_id1163893164_56ce7f85";
-        public static final String TRANSACTIONS = "j_id591600677_4_3cc72c6c:cargaRemotaMovimientos";
     }
 
     public static class JsfPart {
@@ -66,11 +60,17 @@ public final class BankinterConstants {
 
     public static class HeaderKeys {
         public static final String JSF_REQUEST = "Faces-request";
+        public static final String REQUESTED_WITH = "X-Requested-With";
     }
 
     public static class HeaderValues {
         public static final String USER_AGENT =
-                "Mozilla/5.0 (iPhone; CPU iPhone OS 11_1_1 like Mac OS X) AppleWebKit/604.3.5 (KHTML, like Gecko) Mobile/15B150 6.1.8-223 WRAPPER";
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 6.2.1-236 WRAPPER";
         public static final String JSF_PARTIAL = "partial/ajax";
+        public static final String REQUESTED_WITH = "XMLHttpRequest";
+    }
+
+    public static class StorageKeys {
+        public static final String FIRST_PAGINATION_KEY = "firstPaginationKey";
     }
 }
