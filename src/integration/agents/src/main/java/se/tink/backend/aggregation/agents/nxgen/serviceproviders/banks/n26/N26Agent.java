@@ -9,42 +9,44 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.N26PasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactionalaccount.N26AccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactionalaccount.N26TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.session.N26SessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class N26Agent extends NextGenerationAgent
+public abstract class N26Agent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
 
-    private final N26ApiClient n26APiClient;
+    protected final N26ApiClient n26APiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public N26Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.n26APiClient = new N26ApiClient(this.client, sessionStorage);
+        this.n26APiClient = new N26ApiClient(this.client, sessionStorage, persistentStorage);
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
     }
 
     @Override
-    protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new N26PasswordAuthenticator(n26APiClient));
+    public AgentConfigurationController getAgentConfigurationController() {
+        return super.getAgentConfigurationController();
     }
+
+    @Override
+    protected abstract Authenticator constructAuthenticator();
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {

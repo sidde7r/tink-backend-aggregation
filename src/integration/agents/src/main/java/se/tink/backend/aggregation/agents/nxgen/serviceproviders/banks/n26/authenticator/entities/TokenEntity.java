@@ -1,19 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.entities;
 
 import com.google.common.base.Strings;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class TokenEntity {
     private String accessToken;
     private String refreshToken;
-    private long expiresIn;
+    private LocalDateTime expireDate;
 
     public TokenEntity() {}
 
-    public TokenEntity(String accessToken, String refreshToken, long expiresIn) {
+    public TokenEntity(String accessToken, String refreshToken, LocalDateTime expireDate) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.expiresIn = expiresIn;
+        this.expireDate = expireDate;
     }
 
     public String getAccessToken() {
@@ -24,11 +24,13 @@ public class TokenEntity {
         return refreshToken;
     }
 
-    public long getExpiresIn() {
-        return expiresIn;
+    public LocalDateTime getExpireDate() {
+        return expireDate;
     }
 
     public boolean isValid() {
-        return new Date().before(new Date(expiresIn)) && !Strings.isNullOrEmpty(accessToken);
+        return !Strings.isNullOrEmpty(accessToken)
+                && !Strings.isNullOrEmpty(refreshToken)
+                && LocalDateTime.now().isBefore(expireDate);
     }
 }

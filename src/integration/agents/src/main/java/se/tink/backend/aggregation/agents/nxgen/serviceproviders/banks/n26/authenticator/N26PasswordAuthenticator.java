@@ -16,6 +16,6 @@ public class N26PasswordAuthenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        n26ApiClient.login(username, password);
+        n26ApiClient.loginWithPassword(username, password);
     }
 }

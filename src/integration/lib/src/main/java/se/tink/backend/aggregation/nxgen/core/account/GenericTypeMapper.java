@@ -20,11 +20,9 @@ import org.slf4j.LoggerFactory;
 public class GenericTypeMapper<V, T> {
 
     private static final Logger logger = LoggerFactory.getLogger(GenericTypeMapper.class);
-
+    final Optional<V> defaultValue;
     private final Map<T, V> translator;
     private final Set<T> ignoredKeys;
-    final Optional<V> defaultValue;
-
     private BiPredicate<T, Collection<V>> isOneOfType =
             (input, types) -> translate(input).map(types::contains).orElse(false);
 
@@ -72,7 +70,7 @@ public class GenericTypeMapper<V, T> {
         Optional<V> type = Optional.ofNullable(translator.get(typeKey));
 
         if (!type.isPresent() && !ignoredKeys.contains(typeKey)) {
-            logger.warn("Unknown account type for key: {}", typeKey);
+            logger.warn("Unknown key: {}", typeKey);
             return defaultValue;
         }
 
@@ -132,6 +130,11 @@ public class GenericTypeMapper<V, T> {
          */
         public Builder<V, T, B> ignoreKeys(T... keys) {
             self().ignoredKeys.addAll(Arrays.asList(keys));
+            return this;
+        }
+
+        public Builder<V, T, B> ignoreKeys(List<T> keys) {
+            self().ignoredKeys.addAll(keys);
             return this;
         }
 
