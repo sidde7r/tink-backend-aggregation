@@ -237,7 +237,13 @@ public class NordnetAgent extends AbstractAgent
                                 return;
                             }
 
-                            Account account = accountEntity.toAccount(AccountTypes.INVESTMENT);
+                            Account account;
+                            if ("tjänstepension".equalsIgnoreCase(accountEntity.getType())) {
+                                account = accountEntity.toAccount(AccountTypes.PENSION);
+                            } else {
+                                account = accountEntity.toAccount(AccountTypes.INVESTMENT);
+                            }
+
                             Portfolio portfolio = accountEntity.toPortfolio();
 
                             // Contains all positions, regardless of account/portfolio
