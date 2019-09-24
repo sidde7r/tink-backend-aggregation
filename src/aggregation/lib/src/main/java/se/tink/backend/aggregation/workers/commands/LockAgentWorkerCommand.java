@@ -11,8 +11,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LockAgentWorkerCommand extends AgentWorkerCommand {
-    private static final Logger log =
-            LoggerFactory.getLogger(ExpireSessionAgentWorkerCommand.class);
+    private static final Logger log = LoggerFactory.getLogger(LockAgentWorkerCommand.class);
     private static final String LOCK_FORMAT =
             "/locks/aggregation/LockAgentWorkerCommand/%s/%s"; // % (userId, credentialsId)
 
