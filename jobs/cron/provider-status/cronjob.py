@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import requests, json, logging, sys, getopt, os, time
-from collections import defaultdict
+import requests, json, logging, sys, getopt, os, time from collections import defaultdict
 
 # STATUS PAGE
 STATUSPAGE_API_KEY = os.environ.get("STATUSPAGE_API_KEY").rstrip("\n")
@@ -31,12 +30,17 @@ GROUP_IDS = {
     "fr": "6hy84x3bjnwc"
 }
 
+# for debug purposed only - delete or comment out in the production version
+PAGE_ID = "0cm054d7l52c"
+GROUP_IDS = { 'pt': 'x9kj8yzy12k9' }
+
 # PROMETHEUS
 PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus.svc.cluster.local:9090/api/v1/query"
 
 ### Queries
-PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', environment='production', provider!~'.*abstract.*', className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}) by (provider, market)"
-INSTANCES_QUERY = "sum(up{kubernetes_namespace='aggregation', environment='production'})"
+PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
+FAILING_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='failed',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
+UNAVAILABLE_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='unavailable',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
 
 # LOGGING
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -45,7 +49,12 @@ logger = logging.getLogger('statuspage_provider_status')
 
 # SCRIPT
 def create_prometheus_request(query):
-    return requests.get(PROMETHEUS_API_BASE, params = {"query": query})
+    response = requests.get(PROMETHEUS_API_BASE,
+                            params={"query": query},
+                            headers={
+                                'Content-Type': 'application/json; charset=utf-8',
+                            })
+    return response
 
 
 def is_valid_prometheus_response(response):
@@ -60,14 +69,17 @@ def is_valid_prometheus_response(response):
     return True
 
 
-def group_by_market(provider_metrics, running_instances):
+def group_by_market(providers):
     metric_by_market = defaultdict(dict)
-    providers = provider_metrics.json()["data"]["result"]
     for provider in providers:
         # Metric by market holds the provider metrics by market.
         # Here we update the market by adding the provider together with the calculated value.
-        # The calculated value is the number instances where the provider is circuit broken divided by the total number of running instances.
-        metric_by_market[provider["metric"]["market"].lower()].update({provider["metric"]["provider"]: float(provider["value"][1]) / int(running_instances)})
+        # The calculated value is the number instances where the provider is circuit
+        # broken divided by the total number of running instances.
+        market_name = provider["metric"]["market"].lower()
+        provider_name = provider["metric"]["provider"]
+        metric_value = float(provider["value"][1])
+        metric_by_market[market_name].update({provider_name: metric_value})
     return metric_by_market
 
 
@@ -115,34 +127,50 @@ def build_update_component_status_request_body(new_status):
 
 
 def calculate_status(value):
-    if value == NOT_CIRCUIT_BROKEN:
-        return "operational"
+    # TODO restore previous more readable structure
+    status = "operational"
 
     previouslimit = NOT_CIRCUIT_BROKEN
-    for upper_limit, status in STATUS_ENUMS.items():
+    for upper_limit, s in STATUS_ENUMS.items():
         if previouslimit < value <= upper_limit:
-            return status
+            status = s
         previouslimit = upper_limit
+    return status
 
 
-def create_missing_components(names_of_missing_components, group_id, providers_from_prometheus):
+def create_missing_components(names_of_missing_components, group_id):
     logger.info("Creating missing components: [{}]".format(names_of_missing_components))
+    failures = 0
     for component_name in names_of_missing_components:
-        provider_value = providers_from_prometheus[component_name]
+        provider_value = 0
         status = calculate_status(provider_value)
-        request_body = build_missing_components_request(component_name, status, group_id)
+        request_body = build_missing_components_request(component_name, status, group_id, False)
         r = create_statuspage_request("POST", COMPONENTS_PATH, body = json.dumps(request_body))
         if r.status_code != 201:
             logger.error("Failed to create missing component for component name: [{}]".format(component_name))
+            failures += 1
+            # With more than 5 failures for one run we're probably rate-limited, lets keep updating components on next run
+            if failures > 5:
+                logger.warning("Rate limited by Statuspage, will continue creating components on next run.")
+                return False
+        request_body = build_missing_components_request(component_name + " (bank is failing)", status, group_id, True)
+        r = create_statuspage_request("POST", COMPONENTS_PATH, body = json.dumps(request_body))
+        if r.status_code != 201:
+            logger.error("Failed to create missing component for component name: [{}]".format(component_name))
+            failures += 1
+            # With more than 5 failures for one run we're probably rate-limited, lets keep updating components on next run
+            if failures > 5:
+                return False
 
+    return True
 
-def build_missing_components_request(name, status, group_id):
+def build_missing_components_request(name, status, group_id, hide):
     return {
         "component": {
             "description": "",
             "status": status,
             "name": name,
-            "only_show_if_degraded": True,
+            "only_show_if_degraded": hide,
             "group_id": group_id,
             "showcase": True
         }
@@ -158,7 +186,7 @@ def group_by_group_id(all_components):
 
 def process_component(component_name, component_info, provider_metric_value):
     if provider_metric_value == None:
-        logger.warning("Component exists but there are no metrics available - Provider name: [{}]".format(component_name))
+        # Nothing has happened so nothing to update
         return
     component_id = component_info[0]
     component_status = component_info[1]
@@ -187,41 +215,29 @@ def main():
     # The theory is that the job starts faster than the outgoing
     # connections are opened. Hence we've added this sleep to
     # ensure that everything get the time to start up.
-    logger.info("Sleeping for thirty seconds before starting.")
-    time.sleep(30)
+    if not os.environ['STATUSPAGE_DEBUG']:
+        time.sleep(30)
 
     logger.info("Starting cronjob to calculate provider statistics")
 
-    # Get the number of running instances for aggregation production
-    # Example: 
-    # {
-    #   "status": "success",
-    #   "data": {
-    #       "resultType": "vector",
-    #       "result":[
-    #           {
-    #               "metric": {},
-    #               "value":[1544520295.983,"9"]
-    #           }
-    #       ]
-    #   }
-    # }
-    instances_metric = create_prometheus_request(INSTANCES_QUERY)
 
-    if not is_valid_prometheus_response(instances_metric):
+    # The total number of logins per provider over the last N minutes
+    all_logins_response = create_prometheus_request(PROVIDERS_QUERY)
+    if not is_valid_prometheus_response(all_logins_response):
         return 1
 
-    total_running_instances = int(instances_metric.json()["data"]["result"][0]["value"][1])
-
-    if total_running_instances <= 0:
-        logger.error("Total running instances was [{}] - Aborting cron job".format(total_running_instances))
+    # The number of those logins that failed - approximation for 'error is with us'
+    failed_logins_response = create_prometheus_request(FAILING_PROVIDERS_QUERY)
+    if not is_valid_prometheus_response(failed_logins_response):
         return 1
 
-    # The the circuit breaker metrics by provider
-    provider_metrics = create_prometheus_request(PROVIDERS_QUERY)
-    if not is_valid_prometheus_response(provider_metrics):
+    # The number of logins with outcome 'unavailable' - approximation for 'error is with bank'
+    unavailable_logins_response = create_prometheus_request(UNAVAILABLE_PROVIDERS_QUERY)
+    if not is_valid_prometheus_response(failed_logins_response):
         return 1
-    
+
+    # Restructure Prometheus responses so we can work with them
+    #
     # Example: 
     # {
     #   "se": {
@@ -231,7 +247,10 @@ def main():
     #       ...
     #   }
     # }
-    provider_metrics_by_market = group_by_market(provider_metrics, total_running_instances)
+    #
+    all_logins_by_market = group_by_market(all_logins_response.json()["data"]["result"])
+    failed_logins_by_market = group_by_market(failed_logins_response.json()["data"]["result"])
+    unavailable_logins_by_market = group_by_market(unavailable_logins_response.json()["data"]["result"])
     
     # Fetch all available components
     # Example: [
@@ -251,8 +270,8 @@ def main():
     #       "automation_email": "string"
     #   }
     # ]
-    all_components = create_statuspage_request("GET", COMPONENTS_PATH)
-    if len(all_components.json()) == 0:
+    all_components = create_statuspage_request("GET", COMPONENTS_PATH).json()
+    if len(all_components) == 0:
         logger.error("The number of total components was zero")
         return 1
 
@@ -265,25 +284,42 @@ def main():
     #       ...
     #   }
     # }
-    grouped_components = group_by_group_id(all_components.json())
+    grouped_components = group_by_group_id(all_components)
 
     # Each market is a separate component group
     for market in GROUP_IDS.keys():
-        provider_metrics = provider_metrics_by_market[market]
+        provider_logins = all_logins_by_market[market]
+        provider_failed_logins = failed_logins_by_market[market]
+        provider_unavailable_logins = unavailable_logins_by_market[market]
         group_id = GROUP_IDS[market]
         components = grouped_components[group_id]
 
-        available_component_names = set()
-
         for component_name, component_info in components.items():
-            provider_metric_value = provider_metrics.get(component_name, None)
-            process_component(component_name, component_info, provider_metric_value)
+            provider_metric_value = None
+            if component_name[-18:] == " (bank is failing)":
+                # suffix is used by us to create a separate time series for errors not with Tink
+                logins = provider_logins.get(component_name[:-18], None)
+                # If there haven't been any logins at all, status won't be updated
+                if logins is not None and logins > 0.0:
+                    provider_metric_value = provider_unavailable_logins.get(component_name[:-18], 0)
+                    # ...but the component is still processed, so we get something in the logs?
+                process_component(component_name, component_info, provider_metric_value)
+            else:
+                logins = provider_logins.get(component_name, None)
+                # If there haven't been any logins at all, status won't be updated
+                if logins is not None and logins > 0.0:
+                    provider_metric_value = provider_failed_logins.get(component_name, 0)
+                    # ...but the component is still processed, so we get something in the logs?
+                process_component(component_name, component_info, provider_metric_value)
 
         # Check if there are any providers in the metrics that don't have an corresponding component
         # OBS! Do not change order of the comparison since it gives what is available in the first set but not the last
-        missing_components = set(provider_metrics.keys()).difference(set(components.keys()))
+        missing_components = set(provider_logins.keys()).difference(set(components.keys()))
         if missing_components != set():
-            create_missing_components(missing_components, group_id, provider_metrics)
+            if not create_missing_components(missing_components, group_id):
+                logger.warning("Rate limited by Statuspage, will continue creating components on next run.")
+                return 1
+
 
     logger.info("Cronjob ran successfully")
     return 0
