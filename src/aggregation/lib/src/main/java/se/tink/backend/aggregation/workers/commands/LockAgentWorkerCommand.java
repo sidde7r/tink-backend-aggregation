@@ -29,13 +29,13 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
     public AgentWorkerCommandResult execute() throws Exception {
         CredentialsRequest request = context.getRequest();
 
+        String userId = request.getUser().getId();
+        String credentialsId = request.getCredentials().getId();
+
         lock =
                 new InterProcessSemaphoreMutex(
                         context.getCoordinationClient(),
-                        String.format(
-                                LOCK_FORMAT,
-                                request.getUser().getId(),
-                                request.getCredentials().getId()));
+                        String.format(LOCK_FORMAT, userId, credentialsId));
 
         String providerName = request.getProvider().getName();
 
@@ -51,6 +51,7 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
         }
 
         if (!hasAcquiredLock) {
+            log.info("Could not acquire lock for user: {} credentials: {}", userId, credentialsId);
             return AgentWorkerCommandResult.ABORT;
         }
 
