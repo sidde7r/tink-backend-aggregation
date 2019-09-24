@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
@@ -183,11 +184,18 @@ public class SibsBaseApiClient {
         persistentStorage.put(StorageKeys.CONSENT_ID, consent);
     }
 
-    public ConsentStatusResponse getConsentStatus() {
-        URL consentStatus =
-                createUrl(SibsConstants.Urls.CONSENT_STATUS)
-                        .parameter(PathParameterKeys.CONSENT_ID, getConsentIdFromStorage());
-        return client.request(consentStatus).get(ConsentStatusResponse.class);
+    public ConsentStatusResponse getConsentStatus() throws SessionException {
+        try {
+            URL consentStatus =
+                    createUrl(SibsConstants.Urls.CONSENT_STATUS)
+                            .parameter(PathParameterKeys.CONSENT_ID, getConsentIdFromStorage());
+            return client.request(consentStatus).get(ConsentStatusResponse.class);
+        } catch (IllegalStateException ex) {
+            if (ex.getCause() instanceof SessionException) {
+                throw (SessionException) ex.getCause();
+            }
+            throw ex;
+        }
     }
 
     private ConsentRequest getConsentRequest() {

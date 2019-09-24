@@ -29,7 +29,7 @@ public class SibsAuthenticator {
         return apiClient.buildAuthorizeUrl(state);
     }
 
-    public ConsentStatus getConsentStatus() {
+    public ConsentStatus getConsentStatus() throws SessionException {
         String consentStatusString = "unknown state";
         try {
             consentStatusString = apiClient.getConsentStatus().getTransactionStatus();
