@@ -36,7 +36,6 @@ public class RedsysTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        consentController.requestConsentIfNeeded();
         final String consentId = consentController.getConsentId();
         ListAccountsResponse accountsResponse = apiClient.fetchAccounts(consentId);
         return accountsResponse.getAccounts().stream()
@@ -61,7 +60,6 @@ public class RedsysTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        consentController.requestConsentIfNeeded();
         try {
             final String consentId = consentController.getConsentId();
             return apiClient.fetchTransactions(account.getApiIdentifier(), consentId, key);

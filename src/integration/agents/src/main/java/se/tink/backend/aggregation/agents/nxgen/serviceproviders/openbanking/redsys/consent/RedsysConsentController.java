@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent;
 
-import com.google.common.base.Strings;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.enums.ConsentStatus;
@@ -31,18 +30,7 @@ public class RedsysConsentController {
         return consentStorage.getConsentId();
     }
 
-    private boolean hasStoredConsent() {
-        final String consentId = consentStorage.getConsentId();
-        return !Strings.isNullOrEmpty(consentId);
-    }
-
-    public void requestConsentIfNeeded() {
-        if (!hasStoredConsent()) {
-            requestConsent();
-        }
-    }
-
-    public void requestConsent() {
+    public boolean requestConsent() {
         final String supplementalKey = strongAuthenticationState.getSupplementalKey();
         final String state = strongAuthenticationState.getState();
 
@@ -53,13 +41,14 @@ public class RedsysConsentController {
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(consentUrl));
         supplementalInformationHelper.waitForSupplementalInformation(
-                supplementalKey, 10, TimeUnit.MINUTES);
+                supplementalKey, 5, TimeUnit.MINUTES);
 
         if (apiClient.fetchConsent(consentId).getConsentStatus() == ConsentStatus.VALID) {
             consentStorage.useConsentId(consentId);
+            return true;
         } else {
-            // timed out or failed
-            throw new IllegalStateException("Did not get consent.");
+            // Did not approve, or timeout
+            return false;
         }
     }
 }
