@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
@@ -67,7 +68,9 @@ public class RedsysTransactionalAccountFetcher
             final ErrorResponse error = ErrorResponse.fromResponse(hre.getResponse());
             if (error.hasErrorCode(ErrorCodes.CONSENT_EXPIRED)) {
                 // Request new consent
-                consentController.requestConsent();
+                if (!consentController.requestConsent()) {
+                    throw BankServiceError.CONSENT_REVOKED.exception();
+                }
                 final String consentId = consentController.getConsentId();
                 // Server will return 500 if accounts aren't fetched first with this consent
                 // (Bankinter)
