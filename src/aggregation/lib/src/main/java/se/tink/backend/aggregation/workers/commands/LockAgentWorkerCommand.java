@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.base.Strings;
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.recipes.locks.InterProcessLock;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
@@ -37,18 +36,7 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
                         context.getCoordinationClient(),
                         String.format(LOCK_FORMAT, userId, credentialsId));
 
-        String providerName = request.getProvider().getName();
-
-        if (!Strings.isNullOrEmpty(providerName) && providerName.startsWith("uk-")) {
-            // Super UK specific fix to handle two requests coming in at the same time. We don't
-            // want the
-            // second request to execute as it works with stale data and will put the credential
-            // in AUTHENTICATION_ERROR. This should be removed once we have a robust solution in
-            // place.
-            hasAcquiredLock = lock.acquire(35, TimeUnit.SECONDS);
-        } else {
-            hasAcquiredLock = lock.acquire(4, TimeUnit.MINUTES);
-        }
+        hasAcquiredLock = lock.acquire(5, TimeUnit.SECONDS);
 
         if (!hasAcquiredLock) {
             log.info("Could not acquire lock for user: {} credentials: {}", userId, credentialsId);
