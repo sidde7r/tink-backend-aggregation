@@ -40,7 +40,7 @@ spec:
   {{- if eq .Values.Environment "production" }}
   - alert: NoConsumedMessagesFromAutomaticRefreshQueue
     expr: |
-      sum(increase(tink_aggregation_queues_total{event="consumed"}[15m])) == 0
+      sum(increase(tink_aggregation_queues_total{event="consumed"}[15m])) == 0 and sum(increase(tink_aggregation_queues_total{event="produced"}[15m])) > 0
     for: 1m
     labels:
       severity: ping
