@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2;
 
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public class SpankkiConstants {
     public static final DeviceProfile DEVICE_PROFILE = DeviceProfileConfiguration.IOS_STABLE;
@@ -23,6 +26,8 @@ public class SpankkiConstants {
         public static final URL RECEIVE_OTP = new URL(HOST + Endpoints.RECEIVE_OTP);
         public static final URL VERIFY_OTP = new URL(HOST + Endpoints.VERIFY_OTP);
         public static final URL ENCAP = new URL(ENCAP_HOST);
+        public static final URL FETCH_ACCOUNTS = new URL(HOST + Endpoints.FETCH_ACCOUNTS);
+        public static final URL FETCH_TRANSACTIONS = new URL(HOST + Endpoints.FETCH_TRANSACTIONS);
     }
 
     public static class Endpoints {
@@ -38,6 +43,9 @@ public class SpankkiConstants {
         public static final String GET_PHONENUMBER = VERSION + "/identification/phonenumber";
         public static final String RECEIVE_OTP = VERSION + "/identification/phonenumber/activate";
         public static final String VERIFY_OTP = VERSION + "/identification/activation/start10";
+        public static final String FETCH_ACCOUNTS = VERSION + "/bank/customer/accounts/get";
+        public static final String FETCH_TRANSACTIONS =
+                VERSION + "/bank/customer/transactions/get/{accountId}/{page}";
     }
 
     public static class Authentication {
@@ -81,5 +89,30 @@ public class SpankkiConstants {
         public static final String INTERNAL_ERROR_MESSAGE = "INTERNAL_SERVER_ERROR";
         public static final String SESSION_EXPIRED_MESSAGE = "SESSION_EXPIRED";
         public static final String USER_LOCKED = "USER_LOCKED";
+    }
+
+    public static class IdTags {
+        public static final String ACCOUNT_ID = "accountId";
+        public static final String PAGE = "page";
+    }
+
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "418",
+                            "415")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "443",
+                            "419",
+                            "427",
+                            "416")
+                    .build();
+
+    public static class Regex {
+        public static final String WHITE_SPACE = "\\s+";
     }
 }

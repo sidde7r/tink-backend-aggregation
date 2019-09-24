@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Headers;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.ChallengeRequest;
@@ -22,6 +23,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.UserPasswordLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.VerifyOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.VerifyOtpResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.transactionalaccount.rpc.TransactionalAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.rpc.SpankkiHeader;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.rpc.SpankkiResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.RequestBody;
@@ -114,6 +117,18 @@ public class SpankkiApiClient {
         final VerifyOtpRequest verifyOtpRequest = new VerifyOtpRequest(otp);
 
         return postRequest(VerifyOtpResponse.class, Urls.VERIFY_OTP, verifyOtpRequest);
+    }
+
+    public TransactionalAccountsResponse fetchAccounts() {
+        return getRequest(TransactionalAccountsResponse.class, Urls.FETCH_ACCOUNTS);
+    }
+
+    public TransactionsResponse fetchTransactions(String accountId, String page) {
+        return getRequest(
+                TransactionsResponse.class,
+                Urls.FETCH_TRANSACTIONS
+                        .parameter(IdTags.ACCOUNT_ID, accountId)
+                        .parameter(IdTags.PAGE, page));
     }
 
     private String calculateRequestToken(String randomString) {
