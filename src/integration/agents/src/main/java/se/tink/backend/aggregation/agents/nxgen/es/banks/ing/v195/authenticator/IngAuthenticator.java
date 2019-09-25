@@ -7,11 +7,13 @@ import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
@@ -22,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -65,10 +68,15 @@ public class IngAuthenticator implements Authenticator {
                         response.getPinPadNumbers(),
                         response.getPinPositions());
 
-        PutRestSessionResponse putSessionResponse =
-                apiClient.putLoginRestSession(pinPositions, response.getProcessId());
-
-        apiClient.postLoginAuthResponse(putSessionResponse.getTicket());
+        try {
+            PutRestSessionResponse putSessionResponse =
+                    apiClient.putLoginRestSession(pinPositions, response.getProcessId());
+            apiClient.postLoginAuthResponse(putSessionResponse.getTicket());
+        } catch (HttpResponseException hre) {
+            if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+        }
     }
 
     /**
