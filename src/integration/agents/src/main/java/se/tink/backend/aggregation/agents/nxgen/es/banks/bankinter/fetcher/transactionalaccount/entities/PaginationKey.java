@@ -9,6 +9,8 @@ public class PaginationKey {
     @JsonProperty private String viewState;
     @JsonProperty private long consecutiveEmptyReplies;
 
+    public PaginationKey() {}
+
     public PaginationKey(String source, String viewState, long consecutiveEmptyReplies) {
         this.source = source;
         this.viewState = viewState;
