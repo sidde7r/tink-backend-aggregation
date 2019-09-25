@@ -59,11 +59,8 @@ public class BecAgent extends NextGenerationAgent
     }
 
     private BecConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        BecConstants.INTEGRATION_NAME, clientName, BecConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return
+            getAgentConfigurationController().getAgentConfiguration(BecConfiguration.class);
     }
 
     @Override
