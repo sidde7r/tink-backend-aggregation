@@ -7,10 +7,12 @@ public class NemIdCodeAppResponse implements ThirdPartyAppResponse<String> {
 
     private final ThirdPartyAppStatus status;
     private final String reference;
+    private final NemIdCodeAppPollResponse pollResponse;
 
-    public NemIdCodeAppResponse(ThirdPartyAppStatus status, String reference) {
+    public NemIdCodeAppResponse(ThirdPartyAppStatus status, String reference, NemIdCodeAppPollResponse pollResponse) {
         this.status = status;
         this.reference = reference;
+        this.pollResponse = pollResponse;
     }
 
     @Override
@@ -21,5 +23,9 @@ public class NemIdCodeAppResponse implements ThirdPartyAppResponse<String> {
     @Override
     public String getReference() {
         return reference;
+    }
+
+    public NemIdCodeAppPollResponse getPollResponse() {
+        return pollResponse;
     }
 }

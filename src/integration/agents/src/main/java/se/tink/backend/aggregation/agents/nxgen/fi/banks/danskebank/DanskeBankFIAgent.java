@@ -37,6 +37,7 @@ public class DanskeBankFIAgent extends DanskeBankAgent implements RefreshIdentit
                         catalog,
                         supplementalInformationHelper,
                         apiClient,
+                        client,
                         persistentStorage,
                         credentials,
                         deviceId,

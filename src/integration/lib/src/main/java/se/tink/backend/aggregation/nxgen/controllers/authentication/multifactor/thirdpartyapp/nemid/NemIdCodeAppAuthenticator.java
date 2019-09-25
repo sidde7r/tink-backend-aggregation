@@ -56,7 +56,7 @@ public abstract class NemIdCodeAppAuthenticator implements ThirdPartyAppAuthenti
                         String.format("Unknown code app poll response: %s.", pollStatus));
         }
 
-        return new NemIdCodeAppResponse(status, reference);
+        return new NemIdCodeAppResponse(status, reference, pollResponse);
     }
 
     protected NemIdCodeAppPollResponse pollCodeApp(String ticket) {

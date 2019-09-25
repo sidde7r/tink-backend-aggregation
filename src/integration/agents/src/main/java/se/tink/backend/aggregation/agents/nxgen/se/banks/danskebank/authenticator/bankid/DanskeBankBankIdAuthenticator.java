@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticato
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankAbstractAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankWebDriverHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -28,8 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
-public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticator
-        implements BankIdAuthenticator<String> {
+public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String> {
     private static final AggregationLogger log =
             new AggregationLogger(DanskeBankBankIdAuthenticator.class);
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -71,7 +70,7 @@ public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticat
         // Execute javascript to get encrypted logon package and finalize package
         WebDriver driver = null;
         try {
-            driver = constructWebDriver();
+            driver = DanskeBankWebDriverHelper.constructWebDriver();
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createBankIdJavascript(
@@ -161,8 +160,7 @@ public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticat
         return Optional.empty();
     }
 
-    @Override
-    protected FinalizeAuthenticationResponse finalizeAuthentication() throws LoginException {
+    private FinalizeAuthenticationResponse finalizeAuthentication() throws LoginException {
         if (finalizePackage == null) {
             throw new IllegalStateException("Finalize Package was null, aborting login");
         }
