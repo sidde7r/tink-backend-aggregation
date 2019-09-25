@@ -19,9 +19,18 @@ public class RabobankConstants {
         public static final CharSequence ACCESS_EXCEEDED = "access_exceeded";
     }
 
+    public static class Consents {
+        public static final String PREFIX = "_ais.balances.read";
+        public static final String ACTIVE = "Active";
+        public static final String EXPIRE = "expire";
+        public static final String INVALID = "invalid";
+        public static final String REVOKED_BY_USER = "RevokedByGiveConsent";
+    }
+
     public static class StorageKey {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String RESOURCE_ID = "resource_id";
+        public static final String CONSENT_ID = "consentId";
     }
 
     public static class Signature {

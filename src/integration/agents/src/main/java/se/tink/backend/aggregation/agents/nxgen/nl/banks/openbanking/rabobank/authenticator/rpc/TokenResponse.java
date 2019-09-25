@@ -17,6 +17,8 @@ public class TokenResponse {
 
     private String state;
 
+    private String scope;
+
     @JsonProperty("refresh_token")
     private String refreshToken;
 
@@ -37,6 +39,10 @@ public class TokenResponse {
 
     public String getState() {
         return state;
+    }
+
+    public String getScope() {
+        return scope;
     }
 
     public String getRefreshToken() {

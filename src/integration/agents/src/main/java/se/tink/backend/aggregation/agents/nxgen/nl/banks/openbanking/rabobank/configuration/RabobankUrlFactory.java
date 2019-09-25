@@ -32,6 +32,10 @@ public final class RabobankUrlFactory {
                 .concatWithSeparator("v3");
     }
 
+    public URL buildConsentUrl(final String consentId) {
+        return getOauth2Url().concatWithSeparator("consents").concatWithSeparator(consentId);
+    }
+
     public URL getAisAccountsUrl() {
         return getAccountInformationUrl().concatWithSeparator("accounts");
     }

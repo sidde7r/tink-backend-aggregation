@@ -84,7 +84,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 // is nothing left to do but to clear everything and start over.
                 persistentStorage.remove(Storage.CONSENT);
                 persistentStorage.remove(Storage.OAUTH_TOKEN);
-                throw BankServiceError.CONSENT_REVOKED.exception();
+                throw BankServiceError.CONSENT_INVALIDATED.exception();
             }
             throw e;
         }

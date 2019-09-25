@@ -12,9 +12,9 @@ public enum BankServiceError implements AgentRuntimeError {
                     "The maximum allowed number of requests to the bank service has been exceeded; please try again later.")),
     // This should probably be a (checked) authorization error, but it's not supported by
     // OAuth2Authenticator
-    CONSENT_REVOKED(
-            new LocalizableKey(
-                    "The consent given to us to access your data has been revoked by the bank. ")),
+    CONSENT_EXPIRED(new LocalizableKey("The consent has been expired. ")),
+    CONSENT_REVOKED_BY_USER(new LocalizableKey("The consent has been revoked by the user. ")),
+    CONSENT_INVALIDATED(new LocalizableKey("The consent has been invalidated by the bank. ")),
     MULTIPLE_LOGIN(
             new LocalizableKey(
                     "You were automatically logged out because you logged in to another channel; Logout is done for your security."));

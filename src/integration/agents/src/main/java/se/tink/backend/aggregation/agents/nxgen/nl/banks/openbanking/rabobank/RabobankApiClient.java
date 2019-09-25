@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.BalanceResponse;
@@ -49,7 +50,8 @@ public final class RabobankApiClient {
     private final RabobankConfiguration rabobankConfiguration;
     private final EidasProxyConfiguration eidasProxyConf;
     private final EidasIdentity eidasIdentity;
-    private final String qsealcPem;
+    private String qsealcPem;
+    private String consentStatus;
 
     RabobankApiClient(
             final TinkHttpClient client,
@@ -157,6 +159,32 @@ public final class RabobankApiClient {
         }
 
         return builder;
+    }
+
+    public void setConsentStatus() {
+        final String consentId = persistentStorage.get(StorageKey.CONSENT_ID);
+        final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
+        final String uuid = RabobankUtils.getRequestId();
+        final String date = RabobankUtils.getDate();
+        final String signatureHeader = buildSignatureHeader(digest, uuid, date);
+        final URL url = rabobankConfiguration.getUrls().buildConsentUrl(consentId);
+
+        ConsentDetailsResponse response = new ConsentDetailsResponse();
+        try {
+            response =
+                    buildRequest(url, uuid, digest, signatureHeader, date)
+                            .get(ConsentDetailsResponse.class);
+        } catch (HttpResponseException e) {
+            logger.warn(String.valueOf(e.getResponse()));
+        }
+        consentStatus = response.getStatus();
+    }
+
+    public String getConsentStatus() {
+        if (consentStatus == null) {
+            setConsentStatus();
+        }
+        return consentStatus;
     }
 
     public TransactionalAccountsResponse fetchAccounts() {
