@@ -15,6 +15,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 import java.io.IOException;
@@ -1386,7 +1387,15 @@ public class LansforsakringarAgent extends AbstractAgent
 
     @Override
     public boolean keepAlive() throws Exception {
-        return createGetRequest(OVERVIEW_URL).getStatus() == Status.OK.getStatusCode();
+        try {
+            return createGetRequest(OVERVIEW_URL).getStatus() == Status.OK.getStatusCode();
+        } catch (ClientHandlerException exception) {
+            // There are various messages in this exception like 'Connection reset', 'Connection
+            // timed out', 'No route to host', 'Temporary failure in name resolution' etc and in
+            // most of cases we didn't receive any response from LF's API. So, in any case instead
+            // of failing the refresh entirely, is better to send false in case of exception.
+            return false;
+        }
     }
 
     @Override
