@@ -1,18 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard;
 
 import java.util.Arrays;
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.FeatureFlags;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.CredentialKeys;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
-@Ignore
 public class EnterCardAgentTest {
-
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     private static User createUser() {
         final User user = new User();
@@ -26,8 +32,13 @@ public class EnterCardAgentTest {
 
     @Before
     public void setup() {
+        manager.before();
+
         builder =
                 new AgentIntegrationTest.Builder("se", "se-entercard-oauth2")
+                        .addCredentialField(CredentialKeys.SSN, manager.get(Arg.SSN))
+                        .setFinancialInstitutionId("entercard")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setUser(createUser())
@@ -37,5 +48,9 @@ public class EnterCardAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
+    }
+
+    private enum Arg {
+        SSN,
     }
 }

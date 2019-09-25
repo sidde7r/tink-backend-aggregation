@@ -10,9 +10,9 @@ public class CreditCardAccountResponse {
 
     public MetadataEntity metadataEntity;
 
-    private List<AccountEntity> accounts;
+    private List<AccountEntity> account;
 
-    public List<AccountEntity> getAccounts() {
-        return accounts;
+    public List<AccountEntity> getAccount() {
+        return account;
     }
 }

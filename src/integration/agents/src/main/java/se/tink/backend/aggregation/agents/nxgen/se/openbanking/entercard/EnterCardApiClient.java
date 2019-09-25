@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.QueryValues;
@@ -23,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.fetcher
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.fetcher.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.payment.rpc.EnterCardPaymentInitiationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.payment.rpc.PaymentInitiationRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.utils.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.utils.EnterCardUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -33,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class EnterCardApiClient {
 
@@ -55,14 +54,16 @@ public final class EnterCardApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
-        return client.request(url);
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
         final OAuth2Token authToken = getTokenFromStorage();
         final String clientId = configuration.getClientId();
 
-        return createRequest(url).header(HeaderKeys.CLIENT_ID, clientId).addBearerToken(authToken);
+        return createRequest(url).header(HeaderKeys.API_KEY, clientId).addBearerToken(authToken);
     }
 
     private OAuth2Token getTokenFromStorage() {
@@ -72,8 +73,10 @@ public final class EnterCardApiClient {
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
-    public CreditCardAccountResponse fetchCreditCardAccounts() {
-        return createRequestInSession(Urls.ACCOUNTS).get(CreditCardAccountResponse.class);
+    public CreditCardAccountResponse fetchCreditCardAccounts(String ssn) {
+        return createRequestInSession(Urls.ACCOUNTS)
+                .queryParam(QueryKeys.SSN, ssn)
+                .get(CreditCardAccountResponse.class);
     }
 
     public PaginatorResponse fetchCreditCardTransactions(
@@ -82,10 +85,11 @@ public final class EnterCardApiClient {
         return createRequestInSession(Urls.TRANSACTIONS)
                 .queryParam(
                         QueryKeys.FROM_BOOKING_DATE_TIME,
-                        DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        ThreadSafeDateFormat.FORMATTER_SECONDS.format(fromDate))
                 .queryParam(
                         QueryKeys.TO_BOOKING_DATE_TIME,
-                        DateUtils.formatDateTime(toDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        ThreadSafeDateFormat.FORMATTER_SECONDS.format(toDate))
+                .queryParam(QueryKeys.INCLUDE_CARD_MOVEMENTS, QueryValues.TRUE)
                 .queryParam(QueryKeys.ACCOUNT_NUMBER, account.getAccountNumber())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .get(CreditCardTransactionsResponse.class);
@@ -127,7 +131,6 @@ public final class EnterCardApiClient {
     public OAuth2Token getToken(String code) {
         final String clientId = getConfiguration().getClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
-        final String codeVerifier = EnterCardUtils.getCodeVerifier();
         final String clientSecret = getConfiguration().getClientSecret();
 
         TokenRequest request =
@@ -137,8 +140,7 @@ public final class EnterCardApiClient {
                         QueryValues.GRANT_TYPE,
                         clientId,
                         clientSecret,
-                        redirectUri,
-                        codeVerifier);
+                        redirectUri);
 
         return client.request(Urls.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)

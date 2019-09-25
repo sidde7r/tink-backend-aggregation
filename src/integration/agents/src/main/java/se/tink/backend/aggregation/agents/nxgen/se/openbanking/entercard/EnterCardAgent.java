@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.authenticator.EnterCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.configuration.EnterCardConfiguration;
@@ -15,6 +16,9 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -40,7 +44,8 @@ public final class EnterCardAgent extends NextGenerationAgent
                 new CreditCardRefreshController(
                         metricRefreshController,
                         updateController,
-                        new CreditCardAccountFetcher(apiClient),
+                        new CreditCardAccountFetcher(
+                                apiClient, credentials.getField(CredentialKeys.SSN)),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionDatePaginationController<>(
@@ -51,7 +56,9 @@ public final class EnterCardAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        apiClient.setConfiguration(getClientConfiguration());
+        EnterCardConfiguration enterCardConfiguration = getClientConfiguration();
+        apiClient.setConfiguration(enterCardConfiguration);
+        this.client.setEidasProxy(configuration.getEidasProxy(), "Tink");
     }
 
     protected EnterCardConfiguration getClientConfiguration() {
@@ -66,7 +73,21 @@ public final class EnterCardAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new EnterCardAuthenticator(apiClient, persistentStorage, getClientConfiguration());
+        final OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new EnterCardAuthenticator(
+                                apiClient, persistentStorage, getClientConfiguration()),
+                        credentials,
+                        strongAuthenticationState);
+
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override

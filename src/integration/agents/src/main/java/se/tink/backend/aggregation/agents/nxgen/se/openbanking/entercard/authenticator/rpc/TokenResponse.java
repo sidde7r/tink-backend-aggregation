@@ -7,16 +7,20 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 @JsonObject
 public class TokenResponse {
 
+    @JsonProperty("token_type")
     private String tokenType;
 
+    @JsonProperty("access_token")
     private String accessToken;
 
+    @JsonProperty("expires_in")
     private long expiresIn;
 
     private String consentedOn;
 
-    @JsonProperty private String scope;
+    private String scope;
 
+    @JsonProperty("refresh_token")
     private String refreshToken;
 
     private long refreshTokenExpiresIn;

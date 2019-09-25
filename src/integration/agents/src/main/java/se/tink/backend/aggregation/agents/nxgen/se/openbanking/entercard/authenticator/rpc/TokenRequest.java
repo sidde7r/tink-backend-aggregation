@@ -12,7 +12,6 @@ public class TokenRequest {
     private final String clientId;
     private final String clientSecret;
     private final String redirectUri;
-    private final String codeVerifier;
 
     public TokenRequest(
             String scope,
@@ -20,15 +19,13 @@ public class TokenRequest {
             String grantType,
             String clientId,
             String clientSecret,
-            String redirectUri,
-            String codeVerifier) {
+            String redirectUri) {
         this.scope = scope;
         this.code = code;
         this.grantType = grantType;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
-        this.codeVerifier = codeVerifier;
     }
 
     public String toData() {
@@ -39,7 +36,6 @@ public class TokenRequest {
                 .put(QueryKeys.CLIENT_ID, clientId)
                 .put(QueryKeys.CLIENT_SECRET, clientSecret)
                 .put(QueryKeys.REDIRECT_URI, redirectUri)
-                .put(QueryKeys.CODE_VERIFIER, codeVerifier)
                 .build()
                 .serialize();
     }

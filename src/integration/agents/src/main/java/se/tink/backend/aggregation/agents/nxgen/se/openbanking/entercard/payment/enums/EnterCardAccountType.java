@@ -26,10 +26,6 @@ public enum EnterCardAccountType {
         tinkToEnterCardAccountTypeBiMapper.put(Type.SE, BANK_ACCOUNT);
     }
 
-    public String toString() {
-        return name();
-    }
-
     public static EnterCardAccountType fromString(String text) {
         return Arrays.stream(EnterCardAccountType.values())
                 .filter(s -> s.name().equalsIgnoreCase(text))
@@ -49,6 +45,10 @@ public enum EnterCardAccountType {
                                         "Cannot map Tink account type : "
                                                 + tinkAccountType.toString()
                                                 + " to a EnterCard account type."));
+    }
+
+    public String toString() {
+        return name();
     }
 
     public AccountIdentifier.Type mapToTinkAccountType() {
