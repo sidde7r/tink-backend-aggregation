@@ -73,7 +73,13 @@ public final class AvanzaAccountTypeMappers {
                                                 AccountTypes.PENSION,
                                                 AvanzaAccountTypes.TJANSTEPENSION,
                                                 AvanzaAccountTypes.PENSIONSFORSAKRING,
-                                                AvanzaAccountTypes.IPS)
+                                                AvanzaAccountTypes.IPS,
+                                                AvanzaAccountTypes.AVTALS_PENSION)
+                                        .put(
+                                                AccountTypes.LOAN,
+                                                AvanzaAccountTypes.SUPER_BOLANEKONTO,
+                                                AvanzaAccountTypes.KREDITKONTO_ISK,
+                                                AvanzaAccountTypes.KREDITKONTO_KF)
                                         .build());
 
         return accountTypeMapper;
