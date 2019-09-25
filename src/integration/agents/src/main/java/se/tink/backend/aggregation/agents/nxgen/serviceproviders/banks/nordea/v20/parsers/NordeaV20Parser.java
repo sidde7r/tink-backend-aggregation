@@ -54,6 +54,10 @@ public abstract class NordeaV20Parser {
                 .setDescription(cte.getText());
     }
 
+    public boolean isTransactionDateSane(PaymentEntity te) {
+        return transactionParser.getDate(te).before(DateUtils.addYears(new Date(), 10));
+    }
+
     public UpcomingTransaction parseTransaction(PaymentEntity pe) {
         return UpcomingTransaction.builder()
                 .setAmount(transactionParser.getAmount(pe))
