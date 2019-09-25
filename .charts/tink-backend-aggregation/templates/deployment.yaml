@@ -396,6 +396,12 @@ spec:
               name: aggregation-secrets
               key: rabobank-qsealc-abn
               optional: true
+        - name: RABOBANK_QSEALC_PSD2_ABN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-qsealc-psd2-abn
+              optional: true
         {{- end }}
         {{- if $agentsConfig.sibs }}
         - name: SIBS_CLIENT_ID_TINK
