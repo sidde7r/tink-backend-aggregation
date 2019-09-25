@@ -70,6 +70,7 @@ public class NordeaV20TransactionalAccountFetcher
         }
 
         return client.getPayments(productEntity.get(), Payment.StatusCode.CONFIRMED).stream()
+                .filter(parser::isTransactionDateSane)
                 .map(parser::parseTransaction)
                 .collect(Collectors.toList());
     }
