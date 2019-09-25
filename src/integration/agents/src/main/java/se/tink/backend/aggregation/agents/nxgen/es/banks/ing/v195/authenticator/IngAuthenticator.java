@@ -62,6 +62,13 @@ public class IngAuthenticator implements Authenticator {
                 apiClient.postLoginRestSession(
                         username, getUsernameType(username), dob, getDeviceId());
 
+        if (!response.hasPinPad()) {
+            // When the app receives a response with no pinpad and "view":"OTHERS", it does a POST
+            // to /genoma_login/rest/pin-recovery/ and returns to the initial view
+            LOGGER.error("Unexpected login response");
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+        }
+
         List<Integer> pinPositions =
                 getPinPositionsForPassword(
                         getPasswordStringAsIntegerList(password),

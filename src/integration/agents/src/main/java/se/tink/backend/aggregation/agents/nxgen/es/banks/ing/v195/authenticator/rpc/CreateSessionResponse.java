@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
+import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -16,6 +18,7 @@ public class CreateSessionResponse {
     private Long corpContactId;
     private List<String> pinpad;
     private String processId;
+    private String view;
 
     public List<Integer> getPinPositions() {
         return pinPositions;
@@ -55,5 +58,14 @@ public class CreateSessionResponse {
 
     public String getProcessId() {
         return processId;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    @JsonIgnore
+    public boolean hasPinPad() {
+        return !Objects.isNull(pinPositions) && !Objects.isNull(pinPadNumbers);
     }
 }
