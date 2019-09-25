@@ -14,7 +14,7 @@ public class FortisConstants {
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "HELLO4YOU", "COMFORT PACK")
-                    .put(AccountTypes.SAVINGS, "CPTE EPARGNE", "SPAARREKENING")
+                    .put(AccountTypes.SAVINGS, "CPTE EPARGNE", "SPAARREKENING", "ster spaarrek.")
                     .build();
 
     public static class URLS {
