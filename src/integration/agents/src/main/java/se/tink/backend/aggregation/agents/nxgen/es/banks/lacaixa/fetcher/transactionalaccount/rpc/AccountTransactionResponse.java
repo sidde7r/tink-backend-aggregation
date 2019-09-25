@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.TransactionEntity;
@@ -41,6 +43,9 @@ public class AccountTransactionResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
+        if (Objects.isNull(transactions)) {
+            return Collections.emptyList();
+        }
         return transactions.stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
