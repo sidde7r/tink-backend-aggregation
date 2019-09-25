@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nullable;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.builder.BalanceStep;
@@ -26,11 +27,11 @@ public final class LoanModule {
     private final ExactCurrencyAmount initialBalance;
     private final LocalDate initialDate;
     private final String loanNumber;
-    private final int numMonthsBound;
+    private final Integer numMonthsBound;
     private final LocalDate nextDayOfTermsChange;
     private final String security;
     private final List<String> applicants;
-    private final boolean coApplicant;
+    private final Boolean coApplicant;
 
     private LoanModule(Builder builder) {
         this.balance = builder.balance;
@@ -84,7 +85,7 @@ public final class LoanModule {
         return loanNumber;
     }
 
-    public int getNumMonthsBound() {
+    public Integer getNumMonthsBound() {
         return numMonthsBound;
     }
 
@@ -100,7 +101,7 @@ public final class LoanModule {
         return applicants;
     }
 
-    public boolean isCoApplicant() {
+    public Boolean isCoApplicant() {
         return coApplicant;
     }
 
@@ -142,11 +143,11 @@ public final class LoanModule {
         private ExactCurrencyAmount initialBalance;
         private LocalDate initialDate;
         private String loanNumber;
-        private int numMonthsBound;
+        private Integer numMonthsBound;
         private LocalDate nextDayOfTermsChange;
         private String security;
         private List<String> applicants;
-        private boolean coApplicant;
+        private Boolean coApplicant;
 
         @Override
         public BalanceStep<LoanModuleBuildStep> withType(Type loanType) {
@@ -170,72 +171,65 @@ public final class LoanModule {
         }
 
         @Override
-        public LoanModuleBuildStep setAmortized(ExactCurrencyAmount amortized) {
-            Preconditions.checkNotNull(amortized, "Amortized must not be null.");
+        public LoanModuleBuildStep setAmortized(@Nullable ExactCurrencyAmount amortized) {
             this.amortized = amortized;
             return this;
         }
 
         @Override
-        public LoanModuleBuildStep setMonthlyAmortization(ExactCurrencyAmount monthlyAmortization) {
-            Preconditions.checkNotNull(
-                    monthlyAmortization, "MonthlyAmortization must not be null.");
+        public LoanModuleBuildStep setMonthlyAmortization(
+                @Nullable ExactCurrencyAmount monthlyAmortization) {
             this.monthlyAmortization = monthlyAmortization;
             return this;
         }
 
         @Override
-        public LoanModuleBuildStep setInitialBalance(ExactCurrencyAmount initialBalance) {
-            Preconditions.checkNotNull(initialBalance, "InitialBalance must not be null.");
+        public LoanModuleBuildStep setInitialBalance(@Nullable ExactCurrencyAmount initialBalance) {
             this.initialBalance = initialBalance;
             return this;
         }
 
         @Override
-        public LoanModuleBuildStep setInitialDate(LocalDate initialDate) {
-            Preconditions.checkNotNull(initialDate, "InitialDate must not be null.");
+        public LoanModuleBuildStep setInitialDate(@Nullable LocalDate initialDate) {
             this.initialDate = initialDate;
             return this;
         }
 
         @Override
-        public LoanModuleBuildStep setLoanNumber(String loanNumber) {
-            Preconditions.checkNotNull(loanNumber, "LoanNumber must not be null.");
+        public LoanModuleBuildStep setLoanNumber(@Nullable String loanNumber) {
             this.loanNumber = loanNumber;
             return this;
         }
 
         @Override
-        public LoanModuleBuildStep setNumMonthsBound(int numMonthsBound) {
-            Preconditions.checkArgument(numMonthsBound >= 0, "Bound must not be negative.");
+        public LoanModuleBuildStep setNumMonthsBound(@Nullable Integer numMonthsBound) {
+            Preconditions.checkArgument(
+                    numMonthsBound == null || numMonthsBound >= 0, "Bound must not be negative.");
             this.numMonthsBound = numMonthsBound;
             return this;
         }
 
         @Override
-        public LoanModuleBuildStep setNextDayOfTermsChange(LocalDate nextDayOfTermsChange) {
-            Preconditions.checkNotNull(
-                    nextDayOfTermsChange, "NextDayOfTermsChange must not be null.");
+        public LoanModuleBuildStep setNextDayOfTermsChange(
+                @Nullable LocalDate nextDayOfTermsChange) {
             this.nextDayOfTermsChange = nextDayOfTermsChange;
             return this;
         }
 
         @Override
-        public LoanModuleBuildStep setSecurity(String security) {
-            Preconditions.checkNotNull(security, "Security must not be null.");
+        public LoanModuleBuildStep setSecurity(@Nullable String security) {
             this.security = security;
             return this;
         }
 
         @Override
-        public LoanModuleBuildStep setApplicants(List<String> applicants) {
-            Preconditions.checkNotNull(applicants, "Applicants must not be null.");
+        public LoanModuleBuildStep setApplicants(@Nullable List<String> applicants) {
             this.applicants = applicants;
             return this;
         }
 
         @Override
-        public LoanModuleBuildStep setCoApplicant(boolean coApplicant) {
+        public LoanModuleBuildStep setCoApplicant(@Nullable Boolean coApplicant) {
             this.coApplicant = coApplicant;
             return this;
         }

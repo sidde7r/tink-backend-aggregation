@@ -191,7 +191,7 @@ public class LoanAccountBuilderTest {
         assertEquals("SEK", account.getBalance().getCurrency());
         assertNull(account.getExactAvailableCredit());
         assertEquals(0.00155, account.getInterestRate(), 0);
-        assertEquals(12, account.getDetails().getNumMonthsBound());
+        assertEquals(Integer.valueOf(12), account.getDetails().getNumMonthsBound());
 
         assertTrue(storage.isPresent());
         assertEquals("TestString", storage.get().x);

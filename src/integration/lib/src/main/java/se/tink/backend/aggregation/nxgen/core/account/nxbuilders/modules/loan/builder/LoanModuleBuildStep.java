@@ -2,30 +2,31 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.b
 
 import java.time.LocalDate;
 import java.util.List;
+import javax.annotation.Nullable;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public interface LoanModuleBuildStep {
 
-    LoanModuleBuildStep setAmortized(ExactCurrencyAmount amortized);
+    LoanModuleBuildStep setAmortized(@Nullable ExactCurrencyAmount amortized);
 
-    LoanModuleBuildStep setMonthlyAmortization(ExactCurrencyAmount monthlyAmortization);
+    LoanModuleBuildStep setMonthlyAmortization(@Nullable ExactCurrencyAmount monthlyAmortization);
 
-    LoanModuleBuildStep setInitialBalance(ExactCurrencyAmount initialBalance);
+    LoanModuleBuildStep setInitialBalance(@Nullable ExactCurrencyAmount initialBalance);
 
-    LoanModuleBuildStep setInitialDate(LocalDate initialDate);
+    LoanModuleBuildStep setInitialDate(@Nullable LocalDate initialDate);
 
-    LoanModuleBuildStep setLoanNumber(String loanNumber);
+    LoanModuleBuildStep setLoanNumber(@Nullable String loanNumber);
 
-    LoanModuleBuildStep setNumMonthsBound(int numMonthsBound);
+    LoanModuleBuildStep setNumMonthsBound(@Nullable Integer numMonthsBound);
 
-    LoanModuleBuildStep setNextDayOfTermsChange(LocalDate nextDayOfTermsChange);
+    LoanModuleBuildStep setNextDayOfTermsChange(@Nullable LocalDate nextDayOfTermsChange);
 
-    LoanModuleBuildStep setSecurity(String security);
+    LoanModuleBuildStep setSecurity(@Nullable String security);
 
-    LoanModuleBuildStep setApplicants(List<String> applicants);
+    LoanModuleBuildStep setApplicants(@Nullable List<String> applicants);
 
-    LoanModuleBuildStep setCoApplicant(boolean coApplicant);
+    LoanModuleBuildStep setCoApplicant(@Nullable Boolean coApplicant);
 
     LoanModule build();
 }
