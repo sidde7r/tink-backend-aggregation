@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.ChallengeRequest;
@@ -23,6 +24,9 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.UserPasswordLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.VerifyOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.rpc.VerifyOtpResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.creditcard.rpc.CreditCardDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.creditcard.rpc.CreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.transactionalaccount.rpc.TransactionalAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.rpc.SpankkiHeader;
@@ -129,6 +133,28 @@ public class SpankkiApiClient {
                 Urls.FETCH_TRANSACTIONS
                         .parameter(IdTags.ACCOUNT_ID, accountId)
                         .parameter(IdTags.PAGE, page));
+    }
+
+    public CreditCardsResponse fetchCards() {
+        return getRequest(CreditCardsResponse.class, Urls.FETCH_CARDS);
+    }
+
+    public CreditCardDetailsResponse fetchCardDetails(String contractNr, String productCode) {
+        return getRequest(
+                CreditCardDetailsResponse.class,
+                Urls.FETCH_CARD_DETAILS
+                        .queryParam(QueryKeys.CONTRACT_NR, contractNr)
+                        .queryParam(QueryKeys.PRODUCT_CODE, productCode));
+    }
+
+    public CreditCardTransactionsResponse fetchCardTransactions(
+            String contractNr, String fromDate, String toDate) {
+        return getRequest(
+                CreditCardTransactionsResponse.class,
+                Urls.FETCH_CARD_TRANSACTIONS
+                        .parameter(IdTags.CONTRACT_NR, contractNr)
+                        .parameter(IdTags.FROM_DATE, fromDate)
+                        .parameter(IdTags.TO_DATE, toDate));
     }
 
     private String calculateRequestToken(String randomString) {

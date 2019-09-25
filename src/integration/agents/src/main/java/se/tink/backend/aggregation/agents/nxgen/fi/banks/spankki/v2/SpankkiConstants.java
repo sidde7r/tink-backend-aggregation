@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -9,6 +10,8 @@ import se.tink.libraries.account.enums.AccountFlag;
 
 public class SpankkiConstants {
     public static final DeviceProfile DEVICE_PROFILE = DeviceProfileConfiguration.IOS_STABLE;
+
+    public static final String CURRENCY = "EUR";
 
     public static class Urls {
         public static final String HOST = "https://mobile.s-pankki.fi";
@@ -28,6 +31,10 @@ public class SpankkiConstants {
         public static final URL ENCAP = new URL(ENCAP_HOST);
         public static final URL FETCH_ACCOUNTS = new URL(HOST + Endpoints.FETCH_ACCOUNTS);
         public static final URL FETCH_TRANSACTIONS = new URL(HOST + Endpoints.FETCH_TRANSACTIONS);
+        public static final URL FETCH_CARDS = new URL(HOST + Endpoints.FETCH_CARDS);
+        public static final URL FETCH_CARD_DETAILS = new URL(HOST + Endpoints.FETCH_CARD_DETAILS);
+        public static final URL FETCH_CARD_TRANSACTIONS =
+                new URL(HOST + Endpoints.FETCH_CARD_TRANSACTIONS);
     }
 
     public static class Endpoints {
@@ -46,6 +53,10 @@ public class SpankkiConstants {
         public static final String FETCH_ACCOUNTS = VERSION + "/bank/customer/accounts/get";
         public static final String FETCH_TRANSACTIONS =
                 VERSION + "/bank/customer/transactions/get/{accountId}/{page}";
+        public static final String FETCH_CARDS = VERSION + "/customer/cards/get";
+        public static final String FETCH_CARD_DETAILS = VERSION + "/customer/cards/details";
+        public static final String FETCH_CARD_TRANSACTIONS =
+                VERSION + "/customer/cards/transactions/{contractNr}/{fromDate}/{toDate}";
     }
 
     public static class Authentication {
@@ -74,6 +85,11 @@ public class SpankkiConstants {
         public static final String SPANKKI_USER_AGENT = "spankki/2.3.0";
     }
 
+    public static class QueryKeys {
+        public static final String CONTRACT_NR = "contractNr";
+        public static final String PRODUCT_CODE = "productCode";
+    }
+
     public static class Storage {
         public static final String SESSION_ID = "sessionId";
         public static final String DEVICE_ID = "deviceId";
@@ -94,6 +110,9 @@ public class SpankkiConstants {
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAGE = "page";
+        public static final String CONTRACT_NR = "contractNr";
+        public static final String FROM_DATE = "fromDate";
+        public static final String TO_DATE = "toDate";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
@@ -114,5 +133,11 @@ public class SpankkiConstants {
 
     public static class Regex {
         public static final String WHITE_SPACE = "\\s+";
+    }
+
+    public static class LogTags {
+        public static final LogTag CREDIT_CARD = LogTag.from("#spankki_creditcard");
+        public static final LogTag CREDIT_CARD_TRANSACTIONS =
+                LogTag.from("#spankki_creditcard_transactions");
     }
 }

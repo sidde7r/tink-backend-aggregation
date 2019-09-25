@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Authentication;
@@ -14,6 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.SpankkiKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.SpankkiSmsOtpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.entities.CustomerEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.creditcard.SpankkiCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.creditcard.SpankkiCreditCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.transactionalaccount.SpankkiTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.transactionalaccount.SpankkiTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.sessionhandler.SpankkiSessionHandler;
@@ -22,7 +25,9 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycardandsmsotp.KeyCardAndSmsOtpAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -31,9 +36,11 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class SpankkiAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
     private final SpankkiApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SpankkiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -41,6 +48,8 @@ public class SpankkiAgent extends NextGenerationAgent
         apiClient = new SpankkiApiClient(client, persistentStorage, sessionStorage);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+
+        creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -85,6 +94,16 @@ public class SpankkiAgent extends NextGenerationAgent
     }
 
     @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
     protected SessionHandler constructSessionHandler() {
         return new SpankkiSessionHandler(apiClient);
     }
@@ -108,5 +127,16 @@ public class SpankkiAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionPagePaginationController<>(
                                 new SpankkiTransactionFetcher(apiClient), 0)));
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new SpankkiCreditCardFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new SpankkiCreditCardTransactionsFetcher(apiClient))));
     }
 }
