@@ -107,6 +107,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
             if (word.contains(Consents.PREFIX)) {
                 String parts[] = word.split("_");
                 consentId = parts[0];
+                break;
             }
         }
         if (consentId.isEmpty()) {

@@ -180,6 +180,22 @@
         {
             "className": "nxgen.nl.banks.openbanking.rabobank.RabobankAgent",
             "credentialsType": "PASSWORD",
+            "displayName": "Rabobank",
+            "fields": [],
+            "financialInstitutionId": "2bbb8caba53746d68eb161f44e01967c",
+            "multiFactor": false,
+            "name": "nl-rabobank-abn-oauth2",
+            "passwordHelpText": null,
+            "payload": "abnamro",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.nl.banks.openbanking.rabobank.RabobankAgent",
+            "credentialsType": "PASSWORD",
             "displayName": "Rabobank Sandbox",
             "fields": [],
             "financialInstitutionId": "2bbb8caba53746d68eb161f44e01967c",
