@@ -22,9 +22,9 @@ public class ProfitabilityEntity {
     @JsonIgnore
     public double getTotalProfit() {
         double purchaseAmount =
-                acquisitionValue.getFreeAmount().getAmount()
-                        + (acquisitionValue.getValue().getAmount() * quantity);
+                acquisitionValue.getFreeAmount().getAmountAsDouble()
+                        + (acquisitionValue.getValue().getAmountAsDouble() * quantity);
 
-        return quoteAmount.getAmount() - purchaseAmount;
+        return quoteAmount.getAmountAsDouble() - purchaseAmount;
     }
 }
