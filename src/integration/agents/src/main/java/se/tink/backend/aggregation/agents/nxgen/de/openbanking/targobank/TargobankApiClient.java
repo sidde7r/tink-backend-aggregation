@@ -8,6 +8,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.PathVariable;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.SandboxUrls;
@@ -22,6 +23,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.authent
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.authenticator.rpc.PasswordAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.authenticator.rpc.ScaConfirmResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.configuration.TargobankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.util.TargoBankUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -139,5 +143,17 @@ public final class TargobankApiClient {
                 return Optional.empty();
             }
         };
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+        return createRequest(SandboxUrls.CREATE_PAYMENT)
+                .header(HeaderKeys.PSU_IP_Address, getConfiguration().getPsuIpAddress())
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public GetPaymentResponse getPayment(String uniqueId) {
+        return createRequest(SandboxUrls.FETCH_PAYMENT.parameter(PathVariable.PAYMENT_ID, uniqueId))
+                .header(HeaderKeys.PSU_IP_Address, getConfiguration().getPsuIpAddress())
+                .get(GetPaymentResponse.class);
     }
 }
