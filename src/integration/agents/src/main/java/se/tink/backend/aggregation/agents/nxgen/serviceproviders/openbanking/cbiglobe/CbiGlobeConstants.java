@@ -84,6 +84,8 @@ public final class CbiGlobeConstants {
         public static final String BOTH = "both";
         public static final String BOOKED = "booked";
         public static final String STATE = "state";
+        public static final String CONSENT_ACCOUNT_CODE = "1";
+        public static final String CONSENT_TRANSACTION_CODE = "2";
     }
 
     public static class HeaderKeys {
