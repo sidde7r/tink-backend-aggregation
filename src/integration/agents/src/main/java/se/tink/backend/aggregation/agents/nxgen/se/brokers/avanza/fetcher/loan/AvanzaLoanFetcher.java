@@ -48,7 +48,7 @@ public class AvanzaLoanFetcher implements AccountFetcher<LoanAccount> {
     private Function<String, Stream<? extends SessionAccountPair>> getSessionAccountPairs() {
         return authSession ->
                 apiClient.fetchAccounts(authSession).getAccounts().stream()
-                        .filter(AccountEntity::isInvestmentAccount)
+                        .filter(AccountEntity::isLoanAccount)
                         .map(AccountEntity::getAccountId)
                         .map(accountId -> new SessionAccountPair(authSession, accountId));
     }
