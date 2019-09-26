@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
@@ -59,4 +60,10 @@ class VODB {
 
     @JsonProperty("PCBW3243")
     public List<CreditCardTransactionEntity> bookedCreditCardTransactions;
+
+    @JsonProperty("PCBW2581")
+    public List<LoanEntity> mortgageLoans;
+
+    @JsonProperty("PCBW2582")
+    public List<LoanEntity> blancoLoans;
 }
