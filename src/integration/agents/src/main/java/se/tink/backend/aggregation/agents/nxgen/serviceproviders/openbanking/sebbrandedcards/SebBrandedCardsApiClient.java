@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbrandedcards;
 
 import java.time.LocalDate;
-import java.util.List;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
@@ -9,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountsTransactions;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -43,12 +41,11 @@ public class SebBrandedCardsApiClient extends SebBaseApiClient {
                 .toTinkToken();
     }
 
-    public List<CreditCardAccount> fetchCardAccounts() {
+    public FetchCardAccountResponse fetchCardAccounts() {
         return createRequestInSession(
                         new URL(SebCommonConstants.Urls.BASE_URL)
                                 .concat(SebBrandedCardsConstants.Urls.CREDIT_CARD_ACCOUNTS))
-                .get(FetchCardAccountResponse.class)
-                .toTinkAccounts();
+                .get(FetchCardAccountResponse.class);
     }
 
     @Override

@@ -25,12 +25,11 @@ public class TransactionsEntity {
     }
 
     @JsonIgnore
-    public List<CreditCardTransaction> toTinkTransactions() {
+    public List<CreditCardTransaction> toTinkTransactions(String accountNumber) {
         List<CreditCardTransaction> bookedTransactions =
-                collect(booked, BookedEntity::toTinkTransaction);
+                collect(booked, BookedEntity::toTinkTransaction, accountNumber);
         List<CreditCardTransaction> pendingTransactions =
-                collect(pending, PendingEntity::toTinkTransaction);
-
+                collect(pending, PendingEntity::toTinkTransaction, accountNumber);
         List<CreditCardTransaction> transactions = new ArrayList<>(bookedTransactions);
         transactions.addAll(pendingTransactions);
         return transactions;
@@ -38,9 +37,26 @@ public class TransactionsEntity {
 
     @JsonIgnore
     public <T> List<CreditCardTransaction> collect(
-            List<T> transactions, Function<T, CreditCardTransaction> mapMethod) {
+            List<T> transactions,
+            Function<T, CreditCardTransaction> mapMethod,
+            String accountNumber) {
         return Optional.ofNullable(transactions)
-                .map(t -> t.stream().map(mapMethod).collect(Collectors.toList()))
+                .map(
+                        transactionList ->
+                                transactionList.stream()
+                                        .map(mapMethod)
+                                        .filter(
+                                                transaction ->
+                                                        isTransactionForCurrentAccount(
+                                                                transaction, accountNumber))
+                                        .collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);
+    }
+
+    @JsonIgnore
+    private boolean isTransactionForCurrentAccount(
+            CreditCardTransaction creditCardTransaction, String accountNumber) {
+        return accountNumber.equalsIgnoreCase(
+                creditCardTransaction.getCreditCard().get().getCardNumber());
     }
 }

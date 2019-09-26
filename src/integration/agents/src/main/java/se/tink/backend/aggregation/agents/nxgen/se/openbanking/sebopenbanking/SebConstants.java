@@ -49,4 +49,9 @@ public abstract class SebConstants {
         public static final String DEBTORS_MESSAGE = "Debtor's messages";
         public static final String DATE_FORMAT = "yyyy-MM-dd";
     }
+
+    public static class Storage {
+        public static final String CREDIT_CARD_TRANSACTION_RESPONSE =
+                "creditCardTransactionResponse";
+    }
 }
