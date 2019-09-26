@@ -97,10 +97,8 @@ public abstract class NemIdCodeAppAuthenticator implements ThirdPartyAppAuthenti
         ThirdPartyAppAuthenticationPayload.Ios iOsPayload =
                 new ThirdPartyAppAuthenticationPayload.Ios();
         iOsPayload.setAppStoreUrl("https://apps.apple.com/dk/app/nemid-codeapp/id1300533299");
-        // TODO this is the app scheme, but it shouldn't be used to open the app, according to the
-        // docs
+        // this is the app scheme, but it shouldn't be used to open the app, according to the docs
         iOsPayload.setAppScheme("nemid-codeapp");
-        // TODO check real Tink app scheme
         // TODO on a later moment, return URL needs to be configurable and customized per client
         iOsPayload.setDeepLinkUrl("https://codeapp.e-nettet.dk?return=tink://");
         payload.setIos(iOsPayload);
