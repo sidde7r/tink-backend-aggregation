@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.comdirect.ComdirectConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderKeys;
@@ -63,10 +62,6 @@ public class Xs2aDevelopersApiClient {
                 client.request(url)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .type(MediaType.APPLICATION_JSON);
-
-        if (configuration.getBaseUrl().equals(ComdirectConstants.BASE_URL)) {
-            result.header(HeaderKeys.X_TINK_DEBUG, HeaderKeys.TRUST_ALL);
-        }
 
         return result;
     }
