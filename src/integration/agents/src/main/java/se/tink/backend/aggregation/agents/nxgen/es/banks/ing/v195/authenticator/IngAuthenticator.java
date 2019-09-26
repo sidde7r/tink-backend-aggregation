@@ -33,7 +33,7 @@ public class IngAuthenticator implements Authenticator {
 
     private static final Pattern NIF_PATTERN = Pattern.compile("^[0-9]{8}[a-zA-Z]$");
     private static final Pattern NIE_PATTERN = Pattern.compile("^[a-zA-Z][0-9]{7}[a-zA-Z]$");
-    private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
+    private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z0-9]{6,10}$");
     private final PersistentStorage persistentStorage;
 
     private IngApiClient apiClient;
