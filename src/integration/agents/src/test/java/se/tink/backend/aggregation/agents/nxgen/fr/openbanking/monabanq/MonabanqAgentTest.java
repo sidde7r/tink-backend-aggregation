@@ -16,7 +16,9 @@ public class MonabanqAgentTest {
                 new AgentIntegrationTest.Builder("fr", "fr-monabanq-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("monabanq")
+                        .setAppId("tink");
     }
 
     @Test

@@ -16,7 +16,9 @@ public class CicAgentTest {
                 new AgentIntegrationTest.Builder("fr", "fr-cic-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("cic")
+                        .setAppId("tink");
     }
 
     @Test
