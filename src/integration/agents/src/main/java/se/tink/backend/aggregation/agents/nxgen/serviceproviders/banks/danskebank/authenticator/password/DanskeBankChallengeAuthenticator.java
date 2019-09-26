@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
@@ -23,19 +24,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankAbstractAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankWebDriverHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CheckDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CodeAppChallengeAnswerEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CodeAppEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DeviceEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.InitOtpResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.KeyCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.ListOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.ListOtpResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.MoreInformationEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.PollCodeAppResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -45,8 +43,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -54,7 +55,7 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenticator
+public class DanskeBankChallengeAuthenticator
         implements MultiFactorAuthenticator, AutoAuthenticator, KeyCardAuthenticator {
 
     private static final AggregationLogger log =
@@ -63,6 +64,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final DanskeBankApiClient apiClient;
+    private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
     private final String deviceId;
@@ -77,6 +79,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
             DanskeBankApiClient apiClient,
+            TinkHttpClient client,
             PersistentStorage persistentStorage,
             Credentials credentials,
             String deviceId,
@@ -84,6 +87,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         this.catalog = catalog;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
+        this.client = client;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
         this.deviceId = deviceId;
@@ -162,65 +166,56 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
-        finalizeChallengeAuthentication(code);
+        finalizeChallengeAuthentication(code, driver);
     }
     // --- KeyCardAuthenticator ---
 
     // +++ CodeAppAuthenticator +++
     private void codeAppAuthentication(String username, DeviceEntity preferredDevice)
             throws AuthenticationException, AuthorizationException {
-        // Initiate the code app auth by requesting a new otp challenge.
-        // The otp challenge we will get is an encrypted message containing the code app ticket and
-        // url to poll the auth status.
-        // The user will get a push notification to their device as a result of this request.
-        InitOtpResponse initOtpResponse =
-                this.apiClient.initOtp(
-                        preferredDevice.getDeviceType(), preferredDevice.getDeviceSerialNumber());
 
-        String otpChallenge = initOtpResponse.getOtpChallenge();
-        CodeAppEntity codeAppEntity =
-                decryptOtpChallenge(username, otpChallenge, CodeAppEntity.class);
+        // Use NemId controller directly to avoid code replication
+        DanskeBankNemIdCodeAppAuthenticator codeAppAuthenticator =
+                new DanskeBankNemIdCodeAppAuthenticator(
+                        apiClient, client, preferredDevice, username, bindChallengeResponseBody);
+        ThirdPartyAppAuthenticationController<String> nemIdAuthenticationController =
+                new ThirdPartyAppAuthenticationController<>(
+                        codeAppAuthenticator, supplementalInformationHelper);
 
-        // This request is a long polling request, i.e. it will respond when either the
-        // authentication timed out
-        // or the user signed/cancelled in the code app.
-        PollCodeAppResponse pollResponse =
-                this.apiClient.pollCodeApp(codeAppEntity.getPollURL(), codeAppEntity.getToken());
-
-        String pollStatus = pollResponse.getStatus();
-        switch (pollStatus.toLowerCase()) {
-            case DanskeBankConstants.CodeApp.STATUS_OK:
-                break;
-            case DanskeBankConstants.CodeApp.STATUS_OVERWRITTEN:
-                // Caused when a new NemID request for the bank is received after the one created
-                // by this instance; new request might succeed, this one will be 'overwritten'.
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
-            case DanskeBankConstants.CodeApp.STATUS_TIMEOUT:
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                        UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
-            default:
-                throw new IllegalStateException(
-                        String.format("Unknown code app poll response: %s.", pollStatus));
+        try {
+            // Credentials are not needed for this implementation
+            nemIdAuthenticationController.authenticate(null);
+        } catch (ThirdPartyAppException e) {
+            switch (e.getError()) {
+                case CANCELLED:
+                    throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                            UserMessage.CODE_APP_REJECTED_ERROR.getKey());
+                case TIMED_OUT:
+                    throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                            UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
+                default:
+                    throw new IllegalStateException(
+                            String.format(
+                                    "Unknown third party app exception error: %s.", e.getError()));
+            }
         }
 
-        if (!pollResponse.isConfirmation()) {
-            // This means the user rejected the signature request in the code app.
-            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                    UserMessage.CODE_APP_REJECTED_ERROR.getKey());
-        }
+        // Successful authentication, needs to finalize the JS execution
+        NemIdCodeAppResponse response =
+                (NemIdCodeAppResponse) nemIdAuthenticationController.getResponse();
 
         CodeAppChallengeAnswerEntity challengeAnswerEntity =
-                CodeAppChallengeAnswerEntity.createFromPollResponse(pollResponse);
+                CodeAppChallengeAnswerEntity.createFromPollResponse(response.getPollResponse());
 
         String challengeAnswer = SerializationUtils.serializeToString(challengeAnswerEntity);
-        finalizeChallengeAuthentication(challengeAnswer);
+        finalizeChallengeAuthentication(challengeAnswer, codeAppAuthenticator.getDriver());
     }
     // --- CodeAppAuthenticator ---
 
-    private void finalizeChallengeAuthentication(String challengeAnswer)
-            throws AuthenticationException, AuthorizationException {
+    private void finalizeChallengeAuthentication(String challengeAnswer, WebDriver driver)
+            throws AuthenticationException {
         try {
-            JavascriptExecutor js = (JavascriptExecutor) this.driver;
+            JavascriptExecutor js = (JavascriptExecutor) driver;
 
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createChallengeAnswerJavascript(
@@ -229,7 +224,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
 
             // Get step up token header
             String stepUpToken =
-                    this.driver.findElement(By.tagName("body")).getAttribute("bindStepUpToken");
+                    driver.findElement(By.tagName("body")).getAttribute("bindStepUpToken");
 
             BindDeviceResponse bindDeviceResponse;
             try {
@@ -254,9 +249,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
 
             // Persist decrypted device secret - necessary for login after device has been bounded
             String decryptedDeviceSecret =
-                    this.driver
-                            .findElement(By.tagName("body"))
-                            .getAttribute("decryptedDeviceSecret");
+                    driver.findElement(By.tagName("body")).getAttribute("decryptedDeviceSecret");
             this.persistentStorage.put(
                     DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER,
                     bindDeviceResponse.getDeviceSerialNumber());
@@ -264,8 +257,8 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
                     DanskeBankConstants.Persist.DEVICE_SECRET,
                     decryptedDeviceSecret.replaceAll("\"", ""));
         } finally {
-            if (this.driver != null) {
-                this.driver.quit();
+            if (driver != null) {
+                driver.quit();
             }
         }
     }
@@ -332,7 +325,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         // Execute Js to build step up token
         WebDriver driver = null;
         try {
-            driver = constructWebDriver();
+            driver = DanskeBankWebDriverHelper.constructWebDriver();
             JavascriptExecutor js = (JavascriptExecutor) driver;
             // Initiate with username and OtpChallenge
             js.executeScript(
@@ -405,8 +398,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         }
     }
 
-    @Override
-    protected FinalizeAuthenticationResponse finalizeAuthentication() throws LoginException {
+    private FinalizeAuthenticationResponse finalizeAuthentication() throws LoginException {
         // Get encrypted finalize package
         if (this.finalizePackage == null) {
             throw new IllegalStateException("Finalize Package was null, aborting login");
@@ -445,7 +437,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         // Execute javascript to get encrypted logon package and finalize package
         WebDriver driver = null;
         try {
-            driver = constructWebDriver();
+            driver = DanskeBankWebDriverHelper.constructWebDriver();
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createLoginJavascript(
@@ -469,8 +461,8 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
 
     private <T> T decryptOtpChallenge(String username, String otpChallenge, Class<T> clazz) {
         try {
-            this.driver = constructWebDriver();
-            JavascriptExecutor js = (JavascriptExecutor) this.driver;
+            this.driver = DanskeBankWebDriverHelper.constructWebDriver();
+            JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createChallengeJavascript(
                             this.bindChallengeResponseBody, username, otpChallenge));
