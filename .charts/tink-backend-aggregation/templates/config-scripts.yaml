@@ -87,8 +87,6 @@ data:
     substitute-secret SWEDBANK_CLIENT_SECRET "$SWEDBANK_CLIENT_SECRET"
     substitute-secret CBI_CLIENT_ID_TINK_TAG "$CBI_CLIENT_ID"
     substitute-secret CBI_CLIENT_SECRET_TINK_TAG "$CBI_CLIENT_SECRET"
-    substitute-secret BEC_QSEALC "$BEC_QSEALC"
-    substitute-secret BEC_KEY_ID "$BEC_KEY_ID"
     substitute-secret BELFIUS_CLIENT_ID_TAG "$BELFIUS_CLIENT_ID"
     substitute-secret BELFIUS_CLIENT_SECRET_TAG "$BELFIUS_CLIENT_SECRET"
     substitute-secret FINECOBANK_CLIENT_ID_TAG "$FINECOBANK_CLIENT_ID"

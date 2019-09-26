@@ -86,10 +86,6 @@ agents:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       eidasQwac: Tink
       environment: production
-  bec:
-    tink:
-      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
   belfius:
     tink:
       baseUrl: https://psd2.b2b.belfius.be:8443

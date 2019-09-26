@@ -137,15 +137,6 @@ data:
             redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
         {{- end }}
 
-        {{- if $agentsConfig.bec }}
-        bec:
-          tink:
-            eidasQwac: "{{ $agentsConfig.bec.tink.eidasQwac }}"
-            qSealc: "BEC_QSEALC"
-            keyId: "BEC_KEY_ID"
-            redirectUrl: "{{ $agentsConfig.bec.tink.redirectUrl }}"
-        {{- end }}
-
         {{- if $agentsConfig.fints }}
         fints:
           regNumber: "FINTS_REG_NUMBER"
