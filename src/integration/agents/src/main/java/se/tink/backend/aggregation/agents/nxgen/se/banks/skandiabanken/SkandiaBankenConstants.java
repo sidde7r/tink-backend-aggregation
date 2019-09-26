@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -170,8 +171,16 @@ public class SkandiaBankenConstants {
     }
 
     public static final class ErrorMessages {
+        public static final String STATUS_MESSAGE_INTERNAL_SERVER_ERROR = "InternalServerError";
+        public static final String ERROR_CODE_MISSING_CREDIT_CARDS = "CUPGER0201";
+        public static final String ERROR_MESSAGE_COMMUNICATION_FAILED = "Communication failed.";
         public static final String INVESTMENT_NUMBER_NOT_FOUND =
                 "Investment account number was not found";
+        public static final String TECHNICAL_ERROR = "Skandia bank & försäkring - Tekniskt fel";
+        public static final String TECHNICAL_DIFFICULTIES =
+                "We're experiencing technical difficulties at the moment. Please try again or contact Customer services.";
+        private static final ImmutableList<String> BANK_SIDE_FAILURES =
+                ImmutableList.of("connection reset", "connect timed out", "read timed out");
     }
 
     public static class PaymentStatus {
