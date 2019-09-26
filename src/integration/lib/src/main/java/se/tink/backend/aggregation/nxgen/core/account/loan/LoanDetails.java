@@ -23,12 +23,12 @@ public class LoanDetails {
     private final ExactCurrencyAmount initialBalance;
     private final Date initialDate;
     private final String loanNumber;
-    private final int numMonthsBound;
+    private final Integer numMonthsBound;
     private final Date nextDayOfTermsChange;
     private final Type type;
     private final String security;
     private final List<String> applicants;
-    private final boolean coApplicant;
+    private final Boolean coApplicant;
 
     private LoanDetails(
             ExactCurrencyAmount amortized,
@@ -36,12 +36,12 @@ public class LoanDetails {
             ExactCurrencyAmount initialBalance,
             Date initialDate,
             String loanNumber,
-            int numMonthsBound,
+            Integer numMonthsBound,
             Date nextDayOfTermsChange,
             Type type,
             String security,
             List<String> applicants,
-            boolean coApplicant) {
+            Boolean coApplicant) {
         this.amortized = amortized;
         this.monthlyAmortization = monthlyAmortization;
         this.initialBalance = initialBalance;
@@ -145,7 +145,7 @@ public class LoanDetails {
         return loanNumber;
     }
 
-    public int getNumMonthsBound() {
+    public Integer getNumMonthsBound() {
         return numMonthsBound;
     }
 
@@ -167,8 +167,12 @@ public class LoanDetails {
                 .orElseGet(Collections::emptyList);
     }
 
-    public boolean hasCoApplicant() {
-        return getApplicants().size() > 1 || coApplicant;
+    public Boolean hasCoApplicant() {
+        if (getApplicants().size() > 1) {
+            return true;
+        }
+
+        return coApplicant;
     }
 
     public Loan toSystemLoan(LoanAccount account, LoanInterpreter interpreter) {
@@ -235,12 +239,12 @@ public class LoanDetails {
         private ExactCurrencyAmount initialBalance;
         private Date initialDate;
         private String loanNumber;
-        private int numMonthsBound;
+        private Integer numMonthsBound;
         private Date nextDayOfTermsChange;
         private Type type;
         private String security;
         private List<String> applicants;
-        private boolean coApplicant;
+        private Boolean coApplicant;
 
         public Builder(Type type) {
             Preconditions.checkNotNull(type, String.format("%s", type));
@@ -339,11 +343,11 @@ public class LoanDetails {
             return this;
         }
 
-        public int getNumMonthsBound() {
+        public Integer getNumMonthsBound() {
             return numMonthsBound;
         }
 
-        public Builder setNumMonthsBound(int numMonthsBound) {
+        public Builder setNumMonthsBound(Integer numMonthsBound) {
             this.numMonthsBound = numMonthsBound;
             return this;
         }
@@ -379,11 +383,11 @@ public class LoanDetails {
             return this;
         }
 
-        public boolean hasCoApplicant() {
+        public Boolean hasCoApplicant() {
             return coApplicant;
         }
 
-        public Builder setCoApplicant(boolean coApplicant) {
+        public Builder setCoApplicant(Boolean coApplicant) {
             this.coApplicant = coApplicant;
             return this;
         }
