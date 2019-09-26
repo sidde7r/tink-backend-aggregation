@@ -1,5 +1,6 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -19,5 +20,9 @@ public class AgentDataAvailabilityTrackerConfiguration {
 
     public String getCaPath() {
         return caPath;
+    }
+
+    public boolean isValid() {
+        return !Strings.isNullOrEmpty(host) && port != 0;
     }
 }

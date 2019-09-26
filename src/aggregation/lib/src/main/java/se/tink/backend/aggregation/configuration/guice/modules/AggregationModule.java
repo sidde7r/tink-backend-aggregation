@@ -22,8 +22,6 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.libraries.http.client.RequestTracingFilter;
@@ -45,9 +43,6 @@ public class AggregationModule extends AbstractModule {
     protected void configure() {
         bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
-        bind(AgentDataAvailabilityTrackerClient.class)
-                .to(AgentDataAvailabilityTrackerClientImpl.class)
-                .in(Scopes.SINGLETON);
         bind(TppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
                 .in(Scopes.SINGLETON);

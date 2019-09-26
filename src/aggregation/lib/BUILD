@@ -22,6 +22,7 @@ java_library(
         "//src/aggregation/api",
         "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client",
+        "//src/integration/agent_data_availability_tracker/client:module",
         "//src/integration/agents",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
         "//src/integration/api",
