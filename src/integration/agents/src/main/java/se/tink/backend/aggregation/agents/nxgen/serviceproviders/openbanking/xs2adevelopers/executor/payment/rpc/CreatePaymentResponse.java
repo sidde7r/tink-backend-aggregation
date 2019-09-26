@@ -44,8 +44,6 @@ public class CreatePaymentResponse {
                                         .orElse(PaymentStatus.UNDEFINED))
                         .withType(PaymentType.SEPA);
         Payment tinkPayment = buildingPaymentResponse.build();
-        PaymentResponse paymentResponse = new PaymentResponse(tinkPayment);
-
-        return paymentResponse;
+        return new PaymentResponse(tinkPayment);
     }
 }

@@ -52,7 +52,6 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
                 new CreatePaymentRequest(
                         creditor,
                         payment.getCreditor().getName(),
-                        null,
                         debtor,
                         new AmountEntity(
                                 ExactCurrencyAmount.of(

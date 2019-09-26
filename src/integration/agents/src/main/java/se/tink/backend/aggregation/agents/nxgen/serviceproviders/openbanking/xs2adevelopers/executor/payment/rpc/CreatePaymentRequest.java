@@ -18,12 +18,10 @@ public class CreatePaymentRequest {
     public CreatePaymentRequest(
             AccountEntity creditorAccount,
             String creditorName,
-            String dayOfExecution,
             AccountEntity debtorAccount,
             AmountEntity instructedAmount) {
         this.creditorAccount = creditorAccount;
         this.creditorName = creditorName;
-        this.dayOfExecution = dayOfExecution;
         this.debtorAccount = debtorAccount;
         this.instructedAmount = instructedAmount;
     }
