@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.UkOpenBankingV30Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 
@@ -40,11 +42,35 @@ public class AccountEntity implements IdentifiableAccount {
         String accountNumber = account.getUniqueIdentifier();
         String accountName = account.getDisplayName();
 
+        /*
+        TODO: We need to remove this ugly fix that has been done to make Revolut work without
+        doing data migrations. uniqueIdentifier should always be accountNumber in ideal case.
+         */
+
+        Optional<String> revolutAccount =
+                account.getIdentifierEntity().stream()
+                        .filter(
+                                e ->
+                                        e.getIdentifierType()
+                                                .equals(ExternalAccountIdentification4Code.IBAN))
+                        .map(AccountIdentifierEntity::getIdentification)
+                        .filter(x -> x.contains("REVO"))
+                        .findAny();
+
+        String uniqueIdentifier =
+                revolutAccount.isPresent() ? account.getAccountId() : accountNumber;
+
+        HolderName holderName =
+                Objects.nonNull(account.getDefaultIdentifier().getName())
+                        ? new HolderName(account.getDefaultIdentifier().getName())
+                        : null;
+
         TransactionalAccount.Builder accountBuilder =
                 TransactionalAccount.builder(
-                                account.getAccountType(), accountNumber, balance.getBalance())
+                                account.getAccountType(), uniqueIdentifier, balance.getBalance())
                         .setAccountNumber(accountNumber)
                         .setName(accountName)
+                        .setHolderName(holderName)
                         .setBankIdentifier(account.getAccountId());
 
         account.toAccountIdentifier(accountName).ifPresent(accountBuilder::addIdentifier);
@@ -125,5 +151,9 @@ public class AccountEntity implements IdentifiableAccount {
     @Override
     public String getBankIdentifier() {
         return accountId;
+    }
+
+    public List<AccountIdentifierEntity> getIdentifierEntity() {
+        return identifierEntity;
     }
 }
