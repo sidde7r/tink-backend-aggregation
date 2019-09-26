@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
 import com.google.common.base.Strings;
+import javax.ws.rs.core.MediaType;
 import org.json.JSONObject;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.PollCodeTimeoutFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankChallengeAuthenticator.UserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CheckDeviceResponse;
@@ -11,6 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.InitOtpResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.ListOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.ListOtpResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.PollCodeAppRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.PollCodeAppResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.InvestmentAccountsResponse;
@@ -32,7 +37,9 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 
 public class DanskeBankApiClient {
     private static final AggregationLogger log = new AggregationLogger(DanskeBankApiClient.class);
@@ -200,6 +207,27 @@ public class DanskeBankApiClient {
                         .post(String.class, request);
 
         return DanskeBankDeserializer.convertStringToObject(response, InitOtpResponse.class);
+    }
+
+    public PollCodeAppResponse pollCodeApp(String url, String ticket) throws LoginException {
+        PollCodeAppRequest request = new PollCodeAppRequest(ticket);
+
+        try {
+            return client.request(url)
+                    .accept(MediaType.APPLICATION_JSON_TYPE)
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .addFilter(
+                            new TimeoutRetryFilter(
+                                    PollCodeTimeoutFilter.NUM_TIMEOUT_RETRIES,
+                                    PollCodeTimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS))
+                    .post(PollCodeAppResponse.class, request);
+        } catch (HttpClientException e) {
+            if (DanskeBankConstants.Errors.READ_TIMEOUT_ERROR.equals(e.getCause().getMessage())) {
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                        UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
+            }
+            throw e;
+        }
     }
 
     public CheckDeviceResponse checkDevice(

@@ -6,9 +6,11 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 
-public final class DanskeBankWebDriverHelper {
+public abstract class DanskeBankAbstractAuthenticator {
     private static final File phantomJsFile;
 
     static {
@@ -21,7 +23,7 @@ public final class DanskeBankWebDriverHelper {
         }
     }
 
-    public static WebDriver constructWebDriver() {
+    protected WebDriver constructWebDriver() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(
                 PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
@@ -46,4 +48,7 @@ public final class DanskeBankWebDriverHelper {
                 DanskeBankConstants.Javascript.USER_AGENT);
         return new PhantomJSDriver(capabilities);
     }
+
+    protected abstract FinalizeAuthenticationResponse finalizeAuthentication()
+            throws LoginException;
 }
