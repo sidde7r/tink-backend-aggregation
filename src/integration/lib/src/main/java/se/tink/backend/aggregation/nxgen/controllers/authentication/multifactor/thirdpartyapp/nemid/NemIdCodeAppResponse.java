@@ -9,7 +9,8 @@ public class NemIdCodeAppResponse implements ThirdPartyAppResponse<String> {
     private final String reference;
     private final NemIdCodeAppPollResponse pollResponse;
 
-    public NemIdCodeAppResponse(ThirdPartyAppStatus status, String reference, NemIdCodeAppPollResponse pollResponse) {
+    public NemIdCodeAppResponse(
+            ThirdPartyAppStatus status, String reference, NemIdCodeAppPollResponse pollResponse) {
         this.status = status;
         this.reference = reference;
         this.pollResponse = pollResponse;

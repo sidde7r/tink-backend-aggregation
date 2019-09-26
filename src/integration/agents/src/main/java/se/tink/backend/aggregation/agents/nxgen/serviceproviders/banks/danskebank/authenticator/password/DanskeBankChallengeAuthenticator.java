@@ -55,7 +55,7 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class DanskeBankChallengeAuthenticator //extends NemIdCodeAppAuthenticator
+public class DanskeBankChallengeAuthenticator
         implements MultiFactorAuthenticator, AutoAuthenticator, KeyCardAuthenticator {
 
     private static final AggregationLogger log =
@@ -175,10 +175,12 @@ public class DanskeBankChallengeAuthenticator //extends NemIdCodeAppAuthenticato
             throws AuthenticationException, AuthorizationException {
 
         // Use NemId controller directly to avoid code replication
-        DanskeBankNemIdCodeAppAuthenticator codeAppAuthenticator = new DanskeBankNemIdCodeAppAuthenticator(
-            apiClient, client, preferredDevice, username, bindChallengeResponseBody);
-        ThirdPartyAppAuthenticationController<String> nemIdAuthenticationController = new ThirdPartyAppAuthenticationController<>(
-            codeAppAuthenticator, supplementalInformationHelper);
+        DanskeBankNemIdCodeAppAuthenticator codeAppAuthenticator =
+                new DanskeBankNemIdCodeAppAuthenticator(
+                        apiClient, client, preferredDevice, username, bindChallengeResponseBody);
+        ThirdPartyAppAuthenticationController<String> nemIdAuthenticationController =
+                new ThirdPartyAppAuthenticationController<>(
+                        codeAppAuthenticator, supplementalInformationHelper);
 
         try {
             // Credentials are not needed for this implementation
@@ -187,24 +189,25 @@ public class DanskeBankChallengeAuthenticator //extends NemIdCodeAppAuthenticato
             switch (e.getError()) {
                 case CANCELLED:
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                        UserMessage.CODE_APP_REJECTED_ERROR.getKey());
+                            UserMessage.CODE_APP_REJECTED_ERROR.getKey());
                 case TIMED_OUT:
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                        UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
+                            UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
                 default:
                     throw new IllegalStateException(
-                        String.format("Unknown third party app exception error: %s.", e.getError()));
+                            String.format(
+                                    "Unknown third party app exception error: %s.", e.getError()));
             }
         }
 
         // Successful authentication, needs to finalize the JS execution
-        NemIdCodeAppResponse response = (NemIdCodeAppResponse) nemIdAuthenticationController.getResponse();
+        NemIdCodeAppResponse response =
+                (NemIdCodeAppResponse) nemIdAuthenticationController.getResponse();
 
         CodeAppChallengeAnswerEntity challengeAnswerEntity =
-            CodeAppChallengeAnswerEntity.createFromPollResponse(response.getPollResponse());
+                CodeAppChallengeAnswerEntity.createFromPollResponse(response.getPollResponse());
 
-        String challengeAnswer =
-            SerializationUtils.serializeToString(challengeAnswerEntity);
+        String challengeAnswer = SerializationUtils.serializeToString(challengeAnswerEntity);
         finalizeChallengeAuthentication(challengeAnswer, codeAppAuthenticator.getDriver());
     }
     // --- CodeAppAuthenticator ---
@@ -246,9 +249,7 @@ public class DanskeBankChallengeAuthenticator //extends NemIdCodeAppAuthenticato
 
             // Persist decrypted device secret - necessary for login after device has been bounded
             String decryptedDeviceSecret =
-                    driver
-                            .findElement(By.tagName("body"))
-                            .getAttribute("decryptedDeviceSecret");
+                    driver.findElement(By.tagName("body")).getAttribute("decryptedDeviceSecret");
             this.persistentStorage.put(
                     DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER,
                     bindDeviceResponse.getDeviceSerialNumber());
