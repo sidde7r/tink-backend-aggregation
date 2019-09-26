@@ -49,6 +49,10 @@ public class AvanzaConstants {
         public static final String TJANSTEPENSION = "Tjanstepension";
         public static final String PENSIONSFORSAKRING = "Pensionsforsakring";
         public static final String IPS = "IPS";
+        public static final String KREDITKONTO_ISK = "KreditkontoISK";
+        public static final String AVTALS_PENSION = "AvtalsPension";
+        public static final String SUPER_BOLANEKONTO = "Superbolanekonto";
+        public static final String KREDITKONTO_KF = "KreditkontoKF";
     }
 
     public static class AvanzaFallbackAccountTypes {

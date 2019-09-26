@@ -109,6 +109,11 @@ public class AccountEntity {
     }
 
     @JsonIgnore
+    public boolean isLoanAccount() {
+        return MAPPERS.isLoanAccount(getAccountType());
+    }
+
+    @JsonIgnore
     public boolean isInvestmentAccount() {
         return MAPPERS.isInvestmentAccount(getAccountType());
     }

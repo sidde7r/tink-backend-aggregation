@@ -171,10 +171,13 @@ public class AvanzaApiClient {
                         type, orderbookId, authSession, ExchangeTradedFundInfoResponse.class);
 
             default:
+                String response =
+                        fetchMarketInfoResponse(type, orderbookId, authSession, String.class);
                 LOGGER.warn(
-                        String.format(
-                                "avanza - portfolio type not handled in switch - type: %s, orderbookId: %s",
-                                instrumentType, orderbookId));
+                        "avanza - portfolio type not handled in switch - type: {}, orderbookId: {}, reseponse: {}",
+                        instrumentType,
+                        orderbookId,
+                        response);
                 return null;
         }
     }
