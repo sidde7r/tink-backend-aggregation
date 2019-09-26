@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
+import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
@@ -49,6 +50,9 @@ public final class RabobankApiClient {
     private final EidasProxyConfiguration eidasProxyConf;
     private final EidasIdentity eidasIdentity;
 
+    private String qsealcPem;
+    private final String qsealcOldPem;
+
     RabobankApiClient(
             final TinkHttpClient client,
             final PersistentStorage persistentStorage,
@@ -62,6 +66,9 @@ public final class RabobankApiClient {
         this.eidasProxyConf = eidasProxyConf;
         this.eidasIdentity = eidasIdentity;
         this.requestIsManual = requestIsManual;
+
+        this.qsealcPem = rabobankConfiguration.getQsealCert();
+        this.qsealcOldPem = rabobankConfiguration.getQsealOldCert();
 
         client.addFilter(new AccessExceededFilter());
     }
@@ -124,7 +131,7 @@ public final class RabobankApiClient {
             final String signatureHeader,
             final String date) {
         final String clientId = rabobankConfiguration.getClientId();
-        final String clientCert = rabobankConfiguration.getQsealCert();
+        final String clientCert = qsealcPem;
         final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
         final RequestBuilder builder;
@@ -260,9 +267,17 @@ public final class RabobankApiClient {
                         .getSignature(signingString.getBytes());
 
         final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);
-        final String clientCertSerial = rabobankConfiguration.getQsealcSerial();
+        final String clientCertSerial = extractQsealcSerial(qsealcPem);
 
         return RabobankUtils.createSignatureHeader(
                 clientCertSerial, Signature.RSA_SHA_256, b64Signature, Signature.HEADERS_VALUE);
+    }
+
+    private static String extractQsealcSerial(final String qsealc) {
+        return Certificate.getX509SerialNumber(qsealc);
+    }
+
+    public void switchToOldCertificate() {
+        qsealcPem = qsealcOldPem;
     }
 }
