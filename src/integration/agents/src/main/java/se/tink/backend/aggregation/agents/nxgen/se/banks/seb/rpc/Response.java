@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.SystemStat
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.TransactionEntity;
@@ -125,5 +126,15 @@ public class Response {
     @JsonIgnore
     public List<CreditCardTransactionEntity> getBookedCreditCardTransactions() {
         return payload.getBookedCreditCardTransactions();
+    }
+
+    @JsonIgnore
+    public List<LoanEntity> getMortgageLoans() {
+        return payload.getMortgageLoans();
+    }
+
+    @JsonIgnore
+    public List<LoanEntity> getBlancoLoans() {
+        return payload.getBlancoLoans();
     }
 }

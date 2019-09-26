@@ -150,6 +150,11 @@ public class SebApiClient {
         return post(Urls.LIST_CARDS, request);
     }
 
+    public Response fetchLoans() {
+        final Request request = new Request.Builder().build();
+        return post(Urls.LIST_LOANS, request);
+    }
+
     public Response fetchPendingCreditCardTransactions(String uniqueId) {
         final Request request =
                 new Request.Builder()
