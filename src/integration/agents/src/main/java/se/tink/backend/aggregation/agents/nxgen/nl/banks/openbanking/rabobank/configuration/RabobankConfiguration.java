@@ -2,9 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.c
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Base64;
-import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
-import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -19,6 +17,7 @@ public final class RabobankConfiguration implements ClientConfiguration {
     private String clientSSLP12;
     private String redirectUrl;
     private String qsealcPem;
+    private String qsealcOldPem;
     private String certificateId;
 
     public String getClientId() {
@@ -50,12 +49,6 @@ public final class RabobankConfiguration implements ClientConfiguration {
     }
 
     @JsonIgnore
-    public String getQsealcSerial() {
-        Preconditions.checkNotNull(qsealcPem);
-        return Certificate.getX509SerialNumber(qsealcPem);
-    }
-
-    @JsonIgnore
     public String getClientCertSerial() {
         return RabobankUtils.getCertificateSerialNumber(
                 getClientSSLP12bytes(), getClientSSLKeyPassword());
@@ -64,6 +57,11 @@ public final class RabobankConfiguration implements ClientConfiguration {
     @JsonIgnore
     public String getQsealCert() {
         return qsealcPem;
+    }
+
+    @JsonIgnore
+    public String getQsealOldCert() {
+        return qsealcOldPem;
     }
 
     public RabobankUrlFactory getUrls() {
