@@ -17,7 +17,6 @@ public final class RabobankConfiguration implements ClientConfiguration {
     private String clientSSLP12;
     private String redirectUrl;
     private String qsealcPem;
-    private String qsealcOldPem;
     private String certificateId;
 
     public String getClientId() {
@@ -57,11 +56,6 @@ public final class RabobankConfiguration implements ClientConfiguration {
     @JsonIgnore
     public String getQsealCert() {
         return qsealcPem;
-    }
-
-    @JsonIgnore
-    public String getQsealOldCert() {
-        return qsealcOldPem;
     }
 
     public RabobankUrlFactory getUrls() {

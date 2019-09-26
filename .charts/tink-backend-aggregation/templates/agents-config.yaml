@@ -179,7 +179,6 @@ data:
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
             clientSSLKeyPassword: ""
             qsealcPem: "RABOBANK_QSEALC_PSD2_ABN_TAG"
-            qsealcOldPem: "RABOBANK_QSEALC_ABN_TAG"
             certificateId: "{{ $agentsConfig.rabobank.abn.certificateId }}"
           abn:
             clientId: "RABOBANK_CLIENT_ID_ABN_TAG"
@@ -189,7 +188,6 @@ data:
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
             clientSSLKeyPassword: ""
             qsealcPem: "RABOBANK_QSEALC_PSD2_ABN_TAG"
-            qsealcOldPem: "RABOBANK_QSEALC_ABN_TAG"
             certificateId: "{{ $agentsConfig.rabobank.abn.certificateId }}"
         {{- end }}
 
