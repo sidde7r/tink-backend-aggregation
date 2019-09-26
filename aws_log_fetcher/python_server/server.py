@@ -3,6 +3,7 @@ import websockets
 import json
 import fetcher
 import argparse
+from datetime import datetime
 
 parser = argparse.ArgumentParser(description="Kibana fetcher")
 parser.add_argument(
@@ -34,7 +35,7 @@ args = parser.parse_args()
 
 async def fetch_server(websocket, path):
 
-    aws_token = None
+    aws_tokens = {}
 
     while True:
         # Here we expect to fetch query and cookie from browser client
@@ -46,20 +47,35 @@ async def fetch_server(websocket, path):
         else:
             output_folder = args.output
 
-        # TODO: Invalidate "aws_token" if timestamp is too old
+        host = request_data["host"]
+        timestamp = int(datetime.now().timestamp())
+
+        # Check if we should invalidate the token
+        if host not in aws_tokens or aws_tokens[host]["timestamp"] + 3500 <= timestamp:
+            aws_tokens[host] = {
+                "token": None,
+                "timestamp": -1
+            }
+
+        aws_token = aws_tokens[host]["token"]
 
         aws_token = await fetcher.run(
             cookie=request_data["cookie"],
             query=request_data["query"],
-            host=request_data["host"],
+            host=host,
             output_folder=output_folder,
             payload=request_data["payload"],
             username=args.username,
             idp_id=args.idp_id,
             sp_id=args.sp_id,
-            aws_token=aws_token,
+            authenticate_for_aws_command=aws_token,
             ws=websocket
         )
+
+        aws_tokens[host] = {
+            "token": aws_token,
+            "timestamp": int(datetime.now().timestamp())
+        }
 
 start_server = websockets.serve(fetch_server, "localhost", 8765)
 

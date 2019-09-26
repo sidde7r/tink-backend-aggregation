@@ -36,9 +36,10 @@ async def run(cookie,
               sp_id,
               username,
               payload="",
-              aws_token=None,
+              authenticate_for_aws_command=None,
               ws: websockets.WebSocketServerProtocol = None):
 
+    print("Download request has been received")
     output_folder = os.path.join(output_folder, get_timestamp())
 
     if not os.path.exists(output_folder):
@@ -122,14 +123,12 @@ async def run(cookie,
     """
 
     # Create the necessary Terminal command to authenticate for AWS
-    if aws_token is None:
+    if authenticate_for_aws_command is None:
         await send_message(ws, "You will be asked for credentials, please check the Terminal where the Python server"
                                " is running and provide the necessary input", payload)
         authenticate_for_aws_command = aws_google_auth.cli(
             ["-d", "3600", "-u", username, "-I", idp_id, "-S", sp_id, "--ask-role",
              "--resolve-aliases", "--print-creds"])
-    else:
-        authenticate_for_aws_command = aws_token["auth_command"]
 
     command = authenticate_for_aws_command + " && " + download_log_command
 
@@ -137,10 +136,8 @@ async def run(cookie,
     os.system(command)
     organise(output_folder)
     await send_message(ws, "Logs are downloaded", payload)
-    return {
-        "auth_command": authenticate_for_aws_command,
-        "timestamp": get_timestamp()
-    }
+    print("Download is completed")
+    return authenticate_for_aws_command
 
 
 async def main():
