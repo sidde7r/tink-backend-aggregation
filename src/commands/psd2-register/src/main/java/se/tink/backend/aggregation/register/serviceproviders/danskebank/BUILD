@@ -1,0 +1,27 @@
+java_binary(
+    name = "danskebank_register",
+    srcs = glob(["**/*.java"]),
+    data = [
+        "resources",
+    ],
+    main_class = "se.tink.backend.aggregation.register.serviceproviders.danskebank.DanskebankRegisterCommand",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register:psd2-register",
+        "//src/integration/lib",
+        "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/serialization",
+        "//src/libraries/uuid",
+        "//third_party:com_auth0_java_jwt",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
+        "//third_party:com_google_guava_guava",
+        "//third_party:commons_codec_commons_codec",
+        "//third_party:commons_io_commons_io",
+        "//third_party:org_apache_commons_commons_cli",
+        "//third_party:org_bouncycastle_bcpkix_jdk15on",
+        "//third_party:org_bouncycastle_bcprov_jdk15on",
+    ],
+)
