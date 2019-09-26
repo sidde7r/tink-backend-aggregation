@@ -103,7 +103,6 @@ public final class Xs2aDevelopersConstants {
         public static final String PSU_IP_ADDRESS = "PSU-IP-ADDRESS";
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String X_TINK_DEBUG = "X-Tink-Debug";
-        public static final String TRUST_ALL = "trust_all";
     }
 
     public static class FormKeys {
