@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
+import java.util.Arrays;
+import java.util.List;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -33,7 +35,8 @@ public class SantanderEsConstants {
     }
 
     public static final class ErrorCodes {
-        public static final String INCORRECT_CREDENTIALS = "SBAMOV_00002";
+        public static final List<String> INCORRECT_CREDENTIALS =
+                Arrays.asList("SBAMOV_00002", "SBAMOV_00003");
     }
 
     public static final class Storage {

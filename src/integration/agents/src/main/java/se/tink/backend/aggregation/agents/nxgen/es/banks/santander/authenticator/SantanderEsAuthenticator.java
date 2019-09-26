@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants.SoapErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.SoapFaultErrorEntity;
@@ -44,11 +45,11 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
                             .trim()
                             .toUpperCase();
 
-            switch (errorCode) {
-                case SantanderEsConstants.ErrorCodes.INCORRECT_CREDENTIALS:
-                    throw new LoginException(LoginError.INCORRECT_CREDENTIALS);
-                default:
-                    throw e;
+            if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
+                    .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
+                throw new LoginException(LoginError.INCORRECT_CREDENTIALS);
+            } else {
+                throw e;
             }
         }
 
