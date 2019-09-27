@@ -32,8 +32,6 @@ public class BPSondrioAgent extends CbiGlobeAgent {
                                 apiClient, persistentStorage, getClientConfiguration()),
                         new StrongAuthenticationState(request.getAppUriId()));
 
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
