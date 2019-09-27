@@ -49,9 +49,7 @@ public final class RabobankApiClient {
     private final RabobankConfiguration rabobankConfiguration;
     private final EidasProxyConfiguration eidasProxyConf;
     private final EidasIdentity eidasIdentity;
-
-    private String qsealcPem;
-    private final String qsealcOldPem;
+    private final String qsealcPem;
 
     RabobankApiClient(
             final TinkHttpClient client,
@@ -68,7 +66,6 @@ public final class RabobankApiClient {
         this.requestIsManual = requestIsManual;
 
         this.qsealcPem = rabobankConfiguration.getQsealCert();
-        this.qsealcOldPem = rabobankConfiguration.getQsealOldCert();
 
         client.addFilter(new AccessExceededFilter());
     }
@@ -275,9 +272,5 @@ public final class RabobankApiClient {
 
     private static String extractQsealcSerial(final String qsealc) {
         return Certificate.getX509SerialNumber(qsealc);
-    }
-
-    public void switchToOldCertificate() {
-        qsealcPem = qsealcOldPem;
     }
 }
