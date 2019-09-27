@@ -20,7 +20,7 @@ The project consists of two main components: **Chrome extension** and **Python s
 - For each AWS debug log link it could find, it executes necessary commands to download them.
 - After it downloads the logs to a predetermined folder, it organizes the folder in a way that will be explained later.
 
-## Initialization`
+## Initialization
 
 Both Chrome extension and Python script must be running to be able to use it.
 

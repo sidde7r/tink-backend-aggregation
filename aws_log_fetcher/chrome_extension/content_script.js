@@ -73,28 +73,14 @@ function checkIfButtonShouldBeVisible() {
 			});
 		});
 
-		// Will create a hidden popup to show server messages
-		// to user
+		// Will create a hidden popup to show server message to user
 
-		messagePopup = $("<div/>");
-		messagePopup.css("position", "fixed");
-		messagePopup.css("width", "60%");
-		messagePopup.css("height", "50%");
-		messagePopup.css("top", "25%");
-		messagePopup.css("left", "20%");
-		messagePopup.css("background", "blue");
-		messagePopup.css("z-index", "999");
-		messagePopup.css("visibility", "hidden");
-
-		messageArea = $("<textarea/>");
-		messageArea.css("display", "block");
-		messageArea.css("width", "90%");
-		messageArea.css("margin-top", "5%");
-		messageArea.css("margin-left", "5%");
-		messageArea.css("height", "85%");
+		messagePopup = $("<div/>", {id: "extension_message_popup"});
+		messagePopup.css(extension_message_popup_style);
+		messageArea = $("<textarea/>", {id: "extension_message_textarea"});
+		messageArea.css(extension_message_textarea_style);
 
 		popupCloseButton = $("<input/>", {type: "button", value: "Close"});
-		popupCloseButton.css("te")
 		popupCloseButton.click(function() {
 			messagePopup.css("visibility", "hidden");
 		});
@@ -118,7 +104,7 @@ chrome.runtime.onMessage.addListener(
 			If the background script catched the call to ElasticSearch and fetched the cookie,
 			it sends the cookie to this script and we need to store that.
 		*/
-		if (message.type == "COOKIE") {
+		if (message.type === "COOKIE") {
 			cookie = message["cookie"];
 			checkIfButtonShouldBeVisible();
 		}
@@ -126,7 +112,7 @@ chrome.runtime.onMessage.addListener(
 			If the background script catched the call to ElasticSearch and fetched the query JSON,
 			it sends the query JSON to this script and we need to store that.
 		*/
-		else if (message.type == "QUERY") {
+		else if (message.type === "QUERY") {
 			query = message["query"];
 			checkIfButtonShouldBeVisible();
 		}
@@ -134,7 +120,7 @@ chrome.runtime.onMessage.addListener(
 			If the background script received a message from the Python server, it relays the message
 			to this script.
 		*/
-		else if (message.type = "MESSAGE") {
+		else if (message.type === "MESSAGE") {
 			addMessage(message["data"]);
 		}
 		/*
