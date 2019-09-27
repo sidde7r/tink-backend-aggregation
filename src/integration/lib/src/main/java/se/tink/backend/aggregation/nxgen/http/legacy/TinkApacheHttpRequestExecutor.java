@@ -276,6 +276,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                         eidasIdentity);
 
         String jwt = signer.getJWSToken(baseTokenString.getBytes());
+        log.info("jwt token from new method is {}", jwt);
         request.addHeader(SIGNATURE_HEADER_KEY, jwt);
     }
 
