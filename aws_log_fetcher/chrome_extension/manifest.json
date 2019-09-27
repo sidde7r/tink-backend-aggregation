@@ -21,8 +21,8 @@
         "https://kibana.aggregation-production.tink.network/app/kibana*", 
         "https://kibana.aggregation-staging.tink.network/app/kibana*"
       ],
-     "js": ["jquery_min_3.4.1.js", "content_script.js"]
-   }],
+     "js": ["jquery_min_3.4.1.js", "content_script.js", "styles.js"]
+  }],
 
   "offline_enabled": false,
 
