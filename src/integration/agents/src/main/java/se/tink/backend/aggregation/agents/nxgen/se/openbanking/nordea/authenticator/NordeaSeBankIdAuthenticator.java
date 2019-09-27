@@ -125,9 +125,20 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
                         .setRedirectUri(apiClient.getConfiguration().getRedirectUrl())
                         .build();
 
-        OAuth2Token token = apiClient.refreshToken(form);
-        apiClient.storeToken(token);
-        return Optional.ofNullable(token);
+        try {
+            OAuth2Token token = apiClient.refreshToken(form);
+            apiClient.storeToken(token);
+            return Optional.ofNullable(token);
+        } catch (HttpResponseException e) {
+            // If these conditions are true, this will result in a session expired.
+            if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                ErrorResponse error = e.getResponse().getBody(ErrorResponse.class);
+                if (error.isInvalidRefreshTokenError()) {
+                    return Optional.empty();
+                }
+            }
+            throw e;
+        }
     }
 
     private GetTokenForm getGetTokenForm(GetCodeResponse getCodeResponse) {

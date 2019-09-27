@@ -46,6 +46,7 @@ public final class NordeaSeConstants {
     public static class ErrorCode {
         public static final String SERVER_ERROR = "error.server";
         public static final String VALIDATION_ERROR = "error.validation";
+        public static final String DENIED = "error.resource.denied";
     }
 
     public class ErrorMessage {
@@ -60,6 +61,7 @@ public final class NordeaSeConstants {
                 "The SSN number must be a 12-digit string";
         public static final String PSU_ID = "psuId";
         public static final String PATTERN = "Pattern";
+        public static final String INVALID_REFRESH_TOKEN = "Invalid refresh token";
     }
 
     public static final class Tags {

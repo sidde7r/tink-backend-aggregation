@@ -65,6 +65,20 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean isInvalidRefreshTokenError() {
+        if (error == null || error.getFailures().isEmpty()) {
+            return false;
+        }
+
+        return error.getFailures().stream()
+                .anyMatch(
+                        failure ->
+                                ErrorCode.DENIED.equalsIgnoreCase(failure.getCode())
+                                        && ErrorMessage.INVALID_REFRESH_TOKEN.equalsIgnoreCase(
+                                                failure.getDescription()));
+    }
+
+    @JsonIgnore
     public Optional<FailuresItem> getFailure() {
         if (error == null || error.getFailures().isEmpty()) {
             return Optional.empty();
