@@ -20,6 +20,6 @@ public class BPSondrioAuthenticator extends CbiGlobeAuthenticator {
     protected String createRedirectUrl(String state, ConsentType consentType) {
         // '?' and '&' need to be encoded
         return getConfiguration().getRedirectUrl()
-                + CbiGlobeUtils.encodeValue("?state=" + state + "&code=code");
+                + CbiGlobeUtils.encodeValue("?state=" + state + "&code=" + consentType.getCode());
     }
 }
