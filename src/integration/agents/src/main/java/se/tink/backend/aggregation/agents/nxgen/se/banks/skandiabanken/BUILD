@@ -25,5 +25,6 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_slf4j_slf4j_api",
+        "@io_vavr_core//jar",
     ],
 )

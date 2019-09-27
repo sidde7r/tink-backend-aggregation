@@ -156,5 +156,6 @@ public class SkandiaBankenAgent extends NextGenerationAgent
                 new TimeoutRetryFilter(
                         TimeoutFilter.NUM_TIMEOUT_RETRIES,
                         TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new SkandiabankenHttpFilter());
     }
 }
