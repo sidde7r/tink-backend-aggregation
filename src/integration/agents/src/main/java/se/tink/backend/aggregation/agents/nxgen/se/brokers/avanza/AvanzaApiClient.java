@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 
+import com.google.common.base.Strings;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,15 +170,18 @@ public class AvanzaApiClient {
             case InstrumentTypes.EXCHANGE_TRADED_FUND:
                 return fetchMarketInfoResponse(
                         type, orderbookId, authSession, ExchangeTradedFundInfoResponse.class);
-
             default:
-                String response =
-                        fetchMarketInfoResponse(type, orderbookId, authSession, String.class);
-                LOGGER.warn(
-                        "avanza - portfolio type not handled in switch - type: {}, orderbookId: {}, reseponse: {}",
-                        instrumentType,
-                        orderbookId,
-                        response);
+                // If we don't get orderbookId, fetching anything unknown further is not possible
+                // atm. It should also handle the case when we get InstrumentTypes as UNKNOWN
+                if (!Strings.isNullOrEmpty(orderbookId)) {
+                    String response =
+                            fetchMarketInfoResponse(type, orderbookId, authSession, String.class);
+                    LOGGER.warn(
+                            "avanza - portfolio type not handled in switch - type: {}, orderbookId: {}, reseponse: {}",
+                            instrumentType,
+                            orderbookId,
+                            response);
+                }
                 return null;
         }
     }
