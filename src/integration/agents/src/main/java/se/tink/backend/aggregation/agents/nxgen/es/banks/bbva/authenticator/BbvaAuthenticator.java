@@ -38,8 +38,8 @@ public class BbvaAuthenticator implements PasswordAuthenticator {
                 .filterTry(
                         BbvaPredicates.IS_LOGIN_SUCCESS,
                         () -> new IllegalStateException("Could not authenticate"))
-                .transform(s -> apiClient.initiateSession())
-                .onSuccess(putHolderNameInSessionStorage());
+                .get();
+        apiClient.initiateSession().onSuccess(putHolderNameInSessionStorage());
     }
 
     private Consumer<InitiateSessionResponse> putHolderNameInSessionStorage() {
