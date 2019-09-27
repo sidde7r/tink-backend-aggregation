@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.BalanceBaseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -47,9 +48,9 @@ public class DeutscheBankTransactionalAccountFetcher
         try {
             return apiClient.fetchTransactionsForAccount(account, fromDate, toDate);
         } catch (HttpResponseException e) {
-            String exceptionMessage = e.getResponse().getBody(String.class);
-            if (exceptionMessage.contains(
-                    DeutscheBankConstants.FormValues.TRANSACTION_REQUEST_REJECTED)) {
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if (DeutscheBankConstants.FormValues.TRANSACTION_REQUEST_REJECTED.equalsIgnoreCase(
+                    errorResponse.getTransactionStatus())) {
                 return PaginatorResponseImpl.createEmpty(false);
             }
             throw e;
