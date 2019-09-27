@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -58,7 +59,9 @@ public class CbiGlobeAuthenticator {
     }
 
     protected URL getScaUrl(ConsentResponse consentResponse) {
-        return new URL(consentResponse.getLinks().getAuthorizeUrl().getHref());
+        String url = consentResponse.getLinks().getAuthorizeUrl().getHref();
+
+        return new URL(CbiGlobeUtils.encodeBlankSpaces(url));
     }
 
     protected ConsentResponse createConsent(ConsentRequest consentRequest, String redirectUrl) {

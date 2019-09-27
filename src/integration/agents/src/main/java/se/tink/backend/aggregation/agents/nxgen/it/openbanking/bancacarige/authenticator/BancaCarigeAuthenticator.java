@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancacarige.authenticator;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
@@ -7,9 +7,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class BPSondrioAuthenticator extends CbiGlobeAuthenticator {
+public class BancaCarigeAuthenticator extends CbiGlobeAuthenticator {
 
-    public BPSondrioAuthenticator(
+    public BancaCarigeAuthenticator(
             CbiGlobeApiClient apiClient,
             PersistentStorage persistentStorage,
             CbiGlobeConfiguration configuration) {

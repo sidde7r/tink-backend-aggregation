@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancacarige;
 
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio.authenticator.BPSondrioAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancacarige.authenticator.BancaCarigeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -11,16 +11,15 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BPSondrioAgent extends CbiGlobeAgent {
-
-    public BPSondrioAgent(
+public class BancaCarigeAgent extends CbiGlobeAgent {
+    public BancaCarigeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
     @Override
     protected String getIntegrationName() {
-        return BPSondrioConstants.INTEGRATION_NAME;
+        return BancaCarigeConstants.INTEGRATION_NAME;
     }
 
     @Override
@@ -28,7 +27,7 @@ public class BPSondrioAgent extends CbiGlobeAgent {
         controller =
                 new CbiGlobeAuthenticationController(
                         supplementalInformationHelper,
-                        new BPSondrioAuthenticator(
+                        new BancaCarigeAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()),
                         new StrongAuthenticationState(request.getAppUriId()));
 
