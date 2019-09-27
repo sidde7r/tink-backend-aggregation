@@ -64,7 +64,8 @@ public class CbiGlobeAuthenticationController
         this.authenticator.tokenAutoAuthentication();
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
-                        this.authenticator.createRedirectUrl(consentState.getState(),ConsentType.ACCOUNT),
+                        this.authenticator.createRedirectUrl(
+                                consentState.getState(), ConsentType.ACCOUNT),
                         this.authenticator.createConsentRequestAccount());
         return getAppPayload(authorizeUrl);
     }
@@ -81,7 +82,8 @@ public class CbiGlobeAuthenticationController
     public void openThirdPartyApp(GetAccountsResponse getAccountsResponse) {
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(
-                        this.authenticator.createRedirectUrl(consentState.getState(),ConsentType.BALANCE_TRANSACTION),
+                        this.authenticator.createRedirectUrl(
+                                consentState.getState(), ConsentType.BALANCE_TRANSACTION),
                         this.authenticator.createConsentRequestBalancesTransactions(
                                 getAccountsResponse));
         ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
@@ -90,13 +92,14 @@ public class CbiGlobeAuthenticationController
     }
 
     private void waitForSuplementalInformation(ConsentType consentType) {
-            Optional<Map<String,String>> queryMap = this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.consentState.getSupplementalKey(),
-                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                TimeUnit.MINUTES);
+        Optional<Map<String, String>> queryMap =
+                this.supplementalInformationHelper.waitForSupplementalInformation(
+                        this.consentState.getSupplementalKey(),
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES);
 
-            if(!queryMap.get().get(QueryKeys.CODE).equals(consentType.getCode())){
-                waitForSuplementalInformation(consentType);
-            }
+        if (!queryMap.get().get(QueryKeys.CODE).equals(consentType.getCode())) {
+            waitForSuplementalInformation(consentType);
+        }
     }
 }

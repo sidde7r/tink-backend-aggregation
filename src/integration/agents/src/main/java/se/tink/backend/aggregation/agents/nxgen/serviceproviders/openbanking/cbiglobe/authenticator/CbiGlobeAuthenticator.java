@@ -62,8 +62,7 @@ public class CbiGlobeAuthenticator {
     }
 
     protected ConsentResponse createConsent(ConsentRequest consentRequest, String redirectUrl) {
-        ConsentResponse consentResponse =
-                apiClient.createConsent(consentRequest, redirectUrl);
+        ConsentResponse consentResponse = apiClient.createConsent(consentRequest, redirectUrl);
         persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
 
         return consentResponse;
