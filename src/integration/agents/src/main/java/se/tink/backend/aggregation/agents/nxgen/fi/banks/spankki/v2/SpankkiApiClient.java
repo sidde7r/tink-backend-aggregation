@@ -27,6 +27,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.creditcard.rpc.CreditCardDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.creditcard.rpc.CreditCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.investment.rpc.InstrumentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.investment.rpc.InvestmentAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.transactionalaccount.rpc.TransactionalAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.rpc.SpankkiHeader;
@@ -155,6 +157,18 @@ public class SpankkiApiClient {
                         .parameter(IdTags.CONTRACT_NR, contractNr)
                         .parameter(IdTags.FROM_DATE, fromDate)
                         .parameter(IdTags.TO_DATE, toDate));
+    }
+
+    public InvestmentAccountResponse fetchInvestmentsAccount() {
+        return getRequest(InvestmentAccountResponse.class, Urls.FETCH_INVESTMENT_ACCOUNT);
+    }
+
+    public InstrumentDetailsResponse fetchInstrumentDetails(String portfolioId, String securityId) {
+        return getRequest(
+                InstrumentDetailsResponse.class,
+                Urls.FETCH_FUND_DETAILS
+                        .queryParam(QueryKeys.PORTFOLIO_ID, portfolioId)
+                        .queryParam(QueryKeys.SECURITY_ID, securityId));
     }
 
     private String calculateRequestToken(String randomString) {

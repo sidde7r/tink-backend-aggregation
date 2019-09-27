@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2;
 
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
@@ -12,6 +15,25 @@ public class SpankkiConstants {
     public static final DeviceProfile DEVICE_PROFILE = DeviceProfileConfiguration.IOS_STABLE;
 
     public static final String CURRENCY = "EUR";
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "418",
+                            "415")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "443",
+                            "419",
+                            "427",
+                            "416")
+                    .build();
+    public static final TypeMapper<PortfolioType> PORTFOLIO_TYPE_MAP =
+            TypeMapper.<PortfolioType>builder().put(PortfolioType.DEPOT, "ROBO_PORTFOLIO").build();
+    public static final TypeMapper<InstrumentType> INSTRUMENT_TYPE_MAP =
+            TypeMapper.<InstrumentType>builder().put(InstrumentType.FUND, "FUND_ROBO").build();
 
     public static class Urls {
         public static final String HOST = "https://mobile.s-pankki.fi";
@@ -35,6 +57,9 @@ public class SpankkiConstants {
         public static final URL FETCH_CARD_DETAILS = new URL(HOST + Endpoints.FETCH_CARD_DETAILS);
         public static final URL FETCH_CARD_TRANSACTIONS =
                 new URL(HOST + Endpoints.FETCH_CARD_TRANSACTIONS);
+        public static final URL FETCH_INVESTMENT_ACCOUNT =
+                new URL(HOST + Endpoints.FETCH_INVESTMENT_ACCOUNT);
+        public static final URL FETCH_FUND_DETAILS = new URL(HOST + Endpoints.FETCH_FUND_DETAILS);
     }
 
     public static class Endpoints {
@@ -57,6 +82,8 @@ public class SpankkiConstants {
         public static final String FETCH_CARD_DETAILS = VERSION + "/customer/cards/details";
         public static final String FETCH_CARD_TRANSACTIONS =
                 VERSION + "/customer/cards/transactions/{contractNr}/{fromDate}/{toDate}";
+        public static final String FETCH_INVESTMENT_ACCOUNT = VERSION + "/fim/positionreport";
+        public static final String FETCH_FUND_DETAILS = VERSION + "/fim/positiondetails";
     }
 
     public static class Authentication {
@@ -88,6 +115,8 @@ public class SpankkiConstants {
     public static class QueryKeys {
         public static final String CONTRACT_NR = "contractNr";
         public static final String PRODUCT_CODE = "productCode";
+        public static final String PORTFOLIO_ID = "portfolioId";
+        public static final String SECURITY_ID = "securityId";
     }
 
     public static class Storage {
@@ -115,21 +144,9 @@ public class SpankkiConstants {
         public static final String TO_DATE = "toDate";
     }
 
-    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            TransactionalAccountTypeMapper.builder()
-                    .put(
-                            TransactionalAccountType.CHECKING,
-                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
-                            "418",
-                            "415")
-                    .put(
-                            TransactionalAccountType.SAVINGS,
-                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
-                            "443",
-                            "419",
-                            "427",
-                            "416")
-                    .build();
+    public static class Investments {
+        public static String ACCOUNT_ID_PREFIX = "FUND-";
+    }
 
     public static class Regex {
         public static final String WHITE_SPACE = "\\s+";
