@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc;
 
 import io.vavr.collection.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities.PensionPlansEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities.StockAccountEntity;
@@ -28,11 +29,11 @@ public class ProductsResponse extends BbvaResponse {
     private List<Object> insurances;
 
     public List<AccountEntity> getAccounts() {
-        return accounts;
+        return nullToEmptyList(accounts);
     }
 
     public List<CreditCardEntity> getCards() {
-        return cards;
+        return nullToEmptyList(cards);
     }
 
     public List<InternationalFundsPortfoliosEntity> getInternationalFundsPortfolios() {
@@ -64,10 +65,14 @@ public class ProductsResponse extends BbvaResponse {
     }
 
     public List<StockAccountEntity> getStockAccounts() {
-        return stockAccounts;
+        return nullToEmptyList(stockAccounts);
     }
 
     public List<PensionPlansEntity> getPensionPlans() {
-        return pensionPlans;
+        return nullToEmptyList(pensionPlans);
+    }
+
+    private <T> List<T> nullToEmptyList(List<T> list) {
+        return Optional.ofNullable(list).orElse(List.empty());
     }
 }
