@@ -624,8 +624,6 @@ public class AgentWorkerOperationFactory {
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
-                new LoginAgentWorkerCommand(
-                        context, loginAgentWorkerCommandState, createCommandMetricState(request)),
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request)));
     }

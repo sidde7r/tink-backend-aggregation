@@ -13,7 +13,7 @@ public class TransferRequest extends CredentialsRequest {
 
     private SignableOperation signableOperation;
     private boolean update;
-    private boolean triggerRefresh = true;
+    private boolean triggerRefresh;
 
     public TransferRequest() {}
 
