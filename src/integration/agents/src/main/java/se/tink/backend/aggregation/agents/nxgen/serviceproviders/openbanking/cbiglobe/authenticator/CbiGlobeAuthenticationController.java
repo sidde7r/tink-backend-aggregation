@@ -98,7 +98,7 @@ public class CbiGlobeAuthenticationController
                         ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES);
 
-        if (!queryMap.get().get(QueryKeys.CODE).equals(consentType.getCode())) {
+        if (!queryMap.get().get(QueryKeys.CODE).equalsIgnoreCase(consentType.getCode())) {
             waitForSuplementalInformation(consentType);
         }
     }
