@@ -60,6 +60,8 @@ public class SpankkiConstants {
         public static final URL FETCH_INVESTMENT_ACCOUNT =
                 new URL(HOST + Endpoints.FETCH_INVESTMENT_ACCOUNT);
         public static final URL FETCH_FUND_DETAILS = new URL(HOST + Endpoints.FETCH_FUND_DETAILS);
+        public static final URL FETCH_LOANS = new URL(HOST + Endpoints.FETCH_LOANS);
+        public static final URL FETCH_LOAN_DETAILS = new URL(HOST + Endpoints.FETCH_LOAN_DETAILS);
     }
 
     public static class Endpoints {
@@ -84,6 +86,8 @@ public class SpankkiConstants {
                 VERSION + "/customer/cards/transactions/{contractNr}/{fromDate}/{toDate}";
         public static final String FETCH_INVESTMENT_ACCOUNT = VERSION + "/fim/positionreport";
         public static final String FETCH_FUND_DETAILS = VERSION + "/fim/positiondetails";
+        public static final String FETCH_LOANS = VERSION + "/bank/loan/hasLoans";
+        public static final String FETCH_LOAN_DETAILS = VERSION + "/bank/loan/list";
     }
 
     public static class Authentication {
@@ -156,5 +160,7 @@ public class SpankkiConstants {
         public static final LogTag CREDIT_CARD = LogTag.from("#spankki_creditcard");
         public static final LogTag CREDIT_CARD_TRANSACTIONS =
                 LogTag.from("#spankki_creditcard_transactions");
+        public static final LogTag LOAN = LogTag.from("#spankki_loans");
+        public static final LogTag LOAN_DETAILS = LogTag.from("#spankki_loan_details");
     }
 }
