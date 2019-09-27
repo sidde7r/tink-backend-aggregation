@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.filter.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngAgent extends NextGenerationAgent
@@ -54,7 +55,7 @@ public class IngAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
 
         super(request, context, signatureKeyPair);
-
+        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         this.ingApiClient = new IngApiClient(this.client);
 
         IngInvestmentAccountFetcher accountFetcher = new IngInvestmentAccountFetcher(ingApiClient);
