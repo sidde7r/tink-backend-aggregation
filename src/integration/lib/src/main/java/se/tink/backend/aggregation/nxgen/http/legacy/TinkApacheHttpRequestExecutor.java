@@ -134,7 +134,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                 try {
                     if (ALLOWED_APPIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getAppId())) {
                         addQsealcSignature(request);
-                    } else if ("fdcd36ab76bf47269376ed0cfbe6124b"
+                    } else if ("1cead6fc9f9040d4bc68b75934086a5a"
                             .equalsIgnoreCase(eidasIdentity.getAppId())) {
                         addQsealcSignatureByGetingWholeJwsToken(request);
                     }
