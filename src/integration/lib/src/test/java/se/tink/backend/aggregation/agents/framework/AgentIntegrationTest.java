@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
@@ -39,6 +38,7 @@ import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
@@ -212,8 +212,12 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return;
         }
 
-        if (agent instanceof ManualOrAutoAuth) {
-            final ManualOrAutoAuth manualOrAutoAuth = (ManualOrAutoAuth) agent;
+        if (agent instanceof SubsequentGenerationAgent
+                && ((SubsequentGenerationAgent) agent).getAuthenticator()
+                        instanceof AuthenticationControllerType) {
+            final AuthenticationControllerType manualOrAutoAuth =
+                    (AuthenticationControllerType)
+                            ((SubsequentGenerationAgent) agent).getAuthenticator();
             final boolean isManual = manualOrAutoAuth.isManualAuthentication(credential);
             log.info("Authentication requires user intervention: " + isManual);
         }
@@ -302,7 +306,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         if (agent instanceof SubsequentGenerationAgent) {
             log.info("Executing transfer for UkOpenbanking Agent");
             PaymentController paymentController =
-                    ((SubsequentGenerationAgent) agent)
+                    ((SubsequentGenerationAgent<?>) agent)
                             .constructPaymentController()
                             .orElseThrow(Exception::new);
 
@@ -364,7 +368,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         if (agent instanceof SubsequentGenerationAgent) {
             PaymentController paymentController =
-                    ((SubsequentGenerationAgent) agent)
+                    ((SubsequentGenerationAgent<?>) agent)
                             .constructPaymentController()
                             .orElseThrow(
                                     () ->

@@ -2,11 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -21,7 +19,6 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
@@ -35,19 +32,18 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class RabobankAgent extends SubsequentGenerationAgent
+public final class RabobankAgent
+        extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                ProgressiveAuthAgent,
-                ManualOrAutoAuth {
+                ProgressiveAuthAgent {
 
     private static final Logger logger = LoggerFactory.getLogger(RabobankAgent.class);
 
     private final RabobankApiClient apiClient;
     private final String clientName;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final ProgressiveAuthenticator progressiveAuthenticator;
-    private final ManualOrAutoAuth manualOrAutoAuthAuthenticator;
+    private final AutoAuthenticationProgressiveController progressiveAuthenticator;
 
     public RabobankAgent(
             final CredentialsRequest request,
@@ -101,7 +97,6 @@ public final class RabobankAgent extends SubsequentGenerationAgent
                         controller);
 
         progressiveAuthenticator = autoAuthenticationController;
-        manualOrAutoAuthAuthenticator = autoAuthenticationController;
     }
 
     @Override
@@ -158,12 +153,12 @@ public final class RabobankAgent extends SubsequentGenerationAgent
         return SessionHandler.alwaysFail();
     }
 
-    private boolean isSandbox() {
-        return clientName.toLowerCase().contains("sandbox");
+    @Override
+    public AutoAuthenticationProgressiveController getAuthenticator() {
+        return progressiveAuthenticator;
     }
 
-    @Override
-    public boolean isManualAuthentication(final Credentials credentials) {
-        return manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
+    private boolean isSandbox() {
+        return clientName.toLowerCase().contains("sandbox");
     }
 }

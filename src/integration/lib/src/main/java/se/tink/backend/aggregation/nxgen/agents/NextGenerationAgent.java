@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class NextGenerationAgent extends SubsequentGenerationAgent {
+public abstract class NextGenerationAgent extends SubsequentGenerationAgent<Authenticator> {
 
     protected final SupplementalInformationHelper supplementalInformationHelper;
     protected final SupplementalInformationController supplementalInformationController;
@@ -26,16 +26,17 @@ public abstract class NextGenerationAgent extends SubsequentGenerationAgent {
             SignatureKeyPair signatureKeyPair,
             boolean useNextGenClient) {
         super(request, context, signatureKeyPair, useNextGenClient);
+        SupplementalInformationProvider supplementalInformationProvider =
+                new SupplementalInformationProvider(request, supplementalRequester, credentials);
         this.supplementalInformationController =
-                new SupplementalInformationController(supplementalRequester, credentials);
+                supplementalInformationProvider.getSupplementalInformationController();
         this.supplementalInformationHelper =
-                new SupplementalInformationHelper(
-                        request.getProvider(), supplementalInformationController);
+                supplementalInformationProvider.getSupplementalInformationHelper();
     }
 
     protected abstract Authenticator constructAuthenticator();
 
-    private Authenticator getAuthenticator() {
+    public Authenticator getAuthenticator() {
         if (authenticator == null) {
             authenticator = this.constructAuthenticator();
         }

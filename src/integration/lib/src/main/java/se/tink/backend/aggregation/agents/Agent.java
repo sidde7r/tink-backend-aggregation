@@ -20,4 +20,8 @@ public interface Agent {
 
     // Clean up resources. No further operations should be done on the agent after this.
     void close();
+
+    default void accept(AgentVisitor visitor) {
+        visitor.visit(this);
+    }
 }

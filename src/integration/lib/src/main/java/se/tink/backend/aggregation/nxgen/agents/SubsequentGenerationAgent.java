@@ -37,7 +37,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
  * Same as the old NextGenerationAgent, but with SupplementalInformationController + Helper and the
  * imposing authenticator removed.
  */
-public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
+public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         implements TransferExecutorNxgen, PersistentLogin {
 
     static {
@@ -224,4 +224,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     public Optional<PaymentController> constructPaymentController() {
         return Optional.empty();
     }
+
+    public abstract Auth getAuthenticator();
 }

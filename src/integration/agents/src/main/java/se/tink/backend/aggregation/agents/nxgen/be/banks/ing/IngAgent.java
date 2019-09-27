@@ -5,12 +5,10 @@ import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
@@ -30,7 +28,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.session.IngSessionH
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
@@ -46,20 +43,19 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IngAgent extends SubsequentGenerationAgent
+public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
         implements RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                ProgressiveAuthAgent,
-                ManualOrAutoAuth {
+                ProgressiveAuthAgent {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
     private final IngTransferHelper ingTransferHelper;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final ProgressiveAuthenticator authenticator;
+    private final AutoAuthenticationProgressiveController authenticator;
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -174,6 +170,11 @@ public class IngAgent extends SubsequentGenerationAgent
     }
 
     @Override
+    public AutoAuthenticationProgressiveController getAuthenticator() {
+        return authenticator;
+    }
+
+    @Override
     public SteppableAuthenticationResponse login(final SteppableAuthenticationRequest request)
             throws Exception {
         return ProgressiveAuthController.of(authenticator, credentials).login(request);
@@ -182,11 +183,5 @@ public class IngAgent extends SubsequentGenerationAgent
     @Override
     public boolean login() throws Exception {
         throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
-    }
-
-    @Override
-    public boolean isManualAuthentication(Credentials credentials) {
-        // TODO: remove casting
-        return ((ManualOrAutoAuth) authenticator).isManualAuthentication(credentials);
     }
 }

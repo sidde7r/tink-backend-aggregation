@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -19,7 +18,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public class AutoAuthenticationProgressiveController
-        implements ProgressiveAuthenticator, ManualOrAutoAuth {
+        implements ProgressiveAuthenticator, AuthenticationControllerType {
 
     private final Credentials credentials;
     private final CredentialsRequestType credentialsRequestType;
