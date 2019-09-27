@@ -50,6 +50,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
    (This class also removes the header `Cookie2` which is added by apache).
 */
 public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
+    private static final String RESOLVED_APPID_PLACE_HOLDER = "RESOLVEDAPPIDPLACEHOLDER";
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
     private static final String SIGNATURE_HEADER_KEY = "X-Signature";
     private static final String EIDAS_CERTIFICATE_ID_HEADER = "X-Tink-Eidas-Proxy-Certificate-Id";
@@ -129,12 +130,17 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             // 2019-09-10 there are some issue with decryption of 726c95011c994aaf9e3a9c3ca25911b0
             // (Zimpler)
 
-            if (eidasIdentity != null
-                    && eidasIdentity.getAppId() != null
-                    && ALLOWED_APPIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getAppId())) {
-                addQsealcSignature(request);
-                if (eidasIdentity.getAppId() == null) {
-                    log.warn("AppId is null");
+            if (eidasIdentity != null && eidasIdentity.getAppId() != null) {
+                try {
+                    if (ALLOWED_APPIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getAppId())) {
+                        addQsealcSignature(request);
+                    } else if ("0201e59f90514e66ba26492ffabbe045"
+                            .equalsIgnoreCase(eidasIdentity.getAppId())) {
+                        addQsealcSignatureByGetingWholeJwsToken(request);
+                    }
+                } catch (Exception e) {
+                    log.warn("Error occurred in Qsealc signing");
+                    addRequestSignature(request);
                 }
             } else {
                 addRequestSignature(request);
@@ -228,6 +234,49 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         String signature = signer.getSignatureBase64(baseTokenString.getBytes());
         String jwt = baseTokenString + "." + signature;
         log.info("QSEALC Signature is :  {}", jwt);
+        request.addHeader(SIGNATURE_HEADER_KEY, jwt);
+    }
+
+    private void addQsealcSignatureByGetingWholeJwsToken(HttpRequest request) {
+        log.info("Using new qsealc signature method");
+        // TODO: adding the info header once verified
+        JwtBodyEntity jwtBody = new JwtBodyEntity();
+        RequestLine requestLine = request.getRequestLine();
+        jwtBody.setMethod(requestLine.getMethod());
+        jwtBody.setUri(requestLine.getUri());
+        getHttpHeadersHashAsBase64(request).ifPresent(jwtBody::setHeaders);
+
+        getHttpBodyHashAsBase64(request).ifPresent(jwtBody::setBody);
+        jwtBody.setNonce(UUID.randomUUID().toString());
+        jwtBody.setIat(OffsetDateTime.now().toEpochSecond());
+
+        String tokenBodyJson = SerializationUtils.serializeToString(jwtBody);
+        // TODO, idea is to use appId as keyId and upload cert to corresponding path on CDN
+        String tokenHeadJson =
+                SerializationUtils.serializeToString(
+                        new JwtHeaderEntity(RESOLVED_APPID_PLACE_HOLDER));
+
+        String baseTokenString =
+                Base64.getUrlEncoder()
+                                .encodeToString(
+                                        tokenHeadJson != null
+                                                ? tokenHeadJson.getBytes()
+                                                : new byte[0])
+                        + "."
+                        + Base64.getUrlEncoder()
+                                .encodeToString(
+                                        tokenBodyJson != null
+                                                ? tokenBodyJson.getBytes()
+                                                : new byte[0]);
+
+        QsealcSigner signer =
+                QsealcSigner.build(
+                        eidasProxyConfiguration.toInternalConfig(),
+                        QsealcAlg.EIDAS_JWT_RSA_SHA256,
+                        eidasIdentity);
+
+        String jwt = signer.getJWSToken(baseTokenString.getBytes());
+        log.info("jwt token from new method is {}", jwt);
         request.addHeader(SIGNATURE_HEADER_KEY, jwt);
     }
 
