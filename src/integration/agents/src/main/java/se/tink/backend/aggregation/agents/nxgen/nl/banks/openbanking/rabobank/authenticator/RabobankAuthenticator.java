@@ -3,12 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.a
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Consents;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -66,7 +69,11 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         .put(QueryParams.REDIRECT_URI, redirectUri)
                         .build();
 
-        return apiClient.exchangeAuthorizationCode(request).toOauthToken();
+        final TokenResponse tokenResponse = apiClient.exchangeAuthorizationCode(request);
+        final String consentId = getConsentId(tokenResponse.getScope());
+        persistentStorage.put(StorageKey.CONSENT_ID, consentId);
+
+        return tokenResponse.toOauthToken();
     }
 
     @Override
@@ -91,5 +98,21 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     @Override
     public void useAccessToken(final OAuth2Token accessToken) {
         persistentStorage.put(StorageKey.OAUTH_TOKEN, accessToken);
+    }
+
+    private String getConsentId(String scope) {
+        String consentId = null;
+        final String[] words = scope.split(" ");
+        for (String word : words) {
+            if (word.contains(Consents.PREFIX)) {
+                String parts[] = word.split("_");
+                consentId = parts[0];
+                break;
+            }
+        }
+        if (consentId.isEmpty()) {
+            throw BankServiceError.CONSENT_INVALID.exception();
+        }
+        return consentId;
     }
 }

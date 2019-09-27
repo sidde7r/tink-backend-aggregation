@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional;
 
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -8,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public final class TransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
 
+    private static final Logger logger = LoggerFactory.getLogger(TransactionFetcher.class);
     private final RabobankApiClient apiClient;
 
     public TransactionFetcher(final RabobankApiClient apiClient) {
@@ -17,6 +20,9 @@ public final class TransactionFetcher implements TransactionDatePaginator<Transa
     @Override
     public PaginatorResponse getTransactionsFor(
             final TransactionalAccount account, final Date fromDate, final Date toDate) {
+
+        apiClient.checkConsentStatus();
+
         return apiClient.getTransactions(account, fromDate, toDate, false);
     }
 }
