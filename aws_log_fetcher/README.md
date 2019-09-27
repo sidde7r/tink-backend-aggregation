@@ -28,6 +28,7 @@ Both Chrome extension and Python script must be running to be able to use it.
 
 - Open the Chrome browser
 - Click to three dots icon on top-right and go to More Tools - >Extensions
+- You need to enable "Developer mode"
 - Click to "Load unpacked"
 - Pick the folder "<path_to_tink_backend_aggregation>/aws_log_fetcher/chrome_extension"
 
