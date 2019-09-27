@@ -166,6 +166,10 @@ public final class RabobankApiClient {
 
     public void setConsentStatus() {
         final String consentId = persistentStorage.get(StorageKey.CONSENT_ID);
+        if (consentId == null) {
+            throw BankServiceError.CONSENT_INVALID.exception();
+        }
+
         final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
         final String uuid = RabobankUtils.getRequestId();
         final String date = RabobankUtils.getDate();
