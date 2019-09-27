@@ -15,10 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccountDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
@@ -52,9 +52,8 @@ public class CbiGlobeAuthenticator {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    public URL buildAuthorizeUrl(String state, ConsentRequest consentRequest) {
-        ConsentResponse consentResponse = createConsent(consentRequest, state);
-
+    public URL buildAuthorizeUrl(String redirectUrl, ConsentRequest consentRequest) {
+        ConsentResponse consentResponse = createConsent(consentRequest, redirectUrl);
         return getScaUrl(consentResponse);
     }
 
@@ -62,9 +61,8 @@ public class CbiGlobeAuthenticator {
         return new URL(consentResponse.getLinks().getAuthorizeUrl().getHref());
     }
 
-    protected ConsentResponse createConsent(ConsentRequest consentRequest, String state) {
-        ConsentResponse consentResponse =
-                apiClient.createConsent(consentRequest, createRedirectUrl(state));
+    protected ConsentResponse createConsent(ConsentRequest consentRequest, String redirectUrl) {
+        ConsentResponse consentResponse = apiClient.createConsent(consentRequest, redirectUrl);
         persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
 
         return consentResponse;
@@ -99,10 +97,10 @@ public class CbiGlobeAuthenticator {
                 new DateTime(new Date()).plusDays(90).toDate());
     }
 
-    protected String createRedirectUrl(String state) {
+    protected String createRedirectUrl(String state, ConsentType consentType) {
         return new URL(configuration.getRedirectUrl())
                 .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.CODE, QueryValues.CODE)
+                .queryParam(QueryKeys.CODE, consentType.getCode())
                 .get();
     }
 

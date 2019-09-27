@@ -122,7 +122,7 @@ public class CbiGlobeApiClient {
                 createRequestInSession(Urls.CONSENTS)
                         .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
                         .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
-                        .header(HeaderKeys.TPP_NOK_REDIRECT_URI, configuration.getRedirectUrl());
+                        .header(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
 
         return request.post(ConsentResponse.class, consentRequest);
     }
