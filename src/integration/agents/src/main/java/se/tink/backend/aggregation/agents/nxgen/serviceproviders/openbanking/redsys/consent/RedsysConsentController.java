@@ -51,4 +51,12 @@ public class RedsysConsentController {
             return false;
         }
     }
+
+    public ConsentStatus fetchConsentStatus(String consentId) {
+        return apiClient.fetchConsent(consentId).getConsentStatus();
+    }
+
+    public void clearConsentStorage() {
+        consentStorage.clear();
+    }
 }

@@ -117,14 +117,6 @@ public final class RedsysApiClient {
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
-    public boolean hasValidAccessToken() {
-        try {
-            return getTokenFromStorage().isValid();
-        } catch (IllegalStateException e) {
-            return false;
-        }
-    }
-
     private String makeAuthUrl(String path) {
         assert path.startsWith("/");
         return String.format(
