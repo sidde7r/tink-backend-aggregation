@@ -59,4 +59,11 @@ public class ResponseStatusEntity {
                         .toLowerCase()
                         .contains(IcaBankenConstants.BankIdStatus.SOMETHING_WENT_WRONG);
     }
+
+    public boolean isInvalidCustomer() {
+        return serverMessage != null
+                && serverMessage
+                        .toLowerCase()
+                        .contains(IcaBankenConstants.BankIdStatus.INVALID_CUSTOMER_ID);
+    }
 }

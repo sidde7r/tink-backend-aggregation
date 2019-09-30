@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator;
 
 import com.google.common.base.Strings;
+import java.util.Objects;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
@@ -43,7 +43,7 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     }
 
     @Override
-    public String init(String ssn) throws BankIdException {
+    public String init(String ssn) throws AuthenticationException, AuthorizationException {
         try {
             BankIdBodyEntity response = apiClient.initBankId(ssn);
             autostarttoken = response.getAutostartToken();
@@ -53,6 +53,8 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
             } else if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            } else if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                handleKnownErrors(e.getResponse());
             }
 
             throw e;
@@ -124,37 +126,43 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
         BankIdBodyEntity bankIdBodyEntity = bankIdResponse.getBody();
         ResponseStatusEntity responseStatus = bankIdResponse.getResponseStatus();
 
-        // If body is empty we look for error cause in the response status
-        if (bankIdBodyEntity.getStatus() == null) {
+        if (Objects.nonNull(bankIdBodyEntity)) {
+            // If body is empty we look for error cause in the response status
+            if (Objects.isNull(bankIdBodyEntity.getStatus()) && Objects.nonNull(responseStatus)) {
 
-            if (responseStatus.isNotACustomer()) {
-                throw LoginError.NOT_CUSTOMER.exception();
+                if (responseStatus.isNotACustomer()) {
+                    throw LoginError.NOT_CUSTOMER.exception();
+                }
+
+                if (responseStatus.isInterrupted()) {
+                    throw BankIdError.INTERRUPTED.exception();
+                }
+
+                if (responseStatus.isNotVerified()) {
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                }
+
+                if (responseStatus.isInvalidCustomer()) {
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                }
             }
 
-            if (responseStatus.isInterrupted()) {
-                throw BankIdError.INTERRUPTED.exception();
+            if (bankIdBodyEntity.isTimeOut()) {
+                throw BankIdError.TIMEOUT.exception();
             }
 
-            if (responseStatus.isNotVerified()) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            // We sometimes see these temporary errors from Icabanken that we have deemed to be on
+            // their side
+            // as users that have gotten this error have manged to update at a later time. Setting a
+            // condition
+            // that we have managed to poll at least once before getting the error. Getting errors
+            // on first poll
+            // may indicate that something's wrong on our side.
+            if (bankIdBodyEntity.isFailed()
+                    && responseStatus.isSomethingWentWrong()
+                    && pollCounter > 0) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
-        }
-
-        if (bankIdBodyEntity.isTimeOut()) {
-            throw BankIdError.TIMEOUT.exception();
-        }
-
-        // We sometimes see these temporary errors from Icabanken that we have deemed to be on their
-        // side
-        // as users that have gotten this error have manged to update at a later time. Setting a
-        // condition
-        // that we have managed to poll at least once before getting the error. Getting errors on
-        // first poll
-        // may indicate that something's wrong on our side.
-        if (bankIdBodyEntity.isFailed()
-                && responseStatus.isSomethingWentWrong()
-                && pollCounter > 0) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
 

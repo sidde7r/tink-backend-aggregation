@@ -72,6 +72,7 @@ public class IcaBankenConstants {
         public static final String INTERRUPTED = "signing not found";
         public static final String NOT_VERIFIED = "konto har ännu inte blivit verifierat";
         public static final String SOMETHING_WENT_WRONG = "något har blivit fel";
+        public static final String INVALID_CUSTOMER_ID = "invalid customerid";
     }
 
     public static final class StatusCodes {
