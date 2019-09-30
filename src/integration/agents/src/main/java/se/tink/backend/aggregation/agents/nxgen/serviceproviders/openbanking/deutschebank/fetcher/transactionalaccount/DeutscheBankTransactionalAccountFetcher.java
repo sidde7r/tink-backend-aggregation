@@ -6,12 +6,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.BalanceBaseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class DeutscheBankTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -41,6 +45,15 @@ public class DeutscheBankTransactionalAccountFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
-        return apiClient.fetchTransactionsForAccount(account, fromDate, toDate);
+        try {
+            return apiClient.fetchTransactionsForAccount(account, fromDate, toDate);
+        } catch (HttpResponseException e) {
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if (DeutscheBankConstants.FormValues.TRANSACTION_REQUEST_REJECTED.equalsIgnoreCase(
+                    errorResponse.getTransactionStatus())) {
+                return PaginatorResponseImpl.createEmpty(false);
+            }
+            throw e;
+        }
     }
 }

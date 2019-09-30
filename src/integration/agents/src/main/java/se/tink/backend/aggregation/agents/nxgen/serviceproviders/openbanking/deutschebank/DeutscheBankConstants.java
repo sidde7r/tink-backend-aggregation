@@ -110,5 +110,8 @@ public final class DeutscheBankConstants {
     public static class FormValues {
         public static final int MAX_POLLS_COUNTER = 50;
         public static final String CURRENCY_TYPE = "EUR";
+        // If the account does not have transactions for the requested period of time, DeutscheBank
+        // BE is just rejecting the request.
+        public static final String TRANSACTION_REQUEST_REJECTED = "RJCT";
     }
 }
