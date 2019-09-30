@@ -278,7 +278,7 @@
                     "description": "NIF/NIE or passport number",
                     "immutable": true,
                     "name": "username",
-                    "pattern": "(^[0-9]{8}[a-zA-Z]$)|(^[a-zA-Z][0-9]{7}[a-zA-Z]$)|(^[a-zA-Z]{2}[0-9]{6}$)",
+                    "pattern": "(^[0-9]{8}[a-zA-Z]$)|(^[xyzXYZ][0-9]{7}[a-zA-Z]$)|(^[a-zA-Z0-9]{6,10}$)",
                     "patternError": "Please verify that you have entered a correct NIF/NIE, or passport number."
                 },
                 {
