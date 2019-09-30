@@ -8,7 +8,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class NovoBancoAcoresAgent extends SibsProgressiveBaseAgent {
 
     public NovoBancoAcoresAgent(
-            CredentialsRequest request, AgentContext context, AgentsServiceConfiguration configuration) {
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration configuration) {
         super(request, context, configuration);
     }
 

@@ -8,7 +8,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class BpgAgent extends SibsProgressiveBaseAgent {
 
     public BpgAgent(
-            CredentialsRequest request, AgentContext context, AgentsServiceConfiguration configuration) {
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration configuration) {
         super(request, context, configuration);
     }
 

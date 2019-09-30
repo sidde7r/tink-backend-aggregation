@@ -21,7 +21,7 @@ public class SibsAuthenticator {
     private final SibsBaseApiClient apiClient;
     private final Credentials credentials;
 
-    private enum AuthenticationState{
+    private enum AuthenticationState {
         MANUAL_ON_GOING,
         MANUAL_SUCCEEDED,
         AUTO;
@@ -43,13 +43,12 @@ public class SibsAuthenticator {
     private AuthenticationState getCurrentAuthenticationState() throws SessionException {
         ConsentStatus consentStatus = getConsentStatus();
         final boolean manualAuthenticationInProgress = apiClient.isManualAuthenticationInProgress();
-        if(manualAuthenticationInProgress) {
-            if(consentStatus.isAcceptedStatus()) {
+        if (manualAuthenticationInProgress) {
+            if (consentStatus.isAcceptedStatus()) {
                 return AuthenticationState.MANUAL_SUCCEEDED;
             } else {
                 return AuthenticationState.MANUAL_ON_GOING;
             }
-
         }
         return AuthenticationState.AUTO;
     }
@@ -61,10 +60,10 @@ public class SibsAuthenticator {
             return ConsentStatus.valueOf(consentStatusString);
         } catch (IllegalArgumentException e) {
             throw new IllegalStateException(
-                SibsConstants.ErrorMessages.UNKNOWN_TRANSACTION_STATE
-                    + "="
-                    + consentStatusString,
-                e);
+                    SibsConstants.ErrorMessages.UNKNOWN_TRANSACTION_STATE
+                            + "="
+                            + consentStatusString,
+                    e);
         }
     }
 
@@ -74,12 +73,12 @@ public class SibsAuthenticator {
     }
 
     public void autoAuthenticate() throws SessionException {
-        try{
+        try {
             AuthenticationState authenticationState = getCurrentAuthenticationState();
-            if(authenticationState == AuthenticationState.AUTO) {
+            if (authenticationState == AuthenticationState.AUTO) {
                 return;
             } else {
-                if(authenticationState == AuthenticationState.MANUAL_SUCCEEDED) {
+                if (authenticationState == AuthenticationState.MANUAL_SUCCEEDED) {
                     apiClient.markManualAuthenticationFinished();
                 }
                 throw SessionError.SESSION_EXPIRED.exception();
@@ -89,7 +88,6 @@ public class SibsAuthenticator {
             return;
         }
     }
-
 
     public void setSessionExpiryDateIfAccepted(ConsentStatus consentStatus) {
         if (consentStatus.isAcceptedStatus()) {

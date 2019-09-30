@@ -8,7 +8,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class UnicreAgent extends SibsProgressiveBaseAgent {
 
     public UnicreAgent(
-            CredentialsRequest request, AgentContext context, AgentsServiceConfiguration configuration) {
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration configuration) {
         super(request, context, configuration);
     }
 

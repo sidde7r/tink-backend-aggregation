@@ -201,7 +201,9 @@ public class SibsBaseApiClient {
     }
 
     public boolean isManualAuthenticationInProgress() {
-        return persistentStorage.get(SibsSignSteps.SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS, Boolean.class).orElse(false);
+        return persistentStorage
+                .get(SibsSignSteps.SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS, Boolean.class)
+                .orElse(false);
     }
 
     public void markManualAuthenticationFinished() {
