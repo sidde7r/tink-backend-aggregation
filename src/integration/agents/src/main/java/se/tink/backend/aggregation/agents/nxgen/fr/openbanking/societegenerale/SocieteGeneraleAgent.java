@@ -31,7 +31,6 @@ public class SocieteGeneraleAgent extends NextGenerationAgent
 
     private final SocieteGeneraleApiClient apiClient;
     private SocieteGeneraleConfiguration societeGeneraleConfiguration;
-    private final String clientName;
     private TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AutoAuthenticationController authenticator;
 
@@ -39,7 +38,6 @@ public class SocieteGeneraleAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new SocieteGeneraleApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
     }
 
     @Override
@@ -68,26 +66,14 @@ public class SocieteGeneraleAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        societeGeneraleConfiguration = getClientConfiguration();
+        societeGeneraleConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(SocieteGeneraleConfiguration.class);
 
         apiClient.setConfiguration(societeGeneraleConfiguration);
         this.client.setEidasProxy(
                 configuration.getEidasProxy(), societeGeneraleConfiguration.getEidasQwac());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    protected SocieteGeneraleConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        SocieteGeneraleConstants.INTEGRATION_NAME,
-                        clientName,
-                        SocieteGeneraleConfiguration.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        SocieteGeneraleConstants.ErrorMessages
-                                                .MISSING_CONFIGURATION));
     }
 
     @Override
@@ -127,7 +113,7 @@ public class SocieteGeneraleAgent extends NextGenerationAgent
         SocieteGeneraleTransactionalAccountFetcher accountFetcher =
                 new SocieteGeneraleTransactionalAccountFetcher(
                         apiClient,
-                        getClientConfiguration(),
+                        societeGeneraleConfiguration,
                         configuration.getEidasProxy(),
                         sessionStorage,
                         getEidasIdentity());
@@ -136,7 +122,7 @@ public class SocieteGeneraleAgent extends NextGenerationAgent
                 new SocieteGeneraleTransactionFetcher(
                         apiClient,
                         configuration.getEidasProxy(),
-                        getClientConfiguration(),
+                        societeGeneraleConfiguration,
                         sessionStorage,
                         getEidasIdentity());
 

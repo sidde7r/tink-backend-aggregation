@@ -54,7 +54,7 @@ public class SocieteGeneraleAuthenticator implements OAuth2Authenticator {
         TokenRequest request =
                 TokenRequest.builder()
                         .setGrantType(SocieteGeneraleConstants.QueryValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(societeGeneraleConfiguration.getRedirectUri())
+                        .setRedirectUri(societeGeneraleConfiguration.getRedirectUrl())
                         .setCode(code)
                         .build();
 

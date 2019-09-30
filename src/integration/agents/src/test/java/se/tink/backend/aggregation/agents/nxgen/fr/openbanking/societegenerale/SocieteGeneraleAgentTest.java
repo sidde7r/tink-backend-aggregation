@@ -14,6 +14,8 @@ public class SocieteGeneraleAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("fr", "fr-societegenerale-ob")
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("societegenerale")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);

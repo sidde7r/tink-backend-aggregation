@@ -8,7 +8,7 @@ public class SocieteGeneraleConfiguration implements ClientConfiguration {
 
     private String clientId;
     private String clientSecret;
-    private String redirectUri;
+    private String redirectUrl;
     private String eidasQwac;
     private String eidasOrgNmr;
     private String keyId;
@@ -29,8 +29,8 @@ public class SocieteGeneraleConfiguration implements ClientConfiguration {
         return clientSecret;
     }
 
-    public String getRedirectUri() {
-        return redirectUri;
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 
     public String getClientId() {
