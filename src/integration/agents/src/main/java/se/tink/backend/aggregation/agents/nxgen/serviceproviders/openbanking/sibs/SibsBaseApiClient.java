@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SibsSignSteps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentAccessEntity;
@@ -181,6 +182,7 @@ public class SibsBaseApiClient {
     private void saveConsentInPersistentStorage(ConsentResponse consentResponse) {
         Consent consent =
                 new Consent(consentResponse.getConsentId(), LocalDateTime.now().toString());
+        persistentStorage.put(SibsSignSteps.SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS, true);
         persistentStorage.put(StorageKeys.CONSENT_ID, consent);
     }
 
@@ -196,6 +198,16 @@ public class SibsBaseApiClient {
             }
             throw ex;
         }
+    }
+
+    public boolean isManualAuthenticationInProgress() {
+        return persistentStorage
+                .get(SibsSignSteps.SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS, Boolean.class)
+                .orElse(false);
+    }
+
+    public void markManualAuthenticationFinished() {
+        persistentStorage.put(SibsSignSteps.SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS, false);
     }
 
     private ConsentRequest getConsentRequest() {

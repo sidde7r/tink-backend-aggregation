@@ -125,5 +125,7 @@ public final class SibsConstants {
 
     public static class SibsSignSteps {
         public static final String SIBS_PAYMENT_POST_SIGN_STATE = "sibs_payment_post_sign_state";
+        public static final String SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS =
+                "sibs_manual_authentication_in_progress";
     }
 }
