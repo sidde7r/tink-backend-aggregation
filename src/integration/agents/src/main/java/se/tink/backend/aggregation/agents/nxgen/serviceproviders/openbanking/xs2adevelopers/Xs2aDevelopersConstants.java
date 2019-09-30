@@ -31,7 +31,10 @@ public final class Xs2aDevelopersConstants {
                     .build();
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
-            TypeMapper.<PaymentStatus>builder().put(PaymentStatus.PENDING, "RCVD", "ACSC").build();
+            TypeMapper.<PaymentStatus>builder()
+                    .put(PaymentStatus.PENDING, "RCVD")
+                    .put(PaymentStatus.SIGNED, "ACSC")
+                    .build();
 
     private Xs2aDevelopersConstants() {
         throw new AssertionError();
@@ -62,6 +65,8 @@ public final class Xs2aDevelopersConstants {
                 "/berlingroup/v1/payments/sepa-credit-transfers";
         public static final String GET_PAYMENT =
                 "/berlingroup/v1/payments/sepa-credit-transfers/{paymentId}";
+        public static final String START_PAYMENT_AUTHORISATION =
+                "/berlingroup/v1/payments/sepa-credit-transfers/{paymentId}/authorisations";
     }
 
     public static class StorageKeys {
@@ -71,6 +76,7 @@ public final class Xs2aDevelopersConstants {
         public static final String PIS_TOKEN = "pis_token";
         public static final String CODE_VERIFIER = "code_verifier";
         public static final String ACCOUNT_ID = "accountId";
+        public static final String AUTHORISATION_URL = "authorisation_url";
     }
 
     public static class QueryKeys {

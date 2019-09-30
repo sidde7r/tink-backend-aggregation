@@ -20,6 +20,14 @@ public class CreatePaymentResponse {
     private String paymentId;
     private String transactionStatus;
 
+    public LinksEntity getLinks() {
+        return links;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
     public PaymentResponse toTinkPayment(
             AccountEntity creditor, AccountEntity debtor, LocalDate executionDate, Amount amount) {
         Payment.Builder buildingPaymentResponse =
@@ -35,9 +43,7 @@ public class CreatePaymentResponse {
                                         .translate(transactionStatus)
                                         .orElse(PaymentStatus.UNDEFINED))
                         .withType(PaymentType.SEPA);
-
         Payment tinkPayment = buildingPaymentResponse.build();
-
         return new PaymentResponse(tinkPayment);
     }
 }

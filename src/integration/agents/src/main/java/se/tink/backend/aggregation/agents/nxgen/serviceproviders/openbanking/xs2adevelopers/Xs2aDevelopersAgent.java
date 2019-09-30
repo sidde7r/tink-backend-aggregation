@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
@@ -148,16 +147,16 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
                         strongAuthenticationState);
 
         Xs2aDevelopersPaymentExecutor xs2aDevelopersPaymentExecutor =
-                new Xs2aDevelopersPaymentExecutor(apiClient);
-
-        return Optional.of(
-                new Xs2aDevelopersPaymentController(
-                        xs2aDevelopersPaymentExecutor,
-                        xs2aDevelopersPaymentExecutor,
+                new Xs2aDevelopersPaymentExecutor(
+                        apiClient,
                         new ThirdPartyAppAuthenticationController<>(
                                 controller, supplementalInformationHelper),
                         credentials,
-                        persistentStorage));
+                        persistentStorage);
+
+        return Optional.of(
+                new PaymentController(
+                        xs2aDevelopersPaymentExecutor, xs2aDevelopersPaymentExecutor));
     }
 
     @Override

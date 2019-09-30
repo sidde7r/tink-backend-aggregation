@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment;
 
-import java.time.format.DateTimeFormatter;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
+import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AmountEntity;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -17,19 +19,31 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private final Xs2aDevelopersApiClient apiClient;
+    private final ThirdPartyAppAuthenticationController controller;
+    private final Credentials credentials;
+    private final PersistentStorage persistentStorage;
 
-    public Xs2aDevelopersPaymentExecutor(Xs2aDevelopersApiClient apiClient) {
+    public Xs2aDevelopersPaymentExecutor(
+            Xs2aDevelopersApiClient apiClient,
+            ThirdPartyAppAuthenticationController controller,
+            Credentials credentials,
+            PersistentStorage persistentStorage) {
+        this.controller = controller;
+        this.credentials = credentials;
+        this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
         AccountEntity creditor = new AccountEntity(payment.getCreditor().getAccountNumber());
         AccountEntity debtor = new AccountEntity(payment.getDebtor().getAccountNumber());
@@ -38,31 +52,42 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
                 new CreatePaymentRequest(
                         creditor,
                         payment.getCreditor().getName(),
-                        payment.getExecutionDate()
-                                .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)),
                         debtor,
                         new AmountEntity(
                                 ExactCurrencyAmount.of(
                                         payment.getAmount().toBigDecimal(),
                                         payment.getCurrency())));
 
-        return apiClient
-                .createPayment(createPaymentRequest)
-                .toTinkPayment(creditor, debtor, payment.getExecutionDate(), payment.getAmount());
+        CreatePaymentResponse createPaymentResponse = apiClient.createPayment(createPaymentRequest);
+        persistentStorage.put(StorageKeys.PAYMENT_ID, createPaymentResponse.getPaymentId());
+        persistentStorage.put(
+                StorageKeys.AUTHORISATION_URL, createPaymentResponse.getLinks().getScaOAuth());
+
+        return createPaymentResponse.toTinkPayment(
+                creditor, debtor, payment.getExecutionDate(), payment.getAmount());
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
-        final String paymentId = paymentRequest.getPayment().getUniqueId();
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
+        final String paymentId = payment.getUniqueId();
+        sign();
 
         return apiClient.getPayment(paymentId).toTinkPayment(paymentId);
     }
 
+    private void sign() {
+        try {
+            controller.authenticate(credentials);
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+    }
+
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
-        throw new NotImplementedException(
-                "sign not yet implemented for " + this.getClass().getName());
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+        return new PaymentMultiStepResponse(
+                paymentMultiStepRequest.getPayment(), SigningStepConstants.STEP_FINALIZE, null);
     }
 
     @Override
@@ -79,9 +104,10 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
-            throws PaymentException {
-        throw new NotImplementedException(
-                "fetchMultiple not yet implemented for " + this.getClass().getName());
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
+        return new PaymentListResponse(
+                paymentListRequest.getPaymentRequestList().stream()
+                        .map(paymentRequest -> new PaymentResponse(paymentRequest.getPayment()))
+                        .collect(Collectors.toList()));
     }
 }

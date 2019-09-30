@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -176,5 +177,16 @@ public class Xs2aDevelopersApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .header(HeaderKeys.AUTHORIZATION, getPisTokenFromStorage().getAccessToken())
                 .get(GetPaymentResponse.class);
+    }
+
+    public void startPaymentAuthorisation(String paymentId) {
+        createRequest(
+                        new URL(
+                                        configuration.getBaseUrl()
+                                                + ApiServices.START_PAYMENT_AUTHORISATION)
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .header(HeaderKeys.AUTHORIZATION, getPisTokenFromStorage().getAccessToken())
+                .get(HttpResponse.class);
     }
 }
