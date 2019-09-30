@@ -57,7 +57,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_CLUSTER_ID_HEADER = "X-Tink-QWAC-ClusterId";
     private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
-    
+
     // All isAggregator=TRUE appIds
     private static final ImmutableSet<String> DISALLOWED_APPIDS_FOR_QSEALCSIGN =
             ImmutableSet.of(
@@ -201,9 +201,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                     "7ce255d0ba004771a59d8e8142ec959c",
                     "3a7c7e95a4074aafa6c398547c318147",
                     "50e1d054d6dc467cadde44d2d18da2cc",
-                    "cdadab612b3246d3965aa9247482824e"
-            );
-
+                    "cdadab612b3246d3965aa9247482824e");
 
     private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
@@ -266,7 +264,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
             // For RE request, try to add authentication header with corresponding QSealC cert.
             // * If eidasIdentity is null (for legacy agent), fallback to use self signed cert.
-            // * If QSealC cert can't be found or other exceptions, fallback as well and log the error.
+            // * If QSealC cert can't be found or other exceptions, fallback as well and log the
+            // error.
             // Roll out this for oxford users now.
             if (eidasIdentity != null && eidasIdentity.getAppId() != null) {
                 try {
