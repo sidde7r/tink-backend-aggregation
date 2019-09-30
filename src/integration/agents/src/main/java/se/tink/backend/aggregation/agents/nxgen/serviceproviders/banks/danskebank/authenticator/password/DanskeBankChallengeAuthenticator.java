@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password;
 
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Base64;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
@@ -29,7 +32,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CheckDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CodeAppChallengeAnswerEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdInitRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdInitResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdStatusRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DeviceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.InitOtpResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.KeyCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.ListOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.ListOtpResponse;
@@ -145,6 +152,8 @@ public class DanskeBankChallengeAuthenticator
 
             // Authenticate using key card (supplemental information)
             keyCardAuthenticationController.authenticate(credentials);
+        } else if (preferredDevice.isDanskeId()) {
+            danskeIdAuthentication(username, preferredDevice);
         } else {
             // Unknown device type.
             throw new IllegalStateException(
@@ -558,5 +567,46 @@ public class DanskeBankChallengeAuthenticator
         public LocalizableKey getKey() {
             return this.userMessage;
         }
+    }
+
+    public void danskeIdAuthentication(String username, DeviceEntity preferredDevice)
+            throws AuthenticationException, AuthorizationException {
+        // initOTP
+        InitOtpResponse initOtpResponse =
+                this.apiClient.initOtp(
+                        preferredDevice.getDeviceType(), preferredDevice.getDeviceSerialNumber());
+        String otpChallenge = initOtpResponse.getOtpChallenge();
+        String ExternalUserId = username;
+        // init
+        DanskeIdInitResponse initResponse =
+                apiClient.danskeIdInit(new DanskeIdInitRequest(ExternalUserId));
+        int OtpRequestId = initResponse.getOtpRequestId();
+        // poll for status
+        DanskeIdPoll(ExternalUserId, OtpRequestId);
+    }
+
+    private void DanskeIdPoll(String ExternalUserId, int OtpRequestId)
+            throws ThirdPartyAppException {
+        for (int i = 0; i < DanskeBankConstants.PollCodeTimeoutFilter.MAX_POLLS_COUNTER; i++) {
+            Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
+            String danskeIdStatus = getDanskeIdStatus(ExternalUserId, OtpRequestId);
+            switch (danskeIdStatus) {
+                case DanskeBankConstants.DanskeIdStatusCodes.COMPLETED:
+                    return;
+                case DanskeBankConstants.DanskeIdStatusCodes.PENDING:
+                    continue;
+                case DanskeBankConstants.DanskeIdStatusCodes.EXPIRED:
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                default:
+                    break;
+            }
+        }
+        throw ThirdPartyAppError.TIMED_OUT.exception();
+    }
+
+    private String getDanskeIdStatus(String ExternalUserId, int OtpRequestId) {
+        return apiClient
+                .getStatus(new DanskeIdStatusRequest(ExternalUserId, OtpRequestId))
+                .getStatus();
     }
 }

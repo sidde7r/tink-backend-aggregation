@@ -56,6 +56,14 @@ public class DanskeBankConstants {
         return getBaseUrl() + "/logon";
     }
 
+    public String getDanskeIdInitUrl() {
+        return getBaseUrl() + "/danskeid/init";
+    }
+
+    public String getDanskeIdStatusUrl() {
+        return getBaseUrl() + "/danskeid/status";
+    }
+
     // == END Authentication ==
 
     // == START BankID polling ==
@@ -143,6 +151,7 @@ public class DanskeBankConstants {
         public static final String DEVICE_TYPE_OTP_CARD = "OTPCARD";
         public static final String DEVICE_TYPE_SEC_CARD = "SECCARD";
         public static final String DEVICE_TYPE_GEMALTO = "GEMALTO";
+        public static final String DEVICE_TYPE_DANSKEID = "DANSKEID";
         public static final String USER_ID_TYPE = "PRIV";
         public static final String SUPPRESS_PUSH = "N";
         public static final String LANGUAGE_CODE = "EN";
@@ -262,5 +271,24 @@ public class DanskeBankConstants {
     public static class PollCodeTimeoutFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 3000;
+        public static final int MAX_POLLS_COUNTER = 50;
+    }
+
+    public static class DanskeIdStatusCodes {
+        public static final String COMPLETED = "complete";
+        public static final String PENDING = "pending";
+        public static final String EXPIRED = "expired_to_be_changed";
+        public static final String CANCELLED = "canceled";
+    }
+
+    public static class DanskeIdFormValues {
+        public static final String externalUserIdType = "ESAFEID";
+        public static final String lastCheck = "false";
+        public static final String externalRef = "abc";
+        public static final String externalText = "";
+        public static final String messageTemplateID = "MB3_Binding";
+        public static final String otpAppType = "OC";
+        public static final String otpRequestType = "MB3_B";
+        public static final String product = "P";
     }
 }

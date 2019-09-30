@@ -7,6 +7,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CheckDeviceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdInitRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdInitResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdStatusRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.InitOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.InitOtpResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.ListOtpRequest;
@@ -226,5 +230,17 @@ public class DanskeBankApiClient {
         }
 
         return checkDeviceResponse;
+    }
+
+    public DanskeIdStatusResponse getStatus(DanskeIdStatusRequest request) {
+        return client.request(constants.getDanskeIdStatusUrl())
+                .header("Referer", configuration.getAppReferer())
+                .post(DanskeIdStatusResponse.class, request);
+    }
+
+    public DanskeIdInitResponse danskeIdInit(DanskeIdInitRequest request) {
+        return client.request(constants.getDanskeIdInitUrl())
+                .header("Referer", configuration.getAppReferer())
+                .post(DanskeIdInitResponse.class, request);
     }
 }

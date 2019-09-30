@@ -43,6 +43,10 @@ public class DeviceEntity {
         return DanskeBankConstants.Device.DEVICE_TYPE_CODE_APP.equalsIgnoreCase(deviceType);
     }
 
+    public boolean isDanskeId() {
+        return DanskeBankConstants.Device.DEVICE_TYPE_DANSKEID.equalsIgnoreCase(deviceType);
+    }
+
     public boolean isOtpCard() {
         return DanskeBankConstants.Device.DEVICE_TYPE_OTP_CARD.equalsIgnoreCase(deviceType);
     }
