@@ -15,6 +15,8 @@ public class VolvoFinansAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-volvofinans-oauth2")
                         .loadCredentialsBefore(false)
+                        .setFinancialInstitutionId("volvofinans")
+                        .setAppId("tink")
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
