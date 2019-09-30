@@ -3,7 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.tr
 import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Headers;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Tag;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.entities.TransactionResultEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -25,12 +26,9 @@ public class CommerzbankTransactionFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        String productType =
-                account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_TYPE);
-        String identifier =
-                account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.IDENTIFIER);
-        String productBranch =
-                account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH);
+        String productType = account.getFromTemporaryStorage(Headers.PRODUCT_TYPE);
+        String identifier = account.getFromTemporaryStorage(Headers.IDENTIFIER);
+        String productBranch = account.getFromTemporaryStorage(Headers.PRODUCT_BRANCH);
 
         if (!Strings.isNullOrEmpty(productType)
                 && !Strings.isNullOrEmpty(identifier)
@@ -45,9 +43,7 @@ public class CommerzbankTransactionFetcher
 
             } catch (Exception e) {
                 LOGGER.errorExtraLong(
-                        "Error fetching transactions",
-                        CommerzbankConstants.LOGTAG.TRANSACTION_FETCHING_ERROR,
-                        e);
+                        "Error fetching transactions", Tag.TRANSACTION_FETCHING_ERROR, e);
                 return PaginatorResponseImpl.createEmpty();
             }
         }

@@ -9,7 +9,7 @@ public class CommerzbankConstants {
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     public static final String TIMEZONE_CET = "CET";
 
-    public static class URLS {
+    public static class Urls {
         public static final String HOST = "https://app.commerzbank.de";
         public static final String LOGIN = "/app/lp/v4/applogin";
         public static final String OVERVIEW = "/app/rest/v3/financeoverview";
@@ -17,8 +17,8 @@ public class CommerzbankConstants {
         public static final String LOGOUT = "/app/lp/v3/logout";
     }
 
-    public static class HEADERS {
         public static final String CONTENT_TYPE = "Content-Type";
+    public static class Headers {
         public static final String CCB_CLIENT_VERSION = "CCB-Client-Version";
         public static final String USER_AGENT = "User-Agent";
         public static final String PRODUCT_TYPE = "productType";
@@ -28,11 +28,11 @@ public class CommerzbankConstants {
         public static final String PRODUCT_BRANCH = "productBranch";
     }
 
-    public static class VALUES {
         public static final String JSON = "application/json";
         public static final String CCB_VALUE = "MobBkniOS+11.0+11.2";
         public static final String USER_AGENT_VALUE = "MobBkniOS-11.0.0";
         public static final String SESSION_TOKEN_VALUE = "false";
+    public static class Values {
         public static final String CURRENCY_VALUE = "EUR";
         public static final String AMOUNT_TYPE = "ALL";
         public static final String LOGOUT_OK = "logoutText.ok";

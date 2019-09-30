@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.session;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Values;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class CommerzbankSessionHandler implements SessionHandler {
@@ -22,7 +22,7 @@ public class CommerzbankSessionHandler implements SessionHandler {
                 .getItems()
                 .get(0)
                 .getMsgKey()
-                .equalsIgnoreCase(CommerzbankConstants.VALUES.LOGOUT_OK)) {
+                .equalsIgnoreCase(Values.LOGOUT_OK)) {
             return;
         }
         throw new IllegalStateException("Error when logging out");

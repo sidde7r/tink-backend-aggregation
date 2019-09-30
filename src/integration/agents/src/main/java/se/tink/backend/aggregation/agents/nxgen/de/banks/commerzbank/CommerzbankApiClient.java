@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginRequestBody;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Values;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ResultEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.RootModel;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.entities.TransactionModel;
@@ -28,7 +30,7 @@ public class CommerzbankApiClient {
     }
 
     private static URL getUrl(String resource) {
-        return new URL(CommerzbankConstants.URLS.HOST + resource);
+        return new URL(Urls.HOST + resource);
     }
 
     private RequestBuilder firstRequest() {
@@ -63,15 +65,15 @@ public class CommerzbankApiClient {
     }
 
     public ResultEntity financialOverview() {
-        return makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(RootModel.class).getResult();
+        return makeRequest(Urls.OVERVIEW).post(RootModel.class).getResult();
     }
 
     public SessionModel logout() {
-        return makeRequest(CommerzbankConstants.URLS.LOGOUT).get(SessionModel.class);
+        return makeRequest(Urls.LOGOUT).get(SessionModel.class);
     }
 
     public HttpResponse keepAlive() {
-        return makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(HttpResponse.class);
+        return makeRequest(Urls.OVERVIEW).post(HttpResponse.class);
     }
 
     private String toCommerzDate(Date date) {
@@ -112,18 +114,13 @@ public class CommerzbankApiClient {
                                 toCommerzDate(fromdate),
                                 toCommerzDate(toDate),
                                 page,
-                                CommerzbankConstants.VALUES.AMOUNT_TYPE,
+                                Values.AMOUNT_TYPE,
                                 50,
                                 null),
                         new Identifier(
-                                productType,
-                                CommerzbankConstants.VALUES.CURRENCY_VALUE,
-                                identifier,
-                                productBranch));
+                                productType, Values.CURRENCY_VALUE, identifier, productBranch));
         String serialized = new ObjectMapper().writeValueAsString(transactionRequestBody);
 
-        return makeRequest(CommerzbankConstants.URLS.TRANSACTIONS)
-                .post(TransactionModel.class, serialized)
-                .getResult();
+        return makeRequest(Urls.TRANSACTIONS).post(TransactionModel.class, serialized).getResult();
     }
 }
