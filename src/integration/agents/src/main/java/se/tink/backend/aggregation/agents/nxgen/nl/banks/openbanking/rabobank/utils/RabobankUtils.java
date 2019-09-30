@@ -43,6 +43,10 @@ public class RabobankUtils {
                 .orElseThrow(() -> new NoSuchElementException("Missing Oauth token!"));
     }
 
+    public static void removeOauthToken(final PersistentStorage persistentStorage) {
+        persistentStorage.remove(StorageKey.OAUTH_TOKEN);
+    }
+
     public static String createSignatureString(
             final String date, final String digest, final String requestId) {
         String result = Signature.SIGNING_STRING_DATE + date + "\n";

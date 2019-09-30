@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -167,6 +166,7 @@ public final class RabobankApiClient {
     public void setConsentStatus() {
         final String consentId = persistentStorage.get(StorageKey.CONSENT_ID);
         if (consentId == null) {
+            RabobankUtils.removeOauthToken(persistentStorage);
             throw BankServiceError.CONSENT_INVALID.exception();
         }
 
@@ -197,7 +197,9 @@ public final class RabobankApiClient {
         } else if (StringUtils.containsIgnoreCase(
                 consentStatus, RabobankConstants.Consents.INVALID)) {
             throw BankServiceError.CONSENT_INVALID.exception();
-        } else if (Objects.equals(consentStatus, RabobankConstants.Consents.REVOKED_BY_USER)) {
+        } else if (StringUtils.containsIgnoreCase(
+                consentStatus, RabobankConstants.Consents.REVOKED_BY_USER)) {
+            RabobankUtils.removeOauthToken(persistentStorage);
             throw BankServiceError.CONSENT_REVOKED_BY_USER.exception();
         } else {
             logger.debug("Consent status is " + consentStatus);

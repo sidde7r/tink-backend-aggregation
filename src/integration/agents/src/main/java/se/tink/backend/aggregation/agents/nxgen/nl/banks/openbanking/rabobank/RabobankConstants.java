@@ -24,7 +24,7 @@ public class RabobankConstants {
         public static final String ACTIVE = "Active";
         public static final String EXPIRE = "expire";
         public static final String INVALID = "invalid";
-        public static final String REVOKED_BY_USER = "RevokedByGiveConsent";
+        public static final String REVOKED_BY_USER = "revoked";
     }
 
     public static class StorageKey {
