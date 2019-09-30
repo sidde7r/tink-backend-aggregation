@@ -3,11 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator.getPasswordStringAsIntegerList;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator.getUsernameType;
 
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.UsernameTypes;
 
 public class IngAuthenticatorTest {
 
@@ -53,5 +55,16 @@ public class IngAuthenticatorTest {
     public void testExceptionThrownIfZeroPinPositionRequested() throws LoginException {
         IngAuthenticator.getPinPositionsForPassword(
                 getPasswordStringAsIntegerList("123456"), VALID_PINPAD, Arrays.asList(0, 3, 6));
+    }
+
+    @Test
+    public void testUsernameTypes() throws LoginException {
+        assertEquals(UsernameTypes.NIF, getUsernameType("12345678Z"));
+        assertEquals(UsernameTypes.NIF, getUsernameType("12345677J"));
+        assertEquals(UsernameTypes.NIE, getUsernameType("Z2345678M"));
+        assertEquals(UsernameTypes.NIE, getUsernameType("X2345677E"));
+        assertEquals(UsernameTypes.PASSPORT, getUsernameType("XAB123456"));
+        assertEquals(UsernameTypes.PASSPORT, getUsernameType("AB123456"));
+        assertEquals(UsernameTypes.PASSPORT, getUsernameType("12345678A"));
     }
 }

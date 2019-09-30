@@ -5,6 +5,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
@@ -28,13 +29,14 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.identitydata.countries.EsIdentityDocumentType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class IngAuthenticator implements Authenticator {
     private static final AggregationLogger LOGGER = new AggregationLogger(IngAuthenticator.class);
 
     private static final Pattern NIF_PATTERN = Pattern.compile("^[0-9]{8}[a-zA-Z]$");
-    private static final Pattern NIE_PATTERN = Pattern.compile("^[a-zA-Z][0-9]{7}[a-zA-Z]$");
+    private static final Pattern NIE_PATTERN = Pattern.compile("^[xyzXYZ][0-9]{7}[a-zA-Z]$");
     private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z0-9]{6,10}$");
     private final PersistentStorage persistentStorage;
 
@@ -179,19 +181,24 @@ public class IngAuthenticator implements Authenticator {
     /**
      * Validates username type and returns the corresponding document type number.
      *
-     * <p>NIF rule: 8 digits followed by 1 letter, DDDDDDDDL NIE rule: 1 letter followed by 7 digits
-     * followed by 1 letter, LDDDDDDDL PASSPORT rule: 2 letters followed by 6 digits, LLDDDDDD
+     * <p>NIF rule: 8 digits followed by checksum letter: DDDDDDDDC
      *
-     * <p>These are the only possible formats that I've found that the ING accept on the frontend
-     * side. Anything I try outside these formats result in "incorrect format" error.
+     * <p>NIE rule: X, Y or Z followed by 7 digits, followed by checksum letter: XDDDDDDDC
+     *
+     * <p>PASSPORT rule: 6 to 10 letters and digits: WWWWWWWWWW
+     *
+     * <p>Note: a NIF or NIE with a wrong checksum letter will be matched as a valid passport.
      */
-    private static int getUsernameType(String username) throws LoginException {
+    @VisibleForTesting
+    static int getUsernameType(String username) throws LoginException {
 
-        if (NIF_PATTERN.matcher(username).matches()) {
+        if (NIF_PATTERN.matcher(username).matches()
+                && EsIdentityDocumentType.isValidNif(username.toUpperCase(Locale.ROOT))) {
             return IngConstants.UsernameTypes.NIF;
         }
 
-        if (NIE_PATTERN.matcher(username).matches()) {
+        if (NIE_PATTERN.matcher(username).matches()
+                && EsIdentityDocumentType.isValidNie(username.toUpperCase(Locale.ROOT))) {
             return IngConstants.UsernameTypes.NIE;
         }
 
