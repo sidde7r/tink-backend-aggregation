@@ -2,12 +2,34 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginRequestBody;
+import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Headers;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.ScaMethod;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Values;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.ApprovalRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.ApprovalResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.ApproveChallengeRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.AutoLoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.CompleteAppRegistrationRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.CompleteAppRegistrationResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.FinaliseApprovalRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.FinaliseApprovalResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.InitAppRegistrationRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.InitAppRegistrationResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.InitScaResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.ManualLoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.PrepareApprovalRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.PrepareApprovalResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.SendTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.SendTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.UpdateAppRegistrationRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ResultEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.RootModel;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.entities.TransactionModel;
@@ -16,6 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.SearchCriteriaDto;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.TransactionRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.session.entities.SessionModel;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -33,35 +56,124 @@ public class CommerzbankApiClient {
         return new URL(Urls.HOST + resource);
     }
 
-    private RequestBuilder firstRequest() {
-        return client.request(getUrl(CommerzbankConstants.URLS.LOGIN))
-                .header(
-                        CommerzbankConstants.HEADERS.CONTENT_TYPE,
-                        CommerzbankConstants.VALUES.JSON);
-    }
-
+    // TODO: Stop using this method for the requests implemented originally.
     private RequestBuilder makeRequest(String resource) {
         return client.request(getUrl(resource))
-                .header(CommerzbankConstants.HEADERS.CONTENT_TYPE, CommerzbankConstants.VALUES.JSON)
-                .header(
-                        CommerzbankConstants.HEADERS.CCB_CLIENT_VERSION,
-                        CommerzbankConstants.VALUES.CCB_VALUE)
-                .header(
-                        CommerzbankConstants.HEADERS.USER_AGENT,
-                        CommerzbankConstants.VALUES.USER_AGENT_VALUE);
+                .type(MediaType.APPLICATION_JSON)
+                .header(Headers.CCB_CLIENT_VERSION, Values.CCB_CLIENT_VERSION)
+                .header(Headers.USER_AGENT, Values.CCB_CLIENT_VERSION);
     }
 
-    public HttpResponse login(String username, String password) throws JsonProcessingException {
+    private RequestBuilder getPostRequest(URL url) {
+        return client.request(url)
+                .type(MediaType.APPLICATION_JSON)
+                .header(Headers.CCB_CLIENT_VERSION, Values.CCB_CLIENT_VERSION)
+                .header(Headers.USER_AGENT, Values.CCB_CLIENT_VERSION);
+    }
 
-        LoginRequestBody loginRequestBody =
-                new LoginRequestBody(
-                        CommerzbankConstants.APP_ID,
-                        username,
-                        password,
-                        CommerzbankConstants.VALUES.SESSION_TOKEN_VALUE);
-        String serialized = new ObjectMapper().writeValueAsString(loginRequestBody);
+    public LoginResponse manualLogin(String username, String password) {
+        ManualLoginRequest request = ManualLoginRequest.create(username, password);
 
-        return firstRequest().post(HttpResponse.class, serialized);
+        return getPostRequest(Url.LOGIN).post(LoginResponse.class, request);
+    }
+
+    public LoginResponse autoLogin(String username, String password, String appId) {
+        AutoLoginRequest request = AutoLoginRequest.create(username, password, appId);
+
+        return getPostRequest(Url.LOGIN).post(LoginResponse.class, request);
+    }
+
+    public InitScaResponse initScaFlow() {
+        return getPostRequest(Url.INIT_SCA).post(InitScaResponse.class);
+    }
+
+    public PrepareApprovalResponse prepareScaApproval(String processContextId) {
+
+        PrepareApprovalRequest request =
+                PrepareApprovalRequest.create(ScaMethod.PHOTO_TAN, processContextId);
+
+        return getPostRequest(Url.PREPARE_SCA).post(PrepareApprovalResponse.class, request);
+    }
+
+    public void approveSca(String photoTanCode, String processContextId) {
+
+        ApprovalRequest request = ApprovalRequest.create(photoTanCode, processContextId);
+
+        ApprovalResponse response =
+                getPostRequest(Url.APPROVE_SCA).post(ApprovalResponse.class, request);
+
+        if (!response.getStatusEntity().isApprovalOk()) {
+            throw new IllegalStateException("Approval status of SCA was not OK.");
+        }
+    }
+
+    public void finaliseScaApproval(String processContextId) {
+
+        FinaliseApprovalRequest request = FinaliseApprovalRequest.create(processContextId);
+
+        FinaliseApprovalResponse response =
+                getPostRequest(Url.FINALISE_SCA).post(FinaliseApprovalResponse.class, request);
+
+        if (!response.getStatusEntity().isLoginStatusOk()) {
+            throw new IllegalStateException("Login status was not OK.");
+        }
+    }
+
+    public String initAppRegistration() {
+        InitAppRegistrationResponse response =
+                getPostRequest(Url.INIT_APP_REGISTRATION)
+                        .post(InitAppRegistrationResponse.class, new InitAppRegistrationRequest());
+
+        return response.getAppId();
+    }
+
+    public void completeAppRegistration(String appId) {
+        CompleteAppRegistrationRequest request = CompleteAppRegistrationRequest.create(appId);
+
+        CompleteAppRegistrationResponse response =
+                getPostRequest(Url.COMPLETE_APP_REGISTRATION)
+                        .post(CompleteAppRegistrationResponse.class, request);
+
+        if (response.getError() != null) {
+            throw new IllegalStateException("App registration could not be completed.");
+        }
+    }
+
+    public void send2FactorToken(String appId, PublicKey publicKey) {
+        String b64EncodedPublickey = EncodingUtils.encodeAsBase64String(publicKey.getEncoded());
+
+        SendTokenRequest request = SendTokenRequest.create(appId, b64EncodedPublickey);
+
+        SendTokenResponse response =
+                getPostRequest(Url.SEND_TWO_FACTOR_TOKEN).post(SendTokenResponse.class, request);
+
+        if (!response.getStatusEntity().isStatusOk()) {
+            throw new IllegalStateException("Sending of token was not successful.");
+        }
+    }
+
+    public void approveChallenge(String appId, String b64EncodedSignature) {
+        ApproveChallengeRequest request =
+                ApproveChallengeRequest.create(appId, b64EncodedSignature);
+
+        ApprovalResponse response =
+                getPostRequest(Url.APPROVE_CHALLENGE).post(ApprovalResponse.class, request);
+
+        if (!response.getStatusEntity().isLoginStatusOk()) {
+            throw new IllegalStateException("Challenge approval was unsuccessful.");
+        }
+    }
+
+    public void updateAppRegistration(String appId) {
+        UpdateAppRegistrationRequest request = UpdateAppRegistrationRequest.create(appId);
+
+        InitAppRegistrationResponse response =
+                getPostRequest(Url.APP_REGISTRATION_UPDATE)
+                        .post(InitAppRegistrationResponse.class, request);
+
+        if (response.getError() != null) {
+            throw new IllegalStateException("App registration update was unsuccessful.");
+        }
     }
 
     public ResultEntity financialOverview() {
