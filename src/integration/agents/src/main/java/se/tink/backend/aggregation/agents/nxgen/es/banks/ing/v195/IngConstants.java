@@ -144,4 +144,8 @@ public class IngConstants {
     public static class Storage {
         public static final String DEVICE_ID = "deviceId";
     }
+
+    public static class ErrorCodes {
+        public static final String LOGIN_DOCUMENT_FIELD = "loginDocument";
+    }
 }

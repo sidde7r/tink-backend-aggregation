@@ -17,10 +17,12 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Logging;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutRestSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -58,9 +60,21 @@ public class IngAuthenticator implements Authenticator {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        CreateSessionResponse response =
-                apiClient.postLoginRestSession(
-                        username, getUsernameType(username), dob, getDeviceId());
+        final CreateSessionResponse response;
+        try {
+            response =
+                    apiClient.postLoginRestSession(
+                            username, getUsernameType(username), dob, getDeviceId());
+        } catch (HttpResponseException hre) {
+            if (hre.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                final ErrorResponse errorResponse = hre.getResponse().getBody(ErrorResponse.class);
+                if (errorResponse.hasErrorField(ErrorCodes.LOGIN_DOCUMENT_FIELD)) {
+                    // login document didn't pass server-side validation
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                }
+            }
+            throw hre;
+        }
 
         if (!response.hasPinPad()) {
             // When the app receives a response with no pinpad and "view":"OTHERS", it does a POST
