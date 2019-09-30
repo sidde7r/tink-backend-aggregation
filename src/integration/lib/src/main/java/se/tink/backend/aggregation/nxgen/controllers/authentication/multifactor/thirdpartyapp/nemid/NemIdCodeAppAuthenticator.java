@@ -35,7 +35,8 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
         // on the wrong endpoint might cause delays or failures to obtain the user authorization
         this.pollUrl = getPollUrl(initiationResponse);
 
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING, getInitialReference(initiationResponse));
+        return ThirdPartyAppResponseImpl.create(
+                ThirdPartyAppStatus.WAITING, getInitialReference(initiationResponse));
     }
 
     protected abstract T initiateAuthentication();

@@ -46,5 +46,4 @@ public final class DanskeBankWebDriverHelper {
                 DanskeBankConstants.Javascript.USER_AGENT);
         return new PhantomJSDriver(capabilities);
     }
-
 }
