@@ -53,7 +53,6 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
     private static final Joiner REGEXP_OR_JOINER = Joiner.on("|");
     private final TinkHttpClient client;
     private final Credentials credentials;
-    private String loginResponse;
     private boolean hasRefreshed = false;
 
     public CSNAgent(
@@ -101,10 +100,15 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
         }
         hasRefreshed = true;
         checkBankSideError();
-        Matcher matcher = this.reBalance.matcher(this.loginResponse);
+
+        String currentDebtPage =
+                get(
+                        "https://tjanster.csn.se/aterbetalning/hurStorArMinSkuld/aktuellStudieskuld.do");
+
+        Matcher matcher = this.reBalance.matcher(currentDebtPage);
 
         if (!matcher.find()) {
-            if (this.loginResponse.toLowerCase().contains(NO_LOAN)) {
+            if (currentDebtPage.toLowerCase().contains(NO_LOAN)) {
                 // No loans on this credential
                 return;
             }
@@ -144,18 +148,15 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
 
         this.client.addPersistentHeader("Referer", "https://tjanster.csn.se/bas/");
 
-        this.loginResponse = get("https://tjanster.csn.se/bas/inloggning/pinkod.do");
+        String initLoginPage = get("https://tjanster.csn.se/bas/inloggning/pinkod.do");
 
         Preconditions.checkState(
-                this.loginResponse.contains("Fyll i ditt personnummer samt din personliga kod"));
+                initLoginPage.contains("Fyll i ditt personnummer samt din personliga kod"));
 
-        post("https://tjanster.csn.se/bas/inloggning/Pinkod.do", new LoginForm());
+        String loginResponse =
+                post("https://tjanster.csn.se/bas/inloggning/Pinkod.do", new LoginForm());
 
-        this.loginResponse =
-                get(
-                        "https://tjanster.csn.se/aterbetalning/hurStorArMinSkuld/aktuellStudieskuld.do");
-
-        if (!this.loginResponse.contains("Inloggad&nbsp;som")) {
+        if (!loginResponse.contains("Inloggad som")) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
@@ -176,12 +177,12 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
         }
     }
 
-    private void post(String url, MultivaluedMap postData) {
+    private String post(String url, MultivaluedMap postData) {
         try {
-            this.client
+            return this.client
                     .request(url)
                     .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                    .post(postData);
+                    .post(String.class, postData);
         } catch (HttpClientException hce) {
             // time out CSN is having problems
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
