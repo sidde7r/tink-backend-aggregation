@@ -21,7 +21,6 @@ public class AppAuthenticationPasswordController<T>
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final PasswordAuthenticator passwordAuthentication;
-    //    private final ThirdPartyAppAuthenticator<T> appAuthentication;
 
     public AppAuthenticationPasswordController(
             Catalog catalog,
@@ -30,28 +29,9 @@ public class AppAuthenticationPasswordController<T>
             SupplementalInformationHelper supplementalInformationHelper) {
         super(appAuthenticator, supplementalInformationHelper);
         this.catalog = catalog;
-        //        this.appAuthentication = appAuthenticator;
         this.passwordAuthentication = passwordAuthenticator;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
-
-    //
-    //    public AppAuthenticationPasswordController(
-    //            Catalog catalog,
-    //            SupplementalInformationHelper supplementalInformationHelper,
-    //            AppAuthenticatorPassword<T> authenticator) {
-    //        this(catalog, supplementalInformationHelper, authenticator, DEFAULT_OTP_VALUE_LENGTH);
-    //    }
-
-    //    public AppAuthenticationPasswordController(
-    //            Catalog catalog,
-    //            SupplementalInformationHelper supplementalInformationHelper,
-    //            AppAuthenticatorPassword<T> authenticator) {
-    //        this.catalog = Preconditions.checkNotNull(catalog);
-    //        this.supplementalInformationHelper =
-    //                Preconditions.checkNotNull(supplementalInformationHelper);
-    //        this.authenticator = Preconditions.checkNotNull(authenticator);
-    //    }
 
     @Override
     public CredentialsTypes getType() {
