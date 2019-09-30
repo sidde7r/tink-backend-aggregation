@@ -58,9 +58,150 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
-    private static final ImmutableSet<String> ALLOWED_APPIDS_FOR_QSEALCSIGN =
-            // TinkApp, Zimpler Test Appid. TODO, remove Zimpler one once tested
-            ImmutableSet.of("e643eb7981d24acfb47834ef338a4e2a", "6bb8cc19b3be4f329800caf45ce96c92");
+    // All isAggregator=TRUE appIds
+    private static final ImmutableSet<String> DISALLOWED_APPIDS_FOR_QSEALCSIGN =
+            ImmutableSet.of(
+                    "6bb8cc19b3be4f329800caf45ce96c92",
+                    "726c95011c994aaf9e3a9c3ca25911b0",
+                    "22d854bfe1a2486c8a0173d330cf6322",
+                    "36cbaccd848148449f34c2b4305db932",
+                    "a1f9f90779924e0bbae96e0b6bf5cb78",
+                    "cd7eda70a19143478b8844dcda83038d",
+                    "0ff7cba8c4094e29b94ba6812ad81d96",
+                    "db6edf80de054c7aa14c6fe8aa26e8c8",
+                    "a7d4b863a7294e1cb1308cb0ec233e20",
+                    "063c613bd71345a9a89f380831197ab6",
+                    "0ef63a049fd346e2b96e3e824f4974b8",
+                    "1ce03bb5c2a74da9a78c79a0deb4b66b",
+                    "71ca273fae4b4e4eb78f95324d609955",
+                    "11e69a6b69a14f82809f7d5113f91f7e",
+                    "8a9bff73d3a940f9909e4e1ea46e1550",
+                    "b8e09493724c454fa5ca5ec6663f37a3",
+                    "772ead2c31694115915d0cc505213a02",
+                    "6efdcfbed9644b97aeeaf8b8c261d96c",
+                    "61584d2fd46d435583c3826c468f7f43",
+                    "cee545c0bbc843b3861b959d4b884d42",
+                    "5ed32ef6a7314a658b1c57a5431f2978",
+                    "655e700ff6a74a618484ee28bca05d95",
+                    "755100024c524107950b31447b418391",
+                    "77973c9a15c04098b819754fd1c40f52",
+                    "f3420381d7d846fea5974eec0568932d",
+                    "18e699b8b3fc47489fcc26b55345d886",
+                    "1d23aff0566c41418cfd4973aae2bb3b",
+                    "e1af83a8cc174f309d3f8b380988aafc",
+                    "dc9bfc8e43684607b660d24beadce1c3",
+                    "bf766d3aba0243b688df44296ed2d274",
+                    "880e2dcc110d44fca65abc9a55b2b3db",
+                    "e2405849ab174405997e8aab3e79a9a0",
+                    "6865e34438844116a7d8e6f7cd121297",
+                    "f89d31e215b44870983252ee5a28598e",
+                    "5bdff90ba5f54b578b6bcd4a93f68f54",
+                    "2fe7f5bb1b164192b1d450a16aeac2f2",
+                    "d5cb400b4c364ea786cf7c93e91d31ad",
+                    "c8abc7841d524ed0bb5744bfbcda1cfd",
+                    "3a449a008cc14dc0a888ab4cc86a6645",
+                    "c9ffac55a2e943d88c22bf0bd6972986",
+                    "6c22453a598644ee98626621332d867f",
+                    "b3d1a13733b0426aba8ec45057f3e182",
+                    "45d37e3b1b8f4a46b5a031fcb6745004",
+                    "5f558ebb937d4082925588f1ba656857",
+                    "e74b7faf76fc4bf89e03711d8ef4da0b",
+                    "d4094154b219410688d457f727da8ca4",
+                    "aab8687a4584488480da41221311b1f1",
+                    "86d21fa207e045429c720531d378a9e0",
+                    "986a9e244c26451085edd2df33a68e59",
+                    "12eb2f2145e74659819ab75417327cdd",
+                    "421c175de3da403180094d0ee2811aa0",
+                    "99f90f6daa6944938ce56174e8ea8829",
+                    "6befb011567d428e919fba7faaaada83",
+                    "caaba0587c504db9a2bcfa1d150e5bf7",
+                    "ce5c6bd43db84d84b7bf62cd806d9c69",
+                    "5ca6cc5357b848788ca51318d9c4c5fc",
+                    "59b2c8799ada48c381637ebc96d455bc",
+                    "dd62847c2e4c4da0824a61dd364fabd0",
+                    "10d3037a0bf9415fa6b96a1e9dce3505",
+                    "fe19598246c34d51ae3dc36ec5ef45bc",
+                    "9083650d1cb24035bc2cee010f4ae8a6",
+                    "c0f81368e2c3422c8abac1e60f029765",
+                    "59e88a52d5414cd991f1fdadf080ec16",
+                    "5f0ef90db2614a00a8b948fa15af6777",
+                    "13a017b7cdbd486ba75a124ce842cfe2",
+                    "309be78f171a49dd9423dcd5b0a33810",
+                    "8d3e7589fcca45c3b9b6eafab74fb2eb",
+                    "59370bc862c54649b2cabf05f9afaac3",
+                    "68a6db2e54a94f65b14ae25128dd9e7d",
+                    "4c31b94ca11544dca5fbc34d10694118",
+                    "d091a999367647a09332733dedb01762",
+                    "59c9ca2b48f2491a9931f2c6f55257b5",
+                    "263cce748b2141ee9353d9dcbeacae69",
+                    "dde7f7ce71f445499a1fe1158ed638d0",
+                    "8f4384a2a64946b58aafe4d7ae483139",
+                    "dea9dba17ec94bddb48ed8d9120a3f05",
+                    "f1866cd42f0d44aebe454cdeffe9598f",
+                    "18763028d30c4a11a5cdf32a3b09abb4",
+                    "96dbd3f6eb1e4974ad6f0ec14becc581",
+                    "c7e816a0eb5747f5bb49126cf5f2678a",
+                    "2ab6e0f72b4d457a8c925539dcdfcac5",
+                    "72979bd16d3e42c0b302cff96dd69567",
+                    "df01cee2953c4d8e8296b2ef94d241f0",
+                    "e8ea892541c640d290bce24d77315168",
+                    "e74a9bdf259f416abb8f8f9f61e5bae3",
+                    "7e9570c5369640e69ae9ab79c3e91b63",
+                    "6f5db85d03a24ccd8a1fe18215283280",
+                    "98e9f29627fb439b9398d13a0c2ba4f0",
+                    "422133ade348446d98cdab6063fea92b",
+                    "6de5777031f243ca8d2229bd30e5fe5d",
+                    "a28f2fe3cf94417193e8892cc380e58a",
+                    "d2f2d32c648c426e85b5ceae1b8b78a2",
+                    "59f4afd2be3345e2a710819459ed35f3",
+                    "f26ff853c20e41dd9b6ccd1f4d49f961",
+                    "3808a4ff697844c69fb0e28c70fbde04",
+                    "d8e7e1e343664bfe84250a8bbfbc6054",
+                    "496629a2790345d68f03f19707032dda",
+                    "213a3d0ec0ac4f47b2f103ecc80c7f8f",
+                    "36cd54bfdbb04d58907f4fc65cfbcc71",
+                    "85a85d5f863f4e27a13f251379f2f3e5",
+                    "b66c08d2a35a409ba08eb6a0afddc19d",
+                    "88f78b12cef745ec84b017e8d285338d",
+                    "dca52d8fb3644361bb200067e47685b0",
+                    "2b7c112fcf6c49988a4b6d9f492d9a93",
+                    "948b9d03dd9b4615880dfd26a987d17d",
+                    "b806f529d3764f99a367d548e2435eef",
+                    "070c3e06a3fa4b8e96ee715b1102034c",
+                    "77ba5e53ed2b44c4aa280f90a3a8aae9",
+                    "24d5b54e115c4421b7f8c932c27c2c48",
+                    "9257bff04aea4879b624c540a2273e76",
+                    "f598141a8d0a4fdaa67dd47de875fa6c",
+                    "c5f5a6c6fa504c7b887aa7c93ff8d68a",
+                    "160eb0232596469abec43351eacb712b",
+                    "8ad61c6b125f4c609ddc10ec98f23f37",
+                    "a36014cce10a4ea8b87f45c6845ec6e6",
+                    "098449ee14c64710a73be51f30462d3f",
+                    "92ee9f245b644fac9335facc0efd7fa1",
+                    "72a330e7234f49fea66b295f020c7112",
+                    "97ac28d393e04eff832b4c78bbd2b3d6",
+                    "a2002331faa14c3fbc1e3b7b765b2b80",
+                    "9d795ebbc9464b9ba041946932622218",
+                    "b337f009dcf34dc4b4b0b8578370b99a",
+                    "9eb72ab214a0407ebebbc521531869c3",
+                    "0983c0ef2be64d1e9cfe427a1a555689",
+                    "fffbe8fe1fcf4e958f34d7c507d2d981",
+                    "153c35a2405a4900a032e07d6c66e6f0",
+                    "ad2d40e5cab4474188e9c935d162cccb",
+                    "e81d000bd7ce40e5b889ccd75dc749e6",
+                    "8d9a3f02e6fa42138e1ba73cb4f6fcb3",
+                    "ba767cb0db454357bc36e9eac061ee28",
+                    "b5cfcae6a25e413a9bcdb15bdfb02604",
+                    "1cd9aa58ff1b468a9c0fee74fed1334a",
+                    "b41758bd78494b948dc6f1b078aa0ee3",
+                    "0616fef40b6c46f48cbc6eb00d35092f",
+                    "2f780ee271f047ad83cc4b811f7fab54",
+                    "98d926e9f2c14f40aef525c5b6e57f3c",
+                    "2c5bc4b87fd5475bb0571bc04ad8b77c",
+                    "7ce255d0ba004771a59d8e8142ec959c",
+                    "3a7c7e95a4074aafa6c398547c318147",
+                    "50e1d054d6dc467cadde44d2d18da2cc",
+                    "cdadab612b3246d3965aa9247482824e");
 
     private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
@@ -120,26 +261,20 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             request.addHeader(EIDAS_APPID_HEADER, eidasIdentity.getAppId());
             request.addHeader(EIDAS_PROXY_REQUESTER, eidasIdentity.getRequester());
         } else if (shouldAddRequestSignature) {
-            // Do not add a signature header on the proxy requests.
-            // This is because we don't want to leak unnecessary information to proxy providers.
-            //
-            // Requests to the EIDAS proxy do not need to be signed. The proxy will sign the request
-            // on the way out if necessary.
-            // For now, only try the QSealC signing for tinkapp in oxford prod,
-            // as other clusters might not have the corresponding certificate uploaded, and we found
-            // 2019-09-10 there are some issue with decryption of 726c95011c994aaf9e3a9c3ca25911b0
-            // (Zimpler)
 
+            // For RE request, try to add authentication header with corresponding QSealC cert.
+            // * If eidasIdentity is null (for legacy agent), fallback to use self signed cert.
+            // * If QSealC cert can't be found or other exceptions, fallback as well and log the
+            // error.
+            // Roll out this for oxford users now.
             if (eidasIdentity != null && eidasIdentity.getAppId() != null) {
                 try {
-                    if (ALLOWED_APPIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getAppId())) {
-                        addQsealcSignature(request);
-                    } else if ("1cead6fc9f9040d4bc68b75934086a5a"
-                            .equalsIgnoreCase(eidasIdentity.getAppId())) {
+                    if (!DISALLOWED_APPIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getAppId())
+                            && "oxford-production".equals(eidasIdentity.getClusterId())) {
                         addQsealcSignatureByGetingWholeJwsToken(request);
                     }
                 } catch (Exception e) {
-                    log.warn("Error occurred in Qsealc signing");
+                    log.warn("Error occurred in QSealC signing", e);
                     addRequestSignature(request);
                 }
             } else {
@@ -191,50 +326,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                 cookieHeaders.stream().map(Header::getValue).collect(Collectors.joining("; "));
 
         request.addHeader("Cookie", cookieValue);
-    }
-
-    private void addQsealcSignature(HttpRequest request) {
-
-        // TODO: adding the info header once verified
-
-        JwtBodyEntity jwtBody = new JwtBodyEntity();
-        RequestLine requestLine = request.getRequestLine();
-        jwtBody.setMethod(requestLine.getMethod());
-        jwtBody.setUri(requestLine.getUri());
-        getHttpHeadersHashAsBase64(request).ifPresent(jwtBody::setHeaders);
-
-        getHttpBodyHashAsBase64(request).ifPresent(jwtBody::setBody);
-        jwtBody.setNonce(UUID.randomUUID().toString());
-        jwtBody.setIat(OffsetDateTime.now().toEpochSecond());
-
-        String tokenBodyJson = SerializationUtils.serializeToString(jwtBody);
-        // TODO, idea is to use appId as keyId and upload cert to corresponding path on CDN
-        String tokenHeadJson =
-                SerializationUtils.serializeToString(new JwtHeaderEntity(eidasIdentity.getAppId()));
-
-        String baseTokenString =
-                Base64.getUrlEncoder()
-                                .encodeToString(
-                                        tokenHeadJson != null
-                                                ? tokenHeadJson.getBytes()
-                                                : new byte[0])
-                        + "."
-                        + Base64.getUrlEncoder()
-                                .encodeToString(
-                                        tokenBodyJson != null
-                                                ? tokenBodyJson.getBytes()
-                                                : new byte[0]);
-
-        QsealcSigner signer =
-                QsealcSigner.build(
-                        eidasProxyConfiguration.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity);
-
-        String signature = signer.getSignatureBase64(baseTokenString.getBytes());
-        String jwt = baseTokenString + "." + signature;
-        log.info("QSEALC Signature is :  {}", jwt);
-        request.addHeader(SIGNATURE_HEADER_KEY, jwt);
     }
 
     private void addQsealcSignatureByGetingWholeJwsToken(HttpRequest request) {
