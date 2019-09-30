@@ -71,7 +71,7 @@ public class SocieteGeneraleAuthenticator implements OAuth2Authenticator {
                 TokenRequest.builder()
                         .setGrantType(SocieteGeneraleConstants.QueryValues.REFRESH_TOKEN)
                         .setRefreshToken(refreshToken)
-                        .build();
+                        .buildRefresh();
 
         TokenResponse response = apiClient.exchangeAuthorizationCodeOrRefreshToken(request);
         persistentStorage.put(
