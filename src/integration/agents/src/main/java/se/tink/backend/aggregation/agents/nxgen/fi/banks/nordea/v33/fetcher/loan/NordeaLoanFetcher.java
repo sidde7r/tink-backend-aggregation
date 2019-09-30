@@ -29,7 +29,7 @@ public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
                         loansEntity -> {
                             FetchLoanDetailsResponse loanDetails =
                                     apiClient.fetchLoanDetails(loansEntity.getLoanId());
-                            return loanDetails.toTinkLoanAccount(loansEntity);
+                            return loanDetails.toTinkLoanAccount();
                         })
                 .collect(Collectors.toList());
     }
