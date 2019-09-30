@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transa
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class AvanzaApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaApiClient.class);
@@ -174,13 +175,22 @@ public class AvanzaApiClient {
                 // If we don't get orderbookId, fetching anything unknown further is not possible
                 // atm. It should also handle the case when we get InstrumentTypes as UNKNOWN
                 if (!Strings.isNullOrEmpty(orderbookId)) {
-                    String response =
-                            fetchMarketInfoResponse(type, orderbookId, authSession, String.class);
-                    LOGGER.warn(
-                            "avanza - portfolio type not handled in switch - type: {}, orderbookId: {}, reseponse: {}",
-                            instrumentType,
-                            orderbookId,
-                            response);
+                    try {
+                        String response =
+                                fetchMarketInfoResponse(
+                                        type, orderbookId, authSession, String.class);
+                        LOGGER.warn(
+                                "avanza - portfolio type not handled in switch - type: {}, orderbookId: {}, reseponse: {}",
+                                instrumentType,
+                                orderbookId,
+                                response);
+                    } catch (HttpResponseException exception) {
+                        LOGGER.warn(
+                                "avanza - cannot fetch MarketInfo for portfolio - type: {}, orderbookId: {}, reseponse: {}",
+                                instrumentType,
+                                orderbookId,
+                                exception.getLocalizedMessage());
+                    }
                 }
                 return null;
         }
