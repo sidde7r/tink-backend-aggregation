@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppPollResponse;
 
 @JsonObject
 public class CodeAppChallengeAnswerEntity {
@@ -18,7 +19,7 @@ public class CodeAppChallengeAnswerEntity {
     }
 
     public static CodeAppChallengeAnswerEntity createFromPollResponse(
-            PollCodeAppResponse response) {
+            NemIdCodeAppPollResponse response) {
         return new CodeAppChallengeAnswerEntity(
                 response.getCodeAppSerialNumber(),
                 response.getPayload().getResponse(),

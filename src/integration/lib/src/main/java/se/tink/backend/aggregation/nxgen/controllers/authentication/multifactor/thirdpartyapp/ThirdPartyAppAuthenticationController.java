@@ -20,6 +20,7 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
     private final ThirdPartyAppAuthenticator<T> authenticator;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final int maxPollAttempts;
+    private ThirdPartyAppResponse<T> response;
 
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
     private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);
@@ -92,16 +93,20 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
 
         handleStatus(response.getStatus());
 
-        poll(response);
+        this.response = poll(response);
     }
 
-    private void poll(ThirdPartyAppResponse<T> response)
+    public ThirdPartyAppResponse<T> getResponse() {
+        return response;
+    }
+
+    private ThirdPartyAppResponse<T> poll(ThirdPartyAppResponse<T> response)
             throws AuthenticationException, AuthorizationException {
 
         for (int i = 0; i < maxPollAttempts; i++) {
             response = authenticator.collect(response.getReference());
             if (handleStatus(response.getStatus())) {
-                return;
+                return response;
             }
 
             Uninterruptibles.sleepUninterruptibly(SLEEP_SECONDS, TimeUnit.SECONDS);

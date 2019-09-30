@@ -10,15 +10,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankAbstractAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankWebDriverHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-public class DanskeBankPasswordAuthenticator extends DanskeBankAbstractAuthenticator
-        implements PasswordAuthenticator {
+public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
 
     private final DanskeBankApiClient apiClient;
     private final String deviceId;
@@ -58,7 +57,7 @@ public class DanskeBankPasswordAuthenticator extends DanskeBankAbstractAuthentic
         // Execute javascript to get encrypted logon package and finalize package
         WebDriver driver = null;
         try {
-            driver = constructWebDriver();
+            driver = DanskeBankWebDriverHelper.constructWebDriver();
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createLoginJavascript(
@@ -79,8 +78,7 @@ public class DanskeBankPasswordAuthenticator extends DanskeBankAbstractAuthentic
         }
     }
 
-    @Override
-    protected FinalizeAuthenticationResponse finalizeAuthentication() throws LoginException {
+    private FinalizeAuthenticationResponse finalizeAuthentication() throws LoginException {
         // Get encrypted finalize package
         if (this.finalizePackage == null) {
             throw new IllegalStateException("Finalize Package was null, aborting login");
