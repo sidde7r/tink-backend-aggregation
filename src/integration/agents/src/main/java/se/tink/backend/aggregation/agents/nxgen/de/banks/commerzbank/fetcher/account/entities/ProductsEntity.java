@@ -6,6 +6,9 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.DisplayCategoryIndex;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Headers;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Tag;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -324,15 +327,15 @@ public class ProductsEntity {
 
     public AccountTypes getType() {
         switch (productType.getDisplayCategoryIndex()) {
-            case CommerzbankConstants.DISPLAYCATEGORYINDEX.CHECKING:
+            case DisplayCategoryIndex.CHECKING:
                 return AccountTypes.CHECKING;
-            case CommerzbankConstants.DISPLAYCATEGORYINDEX.SAVINGS_OR_INVESTMENT:
+            case DisplayCategoryIndex.SAVINGS_OR_INVESTMENT:
                 return getSavingsOrInvestment();
             default:
                 LOGGER.warnExtraLong(
                         String.format(
                                 "displayCategoryIndex: %s", productType.getDisplayCategoryIndex()),
-                        CommerzbankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE);
+                        Tag.UNKNOWN_ACCOUNT_TYPE);
                 return AccountTypes.OTHER;
         }
     }
@@ -361,15 +364,11 @@ public class ProductsEntity {
                         .setName(getProductType().getProductName())
                         .setAccountNumber(getInternalAccountNumber())
                         .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                        .putInTemporaryStorage(Headers.IDENTIFIER, getProductId().getIdentifier())
                         .putInTemporaryStorage(
-                                CommerzbankConstants.HEADERS.IDENTIFIER,
-                                getProductId().getIdentifier())
+                                Headers.PRODUCT_TYPE, getProductId().getProductType())
                         .putInTemporaryStorage(
-                                CommerzbankConstants.HEADERS.PRODUCT_TYPE,
-                                getProductId().getProductType())
-                        .putInTemporaryStorage(
-                                CommerzbankConstants.HEADERS.PRODUCT_BRANCH,
-                                getProductType().getProductBranch());
+                                Headers.PRODUCT_BRANCH, getProductType().getProductBranch());
 
         if (canMakePayment(accountType)) {
             builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
@@ -387,20 +386,15 @@ public class ProductsEntity {
                 .setName(getProductType().getProductName())
                 .setAccountNumber(CreditCardMasker.maskCardNumber(creditCardNumber))
                 .putInTemporaryStorage(
-                        CommerzbankConstants.HEADERS.CREDIT_CARD_IDENTIFIER,
-                        getProductId().getIdentifier())
+                        Headers.CREDIT_CARD_IDENTIFIER, getProductId().getIdentifier())
                 .putInTemporaryStorage(
-                        CommerzbankConstants.HEADERS.CREDIT_CARD_PRODUCT_TYPE,
-                        getProductId().getProductType())
-                .putInTemporaryStorage(
-                        CommerzbankConstants.HEADERS.PRODUCT_BRANCH,
-                        getProductType().getProductBranch())
+                        Headers.CREDIT_CARD_PRODUCT_TYPE, getProductId().getProductType())
+                .putInTemporaryStorage(Headers.PRODUCT_BRANCH, getProductType().getProductBranch())
                 .build();
     }
 
     public boolean isCreditCard() {
-        return productType.getDisplayCategoryIndex()
-                == CommerzbankConstants.DISPLAYCATEGORYINDEX.CREDIT;
+        return productType.getDisplayCategoryIndex() == DisplayCategoryIndex.CREDIT;
     }
 
     private boolean canMakePayment(AccountTypes type) {

@@ -16,5 +16,6 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/commerzbank",
         "//src/integration/api",
         "//src/integration/lib:lib_test",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
     ],
 )
