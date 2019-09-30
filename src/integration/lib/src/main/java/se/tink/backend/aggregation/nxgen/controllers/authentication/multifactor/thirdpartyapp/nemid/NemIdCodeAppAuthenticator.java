@@ -12,16 +12,16 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.Errors;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.Status;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.Url;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public abstract class NemIdCodeAppAuthenticator implements ThirdPartyAppAuthenticator<String> {
+public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthenticator<String> {
 
     protected final TinkHttpClient client;
+    private String pollUrl;
 
     public NemIdCodeAppAuthenticator(TinkHttpClient client) {
         this.client = client;
@@ -29,10 +29,20 @@ public abstract class NemIdCodeAppAuthenticator implements ThirdPartyAppAuthenti
 
     @Override
     public ThirdPartyAppResponse<String> init() {
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING, getInitialReference());
+        T initiationResponse = initiateAuthentication();
+
+        // The poll endpoint might be slightly different for each NemID request, and requesting
+        // on the wrong endpoint might cause delays or failures to obtain the user authorization
+        this.pollUrl = getPollUrl(initiationResponse);
+
+        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING, getInitialReference(initiationResponse));
     }
 
-    protected abstract String getInitialReference();
+    protected abstract T initiateAuthentication();
+
+    protected abstract String getPollUrl(T initiationResponse);
+
+    protected abstract String getInitialReference(T initiationResponse);
 
     @Override
     public NemIdCodeAppResponse collect(String reference)
@@ -63,7 +73,7 @@ public abstract class NemIdCodeAppAuthenticator implements ThirdPartyAppAuthenti
         NemIdCodeAppPollRequest request = new NemIdCodeAppPollRequest(ticket);
 
         try {
-            return client.request(Url.POLL_URL)
+            return client.request(pollUrl)
                     .accept(MediaType.APPLICATION_JSON_TYPE)
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .addFilter(

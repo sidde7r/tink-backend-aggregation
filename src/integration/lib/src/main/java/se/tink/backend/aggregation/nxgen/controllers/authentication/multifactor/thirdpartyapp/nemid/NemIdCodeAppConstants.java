@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid;
 
 public final class NemIdCodeAppConstants {
-    public static class Url {
-        public static final String POLL_URL = "https://applet.danid.dk/nmas01/poll";
-    }
-
     public static class Status {
         public static final String STATUS_OK = "ok";
         public static final String STATUS_TIMEOUT = "timeout";

@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
-public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticator {
+public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticator<CodeAppEntity> {
 
   private final DanskeBankApiClient apiClient;
   private final String username;
@@ -31,7 +31,7 @@ public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticat
   }
 
   @Override
-  protected String getInitialReference() {
+  protected CodeAppEntity initiateAuthentication() {
     // Initiate the code app auth by requesting a new otp challenge.
     // The otp challenge we will get is an encrypted message containing the code app ticket and
     // url to poll the auth status.
@@ -41,10 +41,18 @@ public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticat
             preferredDevice.getDeviceType(), preferredDevice.getDeviceSerialNumber());
 
     String otpChallenge = initOtpResponse.getOtpChallenge();
-    CodeAppEntity codeAppEntity =
-        decryptOtpChallenge(username, otpChallenge, CodeAppEntity.class);
+    decryptOtpChallenge(username, otpChallenge, CodeAppEntity.class);
+    return decryptOtpChallenge(username, otpChallenge, CodeAppEntity.class);
+  }
 
-    return codeAppEntity.getToken();
+  @Override
+  protected String getPollUrl(CodeAppEntity initiationResponse) {
+    return initiationResponse.getPollURL();
+  }
+
+  @Override
+  protected String getInitialReference(CodeAppEntity initiationResponse) {
+    return initiationResponse.getToken();
   }
 
   private <T> T decryptOtpChallenge(String username, String otpChallenge, Class<T> clazz) {
