@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfSource;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc.AccountResponse;
@@ -41,7 +42,7 @@ public class BankinterTransactionalAccountFetcher
                             JsfUpdateResponse accountInfoResponse =
                                     apiClient.fetchJsfUpdate(
                                             Urls.ACCOUNT,
-                                            JsfSource.ACCOUNT_INFO,
+                                            accountResponse.getAccountInfoJsfSource(),
                                             accountResponse.getViewState(FormValues.ACCOUNT_HEADER),
                                             JsfPart.ACCOUNT_DETAILS);
                             return accountResponse.toTinkAccount(
@@ -54,22 +55,22 @@ public class BankinterTransactionalAccountFetcher
 
     private TransactionsResponse fetchTransactionsPage(
             TransactionalAccount account, PaginationKey nextKey) {
-        final String source;
-        final String viewState;
-        if (null == nextKey) {
+        if (Objects.isNull(nextKey)) {
             // first page, get view state from account
             final AccountResponse accountResponse =
                     apiClient.fetchAccount(Integer.parseInt(account.getApiIdentifier()));
-            source = JsfSource.TRANSACTIONS;
-            viewState = accountResponse.getViewState(FormValues.TRANSACTIONS);
-        } else {
-            source = nextKey.getSource();
-            viewState = nextKey.getViewState();
+            nextKey =
+                    account.getFromTemporaryStorage(
+                                    StorageKeys.FIRST_PAGINATION_KEY, PaginationKey.class)
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    "Could not get initial pagination key."));
         }
         return apiClient.fetchJsfUpdate(
                 Urls.ACCOUNT,
-                source,
-                viewState,
+                nextKey.getSource(),
+                nextKey.getViewState(),
                 TransactionsResponse.class,
                 JsfPart.TRANSACTIONS_WAIT,
                 JsfPart.TRANSACTIONS_NAVIGATION,

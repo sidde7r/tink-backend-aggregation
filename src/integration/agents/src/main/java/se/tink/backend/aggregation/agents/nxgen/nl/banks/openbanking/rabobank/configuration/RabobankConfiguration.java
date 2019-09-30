@@ -2,9 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.c
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Base64;
-import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
-import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -47,12 +45,6 @@ public final class RabobankConfiguration implements ClientConfiguration {
     public String getClientCert() {
         return RabobankUtils.getB64EncodedX509Certificate(
                 getClientSSLP12bytes(), getClientSSLKeyPassword());
-    }
-
-    @JsonIgnore
-    public String getQsealcSerial() {
-        Preconditions.checkNotNull(qsealcPem);
-        return Certificate.getX509SerialNumber(qsealcPem);
     }
 
     @JsonIgnore

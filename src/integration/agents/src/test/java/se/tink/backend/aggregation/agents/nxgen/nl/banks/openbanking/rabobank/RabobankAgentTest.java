@@ -46,4 +46,15 @@ public final class RabobankAgentTest {
                 .build()
                 .testRefresh();
     }
+
+    @Test
+    public void refreshProductionAbnAmro() throws Exception {
+        new AgentIntegrationTest.Builder("nl", "nl-rabobank-abn-oauth2")
+                .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                .setRequestFlagManual(Boolean.parseBoolean(manager.get(Arg.IS_MANUAL)))
+                .expectLoggedIn(false)
+                .build()
+                .testRefresh();
+    }
 }

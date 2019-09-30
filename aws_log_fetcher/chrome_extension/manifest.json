@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "Kibana Helper",
+  "version": "1.0",
+  "version_name": "1.0",
+
+  "description": "This extension helps downloading HTTP debug logs from AWS",
+
+  "author": "Berk Gedik",
+
+  "background": {
+    "scripts": [
+      "jquery_min_3.4.1.js",
+      "background.js"
+    ],
+    "persistent": true
+  },
+  
+  "content_scripts": [{
+     "matches": [
+        "https://kibana.aggregation-production.tink.network/app/kibana*", 
+        "https://kibana.aggregation-staging.tink.network/app/kibana*"
+      ],
+     "js": ["jquery_min_3.4.1.js", "content_script.js", "styles.js"]
+  }],
+
+  "offline_enabled": false,
+
+  "permissions": [
+  	"webRequest",
+  	"webRequestBlocking",
+  	"activeTab",
+  	"https://kibana.aggregation-production.tink.network/app/kibana*",
+    "https://kibana.aggregation-staging.tink.network/app/kibana*"
+  ]
+}

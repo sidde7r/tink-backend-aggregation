@@ -131,6 +131,7 @@ junit_test(
         "//data:agents",
         "//data:aggregation_test",
         "//data:cryptography_test",
+        "//data:security",
         "//data:tesseract_training_set",
         "//etc:development",
         "//tools:libkbc_wbaes_linux",

@@ -1,15 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.GenericCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardLiquidationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsResponse;
@@ -22,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LaCaixaCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
@@ -48,7 +51,7 @@ public class LaCaixaCreditCardFetcher
             // set balance for first card in contract, zero for the others
             return cardsResponse.getCards().stream()
                     .filter(GenericCardEntity::isCreditCard)
-                    .map(card -> mapCreditCardAccount(card, contracts))
+                    .map(card -> mapCreditCardAccount(card, contracts.get(card.getContract())))
                     .collect(Collectors.toList());
         } catch (HttpResponseException hre) {
 
@@ -67,26 +70,44 @@ public class LaCaixaCreditCardFetcher
     }
 
     private CreditCardAccount mapCreditCardAccount(
-            GenericCardEntity card, Map<String, List<GenericCardEntity>> contracts) {
-        boolean isFirstCardOnContract = contracts.get(card.getContract()).get(0).equals(card);
+            GenericCardEntity card, List<GenericCardEntity> cardsInContract) {
+        boolean isFirstCardOnContract = cardsInContract.get(0).equals(card);
         if (!isFirstCardOnContract) {
-            return card.toTinkCard(Amount.inEUR(0));
+            return card.toTinkCard(
+                    ExactCurrencyAmount.of(BigDecimal.ZERO, LaCaixaConstants.CURRENCY));
         }
         try {
             // Prepaid cards have no contract, so we use their balance directly
-            final Amount balance =
+            // Try to fetch the total debt from the next predicted settlement (COB-685, ESD-317)
+            final ExactCurrencyAmount balance =
                     card.getRefValIdContract() != null
                             ? fetchBalanceForCardContract(card.getRefValIdContract())
                             : card.getAvailableCredit();
 
             return card.toTinkCard(balance);
         } catch (NoSuchElementException e) {
-            LOG.warn("Unable to fetch card balance");
-            return card.toTinkCard(Amount.inEUR(0));
+            // If there are no predicted settlements, sum disposed balances from contract
+            // This matches what is shown in the overview of the app
+            LOG.warn("Unable to fetch card balance", e);
+            return card.toTinkCard(getBalanceForContract(cardsInContract));
+        } catch (HttpResponseException hre) {
+            if (isCurrentlyUnavailable(hre.getResponse())) {
+                // For VIA T toll payment devices, we get a 409 in fetchCardLiquidations
+                return card.toTinkCard(getBalanceForContract(cardsInContract));
+            }
+            throw hre;
         }
     }
 
-    private Amount fetchBalanceForCardContract(String contractRefVal)
+    private ExactCurrencyAmount getBalanceForContract(List<GenericCardEntity> cards) {
+        final BigDecimal sum =
+                cards.stream()
+                        .map(GenericCardEntity::getBalance)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return ExactCurrencyAmount.of(sum, LaCaixaConstants.CURRENCY);
+    }
+
+    private ExactCurrencyAmount fetchBalanceForCardContract(String contractRefVal)
             throws NoSuchElementException {
         final CardLiquidationsResponse liquidations =
                 apiClient.fetchCardLiquidations(contractRefVal, true);
@@ -97,12 +118,11 @@ public class LaCaixaCreditCardFetcher
         final LiquidationDetailResponse liquidationDetail =
                 apiClient.fetchCardLiquidationDetail(
                         liquidations.getRefValNumContract(), liquidationDateValue);
-        final Amount debt = Amount.inEUR(liquidationDetail.getLiquidationPeriod().getMyDebt());
-        if (debt.isZero()) {
-            return debt;
-        } else {
-            return debt.negate();
+        final BigDecimal totalDebt = liquidationDetail.getLiquidationPeriod().getMyDebt();
+        if (Objects.isNull(totalDebt)) {
+            throw new NoSuchElementException();
         }
+        return ExactCurrencyAmount.of(totalDebt, LaCaixaConstants.CURRENCY).negate();
     }
 
     @Override
@@ -111,10 +131,10 @@ public class LaCaixaCreditCardFetcher
         // new/first request or not.
         // The response contains a boolean that indicates if there is more data to fetch or not.
 
-        // if there are no transactions we sometimes get an error respomnse instead of empty, we
+        // if there are no transactions we sometimes get an error response instead of empty, we
         // return empty
         try {
-            return apiClient.fetchCardTransactions(account.getBankIdentifier(), page == 0);
+            return apiClient.fetchCardTransactions(account.getApiIdentifier(), page == 0);
         } catch (HttpResponseException hre) {
             if (noTransactions(hre.getResponse())) {
                 LOG.info(
@@ -132,6 +152,15 @@ public class LaCaixaCreditCardFetcher
         if (response != null && response.getStatus() == HttpStatus.SC_CONFLICT) {
             LaCaixaErrorResponse error = response.getBody(LaCaixaErrorResponse.class);
             return error != null && error.isEmptyList();
+        }
+
+        return false;
+    }
+
+    private boolean isCurrentlyUnavailable(HttpResponse response) {
+        if (response != null && response.getStatus() == HttpStatus.SC_CONFLICT) {
+            LaCaixaErrorResponse error = response.getBody(LaCaixaErrorResponse.class);
+            return error != null && error.isCurrentlyUnavailable();
         }
 
         return false;

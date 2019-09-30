@@ -40,7 +40,7 @@ public class LoanModuleTest {
                 .build();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullAmortized() {
         LoanModule.builder()
                 .withType(Type.MORTGAGE)
@@ -50,7 +50,7 @@ public class LoanModuleTest {
                 .build();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullMonthlyAmortization() {
         LoanModule.builder()
                 .withType(Type.MORTGAGE)
@@ -60,7 +60,7 @@ public class LoanModuleTest {
                 .build();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullInitialBalance() {
         LoanModule.builder()
                 .withType(Type.MORTGAGE)
@@ -70,7 +70,7 @@ public class LoanModuleTest {
                 .build();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullInitialDate() {
         LoanModule.builder()
                 .withType(Type.MORTGAGE)
@@ -80,7 +80,7 @@ public class LoanModuleTest {
                 .build();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullLoanNumber() {
         LoanModule.builder()
                 .withType(Type.MORTGAGE)
@@ -100,7 +100,7 @@ public class LoanModuleTest {
                 .build();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullNextDayOfTermsChange() {
         LoanModule.builder()
                 .withType(Type.MORTGAGE)
@@ -110,7 +110,7 @@ public class LoanModuleTest {
                 .build();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullSecurity() {
         LoanModule.builder()
                 .withType(Type.MORTGAGE)
@@ -120,7 +120,7 @@ public class LoanModuleTest {
                 .build();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullApplicants() {
         LoanModule.builder()
                 .withType(Type.MORTGAGE)
@@ -172,7 +172,7 @@ public class LoanModuleTest {
                 loanModule.getMonthlyAmortization(),
                 ExactCurrencyAmount.of(BigDecimal.valueOf(5_000.00), "SEK"));
         assertEquals(loanModule.getNextDayOfTermsChange(), LocalDate.of(2022, 5, 1));
-        assertEquals(loanModule.getNumMonthsBound(), 3);
+        assertEquals(loanModule.getNumMonthsBound(), Integer.valueOf(3));
         assertEquals(loanModule.getSecurity(), "Riksdagshuset");
     }
 }

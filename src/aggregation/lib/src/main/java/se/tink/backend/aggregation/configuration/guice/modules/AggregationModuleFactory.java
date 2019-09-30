@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Module;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.integration.agent_data_availability_tracker.module.AgentDataAvailabilityTrackerModule;
 import se.tink.libraries.discovery.CoordinationModule;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientModule;
 
@@ -26,6 +27,11 @@ public class AggregationModuleFactory {
                 .add(new AgentWorkerCommandModule())
                 .add(new AggregationConfigurationModule(configuration))
                 .add(new AggregationModule(configuration, environment.jersey()))
+                .add(
+                        new AgentDataAvailabilityTrackerModule(
+                                configuration
+                                        .getAgentsServiceConfiguration()
+                                        .getAgentDataAvailabilityTrackerConfiguration()))
                 .add(
                         new QueueModule(
                                 configuration.getSqsQueueConfiguration(), environment.lifecycle()))

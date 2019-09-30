@@ -442,33 +442,25 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
+            "className": "nxgen.uk.openbanking.revolut.RevolutV31Agent",
             "credentialsType": "PASSWORD",
-            "displayName": "Revolut",
+            "displayName": "Revolut Bank",
             "fields": [
                 {
-                    "description": "Phone number",
-                    "maxLength": 16,
-                    "minLength": 5,
-                    "name": "username",
-                    "pattern": "\\+[1-9][0-9]+",
-                    "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +44 NNN NNN NNNN"
-                },
-                {
-                    "description": "Passcode",
-                    "masked": true,
-                    "maxLength": 4,
-                    "minLength": 4,
-                    "name": "password",
-                    "pattern": "[0-9]{4}",
-                    "patternError": "Please enter your four digit passcode.",
-                    "sensitive": true
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true,
+                    "name": "info",
+                    "value": "Connecting your bank"
                 }
             ],
-            "multiFactor": true,
-            "name": "uk-revolut-password",
-            "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "name": "uk-revolut-oauth2",
+            "passwordhelptext": "Authentication is done on external page",
+            "payload": "tink3:revolut",
             "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"

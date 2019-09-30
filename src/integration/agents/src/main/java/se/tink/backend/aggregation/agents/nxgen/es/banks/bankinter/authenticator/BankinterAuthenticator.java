@@ -14,27 +14,23 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.LoginForm;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Paths;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BankinterAuthenticator implements PasswordAuthenticator {
-
-    private static File phantomJsFile;
+    private static final AggregationLogger LOG =
+            new AggregationLogger(BankinterAuthenticator.class);
+    private static final File phantomJsFile;
     private final BankinterApiClient apiClient;
     private final SessionStorage sessionStorage;
-
-    static {
-        boolean mac = System.getProperty("os.name").toLowerCase().contains("mac");
-
-        if (mac) {
-            phantomJsFile = new File("tools/phantomjs-tink-mac64-2.1.1");
-        } else {
-            phantomJsFile = new File("tools/phantomjs-tink-linux-x86_64-2.1.1");
-        }
-    }
 
     public BankinterAuthenticator(BankinterApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -59,6 +55,9 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
 
         capabilities.setCapability(CapabilityType.TAKES_SCREENSHOT, false);
         capabilities.setCapability(CapabilityType.SUPPORTS_ALERTS, false);
+        capabilities.setCapability(
+                PhantomJSDriverService.PHANTOMJS_PAGE_SETTINGS_PREFIX + "userAgent",
+                HeaderValues.USER_AGENT);
 
         final String[] phantomArgs =
                 new String[] {
@@ -84,7 +83,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         }
     }
 
-    private Function<WebDriver, Boolean> hasLoggedInOrFailed(String initialUrl) {
+    private Function<WebDriver, Boolean> didRedirectOrShowError(String initialUrl) {
         return driver -> {
             if (!driver.getCurrentUrl().equals(initialUrl)) {
                 return true;
@@ -108,9 +107,23 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         // submit and wait for error or redirect
         loginForm.submit();
         final WebDriverWait wait = new WebDriverWait(driver, LoginForm.SUBMIT_TIMEOUT_SECONDS);
-        wait.until(hasLoggedInOrFailed(initialUrl));
+        wait.until(didRedirectOrShowError(initialUrl));
 
-        return !isShowingError(driver);
+        // SCA
+        if (getCurrentUrl(driver).toUri().getPath().equalsIgnoreCase(Paths.VERIFY_SCA)) {
+            // TODO: handle SCA properly
+            // SCA triggers randomly for the same user, I haven't been able to see it in testing
+            // When we get to this page, the SMS has already been sent
+            // Throw a bank side failure, since it will most likely not trigger SCA next time
+            LOG.error("SCA not implemented");
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+
+        return getCurrentUrl(driver).toUri().getPath().equalsIgnoreCase(Paths.GLOBAL_POSITION);
+    }
+
+    private URL getCurrentUrl(WebDriver driver) {
+        return new URL(driver.getCurrentUrl());
     }
 
     @Override
@@ -124,5 +137,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         } else {
             throw AuthorizationError.UNAUTHORIZED.exception();
         }
+
+        driver.quit();
     }
 }

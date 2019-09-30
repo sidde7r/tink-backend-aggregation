@@ -7,20 +7,25 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
+import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
@@ -48,6 +53,8 @@ public final class RabobankApiClient {
     private final RabobankConfiguration rabobankConfiguration;
     private final EidasProxyConfiguration eidasProxyConf;
     private final EidasIdentity eidasIdentity;
+    private String qsealcPem;
+    private String consentStatus;
 
     RabobankApiClient(
             final TinkHttpClient client,
@@ -62,6 +69,8 @@ public final class RabobankApiClient {
         this.eidasProxyConf = eidasProxyConf;
         this.eidasIdentity = eidasIdentity;
         this.requestIsManual = requestIsManual;
+
+        this.qsealcPem = rabobankConfiguration.getQsealCert();
 
         client.addFilter(new AccessExceededFilter());
     }
@@ -124,7 +133,7 @@ public final class RabobankApiClient {
             final String signatureHeader,
             final String date) {
         final String clientId = rabobankConfiguration.getClientId();
-        final String clientCert = rabobankConfiguration.getQsealCert();
+        final String clientCert = qsealcPem;
         final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
         final RequestBuilder builder;
@@ -153,6 +162,46 @@ public final class RabobankApiClient {
         }
 
         return builder;
+    }
+
+    public void setConsentStatus() {
+        final String consentId = persistentStorage.get(StorageKey.CONSENT_ID);
+        if (consentId == null) {
+            throw BankServiceError.CONSENT_INVALID.exception();
+        }
+
+        final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
+        final String uuid = RabobankUtils.getRequestId();
+        final String date = RabobankUtils.getDate();
+        final String signatureHeader = buildSignatureHeader(digest, uuid, date);
+        final URL url = rabobankConfiguration.getUrls().buildConsentUrl(consentId);
+
+        ConsentDetailsResponse response = new ConsentDetailsResponse();
+        try {
+            response =
+                    buildRequest(url, uuid, digest, signatureHeader, date)
+                            .get(ConsentDetailsResponse.class);
+        } catch (HttpResponseException e) {
+            logger.warn(String.valueOf(e.getResponse()));
+        }
+        consentStatus = response.getStatus();
+    }
+
+    public void checkConsentStatus() {
+        if (consentStatus == null) {
+            setConsentStatus();
+        }
+
+        if (StringUtils.containsIgnoreCase(consentStatus, RabobankConstants.Consents.EXPIRE)) {
+            throw BankServiceError.CONSENT_EXPIRED.exception();
+        } else if (StringUtils.containsIgnoreCase(
+                consentStatus, RabobankConstants.Consents.INVALID)) {
+            throw BankServiceError.CONSENT_INVALID.exception();
+        } else if (Objects.equals(consentStatus, RabobankConstants.Consents.REVOKED_BY_USER)) {
+            throw BankServiceError.CONSENT_REVOKED_BY_USER.exception();
+        } else {
+            logger.debug("Consent status is " + consentStatus);
+        }
     }
 
     public TransactionalAccountsResponse fetchAccounts() {
@@ -260,9 +309,13 @@ public final class RabobankApiClient {
                         .getSignature(signingString.getBytes());
 
         final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);
-        final String clientCertSerial = rabobankConfiguration.getQsealcSerial();
+        final String clientCertSerial = extractQsealcSerial(qsealcPem);
 
         return RabobankUtils.createSignatureHeader(
                 clientCertSerial, Signature.RSA_SHA_256, b64Signature, Signature.HEADERS_VALUE);
+    }
+
+    private static String extractQsealcSerial(final String qsealc) {
+        return Certificate.getX509SerialNumber(qsealc);
     }
 }

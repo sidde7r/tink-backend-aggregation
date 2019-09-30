@@ -3,18 +3,17 @@ package se.tink.backend.aggregation.agents.utils.crypto;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
+import org.apache.commons.lang3.StringUtils;
 
 public class LaCaixaPasswordHash {
 
     private static final String HASH_ALGORITHM = "MD5";
-    private static final String PADDING =
-            "                " + "                " + "                ";
-
     private static final int MESSAGE_LENGTH = 64;
     private static final int COUNTER_1_VALUE = 3;
     private static final int COUNTER_2_VALUE = 7;
 
-    private String pin;
+    private String password;
     private int iterations;
     private String seed;
 
@@ -22,17 +21,25 @@ public class LaCaixaPasswordHash {
      * Create caixa otp (hashed password).
      * Arguments are seed (semilla), iterations (iteraciones) and pin.
      */
-    public LaCaixaPasswordHash(String seed, int iterations, String pin) {
+    public LaCaixaPasswordHash(String seed, int iterations, String password) {
         this.seed = seed;
         this.iterations = iterations;
-        this.pin = pin;
+        this.password = convertPassword(password);
+    }
+
+    private String convertPassword(String password) {
+        // [password.uppercaseString dataUsingEncoding:NSISOLatin1StringEncoding
+        // allowLossyConversion:YES]
+        final byte[] passwordBytes =
+                password.toUpperCase(Locale.ROOT).getBytes(StandardCharsets.ISO_8859_1);
+        return new String(passwordBytes, StandardCharsets.ISO_8859_1);
     }
 
     public String createOtp() {
         String result = null;
 
-        // md5 string [seed + pin + space] 64 long
-        String md5BaseData = (seed + pin + PADDING).substring(0, MESSAGE_LENGTH);
+        // md5 string [seed + uppercase password] padded with spaces to 64
+        String md5BaseData = StringUtils.rightPad(seed + password, MESSAGE_LENGTH, ' ');
 
         // calculate otp
         for (int i = 0; i < iterations; i++) {
@@ -59,7 +66,7 @@ public class LaCaixaPasswordHash {
                     "Algorithm: (" + HASH_ALGORITHM + ") could not be found.");
         }
 
-        return md.digest(md5BaseData.getBytes(StandardCharsets.UTF_8));
+        return md.digest(md5BaseData.getBytes(StandardCharsets.ISO_8859_1));
     }
 
     private String calculateFoldedHash(byte[] md5Sum) {

@@ -13,7 +13,7 @@ redirectUrls-description: |2
     request, the first one from the list will be used.
 
 redirectUrls-example: |2
-    ['https://api.tink.se/api/v1/credentials/third-party/callback', 'https://main.staging.fakeenvironment.tink.se/api/v1/credentials/third-party/callback']
+    "[\"https://api.tink.se/api/v1/credentials/third-party/callback\", \"https://main.staging.fakeenvironment.tink.se/api/v1/credentials/third-party/callback\"]"
 
 clientId-description: |2
     From https://www.oauth.com/oauth2-servers/client-registration/client-id-secret/: The
@@ -24,7 +24,7 @@ clientId-description: |2
     easier to craft phishing attacks against arbitrary applications.
 
 clientId-example: |2
-    555d5513cb123456789050b90f06a18b21234567890a9cce977c5513734d3f41
+    "555d5513cb123456789050b90f06a18b21234567890a9cce977c5513734d3f41"
 
 clientSecret-description: |2
     From https://www.oauth.com/oauth2-servers/client-registration/client-id-secret/: The
@@ -36,4 +36,4 @@ clientSecret-description: |2
     to a hexadecimal representation.
 
 clientSecret-example: |2
-    042cfdf1234567890ad83d622d7563aa2412345678900d8fd891c490f183c6da
+    "042cfdf1234567890ad83d622d7563aa2412345678900d8fd891c490f183c6da"

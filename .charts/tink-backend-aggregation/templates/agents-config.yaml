@@ -137,15 +137,6 @@ data:
             redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
         {{- end }}
 
-        {{- if $agentsConfig.bec }}
-        bec:
-          tink:
-            eidasQwac: "{{ $agentsConfig.bec.tink.eidasQwac }}"
-            qSealc: "BEC_QSEALC"
-            keyId: "BEC_KEY_ID"
-            redirectUrl: "{{ $agentsConfig.bec.tink.redirectUrl }}"
-        {{- end }}
-
         {{- if $agentsConfig.fints }}
         fints:
           regNumber: "FINTS_REG_NUMBER"
@@ -187,7 +178,7 @@ data:
             baseUrl: "https://api.rabobank.nl/openapi"
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
             clientSSLKeyPassword: ""
-            qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
+            qsealcPem: "RABOBANK_QSEALC_PSD2_ABN_TAG"
             certificateId: "{{ $agentsConfig.rabobank.abn.certificateId }}"
           abn:
             clientId: "RABOBANK_CLIENT_ID_ABN_TAG"
@@ -196,7 +187,7 @@ data:
             baseUrl: "https://api.rabobank.nl/openapi"
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
             clientSSLKeyPassword: ""
-            qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
+            qsealcPem: "RABOBANK_QSEALC_PSD2_ABN_TAG"
             certificateId: "{{ $agentsConfig.rabobank.abn.certificateId }}"
         {{- end }}
 
@@ -288,7 +279,7 @@ data:
             redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
             aspspCode: "CEMG"
           cgd:
-            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.cgd.certificateId }}"
             clientId: "SIBS_CLIENT_ID_CGD_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
@@ -307,7 +298,7 @@ data:
             redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
             aspspCode: "BNKI"
           cgd:
-            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.cgd.certificateId }}"
             clientId: "SIBS_CLIENT_ID_CGD_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"
@@ -516,7 +507,7 @@ data:
             redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
             aspspCode: "BCPPT"
           cgd:
-            baseUrl: "https://site2.sibsapimarket.com/sibs/apimarket"
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             certificateId: "{{ $agentsConfig.sibs.cgd.certificateId }}"
             clientId: "SIBS_CLIENT_ID_CGD_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_CGD_TAG"

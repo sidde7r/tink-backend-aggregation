@@ -21,6 +21,7 @@ public class SebConstants {
         public static final URL ACTIVATE_SESSION = new URL(BASE.concat(Endpoints.ACTIVATE_SESSION));
         public static final URL LIST_ACCOUNTS = new URL(BASE.concat(Endpoints.LIST_ACCOUNTS));
         public static final URL LIST_CARDS = new URL(BASE.concat(Endpoints.LIST_CARDS));
+        public static final URL LIST_LOANS = new URL(BASE.concat(Endpoints.LIST_LOANS));
         public static final URL LIST_TRANSACTIONS =
                 new URL(BASE.concat(Endpoints.LIST_TRANSACTIONS));
         public static final URL LIST_RESERVED_TRANSACTIONS =
@@ -41,6 +42,7 @@ public class SebConstants {
         public static final String ACTIVATE_SESSION = API_BASE + "Aktivera01Session01.asmx/Execute";
         public static final String LIST_ACCOUNTS = API_BASE + "Lista01Konton_privat01.asmx/Execute";
         public static final String LIST_CARDS = API_BASE + "Lista11Kort_privat05.asmx/Execute";
+        public static final String LIST_LOANS = API_BASE + "Lista11Laninfo_privat03.asmx/Execute";
         public static final String LIST_TRANSACTIONS =
                 API_BASE + "Lista01Rorelse_ftg03.asmx/Execute";
         public static final String LIST_RESERVED_TRANSACTIONS =

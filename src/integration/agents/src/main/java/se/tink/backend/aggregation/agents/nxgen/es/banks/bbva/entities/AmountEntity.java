@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.vavr.control.Option;
@@ -11,7 +12,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
-    private BigDecimal amount;
+    @JsonProperty private BigDecimal amount;
     private String currency;
 
     @JsonSetter
@@ -28,7 +29,7 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public double getAmount() {
+    public double getAmountAsDouble() {
         return amount.doubleValue();
     }
 }

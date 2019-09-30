@@ -26,6 +26,7 @@ public class SkandiaBankenAgentTest {
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .setFinancialInstitutionId("skandiabanken")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }

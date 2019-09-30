@@ -167,4 +167,9 @@ public abstract class BankiaConstants {
         public static final LogTag INSTRUMENT_FETCHING_ERROR =
                 LogTag.from("bankia_error_instrument_fetch");
     }
+
+    public static class TimeoutFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 3;
+        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }

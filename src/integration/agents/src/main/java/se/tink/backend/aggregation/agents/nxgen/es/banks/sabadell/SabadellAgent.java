@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SabadellAgent extends NextGenerationAgent
@@ -79,6 +80,7 @@ public class SabadellAgent extends NextGenerationAgent
     protected void configureHttpClient(TinkHttpClient client) {
         client.addMessageWriter(
                 new NoEscapeOfBackslashMessageBodyWriter(InitiateSessionRequestEntity.class));
+        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     @Override

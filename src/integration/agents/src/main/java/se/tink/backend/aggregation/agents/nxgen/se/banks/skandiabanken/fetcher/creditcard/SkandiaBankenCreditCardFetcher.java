@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.LogTags;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -24,7 +25,11 @@ public class SkandiaBankenCreditCardFetcher implements AccountFetcher<CreditCard
             final String creditCardsResponse = apiClient.fetchCreditCards().toString();
             LOG.infoExtraLong(creditCardsResponse, LogTags.CREDIT_CARDS);
         } catch (HttpResponseException e) {
-            // HTTP 500 means there are no available credit cards
+            ErrorResponse error = e.getResponse().getBody(ErrorResponse.class);
+            // Check if expected error response for no available creditcards or keep throwing.
+            if (!error.isNoCreditCardsError()) {
+                throw e;
+            }
         }
         return Collections.emptyList();
     }

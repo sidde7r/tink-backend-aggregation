@@ -6,13 +6,16 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.DeviceIdentification;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
@@ -151,5 +154,19 @@ public class Payload {
     public List<CreditCardTransactionEntity> getBookedCreditCardTransactions() {
         Preconditions.checkNotNull(vodb);
         return vodb.bookedCreditCardTransactions;
+    }
+
+    @JsonIgnore
+    public List<LoanEntity> getMortgageLoans() {
+        Preconditions.checkNotNull(vodb);
+
+        return Optional.ofNullable(vodb.mortgageLoans).orElse(Collections.emptyList());
+    }
+
+    @JsonIgnore
+    public List<LoanEntity> getBlancoLoans() {
+        Preconditions.checkNotNull(vodb);
+
+        return Optional.ofNullable(vodb.blancoLoans).orElse(Collections.emptyList());
     }
 }

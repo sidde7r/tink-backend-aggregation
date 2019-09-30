@@ -98,7 +98,7 @@ public class QsealcSigner {
         return build(conf, alg, new EidasIdentity(clusterId, "", requester), oldCertId);
     }
 
-    private byte[] getSignatureBase64Bytes(byte[] signingData) {
+    private byte[] callSecretsService(byte[] signingData) {
 
         try {
             HttpPost post =
@@ -131,7 +131,11 @@ public class QsealcSigner {
     }
 
     public String getSignatureBase64(byte[] signingData) {
-        return new String(getSignatureBase64Bytes(signingData), Charsets.US_ASCII);
+        return new String(callSecretsService(signingData), Charsets.US_ASCII);
+    }
+
+    public String getJWSToken(byte[] jwsTokenData) {
+        return new String(Base64.getDecoder().decode(callSecretsService(jwsTokenData)));
     }
 
     /**
@@ -154,6 +158,6 @@ public class QsealcSigner {
      * @throws QsealcSignerException if the signature could not be retrieved
      */
     public byte[] getSignature(byte[] signingData) {
-        return Base64.getDecoder().decode(getSignatureBase64Bytes(signingData));
+        return Base64.getDecoder().decode(callSecretsService(signingData));
     }
 }

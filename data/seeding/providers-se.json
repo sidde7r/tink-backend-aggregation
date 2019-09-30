@@ -312,6 +312,7 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "a31f72c5214147438376027cad36745a",
             "market": "SE",
             "multiFactor": false,
             "name": "csn",

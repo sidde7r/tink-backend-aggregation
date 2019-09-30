@@ -36,11 +36,11 @@ public class SibsAuthenticator {
         return apiClient.buildAuthorizeUrl(state);
     }
 
-    public ConsentStatus getConsentStatus() {
+    public ConsentStatus getConsentStatus() throws SessionException {
         return mapToConsentStatus(apiClient.getConsentStatus());
     }
 
-    private AuthenticationState getCurrentAuthenticationState() {
+    private AuthenticationState getCurrentAuthenticationState() throws SessionException {
         ConsentStatus consentStatus = getConsentStatus();
         final boolean manualAuthenticationInProgress = apiClient.isManualAuthenticationInProgress();
         if(manualAuthenticationInProgress) {

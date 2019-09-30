@@ -73,6 +73,10 @@ public class AccountEntity {
         return blockedReason;
     }
 
+    public String getType() {
+        return type;
+    }
+
     /**
      * The amount of cash in the account minus what is borrowed, but those numbers are not directly
      * available. Had to guess a bit here. The exact meaning of 'pawn value', 'loan limit',
