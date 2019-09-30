@@ -20,6 +20,14 @@
 					document.getElementById('launcher').style.display = 'inline';
 					if (response.image) {
 						document.getElementById('qrcode').src = 'data:image/svg+xml;base64,' + response.image;
+						var autostart = document.getElementById('autostarttoken');
+						autostart.value = token;
+						
+						document.getElementById("copyautostart").addEventListener("click", function(){
+							autostart.focus();
+							autostart.select();
+							document.execCommand("copy")
+					});
 					}
 				}
 			};
@@ -45,6 +53,10 @@
 		display: inline-block;
 		font-size: 16px;
 		}
+		input {
+			width: 380px;
+			font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+		}
 		#launcher {display:none;}
 		</style>
 		<title></title>
@@ -59,6 +71,7 @@
 			<p><button onclick="launchDirectly();">Launch directly</button></p>
 			<p><button onclick="launchViaBankId();">Launch via bankid.com</button></p>
 			<p><img id="qrcode"></p>
+			<p><input type="text" id ="autostarttoken" readonly="true"/> <button id ="copyautostart">copy token to clipboard</button></p>
 		</div>
 	</body>
 </html>
