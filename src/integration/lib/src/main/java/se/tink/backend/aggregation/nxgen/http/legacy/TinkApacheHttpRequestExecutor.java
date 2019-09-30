@@ -61,8 +61,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     // All isAggregator=TRUE appIds
     private static final ImmutableSet<String> DISALLOWED_APPIDS_FOR_QSEALCSIGN =
             ImmutableSet.of(
-                    "6bb8cc19b3be4f329800caf45ce96c92",
-                    "726c95011c994aaf9e3a9c3ca25911b0",
                     "22d854bfe1a2486c8a0173d330cf6322",
                     "36cbaccd848148449f34c2b4305db932",
                     "a1f9f90779924e0bbae96e0b6bf5cb78",
@@ -274,7 +272,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                         addQsealcSignatureByGetingWholeJwsToken(request);
                     }
                 } catch (Exception e) {
-                    log.warn("Error occurred in QSealC signing", e);
+                    log.warn(
+                            "Error occurred in QSealC signing, appId {}",
+                            eidasIdentity.getAppId(),
+                            e);
                     addRequestSignature(request);
                 }
             } else {
