@@ -53,10 +53,6 @@ public class RedsysConfiguration implements ClientConfiguration {
         return redirectUrl;
     }
 
-    public String getCertificateId() {
-        return certificateId;
-    }
-
     public Optional<String> getClientSigningKeyPath() {
         return Optional.ofNullable(clientSigningKeyPath);
     }

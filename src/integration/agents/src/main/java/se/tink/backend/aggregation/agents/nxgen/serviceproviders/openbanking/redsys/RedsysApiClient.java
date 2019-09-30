@@ -105,8 +105,8 @@ public final class RedsysApiClient {
         this.clientSigningCertificate =
                 RedsysUtils.parseCertificate(configuration.getClientSigningCertificate());
 
-        if (eidasProxyConfiguration != null && configuration.getCertificateId() != null) {
-            client.setEidasProxy(eidasProxyConfiguration, configuration.getCertificateId());
+        if (eidasProxyConfiguration != null) {
+            client.setEidasProxy(eidasProxyConfiguration, null);
         }
     }
 
