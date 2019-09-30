@@ -17,6 +17,8 @@ public class AbnAmroConfiguration implements ClientConfiguration {
 
     private String clientSSLKeyPassword;
 
+    private String certificateId;
+
     public String getClientId() {
         return clientId;
     }
@@ -35,5 +37,9 @@ public class AbnAmroConfiguration implements ClientConfiguration {
 
     public String getClientSSLKeyPassword() {
         return clientSSLKeyPassword;
+    }
+
+    public String getCertificateId() {
+        return certificateId;
     }
 }

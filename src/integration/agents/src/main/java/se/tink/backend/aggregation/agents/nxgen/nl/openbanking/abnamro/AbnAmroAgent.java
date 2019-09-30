@@ -28,8 +28,8 @@ public class AbnAmroAgent extends NextGenerationAgent
 
     private final AbnAmroApiClient apiClient;
     private final String clientName;
-    private AbnAmroConfiguration configuration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private AbnAmroConfiguration configuration;
 
     public AbnAmroAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -62,10 +62,8 @@ public class AbnAmroAgent extends NextGenerationAgent
         this.configuration = abnAmroConfiguration;
         apiClient.setConfiguration(abnAmroConfiguration);
 
-        final String password = abnAmroConfiguration.getClientSSLKeyPassword();
-
-        final byte[] p12 = abnAmroConfiguration.getClientSSLP12Bytes();
-        client.setSslClientCertificate(p12, password);
+        this.client.setEidasProxy(
+                configuration.getEidasProxy(), abnAmroConfiguration.getCertificateId());
     }
 
     @Override
