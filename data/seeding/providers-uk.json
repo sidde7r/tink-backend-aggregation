@@ -356,7 +356,7 @@
             "multiFactor": false,
             "name": "uk-monzo-oauth2",
             "passwordHelpText": "",
-            "payload": "tink:monzo",
+            "payload": "tink3:monzo",
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
