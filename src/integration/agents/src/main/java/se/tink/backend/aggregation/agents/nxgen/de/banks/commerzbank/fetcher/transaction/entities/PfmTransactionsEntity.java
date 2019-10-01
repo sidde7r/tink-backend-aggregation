@@ -159,6 +159,16 @@ public class PfmTransactionsEntity {
         return text;
     }
 
+    private static String cleanTransactionDescription(String text) {
+        String description[] = text.split("\\r?\\n?⏎");
+        if (CommerzbankConstants.TransactionDescriptions.kartenzahlung.equalsIgnoreCase(
+                description[0])) {
+            return description[1];
+        } else {
+            return description[0];
+        }
+    }
+
     public String getTimestamp() {
         return timestamp;
     }
@@ -204,7 +214,7 @@ public class PfmTransactionsEntity {
         return Transaction.builder()
                 .setAmount(new Amount(getAmount().getCurrency(), getAmount().getValue()))
                 .setDate((getDate()))
-                .setDescription(getText())
+                .setDescription(cleanTransactionDescription(getText()))
                 .setPending(isUncleared())
                 .build();
     }

@@ -119,4 +119,8 @@ public class CommerzbankConstants {
         public static final LogTag TRANSACTION_FETCHING_ERROR =
                 LogTag.from("#commerzbank_transaction_fetching_error");
     }
+
+    public static class TransactionDescriptions {
+        public static String kartenzahlung = "Kartenzahlung";
+    }
 }
