@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -62,6 +63,14 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
 
     protected SubsequentGenerationAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        this(request, context, signatureKeyPair, false);
+    }
+
+    protected SubsequentGenerationAgent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
+            boolean useNextGenClient) {
         super(request, context);
         this.catalog = context.getCatalog();
         this.persistentStorage = new PersistentStorage();
@@ -73,13 +82,23 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
                         MarketCode.valueOf(request.getProvider().getMarket()),
                         request.getProvider().getCurrency(),
                         request.getUser());
-        this.client =
-                new LegacyTinkHttpClient(
-                        context.getAggregatorInfo(),
-                        metricContext.getMetricRegistry(),
-                        context.getLogOutputStream(),
-                        signatureKeyPair,
-                        request.getProvider());
+        if (useNextGenClient) {
+            this.client =
+                    new NextGenTinkHttpClient(
+                            context.getAggregatorInfo(),
+                            metricContext.getMetricRegistry(),
+                            context.getLogOutputStream(),
+                            signatureKeyPair,
+                            request.getProvider());
+        } else {
+            this.client =
+                    new LegacyTinkHttpClient(
+                            context.getAggregatorInfo(),
+                            metricContext.getMetricRegistry(),
+                            context.getLogOutputStream(),
+                            signatureKeyPair,
+                            request.getProvider());
+        }
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();
         }

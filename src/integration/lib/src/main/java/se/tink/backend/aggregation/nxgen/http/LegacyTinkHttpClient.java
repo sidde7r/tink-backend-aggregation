@@ -88,8 +88,6 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-/** @deprecated Use {@link NextGenTinkHttpClient} instead. */
-@Deprecated
 public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         implements TinkHttpClient {
     private TinkApacheHttpRequestExecutor requestExecutor;
@@ -349,7 +347,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
             this.internalClient.addFilter(debugOutputLoggingFilter);
         }
         if (messageSignInterceptor != null) {
-            this.internalClient.addFilter(messageSignInterceptor);
+            this.addFilter(messageSignInterceptor);
         }
     }
 

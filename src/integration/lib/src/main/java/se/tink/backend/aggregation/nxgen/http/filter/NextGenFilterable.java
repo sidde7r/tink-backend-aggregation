@@ -2,12 +2,13 @@ package se.tink.backend.aggregation.nxgen.http.filter;
 
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.DefaultOrderedFiltersSorter;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.OrderedFiltersSorter;
 
-public abstract class NextGenFilterable<T extends NextGenFilterable> implements Filterable<T> {
+public abstract class NextGenFilterable<T extends Filterable> implements Filterable<T> {
 
     private List<Filter> filters = new ArrayList<>();
     private OrderedFiltersSorter orderedFiltersSorter = DefaultOrderedFiltersSorter.getInstance();
@@ -25,7 +26,6 @@ public abstract class NextGenFilterable<T extends NextGenFilterable> implements 
     public void setOrderedFiltersSorter(OrderedFiltersSorter orderedFiltersSorter) {
         Preconditions.checkNotNull(orderedFiltersSorter);
         this.orderedFiltersSorter = orderedFiltersSorter;
-        filters = orderedFiltersSorter.orderFilters(filters);
     }
 
     public Filter getFilterHead() {
@@ -39,7 +39,6 @@ public abstract class NextGenFilterable<T extends NextGenFilterable> implements 
     public T addFilter(Filter filter) {
         Preconditions.checkNotNull(filter);
         this.filters.add(filter);
-        filters = orderedFiltersSorter.orderFilters(filters);
         return (T) this;
     }
 
@@ -59,5 +58,19 @@ public abstract class NextGenFilterable<T extends NextGenFilterable> implements 
     @Deprecated
     public void cutFilterTail() {
         throw new UnsupportedOperationException("No longer supported operation");
+    }
+
+    protected void reorderFilters() {
+        filters = orderedFiltersSorter.orderFilters(filters);
+        Iterator<Filter> it = filters.iterator();
+        Filter next = null;
+        Filter current = null;
+        while (it.hasNext()) {
+            next = it.next();
+            if (current != null) {
+                current.setNext(next);
+            }
+            current = next;
+        }
     }
 }

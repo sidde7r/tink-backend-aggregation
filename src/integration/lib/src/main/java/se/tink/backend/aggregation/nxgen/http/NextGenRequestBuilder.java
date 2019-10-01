@@ -21,7 +21,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.NextGenFilterable;
 
-public class NextGenRequestBuilder extends NextGenFilterable<NextGenRequestBuilder> {
+public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
+        implements RequestBuilder {
 
     private final String headerAggregatorIdentifier;
     private URL url;
@@ -347,6 +348,7 @@ public class NextGenRequestBuilder extends NextGenFilterable<NextGenRequestBuild
 
         addCookiesToHeader();
         addAggregatorToHeader();
+        reorderFilters();
         HttpResponse httpResponse = getFilterHead().handle(httpRequest);
 
         responseStatusHandler.handleResponse(httpRequest, httpResponse);
@@ -364,6 +366,7 @@ public class NextGenRequestBuilder extends NextGenFilterable<NextGenRequestBuild
             throws HttpClientException, HttpResponseException {
         addCookiesToHeader();
         addAggregatorToHeader();
+        reorderFilters();
         HttpResponse httpResponse = handle(HttpResponse.class, httpRequest);
 
         responseStatusHandler.handleResponseWithoutExpectedReturnBody(httpRequest, httpResponse);
