@@ -69,8 +69,9 @@ public final class CmcicConstants {
 
     public static class HeaderKeys {
         public static final String DIGEST = "Digest";
+        public static final String HOST = "Host";
         public static final String DATE = "Date";
-        public static final String X_REQUEST_ID = "X-Request-ID";
+        public static final String X_REQUEST_ID = "X-Request-Id";
         public static final String AUTHORIZATION = "Authorization";
         public static final String SIGNATURE = "Signature";
         public static final String CONTENT_TYPE = "Content-Type";
