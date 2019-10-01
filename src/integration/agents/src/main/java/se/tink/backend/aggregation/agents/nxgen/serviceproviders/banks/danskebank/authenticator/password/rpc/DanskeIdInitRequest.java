@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -30,14 +29,22 @@ public class DanskeIdInitRequest {
     @JsonProperty("Product")
     private String product;
 
-    public DanskeIdInitRequest(String externalUserId) {
-        this.externalRef = DanskeBankConstants.DanskeIdFormValues.externalRef;
-        this.externalText = DanskeBankConstants.DanskeIdFormValues.externalText;
+    public DanskeIdInitRequest(
+            String externalRef,
+            String externalText,
+            String externalUserId,
+            String externalUserIdType,
+            String messageTemplateID,
+            String otpAppType,
+            String otpRequestType,
+            String product) {
+        this.externalRef = externalRef;
+        this.externalText = externalText;
         this.externalUserId = externalUserId;
-        this.externalUserIdType = DanskeBankConstants.DanskeIdFormValues.externalUserIdType;
-        this.messageTemplateID = DanskeBankConstants.DanskeIdFormValues.messageTemplateID;
-        this.otpAppType = DanskeBankConstants.DanskeIdFormValues.otpAppType;
-        this.otpRequestType = DanskeBankConstants.DanskeIdFormValues.otpRequestType;
-        this.product = DanskeBankConstants.DanskeIdFormValues.product;
+        this.externalUserIdType = externalUserIdType;
+        this.messageTemplateID = messageTemplateID;
+        this.otpAppType = otpAppType;
+        this.otpRequestType = otpRequestType;
+        this.product = product;
     }
 }

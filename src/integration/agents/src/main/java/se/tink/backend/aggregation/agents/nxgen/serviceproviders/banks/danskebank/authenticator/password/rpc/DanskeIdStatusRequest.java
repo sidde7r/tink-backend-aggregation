@@ -20,8 +20,8 @@ public class DanskeIdStatusRequest {
 
     public DanskeIdStatusRequest(String externalUserId, Integer otpRequestId) {
         this.externalUserId = externalUserId;
-        this.externalUserIdType = DanskeBankConstants.DanskeIdFormValues.externalUserIdType;
-        this.lastCheck = DanskeBankConstants.DanskeIdFormValues.lastCheck;
+        this.externalUserIdType = DanskeBankConstants.DanskeIdFormValues.EXTERNALUSERIDTYPE;
+        this.lastCheck = DanskeBankConstants.DanskeIdFormValues.LASTCHECK;
         this.otpRequestId = otpRequestId;
     }
 }

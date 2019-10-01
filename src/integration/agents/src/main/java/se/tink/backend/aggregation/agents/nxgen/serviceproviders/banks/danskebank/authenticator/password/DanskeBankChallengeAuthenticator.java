@@ -576,16 +576,32 @@ public class DanskeBankChallengeAuthenticator
                 this.apiClient.initOtp(
                         preferredDevice.getDeviceType(), preferredDevice.getDeviceSerialNumber());
         String otpChallenge = initOtpResponse.getOtpChallenge();
-        String ExternalUserId = username;
-        // init
+
+        String externalRef = DanskeBankConstants.DanskeIdFormValues.EXTERNALREF;
+        String externalText = DanskeBankConstants.DanskeIdFormValues.EXTERNALTEXT;
+        String externalUserIdType = DanskeBankConstants.DanskeIdFormValues.EXTERNALUSERIDTYPE;
+        String messageTemplateID = DanskeBankConstants.DanskeIdFormValues.MESSAGETEMPLATEID;
+        String otpAppType = DanskeBankConstants.DanskeIdFormValues.OTPAPPTYPE;
+        String otpRequestType = DanskeBankConstants.DanskeIdFormValues.OTPREQUESTTYPE;
+        String product = DanskeBankConstants.DanskeIdFormValues.PRODUCT;
+
         DanskeIdInitResponse initResponse =
-                apiClient.danskeIdInit(new DanskeIdInitRequest(ExternalUserId));
+                apiClient.danskeIdInit(
+                        new DanskeIdInitRequest(
+                                externalRef,
+                                externalText,
+                                username,
+                                externalUserIdType,
+                                messageTemplateID,
+                                otpAppType,
+                                otpRequestType,
+                                product));
         int OtpRequestId = initResponse.getOtpRequestId();
         // poll for status
-        DanskeIdPoll(ExternalUserId, OtpRequestId);
+        danskeIdPoll(username, OtpRequestId);
     }
 
-    private void DanskeIdPoll(String ExternalUserId, int OtpRequestId)
+    private void danskeIdPoll(String ExternalUserId, int OtpRequestId)
             throws ThirdPartyAppException {
         for (int i = 0; i < DanskeBankConstants.PollCodeTimeoutFilter.MAX_POLLS_COUNTER; i++) {
             Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);

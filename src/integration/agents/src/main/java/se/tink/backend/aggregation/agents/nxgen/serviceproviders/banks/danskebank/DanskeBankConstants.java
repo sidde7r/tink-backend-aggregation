@@ -282,13 +282,17 @@ public class DanskeBankConstants {
     }
 
     public static class DanskeIdFormValues {
-        public static final String externalUserIdType = "ESAFEID";
-        public static final String lastCheck = "false";
-        public static final String externalRef = "abc";
-        public static final String externalText = "";
-        public static final String messageTemplateID = "MB3_Binding";
-        public static final String otpAppType = "OC";
-        public static final String otpRequestType = "MB3_B";
-        public static final String product = "P";
+        public static final String EXTERNALUSERIDTYPE = "ESAFEID";
+        public static final String LASTCHECK = "false";
+        public static final String EXTERNALREF = "abc";
+        public static final String EXTERNALTEXT = "";
+        public static final String MESSAGETEMPLATEID = "MB3_Binding";
+        public static final String OTPAPPTYPE = "OC";
+        public static final String OTPREQUESTTYPE = "MB3_B";
+        public static final String PRODUCT = "P";
+    }
+
+    public static class DanskeRequestHeaders {
+        public static final String REFERRER = "Referer";
     }
 }

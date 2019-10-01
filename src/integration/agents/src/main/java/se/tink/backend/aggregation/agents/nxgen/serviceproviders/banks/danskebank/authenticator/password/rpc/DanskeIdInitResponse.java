@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class DanskeIdInitResponse {
     @JsonProperty("EupToken")
-    private Object eupToken;
+    private String eupToken;
 
     @JsonProperty("OtpRequestId")
     private Integer otpRequestId;
@@ -15,15 +15,15 @@ public class DanskeIdInitResponse {
     private Integer responseCode;
 
     @JsonProperty("ResponseMessage")
-    private Object responseMessage;
+    private String responseMessage;
 
     @JsonProperty("StatusCode")
     private Integer statusCode;
 
     @JsonProperty("TraceId")
-    private Object traceId;
+    private String traceId;
 
-    public Object getEupToken() {
+    public String getEupToken() {
         return eupToken;
     }
 
@@ -35,7 +35,7 @@ public class DanskeIdInitResponse {
         return responseCode;
     }
 
-    public Object getResponseMessage() {
+    public String getResponseMessage() {
         return responseMessage;
     }
 
@@ -43,7 +43,7 @@ public class DanskeIdInitResponse {
         return statusCode;
     }
 
-    public Object getTraceId() {
+    public String getTraceId() {
         return traceId;
     }
 }
