@@ -69,9 +69,4 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
                 .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
     }
-
-    @Override
-    public void storeToken(OAuth2Token token) {
-        persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, token);
-    }
 }
