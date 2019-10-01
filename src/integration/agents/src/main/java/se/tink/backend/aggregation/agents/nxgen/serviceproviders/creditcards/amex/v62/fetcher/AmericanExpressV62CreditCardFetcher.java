@@ -134,12 +134,9 @@ public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<Credi
     private void addPendingTransactionsToAccount(
             TimelineResponse timelineResponse, Map<String, String> suppIndexAccountNumberMap) {
         for (String suppIndex : suppIndexAccountNumberMap.keySet()) {
-            Set<TransactionEntity> accountTransactions =
-                    instanceStorage.getAccountTransactions(
-                            suppIndexAccountNumberMap.get(suppIndex));
-            accountTransactions.addAll(timelineResponse.getPendingTransactions(suppIndex));
-            instanceStorage.saveAccountTransactions(
-                    suppIndexAccountNumberMap.get(suppIndex), accountTransactions);
+            instanceStorage.addAccountTransactions(
+                    suppIndexAccountNumberMap.get(suppIndex),
+                    timelineResponse.getPendingTransactions(suppIndex));
         }
     }
 
@@ -192,13 +189,7 @@ public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<Credi
         for (TransactionEntity entity : transactionResponse.getTransactionList()) {
             String accountForCurrentTransaction =
                     suppIndexAccountNumberMap.get(entity.getSuppIndex());
-
-            Set<TransactionEntity> transactionSet =
-                    instanceStorage.getAccountTransactions(accountForCurrentTransaction);
-
-            transactionSet.add(entity);
-
-            instanceStorage.saveAccountTransactions(accountForCurrentTransaction, transactionSet);
+            instanceStorage.addAccountTransaction(accountForCurrentTransaction, entity);
         }
     }
 }
