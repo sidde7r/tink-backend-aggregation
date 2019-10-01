@@ -26,7 +26,8 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "type": "CREDIT_CARD"
+            "type": "CREDIT_CARD",
+            "financialInstitutionId": "dummyFinancialInstitutionId"
         },
         {
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",

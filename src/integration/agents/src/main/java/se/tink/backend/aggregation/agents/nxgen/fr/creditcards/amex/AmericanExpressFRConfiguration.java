@@ -1,59 +1,51 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.creditcards.amex;
 
 import java.util.Date;
+import se.tink.backend.aggregation.agents.nxgen.fr.creditcards.amex.AmericanExpressFRConstants.BodyValues;
+import se.tink.backend.aggregation.agents.nxgen.fr.creditcards.amex.AmericanExpressFRConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.creditcards.amex.fetcher.rpc.TimelineFRRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.authenticator.entities.CardEntity;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-public class AmericanExpressFRConfiguration implements AmericanExpressConfiguration {
+public class AmericanExpressFRConfiguration implements AmericanExpressV62Configuration {
+
+    @Override
+    public String getLocale() {
+        return BodyValues.LOCALE;
+    }
 
     @Override
     public String getAppId() {
-        return AmericanExpressFRConstants.HeaderValues.APP_ID;
+        return HeaderValues.APP_ID;
     }
 
     @Override
     public String getUserAgent() {
-        return AmericanExpressFRConstants.HeaderValues.USER_AGENT;
-    }
-
-    @Override
-    public String getFace() {
-        return AmericanExpressFRConstants.HeaderValues.FACE;
-    }
-
-    @Override
-    public String getLocale() {
-        return AmericanExpressFRConstants.BodyValues.LOCALE;
-    }
-
-    @Override
-    public String getClientVersion() {
-        return AmericanExpressFRConstants.BodyValues.CLIENT_VERSION;
+        return HeaderValues.USER_AGENT;
     }
 
     @Override
     public String getBankId(CardEntity cardEntity) {
-        return cardEntity.getCardKey();
+        return cardEntity.getCardNumberDisplay();
     }
 
     @Override
-    public Amount toAmount(Double amount) {
-        return Amount.inEUR(amount);
+    public String getCurrency() {
+        return "EUR";
     }
 
     @Override
-    public TimelineFRRequest createTimelineRequest(Integer cardIndex) {
+    public TimelineRequest createTimelineRequest(Integer cardIndex) {
         TimelineFRRequest request = new TimelineFRRequest();
-        request.setTimeZone(AmericanExpressConstants.RequestValue.TIME_ZONE);
-        request.setTimeZoneOffset(AmericanExpressConstants.RequestValue.TIME_ZONE_OFFSET);
+        request.setTimeZone(AmericanExpressV62Constants.RequestValue.TIME_ZONE);
+        request.setTimeZoneOffset(AmericanExpressV62Constants.RequestValue.TIME_ZONE_OFFSET);
         request.setSortedIndex(cardIndex);
         request.setLocalTime(new ThreadSafeDateFormat("MM-dd-YYYY'T'HH:mm:ss").format(new Date()));
         request.setPendingChargeEnabled(true);
-        request.setPayWithPointsEnabled(true);
+        request.setCmlEnabled(true);
         request.setTimestamp(Long.toString(System.currentTimeMillis()));
         return request;
     }
