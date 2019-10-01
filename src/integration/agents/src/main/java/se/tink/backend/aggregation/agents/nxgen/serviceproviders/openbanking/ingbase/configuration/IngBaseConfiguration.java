@@ -1,19 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class IngBaseConfiguration implements ClientConfiguration {
 
-    private String baseUrl;
-    private String clientCertificateSerial;
-    private String clientCertificate;
-    private String redirectUrl;
-    private String certificateId;
+    @JsonProperty @Secret private String baseUrl;
+    @JsonProperty @Secret private String clientCertificateSerial;
+    @JsonProperty @Secret private String clientCertificate;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String certificateId;
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(
