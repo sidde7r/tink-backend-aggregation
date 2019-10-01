@@ -86,7 +86,6 @@ public final class RaiffeisenApiClient {
     }
 
     public OAuth2Token getToken() {
-
         TokenRequest clientCredentials =
                 TokenRequest.builder()
                         .setGrantType(RaiffeisenConstants.FormValues.GRANT_TYPE)
@@ -95,7 +94,6 @@ public final class RaiffeisenApiClient {
                         .build();
 
         return client.request(Urls.AUTHENTICATE)
-                .addBasicAuth(configuration.getClientId(), configuration.getClientSecret())
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.CACHE_CONTROL)
                 .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG_TRUST_ALL)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)

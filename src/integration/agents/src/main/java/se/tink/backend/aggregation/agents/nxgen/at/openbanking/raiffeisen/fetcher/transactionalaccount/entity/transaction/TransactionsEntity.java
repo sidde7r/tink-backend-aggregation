@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.entity.transaction;
 
-import com.google.common.collect.Lists;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,11 +13,11 @@ public class TransactionsEntity {
     private Links links;
 
     public List<TransactionEntity> getBooked() {
-        return Optional.ofNullable(booked).orElse(Lists.newArrayList());
+        return Optional.ofNullable(booked).orElse(Collections.emptyList());
     }
 
     public List<TransactionEntity> getPending() {
-        return Optional.ofNullable(pending).orElse(Lists.newArrayList());
+        return Optional.ofNullable(pending).orElse(Collections.emptyList());
     }
 
     public boolean hasMore() {
