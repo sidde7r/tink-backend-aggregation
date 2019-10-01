@@ -89,6 +89,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         GenerateChallangeRequest challangeRequest =
                 new GenerateChallangeRequest(apiClient.getDistributorId(), authenticationProcessID);
         String challenge = apiClient.fetchChallenges(challangeRequest);
+        persistentStorage.put(FortisConstants.STORAGE.CHALLENGE, challenge);
 
         String loginCode = waitForLoginCode(challenge);
         if (Strings.isNullOrEmpty(loginCode) || !StringUtils.isNumeric(loginCode)) {
@@ -175,6 +176,18 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                 agreementId,
                 deviceFingerprint);
         getUserInfoAndPersistMuid();
+
+        String muid = persistentStorage.get(FortisConstants.STORAGE.MUID);
+        String challenge = persistentStorage.get(FortisConstants.STORAGE.CHALLENGE);
+
+        String calculateChallenge =
+                FortisUtils.calculateChallenge(
+                        muid,
+                        password,
+                        agreementId,
+                        challenge,
+                        res.getValue().getAuthenticationProcessId());
+        persistentStorage.put(FortisConstants.STORAGE.CALCULATED_CHALLENGE, calculateChallenge);
 
         /*
            We are unable to verify the password the user provided in the device binding flow.

@@ -99,6 +99,7 @@ public class FortisConstants {
         public static final String DEVICE_FINGERPRINT = "devicefingerprint";
         public static final String CALCULATED_CHALLENGE = "calculatedChallenge";
         public static final String DISTRIBUTOR_ID = "distributorId";
+        public static final String CHALLENGE = "challenge";
     }
 
     public static class DATE {
