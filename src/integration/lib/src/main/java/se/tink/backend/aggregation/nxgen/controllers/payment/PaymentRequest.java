@@ -39,8 +39,6 @@ public class PaymentRequest {
                         transfer.getDestination(),
                         transfer.getDestination().getName().orElse(null));
 
-        Debtor debtorInRequest = new Debtor(transfer.getSource());
-
         Reference referenceInRequest = null;
         if (TransferType.PAYMENT.equals(transfer.getType())
                 || TransferType.EINVOICE.equals(transfer.getType())
@@ -49,18 +47,20 @@ public class PaymentRequest {
                     new Reference(transfer.getType().toString(), transfer.getDestinationMessage());
         }
 
-        Payment paymentInRequest =
+        Payment.Builder paymentInRequestBuilder =
                 new Payment.Builder()
                         .withCreditor(creditorInRequest)
-                        .withDebtor(debtorInRequest)
                         .withAmount(transfer.getAmount())
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withCurrency(transfer.getAmount().getCurrency())
                         .withReference(referenceInRequest)
-                        .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()))
-                        .build();
+                        .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()));
 
-        return new PaymentRequest(paymentInRequest);
+        if (transferRequest.isTriggerRefresh()) {
+            paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
+        }
+
+        return new PaymentRequest(paymentInRequestBuilder.build());
     }
 
     public Payment getPayment() {
