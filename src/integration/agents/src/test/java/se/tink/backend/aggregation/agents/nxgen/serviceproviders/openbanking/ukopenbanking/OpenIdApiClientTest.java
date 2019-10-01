@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -30,7 +31,7 @@ public class OpenIdApiClientTest {
     public void setup() {
         UKOB_TEST_CONFIG.validate();
 
-        TinkHttpClient httpClient = new TinkHttpClient();
+        TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.disableSignatureRequestHeader();
         httpClient.trustRootCaCertificate(
                 UKOB_TEST_CONFIG.getRootCAData(), UKOB_TEST_CONFIG.getRootCAPassword());

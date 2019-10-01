@@ -6,13 +6,14 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateOtpChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.RegisterUserResponse;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class AxaApiClientTest {
 
     @Test
     public void testGenerateChallengeResponse() {
-        TinkHttpClient httpClient = new TinkHttpClient();
+        TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.setDebugOutput(true);
         httpClient.setCipherSuites(AxaConstants.CIPHER_SUITES);
 
@@ -28,7 +29,7 @@ public class AxaApiClientTest {
 
     @Test
     public void testRegisterUserFail() {
-        TinkHttpClient httpClient = new TinkHttpClient();
+        TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.setDebugOutput(true);
         httpClient.setCipherSuites(AxaConstants.CIPHER_SUITES);
 
@@ -59,7 +60,7 @@ public class AxaApiClientTest {
 
     @Test
     public void testGenerateOtpChallenge() {
-        TinkHttpClient httpClient = new TinkHttpClient();
+        TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.setDebugOutput(true);
         httpClient.setCipherSuites(AxaConstants.CIPHER_SUITES);
 
@@ -74,7 +75,7 @@ public class AxaApiClientTest {
 
     @Test
     public void testLogon() {
-        TinkHttpClient httpClient = new TinkHttpClient();
+        TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.setDebugOutput(true);
         httpClient.setCipherSuites(AxaConstants.CIPHER_SUITES);
 

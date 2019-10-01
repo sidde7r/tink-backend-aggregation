@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -73,7 +74,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
                         request.getProvider().getCurrency(),
                         request.getUser());
         this.client =
-                new TinkHttpClient(
+                new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         metricContext.getMetricRegistry(),
                         context.getLogOutputStream(),

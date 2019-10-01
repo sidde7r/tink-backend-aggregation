@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -84,7 +85,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.disableSslVerification = disableSslVerification;
 
         this.paymentsHttpClient =
-                new TinkHttpClient(
+                new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         metricContext.getMetricRegistry(),
                         context.getLogOutputStream(),

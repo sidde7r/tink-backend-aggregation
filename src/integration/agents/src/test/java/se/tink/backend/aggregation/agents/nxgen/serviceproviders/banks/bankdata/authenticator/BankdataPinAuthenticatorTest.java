@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataTestConfig;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class BankdataPinAuthenticatorTest {
@@ -27,7 +28,7 @@ public class BankdataPinAuthenticatorTest {
         Credentials credentials = new Credentials();
         AgentContext context = new AgentTestContext(credentials);
         TinkHttpClient client =
-                new TinkHttpClient(
+                new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),

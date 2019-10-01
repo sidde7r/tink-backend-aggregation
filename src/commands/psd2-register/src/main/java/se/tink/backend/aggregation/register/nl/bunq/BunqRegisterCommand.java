@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.auth
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.filter.BunqRequiredHeadersFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.filter.BunqSignatureHeaderFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.aggregation.register.RegisterEnvironment;
@@ -197,7 +198,7 @@ public class BunqRegisterCommand {
 
     private static BunqRegisterCommandApiClient createApiClient(
             RegisterEnvironment selectedEnvironment) {
-        TinkHttpClient client = new TinkHttpClient();
+        TinkHttpClient client = new LegacyTinkHttpClient();
         client.setDebugOutput(true);
 
         client.addFilter(new BunqRequiredHeadersFilter(temporaryStorage));

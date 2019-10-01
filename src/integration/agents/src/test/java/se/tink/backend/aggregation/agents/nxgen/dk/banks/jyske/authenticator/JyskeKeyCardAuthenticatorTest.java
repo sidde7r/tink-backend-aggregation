@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskePersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeTestConfig;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class JyskeKeyCardAuthenticatorTest {
@@ -33,7 +33,7 @@ public class JyskeKeyCardAuthenticatorTest {
                 new JyskePersistentStorage(new PersistentStorage());
         JyskeKeyCardAuthenticator keyCardAuthenticator =
                 new JyskeKeyCardAuthenticator(
-                        new JyskeApiClient(new TinkHttpClient()), persistentStorage);
+                        new JyskeApiClient(new LegacyTinkHttpClient()), persistentStorage);
 
         KeyCardInitValues cardValues = keyCardAuthenticator.init(user.username, user.mobilCode);
 

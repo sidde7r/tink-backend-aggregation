@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.SamlRe
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.utils.EncapMessageUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.utils.EncapSoapUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -36,7 +37,7 @@ public class EncapClient {
             DeviceProfile deviceProfile) {
 
         this.httpClient =
-                new TinkHttpClient(
+                new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),

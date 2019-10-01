@@ -9,6 +9,7 @@ import java.util.Scanner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
+import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -85,7 +86,7 @@ public class UkobRegisterCommand {
     private static TinkHttpClient createHttpClient(
             UkOpenBankingConfiguration config, SoftwareStatement softwareStatement) {
 
-        TinkHttpClient httpClient = new TinkHttpClient();
+        TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.disableSignatureRequestHeader();
 
         if (DISABLE_SSL_VERIFICATION) {
