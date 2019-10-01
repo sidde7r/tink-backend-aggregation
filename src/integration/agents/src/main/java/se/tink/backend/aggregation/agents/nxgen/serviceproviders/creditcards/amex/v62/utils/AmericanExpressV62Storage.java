@@ -54,6 +54,19 @@ public class AmericanExpressV62Storage extends Storage {
         this.put(accountNumber, accountTransactions);
     }
 
+    public void addAccountTransactions(
+            String accountNumber, Set<TransactionEntity> accountTransactions) {
+        Set<TransactionEntity> existingTransactions = getAccountTransactions(accountNumber);
+        existingTransactions.addAll(accountTransactions);
+        saveAccountTransactions(accountNumber, existingTransactions);
+    }
+
+    public void addAccountTransaction(String accountNumber, TransactionEntity accountTransaction) {
+        Set<TransactionEntity> existingTransactions = getAccountTransactions(accountNumber);
+        existingTransactions.add(accountTransaction);
+        saveAccountTransactions(accountNumber, existingTransactions);
+    }
+
     public Set<TransactionEntity> getAccountTransactions(String accountNumber) {
         return this.get(accountNumber, new TypeReference<Set<TransactionEntity>>() {})
                 .orElse(new HashSet<>());

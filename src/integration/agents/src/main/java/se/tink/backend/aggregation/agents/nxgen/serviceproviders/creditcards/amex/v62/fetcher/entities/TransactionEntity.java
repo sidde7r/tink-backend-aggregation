@@ -19,7 +19,7 @@ public class TransactionEntity {
     private AmountEntity amount;
     private List<String> description;
 
-    @JsonIgnore private boolean isPending;
+    private boolean isPending;
 
     public String getSuppIndex() {
         return suppIndex;
@@ -49,12 +49,10 @@ public class TransactionEntity {
         this.amount = amount;
     }
 
-    @JsonIgnore
     public boolean isPending() {
         return isPending;
     }
 
-    @JsonIgnore
     public TransactionEntity setPending(boolean pending) {
         this.isPending = pending;
         return this;
