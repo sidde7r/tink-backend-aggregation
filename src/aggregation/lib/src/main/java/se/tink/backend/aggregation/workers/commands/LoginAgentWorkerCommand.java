@@ -263,6 +263,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                     context.getCatalog().getString(e.getUserMessage()));
             action.cancelled();
             actionLoginType.cancelled();
+            log.error("Authentication Error", e);
             return AgentWorkerCommandResult.ABORT;
 
         } catch (Exception e) {
