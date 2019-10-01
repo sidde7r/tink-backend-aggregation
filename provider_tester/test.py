@@ -33,12 +33,20 @@ parser.add_argument(
     help='Client Secret of the app'
 )
 
+parser.add_argument(
+    '--host',
+    default="https://api.tink.se/api/v1/",
+    help="Host URL of the environment where the provider will be tested (ex: https://api.tink.se/api/v1/)"
+)
+
 args = parser.parse_args()
 provider_name = args.provider_name
 market = args.market
 locale = args.locale
 client_id = args.client_id
 client_secret = args.client_secret
+
+AggregationConfig.host_url = args.host
 
 if provider_name is None:
     raise Exception("[ERROR] Provider name must be provided by --provider_name argument")
