@@ -8,8 +8,9 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class FortisConstants {
 
-    public static final String APP_VERSION = "18.0.15";
+    public static final String APP_VERSION = "24.1.2";
     public static final String NEGATIVE_TRANSACTION_TYPE = "F";
+    public static final String CARD_FRAME_ID = "010119659";
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
@@ -48,6 +49,7 @@ public class FortisConstants {
     }
 
     public static class HEADERS {
+        public static final String USER_AGENT = "User-Agent";
         public static final String CONTENT_TYPE = "Content-Type";
         public static final String CSRF = "CSRF";
     }

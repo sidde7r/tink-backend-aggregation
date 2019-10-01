@@ -62,7 +62,8 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     private EbankingUsersResponse getEbankingUsers(
             String authenticationFactorId, String distributorId, String smid) {
         EBankingUsersRequest eBankingUsersRequest =
-                new EBankingUsersRequest(authenticationFactorId, distributorId, smid);
+                new EBankingUsersRequest(
+                        authenticationFactorId, distributorId, smid, FortisConstants.CARD_FRAME_ID);
         return apiClient.getEBankingUsers(eBankingUsersRequest);
     }
 
@@ -274,52 +275,6 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
             return false;
         }
 
-        AuthenticationProcessResponse res =
-                createAuthenticationProcess(
-                        ebankingUsersId.get(),
-                        apiClient.getDistributorId(),
-                        FortisConstants.HEADER_VALUES.AUTHENTICATION_PASSWORD);
-        String authenticationProcessId = res.getValue().getAuthenticationProcessId();
-
-        GenerateChallangeRequest challangeRequest =
-                new GenerateChallangeRequest(apiClient.getDistributorId(), authenticationProcessId);
-
-        String challenge = apiClient.fetchChallenges(challangeRequest);
-
-        String calculateChallenge =
-                FortisUtils.calculateChallenge(
-                        muid, password, agreementId, challenge, authenticationProcessId);
-
-        persistentStorage.put(FortisConstants.STORAGE.CALCULATED_CHALLENGE, calculateChallenge);
-
-        AuthResponse authResponse =
-                AuthResponse.builder()
-                        .withAuthProcId(authenticationProcessId)
-                        .withAgreementId(agreementId)
-                        .withAuthenticationMeanId(
-                                FortisConstants.HEADER_VALUES.AUTHENTICATION_PASSWORD)
-                        .withCardNumber(cardNumber)
-                        .withDistId(apiClient.getDistributorId())
-                        .withSmid(smid)
-                        .withChallenge(challenge)
-                        .withResponse(calculateChallenge)
-                        .withDeviceFingerprint(deviceFingerprint)
-                        .build();
-
-        HttpResponse response = apiClient.authenticationRequest(authResponse.getUrlEncodedFormat());
-        String responseBody = response.getBody(String.class);
-
-        if (!Strings.isNullOrEmpty(responseBody)
-                && responseBody.contains(FortisConstants.ERRORCODE.ERROR_CODE)) {
-            if (responseBody.contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE)) {
-                throw new IllegalStateException("Invalid signature");
-            }
-            if (responseBody.contains(FortisConstants.ERRORCODE.MAXIMUM_NUMBER_OF_TRIES)) {
-                return false;
-            }
-            LOGGER.warnExtraLong(responseBody, FortisConstants.LOGTAG.LOGIN_ERROR);
-            return false;
-        }
         return true;
     }
 
