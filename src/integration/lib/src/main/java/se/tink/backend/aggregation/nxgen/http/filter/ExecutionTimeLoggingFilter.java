@@ -1,0 +1,26 @@
+package se.tink.backend.aggregation.nxgen.http.filter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.nxgen.http.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
+
+@FilterOrder(category = FilterPhases.SEND, order = 0)
+public class ExecutionTimeLoggingFilter extends Filter {
+
+    private final Logger log = LoggerFactory.getLogger(ExecutionTimeLoggingFilter.class);
+
+    @Override
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
+        long start = System.currentTimeMillis();
+        HttpResponse response = getNext().handle(httpRequest);
+        long end = System.currentTimeMillis();
+        log.info("Service {} was executed in {} milliseconds.", httpRequest.getUrl(), end - start);
+        return response;
+    }
+}
