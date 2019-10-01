@@ -253,6 +253,34 @@ while True:
     print("[INFO] Credentials id = " + create_credentials_response.credentials_id)
     print("[INFO] User id = " + create_credentials_response.user_id)
     print(json.dumps(accounts_list_response, indent=1))
+    i = input("To try again, press ENTER, to continue press Q")
+    if i.lower() == "q":
+        break
+
+print("[INFO] Executing step 10: Fetching list of transactions from Aggregation")
+print("To test the refresh is successful, you need to check the list of transactions and see if the transactions that"
+      "the agent is supposed to fetch are there. Sometimes updating the list takes time so if you do not see the"
+      "transactions in the list, wait a bit and execute the step again by pressing ENTER")
+
+while True:
+
+    transactions_list_response = http_request_helper.make_request(
+        request_type="GET",
+        url=URLConfig.get_transactions_list_url()
+    )
+
+    """
+    Filter the transactions so that only the transactions related with the user and credential that we created
+    will remain in the list
+    """
+
+    transactions_list_response = list(filter(lambda transaction:
+                                    transaction["userId"] == create_credentials_response.user_id, transactions_list_response))
+
+    print("[INFO] List of transactions are successfully fetched")
+    print("[INFO] Credentials id = " + create_credentials_response.credentials_id)
+    print("[INFO] User id = " + create_credentials_response.user_id)
+    print(json.dumps(transactions_list_response, indent=1))
     i = input("To try again, press ENTER, to quit press Q")
     if i.lower() == "q":
         break
