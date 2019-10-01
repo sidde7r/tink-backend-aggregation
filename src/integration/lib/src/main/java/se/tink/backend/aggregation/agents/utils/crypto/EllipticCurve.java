@@ -27,6 +27,7 @@ import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.jce.spec.ECParameterSpec;
+import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.util.BigIntegers;
 
@@ -84,9 +85,11 @@ public class EllipticCurve {
         return convertPublicKeyToPoint((ECPublicKey) keyPair.getPublic(), compressed);
     }
 
-    public static byte[] convertPublicKeyToPoint(ECPublicKey publicKey, boolean compressed) {
+    private static byte[] convertPublicKeyToPoint(ECPublicKey publicKey, boolean compressed) {
+        ECCurve c = publicKey.getParameters().getCurve();
         ECPoint q = publicKey.getQ();
-        return new ECPoint.Fp(q.getCurve(), q.getX(), q.getY(), compressed).getEncoded();
+        return c.createPoint(q.getAffineXCoord().toBigInteger(), q.getAffineYCoord().toBigInteger())
+                .getEncoded(compressed);
     }
 
     public static ECPrivateKey convertPointToPrivateKey(byte[] prvKeyBytes, String curveName) {
