@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.AuthorizationRequest;
@@ -87,7 +88,7 @@ public final class OpBankApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .body(AuthorizationRequest.expiresInDays(60))
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, "tink")
+                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, HeaderValues.TINK)
                         .header(HeaderKeys.AUTHORIZATION, "Bearer " + bearerToken)
                         .post(HttpResponse.class);
 
@@ -116,10 +117,10 @@ public final class OpBankApiClient {
                         .accept(MediaType.APPLICATION_JSON)
                         .body(
                                 new ExchangeTokenForm()
-                                        .setClientId(this.configuration.getClientId())
-                                        .setClientSecret(this.configuration.getClientSecret())
+                                        .setClientId(configuration.getClientId())
+                                        .setClientSecret(configuration.getClientSecret())
                                         .setCode(code)
-                                        .setRedirectUri(this.configuration.getRedirectUrl()))
+                                        .setRedirectUri(configuration.getRedirectUrl()))
                         .post(HttpResponse.class);
         try {
             return MAPPER.readValue(response.getBodyInputStream(), ExchangeTokenResponse.class);
@@ -132,10 +133,10 @@ public final class OpBankApiClient {
         HttpResponse response =
                 client.request(Urls.GET_ACCOUNTS)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .header(HeaderKeys.X_API_KEY, this.configuration.getApiKey())
-                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, "tink")
-                        .header(HeaderKeys.X_CUSTOMER_USER_AGENT, "tink")
-                        .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, "127.0.0.1")
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, HeaderValues.TINK)
+                        .header(HeaderKeys.X_CUSTOMER_USER_AGENT, HeaderValues.TINK)
+                        .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, HeaderValues.CUSTOMER_IP_ADRESS)
                         .addBearerToken(
                                 persistentStorage
                                         .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
@@ -154,8 +155,8 @@ public final class OpBankApiClient {
         HttpResponse response =
                 createRequest(url)
                         .header(HeaderKeys.X_API_KEY, this.configuration.getApiKey())
-                        .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, "127.0.0.1")
-                        .header(HeaderKeys.X_CUSTOMER_USER_AGENT, "tink")
+                        .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, HeaderValues.CUSTOMER_IP_ADRESS)
+                        .header(HeaderKeys.X_CUSTOMER_USER_AGENT, HeaderValues.TINK)
                         .header(HeaderKeys.X_FAPI_INTERACTION_ID, UUID.randomUUID().toString())
                         .addBearerToken(
                                 persistentStorage

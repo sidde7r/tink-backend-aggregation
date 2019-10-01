@@ -53,4 +53,9 @@ public final class OpBankConstants {
         public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
         public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
     }
+
+    public static class HeaderValues {
+        public static final String TINK = "tink";
+        public static final String CUSTOMER_IP_ADRESS = "127.0.0.1";
+    }
 }
