@@ -33,6 +33,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     private final NordeaSeApiClient apiClient;
     private static final Logger log = LoggerFactory.getLogger(NordeaSeBankIdAuthenticator.class);
     private final String language;
+    private OAuth2Token oAuth2Token;
 
     public NordeaSeBankIdAuthenticator(NordeaSeApiClient apiClient, String language) {
         this.apiClient = apiClient;
@@ -100,8 +101,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
 
         GetTokenForm form = getGetTokenForm(getCodeResponse);
 
-        OAuth2Token accessToken = apiClient.getToken(form, reference.getResponse().getTppToken());
-        apiClient.storeToken(accessToken);
+        oAuth2Token = apiClient.getToken(form, reference.getResponse().getTppToken());
 
         return BankIdStatus.DONE;
     }
@@ -113,7 +113,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
 
     @Override
     public Optional<OAuth2Token> getAccessToken() {
-        return Optional.ofNullable(apiClient.getStoredToken());
+        return Optional.ofNullable(oAuth2Token);
     }
 
     @Override
@@ -126,9 +126,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
                         .build();
 
         try {
-            OAuth2Token token = apiClient.refreshToken(form);
-            apiClient.storeToken(token);
-            return Optional.ofNullable(token);
+            return Optional.ofNullable(apiClient.refreshToken(form));
         } catch (HttpResponseException e) {
             // If these conditions are true, this will result in a session expired.
             if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
