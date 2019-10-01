@@ -161,12 +161,10 @@ public class PfmTransactionsEntity {
 
     private static String cleanTransactionDescription(String text) {
         String description[] = text.split("\\r?\\n?⏎");
-        if (CommerzbankConstants.TransactionDescriptions.kartenzahlung.equalsIgnoreCase(
-                description[0])) {
+        if (CommerzbankConstants.TransactionDescriptions.ATM.equalsIgnoreCase(description[0])) {
             return description[1];
-        } else {
-            return description[0];
         }
+        return description[0];
     }
 
     public String getTimestamp() {

@@ -121,6 +121,6 @@ public class CommerzbankConstants {
     }
 
     public static class TransactionDescriptions {
-        public static String kartenzahlung = "Kartenzahlung";
+        public static String ATM = "Kartenzahlung";
     }
 }
