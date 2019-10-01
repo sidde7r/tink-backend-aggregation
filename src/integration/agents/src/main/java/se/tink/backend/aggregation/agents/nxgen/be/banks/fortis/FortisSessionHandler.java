@@ -19,14 +19,14 @@ public class FortisSessionHandler implements SessionHandler {
         apiClient.logout();
     }
 
-    private boolean calulcatedChallengeExists() {
+    private boolean calculcatedChallengeExists() {
         return persistentStorage.containsKey(FortisConstants.STORAGE.CALCULATED_CHALLENGE);
     }
 
     @Override
     public void keepAlive() throws SessionException {
         try {
-            if (calulcatedChallengeExists()) {
+            if (calculcatedChallengeExists()) {
                 this.apiClient.fetchAccounts();
             } else {
                 throw SessionError.SESSION_EXPIRED.exception();
