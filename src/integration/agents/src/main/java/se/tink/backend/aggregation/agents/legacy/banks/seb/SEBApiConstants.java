@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.seb;
 
+import java.util.EnumSet;
+import se.tink.backend.agents.rpc.AccountTypes;
+
 public class SEBApiConstants {
 
     public static class PortfolioType {
@@ -14,4 +17,7 @@ public class SEBApiConstants {
         public static final int BANKID_NOT_AUTHORIZED = 2;
         public static final int KYC_ERROR = 9200;
     }
+
+    public static EnumSet<AccountTypes> PSD2_Account_Types =
+            EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS, AccountTypes.CREDIT_CARD);
 }
