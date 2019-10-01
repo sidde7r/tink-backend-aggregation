@@ -6,7 +6,7 @@ import requests, json, logging, sys, getopt, os, time from collections import de
 STATUSPAGE_API_KEY = os.environ.get("STATUSPAGE_API_KEY").rstrip("\n")
 STATUSPAGE_API_BASE = "https://api.statuspage.io/v1/pages/"
 NOT_CIRCUIT_BROKEN = 0
-PAGE_ID = "x1lbt12g0ryw"
+PAGE_ID = "n814cl79vp6c"
 COMPONENTS_PATH = "/components/"
 
 STATUS_ENUMS = {
@@ -15,24 +15,10 @@ STATUS_ENUMS = {
     1: "major_outage"
 }
 
-GROUP_IDS = {
-    "se": "c20kyrkjrgks",
-    "be": "lw36806hwvfm",
-    "at": "n8p3fc6ltzfw",
-    "es": "zxf8mcfwz08q",
-    "fi": "rkknf5992fpg",
-    "uk": "cbvwtp1bxzhm",
-    "dk": "f1bctj61c0bv",
-    "no": "t99h0j1xfrj0",
-    "de": "zflg1lrtvhpp",
-    "pt": "5d71y2xjh9fm",
-    "nl": "jw9m70dk8379",
-    "fr": "6hy84x3bjnwc"
-}
-
-# for debug purposed only - delete or comment out in the production version
-PAGE_ID = "0cm054d7l52c"
-GROUP_IDS = { 'pt': 'x9kj8yzy12k9' }
+GROUP_IDS = {'se': 'x195hl534bxs', 'be': '56dnhms6f8tj', 'at': 'gkgss64655mg',
+             'es': 'yhl9srftt46k', 'fi': 'sfyg9gmkpnr0', 'uk': 'gc7b1qmwwh18',
+             'dk': 'bqd3nfpkww8m', 'no': 'v696xwjf6rz2', 'de': 'kyvpbs1ys1tf',
+             'pt': '8v8r717k6fs9', 'nl': '5dlcmc71jbzp'}
 
 # PROMETHEUS
 PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus.svc.cluster.local:9090/api/v1/query"
