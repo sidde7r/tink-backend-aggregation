@@ -1,0 +1,5 @@
+baseUrl-description: |2
+    This is the base URL or base location, which helps in converting relative web
+    URLs on the specific page to absolute web URLs.
+baseUrl-example: |2
+    "https://api-dailybanking.axabank.be"
