@@ -136,7 +136,9 @@ public final class OpBankApiClient {
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_FAPI_FINANCIAL_ID, HeaderValues.TINK)
                         .header(HeaderKeys.X_CUSTOMER_USER_AGENT, HeaderValues.TINK)
-                        .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, HeaderValues.CUSTOMER_IP_ADRESS)
+                        .header(
+                                HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS,
+                                HeaderValues.CUSTOMER_IP_ADRESS)
                         .addBearerToken(
                                 persistentStorage
                                         .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
@@ -155,7 +157,9 @@ public final class OpBankApiClient {
         HttpResponse response =
                 createRequest(url)
                         .header(HeaderKeys.X_API_KEY, this.configuration.getApiKey())
-                        .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, HeaderValues.CUSTOMER_IP_ADRESS)
+                        .header(
+                                HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS,
+                                HeaderValues.CUSTOMER_IP_ADRESS)
                         .header(HeaderKeys.X_CUSTOMER_USER_AGENT, HeaderValues.TINK)
                         .header(HeaderKeys.X_FAPI_INTERACTION_ID, UUID.randomUUID().toString())
                         .addBearerToken(
