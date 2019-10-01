@@ -7,12 +7,15 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 
 /*
  * Measure round trip time and response status of each request.
  */
+@FilterOrder(category = FilterPhases.SEND, order = 0)
 public class MetricFilter extends Filter {
 
     private static final MetricId METRIC_ID = MetricId.newId("http_client");

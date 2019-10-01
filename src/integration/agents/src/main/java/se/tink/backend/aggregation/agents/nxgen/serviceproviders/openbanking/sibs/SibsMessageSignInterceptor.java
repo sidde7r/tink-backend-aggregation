@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
 import com.google.common.collect.ImmutableList;
-import com.sun.jersey.api.client.ClientRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +19,7 @@ import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 
 public class SibsMessageSignInterceptor extends MessageSignInterceptor {
 
@@ -49,7 +49,7 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     }
 
     @Override
-    protected void appendAdditionalHeaders(ClientRequest request) {
+    protected void appendAdditionalHeaders(HttpRequest request) {
         if (request.getHeaders().get(HeaderKeys.DATE) == null) {
             String requestTimestamp =
                     new SimpleDateFormat(Formats.CONSENT_BODY_DATE_FORMAT, Locale.ENGLISH)
@@ -68,7 +68,7 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     }
 
     @Override
-    protected void getSignatureAndAddAsHeader(ClientRequest request) {
+    protected void getSignatureAndAddAsHeader(HttpRequest request) {
         List<String> serializedHeaders = new ArrayList<>();
         List<String> headersIncludedInSignature = new ArrayList<>();
 
@@ -102,9 +102,9 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     }
 
     @Override
-    protected void prepareDigestAndAddAsHeader(ClientRequest request) {
-        if (request.getEntity() != null) {
-            String digest = SibsUtils.getDigest(request.getEntity());
+    protected void prepareDigestAndAddAsHeader(HttpRequest request) {
+        if (request.getBody() != null) {
+            String digest = SibsUtils.getDigest(request.getBody());
 
             request.getHeaders()
                     .add(

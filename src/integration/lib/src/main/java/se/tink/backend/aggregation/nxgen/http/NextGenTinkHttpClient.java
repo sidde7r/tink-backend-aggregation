@@ -72,6 +72,9 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.NextGenFilterable;
+import se.tink.backend.aggregation.nxgen.http.filter.RestIoLoggingFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.hostnameverifier.ProxyHostnameVerifier;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
@@ -88,7 +91,8 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class NextGenTinkHttpClient extends NextGenFilterable<NextGenTinkHttpClient> {
+public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
+        implements TinkHttpClient {
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -104,14 +108,12 @@ public class NextGenTinkHttpClient extends NextGenFilterable<NextGenTinkHttpClie
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
 
-    private LoggingFilter debugOutputLoggingFilter = new LoggingFilter(new PrintStream(System.out));
-    private boolean debugOutput = false;
+    private RestIoLoggingFilter debugOutputLoggingFilter;
 
     private final ByteArrayOutputStream logOutputStream;
     private final MetricRegistry metricRegistry;
     private final Provider provider;
 
-    private final Filter finalFilter = new SendRequestFilter();
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
 
     private String cookieSpec;
@@ -126,13 +128,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<NextGenTinkHttpClie
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private SSLContext sslContext;
-    private MessageSignInterceptor messageSignInterceptor;
 
     private HttpResponseStatusHandler responseStatusHandler;
-
-    public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {
-        this.messageSignInterceptor = messageSignInterceptor;
-    }
 
     private class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
@@ -162,6 +159,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<NextGenTinkHttpClie
     }
 
     // This filter is responsible to send the actual http request and MUST be the tail of the chain.
+    @FilterOrder(category = FilterPhases.SEND, order = Integer.MAX_VALUE)
     private class SendRequestFilter extends Filter {
 
         @Override
@@ -239,6 +237,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<NextGenTinkHttpClie
 
         registerJacksonModule(new VavrModule());
         responseStatusHandler = new DefaultResponseStatusHandler();
+        debugOutputLoggingFilter = new RestIoLoggingFilter(new PrintStream(System.out));
+        addFilter(new SendRequestFilter());
     }
 
     public NextGenTinkHttpClient() {
@@ -342,12 +342,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<NextGenTinkHttpClie
         if (this.metricRegistry != null && this.provider != null) {
             addFilter(new MetricFilter(this.metricRegistry, this.provider));
         }
-        if (this.debugOutput) {
-            this.internalClient.addFilter(debugOutputLoggingFilter);
-        }
-        if (messageSignInterceptor != null) {
-            this.internalClient.addFilter(messageSignInterceptor);
-        }
     }
 
     public Client getInternalClient() {
@@ -399,6 +393,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<NextGenTinkHttpClie
 
     public void disableSignatureRequestHeader() {
         requestExecutor.disableSignatureRequestHeader();
+    }
+
+    @Override
+    public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
+        requestExecutor.setEidasProxyConfiguration(eidasProxyConfiguration);
     }
 
     public void setTimeout(int milliseconds) {
@@ -594,24 +593,20 @@ public class NextGenTinkHttpClient extends NextGenFilterable<NextGenTinkHttpClie
     }
 
     public void setDebugOutput(boolean debugOutput) {
-        this.debugOutput = debugOutput;
-
-        if (internalClient == null) {
-            return;
-        }
-
-        if (debugOutput && !internalClient.isFilterPresent(debugOutputLoggingFilter)) {
-            this.internalClient.addFilter(debugOutputLoggingFilter);
-        } else if (!debugOutput && internalClient.isFilterPresent(debugOutputLoggingFilter)) {
-            this.internalClient.removeFilter(debugOutputLoggingFilter);
+        if (debugOutput && !isFilterPresent(debugOutputLoggingFilter)) {
+            this.addFilter(debugOutputLoggingFilter);
+        } else if (!debugOutput && isFilterPresent(debugOutputLoggingFilter)) {
+            this.removeFilter(debugOutputLoggingFilter);
         }
     }
 
     public void setCensorSensitiveHeaders(final boolean censorSensitiveHeadersEnabled) {
-        debugOutputLoggingFilter =
-                new LoggingFilter(new PrintStream(System.out), censorSensitiveHeadersEnabled);
+        debugOutputLoggingFilter.setCensorSensitiveHeaders(censorSensitiveHeadersEnabled);
     }
 
+    public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {
+        addFilter(messageSignInterceptor);
+    }
     // --- Configuration ---
 
     // +++ Cookies +++
@@ -669,11 +664,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<NextGenTinkHttpClie
     // --- Serialization ---
 
     // +++ Requests +++
-    public NextGenRequestBuilder request(String url) {
+    public RequestBuilder request(String url) {
         return request(new URL(url));
     }
 
-    public NextGenRequestBuilder request(URL url) {
+    public RequestBuilder request(URL url) {
         return new NextGenRequestBuilder(
                 this.getFilters(), url, getHeaderAggregatorIdentifier(), responseStatusHandler);
     }

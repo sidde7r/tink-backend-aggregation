@@ -1,32 +1,36 @@
 package se.tink.backend.aggregation.agents.utils.jersey;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientRequest;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.filter.ClientFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.nxgen.http.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 
-public abstract class MessageSignInterceptor extends ClientFilter {
+@FilterOrder(category = FilterPhases.SECURITY, order = 0)
+public abstract class MessageSignInterceptor extends Filter {
 
     private static final Logger LOGGER =
             LoggerFactory.getLogger(MessageSignInterceptor.class.getName());
 
-    @Override
-    public ClientResponse handle(ClientRequest request) throws ClientHandlerException {
+    public HttpResponse handle(HttpRequest request)
+            throws HttpClientException, HttpResponseException {
         appendAdditionalHeaders(request);
         prepareDigestAndAddAsHeader(request);
         getSignatureAndAddAsHeader(request);
         reorganiseHeaders(request);
-        ClientResponse response = getNext().handle(request);
+        HttpResponse response = nextFilter(request);
         return response;
     }
 
-    protected abstract void appendAdditionalHeaders(ClientRequest request);
+    protected abstract void appendAdditionalHeaders(HttpRequest request);
 
-    protected abstract void getSignatureAndAddAsHeader(ClientRequest request);
+    protected abstract void getSignatureAndAddAsHeader(HttpRequest request);
 
-    protected abstract void prepareDigestAndAddAsHeader(ClientRequest request);
+    protected abstract void prepareDigestAndAddAsHeader(HttpRequest request);
 
-    protected void reorganiseHeaders(ClientRequest request) {}
+    protected void reorganiseHeaders(HttpRequest request) {}
 }

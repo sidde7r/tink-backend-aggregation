@@ -55,7 +55,7 @@ public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
-        super(request, context, configuration.getSignatureKeyPair());
+        super(request, context, configuration.getSignatureKeyPair(), true);
         setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();

@@ -6,11 +6,14 @@ import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 
 /**
  * Utility filter to throw a Tink {@link BankServiceError} when an API call responds with <code>
  * HTTP 500 Internal Server Error</code>.
  */
+@FilterOrder(category = FilterPhases.REQUEST_HANDLE, order = Integer.MIN_VALUE)
 public class BankServiceInternalErrorFilter extends Filter {
 
     @Override

@@ -151,4 +151,8 @@ public class HttpResponse {
     public List<NewCookie> getCookies() {
         return internalResponse.getCookies();
     }
+
+    public ClientResponse getInternalResponse() {
+        return internalResponse;
+    }
 }

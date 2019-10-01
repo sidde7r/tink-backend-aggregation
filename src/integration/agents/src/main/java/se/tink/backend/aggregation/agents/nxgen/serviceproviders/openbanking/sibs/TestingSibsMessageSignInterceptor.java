@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
 import com.google.common.collect.ImmutableList;
-import com.sun.jersey.api.client.ClientRequest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.agents.utils.jersey.MessageSignInterceptor;
+import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 
 public class TestingSibsMessageSignInterceptor extends MessageSignInterceptor {
 
@@ -53,7 +53,7 @@ public class TestingSibsMessageSignInterceptor extends MessageSignInterceptor {
     }
 
     @Override
-    protected void appendAdditionalHeaders(ClientRequest request) {
+    protected void appendAdditionalHeaders(HttpRequest request) {
         if (request.getHeaders().get(HeaderKeys.DATE) == null) {
             String requestTimestamp =
                     new SimpleDateFormat(Formats.CONSENT_BODY_DATE_FORMAT, Locale.ENGLISH)
@@ -69,7 +69,7 @@ public class TestingSibsMessageSignInterceptor extends MessageSignInterceptor {
     }
 
     @Override
-    protected void getSignatureAndAddAsHeader(ClientRequest request) {
+    protected void getSignatureAndAddAsHeader(HttpRequest request) {
         List<String> serializedHeaders = new ArrayList<>();
         List<String> listetToSignatureHeaders = new ArrayList<>();
 
@@ -111,9 +111,9 @@ public class TestingSibsMessageSignInterceptor extends MessageSignInterceptor {
     }
 
     @Override
-    protected void prepareDigestAndAddAsHeader(ClientRequest request) {
-        if (request.getEntity() != null) {
-            String digest = SibsUtils.getDigest(request.getEntity());
+    protected void prepareDigestAndAddAsHeader(HttpRequest request) {
+        if (request.getBody() != null) {
+            String digest = SibsUtils.getDigest(request.getBody());
             request.getHeaders()
                     .add(
                             SibsConstants.HeaderKeys.DIGEST,
