@@ -77,6 +77,11 @@ public class VolksbankConstants {
         public static final int REFRESH_TOKEN_EXPIRY_TIME = 90 * 24 * 3600;
     }
 
+    static class HttpClient {
+        public static final int MAX_RETRIES = 5;
+        public static final int RETRY_SLEEP_MILLISECONDS = 1000;
+    }
+
     public static class TokenParams {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";

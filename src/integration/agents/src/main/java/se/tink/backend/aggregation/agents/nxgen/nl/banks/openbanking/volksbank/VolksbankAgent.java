@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.ConsentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.VolksbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
@@ -30,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class VolksbankAgent extends SubsequentGenerationAgent
@@ -85,6 +87,18 @@ public class VolksbankAgent extends SubsequentGenerationAgent
                 agentsServiceConfiguration.getEidasProxy();
 
         client.setEidasProxy(eidasProxyConfiguration, certificateId);
+
+        // Prevent read timeouts
+        client.setTimeout(1000);
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+
+        // This line is needed to trigger the MetricFilter to be added as early as possible. It
+        // circumvents a bug which I think works like this: If we get a read timeout on the
+        // very first request, we will get a NullPointerException in MetricFilter::handle due to
+        // MetricFilter::next being null.
+        client.getInternalClient();
 
         transactionalAccountRefreshController =
                 new TransactionalAccountRefreshController(
