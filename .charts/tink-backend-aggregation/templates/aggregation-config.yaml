@@ -70,6 +70,10 @@ data:
     coordination:
       hosts: {{ default "coordination:2181" .Values.coordinationHosts }}
 
+    endpoints:
+      eventProducerServiceConfiguration:
+        url: event-producer-service.internal.production.oxford.tink.network:443/
+
     sqsQueueConfiguration:
       {{ .Values.sqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
 
