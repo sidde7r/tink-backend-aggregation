@@ -457,7 +457,7 @@ public class AgentWorkerOperationFactory {
             AgentWorkerCommandContext context,
             ControllerWrapper controllerWrapper) {
 
-        String operationName = "execute-transfer";
+        String operationName = "execute-transfer-with-refresh";
         List<AgentWorkerCommand> commands =
                 createTransferBaseCommands(
                         clientInfo, request, context, operationName, controllerWrapper);
@@ -478,7 +478,7 @@ public class AgentWorkerOperationFactory {
             ClientInfo clientInfo,
             AgentWorkerCommandContext context,
             ControllerWrapper controllerWrapper) {
-        String operationName = "execute-transfer";
+        String operationName = "execute-transfer-without-refresh";
         List<AgentWorkerCommand> commands =
                 createTransferWithoutRefreshBaseCommands(
                         clientInfo, request, context, operationName, controllerWrapper);

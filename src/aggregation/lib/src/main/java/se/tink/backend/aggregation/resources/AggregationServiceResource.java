@@ -160,6 +160,9 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
+        logger.info(
+                "Transfer Request received from main. triggerRefresh is: {}",
+                request.isTriggerRefresh());
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationExecuteTransfer(request, clientInfo));
     }
