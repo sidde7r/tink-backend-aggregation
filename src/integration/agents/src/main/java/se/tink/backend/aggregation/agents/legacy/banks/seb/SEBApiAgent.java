@@ -149,6 +149,7 @@ import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -1419,6 +1420,10 @@ public class SEBApiAgent extends AbstractAgent
             type = AccountTypes.OTHER;
         }
         account.setType(type);
+
+        if (SEBApiConstants.PSD2_Account_Types.contains(type)) {
+            account.setFlags(ImmutableList.of(AccountFlag.PSD2_PAYMENT_ACCOUNT));
+        }
 
         return account;
     }
