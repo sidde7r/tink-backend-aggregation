@@ -101,13 +101,7 @@ public class N26ApiClient implements IdentityDataFetcher {
                         .recoverWith(
                                 UnsupportedEncodingException.class,
                                 N26Utils::handleUnsupportedEncodingException)
-                        .map(
-                                b ->
-                                        getRequest(
-                                                        URLS.BASE_AUTHENTICATION,
-                                                        MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                                                .header(N26Constants.DEVICE_TOKEN, deviceId)
-                                                .body(b))
+                        .map(b -> getRequestBody(deviceId, b))
                         .get();
         String mfaToken =
                 Try.of(
@@ -248,13 +242,7 @@ public class N26ApiClient implements IdentityDataFetcher {
                         .recoverWith(
                                 UnsupportedEncodingException.class,
                                 e -> N26Utils.handleUnsupportedEncodingException(e))
-                        .map(
-                                b ->
-                                        getRequest(
-                                                        URLS.BASE_AUTHENTICATION,
-                                                        MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                                                .header(N26Constants.DEVICE_TOKEN, deviceToken)
-                                                .body(b))
+                        .map(b -> getRequestBody(deviceToken, b))
                         .get();
 
         return Try.of(
@@ -282,18 +270,18 @@ public class N26ApiClient implements IdentityDataFetcher {
                         .recoverWith(
                                 UnsupportedEncodingException.class,
                                 N26Utils::handleUnsupportedEncodingException)
-                        .map(
-                                b ->
-                                        getRequest(
-                                                        URLS.BASE_AUTHENTICATION,
-                                                        MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                                                .header(N26Constants.DEVICE_TOKEN, deviceToken)
-                                                .body(b))
+                        .map(b -> getRequestBody(deviceToken, b))
                         .get();
 
         return Try.<Either<ErrorResponse, AuthenticationResponse>>of(
                         () -> Either.right(requestBuilder.post(AuthenticationResponse.class)))
                 .recoverWith(HttpResponseException.class, N26Utils::handleAgentError)
                 .get();
+    }
+
+    private RequestBuilder getRequestBody(String deviceToken, String b) {
+        return getRequest(URLS.BASE_AUTHENTICATION, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .header(N26Constants.DEVICE_TOKEN, deviceToken)
+                .body(b);
     }
 }
