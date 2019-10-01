@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 
-import requests, json, logging, sys, getopt, os, time from collections import defaultdict
+import requests
+import json
+import logging
+import sys
+import os
+import time
+from collections import defaultdict
 
 # STATUS PAGE
 STATUSPAGE_API_KEY = os.environ.get("STATUSPAGE_API_KEY").rstrip("\n")
@@ -23,7 +29,7 @@ GROUP_IDS = {'se': 'x195hl534bxs', 'be': '56dnhms6f8tj', 'at': 'gkgss64655mg',
 # PROMETHEUS
 PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus.svc.cluster.local:9090/api/v1/query"
 
-### Queries
+# Queries
 PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
 FAILING_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='failed',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
 UNAVAILABLE_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='unavailable',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
@@ -46,7 +52,9 @@ def create_prometheus_request(query):
 def is_valid_prometheus_response(response):
     responsestatus = response.json()["status"]
     if responsestatus == "error":
-        logger.error("Fetch from Prometheus failed - errorType: [%s], errorMessage: [%s]", response.json()["errorType"], response.json()["error"])
+        logger.error("Fetch from Prometheus failed - errorType: [%s], errorMessage: [%s]",
+                     response.json()["errorType"],
+                     response.json()["error"])
         return False
 
     if responsestatus != "success":
@@ -69,7 +77,7 @@ def group_by_market(providers):
     return metric_by_market
 
 
-def create_statuspage_request(method, path, payload = None, body = None):
+def create_statuspage_request(method, path, payload=None, body=None):
     url = STATUSPAGE_API_BASE + PAGE_ID + path
     if method == "POST" or method == "PUT":
         headers = {"Content-Type": "application/json", "Authorization": "OAuth " + STATUSPAGE_API_KEY}
@@ -78,29 +86,29 @@ def create_statuspage_request(method, path, payload = None, body = None):
     return create_request(method, url, headers, payload, body)
 
 
-def create_request(method, url, headers, payload = None, body = None):
+def create_request(method, url, headers, payload=None, body=None):
     if method == "GET":
         return requests.get(
             url,
-            headers = headers,
-            params = payload
+            headers=headers,
+            params=payload
         )
     if method == "DELETE":
         return requests.delete(
             url,
-            headers = headers
+            headers=headers
         )
     if method == "POST":
         return requests.post(
             url,
-            headers = headers,
-            data = body
+            headers=headers,
+            data=body
         )
     if method == "PUT":
         return requests.put(
             url,
-            headers = headers,
-            data = body
+            headers=headers,
+            data=body
         )
 
 
@@ -131,24 +139,25 @@ def create_missing_components(names_of_missing_components, group_id):
         provider_value = 0
         status = calculate_status(provider_value)
         request_body = build_missing_components_request(component_name, status, group_id, False)
-        r = create_statuspage_request("POST", COMPONENTS_PATH, body = json.dumps(request_body))
+        r = create_statuspage_request("POST", COMPONENTS_PATH, body=json.dumps(request_body))
         if r.status_code != 201:
             logger.error("Failed to create missing component for component name: [{}]".format(component_name))
             failures += 1
-            # With more than 5 failures for one run we're probably rate-limited, lets keep updating components on next run
+            # With more than 5 failures for one run we're probably rate-limited, keep updating components on next run
             if failures > 5:
                 logger.warning("Rate limited by Statuspage, will continue creating components on next run.")
                 return False
         request_body = build_missing_components_request(component_name + " (bank is failing)", status, group_id, True)
-        r = create_statuspage_request("POST", COMPONENTS_PATH, body = json.dumps(request_body))
+        r = create_statuspage_request("POST", COMPONENTS_PATH, body=json.dumps(request_body))
         if r.status_code != 201:
             logger.error("Failed to create missing component for component name: [{}]".format(component_name))
             failures += 1
-            # With more than 5 failures for one run we're probably rate-limited, lets keep updating components on next run
+            # With more than 5 failures for one run we're probably rate-limited, keep updating components on next run
             if failures > 5:
                 return False
 
     return True
+
 
 def build_missing_components_request(name, status, group_id, hide):
     return {
@@ -166,12 +175,14 @@ def build_missing_components_request(name, status, group_id, hide):
 def group_by_group_id(all_components):
     components_by_group_id = defaultdict(dict)
     for component in all_components:
-        components_by_group_id[component["group_id"]].update({component["name"]: (component["id"], component["status"])})
+        components_by_group_id[component["group_id"]].update(
+            {component["name"]: (component["id"], component["status"])}
+        )
     return components_by_group_id
 
 
 def process_component(component_name, component_info, provider_metric_value):
-    if provider_metric_value == None:
+    if provider_metric_value is None:
         # Nothing has happened so nothing to update
         return
     component_id = component_info[0]
@@ -182,14 +193,16 @@ def process_component(component_name, component_info, provider_metric_value):
     if component_status == new_status:
         return
 
-    logger.info("The status has changed for [%s], updating status [%s] -> [%s]", component_name, component_status, new_status)
+    logger.info("The status has changed for [%s], updating status [%s] -> [%s]",
+                component_name, component_status, new_status)
 
     payload = build_update_component_status_request_body(new_status)
-    r = create_statuspage_request("PUT", COMPONENTS_PATH + component_id, body = json.dumps(payload))
+    r = create_statuspage_request("PUT", COMPONENTS_PATH + component_id, body=json.dumps(payload))
     if r.status_code == 200:
         logger.info("Successfully updated the status to [%s]", new_status)
     else:
-        logger.warning("Status updated of component [%s] failed with statusCode [%s] and message [%s]", component_name, r.status_code, r.json()['error'])
+        logger.warning("Status updated of component [%s] failed with statusCode [%s] and message [%s]",
+                       component_name, r.status_code, r.json()['error'])
 
 
 def main():
@@ -205,7 +218,6 @@ def main():
         time.sleep(30)
 
     logger.info("Starting cronjob to calculate provider statistics")
-
 
     # The total number of logins per provider over the last N minutes
     all_logins_response = create_prometheus_request(PROVIDERS_QUERY)
@@ -224,12 +236,12 @@ def main():
 
     # Restructure Prometheus responses so we can work with them
     #
-    # Example: 
+    # Example:
     # {
     #   "se": {
-    #       "provider-name-1": 0.2, 
-    #       "provider-name-2": 0, 
-    #       "provider-name-3": 1, 
+    #       "provider-name-1": 0.2,
+    #       "provider-name-2": 0,
+    #       "provider-name-3": 1,
     #       ...
     #   }
     # }
@@ -237,7 +249,7 @@ def main():
     all_logins_by_market = group_by_market(all_logins_response.json()["data"]["result"])
     failed_logins_by_market = group_by_market(failed_logins_response.json()["data"]["result"])
     unavailable_logins_by_market = group_by_market(unavailable_logins_response.json()["data"]["result"])
-    
+
     # Fetch all available components
     # Example: [
     #   {
@@ -305,7 +317,6 @@ def main():
             if not create_missing_components(missing_components, group_id):
                 logger.warning("Rate limited by Statuspage, will continue creating components on next run.")
                 return 1
-
 
     logger.info("Cronjob ran successfully")
     return 0

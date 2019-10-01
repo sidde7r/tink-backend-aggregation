@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
-import requests, json, logging, sys, os
+import requests
+import json
+import logging
+import sys
+import os
 
 
 # Config
@@ -17,6 +21,7 @@ STATUSPAGE_API_BASE = "https://api.statuspage.io/v1/pages/"
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('statuspage_provider_status_helper_markets')
 
+
 def create_statuspage_request(method, path, payload=None, body=None):
     url = STATUSPAGE_API_BASE + PAGE_ID + path
     if method == "POST" or method == "PUT":
@@ -26,29 +31,29 @@ def create_statuspage_request(method, path, payload=None, body=None):
     return create_request(method, url, headers, payload, body)
 
 
-def create_request(method, url, headers, payload = None, body = None):
+def create_request(method, url, headers, payload=None, body=None):
     if method == "GET":
         return requests.get(
             url,
-            headers = headers,
-            params = payload
+            headers=headers,
+            params=payload
         )
     if method == "DELETE":
         return requests.delete(
             url,
-            headers = headers
+            headers=headers
         )
     if method == "POST":
         return requests.post(
             url,
-            headers = headers,
-            data = body
+            headers=headers,
+            data=body
         )
     if method == "PUT":
         return requests.put(
             url,
-            headers = headers,
-            data = body
+            headers=headers,
+            data=body
         )
     else:
         logger.error("No request created for {}, unknown request type {}".format(url, method))
@@ -75,6 +80,7 @@ def build_create_component_group_request(name, component_id):
     })
 
 
+# Main
 groups = {}
 
 # Add all integration groups already on statuspage
@@ -103,7 +109,7 @@ for market in MARKETS:
         group_response = create_statuspage_request(
             "POST",
             "/component-groups/",
-            body = build_create_component_group_request( "{} integrations".format(market.upper()), placeholder_id)
+            body=build_create_component_group_request("{} integrations".format(market.upper()), placeholder_id)
         )
         if group_response.status_code != 201:
             logger.error("Failed to create component group for market: [{}]".format(market))
