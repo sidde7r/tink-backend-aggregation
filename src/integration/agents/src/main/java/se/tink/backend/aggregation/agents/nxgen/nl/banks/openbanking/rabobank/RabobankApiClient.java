@@ -193,9 +193,11 @@ public final class RabobankApiClient {
         }
 
         if (StringUtils.containsIgnoreCase(consentStatus, RabobankConstants.Consents.EXPIRE)) {
+            RabobankUtils.removeOauthToken(persistentStorage);
             throw BankServiceError.CONSENT_EXPIRED.exception();
         } else if (StringUtils.containsIgnoreCase(
                 consentStatus, RabobankConstants.Consents.INVALID)) {
+            RabobankUtils.removeOauthToken(persistentStorage);
             throw BankServiceError.CONSENT_INVALID.exception();
         } else if (StringUtils.containsIgnoreCase(
                 consentStatus, RabobankConstants.Consents.REVOKED_BY_USER)) {
