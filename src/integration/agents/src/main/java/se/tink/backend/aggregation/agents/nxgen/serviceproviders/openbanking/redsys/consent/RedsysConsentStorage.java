@@ -4,7 +4,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalUnit;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 
@@ -33,9 +32,14 @@ public class RedsysConsentStorage {
 
     public void useConsentId(String consentId) {
         storage.put(
-                RedsysConstants.StorageKeys.CONSENT_VALID_FROM,
+                StorageKeys.CONSENT_VALID_FROM,
                 ZonedDateTime.now(ZoneId.of("Europe/Madrid"))
                         .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        storage.put(RedsysConstants.StorageKeys.CONSENT_ID, consentId);
+        storage.put(StorageKeys.CONSENT_ID, consentId);
+    }
+
+    public void clear() {
+        storage.remove(StorageKeys.CONSENT_ID);
+        storage.remove(StorageKeys.CONSENT_VALID_FROM);
     }
 }

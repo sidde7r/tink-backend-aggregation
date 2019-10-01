@@ -105,8 +105,8 @@ public final class RedsysApiClient {
         this.clientSigningCertificate =
                 RedsysUtils.parseCertificate(configuration.getClientSigningCertificate());
 
-        if (eidasProxyConfiguration != null && configuration.getCertificateId() != null) {
-            client.setEidasProxy(eidasProxyConfiguration, configuration.getCertificateId());
+        if (eidasProxyConfiguration != null) {
+            client.setEidasProxy(eidasProxyConfiguration, null);
         }
     }
 
@@ -115,14 +115,6 @@ public final class RedsysApiClient {
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
-    }
-
-    public boolean hasValidAccessToken() {
-        try {
-            return getTokenFromStorage().isValid();
-        } catch (IllegalStateException e) {
-            return false;
-        }
     }
 
     private String makeAuthUrl(String path) {
