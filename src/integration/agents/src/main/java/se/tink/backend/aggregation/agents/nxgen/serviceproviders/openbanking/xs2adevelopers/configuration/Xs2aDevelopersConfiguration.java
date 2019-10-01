@@ -1,18 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class Xs2aDevelopersConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String redirectUrl;
-    private String baseUrl;
-    private String certificateId;
+    @JsonProperty @Secret private String clientId;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String baseUrl;
+    @JsonProperty @Secret private String certificateId;
 
     public String getClientId() {
         Preconditions.checkNotNull(
