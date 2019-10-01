@@ -45,7 +45,7 @@ public class ICSUtils {
     public static Date getExpirationDate() {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
-        c.add(Calendar.DATE, 90);
+        c.add(Calendar.DATE, 89);
         return c.getTime();
     }
 
