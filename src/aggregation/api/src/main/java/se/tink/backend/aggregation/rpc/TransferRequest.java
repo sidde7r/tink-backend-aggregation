@@ -63,7 +63,7 @@ public class TransferRequest extends CredentialsRequest {
     }
 
     public boolean isTriggerRefresh() {
-        return triggerRefresh;
+        return true; // triggerRefresh;
     }
 
     public void setTriggerRefresh(boolean triggerRefresh) {
