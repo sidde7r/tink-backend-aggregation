@@ -83,7 +83,7 @@ public class FetchLoanDetailsResponse {
                         IdModule.builder()
                                 .withUniqueIdentifier(maskAccountNumber())
                                 .withAccountNumber(loanFormattedId)
-                                .withAccountName(getNickname())
+                                .withAccountName(getAccountName())
                                 .addIdentifier(new SwedishIdentifier(loanId))
                                 .setProductName(productCode)
                                 .build())
@@ -170,8 +170,8 @@ public class FetchLoanDetailsResponse {
     }
 
     @JsonIgnore
-    private String getNickname() {
-        return Strings.nullToEmpty(nickname);
+    private String getAccountName() {
+        return Strings.isNullOrEmpty(nickname) ? loanFormattedId : nickname;
     }
 
     private LocalDate convertDateToLocalDate(Date dateToConvert) {
