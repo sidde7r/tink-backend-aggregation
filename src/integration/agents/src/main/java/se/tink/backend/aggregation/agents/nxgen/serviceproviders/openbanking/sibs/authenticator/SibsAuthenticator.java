@@ -24,7 +24,7 @@ public class SibsAuthenticator {
     private enum AuthenticationState {
         MANUAL_ON_GOING,
         MANUAL_SUCCEEDED,
-        AUTO;
+        AUTO
     }
 
     public SibsAuthenticator(SibsBaseApiClient apiClient, Credentials credentials) {
