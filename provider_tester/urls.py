@@ -11,6 +11,7 @@ class URLConfig:
     credentials_status_url = "credentials/<credentials_id>"
     refresh_credentials_url = "credentials/<credentials_id>/refresh"
     accounts_url = "accounts/list"
+    transactions_url = "transactions"
     bypass_filters_url = "user/psd2flag"
 
     def __init__(self):
@@ -47,6 +48,10 @@ class URLConfig:
     @staticmethod
     def get_accounts_list_url():
         return AggregationConfig.host_url + URLConfig.accounts_url
+
+    @staticmethod
+    def get_transactions_list_url():
+        return AggregationConfig.host_url + URLConfig.transactions_url
 
     @staticmethod
     def get_bypass_filters_url():
