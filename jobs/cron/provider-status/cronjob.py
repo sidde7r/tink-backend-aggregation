@@ -12,7 +12,7 @@ from collections import defaultdict
 STATUSPAGE_API_KEY = os.environ.get("STATUSPAGE_API_KEY").rstrip("\n")
 STATUSPAGE_API_BASE = "https://api.statuspage.io/v1/pages/"
 NOT_CIRCUIT_BROKEN = 0
-PAGE_ID = "n814cl79vp6c"
+PAGE_ID = "n814cl79vp6c" # https://tinksandbox.statuspage.io/
 COMPONENTS_PATH = "/components/"
 
 STATUS_ENUMS = {
