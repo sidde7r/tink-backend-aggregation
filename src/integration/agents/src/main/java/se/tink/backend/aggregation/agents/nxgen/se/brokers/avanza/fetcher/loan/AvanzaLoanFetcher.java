@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.loan;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -36,25 +36,28 @@ public class AvanzaLoanFetcher implements AccountFetcher<LoanAccount> {
     public Collection<LoanAccount> fetchAccounts() {
         final HolderName holderName = new HolderName(temporaryStorage.get(StorageKeys.HOLDER_NAME));
 
-        authSessionStorage.keySet().stream().flatMap(getAccounts(holderName)).close();
+        for (String authSession : authSessionStorage.keySet()) {
+            getAccounts(authSession);
+        }
         return Collections.emptyList();
     }
 
-    private Function<String, Stream<?>> getAccounts(HolderName holderName) {
-        return authSession ->
-                apiClient.fetchAccounts(authSession).getAccounts().stream()
-                        .filter(AccountEntity::isLoanAccount)
-                        .peek(
-                                acc ->
-                                        LOGGER.info(
-                                                "Avanza Loan Account: {}",
-                                                SerializationUtils.serializeToString(acc)))
-                        .map(AccountEntity::getAccountId)
-                        .map(accId -> apiClient.fetchAccountDetails(accId, authSession))
-                        .peek(
-                                details ->
-                                        LOGGER.info(
-                                                "Avanza Loan Account details: {}",
-                                                SerializationUtils.serializeToString(details)));
+    private void getAccounts(String authSession) {
+        for (AccountEntity account : apiClient.fetchAccounts(authSession).getAccounts()) {
+            if (account.isLoanAccount()) {
+                LOGGER.info(
+                        "Avanza Loan Account: {}", SerializationUtils.serializeToString(account));
+                String accId = account.getAccountId();
+                Optional<AccountDetailsResponse> details =
+                        Optional.ofNullable(apiClient.fetchAccountDetails(accId, authSession));
+                if (details.isPresent()) {
+                    LOGGER.info(
+                            "Avanza Loan Account details: {}",
+                            SerializationUtils.serializeToString(details.get()));
+                } else {
+                    LOGGER.info("No loan details!");
+                }
+            }
+        }
     }
 }
