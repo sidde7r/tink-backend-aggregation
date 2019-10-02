@@ -122,7 +122,6 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
                 RefreshTokenForm.builder()
                         .setRefreshToken(refreshToken)
                         .setGrantType(NordeaBaseConstants.FormValues.REFRESH_TOKEN)
-                        .setRedirectUri(apiClient.getConfiguration().getRedirectUrl())
                         .build();
 
         try {
@@ -132,6 +131,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
             if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
                 ErrorResponse error = e.getResponse().getBody(ErrorResponse.class);
                 if (error.isInvalidRefreshTokenError()) {
+                    log.warn("Nordea invalid refresh token spotted.");
                     return Optional.empty();
                 }
             }
