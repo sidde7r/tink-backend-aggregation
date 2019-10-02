@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactio
 
 import com.google.api.client.util.Lists;
 import com.google.common.collect.Iterables;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +43,8 @@ public class TransactionFetcher
         }
 
         final List<TransactionEntity> transactions =
-                removeOverlappingTransactions(response.getTransactions(), key);
+                removeOverlappingTransactions(
+                        response.getTransactions().orElseGet(ArrayList::new), key);
         tinkTransactions.addAll(
                 transactions.stream()
                         .map(TransactionEntity::toTinkTransaction)
@@ -65,7 +67,8 @@ public class TransactionFetcher
 
     private TransactionPageKey getNextKey(Response response) {
         final TransactionQuery responseQuery = response.getTransactionQuery();
-        final List<TransactionEntity> transactions = response.getTransactions();
+        final List<TransactionEntity> transactions =
+                response.getTransactions().orElseGet(ArrayList::new);
         if (transactions.size() < responseQuery.getMaxRows()) {
             return null;
         }

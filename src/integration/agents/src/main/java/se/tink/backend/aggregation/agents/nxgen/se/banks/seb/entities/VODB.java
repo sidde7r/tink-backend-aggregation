@@ -9,6 +9,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.investment.entities.InvestmentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.investment.entities.InvestmentInstrumnentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.investment.entities.SimpleInsuranceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
@@ -66,4 +69,13 @@ class VODB {
 
     @JsonProperty("PCBW2582")
     public List<LoanEntity> blancoLoans;
+
+    @JsonProperty("PCBWF041")
+    public List<InvestmentEntity> investments;
+
+    @JsonProperty("PCBWF061")
+    public List<SimpleInsuranceEntity> insurances;
+
+    @JsonProperty("PCBW173")
+    public List<InvestmentInstrumnentEntity> investmentInstruments;
 }
