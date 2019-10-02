@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
@@ -210,6 +211,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         if (isLoggedIn(agent)) {
             return;
         }
+
+        if (agent instanceof ManualOrAutoAuth) {
+            final ManualOrAutoAuth manualOrAutoAuth = (ManualOrAutoAuth) agent;
+            final boolean isManual = manualOrAutoAuth.isManualAuthentication(credential);
+            log.info("Authentication requires user intervention: " + isManual);
+        }
+
         if (agent instanceof ProgressiveAuthAgent) {
             final ProgressiveLoginExecutor executor =
                     new ProgressiveLoginExecutor(
