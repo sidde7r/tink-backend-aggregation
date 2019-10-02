@@ -89,7 +89,7 @@ public class VolksbankAgent extends SubsequentGenerationAgent
         client.setEidasProxy(eidasProxyConfiguration, certificateId);
 
         // Prevent read timeouts
-        client.setTimeout(1000);
+        client.setTimeout(HttpClient.READ_TIMEOUT_MILLISECONDS);
         client.addFilter(
                 new TimeoutRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
