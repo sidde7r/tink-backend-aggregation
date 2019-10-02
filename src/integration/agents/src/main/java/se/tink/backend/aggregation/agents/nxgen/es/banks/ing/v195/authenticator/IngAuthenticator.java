@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
@@ -96,9 +97,7 @@ public class IngAuthenticator implements Authenticator {
                     apiClient.putLoginRestSession(pinPositions, response.getProcessId());
             apiClient.postLoginAuthResponse(putSessionResponse.getTicket());
         } catch (HttpResponseException hre) {
-            if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
+            handleErrors(hre);
         }
     }
 
@@ -215,5 +214,16 @@ public class IngAuthenticator implements Authenticator {
             persistentStorage.put(Storage.DEVICE_ID, RandomUtils.generateRandomHexEncoded(20));
         }
         return persistentStorage.get(Storage.DEVICE_ID);
+    }
+
+    private void handleErrors(HttpResponseException hre) throws LoginException {
+        switch (hre.getResponse().getStatus()) {
+            case HttpStatus.SC_FORBIDDEN:
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            case HttpStatus.SC_CONFLICT:
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            default:
+                throw hre;
+        }
     }
 }
