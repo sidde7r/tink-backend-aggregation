@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.BalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -21,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class RedsysTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-                TransactionKeyPaginator<TransactionalAccount, String> {
+                TransactionKeyPaginator<TransactionalAccount, PaginationKey> {
     private final RedsysApiClient apiClient;
     private final RedsysConsentController consentController;
     private final AspspConfiguration aspspConfiguration;
@@ -59,14 +61,14 @@ public class RedsysTransactionalAccountFetcher
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
-            TransactionalAccount account, String key) {
+    public TransactionKeyPaginatorResponse<PaginationKey> getTransactionsFor(
+            TransactionalAccount account, PaginationKey key) {
         try {
             final String consentId = consentController.getConsentId();
             return apiClient.fetchTransactions(account.getApiIdentifier(), consentId, key);
         } catch (HttpResponseException hre) {
             final ErrorResponse error = ErrorResponse.fromResponse(hre.getResponse());
-            if (error.hasErrorCode(ErrorCodes.CONSENT_EXPIRED)) {
+            if (error.hasErrorCode(ErrorCodes.CONSENT_EXPIRED) && Objects.isNull(key)) {
                 // Request new consent
                 if (!consentController.requestConsent()) {
                     throw BankServiceError.CONSENT_REVOKED.exception();
