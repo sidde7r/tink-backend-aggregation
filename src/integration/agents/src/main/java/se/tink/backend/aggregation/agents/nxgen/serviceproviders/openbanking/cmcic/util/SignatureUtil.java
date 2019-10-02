@@ -20,19 +20,13 @@ public final class SignatureUtil {
     public static String getSignatureHeaderValue(
             final String keyId,
             final String httpMethod,
-            URI uri,
+            final URI uri,
             final String date,
             final String requestId,
             final EidasProxyConfiguration eidasProxyConf,
-            EidasIdentity eidasIdentity) {
+            final EidasIdentity eidasIdentity) {
 
-        String signatureEntity =
-                String.join(
-                        "\n",
-                        "(request-target): " + httpMethod.toLowerCase() + " " + uri.getPath(),
-                        "host: " + uri.getHost(),
-                        "date: " + date,
-                        "x-request-id: " + requestId);
+        String signatureEntity = getMandatoryHeadersSignature(httpMethod, uri, date, requestId);
 
         String signature = signAndEncode(signatureEntity, eidasProxyConf, eidasIdentity);
 
@@ -53,15 +47,12 @@ public final class SignatureUtil {
             final String contentType,
             final String requestId,
             final EidasProxyConfiguration eidasProxyConf,
-            EidasIdentity eidasIdentity) {
+            final EidasIdentity eidasIdentity) {
 
         String signatureEntity =
                 String.join(
                         "\n",
-                        "(request-target): " + httpMethod.toLowerCase() + " " + uri.getPath(),
-                        "host: " + uri.getHost(),
-                        "date: " + date,
-                        "x-request-id: " + requestId,
+                        getMandatoryHeadersSignature(httpMethod, uri, date, requestId),
                         "digest: " + digest,
                         "content-type: " + contentType);
 
@@ -71,8 +62,24 @@ public final class SignatureUtil {
                 ",",
                 "keyId=" + keyId,
                 "algorithm=\"rsa-sha256\"",
-                "headers=\"(request-target) host date x-request-id\"",
+                "headers=\"(request-target) host date x-request-id digest content-type\"",
                 "signature=\"" + signature + "\"");
+    }
+
+    private static String getMandatoryHeadersSignature(
+            String httpMethod, URI uri, String date, String requestId) {
+
+        String fullPath = httpMethod.toLowerCase() + " " + uri.getPath();
+        if (uri.getQuery() != null) {
+            fullPath += "?" + uri.getQuery();
+        }
+
+        return String.join(
+                "\n",
+                "(request-target): " + fullPath,
+                "host: " + uri.getHost(),
+                "date: " + date,
+                "x-request-id: " + requestId);
     }
 
     private static String signAndEncode(
