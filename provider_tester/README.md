@@ -1,8 +1,23 @@
 # Provider testing script
 
-This script can be used to test a provider in Oxford production environment. 
-We plan to extend the script to make it usable in other production environments and
-also in staging environments as well.
+This script can be used to test a provider in any environment. The script imitates a customer that 
+wants to aggregate data by using one of our providers. The script creates a user and
+credentials for that user and triggers the authentication flow and performs a refresh 
+on the provider. For instance, it does everything that we are doing by running an 
+ice-cream hack.
+
+Some background information: the need for such script raised from the following facts:
+
+a) Due to the new policy enforcement, we cannot use ice-cream hack towards production 
+environment to test OB providers. (we can of course test them on staging but it is 
+always good to test them on production as well since something can go wrong in production
+and not in staging especially due to secrets/certificates related issues)
+b) Running such script is (expected to be) easier then running ice-cream hack 
+to test a provider
+c) We do not have a tool to perform a full test from the customer-point-of-view. 
+Thanks to this script, we can for example just use the client ID and clientSecret of 
+a customer as a parameter to this script to check how the full pipeline will work for 
+the customer.
 
 ## Requirements 
 
