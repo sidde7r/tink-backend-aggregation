@@ -81,47 +81,78 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.be.banks.axa.AxaAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "AXA",
-            "fields": [
-                {
-                    "description": "Card number (19 characters)",
-                    "immutable": true,
-                    "maxLength": 19,
-                    "minLength": 19,
-                    "name": "username",
-                    "numeric": false,
-                    "pattern": "^6703[0-9]{13}N[0-9]$",
-                    "sensitive": true
-                }
-            ],
-            "multiFactor": true,
-            "name": "be-axa-cardreader",
-            "financialInstitutionId": "e1d2dd305c494c89b45376f9389d80af",
-            "passwordHelpText": "Please authenticate yourself using the same card number you normally use in your bank's mobile banking app, including the letter N and the digit following it. You will also need your AXA card reader to finish the authentication.",
-            "popular": true,
-            "status": "ENABLED",
-            "supplementalFields": [
-                {
-                    "description": "Challenge",
-                    "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nEnter the pin code.\nPress 'OK'.",
-                    "immutable": true,
-                    "masked": false,
-                    "name": "logindescription"
-                },
-                {
-                    "description": "Response, 6 to 8 digits.",
-                    "immutable": false,
-                    "masked": false,
-                    "name": "logininput",
-                    "numeric": true,
-                    "pattern": "^[0-9]{6,8}$",
-                    "patternError": "Enter your 6 to 8 digit response code from your card reader."
-                }
-            ],
-            "transactional": true,
-            "type": "BANK"
+          "accessType": "OTHER",
+          "className": "nxgen.be.banks.axa.AxaAgent",
+          "credentialsType": "PASSWORD",
+          "displayName": "AXA",
+          "fields": [
+            {
+              "description": "Card number (19 characters)",
+              "immutable": true,
+              "maxLength": 19,
+              "minLength": 19,
+              "name": "username",
+              "numeric": false,
+              "pattern": "^6703[0-9]{13}N[0-9]$",
+              "sensitive": true
+            }
+          ],
+          "financialInstitutionId": "0f0a1f6794ce4de7ae12972b89813fa2",
+          "financialInstitutionName": "AXA",
+          "multiFactor": true,
+          "name": "be-axa-cardreader",
+          "passwordHelpText": "Please authenticate yourself using the same card number you normally use in your bank's mobile banking app, including the letter N and the digit following it. You will also need your AXA card reader to finish the authentication.",
+          "popular": true,
+          "status": "ENABLED",
+          "supplementalFields": [
+            {
+              "description": "Challenge",
+              "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nEnter the pin code.\nPress 'OK'.",
+              "immutable": true,
+              "masked": false,
+              "name": "logindescription"
+            },
+            {
+              "description": "Response, 6 to 8 digits.",
+              "immutable": false,
+              "masked": false,
+              "name": "logininput",
+              "numeric": true,
+              "pattern": "^[0-9]{6,8}$",
+              "patternError": "Enter your 6 to 8 digit response code from your card reader."
+            }
+          ],
+          "transactional": true,
+          "type": "BANK",
+          "backgroundRefreshMaxFrequency": 1,
+          "backgroundRefreshEnabled": true
+        },
+        {
+          "accessType": "OPEN_BANKING",
+          "authenticationFlow": "REDIRECT",
+          "className": "nxgen.be.openbanking.axa.AxaAgent",
+          "credentialsType": "PASSWORD",
+          "displayName": "AXA",
+          "fields": [
+            {
+              "description": "Iban",
+              "immutable": true,
+              "name": "iban"
+            }
+          ],
+          "financialInstitutionId": "0f0a1f6794ce4de7ae12972b89813fa2",
+          "financialInstitutionName": "AXA",
+          "multiFactor": false,
+          "name": "be-axa-ob",
+          "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+          "payload": "tink",
+          "popular": true,
+          "status": "ENABLED",
+          "transactional": true,
+          "tutorialUrl": null,
+          "type": "BANK",
+          "backgroundRefreshMaxFrequency": 4,
+          "backgroundRefreshEnabled": true
         },
         {
             "capabilities": [
