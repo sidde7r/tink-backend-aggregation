@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.TppMessageEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.AccountReportEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.BalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -21,10 +22,13 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 @JsonObject
 public class BaseTransactionsResponse<T extends TransactionEntity>
-        implements TransactionKeyPaginatorResponse<String> {
+        implements TransactionKeyPaginatorResponse<PaginationKey> {
     @JsonProperty private AccountReferenceEntity account;
     @JsonProperty private AccountReportEntity<T> transactions;
     @JsonProperty private List<BalanceEntity> balances;
+
+    // Request ID from HTTP header
+    @JsonIgnore private String requestId;
 
     @JsonProperty("_links")
     private Map<String, LinkEntity> links;
@@ -68,13 +72,19 @@ public class BaseTransactionsResponse<T extends TransactionEntity>
 
     @Override
     @JsonIgnore
-    public String nextKey() {
+    public PaginationKey nextKey() {
         final Optional<LinkEntity> nextLink = getNextLink();
-        return nextLink.map(LinkEntity::getHref).orElse(null);
+        return nextLink.map(linkEntity -> new PaginationKey(linkEntity.getHref(), requestId))
+                .orElse(null);
     }
 
     @JsonIgnore
     public boolean isLastPage() {
         return !getNextLink().isPresent();
+    }
+
+    @JsonIgnore
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }

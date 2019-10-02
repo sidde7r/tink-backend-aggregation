@@ -43,6 +43,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.PaymentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.PaginationKey;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.AccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
@@ -52,10 +54,10 @@ import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
@@ -308,19 +310,6 @@ public final class RedsysApiClient {
         return request;
     }
 
-    private String requestIdForAccount(String accountId) {
-        String requestId = sessionStorage.get(StorageKeys.ACCOUNT_REQUEST_ID + accountId);
-        if (Strings.isNullOrEmpty(requestId)) {
-            requestId = UUID.randomUUID().toString().toLowerCase(Locale.ENGLISH);
-            sessionStorage.put(StorageKeys.ACCOUNT_REQUEST_ID + accountId, requestId);
-        }
-        return requestId;
-    }
-
-    private void clearRequestIdForAccount(String accountId) {
-        sessionStorage.remove(StorageKeys.ACCOUNT_REQUEST_ID + accountId);
-    }
-
     public ListAccountsResponse fetchAccounts(String consentId) {
         RequestBuilder builder =
                 createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
@@ -333,7 +322,6 @@ public final class RedsysApiClient {
 
     public AccountBalancesResponse fetchAccountBalances(String accountId, String consentId) {
         final Map<String, Object> headers = Maps.newHashMap();
-        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
         headers.put(HeaderKeys.CONSENT_ID, consentId);
 
         return createSignedRequest(makeApiUrl(Urls.BALANCES, accountId), null, headers)
@@ -341,28 +329,20 @@ public final class RedsysApiClient {
     }
 
     private LocalDate transactionsFromDate(String accountId) {
-        final Optional<LocalDate> fetchedDate = fetchedTransactionsUntil(accountId);
-        final LocalDate defaultRefreshDate =
-                LocalDate.now().minusDays(RedsysConstants.DEFAULT_REFRESH_DAYS);
-        if (fetchedDate.isPresent() && fetchedDate.get().isAfter(defaultRefreshDate)) {
-            return defaultRefreshDate;
+        if (hasDoneInitialFetch(accountId)) {
+            return LocalDate.now().minusDays(RedsysConstants.DEFAULT_REFRESH_DAYS);
         } else {
             // This might trigger SCA
             return aspspConfiguration.oldestTransactionDate();
         }
     }
 
-    private Optional<LocalDate> fetchedTransactionsUntil(String accountId) {
-        final String dateString =
-                persistentStorage.get(StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId);
-        if (Objects.isNull(dateString)) {
-            return Optional.empty();
-        }
-        return Optional.of(LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE));
+    private boolean hasDoneInitialFetch(String accountId) {
+        return persistentStorage.containsKey(StorageKeys.FETCHED_TRANSACTIONS + accountId);
     }
 
     private void setFetchingTransactionsUntil(String accountId, LocalDate date) {
-        final String key = StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId;
+        final String key = StorageKeys.FETCHED_TRANSACTIONS + accountId;
         if (Objects.isNull(date)) {
             sessionStorage.remove(key);
         } else {
@@ -372,34 +352,35 @@ public final class RedsysApiClient {
     }
 
     private void persistFetchedTransactionsUntil(String accountId) {
-        final String key = StorageKeys.FETCHED_TRANSACTIONS_UNTIL + accountId;
+        final String key = StorageKeys.FETCHED_TRANSACTIONS + accountId;
         final String value = sessionStorage.remove(key);
         if (!Objects.isNull(value)) {
             persistentStorage.put(key, value);
         }
     }
 
-    private BaseTransactionsResponse fetchTransactions(String accountId, RequestBuilder request) {
-        try {
-            final BaseTransactionsResponse response =
-                    request.get(aspspConfiguration.getTransactionsResponseClass());
-            if (response.isLastPage()) {
-                persistFetchedTransactionsUntil(accountId);
-                clearRequestIdForAccount(accountId);
-            }
-            return response;
-        } catch (HttpResponseException hre) {
-            clearRequestIdForAccount(accountId);
-            throw hre;
+    private BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
+            String accountId, RequestBuilder request) {
+        final HttpResponse response = request.get(HttpResponse.class);
+        final BaseTransactionsResponse<? extends TransactionEntity> transactionsResponse =
+                response.getBody(aspspConfiguration.getTransactionsResponseClass());
+        // Add Request ID from response header
+        final String requestId = response.getHeaders().getFirst(HeaderKeys.REQUEST_ID);
+        transactionsResponse.setRequestId(requestId);
+
+        if (transactionsResponse.isLastPage()) {
+            // The last page won't always be reached after the first refresh
+            persistFetchedTransactionsUntil(accountId);
         }
+
+        return transactionsResponse;
     }
 
-    public BaseTransactionsResponse fetchTransactions(
+    private BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
             String accountId, String consentId, LocalDate fromDate, LocalDate toDate) {
         final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
         final Map<String, Object> headers = Maps.newHashMap();
-        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
         headers.put(HeaderKeys.CONSENT_ID, consentId);
         setFetchingTransactionsUntil(accountId, toDate);
 
@@ -411,9 +392,9 @@ public final class RedsysApiClient {
         return fetchTransactions(accountId, request);
     }
 
-    public BaseTransactionsResponse fetchPendingTransactions(String accountId, String consentId) {
+    public BaseTransactionsResponse<? extends TransactionEntity> fetchPendingTransactions(
+            String accountId, String consentId) {
         final Map<String, Object> headers = Maps.newHashMap();
-        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
         headers.put(HeaderKeys.CONSENT_ID, consentId);
         setFetchingTransactionsUntil(accountId, null);
 
@@ -423,9 +404,9 @@ public final class RedsysApiClient {
         return fetchTransactions(accountId, request);
     }
 
-    public BaseTransactionsResponse fetchTransactions(
-            String accountId, String consentId, @Nullable String path) {
-        if (path == null) {
+    public BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
+            String accountId, String consentId, @Nullable PaginationKey key) {
+        if (Objects.isNull(key)) {
             // Initial transactions request
             final LocalDate toDate = LocalDate.now();
             final LocalDate fromDate = transactionsFromDate(accountId);
@@ -434,9 +415,10 @@ public final class RedsysApiClient {
 
         final Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.CONSENT_ID, consentId);
-        headers.put(HeaderKeys.REQUEST_ID, requestIdForAccount(accountId));
+        headers.put(HeaderKeys.REQUEST_ID, key.getRequestId());
 
-        final RequestBuilder request = createSignedRequest(makeApiUrl(path), null, headers);
+        final RequestBuilder request =
+                createSignedRequest(makeApiUrl(key.getPath()), null, headers);
         return fetchTransactions(accountId, request);
     }
 
