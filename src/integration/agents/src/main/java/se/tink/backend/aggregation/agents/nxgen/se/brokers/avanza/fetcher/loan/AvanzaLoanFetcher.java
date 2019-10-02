@@ -1,23 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.loan;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AvanzaLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaLoanFetcher.class);
 
     private final AvanzaApiClient apiClient;
     private final AvanzaAuthSessionStorage authSessionStorage;
@@ -36,28 +33,19 @@ public class AvanzaLoanFetcher implements AccountFetcher<LoanAccount> {
     public Collection<LoanAccount> fetchAccounts() {
         final HolderName holderName = new HolderName(temporaryStorage.get(StorageKeys.HOLDER_NAME));
 
-        for (String authSession : authSessionStorage.keySet()) {
-            getAccounts(authSession);
-        }
-        return Collections.emptyList();
+        return authSessionStorage.keySet().stream()
+                .flatMap(getAccounts(holderName))
+                .collect(Collectors.toList());
     }
 
-    private void getAccounts(String authSession) {
-        for (AccountEntity account : apiClient.fetchAccounts(authSession).getAccounts()) {
-            if (account.isLoanAccount()) {
-                LOGGER.info(
-                        "Avanza Loan Account: {}", SerializationUtils.serializeToString(account));
-                String accId = account.getAccountId();
-                Optional<AccountDetailsResponse> details =
-                        Optional.ofNullable(apiClient.fetchAccountDetails(accId, authSession));
-                if (details.isPresent()) {
-                    LOGGER.info(
-                            "Avanza Loan Account details: {}",
-                            SerializationUtils.serializeToString(details.get()));
-                } else {
-                    LOGGER.info("No loan details!");
-                }
-            }
-        }
+    private Function<String, Stream<? extends LoanAccount>> getAccounts(HolderName holderName) {
+        return authSession ->
+                apiClient.fetchAccounts(authSession).getAccounts().stream()
+                        .filter(AccountEntity::isLoanAccount)
+                        .map(AccountEntity::getAccountId)
+                        .map(accId -> apiClient.fetchAccountDetails(accId, authSession))
+                        .map(account -> account.toLoanAccount(holderName))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get);
     }
 }
