@@ -1,19 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 public class TokenEntity {
     private String accessToken;
     private String refreshToken;
-    private long expiresIn;
+    private long expireDate;
 
     public TokenEntity() {}
 
-    public TokenEntity(String accessToken, String refreshToken, long expiresIn) {
+    public TokenEntity(String accessToken, String refreshToken, LocalDateTime expireDate) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.expiresIn = expiresIn;
+        this.expireDate = expireDate.toEpochSecond(ZoneOffset.UTC);
+    }
+
+    public long getExpireDate() {
+        return expireDate;
     }
 
     public String getAccessToken() {
@@ -24,11 +32,15 @@ public class TokenEntity {
         return refreshToken;
     }
 
-    public long getExpiresIn() {
-        return expiresIn;
+    @JsonIgnore
+    public LocalDateTime getExpireDateTime() {
+        return LocalDateTime.ofEpochSecond(expireDate, 0, ZoneOffset.UTC);
     }
 
+    @JsonIgnore
     public boolean isValid() {
-        return new Date().before(new Date(expiresIn)) && !Strings.isNullOrEmpty(accessToken);
+        return !Strings.isNullOrEmpty(accessToken)
+                && !Strings.isNullOrEmpty(refreshToken)
+                && LocalDateTime.now().isBefore(getExpireDateTime());
     }
 }

@@ -837,17 +837,17 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return redirectUrl;
         }
 
+        public Builder setRedirectUrl(String redirectUrl) {
+            this.redirectUrl = redirectUrl;
+            return this;
+        }
+
         public String getClusterId() {
             return clusterId;
         }
 
         public Builder setClusterId(String clusterId) {
             this.clusterId = clusterId;
-            return this;
-        }
-
-        public Builder setRedirectUrl(String redirectUrl) {
-            this.redirectUrl = redirectUrl;
             return this;
         }
 

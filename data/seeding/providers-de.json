@@ -11428,32 +11428,68 @@
             "transactional": true,
             "type": "BANK"
         },
-        {
-            "className": "nxgen.serviceproviders.banks.n26.N26Agent",
-            "credentialsType": "PASSWORD",
-            "displayName": "N26",
-            "fields": [
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                },
-                {
-                    "description": "Password",
-                    "masked": true,
-                    "name": "password",
-                    "sensitive": true
-                }
-            ],
-            "groupDisplayName": "N26",
-            "multiFactor": false,
-            "name": "de-n26-password",
-            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-            "popular": false,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
+      {
+        "accessType": "OTHER",
+        "className": "nxgen.serviceproviders.banks.n26.N26SmsAuthAgent",
+        "credentialsType": "PASSWORD",
+        "displayName": "N26",
+        "fields": [
+          {
+            "description": "Username",
+            "immutable": true,
+            "name": "username"
+          },
+          {
+            "description": "Password",
+            "masked": true,
+            "name": "password",
+            "sensitive": true
+          }
+        ],
+        "financialInstitutionId": "8a2899876c8143438c98be7d52d67f58",
+        "financialInstitutionName": "N26",
+        "groupDisplayName": "N26",
+        "multiFactor": false,
+        "name": "de-n26-password",
+        "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+        "popular": false,
+        "status": "ENABLED",
+        "transactional": true,
+        "type": "BANK",
+        "backgroundRefreshMaxFrequency": 1,
+        "backgroundRefreshEnabled": false
+      },
+      {
+        "accessType": "OTHER",
+        "className": "nxgen.serviceproviders.banks.n26.N26ExternalAppAuthAgent",
+        "credentialsType": "PASSWORD",
+        "displayName": "N26",
+        "fields": [
+          {
+            "description": "Username",
+            "immutable": true,
+            "name": "username"
+          },
+          {
+            "description": "Password",
+            "masked": true,
+            "name": "password",
+            "sensitive": true
+          }
+        ],
+        "financialInstitutionId": "8a2899876c8143438c98be7d52d67f58",
+        "financialInstitutionName": "N26",
+        "groupDisplayName": "N26",
+        "multiFactor": false,
+        "name": "de-n26-thirdpartyapp",
+        "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+        "popular": false,
+        "status": "ENABLED",
+        "transactional": true,
+        "type": "BANK",
+        "backgroundRefreshMaxFrequency": 1,
+        "backgroundRefreshEnabled": false
+      },
         {
             "className": "nxgen.de.banks.fints.FinTsAgent",
             "credentialsType": "PASSWORD",
