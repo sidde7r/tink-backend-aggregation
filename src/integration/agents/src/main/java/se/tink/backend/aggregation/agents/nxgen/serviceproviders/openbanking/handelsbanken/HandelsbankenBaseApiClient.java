@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.TransactionResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.rpc.HandelsbankenErrorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
@@ -104,8 +103,7 @@ public class HandelsbankenBaseApiClient {
                     .type(MediaType.APPLICATION_JSON)
                     .post(DecoupledResponse.class);
         } catch (HttpResponseException e) {
-            if (HttpStatus.SC_BAD_REQUEST == e.getResponse().getStatus()
-                    && e.getResponse().getBody(ErrorResponse.class).isTimeout()) {
+            if (HttpStatus.SC_BAD_REQUEST == e.getResponse().getStatus()) {
                 return e.getResponse().getBody(DecoupledResponse.class);
             }
             throw e;
