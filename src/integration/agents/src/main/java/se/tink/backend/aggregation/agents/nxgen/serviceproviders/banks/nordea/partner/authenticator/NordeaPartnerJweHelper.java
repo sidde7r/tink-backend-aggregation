@@ -41,7 +41,7 @@ public class NordeaPartnerJweHelper {
         this.configuration = configuration;
     }
 
-    public Optional<String> extractUserIdFromToken(String token) {
+    public Optional<String> extractTokenSubject(String token) {
         Preconditions.checkState(
                 !Strings.isNullOrEmpty(token), "Nordea token can not be null or empty");
         try {
@@ -56,7 +56,6 @@ public class NordeaPartnerJweHelper {
                 return Optional.empty();
             }
             return Optional.ofNullable(signedJWT.getJWTClaimsSet()).map(JWTClaimsSet::getSubject);
-
         } catch (ParseException | JOSEException e) {
             logger.error("couldn't read JWT token", e);
             return Optional.empty();

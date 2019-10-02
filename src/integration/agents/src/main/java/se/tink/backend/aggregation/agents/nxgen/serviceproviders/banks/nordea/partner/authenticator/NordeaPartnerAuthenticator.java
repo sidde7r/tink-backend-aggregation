@@ -52,31 +52,25 @@ public class NordeaPartnerAuthenticator implements AutoAuthenticator, MultiFacto
             String token = requestNordeaToken();
             partnerUid =
                     jweHelper
-                            .extractUserIdFromToken(token)
+                            .extractTokenSubject(token)
                             .orElseThrow(ThirdPartyAppError.AUTHENTICATION_ERROR::exception);
             persistentStorage.put(NordeaPartnerConstants.StorageKeys.PARTNER_USER_ID, partnerUid);
         }
 
-        OAuth2Token accessToken = jweHelper.createAccessToken(partnerUid);
-        sessionStorage.put(NordeaPartnerConstants.StorageKeys.TOKEN, accessToken);
+        usePartnerUserId(partnerUid);
     }
 
     @Override
     public void autoAuthenticate()
             throws SessionException, BankServiceException, AuthorizationException {
-        OAuth2Token accessToken =
-                sessionStorage
-                        .get(NordeaPartnerConstants.StorageKeys.TOKEN, OAuth2Token.class)
+
+        String partnerUid =
+                persistentStorage
+                        .get(NordeaPartnerConstants.StorageKeys.PARTNER_USER_ID, String.class)
+                        .filter(String::isEmpty)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (accessToken.hasAccessExpired()) {
-            String partnerUid =
-                    persistentStorage
-                            .get(NordeaPartnerConstants.StorageKeys.PARTNER_USER_ID, String.class)
-                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-            accessToken = jweHelper.createAccessToken(partnerUid);
-            sessionStorage.put(NordeaPartnerConstants.StorageKeys.TOKEN, accessToken);
-        }
+        usePartnerUserId(partnerUid);
     }
 
     private String requestNordeaToken() throws ThirdPartyAppException {
@@ -99,6 +93,12 @@ public class NordeaPartnerAuthenticator implements AutoAuthenticator, MultiFacto
             logger.error("did not get supplemental Info", e);
             throw ThirdPartyAppError.TIMED_OUT.exception();
         }
+    }
+
+    private void usePartnerUserId(String partnerUid) {
+        OAuth2Token accessToken = jweHelper.createAccessToken(partnerUid);
+        sessionStorage.put(NordeaPartnerConstants.StorageKeys.TOKEN, accessToken);
+        sessionStorage.put(NordeaPartnerConstants.StorageKeys.PARTNER_USER_ID, partnerUid);
     }
 
     @Override
