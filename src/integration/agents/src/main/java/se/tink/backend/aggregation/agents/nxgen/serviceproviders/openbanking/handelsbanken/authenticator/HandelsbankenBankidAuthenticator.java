@@ -8,6 +8,7 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -78,7 +79,7 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
     }
 
     @Override
-    public BankIdStatus collect(SessionResponse reference) {
+    public BankIdStatus collect(SessionResponse reference) throws AuthorizationException {
 
         DecoupledResponse decoupledResponse =
                 apiClient.getDecoupled(new URL(reference.getLinks().getTokenEntity().getHref()));
