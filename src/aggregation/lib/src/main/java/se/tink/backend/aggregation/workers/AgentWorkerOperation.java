@@ -164,8 +164,6 @@ public class AgentWorkerOperation implements Runnable {
 
         // Finalize all commands.
 
-        int lastExecutedCommand = currentCommand - 1;
-
         for (currentCommand = commands.size() - 1; currentCommand >= 0; currentCommand--) {
             AgentWorkerCommand command = commands.get(currentCommand);
 
