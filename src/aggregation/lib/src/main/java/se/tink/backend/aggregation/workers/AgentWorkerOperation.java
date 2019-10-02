@@ -162,7 +162,9 @@ public class AgentWorkerOperation implements Runnable {
             log.info(
                     String.format(
                             "Done with command execution for operation '%s'", operationMetricName));
-        } else {
+        }
+
+        if (commandResult == AgentWorkerCommandResult.ABORT) {
             log.info(
                     String.format(
                             "Aborted command execution for operation '%s'", operationMetricName));
