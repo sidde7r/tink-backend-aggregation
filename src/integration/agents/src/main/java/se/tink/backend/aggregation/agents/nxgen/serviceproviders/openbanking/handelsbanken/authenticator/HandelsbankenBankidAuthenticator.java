@@ -130,6 +130,7 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
 
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
+        logger.info("Refreshing access token");
 
         TokenResponse response = apiClient.getRefreshToken(refreshToken);
 
