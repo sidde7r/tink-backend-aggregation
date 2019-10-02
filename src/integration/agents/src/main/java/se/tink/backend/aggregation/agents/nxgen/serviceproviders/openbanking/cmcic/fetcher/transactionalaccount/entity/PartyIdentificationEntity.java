@@ -23,10 +23,10 @@ public class PartyIdentificationEntity {
 
     @JsonCreator
     public PartyIdentificationEntity(
-            String name,
-            PostalAddressEntity postalAddress,
-            GenericOrganisationIdentificationEntity organisationId,
-            GenericPrivateIdentificationEntity privateId) {
+            @JsonProperty("name") String name,
+            @JsonProperty("postalAddress") PostalAddressEntity postalAddress,
+            @JsonProperty("organisationId") GenericOrganisationIdentificationEntity organisationId,
+            @JsonProperty("privateId") GenericPrivateIdentificationEntity privateId) {
         this.name = name;
         this.postalAddress = postalAddress;
         this.organisationId = organisationId;

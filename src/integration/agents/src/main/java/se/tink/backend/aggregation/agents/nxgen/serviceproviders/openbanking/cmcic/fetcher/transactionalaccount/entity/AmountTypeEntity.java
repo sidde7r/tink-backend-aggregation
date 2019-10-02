@@ -16,7 +16,8 @@ public class AmountTypeEntity {
     private String amount = null;
 
     @JsonCreator
-    public AmountTypeEntity(String currency, String amount) {
+    public AmountTypeEntity(
+            @JsonProperty("currency") String currency, @JsonProperty("amount") String amount) {
         this.currency = currency;
         this.amount = amount;
     }

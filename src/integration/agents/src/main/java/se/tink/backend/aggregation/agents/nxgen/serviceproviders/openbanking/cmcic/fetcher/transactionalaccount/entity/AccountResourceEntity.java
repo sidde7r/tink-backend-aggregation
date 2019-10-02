@@ -30,7 +30,7 @@ public class AccountResourceEntity {
     private CashAccountTypeEnumEntity cashAccountType = null;
 
     @JsonProperty("balances")
-    private List<BalanceResourceEntity> balances = new ArrayList<BalanceResourceEntity>();
+    private List<BalanceResourceEntity> balances = new ArrayList<>();
 
     @JsonProperty("psuStatus")
     private String psuStatus = null;
