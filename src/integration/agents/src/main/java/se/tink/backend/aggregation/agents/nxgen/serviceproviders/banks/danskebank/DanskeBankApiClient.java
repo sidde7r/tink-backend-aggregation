@@ -233,7 +233,7 @@ public class DanskeBankApiClient {
     }
 
     public DanskeIdStatusResponse getStatus(DanskeIdStatusRequest request) {
-        return client.request(constants.getDanskeIdStatusUrl())
+        return client.request(constants.DANSKEID_STATUS)
                 .header(
                         DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                         configuration.getAppReferer())
@@ -241,7 +241,7 @@ public class DanskeBankApiClient {
     }
 
     public DanskeIdInitResponse danskeIdInit(DanskeIdInitRequest request) {
-        return client.request(constants.getDanskeIdInitUrl())
+        return client.request(constants.DANSKEID_INIT)
                 .header(
                         DanskeBankConstants.DanskeRequestHeaders.REFERRER,
                         configuration.getAppReferer())
