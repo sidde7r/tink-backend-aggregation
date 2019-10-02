@@ -441,32 +441,6 @@ spec:
               key: sibs-certificate-serial-number-cgd
               optional: true
         {{- end }}
-        {{- if $agentsConfig.cmcic }}
-        - name: CIC_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: cic-client-id
-              optional: true
-        - name: CREDITMUTUEL_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: creditmutuel-client-id
-              optional: true
-        - name: MONABANQ_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: monabanq-client-id
-              optional: true
-        - name: CMCIC_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: cmcic-key-id
-              optional: true
-        {{- end }}
         {{- if $agentsConfig.cbi }}
         - name: CBI_CLIENT_ID
           valueFrom:
