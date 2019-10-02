@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import java.text.MessageFormat;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class DanskeBankConstants {
@@ -55,6 +56,10 @@ public class DanskeBankConstants {
     public String getFinalizeAuthenticationUrl() {
         return getBaseUrl() + "/logon";
     }
+
+    public final URL DANSKEID_INIT = new URL(getBaseUrl() + "/danskeid/init");
+
+    public final URL DANSKEID_STATUS = new URL(getBaseUrl() + "/danskeid/status");
 
     // == END Authentication ==
 
@@ -143,6 +148,7 @@ public class DanskeBankConstants {
         public static final String DEVICE_TYPE_OTP_CARD = "OTPCARD";
         public static final String DEVICE_TYPE_SEC_CARD = "SECCARD";
         public static final String DEVICE_TYPE_GEMALTO = "GEMALTO";
+        public static final String DEVICE_TYPE_DANSKEID = "DANSKEID";
         public static final String USER_ID_TYPE = "PRIV";
         public static final String SUPPRESS_PUSH = "N";
         public static final String LANGUAGE_CODE = "EN";
@@ -262,5 +268,28 @@ public class DanskeBankConstants {
     public static class PollCodeTimeoutFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 3000;
+        public static final int MAX_POLLS_COUNTER = 50;
+    }
+
+    public static class DanskeIdStatusCodes {
+        public static final String COMPLETED = "complete";
+        public static final String PENDING = "pending";
+        public static final String EXPIRED = "expired_to_be_changed";
+        public static final String CANCELLED = "canceled";
+    }
+
+    public static class DanskeIdFormValues {
+        public static final String EXTERNALUSERIDTYPE = "ESAFEID";
+        public static final String LASTCHECK = "false";
+        public static final String EXTERNALREF = "abc";
+        public static final String EXTERNALTEXT = "";
+        public static final String MESSAGETEMPLATEID = "MB3_Binding";
+        public static final String OTPAPPTYPE = "OC";
+        public static final String OTPREQUESTTYPE = "MB3_B";
+        public static final String PRODUCT = "P";
+    }
+
+    public static class DanskeRequestHeaders {
+        public static final String REFERRER = "Referer";
     }
 }
