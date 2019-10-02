@@ -2,20 +2,27 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.trans
 
 import static se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.MAPPERS;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.CurrencyAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountDetailsResponse {
@@ -40,7 +47,7 @@ public class AccountDetailsResponse {
     private double creditAfterInterest;
     private double creditLimit;
     private double forwardBalance;
-    private double interestRate;
+    private BigDecimal interestRate;
     private double ownCapital;
     private double performance;
     private double performancePercent;
@@ -151,10 +158,6 @@ public class AccountDetailsResponse {
 
     public double getForwardBalance() {
         return forwardBalance;
-    }
-
-    public double getInterestRate() {
-        return interestRate;
     }
 
     public double getOwnCapital() {
@@ -269,13 +272,47 @@ public class AccountDetailsResponse {
         return MAPPERS.inferAccountType(accountType).orElse(AccountTypes.OTHER);
     }
 
+    @JsonIgnore
+    private String getAccountNumber() {
+        return clearingNumber != null
+                ? String.format("%s-%s", clearingNumber, accountId)
+                : accountId;
+    }
+
+    @JsonIgnore
+    private double getInterestRate() {
+        return AgentParsingUtils.parsePercentageFormInterest(interestRate).doubleValue();
+    }
+
+    public Optional<LoanAccount> toLoanAccount(HolderName holderName) {
+        return Optional.of(
+                LoanAccount.nxBuilder()
+                        .withLoanDetails(
+                                LoanModule.builder()
+                                        .withType(
+                                                MAPPERS.getLoanType(accountType)
+                                                        .orElse(LoanDetails.Type.OTHER))
+                                        .withBalance(
+                                                new ExactCurrencyAmount(
+                                                        BigDecimal.valueOf(ownCapital), "SEK"))
+                                        .withInterestRate(getInterestRate())
+                                        .build())
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(getAccountNumber())
+                                        .withAccountNumber(getAccountNumber())
+                                        .withAccountName(accountTypeName)
+                                        .addIdentifier(new SwedishIdentifier(accountId))
+                                        .build())
+                        .addHolderName(holderName.toString())
+                        .setApiIdentifier(accountId)
+                        .build());
+    }
+
     public Optional<TransactionalAccount> toTinkAccount(HolderName holderName) {
         final String accountName =
                 Strings.isNullOrEmpty(externalActor) ? accountType : accountType + externalActor;
-        final String accountNumber =
-                clearingNumber != null
-                        ? String.format("%s-%s", clearingNumber, accountId)
-                        : accountId;
+        final String accountNumber = getAccountNumber();
 
         return TransactionalAccount.nxBuilder()
                 .withType(

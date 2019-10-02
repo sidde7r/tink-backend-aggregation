@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.pair.Pair;
 
@@ -24,6 +25,7 @@ public final class AvanzaAccountTypeMappers {
 
     private TypeMapper<AccountTypes> accountTypeMapper;
     private AccountTypePredicateMapper<String> accountTypeFallbackMapper;
+    private TypeMapper<LoanDetails.Type> loanTypeMapper;
 
     private static Predicate<String> codeMatches(final String regex) {
         return t -> Pattern.compile(regex).matcher(t).matches();
@@ -103,6 +105,26 @@ public final class AvanzaAccountTypeMappers {
                                         .build());
 
         return accountTypeFallbackMapper;
+    }
+
+    private TypeMapper<LoanDetails.Type> getLoanTypeMapper() {
+        loanTypeMapper =
+                Optional.ofNullable(loanTypeMapper)
+                        .orElse(
+                                TypeMapper.<LoanDetails.Type>builder()
+                                        .put(
+                                                LoanDetails.Type.BLANCO,
+                                                AvanzaAccountTypes.KREDITKONTO_ISK,
+                                                AvanzaAccountTypes.KREDITKONTO_KF)
+                                        .put(
+                                                LoanDetails.Type.MORTGAGE,
+                                                AvanzaAccountTypes.SUPER_BOLANEKONTO)
+                                        .build());
+        return loanTypeMapper;
+    }
+
+    public Optional<LoanDetails.Type> getLoanType(String loanType) {
+        return getLoanTypeMapper().translate(loanType);
     }
 
     private boolean verify(String key, AccountTypes value) {
