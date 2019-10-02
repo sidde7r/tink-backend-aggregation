@@ -229,7 +229,6 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         } catch (HttpClientException hce) {
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
         }
-
         persistentStorage.put(
                 FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());
     }
@@ -241,7 +240,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                             "muid missing, muidcode %s",
                             userInfoResponse.getValue().getUserData().getMuidCode()),
                     FortisConstants.LOGTAG.LOGIN_ERROR);
-            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            throw AuthorizationError.DEVICE_LIMIT_REACHED.exception();
         }
 
         if (!Strings.isNullOrEmpty(userInfoResponse.getValue().getUserData().getMuidCode())
@@ -311,10 +310,10 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         try {
             userInfoResponse = apiClient.getUserInfo();
             validateMuid(userInfoResponse);
+
         } catch (HttpClientException hce) {
             throw new IllegalStateException("Incorrect challenge in autoAuthenticate");
         }
-
         persistentStorage.put(
                 FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());
     }
