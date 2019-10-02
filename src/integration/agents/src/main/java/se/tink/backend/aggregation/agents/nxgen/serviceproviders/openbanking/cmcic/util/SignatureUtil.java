@@ -1,12 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.util;
 
-import java.text.SimpleDateFormat;
+import java.net.URI;
 import java.util.Base64;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
-import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Signature;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
@@ -25,76 +20,70 @@ public final class SignatureUtil {
     public static String getSignatureHeaderValue(
             final String keyId,
             final String httpMethod,
-            final String requestPath,
+            URI uri,
             final String date,
-            final String digest,
-            final String requestId,
-            final EidasProxyConfiguration eidasProxyConf,
-            EidasIdentity eidasIdentity) {
-
-        String signature =
-                getSignatureValue(
-                        httpMethod,
-                        requestPath,
-                        date,
-                        digest,
-                        requestId,
-                        eidasProxyConf,
-                        eidasIdentity);
-
-        return CmcicConstants.Signature.KEY_ID_NAME
-                + "\""
-                + keyId
-                + "\","
-                + CmcicConstants.Signature.ALGORITHM
-                + ","
-                + CmcicConstants.Signature.HEADERS
-                + ","
-                + CmcicConstants.Signature.SIGNATURE_NAME
-                + "\""
-                + signature
-                + "\"";
-    }
-
-    private static String getSignatureValue(
-            final String httpMethod,
-            final String reqPath,
-            final String date,
-            final String digest,
             final String requestId,
             final EidasProxyConfiguration eidasProxyConf,
             EidasIdentity eidasIdentity) {
 
         String signatureEntity =
-                CmcicConstants.Signature.SIGNING_STRING
-                        + httpMethod.toLowerCase()
-                        + " "
-                        + reqPath
-                        + "\n"
-                        + CmcicConstants.Signature.DATE
-                        + date
-                        + "\n"
-                        + CmcicConstants.Signature.DIGEST
-                        + digest
-                        + "\n"
-                        + CmcicConstants.Signature.X_REQUEST_ID
-                        + requestId
-                        + "\n"
-                        + CmcicConstants.Signature.CONTENT_TYPE
-                        + MediaType.APPLICATION_JSON;
+                String.join(
+                        "\n",
+                        "(request-target): " + httpMethod.toLowerCase() + " " + uri.getPath(),
+                        "host: " + uri.getHost(),
+                        "date: " + date,
+                        "x-request-id: " + requestId);
 
+        String signature = signAndEncode(signatureEntity, eidasProxyConf, eidasIdentity);
+
+        return String.join(
+                ",",
+                "keyId=" + keyId,
+                "algorithm=\"rsa-sha256\"",
+                "headers=\"(request-target) host date x-request-id\"",
+                "signature=\"" + signature + "\"");
+    }
+
+    public static String getSignatureHeaderValue(
+            final String keyId,
+            final String httpMethod,
+            final URI uri,
+            final String date,
+            final String digest,
+            final String contentType,
+            final String requestId,
+            final EidasProxyConfiguration eidasProxyConf,
+            EidasIdentity eidasIdentity) {
+
+        String signatureEntity =
+                String.join(
+                        "\n",
+                        "(request-target): " + httpMethod.toLowerCase() + " " + uri.getPath(),
+                        "host: " + uri.getHost(),
+                        "date: " + date,
+                        "x-request-id: " + requestId,
+                        "digest: " + digest,
+                        "content-type: " + contentType);
+
+        String signature = signAndEncode(signatureEntity, eidasProxyConf, eidasIdentity);
+
+        return String.join(
+                ",",
+                "keyId=" + keyId,
+                "algorithm=\"rsa-sha256\"",
+                "headers=\"(request-target) host date x-request-id\"",
+                "signature=\"" + signature + "\"");
+    }
+
+    private static String signAndEncode(
+            String signatureEntity,
+            EidasProxyConfiguration eidasProxyConf,
+            EidasIdentity eidasIdentity) {
         return QsealcSigner.build(
                         eidasProxyConf.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
                         eidasIdentity,
                         "Tink")
                 .getSignatureBase64(signatureEntity.getBytes());
-    }
-
-    public static String getServerTime() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat(Signature.DATE_FORMAT, Locale.US);
-        dateFormat.setTimeZone(TimeZone.getTimeZone(Signature.TIMEZONE));
-        return dateFormat.format(calendar.getTime());
     }
 }

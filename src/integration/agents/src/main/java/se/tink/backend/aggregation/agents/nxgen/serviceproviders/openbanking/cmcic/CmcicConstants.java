@@ -58,20 +58,10 @@ public final class CmcicConstants {
     }
 
     public static class Signature {
-        public static final String SIGNING_STRING = "(request-target): ";
         public static final String DATE = "date: ";
         public static final String TIMEZONE = "GMT";
         public static final String DIGEST = "digest: ";
-        public static final String ALGORITHM = "algorithm=\"rsa-sha256\"";
         public static final String DIGEST_PREFIX = "SHA-256=";
-        public static final String SIGNATURE = "Signature";
-        public static final String KEY_ID_NAME = "keyId=";
-        public static final String SIGNING_ALGORITHM = "RSA";
-        public static final String HEADERS =
-                "headers=\"(request-target) date digest x-request-id content-type\"";
-        public static final String SIGNATURE_NAME = "signature=";
-        public static final String HTTP_METHOD_POST = "post";
-        public static final String HTTP_METHOD_GET = "get";
         public static final String X_REQUEST_ID = "x-request-id: ";
         public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
         public static final String CONTENT_TYPE = "content-type: ";
@@ -79,11 +69,12 @@ public final class CmcicConstants {
 
     public static class HeaderKeys {
         public static final String DIGEST = "Digest";
+        public static final String HOST = "Host";
         public static final String DATE = "Date";
-        public static final String X_REQUEST_ID = "X-Request-ID";
+        public static final String X_REQUEST_ID = "X-Request-Id";
         public static final String AUTHORIZATION = "Authorization";
         public static final String SIGNATURE = "Signature";
-        public static final String CONTENT_TYPE = "content-type";
+        public static final String CONTENT_TYPE = "Content-Type";
     }
 
     public static class FormKeys {

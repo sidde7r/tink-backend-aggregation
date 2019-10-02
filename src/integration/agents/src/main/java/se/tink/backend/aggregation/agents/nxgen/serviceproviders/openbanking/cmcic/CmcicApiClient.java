@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -9,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.AuthorizationCodeTokenRequest;
@@ -74,55 +79,76 @@ public final class CmcicApiClient {
                 .type(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createPispGetRequestInSession(URL baseUrl, String path) {
-        return createRequestInSession(
-                baseUrl, path, FormValues.EMPTY, HttpMethod.GET, getPispTokenFromStorage());
+    private RequestBuilder createPispRequestInSession(
+            URL baseUrl, String path, HttpMethod httpMethod) {
+        return createRequestInSession(baseUrl, path, httpMethod, getPispTokenFromStorage());
     }
 
-    private RequestBuilder createPispPostRequestInSession(URL baseUrl, String path, String body) {
-        return createRequestInSession(
-                baseUrl, path, body, HttpMethod.POST, getPispTokenFromStorage());
+    private RequestBuilder createPispRequestInSession(
+            URL baseUrl, String path, String body, HttpMethod httpMethod) {
+        return createRequestInSession(baseUrl, path, body, httpMethod, getPispTokenFromStorage());
     }
 
-    private RequestBuilder createAispGetRequestInSession(URL baseUrl, String path) {
-        return createRequestInSession(
-                baseUrl, path, FormValues.EMPTY, HttpMethod.GET, getAispTokenFromStorage());
-    }
-
-    private RequestBuilder createAispPostRequestInSession(URL baseUrl, String path, String body) {
-        return createRequestInSession(
-                baseUrl, path, body, HttpMethod.POST, getAispTokenFromStorage());
+    private RequestBuilder createAispRequestInSession(
+            URL baseUrl, String path, HttpMethod httpMethod) {
+        return createRequestInSession(baseUrl, path, httpMethod, getAispTokenFromStorage());
     }
 
     private RequestBuilder createRequestInSession(
             URL baseUrl, String path, String body, HttpMethod httpMethod, OAuth2Token authToken) {
 
-        final String date = SignatureUtil.getServerTime();
-
+        final String date = getServerTime();
         final String digest = SignatureUtil.generateDigest(body);
         final String requestId = UUID.randomUUID().toString();
+        URL requestUrl = baseUrl.concat(path);
 
-        final String signatureValue =
+        String signatureHeaderValue =
                 SignatureUtil.getSignatureHeaderValue(
                         getConfiguration().getKeyId(),
                         httpMethod.name(),
-                        path,
+                        requestUrl.toUri(),
                         date,
                         digest,
+                        MediaType.APPLICATION_JSON,
                         requestId,
                         eidasProxyConfiguration,
                         eidasIdentity);
 
+        return client.request(requestUrl)
+                .addBearerToken(authToken)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.HOST, requestUrl.toUri().getHost())
+                .header(HeaderKeys.DATE, date)
+                .header(HeaderKeys.SIGNATURE, signatureHeaderValue)
+                .header(HeaderKeys.DIGEST, digest)
+                .header(HeaderKeys.X_REQUEST_ID, requestId)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createRequestInSession(
+            URL baseUrl, String path, HttpMethod httpMethod, OAuth2Token authToken) {
+
+        final String date = getServerTime();
+        final String requestId = UUID.randomUUID().toString();
         URL requestUrl = baseUrl.concat(path);
+
+        String signatureHeaderValue =
+                SignatureUtil.getSignatureHeaderValue(
+                        getConfiguration().getKeyId(),
+                        httpMethod.name(),
+                        requestUrl.toUri(),
+                        date,
+                        requestId,
+                        eidasProxyConfiguration,
+                        eidasIdentity);
 
         return client.request(requestUrl)
                 .addBearerToken(authToken)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.HOST, requestUrl.toUri().getHost())
                 .header(HeaderKeys.DATE, date)
-                .header(HeaderKeys.SIGNATURE, signatureValue)
-                .header(HeaderKeys.DIGEST, digest)
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+                .header(HeaderKeys.SIGNATURE, signatureHeaderValue)
+                .header(HeaderKeys.X_REQUEST_ID, requestId);
     }
 
     private OAuth2Token getPispTokenFromStorage() {
@@ -188,7 +214,8 @@ public final class CmcicApiClient {
         String baseUrl = getConfiguration().getBaseUrl();
         String basePath = getConfiguration().getBasePath();
 
-        return createAispGetRequestInSession(new URL(baseUrl), basePath + Urls.FETCH_ACCOUNTS_PATH)
+        return createAispRequestInSession(
+                        new URL(baseUrl), basePath + Urls.FETCH_ACCOUNTS_PATH, HttpMethod.GET)
                 .get(FetchAccountsResponse.class);
     }
 
@@ -207,7 +234,8 @@ public final class CmcicApiClient {
                                                         account.getApiIdentifier()));
 
         FetchTransactionsResponse fetchTransactionsResponse =
-                createAispGetRequestInSession(baseUrl, path).get(FetchTransactionsResponse.class);
+                createAispRequestInSession(baseUrl, path, HttpMethod.GET)
+                        .get(FetchTransactionsResponse.class);
 
         fetchTransactionsResponse.setTransactionalAccount(account);
 
@@ -222,8 +250,8 @@ public final class CmcicApiClient {
 
         String body = SerializationUtils.serializeToString(paymentRequestResourceEntity);
 
-        return createPispPostRequestInSession(
-                        new URL(baseUrl), basePath + Urls.PAYMENT_REQUESTS, body)
+        return createPispRequestInSession(
+                        new URL(baseUrl), basePath + Urls.PAYMENT_REQUESTS, body, HttpMethod.POST)
                 .type(MediaType.APPLICATION_JSON)
                 .post(HalPaymentRequestCreation.class, body);
     }
@@ -257,9 +285,18 @@ public final class CmcicApiClient {
         String baseUrl = getConfiguration().getBaseUrl();
         String basePath = getConfiguration().getBasePath();
 
-        return createPispGetRequestInSession(
-                        new URL(baseUrl), basePath + Urls.PAYMENT_REQUESTS + "/" + uniqueId)
+        return createPispRequestInSession(
+                        new URL(baseUrl),
+                        basePath + Urls.PAYMENT_REQUESTS + "/" + uniqueId,
+                        HttpMethod.GET)
                 .type(MediaType.APPLICATION_JSON)
                 .get(HalPaymentRequestEntity.class);
+    }
+
+    private String getServerTime() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Signature.DATE_FORMAT, Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone(Signature.TIMEZONE));
+        return dateFormat.format(calendar.getTime());
     }
 }
