@@ -68,7 +68,6 @@ public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-        client.setDebugOutput(true);
     }
 
     protected abstract String getIntegrationName();
