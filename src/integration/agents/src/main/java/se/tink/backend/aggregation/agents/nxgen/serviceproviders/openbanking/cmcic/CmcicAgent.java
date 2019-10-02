@@ -65,8 +65,11 @@ public abstract class CmcicAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
+        CmcicConfiguration cmcicConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
+
         apiClient.setConfiguration(
-                getClientConfiguration(), configuration.getEidasProxy(), getEidasIdentity());
+                cmcicConfiguration, configuration.getEidasProxy(), getEidasIdentity());
     }
 
     protected CmcicConfiguration getClientConfiguration() {

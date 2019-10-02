@@ -16,7 +16,9 @@ public class CreditMutuelAgentTest {
                 new AgentIntegrationTest.Builder("fr", "fr-creditmutuel-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("creditmutuel")
+                        .setAppId("tink");
     }
 
     @Test
