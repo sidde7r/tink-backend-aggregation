@@ -163,6 +163,8 @@ public class AggregationServiceResource implements AggregationService {
         logger.info(
                 "Transfer Request received from main. triggerRefresh is: {}",
                 request.isTriggerRefresh());
+        request.setTriggerRefresh(true); // temp change, remove after serialization fix
+
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationExecuteTransfer(request, clientInfo));
     }
