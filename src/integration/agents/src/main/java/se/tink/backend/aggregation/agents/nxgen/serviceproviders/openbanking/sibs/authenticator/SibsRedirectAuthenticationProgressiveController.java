@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public class SibsRedirectAuthenticationProgressiveController
         implements AutoAuthenticator, ThirdPartyAppStrongAuthenticator<String> {
     private static final Logger logger =
-            LoggerFactory.getLogger(SibsRedirectAuthenticationController.class);
+            LoggerFactory.getLogger(SibsRedirectAuthenticationProgressiveController.class);
     private static final long SLEEP_TIME = 10L;
     private static final int RETRY_ATTEMPTS = 10;
     private final SibsAuthenticator authenticator;
