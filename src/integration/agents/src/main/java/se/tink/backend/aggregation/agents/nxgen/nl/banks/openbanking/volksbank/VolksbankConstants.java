@@ -80,6 +80,7 @@ public class VolksbankConstants {
     static class HttpClient {
         public static final int MAX_RETRIES = 5;
         public static final int RETRY_SLEEP_MILLISECONDS = 1000;
+        public static final int READ_TIMEOUT_MILLISECONDS = 1000;
     }
 
     public static class TokenParams {
