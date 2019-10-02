@@ -81,18 +81,19 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
         DecoupledResponse decoupledResponse =
                 apiClient.getDecoupled(new URL(reference.getLinks().getTokenEntity().getHref()));
 
-        if (decoupledResponse.getError() != null) {
+        if (decoupledResponse.hasError()) {
             switch (decoupledResponse.getError()) {
                 case (Errors.INTENT_EXPIRED):
                 case (Errors.MBID_ERROR):
+                case (Errors.MBID_MAX_POLLING):
                     return BankIdStatus.TIMEOUT;
-                case (Errors.INVALID_REQUEST):
-                case (Errors.UNAUTHORIZED_CLIENT):
                 case (Errors.NOT_SHB_APPROVED):
                     return BankIdStatus.NO_CLIENT;
-                case (Errors.MBID_MAX_POLLING):
-                    return BankIdStatus.INTERRUPTED;
                 default:
+                    logger.warn(
+                            String.format(
+                                    "BankID polling failed with error: %s",
+                                    decoupledResponse.getError()));
                     return BankIdStatus.FAILED_UNKNOWN;
             }
         }

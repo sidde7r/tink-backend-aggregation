@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -68,11 +70,17 @@ public class DecoupledResponse {
         return error;
     }
 
+    @JsonIgnore
     public OAuth2Token toOauthToken() {
         return OAuth2Token.create(
                 HandelsbankenBaseConstants.QueryKeys.BEARER,
                 getAccessToken(),
                 getRefreshToken(),
                 getExpiresIn());
+    }
+
+    @JsonIgnore
+    public boolean hasError() {
+        return !Strings.isNullOrEmpty(error);
     }
 }
