@@ -142,16 +142,6 @@ public class AgentWorkerOperation implements Runnable {
 
                 commandResult = AgentWorkerCommandResult.ABORT;
 
-                // Set TEMPORARY_ERROR here on the credentials. If we catch an exception, we assume
-                // that the agent
-                // didn't correctly set the status if it was an error that the agent could handle.
-                // If it handled it, it
-                // should return ABORT.
-
-                credentials.setStatus(CredentialsStatus.TEMPORARY_ERROR);
-                credentials.setStatusPayload(null);
-                systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
-
                 break;
             }
         }
@@ -168,6 +158,8 @@ public class AgentWorkerOperation implements Runnable {
             log.info(
                     String.format(
                             "Aborted command execution for operation '%s'", operationMetricName));
+
+            handleTemporaryErrorStatusUpdateForAbortedCommand(credentials);
         }
 
         // Finalize all commands.
@@ -203,6 +195,22 @@ public class AgentWorkerOperation implements Runnable {
         log.info(
                 String.format(
                         "Done with command finalization for operation '%s'", operationMetricName));
+    }
+
+    private void handleTemporaryErrorStatusUpdateForAbortedCommand(Credentials credentials) {
+        // No need to update the credential status again as it has already been updated in these
+        // cases.
+        switch (credentials.getStatus()) {
+            case TEMPORARY_ERROR:
+            case AUTHENTICATION_ERROR:
+                return;
+            default:
+                log.info("Updating credentials status due to aborted command execution.");
+        }
+
+        credentials.setStatus(CredentialsStatus.TEMPORARY_ERROR);
+        credentials.setStatusPayload(null);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
     }
 
     private void stopCommandContexts(List<Context> contexts) {
