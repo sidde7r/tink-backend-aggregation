@@ -26,6 +26,7 @@ public class OpBankAgentTest {
                 new AgentIntegrationTest.Builder("fi", "fi-opbank-openbanking")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                        .setFinancialInstitutionId("opbank")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

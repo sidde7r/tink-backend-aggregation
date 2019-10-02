@@ -36,7 +36,6 @@ public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<
             return null;
         }
 
-        // TODO not tested pagination
         return new URL(BASE_URL + getLinks().getNext().getHref());
     }
 

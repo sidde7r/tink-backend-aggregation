@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -31,8 +34,15 @@ public class OpBankTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
             TransactionalAccount account, URL nextUrl) {
+        URL url =
+                Optional.ofNullable(nextUrl)
+                        .orElse(
+                                new URL(Urls.GET_TRANSACTIONS)
+                                        .parameter(
+                                                IdTags.ACCOUNT_ID,
+                                                account.getFromTemporaryStorage(
+                                                        StorageKeys.ACCOUNT_ID)));
 
-        return apiClient.getTransactions(
-                account.getFromTemporaryStorage(OpBankConstants.StorageKeys.ACCOUNT_ID));
+        return apiClient.getTransactions(url);
     }
 }

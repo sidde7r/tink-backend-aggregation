@@ -45,10 +45,8 @@ public final class OpBankAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         OpBankConfiguration opBankConfiguration = getClientConfiguration();
-        apiClient.setConfiguration(opBankConfiguration);
-
-        this.client.setEidasProxy(
-                configuration.getEidasProxy(), opBankConfiguration.getEidasQwac());
+        apiClient.setConfiguration(
+                opBankConfiguration, configuration.getEidasProxy(), getEidasIdentity());
     }
 
     protected OpBankConfiguration getClientConfiguration() {

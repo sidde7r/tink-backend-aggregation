@@ -65,7 +65,8 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
         tokenBody.setIss(configuration.getClientId());
         tokenBody.setResponse_type("code");
         tokenBody.setClient_id(configuration.getClientId());
-        tokenBody.setRedirect_uri("https://localhost:7357/api/v1/thirdparty/callback");
+        tokenBody.setRedirect_uri(
+                "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback");
         tokenBody.setScope("openid accounts");
         tokenBody.setState(state);
         tokenBody.setNonce(UUID.randomUUID().toString());
@@ -78,17 +79,20 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
         String tokenHeadJson = SerializationUtils.serializeToString(new TokenHeaderEntity());
 
         String baseTokenString =
-                Base64.getUrlEncoder().encodeToString(tokenHeadJson.getBytes())
+                Base64.getUrlEncoder().encodeToString(tokenHeadJson.getBytes()).replaceAll("=", "")
                         + "."
-                        + Base64.getUrlEncoder().encodeToString(tokenBodyJson.getBytes());
+                        + Base64.getUrlEncoder()
+                                .encodeToString(tokenBodyJson.getBytes())
+                                .replaceAll("=", "");
 
         String signature = apiClient.fetchSignature(baseTokenString);
 
         String fullToken = baseTokenString + "." + signature;
+        fullToken = fullToken.replaceAll("=", "");
 
         String authorizationURL =
                 String.format(
-                                "https://authorize.psd2-sandbox.op.fi/oauth/authorize"
+                                "https://authorize.op.fi/oauth/authorize"
                                         + "?request=%s"
                                         + "&response_type=code"
                                         + "&client_id=%s"
