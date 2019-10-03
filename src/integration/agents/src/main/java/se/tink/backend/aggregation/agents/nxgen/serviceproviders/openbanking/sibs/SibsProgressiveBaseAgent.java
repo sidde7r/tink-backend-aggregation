@@ -73,7 +73,7 @@ public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
-    private TinkHttpClient applyFilters(TinkHttpClient client){
+    private TinkHttpClient applyFilters(TinkHttpClient client) {
         client.addFilter(new ExecutionTimeLoggingFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
         return client;
