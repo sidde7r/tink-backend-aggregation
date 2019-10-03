@@ -2,15 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entit
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountCategories;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 @JsonObject
 public final class Product {
 
     private String productNumber;
-    private Double balance;
+    private BigDecimal balance;
     private Double availableBalance;
     private Integer type;
     private String subtype;
@@ -105,7 +108,7 @@ public final class Product {
         return productNumber;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
@@ -515,5 +518,16 @@ public final class Product {
         boolean isLoanAccount = IngConstants.AccountCategories.LOANS.contains(type);
         boolean isActive = IngConstants.AccountStatus.OPERATIVE.equals(status.getCod());
         return isLoanAccount && isActive;
+    }
+
+    @JsonIgnore
+    public TransactionalAccountType getTransactionalAccountType() {
+        if (AccountCategories.TRANSACTION_ACCOUNTS.contains(type)) {
+            return TransactionalAccountType.CHECKING;
+        } else if (AccountCategories.SAVINGS_ACCOUNTS.contains(type)) {
+            return TransactionalAccountType.SAVINGS;
+        } else {
+            throw new IllegalStateException("Not a transactional account");
+        }
     }
 }

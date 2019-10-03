@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -38,19 +39,19 @@ public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
         instrument.setQuantity(product.getNumberOfShares());
         instrument.setType(Instrument.Type.FUND);
         instrument.setCurrency(product.getCurrency());
-        instrument.setMarketValue(product.getBalance());
+        instrument.setMarketValue(product.getBalance().doubleValue());
         if (product.getNumberOfShares() > 0) {
             instrument.setAverageAcquisitionPrice(
                     product.getInvestment() / product.getNumberOfShares());
         } else {
-            instrument.setAverageAcquisitionPrice(0D);
+            instrument.setAverageAcquisitionPrice(BigDecimal.ZERO);
         }
 
         Portfolio portfolio = new Portfolio();
         portfolio.setUniqueIdentifier(product.getProductNumber());
         portfolio.setTotalProfit(product.getPerformance());
         portfolio.setCashValue(0.0);
-        portfolio.setTotalValue(product.getBalance());
+        portfolio.setTotalValue(product.getBalance().doubleValue());
 
         if (IngConstants.AccountTypes.INVESTMENT_FUND.equals(product.getType())) {
             portfolio.setType(Portfolio.Type.DEPOT);
