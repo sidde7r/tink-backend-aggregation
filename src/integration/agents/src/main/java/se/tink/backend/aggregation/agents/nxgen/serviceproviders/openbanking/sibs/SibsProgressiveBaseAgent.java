@@ -37,6 +37,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.ExecutionTimeLoggingFilter;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -67,8 +69,14 @@ public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
                         configuration.getEidasProxy(),
                         new EidasIdentity(
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
-        client.addFilter(new ExecutionTimeLoggingFilter());
+        applyFilters(client);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+    }
+
+    private TinkHttpClient applyFilters(TinkHttpClient client){
+        client.addFilter(new ExecutionTimeLoggingFilter());
+        client.addFilter(new BankServiceInternalErrorFilter());
+        return client;
     }
 
     protected abstract String getIntegrationName();
