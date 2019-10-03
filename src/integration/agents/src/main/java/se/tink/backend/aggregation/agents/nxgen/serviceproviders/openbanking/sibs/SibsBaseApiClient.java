@@ -67,8 +67,6 @@ public class SibsBaseApiClient {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.isPsuInvolved = String.valueOf(isRequestManual);
-
-        this.client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     protected void setConfiguration(
