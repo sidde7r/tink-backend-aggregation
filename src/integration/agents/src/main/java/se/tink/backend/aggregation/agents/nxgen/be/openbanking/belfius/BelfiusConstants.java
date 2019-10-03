@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class BelfiusConstants {
 
-    public static final String INTEGRATION_NAME = "belfius";
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")

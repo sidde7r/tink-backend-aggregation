@@ -1,20 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class BelfiusConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String redirectUrl;
-    private String baseUrl;
+    @JsonProperty @Secret private String clientId;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String baseUrl;
     private String certificateId;
-    private String clientSecret;
-    private String eidasQwac;
+    @JsonProperty @SensitiveSecret private String clientSecret;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -54,13 +56,5 @@ public class BelfiusConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;
-    }
-
-    public String getEidasQwac() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasQwac),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
-
-        return eidasQwac;
     }
 }

@@ -54,7 +54,6 @@ public final class BelfiusApiClient {
     }
 
     private RequestBuilder createRequestInSession(URL url) {
-        client.setFollowRedirects(false);
 
         return createRequest(url)
                 .header(HeaderKeys.CLIENT_ID, configuration.getClientId())
@@ -117,6 +116,7 @@ public final class BelfiusApiClient {
     }
 
     public String createPayment(CreatePaymentRequest body, String signature) {
+        client.setFollowRedirects(false);
         HttpResponse res =
                 createRequestInSession(
                                 new URL(configuration.getBaseUrl().concat(Urls.CREATE_PAYMENT)))
