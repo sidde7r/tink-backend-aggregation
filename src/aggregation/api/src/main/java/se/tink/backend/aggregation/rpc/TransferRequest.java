@@ -13,7 +13,7 @@ public class TransferRequest extends CredentialsRequest {
 
     private SignableOperation signableOperation;
     private boolean update;
-    private boolean triggerRefresh;
+    private boolean skipRefresh;
 
     public TransferRequest() {}
 
@@ -62,11 +62,11 @@ public class TransferRequest extends CredentialsRequest {
         this.update = update;
     }
 
-    public boolean isTriggerRefresh() {
-        return triggerRefresh;
+    public boolean isSkipRefresh() {
+        return skipRefresh;
     }
 
-    public void setTriggerRefresh(boolean triggerRefresh) {
-        this.triggerRefresh = triggerRefresh;
+    public void setSkipRefresh(boolean skipRefresh) {
+        this.skipRefresh = skipRefresh;
     }
 }

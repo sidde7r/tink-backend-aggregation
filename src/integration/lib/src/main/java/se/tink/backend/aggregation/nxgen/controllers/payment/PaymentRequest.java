@@ -56,7 +56,7 @@ public class PaymentRequest {
                         .withReference(referenceInRequest)
                         .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()));
 
-        if (transferRequest.isTriggerRefresh()) {
+        if (!transferRequest.isSkipRefresh()) {
             paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
         }
 
