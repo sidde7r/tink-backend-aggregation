@@ -58,6 +58,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
+    private static final ImmutableSet<String> ALLOWED_CLUSTERIDS_FOR_QSEALCSIGN =
+            ImmutableSet.of("oxford-production", "kirkby-staging", "kirkby-production");
+
     // All isAggregator=TRUE appIds
     private static final ImmutableSet<String> DISALLOWED_APPIDS_FOR_QSEALCSIGN =
             ImmutableSet.of(
@@ -264,13 +267,14 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             if (eidasIdentity != null && eidasIdentity.getAppId() != null) {
                 try {
                     if (!DISALLOWED_APPIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getAppId())
-                            && "oxford-production".equals(eidasIdentity.getClusterId())) {
+                            && ALLOWED_CLUSTERIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getClusterId())) {
                         addQsealcSignatureByGetingWholeJwsToken(request);
                     }
                 } catch (Exception e) {
                     log.warn(
-                            "Error occurred in QSealC signing, appId {}",
+                            "Error occurred in QSealC signing, appId {} clusterId {}",
                             eidasIdentity.getAppId(),
+                            eidasIdentity.getClusterId(),
                             e);
                     addRequestSignature(request);
                 }
