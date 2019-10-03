@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.InvestmentAccounts;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -169,6 +171,9 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
+        if (isISKAccount()) {
+            return false;
+        }
         switch (getTinkAccountType()) {
             case CHECKING:
             case OTHER:
@@ -177,6 +182,16 @@ public class AccountEntity implements GeneralAccountEntity {
             default:
                 return false;
         }
+    }
+
+    /**
+     * This extra check is added to ensure the we don't list ISK accounts that we get in
+     * FetchAccountResponse from Nordea as Savings. COB-1176
+     *
+     * @return
+     */
+    private boolean isISKAccount() {
+        return StringUtils.containsIgnoreCase(productName, InvestmentAccounts.PRODUCT_NAME);
     }
 
     // This method used for setting uniqueId is taken from the legacy Nordea agent.
