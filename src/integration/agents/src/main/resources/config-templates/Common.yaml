@@ -1,3 +1,10 @@
+baseUrl-description: |2
+    This is the base URL or base location, which helps in converting relative web
+    URLs on the specific page to absolute web URLs.
+
+baseUrl-example: |2
+    "https://www.tink.com"
+
 redirectUrls-description: |2
     From https://www.oauth.com/oauth2-servers/redirect-uris/: Redirect URLs are a
     critical part of the OAuth flow. After a user successfully authorizes an
