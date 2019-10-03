@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.trans
 import static se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.MAPPERS;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -47,7 +48,10 @@ public class AccountDetailsResponse {
     private double creditAfterInterest;
     private double creditLimit;
     private double forwardBalance;
+
+    @JsonProperty("interestRate")
     private BigDecimal interestRate;
+
     private double ownCapital;
     private double performance;
     private double performancePercent;
@@ -302,7 +306,8 @@ public class AccountDetailsResponse {
                                         .withUniqueIdentifier(getAccountNumber())
                                         .withAccountNumber(getAccountNumber())
                                         .withAccountName(accountTypeName)
-                                        .addIdentifier(new SwedishIdentifier(accountId))
+                                        .addIdentifier(new SwedishIdentifier(getAccountNumber()))
+                                        .setProductName(accountType)
                                         .build())
                         .addHolderName(holderName.toString())
                         .setApiIdentifier(accountId)
