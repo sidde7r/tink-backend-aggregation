@@ -28,7 +28,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     public HandelsbankenBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new HandelsbankenBaseApiClient(client, sessionStorage);
+        apiClient = new HandelsbankenBaseApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
 
         setMaxPeriodTransactions();

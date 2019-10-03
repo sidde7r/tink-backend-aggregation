@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Status;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.DecoupledResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
@@ -109,8 +108,6 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
             case Status.USER_CANCEL:
                 return BankIdStatus.CANCELLED;
             case Status.COMPLETE:
-                sessionStorage.put(StorageKeys.ACCESS_TOKEN, decoupledResponse.toOauthToken());
-                sessionStorage.put(StorageKeys.REFRESH_TOKEN, decoupledResponse.getRefreshToken());
                 this.token = decoupledResponse.toOauthToken();
                 return BankIdStatus.DONE;
             default:

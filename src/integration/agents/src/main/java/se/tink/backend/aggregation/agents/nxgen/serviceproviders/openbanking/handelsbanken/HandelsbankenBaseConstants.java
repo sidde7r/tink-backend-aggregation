@@ -43,8 +43,6 @@ public final class HandelsbankenBaseConstants {
     }
 
     public static class StorageKeys {
-        public static final String ACCESS_TOKEN = "accessToken";
-        public static final String REFRESH_TOKEN = "refreshToken";
         public static final String ACCOUNT_ID = "accountId";
         public static final String MAX_FETCH_PERIOD_MONTHS = "maxFetchPeriodMonths";
     }
