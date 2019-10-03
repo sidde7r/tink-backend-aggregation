@@ -28,8 +28,8 @@ public class SbabAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-sbab-oauth2")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .setFinancialInstitutionId("sbab")
                         .setAppId("tink")
                         .expectLoggedIn(false);

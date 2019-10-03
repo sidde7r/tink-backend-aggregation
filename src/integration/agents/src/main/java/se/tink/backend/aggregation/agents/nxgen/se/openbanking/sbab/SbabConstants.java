@@ -1,16 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class SbabConstants {
 
     public static final String INTEGRATION_NAME = "sbab";
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.SAVINGS, "savings", "minor_savings_account")
-                    .build();
 
     private SbabConstants() {
         throw new AssertionError();
