@@ -196,7 +196,7 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
 
         if (agent instanceof SubsequentGenerationAgent) {
             PaymentController paymentController =
-                    ((SubsequentGenerationAgent) agent)
+                    ((SubsequentGenerationAgent<?>) agent)
                             .constructPaymentController()
                             .orElseThrow(Exception::new);
             ArrayList<PaymentRequest> paymentRequests = new ArrayList<>();

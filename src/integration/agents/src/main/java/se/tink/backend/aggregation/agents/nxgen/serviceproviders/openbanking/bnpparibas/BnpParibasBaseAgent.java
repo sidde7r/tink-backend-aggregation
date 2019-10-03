@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas;
 
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.BnpParibasAuthenticator;
@@ -25,9 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BnpParibasBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                ManualOrAutoAuth {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private BnpParibasApiBaseClient apiClient;
     private BnpParibasConfiguration bnpParibasConfiguration;
@@ -130,10 +126,5 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(transactionFetcher)));
-    }
-
-    @Override
-    public boolean isManualAuthentication(Credentials credentials) {
-        return ((ManualOrAutoAuth) constructAuthenticator()).isManualAuthentication(credentials);
     }
 }

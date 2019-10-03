@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic;
 
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.ErrorMessages;
@@ -29,14 +27,11 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class CmcicAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                ManualOrAutoAuth {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final String clientName;
     private final CmcicApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private ManualOrAutoAuth manualOrAutoAuthAuthenticator;
 
     public CmcicAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -96,7 +91,6 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         new ThirdPartyAppAuthenticationController<>(
                                 controller, supplementalInformationHelper),
                         controller);
-        this.manualOrAutoAuthAuthenticator = autoAuthenticationController;
         return autoAuthenticationController;
     }
 
@@ -136,11 +130,5 @@ public abstract class CmcicAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
-    }
-
-    @Override
-    public boolean isManualAuthentication(Credentials credentials) {
-        return manualOrAutoAuthAuthenticator != null
-                && manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
     }
 }
