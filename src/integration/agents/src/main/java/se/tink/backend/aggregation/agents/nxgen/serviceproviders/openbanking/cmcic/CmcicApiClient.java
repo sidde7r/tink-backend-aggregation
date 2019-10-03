@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.AuthorizationCodeTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.ClientCredentialsTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.GrantTypeEnum;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.RefreshTokenTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestCreation;
@@ -153,7 +154,7 @@ public final class CmcicApiClient {
 
     private OAuth2Token getPispTokenFromStorage() {
         return persistentStorage
-                .get(StorageKeys.CLIENT_CREDENTIALS_TOKEN, OAuth2Token.class)
+                .get(StorageKeys.PISP_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
@@ -180,34 +181,6 @@ public final class CmcicApiClient {
         final String codeVerifier = CodeChallengeUtil.generateCodeVerifier();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         return CodeChallengeUtil.generateCodeChallengeForCodeVerifier(codeVerifier);
-    }
-
-    public OAuth2Token getToken(String code) {
-
-        String baseUrl = getConfiguration().getBaseUrl();
-        String basePath = getConfiguration().getBasePath();
-        final URL baseApiUrl = new URL(baseUrl).concat(basePath);
-
-        final URL tokenUrl = baseApiUrl.concat(Urls.TOKEN_PATH);
-
-        final AuthorizationCodeTokenRequest request =
-                new AuthorizationCodeTokenRequest(
-                        configuration.getClientId(),
-                        GrantTypeEnum.CODE,
-                        code,
-                        configuration.getRedirectUrl(),
-                        sessionStorage.get(StorageKeys.CODE_VERIFIER));
-
-        final TokenResponse tokenResponse =
-                createRequest(tokenUrl)
-                        .body(request.toData(), MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(TokenResponse.class);
-
-        return OAuth2Token.create(
-                tokenResponse.getTokenType().toString(),
-                tokenResponse.getAccessToken(),
-                tokenResponse.getRefreshToken(),
-                tokenResponse.getExpiresIn());
     }
 
     public FetchAccountsResponse fetchAccounts() {
@@ -256,7 +229,35 @@ public final class CmcicApiClient {
                 .post(HalPaymentRequestCreation.class, body);
     }
 
-    public OAuth2Token clientCredentialsAuthentication() {
+    public OAuth2Token getAispToken(String code) {
+
+        String baseUrl = getConfiguration().getBaseUrl();
+        String basePath = getConfiguration().getBasePath();
+        final URL baseApiUrl = new URL(baseUrl).concat(basePath);
+
+        final URL tokenUrl = baseApiUrl.concat(Urls.TOKEN_PATH);
+
+        final AuthorizationCodeTokenRequest request =
+                new AuthorizationCodeTokenRequest(
+                        configuration.getClientId(),
+                        GrantTypeEnum.CODE,
+                        code,
+                        configuration.getRedirectUrl(),
+                        sessionStorage.get(StorageKeys.CODE_VERIFIER));
+
+        final TokenResponse tokenResponse =
+                createRequest(tokenUrl)
+                        .body(request.toData(), MediaType.APPLICATION_FORM_URLENCODED)
+                        .post(TokenResponse.class);
+
+        return OAuth2Token.create(
+                tokenResponse.getTokenType().toString(),
+                tokenResponse.getAccessToken(),
+                tokenResponse.getRefreshToken(),
+                tokenResponse.getExpiresIn());
+    }
+
+    public OAuth2Token getPispToken() {
         String baseUrl = getConfiguration().getBaseUrl();
         String basePath = getConfiguration().getBasePath();
         final URL baseApiUrl = new URL(baseUrl + basePath);
@@ -268,6 +269,28 @@ public final class CmcicApiClient {
                         getConfiguration().getClientId(),
                         FormValues.CLIENT_CREDENTIALS,
                         FormValues.PISP);
+
+        final TokenResponse tokenResponse =
+                createRequest(tokenUrl)
+                        .body(request, MediaType.APPLICATION_FORM_URLENCODED)
+                        .post(TokenResponse.class);
+
+        return OAuth2Token.create(
+                tokenResponse.getTokenType().toString(),
+                tokenResponse.getAccessToken(),
+                tokenResponse.getRefreshToken(),
+                tokenResponse.getExpiresIn());
+    }
+
+    public OAuth2Token refreshToken(String refreshToken) {
+        String baseUrl = getConfiguration().getBaseUrl();
+        String basePath = getConfiguration().getBasePath();
+        final URL baseApiUrl = new URL(baseUrl + basePath);
+
+        final URL tokenUrl = baseApiUrl.concat(Urls.TOKEN_PATH);
+
+        final RefreshTokenTokenRequest request =
+                new RefreshTokenTokenRequest(getConfiguration().getClientId(), refreshToken);
 
         final TokenResponse tokenResponse =
                 createRequest(tokenUrl)
