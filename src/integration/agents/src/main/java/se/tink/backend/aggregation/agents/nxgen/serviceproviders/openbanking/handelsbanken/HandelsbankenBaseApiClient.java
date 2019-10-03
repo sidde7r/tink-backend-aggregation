@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.rpc.HandelsbankenErrorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -35,18 +36,18 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class HandelsbankenBaseApiClient {
 
     private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private HandelsbankenBaseConfiguration configuration;
 
-    public HandelsbankenBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public HandelsbankenBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
     }
 
     public void setConfiguration(HandelsbankenBaseConfiguration configuration) {
@@ -57,9 +58,9 @@ public class HandelsbankenBaseApiClient {
         return this.configuration;
     }
 
-    private OAuth2Token getOauthFromSession() {
-        return sessionStorage
-                .get(HandelsbankenBaseConstants.StorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+    private OAuth2Token getOauthToken() {
+        return persistentStorage
+                .get(PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
@@ -70,7 +71,7 @@ public class HandelsbankenBaseApiClient {
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .header(HeaderKeys.X_IBM_CLIENT_ID, this.configuration.getClientId())
-                .addBearerToken(getOauthFromSession())
+                .addBearerToken(getOauthToken())
                 .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
