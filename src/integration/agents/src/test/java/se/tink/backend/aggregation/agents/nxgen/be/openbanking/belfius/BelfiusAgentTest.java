@@ -25,7 +25,8 @@ public class BelfiusAgentTest {
                 new AgentIntegrationTest.Builder("be", "be-belfius-oauth2")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
-                        .setFinancialInstitutionId("tink")
+                        .setFinancialInstitutionId("belfius")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }

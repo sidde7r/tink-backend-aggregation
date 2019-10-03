@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.BelfiusPaymentController;
@@ -43,16 +42,7 @@ public final class BelfiusAgent extends NextGenerationAgent
         this.clientName = request.getProvider().getPayload();
 
         this.belfiusConfiguration =
-                agentsServiceConfiguration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                BelfiusConstants.INTEGRATION_NAME,
-                                clientName,
-                                BelfiusConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+                getAgentConfigurationController().getAgentConfiguration(BelfiusConfiguration.class);
         super.setConfiguration(agentsServiceConfiguration);
 
         this.apiClient = new BelfiusApiClient(client, this.belfiusConfiguration);
