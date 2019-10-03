@@ -95,7 +95,12 @@ public final class AgentConfigurationController {
             } catch (RuntimeException e) {
                 if (e instanceof StatusRuntimeException) {
                     StatusRuntimeException statusRuntimeException = (StatusRuntimeException) e;
-                    if (statusRuntimeException.getStatus() == Status.NOT_FOUND) {
+                    Preconditions.checkNotNull(
+                            statusRuntimeException.getStatus(),
+                            "Cannot be null Status for StatusRuntimeException: "
+                                    + statusRuntimeException);
+                    if (statusRuntimeException.getStatus().getCode()
+                            == Status.NOT_FOUND.getCode()) {
                         log.info("Could not find secrets" + getSecretsServiceParamsString());
                         return true;
                     } else {
