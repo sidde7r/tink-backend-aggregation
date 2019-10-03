@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.automatic;
 
 import com.google.common.base.Preconditions;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
@@ -16,10 +18,13 @@ import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public class AutoAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
+
+    private static final Logger log = LoggerFactory.getLogger(AutoAuthenticationController.class);
     private final CredentialsRequest request;
     private final SystemUpdater systemUpdater;
     private final MultiFactorAuthenticator manualAuthenticator;
     private final AutoAuthenticator autoAuthenticator;
+    private final boolean isDebugEnabled;
 
     public AutoAuthenticationController(
             CredentialsRequest request,
@@ -30,6 +35,20 @@ public class AutoAuthenticationController
         this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
         this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);
         this.autoAuthenticator = Preconditions.checkNotNull(autoAuthenticator);
+        this.isDebugEnabled = false;
+    }
+
+    public AutoAuthenticationController(
+            CredentialsRequest request,
+            SystemUpdater systemUpdater,
+            MultiFactorAuthenticator manualAuthenticator,
+            AutoAuthenticator autoAuthenticator,
+            boolean isDebugEnabled) {
+        this.request = Preconditions.checkNotNull(request);
+        this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
+        this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);
+        this.autoAuthenticator = Preconditions.checkNotNull(autoAuthenticator);
+        this.isDebugEnabled = isDebugEnabled;
     }
 
     @Override
@@ -56,6 +75,17 @@ public class AutoAuthenticationController
     }
 
     private boolean shouldDoManualAuthentication(final Credentials credentials) {
+        if (isDebugEnabled) {
+            log.debug("forceAutoAuthentication status : ", forceAutoAuthentication());
+            log.debug("manualAuthenticatorType : ", manualAuthenticator.getType());
+            log.debug("credentialsTypes : ", credentials.getType());
+            log.debug("request create status : ", request.isCreate());
+            log.debug("requestUpdate status : ", request.isUpdate());
+            log.debug("requestType : ", request.getType());
+            log.debug(
+                    "credentials.forceAutoAuthentication status : ",
+                    credentials.forceManualAuthentication());
+        }
         return !forceAutoAuthentication()
                         && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
                                 || (request.isUpdate()
