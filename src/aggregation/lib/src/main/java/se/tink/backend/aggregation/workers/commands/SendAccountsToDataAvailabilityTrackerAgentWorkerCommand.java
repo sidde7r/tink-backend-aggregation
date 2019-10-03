@@ -34,7 +34,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final String market;
 
     private final ImmutableSet<String> ENABLED_MARKETS =
-            ImmutableSet.<String>builder().add("SE", "GB").build();
+            ImmutableSet.<String>builder().add("SE", "GB", "ES", "DK", "NO").build();
 
     public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
             AgentWorkerCommandContext context,
