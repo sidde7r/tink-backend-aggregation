@@ -14,7 +14,7 @@ public class RefreshRequest {
         this.grantType = grantType;
     }
 
-    public Object toData() {
+    public String toData() {
         return Form.builder()
                 .put(BnpParibasBaseConstants.QueryKeys.CLIENT_ID, clientId)
                 .put(BnpParibasBaseConstants.QueryKeys.GRANT_TYPE, grantType)
