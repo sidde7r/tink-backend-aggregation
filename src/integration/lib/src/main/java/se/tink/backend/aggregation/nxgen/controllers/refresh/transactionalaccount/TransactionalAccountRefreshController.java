@@ -11,12 +11,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -33,7 +35,8 @@ public final class TransactionalAccountRefreshController
         implements AccountRefresher,
                 TransactionRefresher,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                AuthenticationControllerType {
     private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE =
             new MetricId.MetricLabels().add(AccountRefresher.METRIC_ACCOUNT_TYPE, "transactional");
 
@@ -201,5 +204,10 @@ public final class TransactionalAccountRefreshController
     private List<AggregationTransaction> fetchTransactionsFor(final TransactionalAccount account) {
         return Optional.ofNullable(transactionFetcher.fetchTransactionsFor(account))
                 .orElseGet(Collections::emptyList);
+    }
+
+    @Override
+    public boolean isManualAuthentication(Credentials credentials) {
+        return true;
     }
 }

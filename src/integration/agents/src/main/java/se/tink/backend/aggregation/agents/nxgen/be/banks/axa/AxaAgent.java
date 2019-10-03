@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
 import java.util.Locale;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -17,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.AxaSessionH
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
@@ -29,18 +26,18 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class AxaAgent extends SubsequentGenerationAgent
+public final class AxaAgent
+        extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                ProgressiveAuthAgent,
-                ManualOrAutoAuth {
+                ProgressiveAuthAgent {
 
     private final AxaApiClient apiClient;
     private final AxaStorage storage;
     private final CredentialsRequest request;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final ProgressiveAuthenticator authenticator;
+    private final AutoAuthenticationProgressiveController authenticator;
 
     public AxaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -114,6 +111,11 @@ public final class AxaAgent extends SubsequentGenerationAgent
     }
 
     @Override
+    public AutoAuthenticationProgressiveController getAuthenticator() {
+        return authenticator;
+    }
+
+    @Override
     public SteppableAuthenticationResponse login(final SteppableAuthenticationRequest request)
             throws Exception {
         return ProgressiveAuthController.of(authenticator, credentials).login(request);
@@ -122,11 +124,5 @@ public final class AxaAgent extends SubsequentGenerationAgent
     @Override
     public boolean login() {
         throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
-    }
-
-    @Override
-    public boolean isManualAuthentication(Credentials credentials) {
-        // TODO: remove casting
-        return ((ManualOrAutoAuth) authenticator).isManualAuthentication(credentials);
     }
 }

@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
@@ -23,10 +21,9 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransac
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.filters.KbcHttpFilter;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
@@ -40,13 +37,13 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class KbcAgent extends NextGenerationAgent
+public final class KbcAgent
+        extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
         implements RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                ProgressiveAuthAgent,
-                ManualOrAutoAuth {
+                ProgressiveAuthAgent {
 
     private final KbcApiClient apiClient;
     private final String kbcLanguage;
@@ -55,8 +52,7 @@ public final class KbcAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    private final ProgressiveAuthenticator progressiveAuthenticator;
-    private final ManualOrAutoAuth manualOrAutoAuthAuthenticator;
+    private final AutoAuthenticationProgressiveController progressiveAuthenticator;
 
     public KbcAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -79,7 +75,6 @@ public final class KbcAgent extends NextGenerationAgent
         final AutoAuthenticationProgressiveController autoAuthenticationController =
                 new AutoAuthenticationProgressiveController(
                         request, systemUpdater, kbcAuthenticator, kbcAuthenticator);
-        manualOrAutoAuthAuthenticator = autoAuthenticationController;
         progressiveAuthenticator = autoAuthenticationController;
     }
 
@@ -87,11 +82,6 @@ public final class KbcAgent extends NextGenerationAgent
         httpFilter = new KbcHttpFilter();
         client.addFilter(httpFilter);
         client.setUserAgent(KbcConstants.Headers.USER_AGENT_VALUE);
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        throw new AssertionError(); // Never called because Agent::login is never called
     }
 
     @Override
@@ -162,6 +152,8 @@ public final class KbcAgent extends NextGenerationAgent
 
     @Override
     protected Optional<TransferController> constructTransferController() {
+        SupplementalInformationProvider supplementalInformationProvider =
+                new SupplementalInformationProvider(request, supplementalRequester, credentials);
         return Optional.of(
                 new TransferController(
                         null,
@@ -171,9 +163,14 @@ public final class KbcAgent extends NextGenerationAgent
                                 sessionStorage,
                                 apiClient,
                                 catalog,
-                                supplementalInformationHelper),
+                                supplementalInformationProvider.getSupplementalInformationHelper()),
                         null,
                         null));
+    }
+
+    @Override
+    public AutoAuthenticationProgressiveController getAuthenticator() {
+        return progressiveAuthenticator;
     }
 
     private String getKbcLanguage(String locale) {
@@ -199,7 +196,7 @@ public final class KbcAgent extends NextGenerationAgent
     }
 
     @Override
-    public boolean isManualAuthentication(Credentials credentials) {
-        return manualOrAutoAuthAuthenticator.isManualAuthentication(credentials);
+    public boolean login() {
+        throw new AssertionError("ProgressiveAuthAgent::login should always be used");
     }
 }

@@ -23,8 +23,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
@@ -41,7 +41,8 @@ import se.tink.backend.aggregation.nxgen.http.filter.ExecutionTimeLoggingFilter;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
+public abstract class SibsProgressiveBaseAgent
+        extends SubsequentGenerationAgent<ProgressiveAuthenticator>
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -51,6 +52,7 @@ public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
     protected final SibsBaseApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final ProgressiveAuthenticator authenticator;
 
     public SibsProgressiveBaseAgent(
             CredentialsRequest request,
@@ -69,6 +71,7 @@ public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
         client.addFilter(new ExecutionTimeLoggingFilter());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        authenticator = constructProgressiveAuthenticator();
     }
 
     protected abstract String getIntegrationName();
@@ -78,11 +81,6 @@ public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
                 .getIntegrations()
                 .getClientConfiguration(getIntegrationName(), clientName, SibsConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        throw new AssertionError(); // Never called because Agent::login is never called
     }
 
     private ProgressiveAuthenticator constructProgressiveAuthenticator() {
@@ -144,9 +142,12 @@ public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
+        SupplementalInformationProvider supplementalInformationProvider =
+                new SupplementalInformationProvider(request, supplementalRequester, credentials);
         SignPaymentStrategy signPaymentStrategy =
                 SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(
-                        apiClient, supplementalInformationHelper);
+                        apiClient,
+                        supplementalInformationProvider.getSupplementalInformationHelper());
         SibsPaymentExecutor sibsPaymentExecutor =
                 new SibsPaymentExecutor(apiClient, signPaymentStrategy, strongAuthenticationState);
         return Optional.of(new PaymentController(sibsPaymentExecutor, sibsPaymentExecutor));
@@ -161,12 +162,16 @@ public abstract class SibsProgressiveBaseAgent extends NextGenerationAgent
     @Override
     public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
             throws Exception {
-        return ProgressiveAuthController.of(constructProgressiveAuthenticator(), credentials)
-                .login(request);
+        return ProgressiveAuthController.of(authenticator, credentials).login(request);
     }
 
     @Override
     public boolean login() {
         throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
+    }
+
+    @Override
+    public ProgressiveAuthenticator getAuthenticator() {
+        return authenticator;
     }
 }

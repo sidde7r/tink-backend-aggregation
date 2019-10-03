@@ -9,7 +9,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
@@ -199,13 +198,11 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     private boolean isManualAuthentication(Credentials credentials) {
-        if (agent instanceof ManualOrAutoAuth) {
-            ManualOrAutoAuth manualOrAutoAuth = (ManualOrAutoAuth) agent;
-            final boolean isManual = manualOrAutoAuth.isManualAuthentication(credentials);
-            log.info("Authentication requires user intervention: " + isManual);
-            return isManual;
-        }
-        return false;
+        ManualOrAutoAuthenticationAgentVisitor visitor =
+                new ManualOrAutoAuthenticationAgentVisitor(credentials);
+        agent.accept(visitor);
+        log.info("Authentication requires user intervention: " + visitor.isManualAuthentication());
+        return visitor.isManualAuthentication();
     }
 
     private AgentWorkerCommandResult login() throws Exception {

@@ -49,7 +49,7 @@ git_repository(
 
 git_repository(
     name = "tink_backend_integration_openbanking",
-    commit = "793a2cc70ea8b78d78b41ce9f137eab8952a43d5",
+    commit = "4b685179df107de437ff6cc97105db984cea8b34",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
     shallow_since = "1562076445 +0000",
 )
