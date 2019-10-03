@@ -315,7 +315,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
         if (agent instanceof SubsequentGenerationAgent) {
             log.info("Executing transfer for UkOpenbanking Agent");
             PaymentController paymentController =
-                    ((SubsequentGenerationAgent) agent)
+                    ((SubsequentGenerationAgent<?>) agent)
                             .constructPaymentController()
                             .orElseThrow(Exception::new);
 
@@ -377,7 +377,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
 
         if (agent instanceof SubsequentGenerationAgent) {
             PaymentController paymentController =
-                    ((SubsequentGenerationAgent) agent)
+                    ((SubsequentGenerationAgent<?>) agent)
                             .constructPaymentController()
                             .orElseThrow(
                                     () ->

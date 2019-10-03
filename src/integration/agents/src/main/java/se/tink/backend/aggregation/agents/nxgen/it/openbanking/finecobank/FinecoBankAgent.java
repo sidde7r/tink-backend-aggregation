@@ -2,11 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -34,8 +32,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class FinecoBankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshCreditCardAccountsExecutor,
-                ManualOrAutoAuth {
+                RefreshCreditCardAccountsExecutor {
 
     private final String clientName;
     private final FinecoBankApiClient apiClient;
@@ -175,10 +172,5 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
                                 accountFetcher, 1, 90, ChronoUnit.DAYS)));
-    }
-
-    @Override
-    public boolean isManualAuthentication(Credentials credentials) {
-        return getAuthenticationController().isManualAuthentication(credentials);
     }
 }

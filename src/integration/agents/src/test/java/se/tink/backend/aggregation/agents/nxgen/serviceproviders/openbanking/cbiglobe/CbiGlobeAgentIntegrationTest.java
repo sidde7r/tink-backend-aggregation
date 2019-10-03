@@ -226,7 +226,7 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
                             agent.getClass().getSimpleName()));
         } else {
             PaymentController paymentController =
-                    ((SubsequentGenerationAgent) agent)
+                    ((SubsequentGenerationAgent<?>) agent)
                             .constructPaymentController()
                             .orElseThrow(Exception::new);
             ArrayList<PaymentRequest> paymentRequests = new ArrayList();

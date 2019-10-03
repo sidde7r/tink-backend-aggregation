@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
 import java.time.temporal.ChronoUnit;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.ManualOrAutoAuth;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.IngBaseAuthenticator;
@@ -28,9 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class IngBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                ManualOrAutoAuth {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final String clientName;
     protected final IngBaseApiClient apiClient;
@@ -130,13 +126,5 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new IngSessionHandler();
-    }
-
-    @Override
-    public boolean isManualAuthentication(Credentials credentials) {
-        if (authenticator != null) {
-            return authenticator.isManualAuthentication(credentials);
-        }
-        return false;
     }
 }
