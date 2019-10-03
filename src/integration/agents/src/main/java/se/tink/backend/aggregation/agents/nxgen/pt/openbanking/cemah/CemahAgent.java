@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CemahAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "cemah";
+
     public CemahAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class CemahAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return CemahConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }

@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class EurobicAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "eurobic-pt";
+
     public EurobicAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class EurobicAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return EurobicConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }

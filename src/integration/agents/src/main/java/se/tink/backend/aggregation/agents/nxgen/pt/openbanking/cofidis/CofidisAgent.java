@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CofidisAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "cofidis";
+
     public CofidisAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class CofidisAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return CofidisConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }

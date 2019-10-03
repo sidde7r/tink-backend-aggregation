@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BancoBpiAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "bancobpi-pt";
+
     public BancoBpiAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class BancoBpiAgent extends SibsProgressiveBaseAgent {
 
     @Override
     public String getIntegrationName() {
-        return BancoBpiConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }

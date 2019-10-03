@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CaixaRedirectAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "caixa-redirect-pt";
+
     public CaixaRedirectAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class CaixaRedirectAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return CaixaConstants.INTEGRATION_REDIRECT_NAME;
+        return INTEGRATION_NAME;
     }
 }

@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BpgAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "bpg";
+
     public BpgAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class BpgAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return BpgConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }

@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AtlanticoEuropaAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "atlanticoeuropa";
+
     public AtlanticoEuropaAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class AtlanticoEuropaAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return AtlanticoEuropaConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }
