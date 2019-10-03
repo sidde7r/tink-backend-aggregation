@@ -83,19 +83,21 @@ public final class CmcicConstants {
         public static final String GRANT_TYPE = "grant_type";
         public static final String SCOPE = "scope";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String CODE = "code";
+        public static final String CODE_VERIFIER = "code_verifier";
     }
 
     public static class FormValues {
         public static final String EMPTY = "";
         public static final String GRANT_TYPE = "grant_type";
         public static final String CLIENT_ID = "client_id";
-        public static final String CODE = "code";
-        public static final String CODE_VERIFIER = "code_verifier";
         public static final String BENEFICIARY_NAME = "myMerchant";
         public static final String INSTRUCTION_ID = "MyInstrId";
         public static final String PISP = "pisp";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CLIENT_CREDENTIALS = "client_credentials";
+        public static final String AUTHORIZATION_CODE = "authorization_code";
     }
 
     public class DateFormat {

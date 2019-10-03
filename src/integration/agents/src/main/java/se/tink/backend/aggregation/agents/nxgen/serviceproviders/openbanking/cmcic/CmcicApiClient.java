@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.AuthorizationCodeTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.ClientCredentialsTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.GrantTypeEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.RefreshTokenTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
@@ -33,6 +32,7 @@ import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -230,68 +230,38 @@ public final class CmcicApiClient {
     }
 
     public OAuth2Token getAispToken(String code) {
-
-        String baseUrl = getConfiguration().getBaseUrl();
-        String basePath = getConfiguration().getBasePath();
-        final URL baseApiUrl = new URL(baseUrl).concat(basePath);
-
-        final URL tokenUrl = baseApiUrl.concat(Urls.TOKEN_PATH);
-
         final AuthorizationCodeTokenRequest request =
                 new AuthorizationCodeTokenRequest(
                         configuration.getClientId(),
-                        GrantTypeEnum.CODE,
+                        FormValues.AUTHORIZATION_CODE,
                         code,
                         configuration.getRedirectUrl(),
                         sessionStorage.get(StorageKeys.CODE_VERIFIER));
-
-        final TokenResponse tokenResponse =
-                createRequest(tokenUrl)
-                        .body(request.toData(), MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(TokenResponse.class);
-
-        return OAuth2Token.create(
-                tokenResponse.getTokenType().toString(),
-                tokenResponse.getAccessToken(),
-                tokenResponse.getRefreshToken(),
-                tokenResponse.getExpiresIn());
+        return executeTokenRequest(request);
     }
 
     public OAuth2Token getPispToken() {
-        String baseUrl = getConfiguration().getBaseUrl();
-        String basePath = getConfiguration().getBasePath();
-        final URL baseApiUrl = new URL(baseUrl + basePath);
-
-        final URL tokenUrl = baseApiUrl.concat(Urls.TOKEN_PATH);
-
         final ClientCredentialsTokenRequest request =
                 new ClientCredentialsTokenRequest(
                         getConfiguration().getClientId(),
                         FormValues.CLIENT_CREDENTIALS,
                         FormValues.PISP);
-
-        final TokenResponse tokenResponse =
-                createRequest(tokenUrl)
-                        .body(request, MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(TokenResponse.class);
-
-        return OAuth2Token.create(
-                tokenResponse.getTokenType().toString(),
-                tokenResponse.getAccessToken(),
-                tokenResponse.getRefreshToken(),
-                tokenResponse.getExpiresIn());
+        return executeTokenRequest(request);
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
+        final RefreshTokenTokenRequest request =
+                new RefreshTokenTokenRequest(
+                        getConfiguration().getClientId(), refreshToken, FormValues.REFRESH_TOKEN);
+        return executeTokenRequest(request);
+    }
+
+    private OAuth2Token executeTokenRequest(AbstractForm request) {
         String baseUrl = getConfiguration().getBaseUrl();
         String basePath = getConfiguration().getBasePath();
         final URL baseApiUrl = new URL(baseUrl + basePath);
 
         final URL tokenUrl = baseApiUrl.concat(Urls.TOKEN_PATH);
-
-        final RefreshTokenTokenRequest request =
-                new RefreshTokenTokenRequest(getConfiguration().getClientId(), refreshToken);
-
         final TokenResponse tokenResponse =
                 createRequest(tokenUrl)
                         .body(request, MediaType.APPLICATION_FORM_URLENCODED)
