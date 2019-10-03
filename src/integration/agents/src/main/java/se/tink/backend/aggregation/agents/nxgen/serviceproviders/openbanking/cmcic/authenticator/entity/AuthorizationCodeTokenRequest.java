@@ -9,14 +9,12 @@ public class AuthorizationCodeTokenRequest extends AbstractForm {
             String clientId,
             String grantType,
             String code,
-            String redirectUri,
             String codeVerifier) {
 
         put(FormKeys.GRANT_TYPE, grantType);
         put(FormKeys.CLIENT_ID, clientId);
         put(FormKeys.CODE, code);
         put(FormKeys.CODE_VERIFIER, codeVerifier);
-        put(FormKeys.REDIRECT_URI, redirectUri);
     }
 
 }

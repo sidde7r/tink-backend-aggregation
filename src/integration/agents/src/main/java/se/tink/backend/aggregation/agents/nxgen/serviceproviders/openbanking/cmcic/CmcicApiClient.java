@@ -235,7 +235,6 @@ public final class CmcicApiClient {
                         configuration.getClientId(),
                         FormValues.AUTHORIZATION_CODE,
                         code,
-                        configuration.getRedirectUrl(),
                         sessionStorage.get(StorageKeys.CODE_VERIFIER));
         return executeTokenRequest(request);
     }
