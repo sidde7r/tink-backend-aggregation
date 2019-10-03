@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CaixaCrlAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "caixacrl-pt";
+
     public CaixaCrlAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class CaixaCrlAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return CaixaCrlConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }

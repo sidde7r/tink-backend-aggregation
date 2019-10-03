@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class UnicreAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "unicre-pt";
+
     public UnicreAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class UnicreAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return UnicreConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }

@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NovoBancoAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "novobanco";
+
     public NovoBancoAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class NovoBancoAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return NovoBancoConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }

@@ -1,15 +1,15 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.santander;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.caixa;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsProgressiveBaseAgent;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SantanderAgent extends SibsProgressiveBaseAgent {
+public class CaixaRedirectAgent extends SibsProgressiveBaseAgent {
 
-    private static final String INTEGRATION_NAME = "santander-pt";
+    private static final String INTEGRATION_NAME = "caixa-fr";
 
-    public SantanderAgent(
+    public CaixaRedirectAgent(
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
@@ -17,7 +17,7 @@ public class SantanderAgent extends SibsProgressiveBaseAgent {
     }
 
     @Override
-    public String getIntegrationName() {
+    protected String getIntegrationName() {
         return INTEGRATION_NAME;
     }
 }

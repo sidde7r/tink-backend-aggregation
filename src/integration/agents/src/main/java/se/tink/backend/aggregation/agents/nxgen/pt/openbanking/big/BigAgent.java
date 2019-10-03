@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BigAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "big";
+
     public BigAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class BigAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return BigConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }

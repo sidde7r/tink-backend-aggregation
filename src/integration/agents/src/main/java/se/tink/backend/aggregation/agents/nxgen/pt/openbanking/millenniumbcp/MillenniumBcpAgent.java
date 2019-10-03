@@ -7,6 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MillenniumBcpAgent extends SibsProgressiveBaseAgent {
 
+    private static final String INTEGRATION_NAME = "millenniumbcp";
+
     public MillenniumBcpAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -16,6 +18,6 @@ public class MillenniumBcpAgent extends SibsProgressiveBaseAgent {
 
     @Override
     protected String getIntegrationName() {
-        return MillenniumBcpConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }
