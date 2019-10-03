@@ -4,7 +4,7 @@ metadata:
   name: statuspage-providers-cronjob
   namespace: statuspage-providers-cronjob
 spec:
-  schedule: "{{ .Values.providerStatusCronSchedule | default "0/30 * * * *" }}"
+  schedule: "{{ .Values.providerStatusCronSchedule | default "0/5 * * * *" }}"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
