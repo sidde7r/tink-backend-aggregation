@@ -115,7 +115,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                     "caaba0587c504db9a2bcfa1d150e5bf7",
                     "ce5c6bd43db84d84b7bf62cd806d9c69",
                     "5ca6cc5357b848788ca51318d9c4c5fc",
-                    "59b2c8799ada48c381637ebc96d455bc",
                     "dd62847c2e4c4da0824a61dd364fabd0",
                     "10d3037a0bf9415fa6b96a1e9dce3505",
                     "fe19598246c34d51ae3dc36ec5ef45bc",
@@ -127,8 +126,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                     "309be78f171a49dd9423dcd5b0a33810",
                     "8d3e7589fcca45c3b9b6eafab74fb2eb",
                     "59370bc862c54649b2cabf05f9afaac3",
-                    "68a6db2e54a94f65b14ae25128dd9e7d",
-                    "4c31b94ca11544dca5fbc34d10694118",
                     "d091a999367647a09332733dedb01762",
                     "59c9ca2b48f2491a9931f2c6f55257b5",
                     "263cce748b2141ee9353d9dcbeacae69",
@@ -198,7 +195,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                     "2c5bc4b87fd5475bb0571bc04ad8b77c",
                     "7ce255d0ba004771a59d8e8142ec959c",
                     "3a7c7e95a4074aafa6c398547c318147",
-                    "50e1d054d6dc467cadde44d2d18da2cc",
                     "cdadab612b3246d3965aa9247482824e");
 
     private SignatureKeyPair signatureKeyPair;
