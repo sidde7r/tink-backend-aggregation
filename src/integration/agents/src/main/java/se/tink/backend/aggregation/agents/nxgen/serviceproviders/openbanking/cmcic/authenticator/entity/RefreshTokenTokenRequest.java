@@ -3,14 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormKeys;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
-public class AuthorizationCodeTokenRequest extends AbstractForm {
+public class RefreshTokenTokenRequest extends AbstractForm {
 
-    public AuthorizationCodeTokenRequest(
-            String clientId, String grantType, String code, String codeVerifier) {
-
-        put(FormKeys.GRANT_TYPE, grantType);
+    public RefreshTokenTokenRequest(String clientId, String refreshToken, String grantType) {
         put(FormKeys.CLIENT_ID, clientId);
-        put(FormKeys.CODE, code);
-        put(FormKeys.CODE_VERIFIER, codeVerifier);
+        put(FormKeys.REFRESH_TOKEN, grantType);
+        put(FormKeys.REFRESH_TOKEN, refreshToken);
     }
 }
