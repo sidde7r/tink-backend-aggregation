@@ -76,10 +76,9 @@ public abstract class SibsProgressiveBaseAgent
         authenticator = constructProgressiveAuthenticator();
     }
 
-    private TinkHttpClient applyFilters(TinkHttpClient client) {
+    private void applyFilters(TinkHttpClient client) {
         client.addFilter(new ExecutionTimeLoggingFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
-        return client;
     }
 
     protected abstract String getIntegrationName();
