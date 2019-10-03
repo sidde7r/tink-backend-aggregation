@@ -133,7 +133,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             } else if (agent instanceof SubsequentGenerationAgent) {
                 SubsequentGenerationAgent<?> subsequentGenerationAgent =
                         (SubsequentGenerationAgent) agent;
-                subsequentGenerationAgent.getPaymentController().get();
+
                 if (subsequentGenerationAgent.getPaymentController().isPresent()) {
                     handlePayment(
                             subsequentGenerationAgent.getPaymentController().get(),
