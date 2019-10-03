@@ -67,11 +67,6 @@ public class SibsAuthenticator {
         }
     }
 
-    public ConsentResponse initializeDecoupledConsent(
-            String state, String psuIdType, String psuId) {
-        return apiClient.createDecoupledAuthConsent(state, psuIdType, psuId);
-    }
-
     public void autoAuthenticate() throws SessionException {
         try {
             AuthenticationState authenticationState = getCurrentAuthenticationState();
