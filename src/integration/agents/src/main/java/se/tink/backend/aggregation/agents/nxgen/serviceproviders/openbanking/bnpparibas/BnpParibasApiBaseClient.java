@@ -86,8 +86,8 @@ public class BnpParibasApiBaseClient {
                         BnpParibasBaseConstants.HeaderValues.BASIC
                                 + Base64.getEncoder()
                                         .encodeToString(getAuthorizationString().getBytes()))
-                .body(request, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .post(TokenResponse.class, request.toData())
                 .toOauthToken();
     }
 
