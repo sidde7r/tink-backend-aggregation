@@ -113,7 +113,9 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 metricRefreshController,
                 updateController,
                 new IngBaseAccountsFetcher(
-                        apiClient, request.getProvider().getCurrency().toUpperCase()),
+                        apiClient,
+                        request.getProvider().getCurrency().toUpperCase(),
+                        shouldReturnLowercaseAccountId()),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
@@ -126,5 +128,13 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new IngSessionHandler();
+    }
+
+    /**
+     * Use a lowercase IBAN as account ID. Defaults to false (uppercase). Can be overridden per
+     * market to match RE agent if needed.
+     */
+    protected boolean shouldReturnLowercaseAccountId() {
+        return false;
     }
 }

@@ -11,4 +11,10 @@ public class IngAgent extends IngBaseAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
+
+    @Override
+    protected boolean shouldReturnLowercaseAccountId() {
+        // ING Spain RE agent uses lowercase account IDs
+        return true;
+    }
 }
