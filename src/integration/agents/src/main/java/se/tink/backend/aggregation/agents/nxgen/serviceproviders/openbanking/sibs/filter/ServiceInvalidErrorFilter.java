@@ -1,0 +1,37 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter;
+
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.nxgen.http.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
+import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
+
+/**
+ * Utility filter to throw a Tink {@link BankServiceError} when an SIBS API call responds with
+ * <code>
+ * HTTP 405 Method not allowed</code>.
+ *
+ * <p>Typical response body:
+ *
+ * <p>{"transactionStatus":"RJCT","tppMessages":[{"category":"ERROR","code":"SERVICE_INVALID","text":
+ * "The addressed service is not valid for the addressed resources."}]}
+ */
+@FilterOrder(category = FilterPhases.REQUEST_HANDLE, order = Integer.MIN_VALUE)
+public class ServiceInvalidErrorFilter extends Filter {
+
+    @Override
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
+        HttpResponse response = nextFilter(httpRequest);
+
+        if (response.getStatus() == HttpStatus.SC_METHOD_NOT_ALLOWED) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+
+        return response;
+    }
+}
