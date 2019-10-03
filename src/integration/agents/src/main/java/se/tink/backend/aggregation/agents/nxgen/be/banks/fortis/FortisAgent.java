@@ -49,7 +49,7 @@ public class FortisAgent extends NextGenerationAgent
                 new FortisAuthenticator(
                         catalog, persistentStorage, apiClient, supplementalInformationHelper);
         return new AutoAuthenticationController(
-                request, systemUpdater, authenticator, authenticator);
+                request, systemUpdater, authenticator, authenticator, true);
     }
 
     @Override
