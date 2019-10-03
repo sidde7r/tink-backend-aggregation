@@ -14,6 +14,17 @@ public class SoftwareStatement {
 
     private Map<String, ProviderConfiguration> providerConfigurations;
 
+    public SoftwareStatement() {}
+
+    public SoftwareStatement(
+            SoftwareStatementAssertion softwareStatementAssertion,
+            SignatureKey signingKey,
+            TransportKey transportKey) {
+        this.softwareStatementAssertion = softwareStatementAssertion;
+        this.signingKey = signingKey;
+        this.transportKey = transportKey;
+    }
+
     public String getSigningKeyId() {
         return signingKey.getKeyId();
     }

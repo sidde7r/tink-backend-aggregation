@@ -12,6 +12,14 @@ public class SignatureKey {
     private String key;
     private String password;
 
+    public SignatureKey() {}
+
+    public SignatureKey(String keyId, String key, String password) {
+        this.keyId = keyId;
+        this.key = key;
+        this.password = password;
+    }
+
     public String getKeyId() {
         return keyId;
     }

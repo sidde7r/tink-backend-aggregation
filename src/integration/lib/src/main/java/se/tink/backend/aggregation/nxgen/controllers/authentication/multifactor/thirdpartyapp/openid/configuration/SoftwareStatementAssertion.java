@@ -11,6 +11,14 @@ public class SoftwareStatementAssertion {
     private String softwareId;
     private String redirectUri;
 
+    public SoftwareStatementAssertion() {}
+
+    public SoftwareStatementAssertion(String assertion, String softwareId, String redirectUri) {
+        this.assertion = assertion;
+        this.softwareId = softwareId;
+        this.redirectUri = redirectUri;
+    }
+
     public String getAssertion() {
         return assertion;
     }
