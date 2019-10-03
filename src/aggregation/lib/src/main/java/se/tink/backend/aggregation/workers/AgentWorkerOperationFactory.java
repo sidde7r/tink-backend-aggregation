@@ -442,7 +442,7 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
 
-        if (request.isTriggerRefresh()) {
+        if (!request.isSkipRefresh()) {
             return createOperationExecuteTransferWithRefresh(
                     request, clientInfo, context, controllerWrapper);
         } else {
