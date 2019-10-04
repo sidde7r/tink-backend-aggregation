@@ -71,7 +71,6 @@ public class AccountsItemEntity {
                                 .build())
                 .addHolderName(ownerName)
                 .setApiIdentifier(accountId)
-                .setBankIdentifier(getAccountNumber())
                 .build();
     }
 
