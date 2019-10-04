@@ -83,9 +83,4 @@ public class RabobankConstants {
                 "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
         public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
-
-    public static class Market {
-
-        public static final String INTEGRATION_NAME = "rabobank";
-    }
 }
