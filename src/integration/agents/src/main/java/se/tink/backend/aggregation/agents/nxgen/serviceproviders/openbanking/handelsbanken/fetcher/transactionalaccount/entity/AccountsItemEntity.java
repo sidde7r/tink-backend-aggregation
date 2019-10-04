@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -73,7 +72,6 @@ public class AccountsItemEntity {
                 .addHolderName(ownerName)
                 .setApiIdentifier(accountId)
                 .setBankIdentifier(getAccountNumber())
-                .putInTemporaryStorage(HandelsbankenBaseConstants.StorageKeys.ACCOUNT_ID, accountId)
                 .build();
     }
 
