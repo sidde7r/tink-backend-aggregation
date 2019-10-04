@@ -21,10 +21,7 @@ public class N26ExternalAppAuthAgent extends N26Agent {
         N26PasswordAuthenticator passwordAuthenticator = new N26PasswordAuthenticator(n26APiClient);
         AppAuthenticationPasswordController<String> thirdPartyAppAuthenticationController =
                 new AppAuthenticationPasswordController(
-                        catalog,
-                        passwordAuthenticator,
-                        authenticator,
-                        supplementalInformationHelper);
+                        passwordAuthenticator, authenticator, supplementalInformationHelper);
         return thirdPartyAppAuthenticationController;
     }
 }
