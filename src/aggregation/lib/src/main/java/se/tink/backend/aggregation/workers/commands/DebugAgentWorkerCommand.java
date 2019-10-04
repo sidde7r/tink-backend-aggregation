@@ -51,6 +51,15 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public void postProcess() {
+
+        // Disable all logging until we have looked over how sensitive information is masked in
+        // logs.
+        final boolean HARD_DISABLE = true;
+
+        if (HARD_DISABLE) {
+            return;
+        }
+
         if (!agentDebugStorage.isEnabled()) {
             return;
         }
