@@ -42,8 +42,10 @@ public abstract class BerlinGroupAgent<
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        getApiClient().setConfiguration(getConfiguration());
-        client.setEidasProxy(configuration.getEidasProxy(), getConfiguration().getEidasQwac());
+        getApiClient()
+                .setConfiguration(
+                        getConfiguration(), configuration.getEidasProxy(), getEidasIdentity());
+
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

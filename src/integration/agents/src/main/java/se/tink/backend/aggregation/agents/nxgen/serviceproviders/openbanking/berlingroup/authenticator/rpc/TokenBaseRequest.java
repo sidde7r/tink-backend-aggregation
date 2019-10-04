@@ -5,5 +5,4 @@ public abstract class TokenBaseRequest {
     protected String code;
     protected String redirectUri;
     protected String clientId;
-    protected String clientSecret;
 }

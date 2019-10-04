@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang.NotImplementedException;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankConstants.EndPoints;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankConstants.Urls;
@@ -23,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
@@ -58,7 +58,6 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
         final TokenRequestGet request =
                 new TokenRequestGet(
                         getConfiguration().getClientId(),
-                        getConfiguration().getClientSecret(),
                         getConfiguration().getRedirectUrl(),
                         code,
                         QueryValues.GRANT_TYPE);
@@ -127,11 +126,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     }
 
     private String getSignature(final String digest, final String requestId) {
-        final String clientSigningKeyPath = getConfiguration().getClientSigningKeyPath();
-
-        final SignatureEntity signatureEntity = new SignatureEntity(digest, requestId);
-
-        return BerlinGroupUtils.generateSignature(signatureEntity.toString(), clientSigningKeyPath);
+        throw new NotImplementedException();
     }
 
     private String getAuthorization(final String digest, final String requestId) {

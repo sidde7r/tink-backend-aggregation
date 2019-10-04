@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.StorageKeys;
@@ -14,8 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authentic
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configuration.TriodosConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Certificate;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
@@ -23,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountEntityBaseEntity;
@@ -131,7 +127,6 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                         .addBasicAuth(
                                 getConfiguration().getClientId(),
                                 getConfiguration().getClientSecret())
-                        .header(HeaderKeys.SSL_CERTIFICATE, getCertificateEncoded())
                         .body(body)
                         .type(MediaType.APPLICATION_FORM_URLENCODED)
                         .post(TokenBaseResponse.class);
@@ -192,10 +187,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     }
 
     private String getSignature(final String digest, final String xRequestId) {
-        final String clientSigningKeyPath = getConfiguration().getClientSigningKeyPath();
-        final SignatureEntity signatureEntity = new SignatureEntity(digest, xRequestId);
-
-        return BerlinGroupUtils.generateSignature(signatureEntity.toString(), clientSigningKeyPath);
+        throw new NotImplementedException();
     }
 
     private RequestBuilder createRequest(final URL url, final String digest) {
@@ -207,8 +199,6 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .header(HeaderKeys.DIGEST, digest)
                 .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
-                .header(HeaderKeys.SSL_CERTIFICATE, getCertificateEncoded())
-                .header(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, getCertificateEncoded())
                 .header(HeaderKeys.SIGNATURE, getAuthorization(digest, requestId));
     }
 
@@ -216,18 +206,5 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         return createRequest(url, digest)
                 .header(HeaderKeys.CONSENT_ID, getConsentId())
                 .addBearerToken(getTokenFromSession(BerlinGroupConstants.StorageKeys.OAUTH_TOKEN));
-    }
-
-    private String getCertificateEncoded() {
-        final String certificate =
-                new String(
-                        BerlinGroupUtils.readFile(
-                                getConfiguration().getClientSigningCertificatePath()));
-        try {
-
-            return URLEncoder.encode(certificate, Certificate.UTF_8);
-        } catch (final UnsupportedEncodingException e) {
-            throw new IllegalStateException(ErrorMessages.ENCODE_CERTIFICATE_ERROR, e);
-        }
     }
 }

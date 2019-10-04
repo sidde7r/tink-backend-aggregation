@@ -12,6 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BerlinGroupAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -22,6 +24,8 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
     protected TinkHttpClient client;
     protected SessionStorage sessionStorage;
     private TConfiguration configuration;
+    protected EidasProxyConfiguration eidasProxyConfiguration;
+    protected EidasIdentity eidasIdentity;
 
     public abstract BerlinGroupAccountResponse fetchAccounts();
 
@@ -37,8 +41,14 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
         return configuration;
     }
 
-    public void setConfiguration(final TConfiguration configuration) {
+    public void setConfiguration(
+            final TConfiguration configuration,
+            EidasProxyConfiguration eidasProxyConfiguration,
+            EidasIdentity eidasIdentity) {
         this.configuration = configuration;
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+        this.eidasIdentity = eidasIdentity;
+        client.setEidasProxy(eidasProxyConfiguration, configuration.getEidasQwac());
     }
 
     public RequestBuilder getAccountsRequestBuilder(final String url) {
