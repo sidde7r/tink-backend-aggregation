@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -60,8 +61,8 @@ public class AccountsItemEntity {
                 .withBalance(BalanceModule.of(getAmount(balance)))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(getAccountNumber())
-                                .withAccountNumber(getAccountNumber())
+                                .withUniqueIdentifier(getAccountNumberWithoutClearing())
+                                .withAccountNumber(getAccountNumberWithClearing())
                                 .withAccountName(Optional.ofNullable(name).orElse(accountType))
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
@@ -72,15 +73,29 @@ public class AccountsItemEntity {
                                 .build())
                 .addHolderName(ownerName)
                 .setApiIdentifier(accountId)
-                .setBankIdentifier(getAccountNumber())
-                .putInTemporaryStorage(HandelsbankenBaseConstants.StorageKeys.ACCOUNT_ID, accountId)
                 .build();
     }
 
-    private String getAccountNumber() {
+    /**
+     * Parsing the iban instead of using the bban directly as they may suddenly start including the
+     * clearing number in the bban. As we're using the account number without clearing as unique
+     * identifier it's not a risk we want to take.
+     */
+    @JsonIgnore
+    private String getAccountNumberWithoutClearing() {
         return iban.substring(iban.length() - 9);
     }
 
+    @JsonIgnore
+    private String getAccountNumberWithClearing() {
+        if (Strings.isNullOrEmpty(clearingNumber)) {
+            return getAccountNumberWithoutClearing();
+        }
+
+        return clearingNumber + "-" + getAccountNumberWithoutClearing();
+    }
+
+    @JsonIgnore
     private ExactCurrencyAmount getAmount(BalancesItemEntity balance) {
         return new ExactCurrencyAmount(
                 balance.getAmountEntity().getContent(), balance.getAmountEntity().getCurrency());
