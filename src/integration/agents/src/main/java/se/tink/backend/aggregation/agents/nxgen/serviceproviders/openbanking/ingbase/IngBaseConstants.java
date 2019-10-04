@@ -14,11 +14,14 @@ public final class IngBaseConstants {
     }
 
     public static class Transaction {
-        public static final int PERIOD_IN_DAYS = 89;
-        public static final int MAX_IN_DAYS = 730;
+        // Time after authentication when full transaction history can be fetched (milliseconds).
+        // Documentation says "immediately" after authentication. In practice, this is 1h.
+        public static final long FULL_HISTORY_MAX_AGE = 30 * 60 * 1000;
+        public static final long DEFAULT_HISTORY_DAYS = 89;
     }
 
     public static class StorageKeys {
+        public static final String AUTHENTICATION_TIME = "AUTHENTICATION_TIME";
         public static final String CLIENT_ID = "CLIENT_ID";
         public static final String TOKEN = "TOKEN";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
@@ -43,6 +46,7 @@ public final class IngBaseConstants {
         public static final String CODE = "code";
         public static final String PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW =
                 "payment-accounts:transactions:view payment-accounts:balances:view";
+        public static final String TRANSACTIONS_LIMIT = "100";
     }
 
     public static class HeaderKeys {

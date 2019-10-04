@@ -2,7 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
@@ -105,16 +106,24 @@ public class IngBaseApiClient {
     }
 
     public FetchTransactionsResponse fetchTransactions(
-            final String transactionsUrl, Date fromDate, Date toDate) {
-        final String completeReqPath =
+            final String transactionsUrl, LocalDate fromDate, LocalDate toDate) {
+        final String path =
                 new URL(transactionsUrl)
                         .queryParam(
-                                IngBaseConstants.QueryKeys.DATE_FROM, dateFormat.format(fromDate))
-                        .queryParam(IngBaseConstants.QueryKeys.DATE_TO, dateFormat.format(toDate))
-                        .queryParam(IngBaseConstants.QueryKeys.LIMIT, "100")
+                                IngBaseConstants.QueryKeys.DATE_FROM,
+                                fromDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                        .queryParam(
+                                IngBaseConstants.QueryKeys.DATE_TO,
+                                toDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                        .queryParam(
+                                IngBaseConstants.QueryKeys.LIMIT, QueryValues.TRANSACTIONS_LIMIT)
                         .toString();
+        return fetchTransactionsPage(path);
+    }
+
+    public FetchTransactionsResponse fetchTransactionsPage(final String transactionsUrl) {
         return buildRequestWithSignature(
-                        completeReqPath, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
+                        transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchTransactionsResponse.class);
