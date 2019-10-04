@@ -5,4 +5,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LinksDetailsEntity {
     private String href;
+
+    public LinksDetailsEntity(String href) {
+        this.href = href;
+    }
 }
