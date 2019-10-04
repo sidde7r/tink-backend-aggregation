@@ -29,14 +29,6 @@ public final class BerlinGroupUtils {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(Hash.sha256(input));
     }
 
-    public static byte[] readFile(final String path) {
-        try {
-            return Files.readAllBytes(Paths.get(path));
-        } catch (final IOException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
     public static String getRequestId() {
         return UUID.randomUUID().toString();
     }

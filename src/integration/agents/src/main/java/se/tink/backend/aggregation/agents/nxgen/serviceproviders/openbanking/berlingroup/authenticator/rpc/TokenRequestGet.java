@@ -8,12 +8,10 @@ public class TokenRequestGet extends TokenBaseRequest {
 
     public TokenRequestGet(
             final String clientId,
-            final String clientSecret,
             final String redirectUri,
             final String code,
             final String grantType) {
         this.clientId = clientId;
-        this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
         this.code = code;
         this.grantType = grantType;
@@ -23,7 +21,6 @@ public class TokenRequestGet extends TokenBaseRequest {
         return new HashMap<String, String>() {
             {
                 put(QueryKeys.CLIENT_ID, clientId);
-                put(QueryKeys.CLIENT_SECRET, clientSecret);
                 put(QueryKeys.REDIRECT_URI, redirectUri);
                 put(QueryKeys.CODE, code);
                 put(QueryKeys.GRANT_TYPE, grantType);

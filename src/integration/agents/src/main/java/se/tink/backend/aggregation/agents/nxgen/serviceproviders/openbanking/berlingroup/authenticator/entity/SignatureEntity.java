@@ -17,7 +17,7 @@ public class SignatureEntity {
     public String toString() {
         return BerlinGroupConstants.Signature.DIGEST
                 + digest
-                + System.lineSeparator()
+                + "\n"
                 + HeaderKeys.X_REQUEST_ID.toLowerCase()
                 + ": "
                 + xIngRequestId;

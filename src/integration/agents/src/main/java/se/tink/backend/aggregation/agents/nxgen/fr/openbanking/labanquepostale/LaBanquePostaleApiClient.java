@@ -5,7 +5,6 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Payload;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
@@ -27,6 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -69,19 +70,15 @@ public final class LaBanquePostaleApiClient
     }
 
     private RequestBuilder buildRequestWithSignature(final String url, final String payload) {
-        final String reqId = BerlinGroupUtils.getRequestId();
         final String digest = generateDigest(payload);
-        final String clientId = getConfiguration().getClientId();
-        final String clientSecret = getConfiguration().getClientSecret();
+        final String requestId = UUID.randomUUID().toString();
 
         final OAuth2Token token = getTokenFromSession(StorageKey.OAUTH_TOKEN);
 
         return client.request(url)
-                .header(HeaderKeys.SIGNATURE, getAuthorization(digest, reqId))
+                .header(HeaderKeys.SIGNATURE, getAuthorization(digest, requestId))
                 .addBearerToken(token)
-                .queryParam(QueryKeys.CLIENT_ID, clientId)
-                .queryParam(QueryKeys.CLIENT_SECRET, clientSecret)
-                .header(BerlinGroupConstants.HeaderKeys.X_REQUEST_ID, getX_Request_Id());
+                .header(BerlinGroupConstants.HeaderKeys.X_REQUEST_ID, requestId);
     }
 
     private String generateDigest(final String data) {
@@ -89,21 +86,20 @@ public final class LaBanquePostaleApiClient
     }
 
     private String getSignature(final String digest, String requestId) {
-        final String clientSigningKeyPath = getConfiguration().getClientSigningKeyPath();
-
         final SignatureEntity signatureEntity = new SignatureEntity(digest, requestId);
 
-        return BerlinGroupUtils.generateSignature(signatureEntity.toString(), clientSigningKeyPath);
+        return QsealcSigner.build(
+                        eidasProxyConfiguration.toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        eidasIdentity,
+                        "Tink")
+                .getSignatureBase64(signatureEntity.toString().getBytes());
     }
 
     private String getAuthorization(final String digest, String requestId) {
         final String clientId = getConfiguration().getClientId();
 
         return new AuthorizationEntity(clientId, getSignature(digest, requestId)).toString();
-    }
-
-    private String getX_Request_Id() {
-        return UUID.randomUUID().toString();
     }
 
     @Override

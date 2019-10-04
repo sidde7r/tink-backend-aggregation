@@ -18,7 +18,6 @@ public class TokenRequestPost extends TokenBaseRequest {
         this.code = code;
         this.redirectUri = redirectUri;
         this.clientId = clientId;
-        this.clientSecret = clientSecret;
         this.codeVerifier = codeVerifier;
     }
 
@@ -28,7 +27,6 @@ public class TokenRequestPost extends TokenBaseRequest {
                 .put(FormKeys.CODE, code)
                 .put(FormKeys.REDIRECT_URI, redirectUri)
                 .put(FormKeys.CLIENT_ID, clientId)
-                .put(FormKeys.CLIENT_SECRET, clientSecret)
                 .put(FormKeys.CODE_VERIFIER, codeVerifier)
                 .build()
                 .serialize();

@@ -11,10 +11,6 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
     private String baseUrl;
     private String clientId;
     private String clientSecret;
-    private String clientSigningKeyPath;
-    private String clientSigningCertificatePath;
-    private String clientKeyStorePath;
-    private String clientKeyStorePassword;
     private String redirectUrl;
     private String psuIpAddress;
     private String eidasQwac;
@@ -43,45 +39,12 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
         return redirectUrl;
     }
 
-    public String getClientKeyStorePassword() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientKeyStorePassword),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client KeyStore Password"));
-
-        return clientKeyStorePassword;
-    }
-
-    public String getClientKeyStorePath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientKeyStorePath),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client KeyStore Path"));
-
-        return clientKeyStorePath;
-    }
-
     public String getBaseUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(baseUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
 
         return baseUrl;
-    }
-
-    public String getClientSigningKeyPath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSigningKeyPath),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Signing Path"));
-
-        return clientSigningKeyPath;
-    }
-
-    public String getClientSigningCertificatePath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSigningCertificatePath),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate Path"));
-
-        return clientSigningCertificatePath;
     }
 
     public String getPsuIpAddress() {
@@ -93,6 +56,10 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
     }
 
     public String getEidasQwac() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(eidasQwac),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
+
         return eidasQwac;
     }
 }
