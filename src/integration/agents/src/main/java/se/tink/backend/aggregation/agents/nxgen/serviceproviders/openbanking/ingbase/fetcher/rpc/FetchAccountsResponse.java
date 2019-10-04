@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -13,9 +14,11 @@ public class FetchAccountsResponse {
 
     private List<AccountEntity> accounts;
 
-    public Collection<AccountEntity> getAccounts(String currency) {
+    @JsonIgnore
+    public Collection<AccountEntity> getTransactionalAccounts(String currency) {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
-                .filter(l -> l.getCurrency().equalsIgnoreCase(currency))
+                .filter(AccountEntity::isTransactionalAccount)
+                .filter(account -> currency.equalsIgnoreCase(account.getCurrency()))
                 .collect(Collectors.toList());
     }
 }

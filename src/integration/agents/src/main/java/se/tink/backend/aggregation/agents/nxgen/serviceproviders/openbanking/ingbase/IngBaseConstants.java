@@ -7,7 +7,7 @@ public final class IngBaseConstants {
     }
 
     public static class Urls {
-        public static final String ACCOUNTS = "/v2/accounts";
+        public static final String ACCOUNTS = "/v3/accounts";
         private static final String BASE_AUTH = "/oauth2";
         public static final String OAUTH = BASE_AUTH + "/authorization-server-url";
         public static final String TOKEN = BASE_AUTH + "/token";

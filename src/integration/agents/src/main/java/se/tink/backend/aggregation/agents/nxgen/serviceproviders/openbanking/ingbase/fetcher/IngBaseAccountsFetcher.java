@@ -27,7 +27,7 @@ public class IngBaseAccountsFetcher implements AccountFetcher<TransactionalAccou
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return client.fetchAccounts().getAccounts(currency).stream()
+        return client.fetchAccounts().getTransactionalAccounts(currency).stream()
                 .map(this::enrichAccountWithBalance)
                 .filter(Optional::isPresent)
                 .map(Optional::get)

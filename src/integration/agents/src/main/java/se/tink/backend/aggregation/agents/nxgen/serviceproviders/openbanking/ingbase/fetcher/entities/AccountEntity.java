@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.Locale;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
@@ -18,6 +19,7 @@ public class AccountEntity {
 
     private String resourceId;
     private String iban;
+    private String maskedPan;
     private String name;
     private String currency;
 
@@ -38,8 +40,21 @@ public class AccountEntity {
     }
 
     @JsonIgnore
+    public boolean isTransactionalAccount() {
+        return Strings.nullToEmpty(maskedPan).isEmpty();
+    }
+
+    @JsonIgnore
+    public boolean isCardAccount() {
+        return !Strings.nullToEmpty(maskedPan).isEmpty();
+    }
+
+    @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(
             ExactCurrencyAmount balance, boolean lowercaseAccountId) {
+        if (!isTransactionalAccount()) {
+            throw new IllegalStateException("Not a transactional account.");
+        }
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
