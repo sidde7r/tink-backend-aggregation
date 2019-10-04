@@ -161,7 +161,9 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
         logger.info(
-                "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
+                "Transfer Request received from main. skipRefresh is: {} and update: {}",
+                request.isSkipRefresh(),
+                request.isUpdate());
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationExecuteTransfer(request, clientInfo));
     }
