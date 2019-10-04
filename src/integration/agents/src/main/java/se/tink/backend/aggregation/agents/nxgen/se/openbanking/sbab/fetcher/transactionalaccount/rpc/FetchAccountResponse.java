@@ -16,6 +16,8 @@ public class FetchAccountResponse {
     public List<TransactionalAccount> toTinkAccounts(String owner) {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .map(account -> account.toTinkAccount(owner))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

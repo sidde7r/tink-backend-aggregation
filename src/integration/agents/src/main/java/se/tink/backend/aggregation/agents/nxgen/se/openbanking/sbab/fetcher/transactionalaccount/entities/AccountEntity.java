@@ -1,15 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.math.BigDecimal;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -29,7 +31,7 @@ public class AccountEntity {
     @JsonProperty("opened_date")
     private String openedDate;
 
-    private Number balance;
+    private BigDecimal balance;
 
     @JsonProperty("tax_account")
     private String taxAccount;
@@ -50,30 +52,32 @@ public class AccountEntity {
 
     private String status;
 
-    public TransactionalAccount toTinkAccount(String customerName) {
-        final AccountTypes type =
-                SbabConstants.ACCOUNT_TYPE_MAPPER.translate(accountType).orElse(AccountTypes.OTHER);
-        switch (type) {
-            case SAVINGS:
-                return toSavingsAccount(customerName);
-            case OTHER:
-                return toSavingsAccount(customerName);
-            default:
-                throw new IllegalStateException(ErrorMessages.UNKNOWN_ACCOUNT_TYPE);
-        }
+    @JsonIgnore
+    public Optional<TransactionalAccount> toTinkAccount(String customerName) {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.SAVINGS)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(getAvailableBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountNumber)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(accountName)
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.SE,
+                                                accountNumber,
+                                                customerName))
+                                .build())
+                .addHolderName(customerName)
+                .setApiIdentifier(accountNumber)
+                .setBankIdentifier(accountNumber)
+                .putInTemporaryStorage(SbabConstants.StorageKeys.ACCOUNT_NUMBER, accountNumber)
+                .build();
     }
 
-    public TransactionalAccount toSavingsAccount(String customerName) {
-        return SavingsAccount.builder()
-                .setUniqueIdentifier(accountNumber)
-                .setAccountNumber(accountNumber)
-                .setBalance(new Amount(currency, balance))
-                .setAlias(accountName)
-                .addAccountIdentifier(
-                        AccountIdentifier.create(Type.SE, accountNumber, customerName))
-                .addHolderName(customerName)
-                .putInTemporaryStorage(SbabConstants.StorageKeys.ACCOUNT_NUMBER, accountNumber)
-                .setApiIdentifier(accountNumber)
-                .build();
+    @JsonIgnore
+    private ExactCurrencyAmount getAvailableBalance() {
+        return ExactCurrencyAmount.of(balance, currency);
     }
 }
