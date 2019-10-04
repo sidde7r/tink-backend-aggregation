@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Objects;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
@@ -9,11 +14,10 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class DeutscheBankConfiguration implements ClientConfiguration {
-    private @Secret String baseUrl;
-    private @Secret String redirectUrl;
-    private String psuIpAddress;
-    private String certificateId;
-    private String psuIdType;
+    @JsonProperty @Secret private String baseUrl;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String psuIpAddress;
+    @JsonProperty @Secret private String psuIdType;
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
@@ -32,19 +36,15 @@ public class DeutscheBankConfiguration implements ClientConfiguration {
     }
 
     public String getPsuIpAddress() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(psuIpAddress),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
+        if (Objects.nonNull(psuIpAddress)) {
+            return psuIpAddress;
+        }
 
-        return psuIpAddress;
-    }
-
-    public String getCertificateId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(certificateId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "certificate ID"));
-
-        return certificateId;
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            return DeutscheBankConstants.DEFAULT_IP;
+        }
     }
 
     public String getPsuIdType() {
