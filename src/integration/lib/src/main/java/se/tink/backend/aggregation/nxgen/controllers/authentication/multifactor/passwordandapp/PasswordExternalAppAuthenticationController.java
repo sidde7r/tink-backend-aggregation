@@ -19,7 +19,15 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class AppAuthenticationPasswordController<T> implements MultiFactorAuthenticator {
+/**
+ * This Authentication Controller should handle the case, when multifactor authentication with
+ * password and then the external app is needed. An external app an application means that it
+ * doesn't need to be installed on the same device and the polling of status is performed towards
+ * bank backend.
+ *
+ * @param <T>
+ */
+public class PasswordExternalAppAuthenticationController<T> implements MultiFactorAuthenticator {
 
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
     private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);
@@ -29,7 +37,7 @@ public class AppAuthenticationPasswordController<T> implements MultiFactorAuthen
     private final int maxPollAttempts;
     private ExternalThirdPartyAppResponse<T> response;
 
-    public AppAuthenticationPasswordController(
+    public PasswordExternalAppAuthenticationController(
             PasswordAuthenticator passwordAuthenticator,
             ExternalAppAuthenticator<T> appAuthenticator,
             SupplementalInformationHelper supplementalInformationHelper,
@@ -41,7 +49,7 @@ public class AppAuthenticationPasswordController<T> implements MultiFactorAuthen
         this.maxPollAttempts = maxPollAttempts;
     }
 
-    public AppAuthenticationPasswordController(
+    public PasswordExternalAppAuthenticationController(
             PasswordAuthenticator passwordAuthenticator,
             ExternalAppAuthenticator<T> appAuthenticator,
             SupplementalInformationHelper supplementalInformationHelper) {

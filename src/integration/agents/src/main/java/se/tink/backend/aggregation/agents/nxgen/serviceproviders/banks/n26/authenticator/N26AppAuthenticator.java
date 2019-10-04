@@ -66,27 +66,6 @@ public class N26AppAuthenticator implements ExternalAppAuthenticator<String> {
     //                N26Constants.Errors.THIRD_PARTY_APP_ERROR.getOrDefault(status, null));
     //    }
 
-    @Override
-    public void authenticate() throws AuthenticationException, AuthorizationException {
-
-        String mfaToken =
-                N26Utils.getFromStorage(storage, N26Constants.Storage.MFA_TOKEN, String.class);
-        MultiFactorAppResponse multiFactorAppResponse =
-                apiClient.initiate2fa(
-                        N26Constants.Body.MultiFactor.APP, MultiFactorAppResponse.class);
-        Either<ErrorResponse, AuthenticationResponse> authenticationResponses =
-                apiClient.pollAppStatus();
-        //
-        //        if (authenticationResponses.isLeft()) {
-        //            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING,
-        // reference);
-        //        }
-        // TODO: Work on cancellation and timeout for login
-        storage.put(N26Constants.Storage.TOKEN_ENTITY, authenticationResponses.get().getToken());
-        //        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE, reference);
-    }
-
-    //    @Override
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
     }
