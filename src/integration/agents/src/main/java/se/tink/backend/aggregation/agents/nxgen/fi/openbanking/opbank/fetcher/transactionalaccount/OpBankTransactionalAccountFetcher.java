@@ -28,6 +28,8 @@ public class OpBankTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.getAccounts().stream()
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

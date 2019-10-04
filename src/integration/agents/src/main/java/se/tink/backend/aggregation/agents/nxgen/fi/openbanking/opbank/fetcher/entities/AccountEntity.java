@@ -1,12 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -17,7 +22,7 @@ public class AccountEntity {
     private String servicerSchema;
     private String servicer;
     private String owner;
-    private double netBalance;
+    private BigDecimal netBalance;
     private String grossBalance;
     private String coverReservationAmount;
     private String currency;
@@ -50,7 +55,7 @@ public class AccountEntity {
         return owner;
     }
 
-    public double getNetBalance() {
+    public BigDecimal getNetBalance() {
         return netBalance;
     }
 
@@ -67,15 +72,28 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(getIdentifier())
-                .setAccountNumber(getIdentifier())
-                .setBalance(new Amount(getCurrency(), getNetBalance()))
-                .setAlias(getProductName())
-                // TODO check the identifier scheme
-                .addAccountIdentifier(new IbanIdentifier(getIdentifier()))
-                .putInTemporaryStorage(OpBankConstants.StorageKeys.ACCOUNT_ID, getAccountId())
+    public Optional<TransactionalAccount> toTinkAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(
+                        OpBankConstants.ACCOUNT_TYPE_MAPPER,
+                        productName,
+                        TransactionalAccountType.OTHER)
+                .withBalance(BalanceModule.of(getAvailableBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountId)
+                                .withAccountNumber(identifier)
+                                .withAccountName(productName)
+                                .addIdentifier(new IbanIdentifier(identifier))
+                                .build())
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, getAccountId())
+                .setBankIdentifier(accountId)
+                .setApiIdentifier(accountId)
+                .addHolderName(owner)
                 .build();
+    }
+
+    public ExactCurrencyAmount getAvailableBalance() {
+        return new ExactCurrencyAmount(getNetBalance(), getCurrency());
     }
 }
