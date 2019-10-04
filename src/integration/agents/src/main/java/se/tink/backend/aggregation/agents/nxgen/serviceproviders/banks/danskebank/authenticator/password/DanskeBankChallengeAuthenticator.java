@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CheckDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CodeAppChallengeAnswerEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.DanskeIdStatusRequest;
@@ -212,10 +213,8 @@ public class DanskeBankChallengeAuthenticator
         // Successful authentication, needs to finalize the JS execution
         NemIdCodeAppResponse response =
                 (NemIdCodeAppResponse) nemIdAuthenticationController.getResponse();
-
         CodeAppChallengeAnswerEntity challengeAnswerEntity =
                 CodeAppChallengeAnswerEntity.createFromPollResponse(response.getPollResponse());
-
         String challengeAnswer = SerializationUtils.serializeToString(challengeAnswerEntity);
         finalizeChallengeAuthentication(challengeAnswer, codeAppAuthenticator.getDriver());
     }
@@ -225,16 +224,13 @@ public class DanskeBankChallengeAuthenticator
             throws AuthenticationException {
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
-
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createChallengeAnswerJavascript(
                             this.bindChallengeResponseBody,
                             StringEscapeUtils.escapeJava(challengeAnswer)));
-
             // Get step up token header
             String stepUpToken =
                     driver.findElement(By.tagName("body")).getAttribute("bindStepUpToken");
-
             BindDeviceResponse bindDeviceResponse;
             try {
                 bindDeviceResponse =
@@ -248,14 +244,11 @@ public class DanskeBankChallengeAuthenticator
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                             UserMessage.CREDENTIALS_VERIFICATION_ERROR.getKey());
                 }
-
                 throw hre;
             }
-
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createCollectDeviceSecretJavascript(
                             this.bindChallengeResponseBody, bindDeviceResponse.getSharedSecret()));
-
             // Persist decrypted device secret - necessary for login after device has been bounded
             String decryptedDeviceSecret =
                     driver.findElement(By.tagName("body")).getAttribute("decryptedDeviceSecret");
@@ -342,7 +335,6 @@ public class DanskeBankChallengeAuthenticator
                             checkChallengeWithDeviceInfo,
                             this.credentials.getField(Field.Key.USERNAME),
                             moreInformationEntity.getOtpChallenge()));
-
             // Extract key card entity to get challenge for next Js execution
             String challengeInfo =
                     driver.findElement(By.tagName("body")).getAttribute("trustedChallengeInfo");
@@ -571,34 +563,25 @@ public class DanskeBankChallengeAuthenticator
 
     public void danskeIdAuthentication(String username, DeviceEntity preferredDevice)
             throws AuthenticationException, AuthorizationException {
-        // initOTP
         InitOtpResponse initOtpResponse =
                 this.apiClient.initOtp(
                         preferredDevice.getDeviceType(), preferredDevice.getDeviceSerialNumber());
         String otpChallenge = initOtpResponse.getOtpChallenge();
-
-        String externalRef = DanskeBankConstants.DanskeIdFormValues.EXTERNALREF;
-        String externalText = DanskeBankConstants.DanskeIdFormValues.EXTERNALTEXT;
-        String externalUserIdType = DanskeBankConstants.DanskeIdFormValues.EXTERNALUSERIDTYPE;
-        String messageTemplateID = DanskeBankConstants.DanskeIdFormValues.MESSAGETEMPLATEID;
-        String otpAppType = DanskeBankConstants.DanskeIdFormValues.OTPAPPTYPE;
-        String otpRequestType = DanskeBankConstants.DanskeIdFormValues.OTPREQUESTTYPE;
-        String product = DanskeBankConstants.DanskeIdFormValues.PRODUCT;
-
         DanskeIdInitResponse initResponse =
                 apiClient.danskeIdInit(
                         new DanskeIdInitRequest(
-                                externalRef,
-                                externalText,
+                                DanskeBankConstants.DanskeIdFormValues.EXTERNALREF,
+                                DanskeBankConstants.DanskeIdFormValues.EXTERNALTEXT,
                                 username,
-                                externalUserIdType,
-                                messageTemplateID,
-                                otpAppType,
-                                otpRequestType,
-                                product));
-        int OtpRequestId = initResponse.getOtpRequestId();
-        // poll for status
-        danskeIdPoll(username, OtpRequestId);
+                                DanskeBankConstants.DanskeIdFormValues.EXTERNALUSERIDTYPE,
+                                DanskeBankConstants.DanskeIdFormValues.MESSAGETEMPLATEID,
+                                DanskeBankConstants.DanskeIdFormValues.OTPAPPTYPE,
+                                DanskeBankConstants.DanskeIdFormValues.OTPREQUESTTYPE,
+                                DanskeBankConstants.DanskeIdFormValues.PRODUCT));
+        int otpRequestId = initResponse.getOtpRequestId();
+        danskeIdPoll(username, otpRequestId);
+        decryptOtpChallenge(username, otpChallenge, DanskeIdEntity.class);
+        finalizeChallengeAuthentication(Integer.toString(otpRequestId), driver);
     }
 
     private void danskeIdPoll(String ExternalUserId, int OtpRequestId)
