@@ -3,18 +3,14 @@ package se.tink.backend.aggregation.agents.abnamro.utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
-import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.credentials.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.user.rpc.User;
 
 public class AbnAmroIcsCredentials {
     public static final String ABN_AMRO_ICS_PROVIDER_NAME = "nl-abnamro-ics-abstract";
@@ -37,16 +33,6 @@ public class AbnAmroIcsCredentials {
 
     public AbnAmroIcsCredentials(se.tink.backend.agents.rpc.Credentials credentials) {
         this(CoreCredentialsMapper.fromAggregationCredentials(credentials));
-    }
-
-    public static AbnAmroIcsCredentials create(User user, List<Account> accounts) {
-
-        AbnAmroIcsCredentials credentials =
-                create(user.getId(), AbnAmroLegacyUserUtils.getBcNumber(user).get());
-
-        credentials.addContractNumbers(accounts);
-
-        return credentials;
     }
 
     public static AbnAmroIcsCredentials create(String userId, String bcNumber) {
@@ -79,25 +65,6 @@ public class AbnAmroIcsCredentials {
 
     public Credentials getCredentials() {
         return credentials;
-    }
-
-    /**
-     * Add contract numbers to the credential if they are included. Excluded accounts will not be
-     * added.
-     */
-    public void addContractNumbers(List<Account> accounts) {
-
-        if (accounts == null) {
-            return;
-        }
-
-        Set<Long> accountNumbers =
-                FluentIterable.from(accounts)
-                        .filter(account -> !account.isExcluded())
-                        .transform(account -> Long.valueOf(account.getAccountNumber()))
-                        .toSet();
-
-        addContractNumbers(accountNumbers);
     }
 
     public void addContractNumber(Long contractNumber) {
