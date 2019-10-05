@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investm
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.ValueAccountIdentifierEntity;
 
 public class ValueAccountIdentifierEntityTest {
 
