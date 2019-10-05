@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConsta
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.entity.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.entity.ConsentBaseResponse;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BawagAuthenticator {

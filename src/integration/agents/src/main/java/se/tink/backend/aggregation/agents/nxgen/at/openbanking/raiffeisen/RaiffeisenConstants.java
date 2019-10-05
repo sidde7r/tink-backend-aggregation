@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen;
 
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class RaiffeisenConstants {
 

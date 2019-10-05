@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.pa
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.payment.entity.PaymentRequestResourceEntity;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 

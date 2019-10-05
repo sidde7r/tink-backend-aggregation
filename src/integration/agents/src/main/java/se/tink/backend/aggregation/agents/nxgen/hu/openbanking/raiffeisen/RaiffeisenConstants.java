@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class RaiffeisenConstants {
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =

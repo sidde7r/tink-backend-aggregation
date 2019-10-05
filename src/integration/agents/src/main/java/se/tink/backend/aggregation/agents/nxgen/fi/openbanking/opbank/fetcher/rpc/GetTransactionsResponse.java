@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.en
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<URL> {

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authen
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.UnicreditApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UnicreditAuthenticator {
 

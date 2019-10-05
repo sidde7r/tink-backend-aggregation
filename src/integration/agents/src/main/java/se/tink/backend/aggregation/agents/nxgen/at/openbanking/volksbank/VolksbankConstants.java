@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class VolksbankConstants {
 
