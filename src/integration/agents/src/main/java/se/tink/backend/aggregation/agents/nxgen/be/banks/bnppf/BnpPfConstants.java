@@ -4,8 +4,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.entities.Transaction;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BnpPfConstants {
     public static final String CURRENCY = "EUR";

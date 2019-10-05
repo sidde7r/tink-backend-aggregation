@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.plainte
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.plaintext.AuthenticationSecondRequestBody;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class EncapClient {

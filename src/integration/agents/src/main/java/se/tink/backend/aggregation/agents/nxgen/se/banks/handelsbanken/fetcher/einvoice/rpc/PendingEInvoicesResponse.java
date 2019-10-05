@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.einvoice.entities.EInvoicesGrouped;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class PendingEInvoicesResponse extends BaseResponse {

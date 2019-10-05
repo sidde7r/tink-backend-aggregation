@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.Jys
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class JyskeConstants {
 

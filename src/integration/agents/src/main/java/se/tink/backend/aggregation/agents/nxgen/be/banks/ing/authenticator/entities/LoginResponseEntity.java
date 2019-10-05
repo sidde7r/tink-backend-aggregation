@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.BaseMobileResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.RequestEntity;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class LoginResponseEntity extends BaseMobileResponseEntity {
     private SysDataEntity sysData;

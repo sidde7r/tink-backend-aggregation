@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 /** Requests the eIDAS proxy to sign a string using its eIDAS private key (RSA with SHA256). */
 

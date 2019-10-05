@@ -6,6 +6,7 @@ import java.util.HashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UrlTest {
     private static final String BASE_URL = "https://www.tink.se";

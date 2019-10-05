@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.fetc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.fetchers.transactional.rpc.TransactionsResponseWrapper;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BunqBaseApiClient {
     protected final TinkHttpClient client;

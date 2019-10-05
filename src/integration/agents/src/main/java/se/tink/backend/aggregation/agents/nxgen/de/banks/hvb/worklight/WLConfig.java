@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight;
 
 import java.security.interfaces.RSAPublicKey;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 /** Static configuration for the Worklight client. */
 public final class WLConfig {

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.modelo;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31AisConfiguration;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class ModeloV31AisConfiguration extends UkOpenBankingV31AisConfiguration {
 

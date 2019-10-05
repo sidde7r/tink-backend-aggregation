@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.rpc
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.rpc.UpcomingTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class FidorApiClient {
