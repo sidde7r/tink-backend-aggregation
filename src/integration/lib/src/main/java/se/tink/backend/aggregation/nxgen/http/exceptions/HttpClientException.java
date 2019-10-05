@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.http.exceptions;
 
-import se.tink.backend.aggregation.nxgen.http.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 /**
  * A runtime exception thrown by a client handler that signals a failure to process the HTTP request

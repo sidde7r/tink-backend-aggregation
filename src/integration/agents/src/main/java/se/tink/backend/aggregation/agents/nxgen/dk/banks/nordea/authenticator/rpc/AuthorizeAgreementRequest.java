@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
-import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 
 public class AuthorizeAgreementRequest extends HttpRequestImpl {
     public AuthorizeAgreementRequest(AuthorizeAgreementRequestBody body) {

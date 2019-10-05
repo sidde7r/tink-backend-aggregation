@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.nxgen.http.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 @FilterOrder(category = FilterPhases.SEND, order = 0)
 public class ExecutionTimeLoggingFilter extends Filter {

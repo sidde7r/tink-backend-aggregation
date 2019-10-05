@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http;
+package se.tink.backend.aggregation.nxgen.http.request;
 
 import java.net.URI;
 import javax.ws.rs.core.MultivaluedMap;

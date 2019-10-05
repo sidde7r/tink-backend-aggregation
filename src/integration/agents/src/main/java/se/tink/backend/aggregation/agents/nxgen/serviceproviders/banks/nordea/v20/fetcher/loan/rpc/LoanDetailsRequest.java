@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants.UrlParameter;
-import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 
 public class LoanDetailsRequest extends HttpRequestImpl {
     public LoanDetailsRequest(String accountId) {

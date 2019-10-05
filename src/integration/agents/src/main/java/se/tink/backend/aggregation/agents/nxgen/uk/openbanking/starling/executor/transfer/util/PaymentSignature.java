@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import se.tink.backend.aggregation.nxgen.http.HttpMethod;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 
 public class PaymentSignature {
 

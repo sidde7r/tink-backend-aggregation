@@ -86,6 +86,7 @@ import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrateg
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
