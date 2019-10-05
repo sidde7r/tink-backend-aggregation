@@ -6,15 +6,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEAgent;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMigration {
     private static final Pattern CLEARING_NUMBER_PATTERN = Pattern.compile("([0-9]{4})-.*");
     private static final int ACCOUNT_NUMBER_WITHOUT_CLEARING_START_POSITION = 4;
-    private static final String OLD_HANDELSBANKEN_AGENT =
-            "banks.handelsbanken.v6.HandelsbankenV6Agent";
+    static final String OLD_HANDELSBANKEN_AGENT = "banks.handelsbanken.v6.HandelsbankenV6Agent";
+    static final String NEW_AGENT_NAME =
+            "se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEAgent";
     private Predicate<Account> checkIfAccountIsProperTypeToBeMigrated =
             a -> {
                 // only migrate Transactional accounts and CREDIT_CARD of type "Allkort"
@@ -31,7 +31,7 @@ public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMi
     public boolean shouldChangeRequest(CredentialsRequest request) {
 
         String agentName = request.getProvider().getClassName();
-        if (agentName.endsWith(HandelsbankenSEAgent.class.getSimpleName())
+        if (agentName.endsWith("HandelsbankenSEAgent")
                 || agentName.endsWith(OLD_HANDELSBANKEN_AGENT)) {
             return true;
         }

@@ -22,10 +22,6 @@ import se.tink.libraries.credentials.service.CredentialsRequestType;
 public class HandelsbankenBankIdMigrationNoClearingNumberTest {
 
     public static final String PROVIDER_NAME = "handelsbanken-bankid";
-    private static final String NEW_AGENT_NAME =
-            "se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEAgent";
-    private static final String OLD_HANDELSBANKEN_AGENT =
-            "banks.handelsbanken.v6.HandelsbankenV6Agent";
     private HandelsbankenBankIdMigrationNoClearingNumber migration;
     private CredentialsRequest request;
     private List<Account> accountList;
@@ -72,19 +68,19 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
     @Test
     public void shouldChangeRequest_no() {
         // For this agent we migrate if the request has the same agent!
-        provider.setClassName(NEW_AGENT_NAME + "xx");
+        provider.setClassName(HandelsbankenBankIdMigrationNoClearingNumber.NEW_AGENT_NAME + "xx");
         assertFalse(this.migration.shouldChangeRequest(this.request));
     }
 
     @Test
     public void shouldChangeRequest_sameAgent_yes() {
-        provider.setClassName(NEW_AGENT_NAME);
+        provider.setClassName(HandelsbankenBankIdMigrationNoClearingNumber.NEW_AGENT_NAME);
         assertTrue(this.migration.shouldChangeRequest(this.request));
     }
 
     @Test
     public void shouldChangeRequest_oldAgent_yes() {
-        provider.setClassName(OLD_HANDELSBANKEN_AGENT);
+        provider.setClassName(HandelsbankenBankIdMigrationNoClearingNumber.OLD_HANDELSBANKEN_AGENT);
         assertTrue(this.migration.shouldChangeRequest(this.request));
     }
 
