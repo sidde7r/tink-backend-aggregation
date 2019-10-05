@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEAgent;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
@@ -23,7 +22,8 @@ import se.tink.libraries.credentials.service.CredentialsRequestType;
 public class HandelsbankenBankIdMigrationNoClearingNumberTest {
 
     public static final String PROVIDER_NAME = "handelsbanken-bankid";
-    public static final String NEW_AGENT_NAME = HandelsbankenSEAgent.class.getCanonicalName();
+    private static final String NEW_AGENT_NAME =
+            "se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEAgent";
     private static final String OLD_HANDELSBANKEN_AGENT =
             "banks.handelsbanken.v6.HandelsbankenV6Agent";
     private HandelsbankenBankIdMigrationNoClearingNumber migration;
