@@ -357,8 +357,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_cbor",
-    artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.9.7",
-    sha1 = "3c4fd27ba1e87ccdd32fa336216f2cc1e04f5c20",
+    artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.9.9",
+    sha1 = "3206f36ea2b0f9bd365a138338281243241dc9da",
 )
 
 maven_jar(
@@ -429,8 +429,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_core_jackson_databind",
-    artifact = "com.fasterxml.jackson.core:jackson-databind:2.9.7",
-    sha1 = "e6faad47abd3179666e89068485a1b88a195ceb7",
+    artifact = "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+    sha1 = "d6eb9817d9c7289a91f043ac5ee02a6b3cc86238",
 )
 
 maven_jar(
@@ -441,8 +441,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_core_jackson_core",
-    artifact = "com.fasterxml.jackson.core:jackson-core:2.9.7",
-    sha1 = "4b7f0e0dc527fab032e9800ed231080fdc3ac015",
+    artifact = "com.fasterxml.jackson.core:jackson-core:2.9.9",
+    sha1 = "bfff5af9fb8347d26bbb7959cb9b4fe9a2b0ca5e",
 )
 
 maven_jar(
@@ -531,8 +531,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
-    artifact = "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.7",
-    sha1 = "2774b8e960697678ca87cf54abd59c736fcd1e83",
+    artifact = "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
+    sha1 = "52fb643de81a60839750013a520f26b6259ddeff",
 )
 
 maven_jar(
@@ -585,8 +585,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
-    artifact = "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.7",
-    sha1 = "134f1518a9516be01b25526a935d4fd68610b89c",
+    artifact = "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
+    sha1 = "7deb5d0d335265ace2a9048c8d6e203b588a1724",
 )
 
 maven_jar(
@@ -627,8 +627,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_core_jackson_annotations",
-    artifact = "com.fasterxml.jackson.core:jackson-annotations:2.9.7",
-    sha1 = "4b838e5c4fc17ac02f3293e9a558bb781a51c46d",
+    artifact = "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+    sha1 = "2ea299c145207161c212e28abbc8f513fa245940",
 )
 
 maven_jar(
@@ -765,8 +765,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_datatype_jackson_datatype_guava",
-    artifact = "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.7",
-    sha1 = "3fc843def28bb7b7f7fae414cc61b347ba89e5ce",
+    artifact = "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9",
+    sha1 = "8ed2f11606b6f37c087a090e333b19273f6f48cb",
 )
 
 maven_jar(
@@ -873,8 +873,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_smile",
-    artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.7",
-    sha1 = "cc3a9b1dcd05d65469144026d895968a35c86198",
+    artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
+    sha1 = "85749406c69b08945d6059db679cc66990340ebc",
 )
 
 maven_jar(
@@ -963,8 +963,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",
-    artifact = "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.7",
-    sha1 = "d9feae99faf03d5a9989be2225da3baa73ba43d4",
+    artifact = "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
+    sha1 = "a69b7eda6d0c422567c3ef9187510daeb97ef952",
 )
 
 maven_jar(
@@ -1047,8 +1047,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_module_jackson_module_afterburner",
-    artifact = "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.7",
-    sha1 = "8f864e3a2bb4da738d8cdc56f3825298bee8b943",
+    artifact = "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
+    sha1 = "89ac043b711248ba512b98493d2266328d1f1045",
 )
 
 maven_jar(
@@ -1107,8 +1107,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
-    artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.7",
-    sha1 = "a428edc4bb34a2da98a50eb759c26941d4e85960",
+    artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.9",
+    sha1 = "0ccc00ed13e4d74f9c5cc30465b6fc4fe5ce5473",
 )
 
 maven_jar(
@@ -1131,8 +1131,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
-    artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.7",
-    sha1 = "fdbe6c2867454dabeda629e3e24a4c1a227fed23",
+    artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.9",
+    sha1 = "4b8a210f1102307ec66028f744a1ede73a40ed2d",
 )
 
 maven_jar(
@@ -1629,8 +1629,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
-    artifact = "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.7",
-    sha1 = "0d7f607b3a12e6e92b2f29c721e03c11b638cc32",
+    artifact = "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.9",
+    sha1 = "fc33bfa121b746db0f9fb8f36ed2e6682a1c1dd0",
 )
 
 maven_jar(
@@ -2224,8 +2224,8 @@ maven_jar(
 
 maven_jar(
     name = "com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
-    artifact = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.8",
-    sha1 = "c84e77d8e21625efa6129b8116bf0b0b3aae7d9b",
+    artifact = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9",
+    sha1 = "a33df137557793b0404a486888dbe049f7abeeeb",
 )
 
 ### === START === Java Spark dependencies
