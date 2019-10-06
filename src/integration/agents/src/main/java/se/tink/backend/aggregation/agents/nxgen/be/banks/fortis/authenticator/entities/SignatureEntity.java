@@ -6,4 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SignatureEntity {
     private String token;
     private String response;
+
+    public SignatureEntity(String token, String response) {
+        this.token = token;
+        this.response = response;
+    }
 }

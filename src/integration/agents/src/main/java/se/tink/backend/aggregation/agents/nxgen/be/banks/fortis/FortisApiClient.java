@@ -4,6 +4,10 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.CheckForcedUpgradeRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ExecuteContractUpdateRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ExecuteContractUpdateResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.PrepareContractUpdateRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.PrepareContractUpdateResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.AuthenticationProcessRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.AuthenticationProcessResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.DistributorAuthenticationRequest;
@@ -143,6 +147,22 @@ public class FortisApiClient {
         }
 
         return challenges.get(0);
+    }
+
+    public PrepareContractUpdateResponse prepareContractUpdate(
+            PrepareContractUpdateRequest contractUpdateRequest) {
+        return getRequestBuilderWithCookies(FortisConstants.URLS.PREPARE_CONTRACT_UPDATE)
+                .post(
+                        PrepareContractUpdateResponse.class,
+                        SerializationUtils.serializeToString(contractUpdateRequest));
+    }
+
+    public ExecuteContractUpdateResponse executeContractUpdate(
+            ExecuteContractUpdateRequest request) {
+        return getRequestBuilderWithCookies(FortisConstants.URLS.EXECUTE_CONTRACT_UPDATE)
+                .post(
+                        ExecuteContractUpdateResponse.class,
+                        SerializationUtils.serializeToString(request));
     }
 
     public UserInfoResponse getUserInfo() {

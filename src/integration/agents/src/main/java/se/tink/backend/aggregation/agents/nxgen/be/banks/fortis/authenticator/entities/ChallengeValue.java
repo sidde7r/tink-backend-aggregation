@@ -1,13 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities;
 
-import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ChallengeValue {
-    private List<String> challenges;
+    private ChallengeEntity challenge;
+    private String token;
 
-    public List<String> getChallenges() {
-        return challenges;
+    public ChallengeEntity getChallenge() {
+        return challenge;
+    }
+
+    public String getToken() {
+        return token;
     }
 }
