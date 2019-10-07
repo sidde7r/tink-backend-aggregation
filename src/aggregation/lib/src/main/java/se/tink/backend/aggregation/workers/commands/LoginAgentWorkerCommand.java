@@ -40,18 +40,18 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             "/locks/aggregation/%s/bankid"; // % (userId)
     private boolean weHavePreviouslyLoggedInSuccessfully = false;
 
-    private static class MetricName {
-        private static final String METRIC = "agent_login";
+    static class MetricName {
+        static final String METRIC = "agent_login";
 
-        private static final String IS_LOGGED_IN = "is-logged-in";
-        private static final String LOGIN = "login";
-        private static final String LOGIN_MANUAL = "login-manual";
-        private static final String LOGIN_AUTO = "login-auto";
-        private static final String LOGIN_CRON = "login-cron";
-        private static final String LOGOUT = "logout";
-        private static final String ACQUIRE_LOCK = "acquire-lock";
-        private static final String RELEASE_LOCK = "release-lock";
-        private static final String PERSIST_LOGIN_SESSION = "persist-login-session";
+        static final String IS_LOGGED_IN = "is-logged-in";
+        static final String LOGIN = "login";
+        static final String LOGIN_MANUAL = "login-manual";
+        static final String LOGIN_AUTO = "login-auto";
+        static final String LOGIN_CRON = "login-cron";
+        static final String LOGOUT = "logout";
+        static final String ACQUIRE_LOCK = "acquire-lock";
+        static final String RELEASE_LOCK = "release-lock";
+        static final String PERSIST_LOGIN_SESSION = "persist-login-session";
     }
 
     private final AgentWorkerCommandMetricState metrics;
