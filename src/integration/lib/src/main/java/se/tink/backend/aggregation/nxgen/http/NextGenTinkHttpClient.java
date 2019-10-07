@@ -201,7 +201,21 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             @Nullable ByteArrayOutputStream logOutPutStream,
             @Nullable SignatureKeyPair signatureKeyPair,
             @Nullable Provider provider) {
-        this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
+        this(
+                builder()
+                        .setAggregatorInfo(aggregatorInfo)
+                        .setMetricRegistry(metricRegistry)
+                        .setLogOutputStream(logOutPutStream)
+                        .setSignatureKeyPair(signatureKeyPair)
+                        .setProvider(provider));
+    }
+
+    public NextGenTinkHttpClient() {
+        this(null, null, null, null, null);
+    }
+
+    private NextGenTinkHttpClient(final Builder builder) {
+        this.requestExecutor = new TinkApacheHttpRequestExecutor(builder.getSignatureKeyPair());
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
         this.internalRequestConfigBuilder = RequestConfig.custom();
@@ -214,13 +228,13 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 new SSLContextBuilder().useProtocol("TLSv1.2").setSecureRandom(new SecureRandom());
 
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
-        this.logOutputStream = logOutPutStream;
+        this.logOutputStream = builder.getLogOutputStream();
         this.aggregator =
-                Objects.nonNull(aggregatorInfo)
-                        ? aggregatorInfo
+                Objects.nonNull(builder.getAggregatorInfo())
+                        ? builder.getAggregatorInfo()
                         : AggregatorInfo.getAggregatorForTesting();
-        this.metricRegistry = metricRegistry;
-        this.provider = provider;
+        this.metricRegistry = builder.getMetricRegistry();
+        this.provider = builder.getProvider();
 
         // Add an initial redirect handler to fix any illegal location paths
         addRedirectHandler(new FixRedirectHandler());
@@ -241,8 +255,66 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         addFilter(new SendRequestFilter());
     }
 
-    public NextGenTinkHttpClient() {
-        this(null, null, null, null, null);
+    public static NextGenTinkHttpClient.Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+
+        private AggregatorInfo aggregatorInfo;
+        private MetricRegistry metricRegistry;
+        private ByteArrayOutputStream logOutputStream;
+        private SignatureKeyPair signatureKeyPair;
+        private Provider provider;
+
+        public NextGenTinkHttpClient build() {
+            return new NextGenTinkHttpClient(this);
+        }
+
+        public AggregatorInfo getAggregatorInfo() {
+            return aggregatorInfo;
+        }
+
+        public MetricRegistry getMetricRegistry() {
+            return metricRegistry;
+        }
+
+        public ByteArrayOutputStream getLogOutputStream() {
+            return logOutputStream;
+        }
+
+        public SignatureKeyPair getSignatureKeyPair() {
+            return signatureKeyPair;
+        }
+
+        public Provider getProvider() {
+            return provider;
+        }
+
+        public Builder setAggregatorInfo(AggregatorInfo aggregatorInfo) {
+            this.aggregatorInfo = aggregatorInfo;
+            return this;
+        }
+
+        public Builder setMetricRegistry(MetricRegistry metricRegistry) {
+            this.metricRegistry = metricRegistry;
+            return this;
+        }
+
+        public Builder setLogOutputStream(ByteArrayOutputStream logOutputStream) {
+            this.logOutputStream = logOutputStream;
+            return this;
+        }
+
+        public Builder setSignatureKeyPair(SignatureKeyPair signatureKeyPair) {
+            this.signatureKeyPair = signatureKeyPair;
+            return this;
+        }
+
+        public Builder setProvider(Provider provider) {
+            this.provider = provider;
+            return this;
+        }
     }
 
     public void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler) {
