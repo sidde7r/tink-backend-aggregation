@@ -210,10 +210,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                         .setProvider(provider));
     }
 
-    public NextGenTinkHttpClient() {
-        this(null, null, null, null, null);
-    }
-
     private NextGenTinkHttpClient(final Builder builder) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(builder.getSignatureKeyPair());
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
