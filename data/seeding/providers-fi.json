@@ -112,6 +112,7 @@
                 }
             ],
             "name": "fi-danskebank-codecard",
+            "financialInstitutionId": "6f5f37026d75467f8c7dbe7ce88c4441",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
             "refreshFrequency": 1,
