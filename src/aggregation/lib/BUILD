@@ -16,6 +16,7 @@ java_library(
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//po:i18n",
+        "//src/integration/agents",
     ],
     deps = [
         "//src/aggregation/aggregationcontroller_api",
@@ -23,7 +24,6 @@ java_library(
         "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
-        "//src/integration/agents",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
         "//src/integration/api",
         "//src/integration/credentials:rpc",
