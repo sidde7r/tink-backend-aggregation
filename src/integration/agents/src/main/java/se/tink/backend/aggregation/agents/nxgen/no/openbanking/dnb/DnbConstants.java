@@ -56,6 +56,10 @@ public final class DnbConstants {
         public static final String EXPECTED = "expected";
     }
 
+    public static class AccountTypes {
+        public static final String SAVINGS = "SPAREKONTO";
+    }
+
     public static class QueryKeys {
         public static final String CLIENT_ID = "client_id";
         public static final String SCOPE = "scope";
