@@ -407,7 +407,7 @@
                     "description": "Password",
                     "masked": true,
                     "minLength": 1,
-                    "name": "password",
+                    "name": "PINcode",
                     "sensitive": true
                 }
             ],
@@ -426,7 +426,22 @@
                     "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
                     "immutable": true,
                     "masked": false,
+                    "name": "logindescription"
+                },
+                {
+                    "description": "Challenge 2",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'M2'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
+                    "immutable": true,
+                    "masked": false,
                     "name": "signcodedescription"
+                },
+                {
+                    "description": "Response Code",
+                    "helpText": "Enter your 8 digit response code from your card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "logininput",
+                    "numeric": true
                 },
                 {
                     "description": "Response Code",
