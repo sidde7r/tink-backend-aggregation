@@ -113,7 +113,7 @@ public abstract class UkOpenBankingESSBaseAgent extends NextGenerationAgent
                 new SoftwareStatementAssertion(
                         ukOpenBankingConfiguration.getSoftwareStatementAssertion(),
                         ukOpenBankingConfiguration.getSoftwareId(),
-                        ukOpenBankingConfiguration.getRedirectUri());
+                        ukOpenBankingConfiguration.getRedirectUrl());
         SignatureKey signingKey =
                 new SignatureKey(
                         ukOpenBankingConfiguration.getSigningKeyId(),
