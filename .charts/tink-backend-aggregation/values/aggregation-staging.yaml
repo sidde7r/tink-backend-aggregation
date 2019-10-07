@@ -36,9 +36,6 @@ agents:
     cgd:
       redirectUrl: https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback
       certificateId: cgd
-  volksbank:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
   unicredit:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback

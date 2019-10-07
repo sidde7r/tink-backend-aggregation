@@ -22,28 +22,10 @@ agents:
   abnamro:
     tink:
       redirectUrl: https://localhost/auth
-  rabobank:
-    tink_sandbox:
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-    tink:
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-    abn_sandbox:
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-    abn_staging:
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-    abn:
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-  volksbank:
-    tink:
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   sibs:
     tink:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
     cgd:
-      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
-  commerzbank:
-    tink:
-      certificateId: Tink
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
 
 clients:

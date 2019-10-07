@@ -115,28 +115,6 @@ data:
             redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
         {{- end }}
 
-        {{- if $agentsConfig.volksbank }}
-        volksbank:
-          tink:
-            aisConfiguration:
-              clientId: "VOLKSBANK_AIS_CLIENT_ID_TINK_TAG"
-              clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_TINK_TAG"
-              certificateId: "Tink"
-            redirectUrl: "{{ $agentsConfig.volksbank.tink.redirectUrl }}"
-          abn-staging:
-            aisConfiguration:
-              clientId: "VOLKSBANK_AIS_CLIENT_ID_ABN_TAG"
-              clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_ABN_TAG"
-              certificateId: "abnamro2"
-            redirectUrl: "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
-          abn:
-            aisConfiguration:
-              clientId: "VOLKSBANK_AIS_CLIENT_ID_ABN_TAG"
-              clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_ABN_TAG"
-              certificateId: "abnamro2"
-            redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
-        {{- end }}
-
         {{- if $agentsConfig.fints }}
         fints:
           regNumber: "FINTS_REG_NUMBER"

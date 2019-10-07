@@ -56,28 +56,19 @@ public class VolksbankAgent
         final VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
         final VolksbankConfiguration volksbankConfiguration =
-                agentsServiceConfiguration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                VolksbankConstants.Market.INTEGRATION_NAME,
-                                clientName,
-                                VolksbankConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Volksbank configuration missing."));
+                getAgentConfigurationController()
+                        .getAgentConfiguration(VolksbankConfiguration.class);
 
         final VolksbankApiClient volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
         final URL redirectUrl = new URL(volksbankConfiguration.getRedirectUrl());
-        final String clientId = volksbankConfiguration.getAisConfiguration().getClientId();
+        final String clientId = volksbankConfiguration.getClientId();
 
         final ConsentFetcher consentFetcher =
                 new ConsentFetcher(
                         volksbankApiClient, persistentStorage, isSandbox, redirectUrl, clientId);
 
-        final String certificateId =
-                volksbankConfiguration.getAisConfiguration().getCertificateId();
+        final String certificateId = volksbankConfiguration.getCertificateId();
 
         final EidasProxyConfiguration eidasProxyConfiguration =
                 agentsServiceConfiguration.getEidasProxy();
@@ -110,7 +101,7 @@ public class VolksbankAgent
                                                 consentFetcher,
                                                 persistentStorage))));
 
-        final String clientSecret = volksbankConfiguration.getAisConfiguration().getClientSecret();
+        final String clientSecret = volksbankConfiguration.getClientSecret();
 
         VolksbankAuthenticator authenticator =
                 new VolksbankAuthenticator(

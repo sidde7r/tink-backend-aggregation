@@ -28,6 +28,8 @@ public final class VolksbankAgentTest {
         return new AgentIntegrationTest.Builder("nl", providerName)
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                 .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                .setFinancialInstitutionId("volksbank")
+                .setAppId("tink")
                 .expectLoggedIn(false)
                 .build();
     }
