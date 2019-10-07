@@ -7,10 +7,6 @@ public enum EnterCardCurrency {
     SEK,
     DKK;
 
-    public String toString() {
-        return name();
-    }
-
     public static EnterCardCurrency fromString(String text) {
         return Arrays.stream(EnterCardCurrency.values())
                 .filter(s -> s.name().equalsIgnoreCase(text))
@@ -19,5 +15,9 @@ public enum EnterCardCurrency {
                         () ->
                                 new IllegalArgumentException(
                                         "Unrecognized EnterCard currency : " + text));
+    }
+
+    public String toString() {
+        return name();
     }
 }

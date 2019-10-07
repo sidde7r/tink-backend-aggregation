@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.fetche
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.AccountType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -50,11 +51,18 @@ public class AccountEntity {
     public CreditCardAccount toCreditCardAccount() {
         return CreditCardAccount.builder(accountNumber)
                 .setAccountNumber(accountNumber)
-                .setBankIdentifier(String.valueOf(bankID))
                 .setName(getName())
-                .setBalance(new Amount(currency, balance))
+                .setBalance(new Amount(getCurrency(), getBalance()))
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_NUMBER, accountNumber)
                 .build();
+    }
+
+    private Number getBalance() {
+        return Optional.ofNullable(balance).orElse(Optional.ofNullable(otb).orElse(0));
+    }
+
+    private String getCurrency() {
+        return Optional.ofNullable(currency).orElse("SEK");
     }
 
     public String getName() {

@@ -7,10 +7,6 @@ public enum EnterCardPaymentRequestType {
     BP,
     BT;
 
-    public String toString() {
-        return name();
-    }
-
     public static EnterCardPaymentRequestType fromString(String text) {
         return Arrays.stream(EnterCardPaymentRequestType.values())
                 .filter(s -> s.name().equalsIgnoreCase(text))
@@ -19,5 +15,9 @@ public enum EnterCardPaymentRequestType {
                         () ->
                                 new IllegalArgumentException(
                                         "Unrecognized EnterCard account type : " + text));
+    }
+
+    public String toString() {
+        return name();
     }
 }

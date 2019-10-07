@@ -1,16 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.authenticator;
 
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.configuration.EnterCardConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class EnterCardAuthenticator implements Authenticator {
+public class EnterCardAuthenticator implements OAuth2Authenticator {
 
     private final EnterCardApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -31,8 +36,27 @@ public class EnterCardAuthenticator implements Authenticator {
     }
 
     @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        apiClient.getAuth();
+    public URL buildAuthorizeUrl(String state) {
+        return Urls.AUTHORIZATION
+                .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
+                .queryParam(QueryKeys.STATE, state)
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
+                .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl());
     }
+
+    @Override
+    public OAuth2Token exchangeAuthorizationCode(String code)
+            throws BankServiceException, AuthenticationException {
+        return apiClient.getToken(code);
+    }
+
+    @Override
+    public OAuth2Token refreshAccessToken(String refreshToken)
+            throws SessionException, BankServiceException {
+        return null;
+    }
+
+    @Override
+    public void useAccessToken(OAuth2Token accessToken) {}
 }
