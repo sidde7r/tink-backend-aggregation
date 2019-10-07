@@ -11,7 +11,7 @@ public class UkOpenBankingESSConfiguration implements ClientConfiguration {
     private String signingKey;
     private String signingKeyId;
     private String softwareStatementAssertion;
-    private String redirectUri;
+    private String redirectUrl;
     private String softwareId;
     private String transportKey;
     private String transportKeyId;
@@ -41,8 +41,8 @@ public class UkOpenBankingESSConfiguration implements ClientConfiguration {
         return softwareStatementAssertion;
     }
 
-    public String getRedirectUri() {
-        return redirectUri;
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 
     public String getSoftwareId() {
