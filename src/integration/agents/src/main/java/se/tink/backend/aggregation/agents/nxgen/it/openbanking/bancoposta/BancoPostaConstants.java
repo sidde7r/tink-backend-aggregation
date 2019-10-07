@@ -17,6 +17,7 @@ public final class BancoPostaConstants {
 
     public static class ErrorValues {
         public static final String INVALID_CODE = "Invalid code inserted";
+        public static final String INVALID_CODE_MESSAGE = "The code you entered is not valid";
     }
 
     public static class UserMessages {

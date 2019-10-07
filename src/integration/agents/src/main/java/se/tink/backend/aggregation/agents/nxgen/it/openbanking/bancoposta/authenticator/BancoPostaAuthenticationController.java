@@ -112,6 +112,8 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
                 .minLength(1)
                 .maxLength(length)
                 .hint(String.format(UserMessages.SELECT_HELPER, maxNumber))
+                .pattern(String.format("([1-%d])", maxNumber))
+                .patternError(ErrorValues.INVALID_CODE_MESSAGE)
                 .build();
     }
 }
