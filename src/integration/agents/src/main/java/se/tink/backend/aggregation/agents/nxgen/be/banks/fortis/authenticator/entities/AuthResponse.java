@@ -13,6 +13,7 @@ public class AuthResponse {
     private String authenticationMeanId;
     private String challenge;
     private String deviceFingerprint;
+    private String meanId;
 
     public static Builder builder() {
         return new Builder();
@@ -24,7 +25,11 @@ public class AuthResponse {
                         + distId
                         + "</DIST_ID><AUTH_PROC_ID>"
                         + authProcId
-                        + "</AUTH_PROC_ID><MEAN_ID>UCR</MEAN_ID><EAI_AUTH_TYPE>UCR</EAI_AUTH_TYPE><EBANKING_USER_ID><PERS_ID>12345678910000007</PERS_ID><SMID>"
+                        + "</AUTH_PROC_ID><MEAN_ID>"
+                        + meanId
+                        + "</MEAN_ID><EAI_AUTH_TYPE>"
+                        + meanId
+                        + "</EAI_AUTH_TYPE><EBANKING_USER_ID><PERS_ID>12345678910000007</PERS_ID><SMID>"
                         + smid
                         + "</SMID><AGRE_ID>"
                         + agreementId
@@ -62,6 +67,7 @@ public class AuthResponse {
         private String authenticationMeanId;
         private String cardNumber;
         private String deviceFingerprint;
+        private String meanId;
 
         public Builder withDistId(String distId) {
             this.distId = distId;
@@ -108,6 +114,11 @@ public class AuthResponse {
             return this;
         }
 
+        public Builder withMeanId(String meanId) {
+            this.meanId = meanId;
+            return this;
+        }
+
         public AuthResponse build() {
             AuthResponse authResponse = new AuthResponse();
             authResponse.distId = distId;
@@ -119,6 +130,7 @@ public class AuthResponse {
             authResponse.authenticationMeanId = authenticationMeanId;
             authResponse.cardNumber = cardNumber;
             authResponse.deviceFingerprint = deviceFingerprint;
+            authResponse.meanId = meanId;
             return authResponse;
         }
     }

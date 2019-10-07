@@ -1,28 +1,43 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
-import org.junit.Ignore;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-@Ignore
 public class FortisAgentTest {
 
-    private static final String USERNAME = "";
-    private static final String PASSWORD = "";
-    private static final String CLIENTNUMBER = "";
+    private final ArgumentManager<FortisAgentTest.Arg> manager =
+            new ArgumentManager<>(FortisAgentTest.Arg.values());
 
-    private final AgentIntegrationTest.Builder builder =
-            new AgentIntegrationTest.Builder("be", "be-fortis-cardreader")
-                    .addCredentialField(Field.Key.USERNAME, USERNAME)
-                    .addCredentialField(Field.Key.PASSWORD, PASSWORD)
-                    .addCredentialField("clientnumber", CLIENTNUMBER)
-                    .loadCredentialsBefore(true)
-                    .expectLoggedIn(false)
-                    .saveCredentialsAfter(false);
+    @Before
+    public void setUp() throws Exception {
+        manager.before();
+    }
 
     @Test
-    public void testRefresh() throws Exception {
+    public void testRegisterAndRefresh() throws Exception {
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("be", "be-fortis-cardreader")
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField("PINcode", manager.get(Arg.PINCODE))
+                        .addCredentialField("clientnumber", manager.get(Arg.CLIENTNUMBER))
+                        .loadCredentialsBefore(true)
+                        .expectLoggedIn(false)
+                        .saveCredentialsAfter(true);
         builder.build().testRefresh();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
+
+    private enum Arg {
+        USERNAME,
+        PINCODE,
+        CLIENTNUMBER
     }
 }

@@ -4,15 +4,10 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ChallengeEntity {
+public class ChallengesValue {
     private List<String> challenges;
-    private String token;
 
     public List<String> getChallenges() {
         return challenges;
-    }
-
-    public String getToken() {
-        return token;
     }
 }

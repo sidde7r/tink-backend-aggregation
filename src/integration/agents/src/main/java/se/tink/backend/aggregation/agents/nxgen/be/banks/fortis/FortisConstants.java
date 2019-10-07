@@ -25,6 +25,10 @@ public class FortisConstants {
                 "/EBIA-pr01/rpc/auth/createAuthenticationProcess";
         public static final String GENERATE_CHALLENGES = "/EBIA-pr01/rpc/auth/generateChallenges";
         public static final String GET_USER_INFO = "/TFPL-pr01/rpc/intermediatelogon/getUserinfo";
+        public static final String PREPARE_CONTRACT_UPDATE =
+                "/TFPL-pr01/rpc/contractUpdate/prepareContractUpdate";
+        public static final String EXECUTE_CONTRACT_UPDATE =
+                "/TFPL-pr01/rpc/contractUpdate/executeContractUpdate";
         public static final String GET_VIEW_ACCOUNT_LIST =
                 "/AC52-pr01/rpc/accounts/getViewAccountList";
         public static final String GET_E_BANKING_USERS =
@@ -61,7 +65,14 @@ public class FortisConstants {
     }
 
     public static class FIELD {
+        public static final String PINCODE = "PINcode";
         public static final String CLIENTNUMBER = "clientnumber";
+    }
+
+    public static class VALUES {
+        public static final String TCFLAG = "0";
+        public static final String UCR = "UCR";
+        public static final String DIDAP = "DIDAP";
     }
 
     public static class COOKIE {
@@ -92,6 +103,7 @@ public class FortisConstants {
 
     public static class STORAGE {
         public static final String ACCOUNT_PRODUCT_ID = "accountProductId";
+        public static final String PINCODE = "PINcode";
         public static final String PASSWORD = "password";
         public static final String SMID = "smid";
         public static final String AGREEMENT_ID = "agreementId";

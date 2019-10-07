@@ -3,15 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.e
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ChallengeResponse {
+public class PrepareContractUpdateResponse {
     private ChallengeBusinessMessageBulk businessMessageBulk;
-    private ChallengesValue value;
+    private ChallengeValue value;
 
-    public ChallengeBusinessMessageBulk getBusinessMessageBulk() {
-        return businessMessageBulk;
-    }
-
-    public ChallengesValue getValue() {
+    public ChallengeValue getValue() {
         return value;
     }
 }
