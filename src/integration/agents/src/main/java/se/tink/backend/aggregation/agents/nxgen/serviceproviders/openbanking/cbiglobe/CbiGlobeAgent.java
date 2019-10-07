@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationRedirectController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration.Environment;
@@ -19,7 +20,6 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -32,7 +32,6 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     protected final String clientName;
-    protected CbiGlobeAuthenticationController controller;
     protected CbiGlobeApiClient apiClient;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AutoAuthenticationController autoAuthenticationController;
@@ -78,21 +77,14 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        controller =
-                new CbiGlobeAuthenticationController(
+        final CbiGlobeAuthenticationController controller =
+                new CbiGlobeAuthenticationRedirectController(
                         supplementalInformationHelper,
                         new CbiGlobeAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()),
                         new StrongAuthenticationState(request.getAppUriId()));
 
-        autoAuthenticationController =
-                new AutoAuthenticationController(
-                        request,
-                        systemUpdater,
-                        new ThirdPartyAppAuthenticationController<>(
-                                controller, supplementalInformationHelper),
-                        controller);
-        return autoAuthenticationController;
+        return new AutoAuthenticationController(request, systemUpdater, controller, controller);
     }
 
     @Override
