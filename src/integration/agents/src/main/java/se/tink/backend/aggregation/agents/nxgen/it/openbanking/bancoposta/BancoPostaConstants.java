@@ -14,8 +14,4 @@ public final class BancoPostaConstants {
     public static class HeaderValues {
         public static final String UPDATE_PSU_DATA = "updatePsuData";
     }
-
-    public static class FormValues {
-        public static final String AUTHENTICATION_METHOD_ID = "2.0";
-    }
 }
