@@ -24,7 +24,9 @@ public class DnbAgentTest {
                         .addCredentialField("PSU-ID", manager.get(Arg.PSU_ID))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
-                        .expectLoggedIn(false);
+                        .expectLoggedIn(false)
+                        .setFinancialInstitutionId("dnb")
+                        .setAppId("tink");
     }
 
     @Test
