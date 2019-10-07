@@ -14,7 +14,7 @@ public class BunqConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String redirectUrl;
 
-    @JsonProperty @Secret private String psd2ApiKey;
+    @JsonProperty @SensitiveSecret private String psd2ApiKey;
 
     @JsonProperty @Secret private String clientId;
 
@@ -22,7 +22,7 @@ public class BunqConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String psd2InstallationKeyPair;
 
-    @JsonProperty @Secret private String psd2ClientAuthToken;
+    @JsonProperty @SensitiveSecret private String psd2ClientAuthToken;
 
     public String getPsd2InstallationKeyPair() {
         Preconditions.checkNotNull(
