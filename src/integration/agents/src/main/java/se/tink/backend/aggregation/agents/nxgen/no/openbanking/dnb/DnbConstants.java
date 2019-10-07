@@ -6,7 +6,6 @@ public final class DnbConstants {
 
     public static final String INTEGRATION_NAME = "dnb";
     public static final String BASE_URL = "https://api.psd.dnb.no";
-    public static final String CERTIFICATE_ID = "Tink";
 
     private DnbConstants() {
         throw new AssertionError();
