@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.AmountEntity;
@@ -24,7 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.RepaymentSchedule;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.SubAgreementsItem;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -35,9 +36,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
-    @JsonIgnore
-    private static final AggregationLogger LOG =
-            new AggregationLogger(FetchLoanDetailsResponse.class);
+    private final Logger LOG = LoggerFactory.getLogger(FetchLoanDetailsResponse.class);
 
     @JsonProperty("loan_id")
     private String loanId;

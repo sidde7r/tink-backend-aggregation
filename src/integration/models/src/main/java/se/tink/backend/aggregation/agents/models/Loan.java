@@ -15,6 +15,7 @@ public class Loan implements Comparable<Loan>, Serializable {
         VEHICLE,
         LAND,
         STUDENT,
+        CREDIT,
         OTHER
     }
 

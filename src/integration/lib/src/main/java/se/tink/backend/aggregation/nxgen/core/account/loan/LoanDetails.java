@@ -216,6 +216,7 @@ public class LoanDetails {
         LAND(Loan.Type.LAND),
         STUDENT(Loan.Type.STUDENT),
         OTHER(Loan.Type.OTHER),
+        CREDIT(Loan.Type.CREDIT),
         DERIVE_FROM_NAME(null);
 
         private final Loan.Type type;

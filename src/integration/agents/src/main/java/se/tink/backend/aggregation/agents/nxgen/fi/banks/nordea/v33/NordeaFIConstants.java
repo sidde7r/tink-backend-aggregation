@@ -8,11 +8,13 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaFIConstants {
     public static final String CURRENCY = "EUR";
+    public static final String CREDIT_LOAN = "credit_loan";
 
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
             ImmutableMap.<String, String>builder()
@@ -69,6 +71,13 @@ public class NordeaFIConstants {
                     .put(AccountTypes.CHECKING, "transaction", "savings")
                     .put(AccountTypes.CREDIT_CARD, "credit", "combined")
                     .put(AccountTypes.LOAN, "mortgage")
+                    .build();
+
+    public static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
+            TypeMapper.<LoanDetails.Type>builder()
+                    .put(LoanDetails.Type.MORTGAGE, "mortgage")
+                    .put(LoanDetails.Type.CREDIT, "credit_loan")
+                    .put(LoanDetails.Type.OTHER, "other") // consumer loan
                     .build();
 
     public static class Urls {
@@ -158,6 +167,7 @@ public class NordeaFIConstants {
                 LogTag.from("NORDEA_FI_TRANSACTIONS_ERROR");
         public static final LogTag NORDEA_FI_AUTHENTICATE =
                 LogTag.from("NORDEA_FI_AUTHENTICATION_ERROR");
+        public static final LogTag LOAN_ACCOUNT = LogTag.from("NORDEA_FI_LOAN_ACCOUNT");
     }
 
     public static class NordeaCodesPayload {
