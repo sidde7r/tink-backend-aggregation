@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.tools;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -35,6 +37,7 @@ public class ClientConfigurationTemplateBuilder {
             new String(new char[NUM_SPACES_INDENT]).replace((char) 0, ' ');
     private static final ImmutableMap<String, String> specialFieldsMapper =
             new ImmutableMap.Builder<String, String>().put("redirectUrl", "redirectUrls").build();
+    private static final String FIN_IDS_KEY = "finId";
 
     private final Supplier<IllegalArgumentException> noConfigurationClassFoundExceptionSupplier;
     private final Provider provider;
@@ -56,7 +59,7 @@ public class ClientConfigurationTemplateBuilder {
         Class<? extends ClientConfiguration> clientConfigurationClassForProvider =
                 findClosestClientConfigurationClass(provider.getClassName());
 
-        JsonObject jsonTemplate =
+        JsonArray jsonTemplate =
                 assembleTemplateForConfigurationClass(clientConfigurationClassForProvider);
 
         String jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(jsonTemplate);
@@ -73,7 +76,7 @@ public class ClientConfigurationTemplateBuilder {
         String fieldsDescriptionsAndExamplesCommonPath = "config-templates/Common.yaml";
 
         InputStream fieldsDescriptionsAndExamplesCommonStream =
-                Optional.of(
+                Optional.ofNullable(
                                 clientConfigurationClassForProvider
                                         .getClassLoader()
                                         .getResourceAsStream(
@@ -131,12 +134,16 @@ public class ClientConfigurationTemplateBuilder {
                 jsonString.replace("\\n", "\n" + PRETTY_PRINTING_INDENT_PADDING));
     }
 
-    private JsonObject assembleTemplateForConfigurationClass(
+    private JsonArray assembleTemplateForConfigurationClass(
             Class<? extends ClientConfiguration> clientConfigurationClassForProvider) {
-        JsonObject jsonConfigurationTemplate = new JsonObject();
+        JsonArray jsonConfigurationTemplates = new JsonArray();
 
-        JsonObject jsonTemplateForFinancialInstitution = new JsonObject();
-        jsonConfigurationTemplate.add(financialInstitutionId, jsonTemplateForFinancialInstitution);
+        JsonObject jsonConfigurationTemplate = new JsonObject();
+        jsonConfigurationTemplates.add(jsonConfigurationTemplate);
+
+        JsonArray jsonFinancialInstitutionIdsArray = new JsonArray();
+        jsonConfigurationTemplate.add(FIN_IDS_KEY, jsonFinancialInstitutionIdsArray);
+        jsonFinancialInstitutionIdsArray.add(new JsonPrimitive(financialInstitutionId));
 
         List<Field> fields = Arrays.asList(clientConfigurationClassForProvider.getDeclaredFields());
 
@@ -145,10 +152,10 @@ public class ClientConfigurationTemplateBuilder {
 
         JsonObject jsonSecrets = getSecretFields(fields, fieldsDescriptionsAndExamples);
         JsonObject jsonSensitive = getSensitiveFields(fields, fieldsDescriptionsAndExamples);
-        jsonTemplateForFinancialInstitution.add("secrets", jsonSecrets);
-        jsonTemplateForFinancialInstitution.add("sensitive", jsonSensitive);
+        jsonConfigurationTemplate.add("secrets", jsonSecrets);
+        jsonConfigurationTemplate.add("sensitive", jsonSensitive);
 
-        return jsonConfigurationTemplate;
+        return jsonConfigurationTemplates;
     }
 
     private JsonObject getSensitiveFields(
