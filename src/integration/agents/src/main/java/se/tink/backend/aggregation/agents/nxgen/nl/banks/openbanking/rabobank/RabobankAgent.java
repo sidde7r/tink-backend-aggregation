@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -37,8 +35,6 @@ public final class RabobankAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
-
-    private static final Logger logger = LoggerFactory.getLogger(RabobankAgent.class);
 
     private final RabobankApiClient apiClient;
     private final String clientName;
