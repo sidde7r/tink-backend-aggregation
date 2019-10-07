@@ -22,6 +22,7 @@ public class AccountEntity {
     private String maskedPan;
     private String name;
     private String currency;
+    private String product;
 
     @JsonProperty("_links")
     private LinksEntity links;
@@ -63,7 +64,7 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier(lowercaseAccountId))
                                 .withAccountNumber(iban)
-                                .withAccountName(name)
+                                .withAccountName(product)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .addHolderName(name)
