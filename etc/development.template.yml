@@ -539,7 +539,7 @@ agentsServiceConfiguration:
         "signingKey": ""
         "signingKeyId": ""
         "softwareStatementAssertion": ""
-        "redirectUri": ""
+        "redirectUrls": ""
         "softwareId": ""
         "transportKey": ""
         "transportKeyId": ""
