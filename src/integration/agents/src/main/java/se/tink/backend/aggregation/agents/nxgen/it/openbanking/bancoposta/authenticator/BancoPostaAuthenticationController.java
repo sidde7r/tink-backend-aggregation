@@ -43,7 +43,6 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
                         .getConsentResponse(
                                 ConsentType.ACCOUNT, consentRequest, consentState.getState());
 
-        // User has to choose OTP method before authentication
         ScaMethodEntity chosenScaMethod = selectScaMethod(consentResponse.getScaMethods());
 
         URL authorizeUrl =
@@ -97,7 +96,6 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
 
     private Field getChosenScaMethod(List<ScaMethodEntity> scaMethods) {
         int maxNumber = scaMethods.size();
-        int length = Integer.toString(maxNumber).length();
         String description =
                 IntStream.range(0, maxNumber)
                         .mapToObj(
@@ -110,7 +108,6 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
                 .name(CHOSEN_SCA_METHOD)
                 .numeric(true)
                 .minLength(1)
-                .maxLength(length)
                 .hint(String.format(UserMessages.SELECT_HELPER, maxNumber))
                 .pattern(String.format("([1-%d])", maxNumber))
                 .patternError(ErrorValues.INVALID_CODE_MESSAGE)
