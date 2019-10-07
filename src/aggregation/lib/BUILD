@@ -135,6 +135,7 @@ junit_test(
         "//src/libraries/concurrency",
         "//src/libraries/concurrency:concurrency_test",
         "//src/libraries/creditsafe_consumer_monitoring",
+        "//src/libraries/i18n",
         "//src/libraries/metrics",
         "//src/libraries/pair",
         "//src/libraries/serialization",
