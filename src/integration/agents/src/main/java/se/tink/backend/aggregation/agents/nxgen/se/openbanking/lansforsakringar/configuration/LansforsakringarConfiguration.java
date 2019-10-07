@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class LansforsakringarConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
-    @Secret private String consentId;
     @Secret private String redirectUrl;
     private String eidasQwac;
 
@@ -30,14 +29,6 @@ public class LansforsakringarConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;
-    }
-
-    public String getConsentId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(consentId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Consent ID"));
-
-        return consentId;
     }
 
     public String getRedirectUrl() {

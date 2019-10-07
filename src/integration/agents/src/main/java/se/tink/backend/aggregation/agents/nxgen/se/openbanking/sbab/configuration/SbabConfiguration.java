@@ -11,11 +11,6 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class SbabConfiguration implements ClientConfiguration {
 
     @Secret private String redirectUrl;
-    private String eidasCertId;
-
-    public String getEidasCertId() {
-        return eidasCertId;
-    }
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(

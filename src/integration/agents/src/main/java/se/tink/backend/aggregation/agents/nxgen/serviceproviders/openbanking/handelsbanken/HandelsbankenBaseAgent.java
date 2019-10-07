@@ -46,8 +46,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
                         .getAgentConfiguration(HandelsbankenBaseConfiguration.class);
 
         apiClient.setConfiguration(handelsbankenBaseConfiguration);
-        this.client.setEidasProxy(
-                configuration.getEidasProxy(), handelsbankenBaseConfiguration.getCertificateId());
+        this.client.setEidasProxy(configuration.getEidasProxy(), null);
     }
 
     @Override

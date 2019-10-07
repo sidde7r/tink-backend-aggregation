@@ -10,11 +10,9 @@ import se.tink.backend.aggregation.configuration.Environment;
 @JsonObject
 public class IcaBankenConfiguration implements ClientConfiguration {
 
-    @JsonProperty private String baseUrl;
     @JsonProperty @Secret private String clientId;
     @JsonProperty private String clientSecret;
     @JsonProperty @Secret private String redirectUrl;
-    @JsonProperty private String certificateId;
     @JsonProperty private String environment = "PRODUCTION";
 
     public String getClientId() {
@@ -27,10 +25,6 @@ public class IcaBankenConfiguration implements ClientConfiguration {
 
     public String getRedirectUrl() {
         return redirectUrl;
-    }
-
-    public String getCertificateId() {
-        return certificateId;
     }
 
     @JsonIgnore

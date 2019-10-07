@@ -14,18 +14,6 @@ public class SebConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String redirectUrl;
 
-    @JsonProperty private String baseUrl;
-
-    @JsonProperty private String authUrl;
-
-    @JsonProperty private String eidasQwac;
-
-    @JsonProperty private String psuIpAddress;
-
-    public String getAuthUrl() {
-        return authUrl;
-    }
-
     public String getClientId() {
         return clientId;
     }
@@ -36,17 +24,5 @@ public class SebConfiguration implements ClientConfiguration {
 
     public String getRedirectUrl() {
         return redirectUrl;
-    }
-
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public String getEidasQwac() {
-        return eidasQwac;
-    }
-
-    public String getPsuIpAddress() {
-        return psuIpAddress;
     }
 }

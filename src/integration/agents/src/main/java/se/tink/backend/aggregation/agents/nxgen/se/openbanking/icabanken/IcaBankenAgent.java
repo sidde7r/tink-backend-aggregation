@@ -84,8 +84,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
         apiClient.setConfiguration(icaBankenConfiguration);
 
         if (icaBankenConfiguration.getEnvironment() == Environment.PRODUCTION) {
-            client.setEidasProxy(
-                    configuration.getEidasProxy(), icaBankenConfiguration.getCertificateId());
+            client.setEidasProxy(configuration.getEidasProxy(), null);
         }
     }
 

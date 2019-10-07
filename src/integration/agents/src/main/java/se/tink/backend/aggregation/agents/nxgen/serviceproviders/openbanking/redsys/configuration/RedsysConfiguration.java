@@ -19,7 +19,6 @@ public class RedsysConfiguration implements ClientConfiguration {
     private String clientSigningKeyPassword;
     private String clientSigningCertificate;
     @Secret private String clientSigningCertificateId;
-    private String certificateId;
     @Secret private String tppIpAddress;
 
     public String getBaseAuthUrl() {

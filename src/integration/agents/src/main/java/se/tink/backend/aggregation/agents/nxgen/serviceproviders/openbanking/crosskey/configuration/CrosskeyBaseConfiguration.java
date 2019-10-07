@@ -16,12 +16,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     @Secret private String redirectUrl;
     private String baseAuthUrl;
     private String baseAPIUrl;
-    private String clientKeyStorePath;
-    private String clientKeyStorePassword;
-    private String clientSigningKeyPath;
-    private String clientSigningCertificatePath;
     private String xFapiFinancialId;
-    private String eidasProxyBaseUrl;
 
     public void setBaseAPIUrl(String baseAPIUrl) {
         this.baseAPIUrl = baseAPIUrl;
@@ -81,13 +76,5 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "x-fapi-financial-id"));
 
         return xFapiFinancialId;
-    }
-
-    public String getEidasProxyBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasProxyBaseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas proxy base URL"));
-
-        return eidasProxyBaseUrl;
     }
 }

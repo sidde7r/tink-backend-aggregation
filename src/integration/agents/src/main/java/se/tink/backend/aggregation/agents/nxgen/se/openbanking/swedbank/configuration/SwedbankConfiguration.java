@@ -16,7 +16,6 @@ public class SwedbankConfiguration implements ClientConfiguration {
     @SensitiveSecret private String clientSecret;
     @Secret private String redirectUrl;
     private String eidasQwac;
-    private String psuIpAddress;
     @Secret private boolean bypassTransactionConsent;
     @Secret private int monthsToFetch;
 
@@ -46,14 +45,6 @@ public class SwedbankConfiguration implements ClientConfiguration {
 
     public String getEidasQwac() {
         return eidasQwac;
-    }
-
-    public String getPsuIpAddress() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(psuIpAddress),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
-
-        return psuIpAddress;
     }
 
     public boolean getBypassConsent() {

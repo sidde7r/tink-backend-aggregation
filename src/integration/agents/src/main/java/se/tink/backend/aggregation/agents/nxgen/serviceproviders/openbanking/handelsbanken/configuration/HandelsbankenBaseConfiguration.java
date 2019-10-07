@@ -14,7 +14,6 @@ public class HandelsbankenBaseConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String redirectUrl;
     @JsonProperty @Secret private String appName;
     @JsonProperty @Secret private String appDesc;
-    @JsonProperty private String certificateId;
 
     public String getTppId() {
         return tppId;
@@ -38,9 +37,5 @@ public class HandelsbankenBaseConfiguration implements ClientConfiguration {
 
     public String getAppDesc() {
         return appDesc;
-    }
-
-    public String getCertificateId() {
-        return certificateId;
     }
 }
