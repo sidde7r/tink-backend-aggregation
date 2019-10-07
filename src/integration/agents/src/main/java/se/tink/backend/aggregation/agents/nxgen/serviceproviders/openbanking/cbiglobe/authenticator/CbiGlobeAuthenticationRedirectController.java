@@ -7,9 +7,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class CbiGlobeAuthenticationRedController extends CbiGlobeAuthenticationController {
+public class CbiGlobeAuthenticationRedirectController extends CbiGlobeAuthenticationController {
 
-    public CbiGlobeAuthenticationRedController(
+    public CbiGlobeAuthenticationRedirectController(
             SupplementalInformationHelper supplementalInformationHelper,
             CbiGlobeAuthenticator authenticator,
             StrongAuthenticationState consentState) {
