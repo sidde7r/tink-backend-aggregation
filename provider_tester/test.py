@@ -39,12 +39,20 @@ parser.add_argument(
     help="Host URL of the environment where the provider will be tested (ex: https://api.tink.se/api/v1/)"
 )
 
+parser.add_argument(
+    '--fields',
+    default="{}",
+    help="Extra fields (which are defined in provider configuration file) that will"
+         " be used for test (ex: \"{\"PSU-ID\":\"xxxx\"}\")"
+)
+
 args = parser.parse_args()
 provider_name = args.provider_name
 market = args.market
 locale = args.locale
 client_id = args.client_id
 client_secret = args.client_secret
+fields = json.loads(args.fields)
 
 AggregationConfig.host_url = args.host
 
@@ -168,6 +176,9 @@ credentials_create_request_payload = {
     },
     "providerName": provider_name
 }
+
+for key in fields:
+    credentials_create_request_payload["fields"][key] = fields[key]
 
 create_credentials_response = CreateCredentialsResponse(
     http_request_helper.make_request(

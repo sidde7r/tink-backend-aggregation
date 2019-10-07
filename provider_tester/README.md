@@ -65,4 +65,7 @@ source .venv/bin/activate
 
 - Run the following command:
 
-`python test.py --provider_name <provider_name> --market <market_code> --locale <locale_code> --client_id <client_id> --client_secret <client_secret>`
+`python test.py --provider_name <provider_name> --market <market_code> --fields <extra_fields> --locale <locale_code> --client_id <client_id> --client_secret <client_secret>`
+
+Example value for fields:  "{\"PSU-ID\":\"xxxx\"}"
+
