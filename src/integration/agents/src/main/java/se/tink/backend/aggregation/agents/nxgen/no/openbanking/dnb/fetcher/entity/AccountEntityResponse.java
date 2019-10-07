@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.entity;
 
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.BalanceTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.Balance;
@@ -26,7 +27,7 @@ public class AccountEntityResponse {
 
     public Optional<TransactionalAccount> toTinkAccount(final BalancesResponse balancesResponse) {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
+                .withType(getAccountType())
                 .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getAmount(balancesResponse)))
                 .withId(
@@ -50,6 +51,12 @@ public class AccountEntityResponse {
                                 () -> new IllegalStateException(ErrorMessages.WRONG_BALANCE_TYPE));
 
         return new Amount(currency, Double.valueOf(balance.getBalanceAmount().getAmount()));
+    }
+
+    private TransactionalAccountType getAccountType() {
+        return name.trim().equalsIgnoreCase(AccountTypes.SAVINGS)
+                ? TransactionalAccountType.SAVINGS
+                : TransactionalAccountType.CHECKING;
     }
 
     private boolean isUsableBalanceType(final Balance balance) {
