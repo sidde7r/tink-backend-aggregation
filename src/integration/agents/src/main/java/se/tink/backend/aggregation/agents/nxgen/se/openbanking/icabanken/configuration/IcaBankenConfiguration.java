@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.config
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.Environment;
 
@@ -10,9 +11,9 @@ import se.tink.backend.aggregation.configuration.Environment;
 public class IcaBankenConfiguration implements ClientConfiguration {
 
     @JsonProperty private String baseUrl;
-    @JsonProperty private String clientId;
+    @JsonProperty @Secret private String clientId;
     @JsonProperty private String clientSecret;
-    @JsonProperty private String redirectUrl;
+    @JsonProperty @Secret private String redirectUrl;
     @JsonProperty private String certificateId;
     @JsonProperty private String environment = "PRODUCTION";
 

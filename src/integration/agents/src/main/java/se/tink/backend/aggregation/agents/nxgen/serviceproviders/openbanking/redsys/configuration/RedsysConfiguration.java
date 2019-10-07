@@ -5,21 +5,22 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class RedsysConfiguration implements ClientConfiguration {
 
-    private String baseAuthUrl;
-    private String baseAPIUrl;
-    private String clientId;
-    private String redirectUrl;
+    @Secret private String baseAuthUrl;
+    @Secret private String baseAPIUrl;
+    @Secret private String clientId;
+    @Secret private String redirectUrl;
     private String clientSigningKeyPath;
     private String clientSigningKeyPassword;
     private String clientSigningCertificate;
-    private String clientSigningCertificateId;
+    @Secret private String clientSigningCertificateId;
     private String certificateId;
-    private String tppIpAddress;
+    @Secret private String tppIpAddress;
 
     public String getBaseAuthUrl() {
         Preconditions.checkNotNull(

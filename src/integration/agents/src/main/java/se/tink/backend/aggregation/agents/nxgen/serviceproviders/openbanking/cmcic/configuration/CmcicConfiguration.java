@@ -4,17 +4,18 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class CmcicConfiguration implements ClientConfiguration {
 
-    private String baseUrl;
-    private String basePath;
-    private String authBaseUrl;
-    private String redirectUrl;
-    private String clientId;
-    private String keyId;
+    @Secret private String baseUrl;
+    @Secret private String basePath;
+    @Secret private String authBaseUrl;
+    @Secret private String redirectUrl;
+    @Secret private String clientId;
+    @Secret private String keyId;
     private String certificateId;
 
     public String getKeyId() {
