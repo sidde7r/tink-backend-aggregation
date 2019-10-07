@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -193,21 +192,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 throw new HttpClientException(e, httpRequest);
             }
         }
-    }
-
-    public NextGenTinkHttpClient(
-            @Nullable AggregatorInfo aggregatorInfo,
-            @Nullable MetricRegistry metricRegistry,
-            @Nullable ByteArrayOutputStream logOutPutStream,
-            @Nullable SignatureKeyPair signatureKeyPair,
-            @Nullable Provider provider) {
-        this(
-                builder()
-                        .setAggregatorInfo(aggregatorInfo)
-                        .setMetricRegistry(metricRegistry)
-                        .setLogOutputStream(logOutPutStream)
-                        .setSignatureKeyPair(signatureKeyPair)
-                        .setProvider(provider));
     }
 
     private NextGenTinkHttpClient(final Builder builder) {

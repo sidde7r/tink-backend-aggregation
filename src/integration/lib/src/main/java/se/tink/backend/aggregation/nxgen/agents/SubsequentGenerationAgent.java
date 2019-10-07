@@ -84,12 +84,13 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         request.getUser());
         if (useNextGenClient) {
             this.client =
-                    new NextGenTinkHttpClient(
-                            context.getAggregatorInfo(),
-                            metricContext.getMetricRegistry(),
-                            context.getLogOutputStream(),
-                            signatureKeyPair,
-                            request.getProvider());
+                    NextGenTinkHttpClient.builder()
+                            .setAggregatorInfo(context.getAggregatorInfo())
+                            .setMetricRegistry(metricContext.getMetricRegistry())
+                            .setLogOutputStream(context.getLogOutputStream())
+                            .setSignatureKeyPair(signatureKeyPair)
+                            .setProvider(request.getProvider())
+                            .build();
         } else {
             this.client =
                     new LegacyTinkHttpClient(
