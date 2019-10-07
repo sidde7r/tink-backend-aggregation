@@ -49,8 +49,7 @@ public final class SbabAgent extends NextGenerationAgent
         SbabConfiguration sbabConfiguration = getClientConfiguration();
         apiClient.setConfiguration(sbabConfiguration);
 
-        this.client.setEidasProxy(
-                configuration.getEidasProxy(), sbabConfiguration.getEidasCertId());
+        this.client.setEidasProxy(configuration.getEidasProxy(), null);
     }
 
     @Override

@@ -4,13 +4,14 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class AbancaConfiguration implements ClientConfiguration {
 
-    private String authKey;
-    private String apiKey;
+    @SensitiveSecret private String authKey;
+    @SensitiveSecret private String apiKey;
 
     public String getAuthKey() {
         Preconditions.checkNotNull(

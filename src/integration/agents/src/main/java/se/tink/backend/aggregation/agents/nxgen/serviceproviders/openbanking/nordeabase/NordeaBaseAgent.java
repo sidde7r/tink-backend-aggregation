@@ -33,8 +33,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
                         .getAgentConfiguration(NordeaBaseConfiguration.class);
 
         apiClient.setConfiguration(nordeaConfiguration);
-        this.client.setEidasProxy(
-                configuration.getEidasProxy(), nordeaConfiguration.getEidasQwac());
+        this.client.setEidasProxy(configuration.getEidasProxy(), null);
     }
 
     @Override

@@ -4,22 +4,19 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class CrosskeyBaseConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String redirectUrl;
+    @Secret private String clientId;
+    @SensitiveSecret private String clientSecret;
+    @Secret private String redirectUrl;
     private String baseAuthUrl;
     private String baseAPIUrl;
-    private String clientKeyStorePath;
-    private String clientKeyStorePassword;
-    private String clientSigningKeyPath;
-    private String clientSigningCertificatePath;
     private String xFapiFinancialId;
-    private String eidasProxyBaseUrl;
 
     public void setBaseAPIUrl(String baseAPIUrl) {
         this.baseAPIUrl = baseAPIUrl;
@@ -79,13 +76,5 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "x-fapi-financial-id"));
 
         return xFapiFinancialId;
-    }
-
-    public String getEidasProxyBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasProxyBaseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas proxy base URL"));
-
-        return eidasProxyBaseUrl;
     }
 }

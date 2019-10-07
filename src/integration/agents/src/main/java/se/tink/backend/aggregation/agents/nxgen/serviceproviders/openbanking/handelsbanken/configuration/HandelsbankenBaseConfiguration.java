@@ -2,18 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class HandelsbankenBaseConfiguration implements ClientConfiguration {
 
-    @JsonProperty private String tppId;
-    @JsonProperty private String clientId;
-    @JsonProperty private String psuIpAddress;
-    @JsonProperty private String redirectUrl;
-    @JsonProperty private String appName;
-    @JsonProperty private String appDesc;
-    @JsonProperty private String certificateId;
+    @JsonProperty @Secret private String tppId;
+    @JsonProperty @Secret private String clientId;
+    @JsonProperty @Secret private String psuIpAddress;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String appName;
+    @JsonProperty @Secret private String appDesc;
 
     public String getTppId() {
         return tppId;
@@ -37,9 +37,5 @@ public class HandelsbankenBaseConfiguration implements ClientConfiguration {
 
     public String getAppDesc() {
         return appDesc;
-    }
-
-    public String getCertificateId() {
-        return certificateId;
     }
 }
