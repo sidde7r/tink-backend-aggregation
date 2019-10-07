@@ -402,7 +402,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     }
 
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
-        return supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
+        return supplementalInformationHelper.waitForLoginChallengeResponse(challenge);
     }
 
     private String waitForSignCode(String challenge) throws SupplementalInfoException {
