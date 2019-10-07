@@ -39,6 +39,10 @@ public class AvanzaConstants {
         }
     }
 
+    public static class Currencies {
+        public static final String SEK = "SEK";
+    }
+
     public static class AvanzaAccountTypes {
         public static final String AKTIE_FONDKONTO = "AktieFondkonto";
         public static final String INVESTERINGSSPARKONTO = "Investeringssparkonto";
@@ -174,10 +178,6 @@ public class AvanzaConstants {
         public static final String AUTH_SESSION = "X-AuthenticationSession";
         public static final String SECURITY_TOKEN = "X-SecurityToken";
     }
-
-    public static class FormKeys {}
-
-    public static class FormValues {}
 
     public static class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("avanza_unknown_accountype");

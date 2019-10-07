@@ -8,9 +8,11 @@ import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.Currencies;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.CurrencyAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.builder.LoanModuleBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -52,7 +55,9 @@ public class AccountDetailsResponse {
     @JsonProperty("interestRate")
     private BigDecimal interestRate;
 
-    private double ownCapital;
+    @JsonProperty("ownCapital")
+    private BigDecimal ownCapital = null;
+
     private double performance;
     private double performancePercent;
     private double performanceSinceOneMonth;
@@ -79,6 +84,15 @@ public class AccountDetailsResponse {
     private int numberOfIntradayTransfers;
     private int numberOfOrders;
     private int numberOfTransfers;
+
+    @JsonProperty("totalBalanceDue")
+    private BigDecimal totalBalanceDue = null;
+
+    @JsonProperty("nextPaymentPrognosis")
+    private BigDecimal nextPaymentPrognosis = null;
+
+    @JsonProperty("remainingLoan")
+    private BigDecimal remainingLoan = null;
 
     public List<CurrencyAccountEntity> getCurrencyAccounts() {
         return Optional.ofNullable(currencyAccounts).orElseGet(Collections::emptyList);
@@ -164,7 +178,7 @@ public class AccountDetailsResponse {
         return forwardBalance;
     }
 
-    public double getOwnCapital() {
+    public BigDecimal getOwnCapital() {
         return ownCapital;
     }
 
@@ -288,19 +302,11 @@ public class AccountDetailsResponse {
         return AgentParsingUtils.parsePercentageFormInterest(interestRate).doubleValue();
     }
 
+    @JsonIgnore
     public Optional<LoanAccount> toLoanAccount(HolderName holderName) {
         return Optional.of(
                 LoanAccount.nxBuilder()
-                        .withLoanDetails(
-                                LoanModule.builder()
-                                        .withType(
-                                                MAPPERS.getLoanType(accountType)
-                                                        .orElse(LoanDetails.Type.OTHER))
-                                        .withBalance(
-                                                new ExactCurrencyAmount(
-                                                        BigDecimal.valueOf(ownCapital), "SEK"))
-                                        .withInterestRate(getInterestRate())
-                                        .build())
+                        .withLoanDetails(getLoanDetails())
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(getAccountNumber())
@@ -314,6 +320,41 @@ public class AccountDetailsResponse {
                         .build());
     }
 
+    @JsonIgnore
+    private LoanModule getLoanDetails() {
+        LoanModuleBuildStep builder =
+                LoanModule.builder()
+                        .withType(MAPPERS.getLoanType(accountType).orElse(LoanDetails.Type.OTHER))
+                        .withBalance(getBalance())
+                        .withInterestRate(getInterestRate());
+        if (!Objects.isNull(totalBalanceDue)) {
+            builder.setInitialBalance(new ExactCurrencyAmount(totalBalanceDue, Currencies.SEK));
+        }
+        if (!Objects.isNull(nextPaymentPrognosis)) {
+            builder.setMonthlyAmortization(
+                    new ExactCurrencyAmount(nextPaymentPrognosis, Currencies.SEK));
+        }
+        if (!Objects.isNull(totalBalanceDue) && !Objects.isNull(remainingLoan)) {
+            builder.setAmortized(
+                    new ExactCurrencyAmount(
+                            totalBalanceDue.subtract(remainingLoan), Currencies.SEK));
+        }
+
+        return builder.build();
+    }
+
+    @JsonIgnore
+    private ExactCurrencyAmount getBalance() {
+        if (!Objects.isNull(ownCapital)) {
+            return new ExactCurrencyAmount(ownCapital, Currencies.SEK);
+        } else if (!Objects.isNull(remainingLoan)) {
+            return new ExactCurrencyAmount(remainingLoan, Currencies.SEK);
+        } else {
+            throw new IllegalStateException("Could not parse balance!");
+        }
+    }
+
+    @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(HolderName holderName) {
         final String accountName =
                 Strings.isNullOrEmpty(externalActor) ? accountType : accountType + externalActor;

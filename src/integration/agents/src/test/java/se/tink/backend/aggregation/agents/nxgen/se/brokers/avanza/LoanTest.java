@@ -7,6 +7,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LoanTest {
@@ -72,6 +73,29 @@ public class LoanTest {
                     + "  \"numberOfIntradayTransfers\": 0\n"
                     + "}";
 
+    private static final String SUPER_BOLAN_DATA =
+            "{\n"
+                    + "  \"courtageClass\": \"PRO2\",\n"
+                    + "  \"depositable\": true,\n"
+                    + "  \"accountType\": \"Superbolanekonto\",\n"
+                    + "  \"withdrawable\": true,\n"
+                    + "  \"accountId\": \"6663592\",\n"
+                    + "  \"accountTypeName\": \"Superbolånet PB\",\n"
+                    + "  \"clearingNumber\": \"9552\",\n"
+                    + "  \"instrumentTransferPossible\": false,\n"
+                    + "  \"internalTransferPossible\": true,\n"
+                    + "  \"jointlyOwned\": false,\n"
+                    + "  \"interestRate\": 0.79,\n"
+                    + "  \"nextPaymentPrognosis\": 3528.60,\n"
+                    + "  \"totalBalanceDue\": 5378947.00,\n"
+                    + "  \"remainingLoan\": 170700.14,\n"
+                    + "  \"nextPaymentDate\": \"2019-10-31\",\n"
+                    + "  \"numberOfTransfers\": 0,\n"
+                    + "  \"numberOfIntradayTransfers\": 0,\n"
+                    + "  \"sharpeRatio\": -2.0391090573654393,\n"
+                    + "  \"standardDeviation\": 0.1586169482290629\n"
+                    + "}";
+
     @Test
     public void testLoanParsing() {
         AccountDetailsResponse deets =
@@ -93,6 +117,34 @@ public class LoanTest {
                 BigDecimal.valueOf(3.17), loanAccount.getExactBalance().getExactValue());
         Assert.assertEquals(
                 BigDecimal.valueOf(0.00).divide(BigDecimal.valueOf(100)),
+                BigDecimal.valueOf(loanAccount.getInterestRate()));
+    }
+
+    @Test
+    public void testSuperbolanParsing() {
+        AccountDetailsResponse deets =
+                SerializationUtils.deserializeFromString(
+                        SUPER_BOLAN_DATA, AccountDetailsResponse.class);
+        Optional<LoanAccount> account = deets.toLoanAccount(new HolderName("Some Name"));
+        Assert.assertTrue(account.isPresent());
+        LoanAccount loanAccount = account.get();
+        Assert.assertEquals(
+                BigDecimal.valueOf(170700.14), loanAccount.getExactBalance().getExactValue());
+        Assert.assertEquals(
+                new Amount("SEK", 5378947.00), loanAccount.getDetails().getInitialBalance());
+        Assert.assertEquals(
+                0,
+                BigDecimal.valueOf(3528.60)
+                        .compareTo(
+                                loanAccount
+                                        .getDetails()
+                                        .getExactMonthlyAmortization()
+                                        .getExactValue()));
+        Assert.assertEquals(
+                BigDecimal.valueOf(5378947.00).subtract(BigDecimal.valueOf(170700.14)),
+                loanAccount.getDetails().getExactAmortized().getExactValue());
+        Assert.assertEquals(
+                BigDecimal.valueOf(0.79).divide(BigDecimal.valueOf(100)),
                 BigDecimal.valueOf(loanAccount.getInterestRate()));
     }
 }
