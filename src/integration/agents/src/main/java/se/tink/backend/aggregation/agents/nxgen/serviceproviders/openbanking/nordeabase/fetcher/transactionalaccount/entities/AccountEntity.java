@@ -138,7 +138,7 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(getIban())
                                 .withAccountNumber(identifier.getIdentifier())
-                                .withAccountName(accountName)
+                                .withAccountName(Optional.ofNullable(accountName).orElse(product))
                                 .addIdentifier(identifier)
                                 .build())
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
