@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -229,9 +230,13 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
 
+        final PrintStream printStream =
+                Optional.ofNullable(builder.getPrintStream())
+                        .orElseGet(() -> new PrintStream(System.out));
+
         registerJacksonModule(new VavrModule());
         responseStatusHandler = new DefaultResponseStatusHandler();
-        debugOutputLoggingFilter = new RestIoLoggingFilter(new PrintStream(System.out));
+        debugOutputLoggingFilter = new RestIoLoggingFilter(printStream);
         addFilter(new SendRequestFilter());
     }
 
@@ -246,6 +251,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private ByteArrayOutputStream logOutputStream;
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
+        private PrintStream printStream;
 
         public NextGenTinkHttpClient build() {
             return new NextGenTinkHttpClient(this);
@@ -271,6 +277,10 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             return provider;
         }
 
+        public PrintStream getPrintStream() {
+            return printStream;
+        }
+
         public Builder setAggregatorInfo(AggregatorInfo aggregatorInfo) {
             this.aggregatorInfo = aggregatorInfo;
             return this;
@@ -293,6 +303,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         public Builder setProvider(Provider provider) {
             this.provider = provider;
+            return this;
+        }
+
+        public Builder setPrintStream(PrintStream printStream) {
+            this.printStream = printStream;
             return this;
         }
     }
