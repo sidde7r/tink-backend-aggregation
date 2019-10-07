@@ -62,7 +62,7 @@ public final class DnbApiClient {
     public void setConfiguration(
             DnbConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
-        this.client.setEidasProxy(eidasProxyConfiguration, DnbConstants.CERTIFICATE_ID);
+        this.client.setEidasProxy(eidasProxyConfiguration, "");
     }
 
     public AccountsResponse fetchAccounts() {
