@@ -1,22 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 @JsonObject
 public final class RabobankConfiguration implements ClientConfiguration {
 
-    private String baseUrl;
-    private String clientId;
-    private String clientSecret;
-    private String clientSSLKeyPassword;
-    private String clientSSLP12;
-    private String redirectUrl;
-    private String qsealcPem;
+    @JsonProperty @Secret private String baseUrl;
+    @JsonProperty @Secret private String clientId;
+    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @Secret private String clientSSLKeyPassword;
+    @JsonProperty @Secret private String clientSSLP12;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String qsealcPem;
     private String certificateId;
 
     public String getClientId() {

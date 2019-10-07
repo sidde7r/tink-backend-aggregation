@@ -54,14 +54,8 @@ public final class RabobankAgent
         clientName = request.getProvider().getPayload();
 
         final RabobankConfiguration rabobankConfiguration =
-                agentsConfiguration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                RabobankConstants.Market.INTEGRATION_NAME,
-                                clientName,
-                                RabobankConfiguration.class)
-                        .orElseThrow(
-                                () -> new IllegalStateException("Rabobank configuration missing."));
+                getAgentConfigurationController()
+                        .getAgentConfiguration(RabobankConfiguration.class);
 
         final String password = rabobankConfiguration.getClientSSLKeyPassword();
         final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();

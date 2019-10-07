@@ -31,6 +31,8 @@ public final class RabobankAgentTest {
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                 .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
                 .setRequestFlagManual(Boolean.parseBoolean(manager.get(Arg.IS_MANUAL)))
+                .setFinancialInstitutionId("rabobank")
+                .setAppId("tink-sandbox")
                 .expectLoggedIn(false)
                 .build()
                 .testRefresh();
@@ -42,6 +44,8 @@ public final class RabobankAgentTest {
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                 .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
                 .setRequestFlagManual(Boolean.parseBoolean(manager.get(Arg.IS_MANUAL)))
+                .setFinancialInstitutionId("rabobank")
+                .setAppId("tink")
                 .expectLoggedIn(false)
                 .build()
                 .testRefresh();
@@ -53,6 +57,8 @@ public final class RabobankAgentTest {
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                 .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
                 .setRequestFlagManual(Boolean.parseBoolean(manager.get(Arg.IS_MANUAL)))
+                .setFinancialInstitutionId("rabobank")
+                .setAppId("abnamro")
                 .expectLoggedIn(false)
                 .build()
                 .testRefresh();

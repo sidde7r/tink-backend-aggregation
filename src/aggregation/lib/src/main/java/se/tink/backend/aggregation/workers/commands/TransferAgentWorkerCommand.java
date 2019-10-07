@@ -119,8 +119,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
         Optional<String> operationStatusMessage = Optional.empty();
         try {
+            // TODO: DISABLED UNTIL SECRET MASKING HAS BEEN FIXED
             // We want to explicitly log everything that has to do with transfers.
-            httpLoggableExecutor.attachHttpFilters(loggingFilterFactory);
+            //            httpLoggableExecutor.attachHttpFilters(loggingFilterFactory);
             log.info(transfer, getTransferExecuteLogInfo(transfer, transferRequest.isUpdate()));
 
             if (agent instanceof TransferExecutor) {
