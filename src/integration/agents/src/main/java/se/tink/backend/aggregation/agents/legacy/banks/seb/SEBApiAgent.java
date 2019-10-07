@@ -938,16 +938,16 @@ public class SEBApiAgent extends AbstractAgent
             if (!isValidResponse(response)) {
                 return Collections.emptyList();
             }
+
+            SebResponse sebResponse = response.getEntity(SebResponse.class);
+            if (sebResponse == null) {
+                return Collections.emptyList();
+            }
+
+            return sebResponse.getAccountEntities();
         } finally {
             response.close();
         }
-
-        SebResponse sebResponse = response.getEntity(SebResponse.class);
-        if (sebResponse == null) {
-            return Collections.emptyList();
-        }
-
-        return sebResponse.getAccountEntities();
     }
 
     private ClientResponse queryAccounts(final String id) {
