@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner;
 
 import java.util.UUID;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
 
+@Ignore
 public class NordeaPartnerAgentTest {
 
     @Test
@@ -23,6 +25,8 @@ public class NordeaPartnerAgentTest {
                 .setCredentialId(credentialsId)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
+                .setAppId("tink")
+                .setFinancialInstitutionId("nordeapartner")
                 .build()
                 .testRefresh();
     }

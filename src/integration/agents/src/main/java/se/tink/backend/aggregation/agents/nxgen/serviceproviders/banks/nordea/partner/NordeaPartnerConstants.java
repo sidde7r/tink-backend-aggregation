@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 
 public class NordeaPartnerConstants {
 
-    public static final String INTEGRATION_NAME = "nordeapartner";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =

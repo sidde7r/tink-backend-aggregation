@@ -3,19 +3,21 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 import com.google.common.base.Preconditions;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class NordeaPartnerConfiguration implements ClientConfiguration {
-    private String partnerId;
-    private String baseUrl;
-    private String nordeaSigningPublicKey;
-    private String nordeaEncryptionPublicKey;
-    private String tinkSingingPrivateKey;
-    private String tinkSingingPublicKey;
-    private String tinkEncryptionPrivateKey;
-    private String tinkEncryptionPublicKey;
-    private String kid;
+    @Secret private String partnerId;
+    @Secret private String baseUrl;
+    @Secret private String nordeaSigningPublicKey;
+    @Secret private String nordeaEncryptionPublicKey;
+    @SensitiveSecret private String tinkSingingPrivateKey;
+    @Secret private String tinkSingingPublicKey;
+    @SensitiveSecret private String tinkEncryptionPrivateKey;
+    @Secret private String tinkEncryptionPublicKey;
+    @Secret private String kid;
 
     public String getBaseUrl() {
         Preconditions.checkState(

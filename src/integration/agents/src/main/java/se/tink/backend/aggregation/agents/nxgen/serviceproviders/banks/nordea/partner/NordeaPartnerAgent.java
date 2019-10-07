@@ -25,38 +25,24 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class NordeaPartnerAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final NordeaPartnerApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private NordeaPartnerConfiguration nordeaConfiguration;
-    private NordeaPartnerKeystore keystore;
     private NordeaPartnerJweHelper jweHelper;
 
     public NordeaPartnerAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, true);
         apiClient = new NordeaPartnerApiClient(client, sessionStorage);
-        clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        nordeaConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                NordeaPartnerConstants.INTEGRATION_NAME,
-                                clientName,
-                                NordeaPartnerConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format(
-                                                        "No Nordea Partner client configured for name: %s",
-                                                        clientName)));
-        keystore = new NordeaPartnerKeystore(nordeaConfiguration);
+        NordeaPartnerConfiguration nordeaConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(NordeaPartnerConfiguration.class);
+        NordeaPartnerKeystore keystore = new NordeaPartnerKeystore(nordeaConfiguration);
         jweHelper = new NordeaPartnerJweHelper(keystore, nordeaConfiguration);
 
         client.setEidasProxy(configuration.getEidasProxy(), null);
