@@ -101,13 +101,20 @@ public class RestIoLoggingFilter extends Filter {
     }
 
     private void printRequestBody(StringBuilder b, long id, Object body) {
-        if (body != null) {
-            ObjectMapper om = new ObjectMapper();
-            try {
-                b.append(om.writeValueAsString(body)).append("\n");
-            } catch (JsonProcessingException e) {
-                b.append("Error during body serialization '").append(body).append("'").append("\n");
-            }
+        if (body == null) {
+            return;
+        }
+
+        if (body instanceof String) {
+            b.append(body).append("\n");
+            return;
+        }
+
+        ObjectMapper om = new ObjectMapper();
+        try {
+            b.append(om.writeValueAsString(body)).append("\n");
+        } catch (JsonProcessingException e) {
+            b.append("Error during body serialization '").append(body).append("'").append("\n");
         }
     }
 
