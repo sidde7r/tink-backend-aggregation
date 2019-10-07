@@ -66,10 +66,6 @@ public class VolksbankConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
     }
 
-    public static class Market {
-        public static final String INTEGRATION_NAME = "volksbank";
-    }
-
     public static class ConsentParams {
         public static final Integer VALID_YEAR = 2;
         public static final Integer FREQUENCY_PER_DAY = 100;
