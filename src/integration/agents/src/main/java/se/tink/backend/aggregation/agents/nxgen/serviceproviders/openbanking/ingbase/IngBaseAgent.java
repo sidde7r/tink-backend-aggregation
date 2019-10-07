@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.IngBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.IngBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseAccountsFetcher;
@@ -20,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -113,18 +115,42 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 metricRefreshController,
                 updateController,
                 new IngBaseAccountsFetcher(
-                        apiClient, request.getProvider().getCurrency().toUpperCase()),
+                        apiClient,
+                        request.getProvider().getCurrency().toUpperCase(),
+                        shouldReturnLowercaseAccountId()),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new IngBaseTransactionsFetcher(apiClient),
-                                2,
-                                IngBaseConstants.Transaction.PERIOD_IN_DAYS,
-                                ChronoUnit.DAYS)));
+                        new TransactionKeyPaginationController<>(
+                                new IngBaseTransactionsFetcher(
+                                        apiClient, this::getTransactionsFromDate))));
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
         return new IngSessionHandler();
     }
+
+    /**
+     * Use a lowercase IBAN as account ID. Defaults to false (uppercase). Can be overridden per
+     * market to match RE agent if needed.
+     */
+    protected boolean shouldReturnLowercaseAccountId() {
+        return false;
+    }
+
+    private LocalDate getTransactionsFromDate() {
+        final Long authenticationTime =
+                persistentStorage.get(StorageKeys.AUTHENTICATION_TIME, Long.TYPE).orElse(0L);
+        final long authenticationAge = System.currentTimeMillis() - authenticationTime;
+        if (authenticationAge < Transaction.FULL_HISTORY_MAX_AGE) {
+            return earliestTransactionHistoryDate();
+        }
+        return LocalDate.now().minusDays(Transaction.DEFAULT_HISTORY_DAYS);
+    }
+
+    /*
+     * Available transaction history per market
+     * see https://developer.ing.com/api-marketplace/marketplace/b6d5093d-626e-41e9-b9e8-ff287bbe2c07/versions/b063703e-1437-4995-90e2-06dac67fef92/documentation#country-specific-information
+     */
+    protected abstract LocalDate earliestTransactionHistoryDate();
 }

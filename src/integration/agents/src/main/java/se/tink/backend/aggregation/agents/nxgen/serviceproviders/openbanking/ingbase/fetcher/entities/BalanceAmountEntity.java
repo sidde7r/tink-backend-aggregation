@@ -1,19 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceAmountEntity {
 
     private String currency;
-    private Number amount;
+    private BigDecimal amount;
 
     public String getCurrency() {
         return currency;
     }
 
-    public Amount toAmount() {
-        return new Amount(currency, amount);
+    @JsonIgnore
+    public ExactCurrencyAmount toAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
     }
 }
