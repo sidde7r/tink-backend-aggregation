@@ -1,31 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
-import com.google.common.base.Preconditions;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.libraries.i18n.LocalizableKey;
 
-public class CbiGlobeAuthenticationController
-        implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-    private final SupplementalInformationHelper supplementalInformationHelper;
-    private final CbiGlobeAuthenticator authenticator;
-    private final StrongAuthenticationState consentState;
+public abstract class CbiGlobeAuthenticationController
+        implements AutoAuthenticator, MultiFactorAuthenticator {
+    protected final SupplementalInformationHelper supplementalInformationHelper;
+    protected final CbiGlobeAuthenticator authenticator;
+    protected final StrongAuthenticationState consentState;
 
     public CbiGlobeAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
@@ -36,69 +33,47 @@ public class CbiGlobeAuthenticationController
         this.consentState = consentState;
     }
 
-    public ThirdPartyAppResponse<String> init() {
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
-    }
-
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
         authenticator.autoAutenthicate();
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(String reference) {
-        // Consent for accounts
-        waitForSuplementalInformation(ConsentType.ACCOUNT);
-
-        // account fetching in AUTHENTICATING phase due to two times consent authentication flow
-        GetAccountsResponse getAccountsResponse = authenticator.fetchAccounts();
-        openThirdPartyApp(getAccountsResponse);
-
-        // Consent for transactions and balances
-        waitForSuplementalInformation(ConsentType.BALANCE_TRANSACTION);
-
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
-    }
-
-    public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        this.authenticator.tokenAutoAuthentication();
-        URL authorizeUrl =
-                this.authenticator.buildAuthorizeUrl(
-                        this.authenticator.createRedirectUrl(
-                                consentState.getState(), ConsentType.ACCOUNT),
-                        this.authenticator.createConsentRequestAccount());
-        return getAppPayload(authorizeUrl);
-    }
-
-    private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
-        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
+    public CredentialsTypes getType() {
+        return CredentialsTypes.THIRD_PARTY_APP;
     }
 
     @Override
-    public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
-        return Optional.empty();
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
+        this.authenticator.tokenAutoAuthentication();
+
+        accountConsentAuthentication();
+
+        // Fetching accounts authentication phase due to double consent authentication
+        GetAccountsResponse getAccountsResponse = authenticator.fetchAccounts();
+
+        transactionsConsentAuthentication(getAccountsResponse);
     }
 
-    public void openThirdPartyApp(GetAccountsResponse getAccountsResponse) {
-        URL authorizeUrl =
-                this.authenticator.buildAuthorizeUrl(
-                        this.authenticator.createRedirectUrl(
-                                consentState.getState(), ConsentType.BALANCE_TRANSACTION),
-                        this.authenticator.createConsentRequestBalancesTransactions(
-                                getAccountsResponse));
-        ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
-        Preconditions.checkNotNull(payload);
-        this.supplementalInformationHelper.openThirdPartyApp(payload);
-    }
+    protected abstract void accountConsentAuthentication();
 
-    private void waitForSuplementalInformation(ConsentType consentType) {
+    protected abstract void transactionsConsentAuthentication(
+            GetAccountsResponse getAccountsResponse);
+
+    protected void waitForSuplementalInformation(ConsentType consentType) {
         Optional<Map<String, String>> queryMap =
                 this.supplementalInformationHelper.waitForSupplementalInformation(
                         this.consentState.getSupplementalKey(),
                         ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES);
 
-        if (!queryMap.get().get(QueryKeys.CODE).equalsIgnoreCase(consentType.getCode())) {
+        Optional<String> codeValue =
+                Optional.ofNullable(
+                        Optional.ofNullable(queryMap.get().get(QueryKeys.CODE))
+                                .orElse(consentType.getCode()));
+
+        if (!codeValue.get().equalsIgnoreCase(consentType.getCode())) {
             waitForSuplementalInformation(consentType);
         }
     }

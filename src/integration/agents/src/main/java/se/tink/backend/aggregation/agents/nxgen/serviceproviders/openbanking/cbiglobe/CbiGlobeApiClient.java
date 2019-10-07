@@ -117,13 +117,15 @@ public class CbiGlobeApiClient {
                 .post(GetTokenResponse.class);
     }
 
-    public ConsentResponse createConsent(ConsentRequest consentRequest, String redirectUrl) {
-        RequestBuilder request =
-                createRequestInSession(Urls.CONSENTS)
-                        .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
-                        .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
-                        .header(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+    public RequestBuilder createConsentRequest(String redirectUrl) {
+        return createRequestInSession(Urls.CONSENTS)
+                .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+    }
 
+    public ConsentResponse createConsent(ConsentRequest consentRequest, String redirectUrl) {
+        RequestBuilder request = createConsentRequest(redirectUrl);
         return request.post(ConsentResponse.class, consentRequest);
     }
 
