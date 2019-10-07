@@ -139,7 +139,7 @@ public abstract class UnicreditBaseApiClient {
                                 new URL(getConfiguration().getRedirectUrl())
                                         .queryParam(HeaderKeys.STATE, state)
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
-                        .header(HeaderKeys.TPP_REDIRECT_PREFERED, false) // true for redirect auth
+                        .header(HeaderKeys.TPP_REDIRECT_PREFERED, true) // true for redirect auth
                         .post(getConsentResponseType(), getConsentRequest());
 
         persistentStorage.put(

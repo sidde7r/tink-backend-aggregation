@@ -8,11 +8,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class UnicreditConsentLinksEntity {
 
-    private ScaRedirect authoriseTransaction;
+    private ScaRedirect scaRedirect;
 
     public ScaRedirect getScaRedirect() {
 
-        return Optional.ofNullable(authoriseTransaction)
+        return Optional.ofNullable(scaRedirect)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_SCA_URL));
     }
 }

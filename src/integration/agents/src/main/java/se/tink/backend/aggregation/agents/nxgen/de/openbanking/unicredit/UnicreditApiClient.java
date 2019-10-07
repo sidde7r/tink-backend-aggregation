@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit;
 
+import java.util.Date;
+import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.rpc.UnicreditConsentResponse;
@@ -18,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class UnicreditApiClient extends UnicreditBaseApiClient {
 
@@ -88,13 +91,13 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
         return UnicreditConsentResponse.class;
     }
 
-    @Override
-    public URL getScaRedirectUrlFromConsentResponse(ConsentResponse consentResponse) {
-        return new URL(getConfiguration().getBaseUrl() + consentResponse.getScaRedirect());
+    protected URL getScaRedirectUrlFromConsentResponse(ConsentResponse consentResponse) {
+        return new URL(consentResponse.getScaRedirect());
     }
 
     @Override
     protected String getTransactionsDateFrom() {
-        return QueryValues.TRANSACTION_FROM_DATE;
+        return ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                DateUtils.addDays(new Date(), -QueryValues.MAX_PERIOD_IN_DAYS));
     }
 }
