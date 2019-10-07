@@ -69,12 +69,9 @@ public abstract class CbiGlobeAuthenticationController
                         ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES);
 
-        Optional<String> codeValue =
-                Optional.ofNullable(
-                        Optional.ofNullable(queryMap.get().get(QueryKeys.CODE))
-                                .orElse(consentType.getCode()));
+        String codeValue = queryMap.get().getOrDefault(QueryKeys.CODE, consentType.getCode());
 
-        if (!codeValue.get().equalsIgnoreCase(consentType.getCode())) {
+        if (!codeValue.equalsIgnoreCase(consentType.getCode())) {
             waitForSuplementalInformation(consentType);
         }
     }
