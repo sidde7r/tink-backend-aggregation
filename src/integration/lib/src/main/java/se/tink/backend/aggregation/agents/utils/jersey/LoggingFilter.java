@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.jersey;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.sun.jersey.api.client.AbstractClientRequestAdapter;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
@@ -18,6 +18,7 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
@@ -39,8 +40,44 @@ public class LoggingFilter extends ClientFilter {
 
     private static final String RESPONSE_PREFIX = "< ";
 
-    private static final ImmutableList<String> SENSITIVE_HEADERS =
-            ImmutableList.of("cookie", "set-cookie", "authorization");
+    // In lower case
+    private static final Set<String> NON_SENSITIVE_HEADER_FIELDS =
+            ImmutableSet.of(
+                    "accept",
+                    "accept-charset",
+                    "accept-datetime",
+                    "accept-encoding",
+                    "accept-language",
+                    "accept-ranges",
+                    "access-control-allow-origin",
+                    "age",
+                    "allow",
+                    "cache-control",
+                    "connection",
+                    "content-encoding",
+                    "content-language",
+                    "content-length",
+                    "content-type",
+                    "date",
+                    "expires",
+                    "forwarded",
+                    "if-modified-since",
+                    "if-unmodified-since",
+                    "host",
+                    "language",
+                    "last-modified",
+                    "pragma",
+                    "proxy-connection",
+                    "referer",
+                    "server",
+                    "status",
+                    "transfer-encoding",
+                    "user-agent",
+                    "vary",
+                    "via",
+                    "x-forwarded-for",
+                    "x-forwarded-host",
+                    "x-powered-by");
 
     private final class Adapter extends AbstractClientRequestAdapter {
         private final StringBuilder b;
@@ -120,14 +157,13 @@ public class LoggingFilter extends ClientFilter {
     }
 
     private static String censorHeaderValue(String key, String value) {
-        // do not output sensitive information in our logs
-        for (String sensitiveHeader : SENSITIVE_HEADERS) {
-            // http header keys are case insensitive
-            if (key.toLowerCase().equals(sensitiveHeader)) {
-                return "***";
-            }
+
+        if (NON_SENSITIVE_HEADER_FIELDS.contains(key.toLowerCase())) {
+            return value;
         }
-        return value;
+
+        // Do not output sensitive information in our logs
+        return "***";
     }
 
     private static StringBuilder prefixId(StringBuilder b, long id) {
