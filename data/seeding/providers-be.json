@@ -68,13 +68,13 @@
                     "name": "logindescription"
                 },
                 {
-                    "description": "Response, 8 digits.",
+                    "description": "Response, 7 or 8 digits.",
                     "immutable": false,
                     "masked": false,
                     "name": "logininput",
                     "numeric": true,
-                    "pattern": "^[0-9]{8}$",
-                    "patternError": "Please enter your 8 digit response code from your card reader."
+                    "pattern": "^[0-9]{7,8}$",
+                    "patternError": "Please enter your 7 or 8 digit response code from your card reader."
                 }
             ],
             "transactional": true,
@@ -430,7 +430,7 @@
                 },
                 {
                     "description": "Login Response Code",
-                    "helpText": "Enter your 8 digit response code from your card reader.",
+                    "helpText": "Enter your 7 or 8 digit response code from your card reader.",
                     "immutable": true,
                     "masked": false,
                     "name": "logininput",
@@ -438,7 +438,7 @@
                 },
                 {
                     "description": "Sign Response Code",
-                    "helpText": "Enter your 8 digit response code from your card reader.",
+                    "helpText": "Enter your 7 or 8 digit response code from your card reader.",
                     "immutable": true,
                     "masked": false,
                     "name": "signcodeinput",
@@ -501,7 +501,7 @@
                 },
                 {
                     "description": "Response Code",
-                    "helpText": "Enter your 8 digit response code from your card reader.",
+                    "helpText": "Enter your 7 or 8 digit response code from your card reader.",
                     "immutable": true,
                     "masked": false,
                     "name": "signcodeinput",
@@ -611,13 +611,13 @@
                     "name": "logindescription"
                 },
                 {
-                    "description": "Login code, 8 digits.",
+                    "description": "Login code, 7 or 8 digits.",
                     "immutable": false,
                     "masked": false,
                     "name": "logininput",
                     "numeric": true,
-                    "pattern": "^[0-9]{8}$",
-                    "patternError": "Please enter your 8 digit login code from your card reader."
+                    "pattern": "^[0-9]{7,8}$",
+                    "patternError": "Please enter your 7 or 8 digit login code from your card reader."
                 },
                 {
                     "description": "Start code",
@@ -627,13 +627,13 @@
                     "name": "signcodedescription"
                 },
                 {
-                    "description": "Sign code, 8 digits.",
+                    "description": "Sign code, 7 or 8 digits.",
                     "immutable": false,
                     "masked": false,
                     "name": "signcodeinput",
                     "numeric": true,
-                    "pattern": "^[0-9]{8}$",
-                    "patternError": "Please enter your 8 digit sign code from your card reader."
+                    "pattern": "^[0-9]{7,8}$",
+                    "patternError": "Please enter your 7 or 8 digit sign code from your card reader."
                 },
                 {
                     "description": "Start code",
@@ -655,13 +655,13 @@
                 {
                     "description": "Sign code",
                     "helpText": "Enter your PIN.\nPress 'OK'.\nEnter the sign code from your card reader.",
-                    "hint": "8 digits.",
+                    "hint": "7 or 8 digits.",
                     "immutable": false,
                     "masked": false,
                     "name": "signfortransferinput",
                     "numeric": true,
-                    "pattern": "^[0-9]{8}$",
-                    "patternError": "Please enter your 8 digit response code from your card reader.",
+                    "pattern": "^[0-9]{7,8}$",
+                    "patternError": "Please enter your 7 or 8 digit response code from your card reader.",
                     "value": null
                 }
             ],
