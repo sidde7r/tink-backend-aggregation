@@ -22,7 +22,6 @@ public class FortisAgentTest {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("be", "be-fortis-cardreader")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                        .addCredentialField("PINcode", manager.get(Arg.PINCODE))
                         .addCredentialField("clientnumber", manager.get(Arg.CLIENTNUMBER))
                         .loadCredentialsBefore(true)
                         .expectLoggedIn(false)
@@ -37,7 +36,6 @@ public class FortisAgentTest {
 
     private enum Arg {
         USERNAME,
-        PINCODE,
         CLIENTNUMBER
     }
 }
