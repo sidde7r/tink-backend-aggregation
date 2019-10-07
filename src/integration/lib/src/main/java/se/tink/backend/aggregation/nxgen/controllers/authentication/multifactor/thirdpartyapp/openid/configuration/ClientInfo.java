@@ -11,6 +11,13 @@ public class ClientInfo {
     private long clientIdIssuedAt;
     private long clientSecretExpiresAt;
 
+    public ClientInfo() {}
+
+    public ClientInfo(String clientId, String clientSecret) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+    }
+
     public String getClientId() {
         return clientId;
     }
@@ -19,6 +26,7 @@ public class ClientInfo {
         return clientSecret;
     }
 
+    // TODO: No usage of clientIdIssuedAt and clientSecretExpiresAt, should be removed...
     public Instant getClientIdIssuedAt() {
         return Instant.ofEpochMilli(clientIdIssuedAt);
     }

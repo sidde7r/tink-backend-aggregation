@@ -10,6 +10,13 @@ public class ProviderConfiguration {
 
     private ClientInfo clientInfo;
 
+    public ProviderConfiguration() {}
+
+    public ProviderConfiguration(String organizationId, ClientInfo clientInfo) {
+        this.organizationId = organizationId;
+        this.clientInfo = clientInfo;
+    }
+
     public void validate() {
         Preconditions.checkNotNull(clientInfo);
     }

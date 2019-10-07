@@ -532,6 +532,22 @@ agentsServiceConfiguration:
         clientId: "app.bbva.bbvatestapp"
         clientSecret: "9$YyzM4UTAI9$xlH5faHRybL$lJJVYBcIhYvaVFJWE1HJGwyfOz8WTAlAtDDcxb7"
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    aib:
+      tink:
+        "organizationId": ""
+        "clientId": ""
+        "signingKey": ""
+        "signingKeyId": ""
+        "softwareStatementAssertion": ""
+        "redirectUri": ""
+        "softwareId": ""
+        "transportKey": ""
+        "transportKeyId": ""
+        "rootCAData": ""
+        "clientSecret": ""
+        "transportKeyPassword": ""
+        "signingKeyPassword": ""
+        "rootCAPassword": ""
     demoFinancialInstitution:
       mobilebanking:
         baseUrl: "http://localhost:9271/mobilebanking"

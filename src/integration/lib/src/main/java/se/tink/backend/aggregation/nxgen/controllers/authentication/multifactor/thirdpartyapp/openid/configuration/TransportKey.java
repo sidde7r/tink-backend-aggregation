@@ -10,6 +10,14 @@ public class TransportKey {
     private String key;
     private String password;
 
+    public TransportKey() {}
+
+    public TransportKey(String keyId, String key, String password) {
+        this.keyId = keyId;
+        this.key = key;
+        this.password = password;
+    }
+
     public byte[] getP12Key() {
         return EncodingUtils.decodeBase64String(key);
     }
