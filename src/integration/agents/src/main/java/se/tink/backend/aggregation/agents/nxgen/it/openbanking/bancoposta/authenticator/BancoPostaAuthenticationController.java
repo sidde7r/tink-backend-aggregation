@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.BancoPostaConstants.ErrorValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.ConsentScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
@@ -81,13 +82,13 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
     }
 
     private Map<String, String> getSupplementalInformation(List<ScaMethodEntity> methods) {
-        Map<String, String> supplementalInformation = null;
+        Map<String, String> supplementalInformation;
         try {
             supplementalInformation =
                     this.supplementalInformationHelper.askSupplementalInformation(
                             new Field[] {getChosenScaMethod(methods)});
         } catch (SupplementalInfoException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(ErrorValues.INVALID_CODE);
         }
         return supplementalInformation;
     }
