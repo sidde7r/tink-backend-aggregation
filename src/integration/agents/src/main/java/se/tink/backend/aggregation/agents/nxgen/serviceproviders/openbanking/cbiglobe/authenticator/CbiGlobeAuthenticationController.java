@@ -47,6 +47,7 @@ public abstract class CbiGlobeAuthenticationController
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         this.authenticator.tokenAutoAuthentication();
+        // CBI Globe flow needs two authentcation for AIS: 1. accounts 2. balances and transactions
 
         accountConsentAuthentication();
 

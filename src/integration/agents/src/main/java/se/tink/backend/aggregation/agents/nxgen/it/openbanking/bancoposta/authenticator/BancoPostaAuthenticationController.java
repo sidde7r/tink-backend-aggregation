@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.BancoPostaConstants.ErrorValues;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.BancoPostaConstants.UserMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.ConsentScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
@@ -42,6 +43,7 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
                         .getConsentResponse(
                                 ConsentType.ACCOUNT, consentRequest, consentState.getState());
 
+        // User has to choose OTP method before authentication
         ScaMethodEntity chosenScaMethod = selectScaMethod(consentResponse.getScaMethods());
 
         URL authorizeUrl =
@@ -104,12 +106,12 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
 
         return Field.builder()
                 .description(this.catalog.getString(description))
-                .helpText("Please select SCA method")
+                .helpText(UserMessages.SELECT_INFO)
                 .name(CHOSEN_SCA_METHOD)
                 .numeric(true)
                 .minLength(1)
                 .maxLength(length)
-                .hint(String.format("Select from 1 to %d", maxNumber))
+                .hint(String.format(UserMessages.SELECT_HELPER, maxNumber))
                 .build();
     }
 }
