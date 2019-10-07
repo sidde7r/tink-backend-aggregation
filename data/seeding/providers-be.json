@@ -422,21 +422,21 @@
             "status": "ENABLED",
             "supplementalFields": [
                 {
-                    "description": "Challenge",
+                    "description": "Login challenge",
                     "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
                     "immutable": true,
                     "masked": false,
                     "name": "logindescription"
                 },
                 {
-                    "description": "Challenge 2",
+                    "description": "Sign challenge",
                     "helpText": "Insert your bank card into the card reader.\nPress 'M2'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
                     "immutable": true,
                     "masked": false,
                     "name": "signcodedescription"
                 },
                 {
-                    "description": "Response Code",
+                    "description": "Login Response Code",
                     "helpText": "Enter your 8 digit response code from your card reader.",
                     "immutable": true,
                     "masked": false,
@@ -444,7 +444,7 @@
                     "numeric": true
                 },
                 {
-                    "description": "Response Code",
+                    "description": "Sign Response Code",
                     "helpText": "Enter your 8 digit response code from your card reader.",
                     "immutable": true,
                     "masked": false,
