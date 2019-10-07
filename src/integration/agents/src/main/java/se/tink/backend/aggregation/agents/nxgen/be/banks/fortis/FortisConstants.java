@@ -65,7 +65,6 @@ public class FortisConstants {
     }
 
     public static class FIELD {
-        public static final String PINCODE = "PINcode";
         public static final String CLIENTNUMBER = "clientnumber";
     }
 
@@ -103,7 +102,6 @@ public class FortisConstants {
 
     public static class STORAGE {
         public static final String ACCOUNT_PRODUCT_ID = "accountProductId";
-        public static final String PINCODE = "PINcode";
         public static final String PASSWORD = "password";
         public static final String SMID = "smid";
         public static final String AGREEMENT_ID = "agreementId";

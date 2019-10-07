@@ -152,12 +152,12 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
 
         final String authenticatorFactorId = credentials.getField(Field.Key.USERNAME);
         final String smid = credentials.getField(FortisConstants.FIELD.CLIENTNUMBER);
-        final String pinCode = credentials.getField(FortisConstants.STORAGE.PINCODE);
+        final String password = RandomStringUtils.randomAlphanumeric(16);
         final String deviceFingerprint = FortisUtils.calculateDeviceFingerPrint();
 
         persistentStorage.put(FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID, authenticatorFactorId);
         persistentStorage.put(FortisConstants.STORAGE.SMID, smid);
-        persistentStorage.put(FortisConstants.STORAGE.PINCODE, pinCode);
+        persistentStorage.put(FortisConstants.STORAGE.PASSWORD, password);
         persistentStorage.put(FortisConstants.STORAGE.DEVICE_FINGERPRINT, deviceFingerprint);
 
         Optional<EBankingUserId> ebankingUsersResponse =
@@ -193,7 +193,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         String calculateChallenge =
                 FortisUtils.calculateChallenge(
                         muid,
-                        pinCode,
+                        password,
                         agreementId,
                         challenge,
                         res.getValue().getAuthenticationProcessId());
@@ -287,10 +287,6 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                 checkNotNullOrEmpty(
                         persistentStorage.get(FortisConstants.STORAGE.MUID),
                         FortisConstants.STORAGE.MUID);
-        String pinCode =
-                checkNotNullOrEmpty(
-                        persistentStorage.get(FortisConstants.STORAGE.PINCODE),
-                        FortisConstants.STORAGE.PASSWORD);
         String agreementId =
                 checkNotNullOrEmpty(
                         persistentStorage.get(FortisConstants.STORAGE.AGREEMENT_ID),
