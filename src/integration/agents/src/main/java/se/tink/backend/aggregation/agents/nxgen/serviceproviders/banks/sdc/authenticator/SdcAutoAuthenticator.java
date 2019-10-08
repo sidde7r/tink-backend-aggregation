@@ -88,7 +88,7 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
             Optional<InvalidPinResponse> invalidPin = InvalidPinResponse.from(e);
             if (invalidPin.isPresent()) {
                 this.persistentStorage.removeSignedDeviceId();
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(e);
             }
             if (SdcConstants.Authentication.isInternalError(e)) {
                 // errorMessage is null safe
@@ -99,10 +99,10 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
                                                 .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
                                 .orElse("");
                 if (this.agentConfiguration.isLoginError(errorMessage)) {
-                    LOGGER.info(errorMessage);
+                    LOGGER.info(errorMessage, e);
 
                     this.persistentStorage.removeSignedDeviceId();
-                    throw SessionError.SESSION_EXPIRED.exception();
+                    throw SessionError.SESSION_EXPIRED.exception(e);
                 }
             }
 

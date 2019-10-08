@@ -33,7 +33,7 @@ public class SdcSessionHandler implements SessionHandler {
 
             bankClient.filterAccounts(request);
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

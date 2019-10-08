@@ -59,14 +59,16 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
                         log.info(
                                 String.format(
                                         "%s - User does not have any mortgages",
-                                        BecConstants.Log.LOANS));
+                                        BecConstants.Log.LOANS),
+                                hre);
                         return Collections.emptyList();
                     }
 
                     if (becErrorResponse.noDetailsExist()) {
                         log.info(
                                 String.format(
-                                        "%s - No details for loans exist", BecConstants.Log.LOANS));
+                                        "%s - No details for loans exist", BecConstants.Log.LOANS),
+                                hre);
                         return Collections.emptyList();
                     }
 
@@ -75,7 +77,8 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
                     if (becErrorResponse.functionIsNotAvailable()) {
                         log.info(
                                 String.format(
-                                        "%s - Function not available", BecConstants.Log.LOANS));
+                                        "%s - Function not available", BecConstants.Log.LOANS),
+                                hre);
                         return Collections.emptyList();
                     }
 
@@ -84,7 +87,8 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
                                     "%s - Unknown error: [%s] %s",
                                     BecConstants.Log.LOAN_FAILED,
                                     becErrorResponse.getAction(),
-                                    becErrorResponse.getMessage()));
+                                    becErrorResponse.getMessage()),
+                            hre);
                     throw hre;
                 case HttpStatus.SC_FORBIDDEN:
                     // No mortgages in provider

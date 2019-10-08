@@ -36,7 +36,7 @@ public class N26Utils {
                 .map(
                         a -> {
                             logger.error(
-                                    "Unable to authenticate error {} description {} {}",
+                                    "Unable to authenticate error {} description {}",
                                     error,
                                     errorResponse.getErrorDescription(),
                                     ex);
@@ -45,7 +45,7 @@ public class N26Utils {
                 .orElseGet(
                         () -> {
                             logger.error(
-                                    "Unknown error {}  with description {} {}",
+                                    "Unknown error {} with description {}",
                                     error,
                                     errorResponse.getErrorDescription(),
                                     ex);
@@ -61,13 +61,16 @@ public class N26Utils {
                         HttpResponseException.class,
                         ex -> {
                             if (ex.getResponse().getStatus() == 500) {
-                                Try.failure(BankServiceError.BANK_SIDE_FAILURE.exception());
+                                Try.failure(BankServiceError.BANK_SIDE_FAILURE.exception(ex));
                             }
                             final ErrorResponse errResponse =
                                     ex.getResponse().getBody(ErrorResponse.class);
 
                             return mapError(ex, errResponse)
-                                    .map(e -> Try.<Either<ErrorResponse, T>>failure(e.exception()))
+                                    .map(
+                                            e ->
+                                                    Try.<Either<ErrorResponse, T>>failure(
+                                                            e.exception(ex)))
                                     .orElseGet(() -> Try.success(Either.left(errResponse)));
                         });
     }

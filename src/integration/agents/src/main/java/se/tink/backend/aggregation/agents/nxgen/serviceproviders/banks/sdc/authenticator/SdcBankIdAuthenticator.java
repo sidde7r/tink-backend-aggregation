@@ -42,7 +42,7 @@ public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
             bankClient.initSession();
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                LOGGER.warn("SDC SE: Received 500 response on init session request.");
+                LOGGER.warn("SDC SE: Received 500 response on init session request.", e);
             }
         }
 
@@ -72,7 +72,7 @@ public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
             return BankIdStatus.DONE;
         } catch (Exception e) {
             if (credentials.getUpdated() == null) {
-                throw LoginError.NOT_CUSTOMER.exception();
+                throw LoginError.NOT_CUSTOMER.exception(e);
             }
 
             throw e;

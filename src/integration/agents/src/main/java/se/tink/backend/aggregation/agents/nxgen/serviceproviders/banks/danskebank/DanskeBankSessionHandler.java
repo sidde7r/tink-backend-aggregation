@@ -26,7 +26,7 @@ public class DanskeBankSessionHandler implements SessionHandler {
             apiClient.listAccounts(
                     ListAccountsRequest.createFromLanguageCode(configuration.getLanguageCode()));
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

@@ -80,7 +80,7 @@ public class SdcSmsOtpAuthenticator
 
             return new InitValues(device, challenge, transId);
         } catch (HttpResponseException e) {
-            LOGGER.infoExtraLong(e.toString(), SdcConstants.HTTP_RESPONSE_LOGGER);
+            LOGGER.infoExtraLong(e.toString(), SdcConstants.HTTP_RESPONSE_LOGGER, e);
             handleErrors(e);
             throw e;
         }
@@ -92,7 +92,7 @@ public class SdcSmsOtpAuthenticator
 
         Optional<InvalidPinResponse> invalidPin = InvalidPinResponse.from(e);
         if (invalidPin.isPresent()) {
-            throw invalidPin.get().exception();
+            throw invalidPin.get().exception(e);
         }
         if (SdcConstants.Authentication.isInternalError(e)) {
             // errorMessage is null safe
@@ -103,20 +103,21 @@ public class SdcSmsOtpAuthenticator
                                             .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
                             .orElse("");
             if (this.agentConfiguration.isNotCustomer(errorMessage)) {
-                throw LoginError.NOT_CUSTOMER.exception();
+                throw LoginError.NOT_CUSTOMER.exception(e);
             }
             if (this.agentConfiguration.isDeviceRegistrationNotAllowed(errorMessage)) {
                 throw new IllegalStateException(
-                        "This bank does not support device registration! Configure this provider to use PIN instead of SMS");
+                        "This bank does not support device registration! Configure this provider to use PIN instead of SMS",
+                        e);
             } else if (this.agentConfiguration.isLoginError(errorMessage)) {
-                LOGGER.info(errorMessage);
+                LOGGER.info(errorMessage, e);
 
                 // if user is blocked throw more specific exception
                 if (this.agentConfiguration.isUserBlocked(errorMessage)) {
-                    throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
                 }
 
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
         }
     }
@@ -137,7 +138,7 @@ public class SdcSmsOtpAuthenticator
                             .orElse("");
 
             if (SdcConstants.ErrorMessage.isPinInvalid(errorMessage)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
             }
 
             throw hre;

@@ -123,7 +123,7 @@ public class SwedbankDefaultTransactionalAccountFetcher
                                 accountNumber, bankProfileId));
             }
         } catch (Exception e) {
-            log.warn("Swedbank_multiprofile Failed to log info for multiprofile user");
+            log.warn("Swedbank_multiprofile Failed to log info for multiprofile user", e);
         }
     }
 
@@ -203,7 +203,7 @@ public class SwedbankDefaultTransactionalAccountFetcher
                         SwedbankBaseConstants.PaginationError.PAGINATION_ERROR,
                         account.getAccountNumber());
                 // Log to notify we still have the problem
-                log.warn(SwedbankBaseConstants.PaginationError.PAGINATION_ERROR_MSG);
+                log.warn(SwedbankBaseConstants.PaginationError.PAGINATION_ERROR_MSG, hre);
 
                 // return fetching is "done"
                 return new EngagementTransactionsResponse();

@@ -142,7 +142,7 @@ public class SwedbankDefaultBankIdAuthenticator
                 ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
 
                 if (errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.USER_ID)) {
-                    throw BankIdError.USER_VALIDATION_ERROR.exception();
+                    throw BankIdError.USER_VALIDATION_ERROR.exception(hre);
                 }
             }
 

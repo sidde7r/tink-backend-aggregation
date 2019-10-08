@@ -98,7 +98,7 @@ public class DanskeBankApiClient {
             response = postRequest(constants.getFinalizeAuthenticationUrl(), request);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
             throw e;
         }

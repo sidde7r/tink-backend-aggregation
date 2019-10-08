@@ -47,7 +47,7 @@ public class CrossKeyCreditCardFetcher
                     .map(CrossKeyCard::toCreditCardAccount)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            LOG.info("Error fetching credit cards: " + e.getMessage());
+            LOG.info("Error fetching credit cards: " + e.getMessage(), e);
             return Collections.emptyList();
         }
     }

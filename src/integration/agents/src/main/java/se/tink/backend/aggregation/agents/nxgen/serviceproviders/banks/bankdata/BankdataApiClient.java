@@ -49,33 +49,34 @@ public class BankdataApiClient {
         } catch (HttpResponseException e) {
             LoginErrorResponse error = e.getResponse().getBody(LoginErrorResponse.class);
 
-            handleLoginErrors(error);
+            handleLoginErrors(error, e);
 
             throw new IllegalStateException(
                     String.format(
                             "Unhandled login error: errorCode: %s, errorMessage: %s, getNumberOfLoginAttemptsLeft: %s",
                             error.getErrorCode(),
                             error.getErrorMessage(),
-                            error.getNumberOfLoginAttemptsLeft()));
+                            error.getNumberOfLoginAttemptsLeft()),
+                    e);
         }
     }
 
-    private void handleLoginErrors(LoginErrorResponse error)
+    private void handleLoginErrors(LoginErrorResponse error, HttpResponseException e)
             throws AuthorizationException, LoginException {
 
         if (error.isBlocked()) {
-            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
         } else if (error.getErrorCode() == BankdataConstants.ErrorCodes.INCORRECT_CREDENTIALS) {
 
             if (error.isLastChance()) {
-                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
+                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception(e);
             }
 
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(e);
 
         } else if (error.getErrorCode()
                 == BankdataConstants.ErrorCodes.ACCOUNT_NOT_ACTIVATED_IN_ONLINE_BANK) {
-            throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
+            throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(e);
         }
     }
 

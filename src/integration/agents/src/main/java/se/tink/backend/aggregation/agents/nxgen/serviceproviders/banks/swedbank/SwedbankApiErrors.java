@@ -69,16 +69,16 @@ public class SwedbankApiErrors {
     public static void handleTokenErrors(HttpResponseException hre)
             throws SupplementalInfoException {
         if (isSecurityTokenInvalidFormat(hre)) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception();
+            throw SupplementalInfoError.NO_VALID_CODE.exception(hre);
         }
         if (isSecurityTokenTooOld(hre)) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception();
+            throw SupplementalInfoError.NO_VALID_CODE.exception(hre);
         }
         if (isLoginSecurityTokenInvalid(hre)) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception();
+            throw SupplementalInfoError.NO_VALID_CODE.exception(hre);
         }
         if (isAuthorizationSecurityTokenInvalid(hre)) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception();
+            throw SupplementalInfoError.NO_VALID_CODE.exception(hre);
         }
     }
 
