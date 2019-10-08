@@ -36,7 +36,7 @@ public class ContractsItem {
                             .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
                             .build());
         } catch (Exception e) {
-            logger.error("{} {}", BbvaMxConstants.LOGGING.CREDIT_PARSING_ERROR, e.toString());
+            logger.error("{} {}", BbvaMxConstants.LOGGING.CREDIT_PARSING_ERROR, e.toString(), e);
             return Optional.empty();
         }
     }

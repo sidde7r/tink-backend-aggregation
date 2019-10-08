@@ -38,7 +38,7 @@ public class ContractsItemEntity {
             toTransactionalAccount("");
             return true;
         } catch (Exception e) {
-            logger.error("{} {}", BbvaMxConstants.LOGGING.ACCOUNT_PARSING_ERROR, e.toString());
+            logger.error("{} {}", BbvaMxConstants.LOGGING.ACCOUNT_PARSING_ERROR, e.toString(), e);
             return false;
         }
     }
