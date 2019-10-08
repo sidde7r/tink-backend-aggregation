@@ -54,6 +54,7 @@ public final class AgentConfigurationController {
         Preconditions.checkNotNull(
                 provider.getAccessType(), "provider.getAccessType() cannot be null.");
         Preconditions.checkNotNull(provider.getType(), "provider.getType() cannot be null.");
+        Preconditions.checkNotNull(provider.getName(), "provider.getName() cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
 
@@ -80,7 +81,12 @@ public final class AgentConfigurationController {
         this.isTestProvider = ProviderTypes.TEST == provider.getType();
 
         if (isTestProvider) {
-            log.info("Test provider, will not try to read agent configuration from SS.");
+            log.info(
+                    "Test provider : "
+                            + provider.getName()
+                            + " when reading secrets"
+                            + getSecretsServiceParamsString()
+                            + ", will not try to read agent configuration from SS.");
         }
     }
 
