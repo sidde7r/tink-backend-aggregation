@@ -51,7 +51,7 @@ public class Sparebank1SessionHandler implements SessionHandler {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
         } catch (HttpResponseException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

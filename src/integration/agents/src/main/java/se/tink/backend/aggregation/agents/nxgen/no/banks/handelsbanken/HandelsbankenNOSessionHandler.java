@@ -23,7 +23,7 @@ public class HandelsbankenNOSessionHandler implements SessionHandler {
         try {
             apiClient.extendSession();
         } catch (HttpResponseException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

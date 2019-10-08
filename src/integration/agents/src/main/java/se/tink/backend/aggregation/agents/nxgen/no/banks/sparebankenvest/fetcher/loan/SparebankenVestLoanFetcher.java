@@ -65,7 +65,8 @@ public class SparebankenVestLoanFetcher implements AccountFetcher<LoanAccount> {
         } catch (Exception e) {
             LOGGER.infoExtraLong(
                     "DETAILS: Failed to fetch details: " + e.getMessage(),
-                    SparebankenVestConstants.LogTags.LOANS);
+                    SparebankenVestConstants.LogTags.LOANS,
+                    e);
         }
     }
 }

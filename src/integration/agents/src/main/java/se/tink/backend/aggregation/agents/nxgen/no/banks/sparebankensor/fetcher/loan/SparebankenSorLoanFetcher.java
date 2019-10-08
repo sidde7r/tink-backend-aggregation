@@ -55,7 +55,7 @@ public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
                     transigoAccountsResponse, SparebankenSorConstants.LogTags.LOAN_LOG_TAG);
         } catch (Exception e) {
             LOGGER.infoExtraLong(
-                    "Failed to retrieve loans", SparebankenSorConstants.LogTags.LOAN_LOG_TAG);
+                    "Failed to retrieve loans", SparebankenSorConstants.LogTags.LOAN_LOG_TAG, e);
         }
 
         List<AccountEntity> accountList = apiClient.fetchAccounts();
@@ -88,7 +88,8 @@ public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
         } catch (Exception e) {
             LOGGER.warn(
                     SparebankenSorConstants.LogTags.LOAN_DETAILS.toString()
-                            + " fetching of loan details failed");
+                            + " fetching of loan details failed",
+                    e);
         }
     }
 }

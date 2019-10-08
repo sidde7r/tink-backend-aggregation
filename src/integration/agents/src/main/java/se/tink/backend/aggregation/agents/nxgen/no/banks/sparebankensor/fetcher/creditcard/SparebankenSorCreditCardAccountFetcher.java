@@ -26,7 +26,8 @@ public class SparebankenSorCreditCardAccountFetcher implements AccountFetcher<Cr
         } catch (Exception e) {
             LOGGER.infoExtraLong(
                     "Failed to retrieve credit cards",
-                    SparebankenSorConstants.LogTags.CREDIT_CARD_LOG_TAG);
+                    SparebankenSorConstants.LogTags.CREDIT_CARD_LOG_TAG,
+                    e);
         }
         return Collections.emptyList();
     }
