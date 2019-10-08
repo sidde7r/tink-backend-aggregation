@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
@@ -76,8 +77,8 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
                                 .map(Holder::getAnyName)
                                 .collect(Collectors.toList()))
                 .setCoApplicant(product.getHolders().size() > 1)
-                .setInitialDate(IngUtils.toJavaLangDate(product.getSignClientDate()))
-                .setNextDayOfTermsChange(IngUtils.toJavaLangDate(product.getNextRevisionDate()))
+                .setInitialDate(getDateIfPresent(product.getSignClientDate()))
+                .setNextDayOfTermsChange(getDateIfPresent(product.getNextRevisionDate()))
                 .setLoanNumber(product.getProductNumber())
                 .build();
     }
@@ -93,8 +94,12 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
                                 .map(Holder::getAnyName)
                                 .collect(Collectors.toList()))
                 .setCoApplicant(product.getHolders().size() > 1)
-                .setInitialDate(IngUtils.toJavaLangDate(product.getInitDate()))
+                .setInitialDate(getDateIfPresent(product.getInitDate()))
                 .setLoanNumber(product.getProductNumber())
                 .build();
+    }
+
+    private static Date getDateIfPresent(String dateString) {
+        return dateString == null ? null : IngUtils.toJavaLangDate(dateString);
     }
 }
