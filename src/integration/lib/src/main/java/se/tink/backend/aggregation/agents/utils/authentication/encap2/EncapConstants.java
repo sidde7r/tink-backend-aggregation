@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap2;
 
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class EncapConstants {
     public static final String B64_ELLIPTIC_CURVE_PUBLIC_KEY =

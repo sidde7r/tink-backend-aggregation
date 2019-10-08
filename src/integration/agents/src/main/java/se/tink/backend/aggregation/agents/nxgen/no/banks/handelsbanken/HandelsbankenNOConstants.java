@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken;
 
 import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class HandelsbankenNOConstants {

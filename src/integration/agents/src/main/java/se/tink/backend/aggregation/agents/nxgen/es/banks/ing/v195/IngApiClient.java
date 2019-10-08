@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.Mo
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.ProductsResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class IngApiClient {
 

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb;
 
 import com.google.common.collect.ImmutableSet;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 // NOTE: Look out for additional, Worklight-specific constants in the WLConstants class
 

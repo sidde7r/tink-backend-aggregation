@@ -5,8 +5,8 @@ import java.util.Map;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17Constants;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class NordeaNoConstants {
     public static final String MARKET_CODE = "NO";

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas;
 
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BnpParibasConstants {
 

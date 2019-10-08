@@ -8,6 +8,7 @@ java_binary(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidas",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_github_tomakehurst_wiremock",

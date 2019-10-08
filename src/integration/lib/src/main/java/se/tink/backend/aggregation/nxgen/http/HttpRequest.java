@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.http;
 
 import java.net.URI;
 import javax.ws.rs.core.MultivaluedMap;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public interface HttpRequest {
     HttpMethod getMethod();

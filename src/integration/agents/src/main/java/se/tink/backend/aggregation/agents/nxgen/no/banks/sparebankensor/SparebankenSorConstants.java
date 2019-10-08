@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor;
 
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SparebankenSorConstants {
 

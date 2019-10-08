@@ -8,8 +8,8 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class NordeaDkConstants {
     public static final String MARKET_CODE = "DK";

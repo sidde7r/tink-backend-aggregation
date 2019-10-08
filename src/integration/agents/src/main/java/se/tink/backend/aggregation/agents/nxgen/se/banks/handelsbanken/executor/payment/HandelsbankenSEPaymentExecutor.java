@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.UpdatePaymentExecutor;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;

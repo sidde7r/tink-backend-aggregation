@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http;
+package se.tink.backend.aggregation.nxgen.http.url;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;

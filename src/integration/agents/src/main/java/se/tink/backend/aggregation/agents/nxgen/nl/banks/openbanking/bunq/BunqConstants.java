@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq;
 
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class BunqConstants {
 

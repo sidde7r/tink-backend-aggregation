@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.entities.Ot
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 import se.tink.backend.aggregation.utils.deviceprofile.entity.UserAgentEntity;
 import se.tink.libraries.strings.StringUtils;

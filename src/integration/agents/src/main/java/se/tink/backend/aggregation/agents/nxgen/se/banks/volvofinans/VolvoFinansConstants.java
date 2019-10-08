@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans;
 
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class VolvoFinansConstants {
 

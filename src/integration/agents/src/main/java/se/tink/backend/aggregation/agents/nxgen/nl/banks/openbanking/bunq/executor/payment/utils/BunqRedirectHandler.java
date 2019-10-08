@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.execu
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BunqRedirectHandler {
     private final SupplementalInformationHelper supplementalInformationHelper;

@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 // According to "OpenID Connect Discovery 1.0"
 

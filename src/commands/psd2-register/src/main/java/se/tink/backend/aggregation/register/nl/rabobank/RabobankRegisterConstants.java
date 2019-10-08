@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.register.nl.rabobank;
 
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class RabobankRegisterConstants {
     public static class Url {

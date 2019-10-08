@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth1Token;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public interface OAuth1Authenticator {
 

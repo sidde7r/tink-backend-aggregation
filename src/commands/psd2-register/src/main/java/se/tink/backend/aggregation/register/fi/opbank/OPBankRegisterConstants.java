@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.register.fi.opbank;
 
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class OPBankRegisterConstants {
     public static class Url {

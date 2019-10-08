@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BankdataConstants {
     public static final String MARKET_CURRENCY = "dkk";

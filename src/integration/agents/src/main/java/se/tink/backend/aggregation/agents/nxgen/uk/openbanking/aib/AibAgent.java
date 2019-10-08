@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.aib.AibConstants.
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AibAgent extends UkOpenBankingBaseAgent {
