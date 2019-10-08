@@ -5,6 +5,64 @@ metadata:
   namespace: agents
 spec:
   rules:
+
+  # All Markets.
+  # For metrics that lack market properties.
+
+  - alert: TransferSuccessRateLow
+    expr: |
+        # Failed attempts above 10%
+        (sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', status=~"FAILED"}[30m])) by (provider)
+            / sum(increase(tink_transfer_count_total{transfer_type='bank-transfer'}[30m])) by (provider) > 0.1)
+        # At least this many attempts.
+        and sum(increase(tink_transfer_count_total{transfer_type='bank-transfer'}[30m])) by (provider)) > 2
+    for: 5m
+    labels:
+        severity: urgent
+        who: integration
+    annotations:
+        description: Transfers failing more than 10% ( <{ $value }> ) for the last 30 minutes.
+            Investigate immediately.
+        summary: Transfers failing more than 10% ( <{ $value }> ) for <{ $labels.provider }>
+            the last 30 minutes.
+        tags: <{ $labels.provider }>
+
+  - alert: PaymentSuccessRateLow
+    expr: |
+        # Failed attempts above 10%
+        (sum(increase(tink_transfer_count_total{transfer_type='payment', status=~"FAILED"}[30m])) by (provider)
+            / sum(increase(tink_transfer_count_total{transfer_type='payment'}[30m])) by (provider) > 0.1)
+        # At least this many attempts.
+        and sum(increase(tink_transfer_count_total{transfer_type='payment'}[30m])) by (provider)) > 2
+    for: 5m
+    labels:
+        severity: urgent
+        who: integration
+    annotations:
+        description: Payments failing more than 10% ( <{ $value }> ) for the last 30 minutes.
+            Investigate immediately.
+        summary: Payments failing more than 10% ( <{ $value }> ) for <{ $labels.provider }>
+            the last 30 minutes.
+        tags: <{ $labels.provider }>
+        
+  - alert: EInvoiceSuccessRateLow
+    expr: |
+        # Failed attempts above 10%
+        (sum(increase(tink_transfer_count_total{transfer_type='einvoice', status=~"FAILED"}[30m])) by (provider)
+            / sum(increase(tink_transfer_count_total{transfer_type='einvoice'}[30m])) by (provider) > 0.1)
+        # At least this many attempts.
+        and sum(increase(tink_transfer_count_total{transfer_type='einvoice'}[30m])) by (provider)) > 2
+    for: 5m
+    labels:
+        severity: urgent
+        who: integration
+    annotations:
+        description: EInvoice failing more than 10% ( <{ $value }> ) for the last 30 minutes.
+            Investigate immediately.
+        summary: EInvoice failing more than 10% ( <{ $value }> ) for <{ $labels.provider }>
+            the last 30 minutes.
+        tags: <{ $labels.provider }>
+
 ### Market specific alerts for degrading logins and refreshes
 ### Keep them market separate since we might want to tweak the attempt limits
 ### depending on how much traffic we have on each market.
