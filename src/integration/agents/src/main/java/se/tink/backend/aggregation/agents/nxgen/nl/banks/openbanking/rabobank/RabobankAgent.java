@@ -45,7 +45,7 @@ public final class RabobankAgent
             final CredentialsRequest request,
             final AgentContext context,
             final AgentsServiceConfiguration agentsConfiguration) {
-        super(request, context, agentsConfiguration.getSignatureKeyPair());
+        super(request, context, agentsConfiguration.getSignatureKeyPair(), true);
 
         clientName = request.getProvider().getPayload();
 
