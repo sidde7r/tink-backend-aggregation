@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final Logger log =
@@ -48,11 +47,7 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
         for (BankProfile bankProfile : apiClient.getBankProfiles()) {
             apiClient.selectProfile(bankProfile);
 
-            String portfolioHoldingsString = apiClient.portfolioHoldings();
-
-            PortfolioHoldingsResponse portfolioHoldings =
-                    SerializationUtils.deserializeFromString(
-                            portfolioHoldingsString, PortfolioHoldingsResponse.class);
+            PortfolioHoldingsResponse portfolioHoldings = apiClient.portfolioHoldings();
 
             investmentAccounts.addAll(
                     fundAccountsToInvestmentAccounts(portfolioHoldings.getFundAccounts()));
@@ -79,8 +74,7 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
             return Collections.emptyList();
         }
 
-        return defaultAccountToInvestmentAccount(
-                getDetailedPortfolioResponseList(equityTraders));
+        return defaultAccountToInvestmentAccount(getDetailedPortfolioResponseList(equityTraders));
     }
 
     private List<InvestmentAccount> investmentSavingsToTinkInvestmentAccounts(
@@ -142,18 +136,10 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
     private List<DetailedPortfolioResponse> getDetailedPortfolioResponseList(
             List<? extends AbstractInvestmentAccountEntity> entityList) {
 
-        List<String> responseList =
-                entityList.stream()
-                        .map(AbstractInvestmentAccountEntity::getLinks)
-                        .map(LinksEntity::getSelf)
-                        .map(apiClient::detailedPortfolioInfo)
-                        .collect(Collectors.toList());
-
-        return responseList.stream()
-                .map(
-                        responseString ->
-                                SerializationUtils.deserializeFromString(
-                                        responseString, DetailedPortfolioResponse.class))
+        return entityList.stream()
+                .map(AbstractInvestmentAccountEntity::getLinks)
+                .map(LinksEntity::getSelf)
+                .map(apiClient::detailedPortfolioInfo)
                 .collect(Collectors.toList());
     }
 }
