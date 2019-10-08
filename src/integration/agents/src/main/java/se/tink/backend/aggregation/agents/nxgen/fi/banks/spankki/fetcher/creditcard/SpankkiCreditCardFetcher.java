@@ -49,7 +49,7 @@ public class SpankkiCreditCardFetcher
         } catch (HttpResponseException e) {
             LOGGER.warnExtraLong(SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD, e);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
         }
 
         return Collections.emptyList();

@@ -97,7 +97,7 @@ public class OpAuthenticator implements KeyCardAuthenticator {
             ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
 
             if (errorResponse.isIncorrectLoginCredentials()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
         }
 

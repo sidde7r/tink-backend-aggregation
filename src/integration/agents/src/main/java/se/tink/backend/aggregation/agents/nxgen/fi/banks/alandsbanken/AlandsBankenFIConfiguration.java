@@ -109,7 +109,7 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
                                 SerializationUtils.serializeToString(transaction)));
             }
         } catch (Exception e) {
-            LOG.debug("Could not log transaction " + e.getMessage());
+            LOG.debug("Could not log transaction " + e.getMessage(), e);
         }
     }
 

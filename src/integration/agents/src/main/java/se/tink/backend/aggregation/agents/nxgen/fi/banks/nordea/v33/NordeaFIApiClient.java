@@ -148,7 +148,7 @@ public class NordeaFIApiClient {
 
             ErrorResponse error = hre.getResponse().getBody(ErrorResponse.class);
             if (error.isInvalidRefreshToken()) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(hre);
             }
 
             throw hre;
