@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankDefaultTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -220,11 +219,7 @@ public class SwedbankDefaultTransactionalAccountFetcher
     private List<String> getInvestmentAccountNumbers() {
 
         if (investmentAccountNumbers == null) {
-            String portfolioHoldingsString = apiClient.portfolioHoldings();
-            PortfolioHoldingsResponse portfolioHoldings =
-                    SerializationUtils.deserializeFromString(
-                            portfolioHoldingsString, PortfolioHoldingsResponse.class);
-
+            PortfolioHoldingsResponse portfolioHoldings = apiClient.portfolioHoldings();
             investmentAccountNumbers = portfolioHoldings.investmentAccountNumbers();
         }
 

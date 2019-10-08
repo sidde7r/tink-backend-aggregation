@@ -49,7 +49,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.IncomingEinvoicesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.DetailedPortfolioResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.FundMarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.PortfolioHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankEntity;
@@ -297,12 +299,13 @@ public class SwedbankDefaultApiClient {
         return makeRequest(linkEntity, DetailedCardAccountResponse.class, true);
     }
 
-    public String portfolioHoldings() {
-        return makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey.PORTFOLIOS, String.class);
+    public PortfolioHoldingsResponse portfolioHoldings() {
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.PORTFOLIOS, PortfolioHoldingsResponse.class);
     }
 
-    public String detailedPortfolioInfo(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, String.class, true);
+    public DetailedPortfolioResponse detailedPortfolioInfo(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, DetailedPortfolioResponse.class, true);
     }
 
     public FundMarketInfoResponse fundMarketInfo(LinkEntity linkEntity) {
