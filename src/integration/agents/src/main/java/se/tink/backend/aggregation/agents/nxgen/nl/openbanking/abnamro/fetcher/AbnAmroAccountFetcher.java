@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroConstants.StorageKey;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.rpc.AccountHolderResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -25,10 +25,13 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
 
-        AccountHolderResponse accountInfo = apiClient.fetchAccountHolder();
+        ConsentResponse consent = apiClient.consentRequest();
+        String accountId = consent.getAccountId();
+
+        AccountHolderResponse accountInfo = apiClient.fetchAccountHolder(accountId);
         String accountNumber = accountInfo.getAccountNumber();
         String holderName = accountInfo.getAccountHolderName();
-        AccountBalanceResponse balanceInfo = apiClient.fetchAccountBalance();
+        AccountBalanceResponse balanceInfo = apiClient.fetchAccountBalance(accountId);
 
         Optional<TransactionalAccount> account =
                 TransactionalAccount.nxBuilder()
@@ -43,7 +46,6 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
                                         .addIdentifier(new IbanIdentifier(accountNumber))
                                         .build())
                         .addHolderName(holderName)
-                        .putInTemporaryStorage(StorageKey.ACCOUNT_CONSENT_ID, accountNumber)
                         .build();
 
         return account.map(Lists::newArrayList).orElseGet(Lists::newArrayList);

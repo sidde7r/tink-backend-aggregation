@@ -60,7 +60,6 @@ public final class AbnAmroConstants {
 
     public class StorageKey {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
-        public static final String ACCOUNT_CONSENT_ID = "ConsentAccountId";
     }
 
     public class Signature {
@@ -95,10 +94,12 @@ public final class AbnAmroConstants {
         public static final String DATE = "Date";
         public static final String BOOK_DATE_FROM = "bookDateFrom";
         public static final String BOOK_DATE_TO = "bookDateTo";
+        public static final String NEXT_PAGE_KEY = "nextPageKey";
     }
 
     public class QueryValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE = "code";
         public static final String SCOPES =
                 "psd2:account:balance:read psd2:account:transaction:read psd2:account:details:read";
