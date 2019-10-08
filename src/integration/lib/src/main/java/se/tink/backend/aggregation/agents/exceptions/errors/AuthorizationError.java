@@ -30,7 +30,17 @@ public enum AuthorizationError implements AgentError {
     }
 
     @Override
+    public AuthorizationException exception(Throwable cause) {
+        return new AuthorizationException(this);
+    }
+
+    @Override
     public AuthorizationException exception(LocalizableKey userMessage) {
         return new AuthorizationException(this, userMessage);
+    }
+
+    @Override
+    public AuthorizationException exception(LocalizableKey userMessage, Throwable cause) {
+        return new AuthorizationException(this, userMessage, cause);
     }
 }

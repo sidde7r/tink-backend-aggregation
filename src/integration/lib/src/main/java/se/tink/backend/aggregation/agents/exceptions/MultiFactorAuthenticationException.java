@@ -4,11 +4,21 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AgentError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public abstract class MultiFactorAuthenticationException extends AuthenticationException {
-    MultiFactorAuthenticationException(AgentError error) {
+
+    public MultiFactorAuthenticationException(AgentError error) {
         super(error);
     }
 
-    MultiFactorAuthenticationException(AgentError error, LocalizableKey userMessage) {
+    public MultiFactorAuthenticationException(AgentError error, Throwable cause) {
+        super(error, cause);
+    }
+
+    public MultiFactorAuthenticationException(AgentError error, LocalizableKey userMessage) {
         super(error, userMessage);
+    }
+
+    public MultiFactorAuthenticationException(
+            AgentError error, LocalizableKey userMessage, Throwable cause) {
+        super(error, userMessage, cause);
     }
 }

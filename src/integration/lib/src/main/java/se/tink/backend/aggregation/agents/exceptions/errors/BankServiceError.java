@@ -32,6 +32,11 @@ public enum BankServiceError implements AgentRuntimeError {
     }
 
     @Override
+    public BankServiceException exception(Throwable cause) {
+        return new BankServiceException(this, cause);
+    }
+
+    @Override
     public LocalizableKey userMessage() {
         return userMessage;
     }
@@ -39,5 +44,10 @@ public enum BankServiceError implements AgentRuntimeError {
     @Override
     public BankServiceException exception(LocalizableKey userMessage) {
         return new BankServiceException(this, userMessage);
+    }
+
+    @Override
+    public BankServiceException exception(LocalizableKey userMessage, Throwable cause) {
+        return new BankServiceException(this, userMessage, cause);
     }
 }

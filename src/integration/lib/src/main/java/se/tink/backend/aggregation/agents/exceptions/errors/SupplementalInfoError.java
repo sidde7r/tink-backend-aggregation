@@ -23,7 +23,17 @@ public enum SupplementalInfoError implements AgentError {
     }
 
     @Override
+    public SupplementalInfoException exception(Throwable cause) {
+        return new SupplementalInfoException(this, cause);
+    }
+
+    @Override
     public SupplementalInfoException exception(LocalizableKey userMessage) {
         return new SupplementalInfoException(this, userMessage);
+    }
+
+    @Override
+    public SupplementalInfoException exception(LocalizableKey userMessage, Throwable cause) {
+        return new SupplementalInfoException(this, userMessage, cause);
     }
 }

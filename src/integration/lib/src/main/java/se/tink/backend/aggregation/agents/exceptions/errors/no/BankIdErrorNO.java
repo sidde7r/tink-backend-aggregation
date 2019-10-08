@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.exceptions.errors.no;
 
+import se.tink.backend.aggregation.agents.exceptions.AgentExceptionImpl;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
@@ -27,7 +28,17 @@ public enum BankIdErrorNO implements AgentError {
     }
 
     @Override
+    public AgentExceptionImpl exception(Throwable cause) {
+        return BankIdError.valueOf(this.name()).exception(this.userMessage, cause);
+    }
+
+    @Override
     public BankIdException exception(LocalizableKey userMessage) {
         return BankIdError.valueOf(this.name()).exception(userMessage);
+    }
+
+    @Override
+    public AgentExceptionImpl exception(LocalizableKey userMessage, Throwable cause) {
+        return BankIdError.valueOf(this.name()).exception(userMessage, cause);
     }
 }

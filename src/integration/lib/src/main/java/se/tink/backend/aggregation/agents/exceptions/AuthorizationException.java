@@ -13,20 +13,26 @@ import se.tink.libraries.i18n.LocalizableKey;
  * http://stackoverflow.com/questions/6556522/authentication-versus-authorization
  */
 public class AuthorizationException extends AgentExceptionImpl {
-    private final AuthorizationError error;
 
     public AuthorizationException(AuthorizationError error) {
         super(error);
-        this.error = error;
+    }
+
+    public AuthorizationException(AuthorizationError error, Throwable cause) {
+        super(error, cause);
     }
 
     public AuthorizationException(AuthorizationError error, LocalizableKey userMessage) {
         super(error, userMessage);
-        this.error = error;
+    }
+
+    public AuthorizationException(
+            AuthorizationError error, LocalizableKey userMessage, Throwable cause) {
+        super(error, userMessage, cause);
     }
 
     @Override
     public AuthorizationError getError() {
-        return error;
+        return getError(AuthorizationError.class);
     }
 }

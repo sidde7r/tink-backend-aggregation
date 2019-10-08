@@ -30,7 +30,23 @@ public class UnknownError implements AgentBaseError {
     }
 
     @Override
+    public RuntimeException exception(Throwable cause) {
+        // Hard to conciliate two exceptions, so using suppressed exceptions as compromise
+        RuntimeException runtimeException = new RuntimeException(exception);
+        runtimeException.addSuppressed(cause);
+        return runtimeException;
+    }
+
+    @Override
     public RuntimeException exception(LocalizableKey userMessage) {
         return new RuntimeException(key.toString(), exception);
+    }
+
+    @Override
+    public RuntimeException exception(LocalizableKey userMessage, Throwable cause) {
+        // Hard to conciliate two exceptions, so using suppressed exceptions as compromise
+        RuntimeException runtimeException = new RuntimeException(key.toString(), exception);
+        runtimeException.addSuppressed(cause);
+        return runtimeException;
     }
 }

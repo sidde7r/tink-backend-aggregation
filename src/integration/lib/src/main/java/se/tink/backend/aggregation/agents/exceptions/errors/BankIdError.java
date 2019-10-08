@@ -42,6 +42,11 @@ public enum BankIdError implements AgentError {
     }
 
     @Override
+    public BankIdException exception(Throwable cause) {
+        return new BankIdException(this, cause);
+    }
+
+    @Override
     public LocalizableKey userMessage() {
         return userMessage;
     }
@@ -49,5 +54,10 @@ public enum BankIdError implements AgentError {
     @Override
     public BankIdException exception(LocalizableKey userMessage) {
         return new BankIdException(this, userMessage);
+    }
+
+    @Override
+    public BankIdException exception(LocalizableKey userMessage, Throwable cause) {
+        return new BankIdException(this, userMessage, cause);
     }
 }

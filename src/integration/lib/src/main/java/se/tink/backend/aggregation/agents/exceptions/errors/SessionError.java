@@ -23,6 +23,11 @@ public enum SessionError implements AgentError {
     }
 
     @Override
+    public SessionException exception(Throwable cause) {
+        return new SessionException(this, cause);
+    }
+
+    @Override
     public LocalizableKey userMessage() {
         return userMessage;
     }
@@ -30,5 +35,10 @@ public enum SessionError implements AgentError {
     @Override
     public SessionException exception(LocalizableKey userMessage) {
         return new SessionException(this, userMessage);
+    }
+
+    @Override
+    public SessionException exception(LocalizableKey userMessage, Throwable cause) {
+        return new SessionException(this, userMessage, cause);
     }
 }

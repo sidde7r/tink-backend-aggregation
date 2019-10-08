@@ -5,20 +5,25 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class ThirdPartyAppException extends MultiFactorAuthenticationException {
 
-    private final ThirdPartyAppError error;
-
     public ThirdPartyAppException(ThirdPartyAppError error) {
         super(error);
-        this.error = error;
+    }
+
+    public ThirdPartyAppException(ThirdPartyAppError error, Throwable cause) {
+        super(error, cause);
     }
 
     public ThirdPartyAppException(ThirdPartyAppError error, LocalizableKey userMessage) {
         super(error, userMessage);
-        this.error = error;
+    }
+
+    public ThirdPartyAppException(
+            ThirdPartyAppError error, LocalizableKey userMessage, Throwable cause) {
+        super(error, userMessage, cause);
     }
 
     @Override
     public ThirdPartyAppError getError() {
-        return error;
+        return getError(ThirdPartyAppError.class);
     }
 }
