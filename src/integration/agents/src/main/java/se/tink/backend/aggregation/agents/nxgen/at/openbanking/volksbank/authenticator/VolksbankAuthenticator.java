@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.authen
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.authenticator.rpc.ConsentStatusResponse;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class VolksbankAuthenticator {
 

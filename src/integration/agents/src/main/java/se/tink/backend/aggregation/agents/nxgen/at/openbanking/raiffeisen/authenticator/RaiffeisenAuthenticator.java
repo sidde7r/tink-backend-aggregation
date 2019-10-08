@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authe
 
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenApiClient;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class RaiffeisenAuthenticator {
 

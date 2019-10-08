@@ -6,8 +6,8 @@ import com.google.common.base.Strings;
 import io.vavr.control.Try;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SparebankAuthenticator {
     private final SparebankApiClient apiClient;
