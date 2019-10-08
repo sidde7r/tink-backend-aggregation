@@ -98,7 +98,7 @@ public class BunqRegistrationAuthenticator implements Authenticator {
                 throw new IllegalStateException("Could not authenticate user", e);
             }
 
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(e);
         }
     }
 }

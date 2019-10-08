@@ -74,7 +74,7 @@ public class TransactionEntity {
         try {
             return ICSConstants.Date.TRANSACTION_FORMAT.parse(transactionDate);
         } catch (ParseException e) {
-            throw new IllegalStateException("Cannot parse date!");
+            throw new IllegalStateException("Cannot parse date!", e);
         }
     }
 
