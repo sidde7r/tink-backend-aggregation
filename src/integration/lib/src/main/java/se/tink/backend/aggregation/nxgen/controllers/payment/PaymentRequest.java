@@ -54,7 +54,8 @@ public class PaymentRequest {
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withCurrency(transfer.getAmount().getCurrency())
                         .withReference(referenceInRequest)
-                        .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()));
+                        // UKOpenBanking only accepts max 31 characters.
+                        .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()).substring(0, 31));
 
         if (!transferRequest.isSkipRefresh()) {
             paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));

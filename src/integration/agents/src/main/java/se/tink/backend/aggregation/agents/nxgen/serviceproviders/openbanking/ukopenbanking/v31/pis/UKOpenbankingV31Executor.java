@@ -111,6 +111,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                                         genericBuilder()
                                 .put(
                                         PaymentType.DOMESTIC,
+                                        new Pair<>(null, AccountIdentifier.Type.SORT_CODE),
                                         new Pair<>(
                                                 AccountIdentifier.Type.SORT_CODE,
                                                 AccountIdentifier.Type.SORT_CODE),
@@ -119,6 +120,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                                                 AccountIdentifier.Type.PAYM_PHONE_NUMBER))
                                 .put(
                                         PaymentType.INTERNATIONAL,
+                                        new Pair<>(null, AccountIdentifier.Type.IBAN),
                                         new Pair<>(
                                                 AccountIdentifier.Type.IBAN,
                                                 AccountIdentifier.Type.IBAN))

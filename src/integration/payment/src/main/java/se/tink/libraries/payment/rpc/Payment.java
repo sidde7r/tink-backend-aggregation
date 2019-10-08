@@ -2,6 +2,7 @@ package se.tink.libraries.payment.rpc;
 
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 import org.iban4j.IbanUtil;
 import se.tink.libraries.account.AccountIdentifier;
@@ -85,6 +86,9 @@ public class Payment {
     }
 
     public Pair<AccountIdentifier.Type, AccountIdentifier.Type> getCreditorAndDebtorAccountType() {
+        if (Objects.isNull(debtor)) {
+            return new Pair<>(null, creditor.getAccountIdentifierType());
+        }
         return new Pair<>(debtor.getAccountIdentifierType(), creditor.getAccountIdentifierType());
     }
 
