@@ -72,7 +72,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         try {
             login(panNumber, password, deviceToken);
         } catch (AuthenticationException | AuthorizationException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 

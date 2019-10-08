@@ -153,7 +153,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         } catch (SupplementalInfoException e) {
             throw createFailedTransferException(
                     TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
-                    TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
+                    TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
+                    e);
         }
 
         SignProtocolResponse signProtocolResponse = apiClient.signTransfer(response);
@@ -192,7 +193,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
             } catch (SupplementalInfoException e) {
                 throw createFailedTransferException(
                         TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
-                        TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
+                        TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
+                        e);
             }
         }
 
@@ -207,9 +209,17 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     public TransferExecutionException createFailedTransferException(
             TransferExecutionException.EndUserMessage message,
             TransferExecutionException.EndUserMessage endUserMessage) {
+        return createFailedTransferException(message, endUserMessage, null);
+    }
+
+    public TransferExecutionException createFailedTransferException(
+            TransferExecutionException.EndUserMessage message,
+            TransferExecutionException.EndUserMessage endUserMessage,
+            SupplementalInfoException e) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(catalog.getString(message))
                 .setEndUserMessage(catalog.getString(endUserMessage))
+                .setException(e)
                 .build();
     }
 
@@ -270,7 +280,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         } catch (SupplementalInfoException e) {
             throw createFailedTransferException(
                     TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
-                    TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
+                    TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
+                    e);
         }
 
         checkThrowableErrors(apiClient.signBeneficiary(response));

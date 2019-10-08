@@ -90,7 +90,8 @@ public class MovementsItem {
                     currency,
                     NumberFormat.getInstance(Locale.FRANCE).parse(amount.replace(".", "")));
         } catch (ParseException e) {
-            throw new IllegalStateException("Cannot parse amount in transaction: " + e.toString());
+            throw new IllegalStateException(
+                    "Cannot parse amount in transaction: " + e.toString(), e);
         }
     }
 
@@ -98,7 +99,8 @@ public class MovementsItem {
         try {
             return FortisConstants.DATE.TRANSACTION_FORMAT.parse(executionDate);
         } catch (ParseException e) {
-            throw new IllegalStateException("Cannot parse amount in transaction: " + e.toString());
+            throw new IllegalStateException(
+                    "Cannot parse amount in transaction: " + e.toString(), e);
         }
     }
 

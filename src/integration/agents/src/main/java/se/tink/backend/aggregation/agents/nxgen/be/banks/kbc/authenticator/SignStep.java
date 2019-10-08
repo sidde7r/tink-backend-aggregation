@@ -53,15 +53,15 @@ final class SignStep implements AuthenticationStep {
         } catch (IllegalStateException e) {
             if (kbcAuthenticator.isIncorrectCardNumber(e) || kbcAuthenticator.isIncorrectCard(e)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(
-                        KbcConstants.UserMessage.INCORRECT_CARD_NUMBER.getKey());
+                        KbcConstants.UserMessage.INCORRECT_CARD_NUMBER.getKey(), e);
             }
 
             if (kbcAuthenticator.isIncorrectLoginCodeLastAttempt(e)) {
-                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
+                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception(e);
             }
 
             if (kbcAuthenticator.isIncorrectLoginCode(e)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
 
             throw e;

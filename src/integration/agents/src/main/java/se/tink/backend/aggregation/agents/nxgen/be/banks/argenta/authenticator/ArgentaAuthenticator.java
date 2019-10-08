@@ -120,7 +120,7 @@ public class ArgentaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
             validateAuthResponse = validatePin(startAuthResponse, cardNumber);
             return validateAuthResponse;
         } catch (LoginException | AuthorizationException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 

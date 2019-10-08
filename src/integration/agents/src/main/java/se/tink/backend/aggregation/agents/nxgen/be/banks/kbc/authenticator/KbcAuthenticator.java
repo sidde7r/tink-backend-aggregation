@@ -74,11 +74,11 @@ public class KbcAuthenticator implements AutoAuthenticator, ProgressiveTypedAuth
         } catch (IllegalStateException e) {
             if (isNotACustomer(e)) {
                 throw LoginError.NOT_CUSTOMER.exception(
-                        KbcConstants.UserMessage.NOT_A_CUSTOMER.getKey());
+                        KbcConstants.UserMessage.NOT_A_CUSTOMER.getKey(), e);
             }
 
             if (isIncorrectSignCode(e)) {
-                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
             }
 
             throw e;
@@ -201,7 +201,7 @@ public class KbcAuthenticator implements AutoAuthenticator, ProgressiveTypedAuth
         try {
             login(device);
         } catch (AuthenticationException | AuthorizationException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 
