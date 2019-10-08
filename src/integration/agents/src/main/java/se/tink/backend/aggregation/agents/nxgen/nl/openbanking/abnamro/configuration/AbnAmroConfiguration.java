@@ -1,21 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.configuration;
 
-import java.util.Base64;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class AbnAmroConfiguration implements ClientConfiguration {
 
-    private String clientId;
+    @JsonProperty @Secret private String clientId;
 
-    private String apiKey;
+    @JsonProperty @SensitiveSecret private String apiKey;
 
-    private String redirectUrl;
-
-    private String clientSSLP12;
-
-    private String clientSSLKeyPassword;
+    @JsonProperty @Secret private String redirectUrl;
 
     private String certificateId;
 
@@ -29,14 +27,6 @@ public class AbnAmroConfiguration implements ClientConfiguration {
 
     public String getRedirectUrl() {
         return redirectUrl;
-    }
-
-    public byte[] getClientSSLP12Bytes() {
-        return Base64.getDecoder().decode(clientSSLP12);
-    }
-
-    public String getClientSSLKeyPassword() {
-        return clientSSLKeyPassword;
     }
 
     public String getCertificateId() {

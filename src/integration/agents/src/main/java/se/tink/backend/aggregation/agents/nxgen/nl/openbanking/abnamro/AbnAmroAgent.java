@@ -46,18 +46,7 @@ public class AbnAmroAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         final AbnAmroConfiguration abnAmroConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                AbnAmroConstants.INTEGRATION_NAME,
-                                clientName,
-                                AbnAmroConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format(
-                                                        "No abnamro client configured for name: %s",
-                                                        clientName)));
+                getAgentConfigurationController().getAgentConfiguration(AbnAmroConfiguration.class);
 
         this.configuration = abnAmroConfiguration;
         apiClient.setConfiguration(abnAmroConfiguration);
