@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.N26PasswordAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.passwordandapp.AppAuthenticationPasswordController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.passwordandapp.PasswordExternalAppAuthenticationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class N26ExternalAppAuthAgent extends N26Agent {
@@ -19,12 +19,7 @@ public class N26ExternalAppAuthAgent extends N26Agent {
     protected Authenticator constructAuthenticator() {
         N26AppAuthenticator authenticator = new N26AppAuthenticator(n26APiClient, sessionStorage);
         N26PasswordAuthenticator passwordAuthenticator = new N26PasswordAuthenticator(n26APiClient);
-        AppAuthenticationPasswordController<String> thirdPartyAppAuthenticationController =
-                new AppAuthenticationPasswordController(
-                        catalog,
-                        passwordAuthenticator,
-                        authenticator,
-                        supplementalInformationHelper);
-        return thirdPartyAppAuthenticationController;
+        return new PasswordExternalAppAuthenticationController(
+                passwordAuthenticator, authenticator, supplementalInformationHelper);
     }
 }
