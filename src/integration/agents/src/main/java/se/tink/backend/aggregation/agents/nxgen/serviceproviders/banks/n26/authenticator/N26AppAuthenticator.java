@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.auth
 
 import io.vavr.control.Either;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26ApiClient;
@@ -58,9 +57,5 @@ public class N26AppAuthenticator implements ExternalAppAuthenticator<String> {
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    public CredentialsTypes getType() {
-        return CredentialsTypes.PASSWORD;
     }
 }
