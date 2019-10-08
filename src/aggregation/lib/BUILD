@@ -40,7 +40,6 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/creditcards/amex",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/bunq",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/abnamro",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/bunq",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/rabobank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/volksbank",

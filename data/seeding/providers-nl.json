@@ -18,22 +18,24 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.nl.banks.openbanking.abnamro.AbnAmroAgent",
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.nl.openbanking.abnamro.AbnAmroAgent",
             "credentialsType": "PASSWORD",
             "displayName": "AbnAmro",
             "fields": [],
             "financialInstitutionId": "eb6ce2eebe194df7911d2dda92337451",
             "multiFactor": false,
-            "name": "nl-abnamro-oauth2",
+            "name": "nl-abnamro-ob",
             "passwordHelpText": null,
             "payload": "tink",
             "popular": true,
-            "status": "DISABLED",
+            "status": "ENABLED",
             "transactional": "true",
             "tutorialUrl": null,
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.banks.openbanking.volksbank.VolksbankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "ASN Bank",
@@ -73,6 +75,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.banks.openbanking.bunq.BunqAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Bunq Open Banking",
@@ -112,6 +115,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.banks.openbanking.bunq.BunqAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Bunq Open Banking Sandbox",
@@ -162,6 +166,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.banks.openbanking.rabobank.RabobankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Rabobank",
@@ -178,6 +183,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.banks.openbanking.rabobank.RabobankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Rabobank",
@@ -194,6 +200,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.banks.openbanking.rabobank.RabobankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Rabobank Sandbox",
@@ -210,6 +217,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.banks.openbanking.volksbank.VolksbankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "RegioBank",
@@ -226,6 +234,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.banks.openbanking.volksbank.VolksbankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "SNS Bank (Sandbox)",
@@ -242,6 +251,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.banks.openbanking.volksbank.VolksbankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "SNS Bank",
