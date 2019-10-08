@@ -94,7 +94,7 @@ public class TestingSibsMessageSignInterceptor extends MessageSignInterceptor {
         try {
             signatureSha = toSHA256withRSA(serializedHeadersString);
         } catch (SignatureException | InvalidKeyException | NoSuchAlgorithmException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
         String signatureBase64Sha =
                 org.apache.commons.codec.binary.Base64.encodeBase64String(signatureSha);

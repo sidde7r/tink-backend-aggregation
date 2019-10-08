@@ -23,7 +23,7 @@ public class SibsPaymentAuthenticator {
         try {
             return ConsentStatus.valueOf(apiClient.getConsentStatus().getTransactionStatus());
         } catch (SessionException e) {
-            throw new IllegalStateException(e.getMessage());
+            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 

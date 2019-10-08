@@ -159,6 +159,7 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
         } catch (AuthenticationException | AuthorizationException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage("Authentication error.")
+                    .setException(e)
                     .build();
         }
 
