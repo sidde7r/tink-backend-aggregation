@@ -86,6 +86,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
     // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
+    private final AgentTestServerClient agentTestServerClient;
 
     protected HandelsbankenAgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
@@ -112,6 +113,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
 
         this.supplementalInformationController =
                 new SupplementalInformationController(context, credential);
+        agentTestServerClient = AgentTestServerClient.getInstance();
     }
 
     private boolean loadCredentials() {
@@ -120,7 +122,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
         }
 
         Optional<Credentials> optionalCredential =
-                AgentTestServerClient.loadCredential(provider.getName(), credential.getId());
+                agentTestServerClient.loadCredential(provider.getName(), credential.getId());
 
         optionalCredential.ifPresent(c -> this.credential = c);
 
@@ -137,7 +139,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
         // Tell the agent to store data onto the credential (cookies etcetera)
         persistentAgent.persistLoginSession();
 
-        AgentTestServerClient.saveCredential(provider.getName(), credential);
+        agentTestServerClient.saveCredential(provider.getName(), credential);
     }
 
     private RefreshInformationRequest createRefreshInformationRequest() {
