@@ -563,8 +563,8 @@ agentsServiceConfiguration:
     certificatesLocation: "development-staging"
     enabled: false
   testConfiguration:
-    debugOutput: false
-    censorSensitiveHeaders: true
+    debugOutput: true
+    censorSensitiveHeaders: false
 
 transfers:
   enabled: true
