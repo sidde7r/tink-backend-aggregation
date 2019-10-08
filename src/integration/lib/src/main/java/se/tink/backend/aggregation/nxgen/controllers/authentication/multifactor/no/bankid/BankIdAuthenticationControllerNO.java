@@ -17,11 +17,14 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.no.BankIdErrorNO;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class BankIdAuthenticationControllerNO implements MultiFactorAuthenticator {
+public class BankIdAuthenticationControllerNO
+        implements MultiFactorAuthenticator, AuthenticationControllerType {
     private static final int MAX_ATTEMPTS = 90;
 
     private static final AggregationLogger log =
@@ -106,5 +109,11 @@ public class BankIdAuthenticationControllerNO implements MultiFactorAuthenticato
 
         log.info(String.format("Norweigan BankID timed out internally, last status: %s", status));
         throw BankIdErrorNO.TIMEOUT.exception();
+    }
+
+    @Override
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        // since authenticate always init bankid
+        return true;
     }
 }
