@@ -959,7 +959,7 @@ public class ICABankenAgent extends AbstractAgent
             userInstallationId = getUserInstallationId(sessionResponse);
             return true;
         } catch (UniformInterfaceException e) {
-            logHttpErrors(e.getResponse());
+            logHttpErrors(e.getResponse(), e);
 
             throw e;
         }
@@ -1182,7 +1182,7 @@ public class ICABankenAgent extends AbstractAgent
             String logMessage = SerializationUtils.serializeToString(depots);
             log.infoExtraLong(logMessage, investmentLogTag);
         } catch (Exception e) {
-            log.info("error when fetching investment " + investmentLogTag.toString());
+            log.info("error when fetching investment " + investmentLogTag.toString(), e);
         }
     }
 
@@ -1393,7 +1393,7 @@ public class ICABankenAgent extends AbstractAgent
             ClientResponse response = e.getResponse();
 
             if (Objects.equal(response.getStatus(), 409)) {
-                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                throw BankIdError.ALREADY_IN_PROGRESS.exception(e);
             }
 
             throw e;
@@ -1496,27 +1496,27 @@ public class ICABankenAgent extends AbstractAgent
                             bankIdResponse.getResponseStatus().getClientMessage().toLowerCase();
 
                     if (responseBody.isTimeOut()) {
-                        throw BankIdError.TIMEOUT.exception();
+                        throw BankIdError.TIMEOUT.exception(e);
                     }
 
                     if (responseBody.isFailure()) {
-                        throw BankIdError.CANCELLED.exception();
+                        throw BankIdError.CANCELLED.exception(e);
                     }
 
                     if (serverMessage.contains("signing not found")) {
-                        throw BankIdError.INTERRUPTED.exception();
+                        throw BankIdError.INTERRUPTED.exception(e);
                     }
 
                     if (serverMessage.contains("no active accounts")) {
-                        throw LoginError.NOT_CUSTOMER.exception();
+                        throw LoginError.NOT_CUSTOMER.exception(e);
                     }
 
                     if (clientMessage.contains("fel personnummer eller lösenord")) {
-                        throw LoginError.INCORRECT_CREDENTIALS.exception();
+                        throw LoginError.INCORRECT_CREDENTIALS.exception(e);
                     }
 
                     if (clientMessage.contains("konto har ännu inte blivit verifierat")) {
-                        throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                        throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
                     }
                 }
 
@@ -1539,7 +1539,7 @@ public class ICABankenAgent extends AbstractAgent
         return collectResponse;
     }
 
-    private void logHttpErrors(ClientResponse response) {
+    private void logHttpErrors(ClientResponse response, Exception e) {
         List<String> errors = extractErrorsFrom(response.getHeaders());
 
         MoreObjects.ToStringHelper errorBuilder =
@@ -1556,7 +1556,7 @@ public class ICABankenAgent extends AbstractAgent
             }
         }
 
-        log.warn(errorBuilder.toString());
+        log.warn(errorBuilder.toString(), e);
     }
 
     private List<String> extractErrorsFrom(MultivaluedMap<String, String> headers) {
@@ -1719,7 +1719,7 @@ public class ICABankenAgent extends AbstractAgent
             }
             return new FetchLoanAccountsResponse(accounts);
         } catch (Exception e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
     }
 

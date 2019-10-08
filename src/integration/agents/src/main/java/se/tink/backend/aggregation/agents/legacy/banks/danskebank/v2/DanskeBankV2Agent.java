@@ -676,24 +676,30 @@ public class DanskeBankV2Agent extends AbstractAgent
                 log.info(
                         String.format(
                                 "Status code: %s, status text: %s, interpreted as bankID already in progress.",
-                                bankIdStatusCode, bankIdStatusText));
-                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                                bankIdStatusCode, bankIdStatusText),
+                        bankIdException);
+                throw BankIdError.ALREADY_IN_PROGRESS.exception(bankIdException);
             }
 
             if (bankIdResponse.isUserCancelled()) {
-                log.info(bankIdStatusCode + " - User cancelled BankID authentication");
-                throw BankIdError.CANCELLED.exception();
+                log.info(
+                        bankIdStatusCode + " - User cancelled BankID authentication",
+                        bankIdException);
+                throw BankIdError.CANCELLED.exception(bankIdException);
             }
 
             if (bankIdResponse.isTimeout() || bankIdResponse.isWaitingForUserInput()) {
-                log.info(bankIdStatusCode + " - User timeout authenticating with BankID");
-                throw BankIdError.TIMEOUT.exception();
+                log.info(
+                        bankIdStatusCode + " - User timeout authenticating with BankID",
+                        bankIdException);
+                throw BankIdError.TIMEOUT.exception(bankIdException);
             }
 
             throw new IllegalStateException(
                     String.format(
                             "#danskebankV2 - BankID authentication failed with status code: %s, and status text: %s",
-                            bankIdStatusCode, bankIdStatusText));
+                            bankIdStatusCode, bankIdStatusText),
+                    bankIdException);
         }
     }
 
@@ -1252,7 +1258,7 @@ public class DanskeBankV2Agent extends AbstractAgent
             return new FetchIdentityDataResponse(
                     SeIdentityData.of(name, credentials.getField(Key.USERNAME)));
         } catch (NullPointerException | IllegalArgumentException | IllegalStateException e) {
-            log.warn("Failed to parse SSN: " + credentials.getField(Key.USERNAME));
+            log.warn("Failed to parse SSN: " + credentials.getField(Key.USERNAME), e);
 
             return new FetchIdentityDataResponse(
                     IdentityData.builder().setFullName(name).setDateOfBirth(null).build());

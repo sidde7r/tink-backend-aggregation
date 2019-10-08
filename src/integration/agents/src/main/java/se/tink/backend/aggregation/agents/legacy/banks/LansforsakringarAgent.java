@@ -497,7 +497,7 @@ public class LansforsakringarAgent extends AbstractAgent
             // Error-Message: "Du saknar den här tjänsten. Kontakta oss för att få hjälp att komma
             // igång."
             if (e.hasErrorCode(12051)) {
-                log.info(e.getMessage());
+                log.info(e.getMessage(), e);
                 return Lists.newArrayList();
             }
 
@@ -539,7 +539,7 @@ public class LansforsakringarAgent extends AbstractAgent
         } catch (HttpStatusCodeErrorException e) {
             // Error-Message: "Du har inte behörighet att använda denna tjänst."
             if (e.hasErrorCode(12231)) {
-                log.info(e.getMessage());
+                log.info(e.getMessage(), e);
                 return false;
             }
 
@@ -711,13 +711,14 @@ public class LansforsakringarAgent extends AbstractAgent
             validateTransactionClientResponse(bankIdResponse);
 
         } catch (TransferExecutionException e) {
-            cancelUnsignedPayment(paymentEntityToSign.getUniqueId());
+            cancelUnsignedPayment(paymentEntityToSign.getUniqueId(), e);
             throw e;
         }
     }
 
-    private void cancelUnsignedPayment(String uniqueId) throws TransferExecutionException {
-        log.info("Removing e-invoice/payment from inbox since signing failed.");
+    private void cancelUnsignedPayment(String uniqueId, Exception e)
+            throws TransferExecutionException {
+        log.info("Removing e-invoice/payment from inbox since signing failed.", e);
         CancelPaymentRequest request = new CancelPaymentRequest();
         request.setUniqueId(uniqueId);
 
@@ -875,7 +876,7 @@ public class LansforsakringarAgent extends AbstractAgent
         try {
             signAndValidatePayment(paymentRequest);
         } catch (Exception initialException) {
-            boolean cancelled = cancelFailedPayment(paymentRequest);
+            boolean cancelled = cancelFailedPayment(paymentRequest, initialException);
             boolean deleted = deleteSignedTransaction(paymentRequest);
             if (cancelled || deleted) {
                 throw initialException;
@@ -986,7 +987,7 @@ public class LansforsakringarAgent extends AbstractAgent
         return Optional.empty();
     }
 
-    private boolean cancelFailedPayment(PaymentRequest paymentRequest)
+    private boolean cancelFailedPayment(PaymentRequest paymentRequest, Exception initialException)
             throws TransferExecutionException, HttpStatusCodeErrorException {
         List<PaymentEntity> unsignedPayments = fetchUnsignedPaymentsAndTransfers();
 
@@ -998,7 +999,7 @@ public class LansforsakringarAgent extends AbstractAgent
         }
 
         try {
-            cancelUnsignedPayment(uniqueId.get());
+            cancelUnsignedPayment(uniqueId.get(), initialException);
             return true;
         } catch (TransferExecutionException deleteException) {
             log.warn(
@@ -1719,7 +1720,7 @@ public class LansforsakringarAgent extends AbstractAgent
             loans = createGetRequest(FETCH_LOANS_URL, LoanListResponse.class);
         } catch (Exception e) {
             // Seeing LF return 400 and 500 responses from time to time, therefore this try-catch
-            log.warn("Was not able to retrieve loans from Lansforsakringar: " + e.getMessage());
+            log.warn("Was not able to retrieve loans from Lansforsakringar: " + e.getMessage(), e);
         }
 
         if (loans == null) {
@@ -1742,7 +1743,7 @@ public class LansforsakringarAgent extends AbstractAgent
 
                 loanAccounts.put(account, AccountFeatures.createForLoan(loan));
             } catch (Exception e) {
-                log.warn("Was not able to retrieve loan: " + e.getMessage());
+                log.warn("Was not able to retrieve loan: " + e.getMessage(), e);
             }
         }
         return new FetchLoanAccountsResponse(loanAccounts);

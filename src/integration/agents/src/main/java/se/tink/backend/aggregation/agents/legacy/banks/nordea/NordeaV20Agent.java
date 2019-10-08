@@ -2100,7 +2100,7 @@ public class NordeaV20Agent extends AbstractAgent
             }
         } catch (UniformInterfaceException e) {
             if (Objects.equal(e.getResponse().getStatus(), 204)) {
-                this.log.debug("No payments available");
+                this.log.debug("No payments available", e);
                 return Lists.newArrayList();
             }
 

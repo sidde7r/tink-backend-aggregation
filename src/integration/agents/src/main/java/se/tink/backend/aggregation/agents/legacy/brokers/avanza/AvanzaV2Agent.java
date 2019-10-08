@@ -143,7 +143,7 @@ public class AvanzaV2Agent extends AbstractAgent
                     createClientRequest(Urls.BANK_ID_INIT)
                             .post(InitiateBankIdResponse.class, initiateBankIdRequest);
         } catch (UniformInterfaceException e) {
-            handleBankIdInitErrors(e.getResponse());
+            handleBankIdInitErrors(e);
 
             // Error unknown, re-throw original exception
             throw e;
@@ -168,7 +168,7 @@ public class AvanzaV2Agent extends AbstractAgent
                                 .get(ClientResponse.class);
             } catch (UniformInterfaceException e) {
 
-                handleBankIdPollErrors(e.getResponse());
+                handleBankIdPollErrors(e);
 
                 // Error unknown, re-throw original exception
                 throw e;
@@ -227,29 +227,31 @@ public class AvanzaV2Agent extends AbstractAgent
         throw BankIdError.TIMEOUT.exception();
     }
 
-    private void handleBankIdInitErrors(ClientResponse response) throws BankIdException {
+    private void handleBankIdInitErrors(UniformInterfaceException e) throws BankIdException {
+        ClientResponse response = e.getResponse();
 
         if (response != null && response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR_500) {
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            throw BankIdError.ALREADY_IN_PROGRESS.exception(e);
         }
 
         if (response != null && response.getStatus() == HttpStatus.SERVICE_UNAVAILABLE_503) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
         }
     }
 
-    private void handleBankIdPollErrors(ClientResponse response) throws BankIdException {
+    private void handleBankIdPollErrors(UniformInterfaceException e) throws BankIdException {
+        ClientResponse response = e.getResponse();
 
         if (response != null && response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR_500) {
             ErrorResponse errorResponse = response.getEntity(ErrorResponse.class);
 
             if (errorResponse.isUserCancel()) {
-                throw BankIdError.CANCELLED.exception();
+                throw BankIdError.CANCELLED.exception(e);
             }
         }
 
         if (response != null && response.getStatus() == HttpStatus.SERVICE_UNAVAILABLE_503) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
         }
     }
 

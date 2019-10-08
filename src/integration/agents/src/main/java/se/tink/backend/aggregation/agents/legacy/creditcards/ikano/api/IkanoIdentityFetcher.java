@@ -31,7 +31,7 @@ class IkanoIdentityFetcher {
 
         } catch (LoginException e) {
             throw new IllegalStateException(
-                    "Fetching identity gave empty card list: " + e.getMessage());
+                    "Fetching identity gave empty card list: " + e.getMessage(), e);
         }
     }
 }
