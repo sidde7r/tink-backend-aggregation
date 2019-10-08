@@ -291,7 +291,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
     private PaymentMultiStepResponse executePayment(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        String endToEndIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
+        String endToEndIdentification =
+                paymentMultiStepRequest.getPayment().getUniqueIdForUKOPenBanking();
         String instructionIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
 
         PaymentResponse paymentResponse =

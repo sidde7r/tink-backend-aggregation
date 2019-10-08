@@ -41,6 +41,20 @@ public class Payment {
         this.id = UUID.randomUUID();
     }
 
+    /*
+       This method is used by UK OpenBanking for EndToEndIdentification field since
+       there the max allowed length for id is 31
+       From the Docs: The Faster Payments Scheme can only access 31 characters for
+       the EndToEndIdentification field.
+    */
+    public String getUniqueIdForUKOPenBanking() {
+        if (uniqueId.length() > 31) {
+            return uniqueId.substring(0, 31);
+        }
+
+        return uniqueId;
+    }
+
     public String getCurrency() {
         return currency;
     }
