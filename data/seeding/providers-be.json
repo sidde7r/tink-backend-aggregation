@@ -36,6 +36,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [],
             "className": "nxgen.be.banks.argenta.ArgentaAgent",
             "credentialsType": "PASSWORD",
@@ -51,9 +52,10 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "b78ac5b741b047068fe1d57f38d5a89d",
+            "financialInstitutionName": "Argenta",
             "multiFactor": true,
             "name": "be-argenta-cardreader",
-            "financialInstitutionId": "b78ac5b741b047068fe1d57f38d5a89d",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your Argenta Digipass to finish the authentication.",
             "popular": true,
             "refreshFrequency": 1,
@@ -62,7 +64,7 @@
             "supplementalFields": [
                 {
                     "description": "Challenge",
-                    "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the response from the card reader.",
                     "immutable": true,
                     "masked": false,
                     "name": "logindescription"
@@ -78,7 +80,9 @@
                 }
             ],
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "backgroundRefreshMaxFrequency": 1,
+            "backgroundRefreshEnabled": true
         },
         {
             "accessType": "OTHER",
