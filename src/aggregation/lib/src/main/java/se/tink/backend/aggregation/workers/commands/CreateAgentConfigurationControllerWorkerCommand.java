@@ -34,11 +34,10 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
                 new AgentConfigurationController(
                         tppSecretsServiceClient,
                         agentsServiceConfiguration.getIntegrations(),
-                        credentialsRequest.getProvider().getFinancialInstitutionId(),
+                        agentWorkerCommandContext.getRequest().getProvider(),
                         agentWorkerCommandContext.getAppId(),
                         agentWorkerCommandContext.getClusterId(),
-                        agentWorkerCommandContext.getRequest().getCallbackUri(),
-                        agentWorkerCommandContext.getRequest().getProvider().getAccessType());
+                        agentWorkerCommandContext.getRequest().getCallbackUri());
 
         agentWorkerCommandContext.setAgentConfigurationController(agentConfigurationController);
 

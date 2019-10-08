@@ -15,7 +15,9 @@ import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.Provider.AccessType;
+import se.tink.backend.agents.rpc.ProviderTypes;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
@@ -33,21 +35,25 @@ public final class AgentConfigurationController {
     private final String clusterId;
     private final String redirectUrl;
     private final boolean isOpenBankingAgent;
+    private final boolean isTestProvider;
     private Map<String, String> allSecrets;
 
     public AgentConfigurationController(
             TppSecretsServiceClient tppSecretsServiceClient,
             IntegrationsConfiguration integrationsConfiguration,
-            String financialInstitutionId,
+            Provider provider,
             String appId,
             String clusterId,
-            String redirectUrl,
-            AccessType accessType) {
+            String redirectUrl) {
         Preconditions.checkNotNull(
                 tppSecretsServiceClient, "tppSecretsServiceClient cannot be null.");
+        Preconditions.checkNotNull(provider, "provider cannot be null.");
         Preconditions.checkNotNull(
-                Strings.emptyToNull(financialInstitutionId),
+                Strings.emptyToNull(provider.getFinancialInstitutionId()),
                 "financialInstitutionId cannot be empty/null.");
+        Preconditions.checkNotNull(
+                provider.getAccessType(), "provider.getAccessType() cannot be null.");
+        Preconditions.checkNotNull(provider.getType(), "provider.getType() cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
 
@@ -66,11 +72,12 @@ public final class AgentConfigurationController {
                     "integrationsConfiguration cannot be null if tppSecretsService is not enabled.");
         }
         this.integrationsConfiguration = integrationsConfiguration;
-        this.financialInstitutionId = financialInstitutionId;
+        this.financialInstitutionId = provider.getFinancialInstitutionId();
         this.appId = appId;
         this.clusterId = clusterId;
         this.redirectUrl = redirectUrl;
-        this.isOpenBankingAgent = AccessType.OPEN_BANKING == accessType;
+        this.isOpenBankingAgent = AccessType.OPEN_BANKING == provider.getAccessType();
+        this.isTestProvider = ProviderTypes.TEST == provider.getType();
     }
 
     public boolean isOpenBankingAgent() {
@@ -78,7 +85,7 @@ public final class AgentConfigurationController {
     }
 
     public boolean init() {
-        if (tppSecretsServiceEnabled && isOpenBankingAgent) {
+        if (tppSecretsServiceEnabled && isOpenBankingAgent && !isTestProvider) {
             try {
                 Optional<Map<String, String>> allSecretsOpt =
                         tppSecretsServiceClient.getAllSecrets(

@@ -165,11 +165,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     new AgentConfigurationController(
                             tppSecretsServiceClient,
                             configuration.getIntegrations(),
-                            provider.getFinancialInstitutionId(),
+                            provider,
                             context.getAppId(),
                             context.getClusterId(),
-                            credentialsRequest.getCallbackUri(),
-                            provider.getAccessType());
+                            credentialsRequest.getCallbackUri());
             if (!agentConfigurationController.init()) {
                 throw new IllegalStateException(
                         "Error when initializing AgentConfigurationController.");
