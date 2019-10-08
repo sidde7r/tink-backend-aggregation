@@ -99,7 +99,7 @@ public class SantanderApiClient {
                     SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_LOGGING);
         } catch (Exception e) {
             longlogger.infoExtraLong(
-                    e.toString(), SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_PARSING_ERROR);
+                    e.toString(), SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_PARSING_ERROR, e);
         }
 
         return response;

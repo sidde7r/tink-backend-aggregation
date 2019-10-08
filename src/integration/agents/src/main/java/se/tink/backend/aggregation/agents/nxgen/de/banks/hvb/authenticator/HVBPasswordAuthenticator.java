@@ -48,7 +48,7 @@ public final class HVBPasswordAuthenticator implements PasswordAuthenticator {
         try {
             storage.getWlInstanceId();
         } catch (NoSuchElementException e) { // Indicates a bug in the authenticator
-            throw new IllegalStateException("WL-Instance-Id was not set during authentication");
+            throw new IllegalStateException("WL-Instance-Id was not set during authentication", e);
         }
     }
 }

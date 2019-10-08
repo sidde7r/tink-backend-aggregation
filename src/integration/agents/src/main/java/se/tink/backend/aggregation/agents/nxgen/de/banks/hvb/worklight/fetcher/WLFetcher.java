@@ -63,7 +63,7 @@ public final class WLFetcher {
         try {
             paylIWV = new JSONObject().put("key1", accountNumber);
         } catch (JSONException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
         return query(WLConstants.Procedure.fetch_AccountDO.name(), entityClass, paylIWV);
     }
@@ -128,7 +128,7 @@ public final class WLFetcher {
         try {
             SecureRandom.getInstance("SHA1PRNG").nextBytes(bytes);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
         return bytes;
     }
