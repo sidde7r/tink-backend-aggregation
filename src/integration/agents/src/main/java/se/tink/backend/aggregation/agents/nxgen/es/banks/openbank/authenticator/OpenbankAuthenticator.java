@@ -57,7 +57,7 @@ public class OpenbankAuthenticator implements Authenticator {
         Try.of(() -> apiClient.login(request))
                 .filterTry(
                         LoginResponse::hasTokenCredential,
-                        e -> LoginError.INCORRECT_CREDENTIALS.exception())
+                        r -> LoginError.INCORRECT_CREDENTIALS.exception())
                 .onSuccess(this::putAuthTokenInSessionStorage)
                 .getOrElseThrow(this::handleExceptions);
     }
@@ -71,11 +71,11 @@ public class OpenbankAuthenticator implements Authenticator {
                 .of(
                         Case(
                                 $(HAS_INCORRECT_CREDENTIALS),
-                                LoginError.INCORRECT_CREDENTIALS.exception()),
+                                LoginError.INCORRECT_CREDENTIALS.exception(hre)),
                         Case(
                                 $(HAS_INVALID_LOGIN_USERNAME_TYPE),
                                 LoginError.INCORRECT_CREDENTIALS.exception(
-                                        LocalizableKey.of("Invalid username type"))));
+                                        LocalizableKey.of("Invalid username type"), hre)));
     }
 
     private void putAuthTokenInSessionStorage(LoginResponse loginResponse) {

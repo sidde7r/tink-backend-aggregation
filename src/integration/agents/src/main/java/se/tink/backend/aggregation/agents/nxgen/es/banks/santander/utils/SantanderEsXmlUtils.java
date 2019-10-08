@@ -36,7 +36,7 @@ public class SantanderEsXmlUtils {
             JSONObject json = new JSONObject(SerializationUtils.serializeToString(jsonObject));
             return XML.toString(json);
         } catch (JSONException e) {
-            throw new IllegalStateException("Could not parse JSON object to XML string.");
+            throw new IllegalStateException("Could not parse JSON object to XML string.", e);
         }
     }
 
@@ -44,7 +44,7 @@ public class SantanderEsXmlUtils {
         try {
             return MAPPER.readValue(xmlString, returnType);
         } catch (IOException e) {
-            throw new IllegalStateException("Could not parse XML string into JSON object.");
+            throw new IllegalStateException("Could not parse XML string into JSON object.", e);
         }
     }
 

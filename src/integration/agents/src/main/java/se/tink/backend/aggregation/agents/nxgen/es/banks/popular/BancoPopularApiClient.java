@@ -69,11 +69,11 @@ public class BancoPopularApiClient {
         } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
 
-            ifLoginErrorThrowLoginException(statusCode);
+            ifLoginErrorThrowLoginException(statusCode, e);
 
             // the bank will respond 500 Internal server error if we use a non-numeric password,
             // but we cannot tell that apart from any other 500 response.
-            LOGGER.warn("Login to Popular failed, status code: " + statusCode);
+            LOGGER.warn("Login to Popular failed, status code: " + statusCode, e);
             throw e;
         }
     }
@@ -189,25 +189,26 @@ public class BancoPopularApiClient {
             int statusCode = e.getResponse().getStatus();
             if (statusCode == BancoPopularConstants.StatusCodes.SESSION_EXPIRED) {
                 LOGGER.trace("No session found");
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(e);
             }
 
-            LOGGER.warn("Keep session alive failed: " + statusCode);
+            LOGGER.warn("Keep session alive failed: " + statusCode, e);
             throw e;
         }
     }
 
-    private void ifLoginErrorThrowLoginException(int statusCode) throws LoginException {
+    private void ifLoginErrorThrowLoginException(int statusCode, HttpResponseException e)
+            throws LoginException {
         if (statusCode == BancoPopularConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD) {
             LOGGER.trace("Login failed, incorrect username/password");
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(e);
         }
         if (statusCode == BancoPopularConstants.StatusCodes.INCORRECT_TOKEN) { // bad TKN_CRC
             setAuthorization(""); // reset Authorization to start with a fresh value
             client.clearPersistentHeaders();
 
             LOGGER.trace("Login failed, incorrect TKN_CRC");
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(e);
         }
     }
 
@@ -251,7 +252,7 @@ public class BancoPopularApiClient {
 
             return Hex.encodeHexString(macAsBytes);
         } catch (Exception e) {
-            LOGGER.warn("Could not create TKN-CRC token");
+            LOGGER.warn("Could not create TKN-CRC token", e);
             throw new IllegalStateException("Could not create TKN-CRC token", e);
         }
     }

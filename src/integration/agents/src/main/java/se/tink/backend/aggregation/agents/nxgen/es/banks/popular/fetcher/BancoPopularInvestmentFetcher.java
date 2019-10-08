@@ -37,7 +37,8 @@ public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher
         } catch (Exception e) {
             log.infoExtraLong(
                     "Could not fetch investment accounts " + e.toString(),
-                    BancoPopularConstants.Fetcher.INVESTMENT_LOGGING);
+                    BancoPopularConstants.Fetcher.INVESTMENT_LOGGING,
+                    e);
         }
 
         return Collections.emptyList();
