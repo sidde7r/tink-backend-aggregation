@@ -14,5 +14,11 @@ public interface AgentError extends AgentBaseError {
     AgentExceptionImpl exception();
 
     @Override
+    AgentExceptionImpl exception(Throwable cause);
+
+    @Override
     AgentExceptionImpl exception(LocalizableKey userMessage);
+
+    @Override
+    AgentExceptionImpl exception(LocalizableKey userMessage, Throwable cause);
 }

@@ -41,6 +41,11 @@ public enum LoginError implements AgentError {
     }
 
     @Override
+    public LoginException exception(Throwable cause) {
+        return new LoginException(this, cause);
+    }
+
+    @Override
     public LocalizableKey userMessage() {
         return userMessage;
     }
@@ -48,5 +53,10 @@ public enum LoginError implements AgentError {
     @Override
     public LoginException exception(LocalizableKey userMessage) {
         return new LoginException(this, userMessage);
+    }
+
+    @Override
+    public LoginException exception(LocalizableKey userMessage, Throwable cause) {
+        return new LoginException(this, userMessage, cause);
     }
 }
