@@ -26,7 +26,7 @@ public class AgentTestServerClient {
         client = constructHttpClient();
     }
 
-    static AgentTestServerClient getInstance() {
+    public static AgentTestServerClient getInstance() {
         // Ought to be moved to Guice module eventually
         return singleton == null ? new AgentTestServerClient() : singleton;
     }
@@ -62,19 +62,19 @@ public class AgentTestServerClient {
         return client;
     }
 
-    void openThirdPartyApp(String fields) {
+    public void openThirdPartyApp(String fields) {
         client.request(Urls.OPEN_THIRDPARTYAPP.getUrl())
                 .type(MediaType.APPLICATION_JSON)
                 .post(fields);
     }
 
-    void initiateSupplementalInformation(String key, String fields) {
+    public void initiateSupplementalInformation(String key, String fields) {
         client.request(Urls.INITIATE_SUPPLEMENTAL.getUrl().parameter(SUPPLEMENTAL_KEY_KEY, key))
                 .type(MediaType.APPLICATION_JSON)
                 .post(fields);
     }
 
-    String waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
+    public String waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
         return client.request(
                         Urls.WAIT_FOR_SUPPLEMENTAL
                                 .getUrl()
@@ -85,7 +85,7 @@ public class AgentTestServerClient {
                 .get(String.class);
     }
 
-    void saveCredential(String providerName, Credentials credential) {
+    public void saveCredential(String providerName, Credentials credential) {
         client.request(
                         Urls.CREDENTIAL
                                 .getUrl()
@@ -95,7 +95,7 @@ public class AgentTestServerClient {
                 .post(credential);
     }
 
-    Optional<Credentials> loadCredential(String providerName, String credentialId) {
+    public Optional<Credentials> loadCredential(String providerName, String credentialId) {
         try {
             return Optional.ofNullable(
                     client.request(
@@ -113,7 +113,7 @@ public class AgentTestServerClient {
         }
     }
 
-    void sendBankIdAutoStartToken(String autoStartToken) {
+    public void sendBankIdAutoStartToken(String autoStartToken) {
         client.request(
                         Urls.BANKID_SEND_AUTOSTART
                                 .getUrl()
