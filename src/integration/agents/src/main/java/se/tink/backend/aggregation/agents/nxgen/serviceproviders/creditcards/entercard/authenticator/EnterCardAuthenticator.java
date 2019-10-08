@@ -69,7 +69,7 @@ public class EnterCardAuthenticator implements BankIdAuthenticator<BankIdInitRes
             return bankIdStatus;
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                throw BankIdError.INTERRUPTED.exception();
+                throw BankIdError.INTERRUPTED.exception(e);
             }
             throw e;
         }

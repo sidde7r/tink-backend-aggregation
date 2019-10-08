@@ -39,7 +39,7 @@ public class SebKortSessionHandler implements SessionHandler {
             apiClient.fetchCards();
         } catch (HttpResponseException | SebKortUnexpectedMediaTypeException e) {
             LOGGER.debug("SEBKort HTTP Exception during keepalive", e);
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         } catch (Exception e) {
             LOGGER.debug("SEBKort exception during keepalive", e);
             throw e;
