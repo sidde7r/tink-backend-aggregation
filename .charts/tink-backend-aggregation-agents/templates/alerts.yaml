@@ -731,21 +731,6 @@ spec:
         the last 30 minutes.
       tags: <{ $labels.className }>
 
-### Too many errors in general
-    # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
-    # Threshold: old canonical threshold of 20 errors / 15 min.
-  - alert: TooManyLoggedIntegrationErrors
-    expr: sum(rate(logback_appender_total{kubernetes_namespace="aggregation",at=~"^(?:se.tink.backend.aggregation.nxgen.*)$|^(?:se.tink.backend.aggregation.agents.*)$",level="error"}[5m]))
-      BY (at, kubernetes_namespace) * 15 * 60 > 20
-    for: 15m
-    labels:
-      severity: urgent
-      who: integration
-    annotations:
-      description: Job <{ $labels.job }> has logged <{ $value }> errors past 15m in class
-        '<{ $labels.at }>'.
-      summary: Too many errors logged by <{ $labels.job }>
-
 ### Agent level login failures
   - alert: HighProviderFailedLoginRatio
     expr: |
