@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -120,7 +121,8 @@ public final class SbabAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController<>(
+                                transactionFetcher, 4, 6, ChronoUnit.MONTHS)));
     }
 
     @Override
