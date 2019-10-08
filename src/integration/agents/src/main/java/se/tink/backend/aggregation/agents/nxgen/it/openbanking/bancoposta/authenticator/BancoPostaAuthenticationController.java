@@ -103,12 +103,11 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
                         .collect(Collectors.joining(";\n"));
 
         return Field.builder()
-                .description(this.catalog.getString(description))
-                .helpText(UserMessages.SELECT_INFO)
+                .description(UserMessages.INPUT_FIELD)
+                .helpText(String.format(UserMessages.SELECT_INFO, maxNumber).concat(description))
                 .name(CHOSEN_SCA_METHOD)
                 .numeric(true)
                 .minLength(1)
-                .hint(String.format(UserMessages.SELECT_HELPER, maxNumber))
                 .pattern(String.format("([1-%d])", maxNumber))
                 .patternError(ErrorValues.INVALID_CODE_MESSAGE)
                 .build();

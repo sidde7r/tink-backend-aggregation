@@ -21,7 +21,8 @@ public final class BancoPostaConstants {
     }
 
     public static class UserMessages {
-        public static final String SELECT_INFO = "Please select authentication method";
-        public static final String SELECT_HELPER = "Select from 1 to %d";
+        public static final String SELECT_INFO =
+                "Please insert authentication method index from 1 do %d \n";
+        public static final String INPUT_FIELD = "index";
     }
 }
