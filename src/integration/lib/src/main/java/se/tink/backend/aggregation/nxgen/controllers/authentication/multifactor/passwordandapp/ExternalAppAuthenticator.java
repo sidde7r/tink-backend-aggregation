@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.libraries.i18n.LocalizableKey;
 
 /**
- * This interface is supposed to be used for apps that might, but doesn't have to be installed on
+ * This interface is supposed to be used for apps that might, but doesn't have to, be installed on
  * the same device an original request is coming from
  *
  * @param <T>
