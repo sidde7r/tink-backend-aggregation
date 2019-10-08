@@ -38,7 +38,7 @@ public class IngAtSessionHandler implements SessionHandler {
             keepAliveResponse =
                     apiClient.keepAlive().orElseThrow(SessionError.SESSION_EXPIRED::exception);
         } catch (HttpResponseException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
 
         // If keepalive response indicates expiration -> SessionException

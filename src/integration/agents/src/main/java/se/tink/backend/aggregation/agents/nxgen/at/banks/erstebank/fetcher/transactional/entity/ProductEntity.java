@@ -101,7 +101,7 @@ public class ProductEntity {
             toTransactionalAccount();
             return true;
         } catch (Exception e) {
-            logger.warn("{} {}", ErsteBankConstants.LOGTAG.TRANSANSACTIONAL_ACC_ERR, getType());
+            logger.warn("{} {}", ErsteBankConstants.LOGTAG.TRANSANSACTIONAL_ACC_ERR, getType(), e);
             return false;
         }
     }
@@ -126,7 +126,7 @@ public class ProductEntity {
             toCreditCardAccount();
             return true;
         } catch (Exception e) {
-            logger.warn("{} {}", ErsteBankConstants.LOGTAG.CREDIT_ACC_ERR, e.toString());
+            logger.warn("{} {}", ErsteBankConstants.LOGTAG.CREDIT_ACC_ERR, e.toString(), e);
             return false;
         }
     }

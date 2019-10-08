@@ -44,7 +44,7 @@ public class ErstebankSidentityAuthenticator implements Authenticator {
             try {
                 response = ersteBankApiClient.pollStatus();
             } catch (HttpResponseException hre) {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(hre);
             }
 
             switch (response.getSecondFactorStatus()) {

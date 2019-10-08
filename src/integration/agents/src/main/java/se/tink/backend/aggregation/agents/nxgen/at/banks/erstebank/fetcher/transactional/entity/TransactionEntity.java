@@ -107,7 +107,7 @@ public class TransactionEntity {
 
             LONGLOGGER.errorExtraLong(
                     "DateParsing error", ErsteBankConstants.LOGTAG.ERROR_DATE_PARSING, e);
-            throw new IllegalArgumentException("Cannot parse date: " + e.toString());
+            throw new IllegalArgumentException("Cannot parse date: " + e.toString(), e);
         }
     }
 

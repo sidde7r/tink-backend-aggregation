@@ -76,7 +76,8 @@ public class OtmlResponseConverter {
             LOGGER.error(
                     withTag(
                             BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR,
-                            "Xpath expression not valid, test in unittest"));
+                            "Xpath expression not valid, test in unittest"),
+                    e);
         }
         return Optional.empty();
     }
@@ -156,7 +157,8 @@ public class OtmlResponseConverter {
             LOGGER.error(
                     withTag(
                             BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR,
-                            "Xpath expression not valid, test in unittest"));
+                            "Xpath expression not valid, test in unittest"),
+                    e);
         }
         return null;
     }
@@ -171,7 +173,8 @@ public class OtmlResponseConverter {
             LOGGER.error(
                     withTag(
                             BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR,
-                            "Xpath expression not valid, test in unittest"));
+                            "Xpath expression not valid, test in unittest"),
+                    e);
         }
         return xpathNodeList;
     }
