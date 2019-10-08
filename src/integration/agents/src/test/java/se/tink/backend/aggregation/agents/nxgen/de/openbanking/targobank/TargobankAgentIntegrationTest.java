@@ -68,6 +68,7 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
     private Credentials credential;
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
+    private final AgentTestServerClient agentTestServerClient;
 
     private TargobankAgentIntegrationTest(TargobankAgentIntegrationTest.Builder builder) {
         this.provider = builder.getProvider();
@@ -85,6 +86,7 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
                         this.user, this.credential, builder.getTransactionsToPrint(), "", "");
         this.supplementalInformationController =
                 new SupplementalInformationController(this.context, this.credential);
+        agentTestServerClient = AgentTestServerClient.getInstance();
     }
 
     private boolean loadCredentials() {
@@ -92,7 +94,7 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
             return false;
         } else {
             Optional<Credentials> optionalCredential =
-                    AgentTestServerClient.loadCredential(
+                    agentTestServerClient.loadCredential(
                             this.provider.getName(), this.credential.getId());
             optionalCredential.ifPresent(credentials -> this.credential = credentials);
             return optionalCredential.isPresent();
@@ -103,7 +105,7 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
         if (this.saveCredentialsAfter && agent instanceof PersistentLogin) {
             PersistentLogin persistentAgent = (PersistentLogin) agent;
             persistentAgent.persistLoginSession();
-            AgentTestServerClient.saveCredential(this.provider.getName(), this.credential);
+            agentTestServerClient.saveCredential(this.provider.getName(), this.credential);
         }
     }
 

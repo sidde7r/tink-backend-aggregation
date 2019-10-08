@@ -71,6 +71,7 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
     private Credentials credential;
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
+    private final AgentTestServerClient agentTestServerClient;
 
     private CbiGlobeAgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
@@ -92,6 +93,7 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
                         builder.getClusterId());
         this.supplementalInformationController =
                 new SupplementalInformationController(this.context, this.credential);
+        agentTestServerClient = AgentTestServerClient.getInstance();
     }
 
     private boolean loadCredentials() {
@@ -99,7 +101,7 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
             return false;
         } else {
             Optional<Credentials> optionalCredential =
-                    AgentTestServerClient.loadCredential(
+                    agentTestServerClient.loadCredential(
                             this.provider.getName(), this.credential.getId());
             optionalCredential.ifPresent(
                     (c) -> {
@@ -113,7 +115,7 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
         if (this.saveCredentialsAfter && agent instanceof PersistentLogin) {
             PersistentLogin persistentAgent = (PersistentLogin) agent;
             persistentAgent.persistLoginSession();
-            AgentTestServerClient.saveCredential(this.provider.getName(), this.credential);
+            agentTestServerClient.saveCredential(this.provider.getName(), this.credential);
         }
     }
 
