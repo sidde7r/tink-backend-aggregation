@@ -11,11 +11,18 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class TransactionIndexPaginationController<A extends Account>
         implements TransactionPaginator<A> {
     private final TransactionIndexPaginator<A> paginator;
-    private static final int NUMBER_OF_TRANSACTIONS_PER_PAGE = 30;
+    private static final int DEFAULT_NUMBER_OF_TRANSACTIONS_PER_PAGE = 30;
     private int numberOfTransactionsFetched = 0;
+    private final int numberOfTransactionsPerPage;
 
     public TransactionIndexPaginationController(TransactionIndexPaginator<A> paginator) {
+        this(paginator, DEFAULT_NUMBER_OF_TRANSACTIONS_PER_PAGE);
+    }
+
+    public TransactionIndexPaginationController(
+            TransactionIndexPaginator<A> paginator, int numberOfTransactionsPerPage) {
         this.paginator = Preconditions.checkNotNull(paginator);
+        this.numberOfTransactionsPerPage = numberOfTransactionsPerPage;
     }
 
     @Override
@@ -27,12 +34,12 @@ public class TransactionIndexPaginationController<A extends Account>
     public PaginatorResponse fetchTransactionsFor(A account) {
         PaginatorResponse response =
                 paginator.getTransactionsFor(
-                        account, NUMBER_OF_TRANSACTIONS_PER_PAGE, numberOfTransactionsFetched);
+                        account, numberOfTransactionsPerPage, numberOfTransactionsFetched);
 
         Collection<? extends Transaction> transactions = response.getTinkTransactions();
         numberOfTransactionsFetched += transactions.size();
 
-        if (transactions.size() < NUMBER_OF_TRANSACTIONS_PER_PAGE
+        if (transactions.size() < numberOfTransactionsPerPage
                 && !response.canFetchMore().isPresent()) {
             // If we return less transactions than we asked for AND the pagee doesn't implement
             // canFetchMore we
