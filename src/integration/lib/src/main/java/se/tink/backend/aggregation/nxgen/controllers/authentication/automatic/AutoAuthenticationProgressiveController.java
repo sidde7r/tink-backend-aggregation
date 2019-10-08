@@ -75,8 +75,8 @@ public class AutoAuthenticationProgressiveController
     }
 
     @Override
-    public boolean isManualAuthentication(final Credentials credentials) {
-        return shouldDoManualAuthentication(credentials);
+    public boolean isManualAuthentication(final CredentialsRequest request) {
+        return shouldDoManualAuthentication(request.getCredentials());
     }
 
     // TODO: Remove this when there is support for new MultiFactor credential types.
