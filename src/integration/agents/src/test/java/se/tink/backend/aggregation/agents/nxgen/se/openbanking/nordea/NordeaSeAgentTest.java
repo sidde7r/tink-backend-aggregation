@@ -12,7 +12,9 @@ public class NordeaSeAgentTest {
     private AgentIntegrationTest.Builder builder;
 
     private enum Arg {
-        SSN // 12 digit SSN
+        SSN, // 12 digit SSN
+        LOAD_BEFORE,
+        SAVE_AFTER
     }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
@@ -26,8 +28,8 @@ public class NordeaSeAgentTest {
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("nordea")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(true);
+                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
     }
 
     @Test
