@@ -60,12 +60,6 @@ public class N26AppAuthenticator implements ExternalAppAuthenticator<String> {
         return Optional.empty();
     }
 
-    //    @Override
-    //    public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
-    //        return Optional.ofNullable(
-    //                N26Constants.Errors.THIRD_PARTY_APP_ERROR.getOrDefault(status, null));
-    //    }
-
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
     }
