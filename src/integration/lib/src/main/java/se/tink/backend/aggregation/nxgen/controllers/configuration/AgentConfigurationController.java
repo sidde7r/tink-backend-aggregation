@@ -78,6 +78,10 @@ public final class AgentConfigurationController {
         this.redirectUrl = redirectUrl;
         this.isOpenBankingAgent = AccessType.OPEN_BANKING == provider.getAccessType();
         this.isTestProvider = ProviderTypes.TEST == provider.getType();
+
+        if (isTestProvider) {
+            log.info("Test provider, will not try to read agent configuration from SS.");
+        }
     }
 
     public boolean isOpenBankingAgent() {
