@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 
 public class NordeaSEConstants {
+    public static final int NUM_TRANSACTIONS_PER_PAGE = 200;
     public static final String CURRENCY = "SEK";
 
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
