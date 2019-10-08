@@ -20,34 +20,25 @@ public final class SbabConstants {
     }
 
     public static class Urls {
-        public static final URL ACCOUNTS = new URL(Endpoints.BASE_URL + Endpoints.ACCOUNTS);
-        public static final URL AUTHORIZATION =
-                new URL(Endpoints.BASE_URL + Endpoints.AUTHORIZATION);
-        public static final URL AUTHENTICATION =
-                new URL(Endpoints.BASE_URL + Endpoints.AUTHENTICATION);
-        public static final URL TRANSACTIONS = new URL(Endpoints.BASE_URL + Endpoints.TRANSFERS);
-        public static final URL CUSTOMERS = new URL(Endpoints.BASE_URL + Endpoints.CUSTOMERS);
-        public static final URL TOKEN = new URL(Endpoints.BASE_URL + Endpoints.TOKEN);
-        public static final URL INITIATE_PAYMENT =
-                new URL(Endpoints.BASE_URL + Endpoints.INITIATE_PAYMENT);
-        public static final URL GET_PAYMENT = new URL(Endpoints.BASE_URL + Endpoints.GET_PAYMENT);
-        public static final URL SIGN_PAYMENT = new URL(Endpoints.BASE_URL + Endpoints.SIGN_PAYMENT);
-    }
-
-    public static class Endpoints {
-        public static final String INITIATE_PAYMENT =
-                "/savings/2.0/accounts/{accountNumber}/transfers";
-        public static final String GET_PAYMENT =
-                "/savings/2.0/accounts/{accountNumber}/transfers/status/{referenceId}";
-        public static final String SIGN_PAYMENT =
-                "/savings/2.0/accounts/transfers/sign/{referenceId}";
         public static final String BASE_URL = "https://psd.sbab.se/psd2";
-        public static final String AUTHORIZATION = "/auth/1.0/authorize";
-        public static final String AUTHENTICATION = "/auth/1.0/authenticate";
-        public static final String TRANSFERS = "/savings/2.0/accounts/{accountNumber}/transfers";
-        public static final String CUSTOMERS = "/customer/1.0/customers";
-        public static final String ACCOUNTS = "/savings/2.0/accounts";
-        public static final String TOKEN = "/auth/1.0/token";
+
+        public static final URL AUTHORIZATION = new URL(BASE_URL + "/auth/1.0/authorize");
+        public static final URL AUTHENTICATION = new URL(BASE_URL + "/auth/1.0/authenticate");
+        public static final URL TOKEN = new URL(BASE_URL + "/auth/1.0/token");
+
+        public static final URL CUSTOMERS = new URL(BASE_URL + "/customer/1.0/customers");
+        public static final URL ACCOUNTS = new URL(BASE_URL + "/savings/2.0/accounts");
+        public static final URL TRANSACTIONS =
+                new URL(BASE_URL + "/savings/2.0/accounts/{accountNumber}/transfers");
+
+        public static final URL INITIATE_PAYMENT =
+                new URL(BASE_URL + "/savings/2.0/accounts/{accountNumber}/transfers");
+        public static final URL GET_PAYMENT =
+                new URL(
+                        BASE_URL
+                                + "/savings/2.0/accounts/{accountNumber}/transfers/status/{referenceId}");
+        public static final URL SIGN_PAYMENT =
+                new URL(BASE_URL + "/savings/2.0/accounts/transfers/sign/{referenceId}");
     }
 
     public static class StorageKeys {
