@@ -60,7 +60,6 @@ public final class AbnAmroConstants {
 
     public class StorageKey {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
-        public static final String RESOURCE_ID = "resource_id";
         public static final String ACCOUNT_CONSENT_ID = "ConsentAccountId";
     }
 
@@ -69,13 +68,11 @@ public final class AbnAmroConstants {
         public static final String HEADERS = "headers";
         public static final String KEY_ID = "keyId";
         public static final String SHA_512 = "sha-512";
-        public static final String RSA_SHA_512 = "rsa-sha512";
         public static final String SIGNING_STRING_DIGEST = "digest: ";
         public static final String SIGNING_STRING_DATE = "date: ";
         public static final String SIGNING_STRING_REQUEST_ID = "x-request-id: ";
         public static final String SIGNING_STRING_SHA_512 = SHA_512 + "=";
         public static final String SIGNATURE = "signature";
-        public static final String HEADERS_VALUE = "date digest x-request-id";
     }
 
     public class QueryParams {
@@ -90,14 +87,12 @@ public final class AbnAmroConstants {
         public static final String BANK = "bank";
         public static final String FLOW = "flow";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String REQUEST_ID = "X-Request-ID";
         public static final String CONTENT_TYPE = "Content-Type";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String AUTHORIZATION = "Authorization";
         public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
         public static final String SIGNATURE = "Signature";
         public static final String DATE = "Date";
-        public static final String PAGE = "page";
         public static final String BOOK_DATE_FROM = "bookDateFrom";
         public static final String BOOK_DATE_TO = "bookDateTo";
     }
