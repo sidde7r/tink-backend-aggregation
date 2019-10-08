@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -27,7 +27,6 @@ public class AbnAmroAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final AbnAmroApiClient apiClient;
-    private final String clientName;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AbnAmroConfiguration configuration;
 
@@ -36,8 +35,6 @@ public class AbnAmroAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         this.apiClient = new AbnAmroApiClient(client, persistentStorage);
-        this.clientName = request.getProvider().getPayload();
-
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -100,7 +97,7 @@ public class AbnAmroAgent extends NextGenerationAgent
                 new AbnAmroAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
+                        new TransactionKeyPaginationController<>(
                                 new AbnAmroTransactionFetcher(apiClient))));
     }
 

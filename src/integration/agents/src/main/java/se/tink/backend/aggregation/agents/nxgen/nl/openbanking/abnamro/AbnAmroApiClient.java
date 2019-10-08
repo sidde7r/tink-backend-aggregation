@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroConstants.QueryParams;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroConstants.URLs;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ExchangeAuthorizationCodeRequest;
@@ -15,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.r
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.rpc.AccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.utils.AbnAmroUtils;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -66,43 +64,47 @@ public class AbnAmroApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }
 
-    public ConsentResponse consentRequest(OAuth2Token token) {
-
+    public ConsentResponse consentRequest() {
         final String apiKey = getConfiguration().getApiKey();
         return client.request(URLs.ABNAMRO_CONSENT_INFO)
-                .addBearerToken(token)
+                .addBearerToken(AbnAmroUtils.getOauthToken(persistentStorage))
                 .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(ConsentResponse.class);
     }
 
-    public AccountHolderResponse fetchAccountHolder() {
-        String accountId = persistentStorage.get(StorageKey.ACCOUNT_CONSENT_ID);
+    public AccountHolderResponse fetchAccountHolder(String accountId) {
         return buildRequest(AbnAmroConstants.URLs.buildAccountHolderUrl(accountId))
                 .get(AccountHolderResponse.class);
     }
 
-    public AccountBalanceResponse fetchAccountBalance() {
-        String accountId = persistentStorage.get(StorageKey.ACCOUNT_CONSENT_ID);
+    public AccountBalanceResponse fetchAccountBalance(String accountId) {
         return buildRequest(AbnAmroConstants.URLs.buildBalanceUrl(accountId))
                 .get(AccountBalanceResponse.class);
     }
 
-    public TransactionsResponse fetchTransactions(Date from, Date to) {
-
-        String accountId = persistentStorage.get(StorageKey.ACCOUNT_CONSENT_ID);
+    public TransactionsResponse fetchTransactionsByDate(String accountId, Date from, Date to) {
         final String apiKey = getConfiguration().getApiKey();
         final SimpleDateFormat sdf =
                 new SimpleDateFormat(AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT);
 
-        TransactionsResponse response =
-                client.request(AbnAmroConstants.URLs.buildTransactionsUrl(accountId))
-                        .queryParam(QueryParams.BOOK_DATE_FROM, sdf.format(from))
-                        .queryParam(QueryParams.BOOK_DATE_TO, sdf.format(to))
-                        .addBearerToken(AbnAmroUtils.getOauthToken(persistentStorage))
-                        .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .get(TransactionsResponse.class);
-        return response;
+        return client.request(AbnAmroConstants.URLs.buildTransactionsUrl(accountId))
+                .queryParam(QueryParams.BOOK_DATE_FROM, sdf.format(from))
+                .queryParam(QueryParams.BOOK_DATE_TO, sdf.format(to))
+                .addBearerToken(AbnAmroUtils.getOauthToken(persistentStorage))
+                .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(TransactionsResponse.class);
+    }
+
+    public TransactionsResponse fetchTransactionsByKey(String nextPageKey, String accountId) {
+        final String apiKey = getConfiguration().getApiKey();
+
+        return client.request(AbnAmroConstants.URLs.buildTransactionsUrl(accountId))
+                .queryParam(QueryParams.NEXT_PAGE_KEY, nextPageKey)
+                .addBearerToken(AbnAmroUtils.getOauthToken(persistentStorage))
+                .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(TransactionsResponse.class);
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -16,7 +16,7 @@ public class TransactionEntity {
     private int balanceAfterMutation;
     private String counterPartyAccountNumber;
     private String counterPartyName;
-    private double amount;
+    private String amount;
     private String currency;
     private String transactionId;
 
@@ -26,7 +26,7 @@ public class TransactionEntity {
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
-                .setAmount(new Amount(currency, amount))
+                .setAmount(ExactCurrencyAmount.of(amount, currency))
                 .setDate(bookDate)
                 .setDescription(String.join(" ", descriptionLines))
                 .build();
