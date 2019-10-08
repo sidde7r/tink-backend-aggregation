@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -34,15 +34,13 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class AgentTestContext extends AgentContext {
-    private static final Logger log = LoggerFactory.getLogger(AgentTestContext.class);
-    private static final ObjectMapper mapper = new ObjectMapper();
-    private static final TinkHttpClient supplementalClient = new LegacyTinkHttpClient();
+
     private static final String SUPPLEMENTAL_TEST_API = "http://127.0.0.1:7357/api/v1/supplemental";
     private static final String CLUSTER_ID_FOR_TESTING = "test-local-development";
 
-    static {
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"));
-    }
+    private final Logger log;
+    private final ObjectMapper mapper;
+    private final TinkHttpClient supplementalClient;
 
     private Map<String, Account> accountsByBankId = Maps.newHashMap();
     private Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
@@ -53,6 +51,11 @@ public class AgentTestContext extends AgentContext {
     private Credentials credentials;
 
     public AgentTestContext(Credentials credentials) {
+        supplementalClient = NextGenTinkHttpClient.builder().build();
+        log = LoggerFactory.getLogger(AgentTestContext.class);
+        mapper = new ObjectMapper();
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"));
+
         this.credentials = credentials;
 
         setClusterId(CLUSTER_ID_FOR_TESTING);
