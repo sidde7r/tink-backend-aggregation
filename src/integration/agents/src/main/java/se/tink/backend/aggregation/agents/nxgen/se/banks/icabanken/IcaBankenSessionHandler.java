@@ -34,7 +34,7 @@ public class IcaBankenSessionHandler implements SessionHandler {
             apiClient.keepAlive();
             apiClient.fetchAccounts();
         } catch (HttpResponseException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

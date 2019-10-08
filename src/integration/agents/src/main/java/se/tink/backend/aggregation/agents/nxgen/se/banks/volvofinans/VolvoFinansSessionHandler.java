@@ -22,7 +22,7 @@ public class VolvoFinansSessionHandler implements SessionHandler {
         try {
             apiClient.keepAlive();
         } catch (Exception e) {
-            throw new SessionException(SessionError.SESSION_EXPIRED);
+            throw new SessionException(SessionError.SESSION_EXPIRED, e);
         }
     }
 }

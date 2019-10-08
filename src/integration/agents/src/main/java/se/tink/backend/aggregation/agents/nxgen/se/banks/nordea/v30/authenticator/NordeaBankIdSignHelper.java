@@ -56,7 +56,7 @@ public class NordeaBankIdSignHelper {
                 Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                    throw BankIdError.ALREADY_IN_PROGRESS.exception(e);
                 }
             }
         }

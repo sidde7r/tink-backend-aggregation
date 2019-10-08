@@ -61,7 +61,7 @@ public class IcaBankenTransactionFetcher {
             if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
                 ResponseStatusEntity error = hre.getResponse().getBody(ResponseStatusEntity.class);
                 if (error.getCode() == Error.MULTIPLE_LOGIN_ERROR_CODE) {
-                    throw BankServiceError.MULTIPLE_LOGIN.exception();
+                    throw BankServiceError.MULTIPLE_LOGIN.exception(hre);
                 }
             }
         }

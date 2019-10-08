@@ -48,7 +48,7 @@ public class CoopTransactionalAccountFetcher
         } catch (HttpResponseException hre) {
             HttpResponse response = hre.getResponse();
             if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hre);
             }
 
             throw hre;

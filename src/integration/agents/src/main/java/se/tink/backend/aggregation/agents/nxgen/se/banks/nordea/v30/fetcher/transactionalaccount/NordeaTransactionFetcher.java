@@ -75,7 +75,8 @@ public class NordeaTransactionFetcher
                                 attempt,
                                 account.getAccountNumber(),
                                 startIndex,
-                                numberOfTransactions));
+                                numberOfTransactions),
+                        hre);
 
                 return fetchTransactions(account, numberOfTransactions, startIndex, ++attempt);
             }
@@ -93,7 +94,7 @@ public class NordeaTransactionFetcher
         try {
             Thread.sleep(TRANSACTION_FETCHER_BACKOFF);
         } catch (InterruptedException e) {
-            LOG.debug("Woke up early");
+            LOG.debug("Woke up early", e);
         }
     }
 }

@@ -42,7 +42,7 @@ public class SkandiabankenHttpFilter extends Filter {
                         .findAny()
                         .ifPresent(
                                 f -> {
-                                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                                    throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
                                 });
     }
 

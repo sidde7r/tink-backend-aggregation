@@ -287,7 +287,7 @@ public class NordeaSEApiClient {
         } catch (HttpResponseException hre) {
             ErrorResponse error = ErrorResponse.of(hre);
             if (error.isInvalidRefreshToken()) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(hre);
             }
             throw hre;
         }

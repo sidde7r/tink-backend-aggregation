@@ -49,20 +49,21 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
             return apiClient.initBankId(request);
         } catch (HttpResponseException e) {
 
-            handleInitBankIdErrors(e.getResponse());
+            handleInitBankIdErrors(e);
 
             throw e;
         }
     }
 
-    private void handleInitBankIdErrors(HttpResponse response) throws BankIdException {
+    private void handleInitBankIdErrors(HttpResponseException e) throws BankIdException {
+        HttpResponse response = e.getResponse();
 
         if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            throw BankIdError.ALREADY_IN_PROGRESS.exception(e);
         }
 
         if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
         }
     }
 
@@ -88,30 +89,33 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
 
             return status;
         } catch (HttpResponseException e) {
-            handlePollBankIdErrors(e.getResponse());
+            handlePollBankIdErrors(e);
             throw e;
         }
     }
 
-    private void handlePollBankIdErrors(HttpResponse response) throws BankIdException {
+    private void handlePollBankIdErrors(HttpResponseException e) throws BankIdException {
+        HttpResponse response = e.getResponse();
 
         if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
         }
 
         if (response.hasBody()) {
             ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
 
             if (errorResponse.isUserCancel()) {
-                throw BankIdError.CANCELLED.exception();
+                throw BankIdError.CANCELLED.exception(e);
             }
 
             if (errorResponse.isBankIdTimeout()) {
-                throw BankIdError.TIMEOUT.exception();
+                throw BankIdError.TIMEOUT.exception(e);
             }
 
             LOGGER.error(
-                    "Avanza BankID poll failed with error message: {}", errorResponse.getMessage());
+                    "Avanza BankID poll failed with error message: {}",
+                    errorResponse.getMessage(),
+                    e);
         }
     }
 

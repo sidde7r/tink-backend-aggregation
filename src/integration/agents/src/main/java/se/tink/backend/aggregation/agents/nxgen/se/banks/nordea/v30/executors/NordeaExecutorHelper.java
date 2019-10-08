@@ -144,7 +144,7 @@ public class NordeaExecutorHelper {
             context.openBankId(null, false);
             pollSignTransfer(transferId, signatureResponse.getOrderReference());
         } else {
-            throw paymentFailedError();
+            throw paymentFailedError(null);
         }
     }
 
@@ -158,7 +158,7 @@ public class NordeaExecutorHelper {
                     HttpResponse response =
                             ((HttpResponseException) initialException.getCause()).getResponse();
                     if (response.getStatus() == HttpStatus.SC_CONFLICT) {
-                        throw bankIdAlreadyInProgressError();
+                        throw bankIdAlreadyInProgressError(initialException);
                     }
                 }
 
@@ -188,7 +188,7 @@ public class NordeaExecutorHelper {
                 Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                    throw bankIdAlreadyInProgressError();
+                    throw bankIdAlreadyInProgressError(e);
                 }
             }
         }
@@ -253,10 +253,11 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    public TransferExecutionException paymentFailedError() {
+    public TransferExecutionException paymentFailedError(Exception e) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
                 .setEndUserMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
+                .setException(e)
                 .build();
     }
 
@@ -275,7 +276,7 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    private TransferExecutionException bankIdAlreadyInProgressError() {
+    private TransferExecutionException bankIdAlreadyInProgressError(Exception e) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS
@@ -285,6 +286,7 @@ public class NordeaExecutorHelper {
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage
                                         .BANKID_ANOTHER_IN_PROGRESS))
+                .setException(e)
                 .build();
     }
 
@@ -310,9 +312,10 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    protected TransferExecutionException duplicatePaymentError() {
+    protected TransferExecutionException duplicatePaymentError(HttpResponseException e) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(NordeaSEConstants.LogMessages.DUPLICATE_PAYMENT)
+                .setException(e)
                 .build();
     }
 
@@ -323,11 +326,12 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    protected TransferExecutionException transferFailedError() {
+    protected TransferExecutionException transferFailedError(Exception e) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(
                         this.catalog.getString(
                                 TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED))
+                .setException(e)
                 .build();
     }
 

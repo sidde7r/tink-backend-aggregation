@@ -131,7 +131,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                                         name);
             }
         } catch (Exception e) {
-            LOG.info("Unable to fetch account info " + e.getMessage());
+            LOG.info("Unable to fetch account info " + e.getMessage(), e);
         }
 
         TransactionalAccountType accountType =
@@ -222,7 +222,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         try {
             return Optional.of(findLink(HandelsbankenConstants.URLS.Links.ACCOUNT_INFO));
         } catch (Exception e) {
-            LOG.info("Failed to find link for account info ", e.getMessage());
+            LOG.info("Failed to find link for account info ", e.getMessage(), e);
         }
 
         return Optional.empty();

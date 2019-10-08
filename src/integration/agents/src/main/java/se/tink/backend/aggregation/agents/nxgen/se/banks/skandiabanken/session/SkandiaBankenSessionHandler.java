@@ -57,7 +57,7 @@ public class SkandiaBankenSessionHandler implements SessionHandler {
         } catch (HttpResponseException hre) {
             if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
                     || hre.getResponse().getBody(ErrorResponse.class).isUnauthorized()) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(hre);
             }
             throw hre;
         }

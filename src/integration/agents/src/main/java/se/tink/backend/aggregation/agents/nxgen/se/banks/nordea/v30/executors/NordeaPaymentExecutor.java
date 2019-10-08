@@ -56,7 +56,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
             }
         } catch (HttpResponseException e) {
             log.warn("Payment execution failed", e);
-            throw executorHelper.paymentFailedError();
+            throw executorHelper.paymentFailedError(e);
         }
     }
 
@@ -125,10 +125,10 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
                 if (errorResponse.isDuplicatePayment()) {
-                    throw executorHelper.duplicatePaymentError();
+                    throw executorHelper.duplicatePaymentError(e);
                 }
                 log.warn("Payment execution failed", e);
-                throw executorHelper.paymentFailedError();
+                throw executorHelper.paymentFailedError(e);
             }
             throw e;
         }

@@ -185,6 +185,7 @@ public class IcaBankenExecutorHelper {
                     .setMessage(
                             context.getCatalog()
                                     .getString(IcaBankenConstants.LogMessage.NO_RECIPIENT_NAME))
+                    .setException(e)
                     .build();
         }
     }
@@ -240,7 +241,7 @@ public class IcaBankenExecutorHelper {
                     HttpResponse response =
                             ((HttpResponseException) initialException.getCause()).getResponse();
                     if (response.getStatus() == HttpStatus.SC_CONFLICT) {
-                        throwBankIdAlreadyInProgressError();
+                        throwBankIdAlreadyInProgressError(initialException);
                     }
                 }
 
@@ -259,7 +260,7 @@ public class IcaBankenExecutorHelper {
         return reference;
     }
 
-    private void throwBankIdAlreadyInProgressError() {
+    private void throwBankIdAlreadyInProgressError(Exception initialException) {
 
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(
@@ -270,6 +271,7 @@ public class IcaBankenExecutorHelper {
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage
                                         .BANKID_ANOTHER_IN_PROGRESS))
+                .setException(initialException)
                 .build();
     }
 
@@ -336,6 +338,7 @@ public class IcaBankenExecutorHelper {
                                     catalog.getString(
                                             IcaBankenConstants.UserMessage
                                                     .BANKID_TRANSFER_INTERRUPTED))
+                            .setException(e)
                             .build();
                 }
             }
@@ -443,6 +446,7 @@ public class IcaBankenExecutorHelper {
                                             transferResponse,
                                             TransferExecutionException.EndUserMessage
                                                     .TRANSFER_EXECUTE_FAILED))
+                            .setException(e)
                             .build();
                 }
             } else {

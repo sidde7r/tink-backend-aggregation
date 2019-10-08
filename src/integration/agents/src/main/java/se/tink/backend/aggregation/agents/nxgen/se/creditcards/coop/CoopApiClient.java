@@ -43,7 +43,7 @@ public class CoopApiClient {
             int status = e.getResponse().getStatus();
             if (status == 401) {
 
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
 
             throw e;

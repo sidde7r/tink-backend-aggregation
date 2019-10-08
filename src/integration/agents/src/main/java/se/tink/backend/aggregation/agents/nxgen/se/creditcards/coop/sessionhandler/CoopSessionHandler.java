@@ -28,7 +28,7 @@ public class CoopSessionHandler implements SessionHandler {
             sessionStorage.put(CoopConstants.Storage.USER_SUMMARY, userSummary);
 
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }
