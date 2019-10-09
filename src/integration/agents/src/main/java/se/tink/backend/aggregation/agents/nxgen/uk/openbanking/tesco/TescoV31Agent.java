@@ -26,7 +26,7 @@ public class TescoV31Agent extends UkOpenBankingBaseAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new URL(V31.WELL_KNOWN_URL));
         aisConfig = new UkOpenBankingV31AisConfiguration(V31.AIS_API_URL, V31.AIS_AUTH_URL);
-        pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL, V31.PIS_AUTH_URL);
+        pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
     }
 
     @Override

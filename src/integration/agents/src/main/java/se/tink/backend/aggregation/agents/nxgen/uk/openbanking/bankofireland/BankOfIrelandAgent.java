@@ -5,11 +5,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11PisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20AisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofireland.BankOfIrelandConstants.Urls.V11;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofireland.BankOfIrelandConstants.Urls.V20;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofireland.BankOfIrelandConstants.Urls.V31;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -25,7 +25,7 @@ public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new URL(V20.WELL_KNOWN_URL), true);
         aisConfig = new UkOpenBankingV20AisConfiguration(V20.AIS_API_URL, V20.AIS_AUTH_URL);
-        pisConfig = new UkOpenBankingV11PisConfiguration(V11.PIS_API_URL, V11.PIS_AUTH_URL);
+        pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
     }
 
     @Override
