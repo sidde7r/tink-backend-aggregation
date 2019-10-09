@@ -22,11 +22,13 @@ public class CbiGlobeTransactionalAccountFetcher
 
     private final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final String queryValue;
 
-    public CbiGlobeTransactionalAccountFetcher(
-            CbiGlobeApiClient apiClient, PersistentStorage persistentStorage) {
+    private CbiGlobeTransactionalAccountFetcher(
+            CbiGlobeApiClient apiClient, PersistentStorage persistentStorage, String queryValue) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
+        this.queryValue = queryValue;
     }
 
     @Override
@@ -43,10 +45,21 @@ public class CbiGlobeTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        // Bank allows to fetch transactions for last 90 days
         fromDate = calculateFromDate(toDate);
 
         return apiClient.getTransactions(
-                account.getApiIdentifier(), fromDate, toDate, QueryValues.BOTH);
+                account.getApiIdentifier(), fromDate, toDate, this.queryValue);
+    }
+
+    public static CbiGlobeTransactionalAccountFetcher createFromBoth(
+            CbiGlobeApiClient apiClient, PersistentStorage persistentStorage) {
+        return new CbiGlobeTransactionalAccountFetcher(
+                apiClient, persistentStorage, QueryValues.BOTH);
+    }
+
+    public static CbiGlobeTransactionalAccountFetcher createFromBooked(
+            CbiGlobeApiClient apiClient, PersistentStorage persistentStorage) {
+        return new CbiGlobeTransactionalAccountFetcher(
+                apiClient, persistentStorage, QueryValues.BOOKED);
     }
 }
