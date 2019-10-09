@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.InstructedAmount;
@@ -25,7 +26,8 @@ public class PaymentInitiation {
             Payment payment, String endToEndIdentification, String instructionIdentification) {
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;
-        this.debtorAccount = new DebtorAccount(payment.getDebtor());
+        this.debtorAccount =
+                Objects.isNull(payment.getDebtor()) ? null : new DebtorAccount(payment.getDebtor());
         this.creditorAccount = new CreditorAccount(payment.getCreditor());
         this.currencyOfTransfer = payment.getCurrency();
         this.instructedAmount = new InstructedAmount(payment.getAmount());
