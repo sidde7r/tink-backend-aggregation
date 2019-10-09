@@ -15,18 +15,24 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NatWestV31Agent extends UkOpenBankingBaseAgent {
 
-    private final UkOpenBankingAisConfig aisConfig;
+    private static final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingPisConfig pisConfig;
+
+    static {
+        aisConfig =
+                new UkOpenBankingV31AisConfiguration.Builder()
+                        .withApiBaseURL(V31.AIS_API_URL)
+                        .withWellKnownURL(V31.WELL_KNOWN_URL)
+                        .build();
+    }
 
     public NatWestV31Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new URL(V31.WELL_KNOWN_URL));
-        aisConfig = new UkOpenBankingV31AisConfiguration(V31.AIS_API_URL, V31.AIS_AUTH_URL);
+        super(request, context, signatureKeyPair, aisConfig);
         pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
     }
 

@@ -13,18 +13,24 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofireland.Ban
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
 
-    private final UkOpenBankingAisConfig aisConfig;
+    private static final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingPisConfig pisConfig;
+
+    static {
+        aisConfig =
+                new UkOpenBankingV20AisConfiguration.Builder()
+                        .withApiBaseURL(V20.AIS_API_URL)
+                        .withWellKnownURL(V20.WELL_KNOWN_URL)
+                        .build();
+    }
 
     public BankOfIrelandAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new URL(V20.WELL_KNOWN_URL), true);
-        aisConfig = new UkOpenBankingV20AisConfiguration(V20.AIS_API_URL, V20.AIS_AUTH_URL);
+        super(request, context, signatureKeyPair, aisConfig, true);
         pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
     }
 
