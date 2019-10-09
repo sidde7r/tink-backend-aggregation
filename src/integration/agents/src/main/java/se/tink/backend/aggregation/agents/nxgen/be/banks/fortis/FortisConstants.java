@@ -117,6 +117,7 @@ public class FortisConstants {
     }
 
     public static class LOGTAG {
+        public static final LogTag NO_USER_DATA_FOUND = LogTag.from("NO_USER_DATA_FOUND");
         public static final LogTag LOGIN_ERROR = LogTag.from("FORTIS_LOGIN_ERROR");
         public static final LogTag TRANSACTION_VALIDATION_ERROR =
                 LogTag.from("FORTIS_TRANSACTION_VALIDATION_ERROR");

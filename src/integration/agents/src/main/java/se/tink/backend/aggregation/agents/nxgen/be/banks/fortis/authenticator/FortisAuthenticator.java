@@ -240,6 +240,13 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                     String.format("authenticate, multiple users found: %s", ""),
                     FortisConstants.LOGTAG.MULTIPLE_USER_ENTITIES);
         }
+
+        if (eBankingUserIdEntity.getValue().getEBankingUsers().size() == 0) {
+            LOGGER.warnExtraLong(
+                    String.format("authenticate, no user data found: %s", ""),
+                    FortisConstants.LOGTAG.NO_USER_DATA_FOUND);
+        }
+
         return Optional.ofNullable(
                 eBankingUserIdEntity
                         .getValue()
@@ -341,12 +348,12 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                 persistentStorage.get(FortisConstants.STORAGE.DEVICE_FINGERPRINT);
         final String muid = persistentStorage.get(FortisConstants.STORAGE.MUID);
 
-        if (Strings.isNullOrEmpty(password)) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-
         Optional<EBankingUserId> ebankingUsersResponse =
                 getEbankingUserId(authenticatorFactorId, smid);
+
+        if (Strings.isNullOrEmpty(password) || !ebankingUsersResponse.isPresent()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
 
         AuthenticationProcessResponse res =
                 createAuthenticationProcess(
