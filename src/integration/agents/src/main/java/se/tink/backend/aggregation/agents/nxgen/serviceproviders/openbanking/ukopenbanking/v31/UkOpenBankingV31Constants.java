@@ -43,8 +43,10 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                             .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")
                             .put(
                                     ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
-                                    "UK.OBIE.SortCodeAccountNumber")
-                            // TODO: Remove the following mapping for PAN when Santander starts
+                                    "UK.OBIE.SortCodeAccountNumber",
+                                    "UK.Santander.SavingsRollNumber")
+                            // TODO: Remove the following mapping for PAN and
+                            // UK.Santander.SavingsRollNumber when Santander starts
                             // sending UK.OBIE.PAN for Credit Card Accounts
                             .put(ExternalAccountIdentification4Code.PAN, "UK.OBIE.PAN", "PAN")
                             .build();
