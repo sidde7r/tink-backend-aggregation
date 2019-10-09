@@ -5,8 +5,10 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class AbancaAuthenticator implements Authenticator {
+public class AbancaAuthenticator implements Authenticator, AuthenticationControllerType {
 
     private final AbancaApiClient apiClient;
 
@@ -19,5 +21,11 @@ public class AbancaAuthenticator implements Authenticator {
             throws AuthenticationException, AuthorizationException {
 
         apiClient.authenticate(credentials);
+    }
+
+    @Override
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        // since authenticate only uses the credentials fields
+        return request.isUpdate() || request.isCreate();
     }
 }
