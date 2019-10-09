@@ -1,18 +1,18 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentVisitor;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ManualOrAutoAuthenticationAgentVisitor implements AgentVisitor {
 
     private boolean manualAuthentication;
-    private Credentials credentials;
+    private CredentialsRequest request;
 
-    public ManualOrAutoAuthenticationAgentVisitor(Credentials credentials) {
-        this.credentials = credentials;
+    public ManualOrAutoAuthenticationAgentVisitor(CredentialsRequest request) {
+        this.request = request;
         manualAuthentication = false;
     }
 
@@ -26,7 +26,7 @@ public class ManualOrAutoAuthenticationAgentVisitor implements AgentVisitor {
                 manualAuthentication =
                         ((AuthenticationControllerType)
                                         subsequentGenerationAgent.getAuthenticator())
-                                .isManualAuthentication(credentials);
+                                .isManualAuthentication(request);
             }
         }
     }

@@ -10,12 +10,15 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuthenticator {
+public class ThirdPartyAppAuthenticationController<T>
+        implements MultiFactorAuthenticator, AuthenticationControllerType {
 
     private final ThirdPartyAppAuthenticator<T> authenticator;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -114,5 +117,11 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
 
         // Treat poll exhaustion as a timeout.
         throw decorateException(ThirdPartyAppStatus.TIMED_OUT, ThirdPartyAppError.TIMED_OUT);
+    }
+
+    @Override
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        // since authenticate always opens the third party app
+        return true;
     }
 }

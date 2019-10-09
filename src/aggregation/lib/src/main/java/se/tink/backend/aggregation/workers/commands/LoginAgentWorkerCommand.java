@@ -197,9 +197,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         return true;
     }
 
-    private boolean isManualAuthentication(Credentials credentials) {
+    private boolean isManualAuthentication(CredentialsRequest request) {
         ManualOrAutoAuthenticationAgentVisitor visitor =
-                new ManualOrAutoAuthenticationAgentVisitor(credentials);
+                new ManualOrAutoAuthenticationAgentVisitor(request);
         agent.accept(visitor);
         log.info("Authentication requires user intervention: " + visitor.isManualAuthentication());
         return visitor.isManualAuthentication();
@@ -214,7 +214,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         MetricAction actionLoginType =
                 isCron
                         ? metrics.buildAction(metricForAction(MetricName.LOGIN_CRON))
-                        : (isManualAuthentication(request.getCredentials())
+                        : (isManualAuthentication(request)
                                 ? metrics.buildAction(metricForAction(MetricName.LOGIN_MANUAL))
                                 : metrics.buildAction(metricForAction(MetricName.LOGIN_AUTO)));
         try {

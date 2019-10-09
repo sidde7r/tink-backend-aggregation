@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -28,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.pair.Pair;
 
@@ -207,7 +207,7 @@ public final class TransactionalAccountRefreshController
     }
 
     @Override
-    public boolean isManualAuthentication(Credentials credentials) {
+    public boolean isManualAuthentication(CredentialsRequest request) {
         return true;
     }
 }

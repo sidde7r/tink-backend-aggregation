@@ -207,7 +207,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return true;
     }
 
-    private void login(Agent agent) throws Exception {
+    private void login(Agent agent, CredentialsRequest credentialsRequest) throws Exception {
         if (isLoggedIn(agent)) {
             return;
         }
@@ -218,7 +218,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             final AuthenticationControllerType manualOrAutoAuth =
                     (AuthenticationControllerType)
                             ((SubsequentGenerationAgent) agent).getAuthenticator();
-            final boolean isManual = manualOrAutoAuth.isManualAuthentication(credential);
+            final boolean isManual = manualOrAutoAuth.isManualAuthentication(credentialsRequest);
             log.info("Authentication requires user intervention: " + isManual);
         }
 
@@ -528,9 +528,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     public NewAgentTestContext testRefresh() throws Exception {
         initiateCredentials();
-        Agent agent = createAgent(createRefreshInformationRequest());
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        Agent agent = createAgent(credentialsRequest);
         try {
-            login(agent);
+            login(agent, credentialsRequest);
             refresh(agent);
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
@@ -548,9 +549,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private void testBankTransfer(Transfer transfer, boolean isUpdate) throws Exception {
         initiateCredentials();
-        Agent agent = createAgent(createRefreshInformationRequest());
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        Agent agent = createAgent(credentialsRequest);
         try {
-            login(agent);
+            login(agent, credentialsRequest);
             doBankTransfer(agent, transfer, isUpdate);
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
@@ -574,9 +576,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     public void testGenericPayment(List<Payment> paymentList) throws Exception {
         initiateCredentials();
-        Agent agent = createAgent(createRefreshInformationRequest());
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        Agent agent = createAgent(credentialsRequest);
         try {
-            login(agent);
+            login(agent, credentialsRequest);
             if (agent instanceof SubsequentGenerationAgent) {
                 doGenericPaymentBankTransfer(agent, paymentList);
             } else {
