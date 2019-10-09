@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
@@ -149,6 +150,11 @@ public class ArgentaApiClient {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.ACCOUNT_BLOCKED)) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+        } else if (errorMessage.contains(
+                ArgentaConstants.ErrorResponse.PROBLEM_SOLVING_IN_PROGRESS)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.SOMETHING_WRONG)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
 
