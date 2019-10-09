@@ -21,11 +21,11 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "1a34ed1d2b644b84b72eaf2159ec8717",
             "groupDisplayName": "American Express",
             "market": "BE",
             "multiFactor": false,
             "name": "be-americanexpress-password",
-            "financialInstitutionId": "1a34ed1d2b644b84b72eaf2159ec8717",
             "passwordHelpText": "You use the same password as when you log in to the %s website. You can order a new username and password from [%s](%s).",
             "payload": "BE",
             "popular": false,
@@ -38,6 +38,8 @@
         },
         {
             "accessType": "OTHER",
+            "backgroundRefreshEnabled": true,
+            "backgroundRefreshMaxFrequency": 1,
             "capabilities": [],
             "className": "nxgen.be.banks.argenta.ArgentaAgent",
             "credentialsType": "PASSWORD",
@@ -81,12 +83,12 @@
                 }
             ],
             "transactional": true,
-            "type": "BANK",
-            "backgroundRefreshMaxFrequency": 1,
-            "backgroundRefreshEnabled": true
+            "type": "BANK"
         },
         {
             "accessType": "OTHER",
+            "backgroundRefreshEnabled": true,
+            "backgroundRefreshMaxFrequency": 1,
             "className": "nxgen.be.banks.axa.AxaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "AXA",
@@ -128,13 +130,13 @@
                 }
             ],
             "transactional": true,
-            "type": "BANK",
-            "backgroundRefreshMaxFrequency": 1,
-            "backgroundRefreshEnabled": true
+            "type": "BANK"
         },
         {
             "accessType": "OPEN_BANKING",
             "authenticationFlow": "REDIRECT",
+            "backgroundRefreshEnabled": true,
+            "backgroundRefreshMaxFrequency": 4,
             "className": "nxgen.be.openbanking.axa.AxaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "AXA",
@@ -155,9 +157,7 @@
             "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": null,
-            "type": "BANK",
-            "backgroundRefreshMaxFrequency": 4,
-            "backgroundRefreshEnabled": true
+            "type": "BANK"
         },
         {
             "accessType": "OTHER",
@@ -185,9 +185,9 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "60cdc3bd42aa43a9ab2e6eeef116bebd",
             "multiFactor": true,
             "name": "be-belfius-cardreader",
-            "financialInstitutionId": "60cdc3bd42aa43a9ab2e6eeef116bebd",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
             "popular": true,
             "refreshFrequency": 1,
@@ -296,20 +296,20 @@
         },
         {
             "accessType": "OPEN_BANKING",
-            "name": "be-belfius-oauth2",
-            "financialInstitutionId": "60cdc3bd42aa43a9ab2e6eeef116bebd",
             "className": "nxgen.be.openbanking.belfius.BelfiusAgent",
-            "displayName": "Belfius (Sandbox)",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
             "credentialsType": "PASSWORD",
+            "displayName": "Belfius (Sandbox)",
+            "fields": [],
+            "financialInstitutionId": "60cdc3bd42aa43a9ab2e6eeef116bebd",
             "multiFactor": false,
+            "name": "be-belfius-oauth2",
             "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
             "transactional": "true",
             "tutorialUrl": null,
-            "fields": [],
-            "payload": "tink"
+            "type": "BANK"
         },
         {
             "accessType": "OTHER",
@@ -330,9 +330,9 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "e7fa67c56e4648e89278f4eab19d4751",
             "multiFactor": false,
             "name": "be-beobank-password",
-            "financialInstitutionId": "e7fa67c56e4648e89278f4eab19d4751",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in Beobank's mobile banking app.",
             "payload": "BEOBANK",
             "popular": false,
@@ -355,8 +355,8 @@
                     "sensitive": true
                 }
             ],
-            "multiFactor": true,
             "financialInstitutionId": "5cc3eb2f58c64a94a538bff2dcf59095",
+            "multiFactor": true,
             "name": "be-bnppf-jwt",
             "popular": false,
             "status": "OBSOLETE",
@@ -380,8 +380,8 @@
                     "sensitive": true
                 }
             ],
-            "name": "be-demo",
             "financialInstitutionId": "036fbb5d0ab046cba0162bfbe0651ed2",
+            "name": "be-demo",
             "passwordHelpText": "",
             "popular": false,
             "status": "ENABLED",
@@ -414,9 +414,9 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "e63aa8bdecc84e61b2165453fd3780fc",
             "multiFactor": true,
             "name": "be-fortis-cardreader",
-            "financialInstitutionId": "e63aa8bdecc84e61b2165453fd3780fc",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
             "payload": "https://app.easybanking.bnpparibasfortis.be 49FB001",
             "popular": true,
@@ -493,9 +493,9 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "077605ad72b5420ba367319854ce3492",
             "multiFactor": true,
             "name": "be-hellobank-cardreader",
-            "financialInstitutionId": "077605ad72b5420ba367319854ce3492",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
             "payload": "https://app.easybanking.hellobank.be 49FB002",
             "popular": false,
@@ -550,12 +550,12 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "0df5af8e4bf84df686a9b4a07fc205bf",
             "multiFactor": true,
             "name": "be-ing-cardreader",
             "passwordHelpText": "In order to authenticate yourself you will need your ING card reader.\nBy connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
             "popular": true,
             "refreshFrequency": 1,
-            "financialInstitutionId": "0df5af8e4bf84df686a9b4a07fc205bf",
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "supplementalFields": [
@@ -607,9 +607,9 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "7802078d8a7049398f9668e5478934ea",
             "multiFactor": true,
             "name": "be-kbc-cardreader",
-            "financialInstitutionId": "7802078d8a7049398f9668e5478934ea",
             "passwordHelpText": "In order to authenticate yourself you will need your KBC card reader.",
             "popular": true,
             "refreshFrequency": 1,
@@ -699,10 +699,10 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "cb817998aff84ce285d71f240ef6e21d",
             "groupDisplayName": "N26",
             "multiFactor": false,
             "name": "be-n26-password",
-            "financialInstitutionId": "cb817998aff84ce285d71f240ef6e21d",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
             "popular": false,
             "refreshFrequency": 1,
@@ -734,9 +734,9 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "04622ab86e9d4ae298545bd8c33b031d",
             "multiFactor": true,
             "name": "be-revolut-password",
-            "financialInstitutionId": "04622ab86e9d4ae298545bd8c33b031d",
             "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -756,10 +756,10 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "16ef1ab965974487ad1a7b793a32b038",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "be-test-multi-supplemental",
-            "financialInstitutionId": "16ef1ab965974487ad1a7b793a32b038",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
             "status": "ENABLED",
@@ -784,10 +784,10 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "cbf270b8b9f24840b3346350b49ee62f",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "be-test-password",
-            "financialInstitutionId": "cbf270b8b9f24840b3346350b49ee62f",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
             "status": "ENABLED",
