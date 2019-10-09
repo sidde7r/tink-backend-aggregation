@@ -5,6 +5,7 @@ import se.tink.libraries.account.AccountIdentifier;
 public class BbanIdentifier extends AccountIdentifier {
 
     private String accountNumber;
+    private String identifier;
 
     public BbanIdentifier(String accountNumber) {
         this.accountNumber = accountNumber;
@@ -16,7 +17,7 @@ public class BbanIdentifier extends AccountIdentifier {
 
     @Override
     public String getIdentifier() {
-        return accountNumber;
+        return identifier;
     }
 
     @Override

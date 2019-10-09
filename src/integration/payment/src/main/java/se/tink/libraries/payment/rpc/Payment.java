@@ -7,6 +7,7 @@ import org.iban4j.IbanUtil;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -100,6 +101,25 @@ public class Payment {
 
     public String getIbanMarket(String accountNumber) {
         return IbanUtil.getCountryCode(accountNumber);
+    }
+
+    public String getMarketCode(
+            String accountNumber, String marketCode, AccountIdentifier.Type accountIdentifierType) {
+        switch (accountIdentifierType) {
+            case PAYM_PHONE_NUMBER:
+            case SORT_CODE:
+                marketCode = String.valueOf(MarketCode.GB);
+                break;
+            case IBAN:
+                marketCode = getIbanMarket(accountNumber);
+                break;
+            case SE:
+            case BBAN:
+                marketCode = String.valueOf(MarketCode.SE);
+                break;
+            default:
+        }
+        return marketCode;
     }
 
     public static class Builder {
