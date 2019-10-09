@@ -179,7 +179,11 @@ public abstract class UkOpenBankingESSBaseAgent extends NextGenerationAgent
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration) {
         return new UkOpenBankingApiClient(
-                httpClient, softwareStatement, providerConfiguration, wellKnownURL);
+                httpClient,
+                softwareStatement,
+                providerConfiguration,
+                wellKnownURL,
+                persistentStorage);
     }
 
     @Override

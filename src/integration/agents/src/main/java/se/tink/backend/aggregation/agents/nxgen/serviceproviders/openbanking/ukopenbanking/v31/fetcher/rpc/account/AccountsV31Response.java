@@ -19,7 +19,7 @@ public class AccountsV31Response extends BaseV31Response<List<AccountEntity>>
         implements AccountStream {
 
     public static Optional<TransactionalAccount> toTransactionalAccount(
-            AccountsV31Response accounts, AccountBalanceV31Response balance) {
+            AccountsV31Response accounts, AccountBalanceV31Response balance, String partyName) {
 
         return accounts.stream()
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
@@ -29,11 +29,11 @@ public class AccountsV31Response extends BaseV31Response<List<AccountEntity>>
                                         e.getRawAccountSubType(),
                                         Arrays.asList(AccountTypes.CHECKING, AccountTypes.SAVINGS)))
                 .findFirst()
-                .map(e -> AccountEntity.toTransactionalAccount(e, balance.getBalance()));
+                .map(e -> AccountEntity.toTransactionalAccount(e, balance.getBalance(), partyName));
     }
 
     public static Optional<CreditCardAccount> toCreditCardAccount(
-            AccountsV31Response accounts, AccountBalanceV31Response balance) {
+            AccountsV31Response accounts, AccountBalanceV31Response balance, String partyName) {
 
         return accounts.stream()
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
@@ -42,7 +42,7 @@ public class AccountsV31Response extends BaseV31Response<List<AccountEntity>>
                                 UkOpenBankingV31Constants.ACCOUNT_TYPE_MAPPER.isOf(
                                         e.getRawAccountSubType(), AccountTypes.CREDIT_CARD))
                 .findFirst()
-                .map(e -> AccountEntity.toCreditCardAccount(e, balance.getBalance()));
+                .map(e -> AccountEntity.toCreditCardAccount(e, balance.getBalance(), partyName));
     }
 
     public Stream<AccountEntity> stream() {
