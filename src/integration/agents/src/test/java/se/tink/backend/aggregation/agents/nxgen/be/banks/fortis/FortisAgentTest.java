@@ -21,8 +21,9 @@ public class FortisAgentTest {
     public void testRegisterAndRefresh() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("be", "be-fortis-cardreader")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.CARDNUMBER))
                         .addCredentialField("clientnumber", manager.get(Arg.CLIENTNUMBER))
+                        .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                         .loadCredentialsBefore(true)
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(true);
@@ -35,7 +36,8 @@ public class FortisAgentTest {
     }
 
     private enum Arg {
-        USERNAME,
-        CLIENTNUMBER
+        CARDNUMBER,
+        CLIENTNUMBER,
+        PASSWORD
     }
 }
