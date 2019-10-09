@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.SbabPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.SbabPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountTransactionFetcher;
@@ -68,14 +67,9 @@ public final class SbabAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         SbabPaymentExecutor sbabPaymentExecutor =
-                new SbabPaymentExecutor(apiClient, getClientConfiguration(), sessionStorage);
+                new SbabPaymentExecutor(apiClient, supplementalRequester);
 
-        return Optional.of(
-                new SbabPaymentController(
-                        sbabPaymentExecutor,
-                        sbabPaymentExecutor,
-                        supplementalInformationHelper,
-                        sessionStorage));
+        return Optional.of(new PaymentController(sbabPaymentExecutor, sbabPaymentExecutor));
     }
 
     protected SbabConfiguration getClientConfiguration() {
