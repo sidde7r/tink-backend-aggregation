@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.R
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -31,6 +32,7 @@ public class PocketEntity {
         TransactionalAccount.Builder builder =
                 TransactionalAccount.builder(
                                 accountType, id, new Amount(currency.toUpperCase(), getBalance()))
+                        .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                         .setName(getAccountName())
                         .setHolderName(new HolderName(holderName))
                         .setBankIdentifier(id);
