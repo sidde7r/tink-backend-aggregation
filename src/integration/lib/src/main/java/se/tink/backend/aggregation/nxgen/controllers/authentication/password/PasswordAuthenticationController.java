@@ -47,6 +47,6 @@ public class PasswordAuthenticationController
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
-        return !request.isUpdate() && !request.isCreate();
+        return request.isUpdate() || request.isCreate();
     }
 }
