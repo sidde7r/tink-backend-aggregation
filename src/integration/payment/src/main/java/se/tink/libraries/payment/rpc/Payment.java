@@ -98,6 +98,10 @@ public class Payment {
         return false;
     }
 
+    public String getIbanMarket(String accountNumber) {
+        return IbanUtil.getCountryCode(accountNumber);
+    }
+
     public static class Builder {
         private Creditor creditor;
         private Debtor debtor;

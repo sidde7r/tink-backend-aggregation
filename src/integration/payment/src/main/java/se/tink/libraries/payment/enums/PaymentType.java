@@ -4,7 +4,9 @@ public enum PaymentType {
     UNDEFINED,
     DOMESTIC,
     SEPA,
-    INTERNATIONAL;
+    INTERNATIONAL,
+    DOMESTIC_FUTURE,
+    INTERNATIONAL_FUTURE;
 
     @Override
     public String toString() {

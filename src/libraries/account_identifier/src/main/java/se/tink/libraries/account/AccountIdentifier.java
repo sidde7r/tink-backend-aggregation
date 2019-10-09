@@ -13,21 +13,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.account.identifiers.BankGiroIdentifier;
-import se.tink.libraries.account.identifiers.BelgianIdentifier;
-import se.tink.libraries.account.identifiers.DanishIdentifier;
-import se.tink.libraries.account.identifiers.FinnishIdentifier;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
-import se.tink.libraries.account.identifiers.NorwegianIdentifier;
-import se.tink.libraries.account.identifiers.PaymPhoneNumberIdentifier;
-import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
-import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
-import se.tink.libraries.account.identifiers.SepaEurIdentifier;
-import se.tink.libraries.account.identifiers.SortCodeIdentifier;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
-import se.tink.libraries.account.identifiers.TinkIdentifier;
+import se.tink.libraries.account.identifiers.*;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 
 public abstract class AccountIdentifier {
@@ -51,7 +37,9 @@ public abstract class AccountIdentifier {
         SEPA_EUR("sepa-eur"),
         SORT_CODE("sort-code"),
         PAYMENT_CARD_NUMBER("payment-card-number"),
-        PAYM_PHONE_NUMBER("paym-phone-number");
+        PAYM_PHONE_NUMBER("paym-phone-number"),
+        BBAN("bban"),
+        COUNTRY_SPECIFIC("country_specific");
 
         private String scheme;
 
@@ -263,6 +251,7 @@ public abstract class AccountIdentifier {
             case IBAN:
                 return new IbanIdentifier(id);
             case SE_BG:
+            case COUNTRY_SPECIFIC:
                 return new BankGiroIdentifier(id);
             case SE_PG:
                 return new PlusGiroIdentifier(id);
@@ -274,6 +263,8 @@ public abstract class AccountIdentifier {
                 return new PaymPhoneNumberIdentifier(id);
             case PAYMENT_CARD_NUMBER:
                 return new PaymentCardNumberIdentifier(id);
+            case BBAN:
+                return new BbanIdentifier(id);
         }
         return null;
     }
