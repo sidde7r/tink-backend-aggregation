@@ -2,6 +2,7 @@ package se.tink.libraries.payment.rpc;
 
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 import org.iban4j.IbanUtil;
 import se.tink.libraries.account.AccountIdentifier;
@@ -38,6 +39,20 @@ public class Payment {
         this.uniqueId = builder.uniqueId;
         this.reference = builder.reference;
         this.id = UUID.randomUUID();
+    }
+
+    /*
+       This method is used by UK OpenBanking for EndToEndIdentification field since
+       there the max allowed length for id is 31
+       From the Docs: The Faster Payments Scheme can only access 31 characters for
+       the EndToEndIdentification field.
+    */
+    public String getUniqueIdForUKOPenBanking() {
+        if (uniqueId.length() > 31) {
+            return uniqueId.substring(0, 31);
+        }
+
+        return uniqueId;
     }
 
     public String getCurrency() {
@@ -85,6 +100,9 @@ public class Payment {
     }
 
     public Pair<AccountIdentifier.Type, AccountIdentifier.Type> getCreditorAndDebtorAccountType() {
+        if (Objects.isNull(debtor)) {
+            return new Pair<>(null, creditor.getAccountIdentifierType());
+        }
         return new Pair<>(debtor.getAccountIdentifierType(), creditor.getAccountIdentifierType());
     }
 
