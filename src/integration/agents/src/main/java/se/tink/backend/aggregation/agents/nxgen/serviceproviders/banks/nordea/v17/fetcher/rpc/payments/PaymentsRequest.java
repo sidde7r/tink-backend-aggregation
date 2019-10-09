@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17Constants.Payment;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17Constants.Url;
-import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 
 public abstract class PaymentsRequest extends HttpRequestImpl {
     public PaymentsRequest(String accountId, Payment.StatusCode status) {

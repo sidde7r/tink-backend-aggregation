@@ -91,7 +91,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
             String smid,
             String agreementId,
             String deviceFingerprint)
-            throws SupplementalInfoException, LoginException {
+            throws SupplementalInfoException, LoginException, AuthorizationException {
         GenerateChallangeRequest challangeRequest =
                 new GenerateChallangeRequest(apiClient.getDistributorId(), authenticationProcessID);
         String challenge = apiClient.fetchChallenges(challangeRequest);
@@ -120,7 +120,8 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         sendChallenges(authResponse);
     }
 
-    private void sendChallenges(AuthResponse response) throws LoginException {
+    private void sendChallenges(AuthResponse response)
+            throws LoginException, AuthorizationException {
         HttpResponse httpResponse;
         try {
             httpResponse = apiClient.authenticationRequest(response.getUrlEncodedFormat());
@@ -136,7 +137,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                 throw new IllegalStateException("Invalid signature");
             }
             if (responseBody.contains(FortisConstants.ERRORCODE.MAXIMUM_NUMBER_OF_TRIES)) {
-                throw new IllegalStateException("Reached maximum number of tries");
+                throw AuthorizationError.REACH_MAXIMUM_TRIES.exception();
             }
             if (responseBody.contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE_KO)) {
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();

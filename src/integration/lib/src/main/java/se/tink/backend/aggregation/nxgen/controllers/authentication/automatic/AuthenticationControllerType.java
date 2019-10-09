@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.automatic;
 
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public interface AuthenticationControllerType {
-    boolean isManualAuthentication(Credentials credentials);
+    boolean isManualAuthentication(CredentialsRequest request);
 }

@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.nxgen.http.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class SibsMessageSignInterceptor extends MessageSignInterceptor {
 

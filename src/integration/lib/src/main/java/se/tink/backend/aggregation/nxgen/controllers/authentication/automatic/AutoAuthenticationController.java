@@ -62,7 +62,7 @@ public class AutoAuthenticationController
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         try {
-            if (isManualAuthentication(credentials)) {
+            if (isManualAuthentication(request)) {
                 manual(credentials);
             } else {
                 Preconditions.checkState(
@@ -96,8 +96,8 @@ public class AutoAuthenticationController
     }
 
     @Override
-    public boolean isManualAuthentication(Credentials credentials) {
-        return shouldDoManualAuthentication(credentials);
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        return shouldDoManualAuthentication(request.getCredentials());
     }
 
     // TODO: Remove this when there is support for new MultiFactor credential types.

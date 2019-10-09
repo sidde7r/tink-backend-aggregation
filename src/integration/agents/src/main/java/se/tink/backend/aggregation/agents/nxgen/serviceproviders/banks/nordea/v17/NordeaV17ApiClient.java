@@ -34,8 +34,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v1
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.rpc.NordeaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.rpc.filter.NordeaV17LogResponseFilter;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class NordeaV17ApiClient {
     // magic switch to toggle response logging, for beta

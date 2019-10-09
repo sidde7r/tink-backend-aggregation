@@ -151,7 +151,8 @@ public class NordeaSEAgent extends NextGenerationAgent
                 new NordeaTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionIndexPaginationController<>(transactionFetcher),
+                        new TransactionIndexPaginationController<>(
+                                transactionFetcher, NordeaSEConstants.NUM_TRANSACTIONS_PER_PAGE),
                         transactionFetcher));
     }
 

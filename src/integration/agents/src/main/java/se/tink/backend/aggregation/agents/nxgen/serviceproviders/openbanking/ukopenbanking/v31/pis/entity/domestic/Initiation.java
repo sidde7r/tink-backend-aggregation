@@ -34,7 +34,7 @@ public class Initiation {
 
         // TODO: What to use here?
         this.instructionIdentification = payment.getUniqueId();
-        this.endToEndIdentification = payment.getUniqueId();
+        this.endToEndIdentification = payment.getUniqueIdForUKOPenBanking();
 
         this.instructedAmount = new InstructedAmount(payment.getAmount());
         this.debtorAccount =

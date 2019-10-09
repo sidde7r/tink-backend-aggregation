@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 /**
  * Handelsbanken SE intermittently "forget" to set their <code>Content-Type</code> header for the

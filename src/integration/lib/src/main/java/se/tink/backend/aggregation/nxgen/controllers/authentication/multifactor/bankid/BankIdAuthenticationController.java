@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
@@ -28,9 +29,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBa
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BankIdAuthenticationController<T>
-        implements AutoAuthenticator, MultiFactorAuthenticator {
+        implements AutoAuthenticator, MultiFactorAuthenticator, AuthenticationControllerType {
     private static final int MAX_ATTEMPTS = 90;
     private static final int DEFAULT_TOKEN_LIFETIME = 90;
     private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
@@ -209,5 +211,11 @@ public class BankIdAuthenticationController<T>
         credentials.setSessionExpiryDate(
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                         token, tokenLifetime, tokenLifetimeUnit));
+    }
+
+    @Override
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        // since Authenticate always opens mobile bankId app
+        return true;
     }
 }

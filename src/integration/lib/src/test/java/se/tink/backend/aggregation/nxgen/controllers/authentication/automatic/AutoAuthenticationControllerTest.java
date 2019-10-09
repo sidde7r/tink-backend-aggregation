@@ -34,6 +34,7 @@ public class AutoAuthenticationControllerTest {
                 new AutoAuthenticationController(
                         request, context, multiFactorAuthenticator, autoAuthenticator);
 
+        Mockito.when(request.getCredentials()).thenReturn(credentials);
         Mockito.doCallRealMethod().when(credentials).setType(Mockito.any(CredentialsTypes.class));
         Mockito.when(credentials.getType()).thenCallRealMethod();
 

@@ -16,12 +16,12 @@ import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
-import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @FilterOrder(category = FilterPhases.SEND, order = Integer.MIN_VALUE)

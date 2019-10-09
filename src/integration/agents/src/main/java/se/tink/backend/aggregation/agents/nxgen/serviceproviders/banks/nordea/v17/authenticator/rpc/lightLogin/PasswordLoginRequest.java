@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.authenticator.entities.lightLogin.LightLoginBody;
-import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 
 public class PasswordLoginRequest extends HttpRequestImpl {
     public PasswordLoginRequest(String username, String password, String marketCode) {
