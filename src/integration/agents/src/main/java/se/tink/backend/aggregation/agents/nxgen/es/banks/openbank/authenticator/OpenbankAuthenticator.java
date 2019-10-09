@@ -22,11 +22,13 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class OpenbankAuthenticator implements Authenticator {
+public class OpenbankAuthenticator implements Authenticator, AuthenticationControllerType {
     private final OpenbankApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -82,5 +84,10 @@ public class OpenbankAuthenticator implements Authenticator {
         loginResponse
                 .getTokenCredential()
                 .peek(authToken -> sessionStorage.put(Storage.AUTH_TOKEN, authToken));
+    }
+
+    @Override
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        return request.isUpdate() || request.isCreate();
     }
 }
