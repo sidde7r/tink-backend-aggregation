@@ -4,11 +4,11 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
-import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class NordeaSEServiceUnavailableFilter extends Filter {
     private static final Logger log =

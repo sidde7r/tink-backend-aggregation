@@ -6,10 +6,10 @@ import java.lang.invoke.MethodHandles;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 /**
  * An abstract retry filter, that can repeat its operation depending on the result of each request.

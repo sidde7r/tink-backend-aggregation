@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.nxgen.http.HttpMethod;
-import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class SwedbankBaseHttpFilter extends Filter {
     @Override

@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.nxgen.http;
 import com.sun.jersey.core.header.OutBoundHeaders;
 import java.net.URI;
 import javax.ws.rs.core.MultivaluedMap;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class HttpRequestImpl implements HttpRequest {

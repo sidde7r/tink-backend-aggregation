@@ -162,6 +162,7 @@ junit_test(
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/models",
         "//src/libraries/concurrency",
         "//src/libraries/concurrency:concurrency_test",

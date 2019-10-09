@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.nxgen.http.filter;
 
 import java.net.SocketTimeoutException;
-import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class MockFinalFilter extends Filter {
 

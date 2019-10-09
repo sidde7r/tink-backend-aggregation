@@ -8,7 +8,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1Constants;
-import se.tink.backend.aggregation.nxgen.http.HttpMethod;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 
 public class OAuthUtilsTest {
 

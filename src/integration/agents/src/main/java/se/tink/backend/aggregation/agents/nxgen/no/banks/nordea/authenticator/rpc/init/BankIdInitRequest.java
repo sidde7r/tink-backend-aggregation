@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.r
 
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.BankIdOperation;
-import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 
 public class BankIdInitRequest extends HttpRequestImpl {
     public BankIdInitRequest(String dob, String mobileNumber) {
