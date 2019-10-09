@@ -7,7 +7,9 @@ import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -28,9 +30,14 @@ public class AccountPermissionDataEntity {
         this.expirationDateTime = expirationDateTime;
     }
 
-    public static AccountPermissionDataEntity create() {
-        return new AccountPermissionDataEntity(
-                UkOpenBankingAisAuthenticatorConstants.ACCOUNT_PERMISSIONS, null);
+    public static AccountPermissionDataEntity create(List<String> additionalPermissions) {
+        List<String> permissions =
+                new ArrayList<>(UkOpenBankingAisAuthenticatorConstants.ACCOUNT_PERMISSIONS);
+
+        if (Objects.nonNull(additionalPermissions)) {
+            permissions.addAll(additionalPermissions);
+        }
+        return new AccountPermissionDataEntity(permissions, null);
     }
 
     public static AccountPermissionDataEntity create(long expiresInDays) {

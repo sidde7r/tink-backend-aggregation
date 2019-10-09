@@ -19,7 +19,7 @@ public class AccountsV30Response extends BaseResponse<List<AccountEntity>>
         implements AccountStream {
 
     public static Optional<TransactionalAccount> toTransactionalAccount(
-            AccountsV30Response accounts, AccountBalanceV30Response balance) {
+            AccountsV30Response accounts, AccountBalanceV30Response balance, String partyName) {
 
         return accounts.stream()
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
@@ -33,7 +33,7 @@ public class AccountsV30Response extends BaseResponse<List<AccountEntity>>
     }
 
     public static Optional<CreditCardAccount> toCreditCardAccount(
-            AccountsV30Response accounts, AccountBalanceV30Response balance) {
+            AccountsV30Response accounts, AccountBalanceV30Response balance, String partyName) {
 
         return accounts.stream()
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))

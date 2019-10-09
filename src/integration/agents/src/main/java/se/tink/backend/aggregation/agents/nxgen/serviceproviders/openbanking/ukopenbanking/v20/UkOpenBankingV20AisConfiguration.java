@@ -5,19 +5,27 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_TRANSACTIONS_REQUEST;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST;
 
+import com.google.common.base.Preconditions;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.identity.IdentityDataV31Response;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UkOpenBankingV20AisConfiguration implements UkOpenBankingAisConfig {
 
     private final URL apiBaseURL;
-    private final URL authBaseURL;
+    private final URL wellKnownURL;
+    private final URL identityDataURL;
+    private final URL appToAppURL;
 
-    public UkOpenBankingV20AisConfiguration(String apiBaseURL, String authBaseURL) {
-        this.apiBaseURL = new URL(apiBaseURL);
-        this.authBaseURL = new URL(authBaseURL);
+    public UkOpenBankingV20AisConfiguration(
+            URL apiBaseURL, URL wellKnownURL, URL identityDataURL, URL appToAppURL) {
+        this.apiBaseURL = apiBaseURL;
+        this.wellKnownURL = wellKnownURL;
+        this.identityDataURL = identityDataURL;
+        this.appToAppURL = appToAppURL;
     }
 
     public URL getBulkAccountRequestURL() {
@@ -35,7 +43,7 @@ public class UkOpenBankingV20AisConfiguration implements UkOpenBankingAisConfig 
 
     @Override
     public URL createConsentRequestURL() {
-        return authBaseURL.concat(UkOpenBankingConstants.ApiServices.ACCOUNT_REQUESTS);
+        return apiBaseURL.concat(UkOpenBankingConstants.ApiServices.ACCOUNT_REQUESTS);
     }
 
     @Override
@@ -58,7 +66,83 @@ public class UkOpenBankingV20AisConfiguration implements UkOpenBankingAisConfig 
         return apiBaseURL;
     }
 
-    public URL getAuthBaseURL() {
-        return authBaseURL;
+    @Override
+    public URL getWellKnownURL() {
+        return null;
+    }
+
+    @Override
+    public URL getIdentityDataURL() {
+        return null;
+    }
+
+    @Override
+    public URL getAppToAppURL() {
+        return null;
+    }
+
+    @Override
+    public List<String> getAdditionalPermissions() {
+        return null;
+    }
+
+    @Override
+    public void setIdentityData(IdentityDataV31Response identityData) {
+        // soon V20 needs to be deprecated
+    }
+
+    @Override
+    public IdentityDataV31Response getIdentityData() {
+        return null;
+    }
+
+    @Override
+    public void setHolderName(String holderName) {
+        // soon V20 needs to be deprecated
+    }
+
+    @Override
+    public String getHolderName() {
+        return null;
+    }
+
+    public static final class Builder {
+
+        protected URL apiBaseURL;
+        protected URL wellKnownURL;
+        protected URL identityDataURL;
+        protected URL appToAppURL;
+
+        public Builder() {}
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public Builder withApiBaseURL(final String apiBaseURL) {
+            this.apiBaseURL = new URL(apiBaseURL);
+            return this;
+        }
+
+        public Builder withWellKnownURL(final String wellKnownURL) {
+            this.wellKnownURL = new URL(wellKnownURL);
+            return this;
+        }
+
+        public Builder withIdentityDataURL(final String identityDataURL) {
+            this.identityDataURL = new URL(identityDataURL);
+            return this;
+        }
+
+        public Builder withAppToAppURL(final String appToAppURL) {
+            this.appToAppURL = new URL(appToAppURL);
+            return this;
+        }
+
+        public UkOpenBankingV20AisConfiguration build() {
+            Preconditions.checkNotNull(apiBaseURL);
+            return new UkOpenBankingV20AisConfiguration(
+                    apiBaseURL, wellKnownURL, identityDataURL, appToAppURL);
+        }
     }
 }

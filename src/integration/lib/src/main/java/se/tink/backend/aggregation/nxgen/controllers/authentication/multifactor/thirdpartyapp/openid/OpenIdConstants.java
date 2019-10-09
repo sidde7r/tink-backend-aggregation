@@ -121,6 +121,8 @@ public class OpenIdConstants {
     public static class PersistentStorageKeys {
         public static final String AIS_ACCESS_TOKEN = "open_id_ais_access_token";
         public static final String PIS_ACCESS_TOKEN = "open_id_pis_access_token";
+        public static final String AIS_ACCOUNT_PERMISSIONS_GRANTED =
+                "ais_account_permissions_granted";
     }
 
     public static class HttpHeaders {

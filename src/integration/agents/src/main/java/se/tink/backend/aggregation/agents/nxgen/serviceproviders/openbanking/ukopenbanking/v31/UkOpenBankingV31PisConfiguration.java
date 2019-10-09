@@ -9,11 +9,9 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class UkOpenBankingV31PisConfiguration implements UkOpenBankingPisConfig {
 
     private final URL pisBaseURL;
-    private final URL pisConsentURL;
 
-    public UkOpenBankingV31PisConfiguration(String pisBaseURL, String pisConsentURL) {
-        this.pisBaseURL = new URL(pisBaseURL);
-        this.pisConsentURL = new URL(pisConsentURL);
+    public UkOpenBankingV31PisConfiguration(String pisBaseUrl) {
+        this.pisBaseURL = new URL(pisBaseUrl);
     }
 
     @Override
@@ -26,7 +24,7 @@ public class UkOpenBankingV31PisConfiguration implements UkOpenBankingPisConfig 
     // let's get rid of pisConsentUrl
     @Override
     public URL createPaymentsURL() {
-        return pisConsentURL.concat(UkOpenBankingConstants.ApiServices.PAYMENTS);
+        return pisBaseURL.concat(UkOpenBankingConstants.ApiServices.PAYMENTS);
     }
 
     @Override

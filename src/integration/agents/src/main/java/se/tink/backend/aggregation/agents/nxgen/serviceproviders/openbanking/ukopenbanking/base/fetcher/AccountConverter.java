@@ -18,5 +18,5 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 public interface AccountConverter<AccountResponse, BalanceResponse, AccountType extends Account> {
 
     Optional<? extends AccountType> toTinkAccount(
-            AccountResponse accountResponse, BalanceResponse balanceResponse);
+            AccountResponse accountResponse, BalanceResponse balanceResponse, String partyName);
 }

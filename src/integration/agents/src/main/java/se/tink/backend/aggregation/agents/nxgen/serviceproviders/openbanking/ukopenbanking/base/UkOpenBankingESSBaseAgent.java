@@ -66,21 +66,22 @@ public abstract class UkOpenBankingESSBaseAgent extends NextGenerationAgent
 
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
+    private final UkOpenBankingAisConfig agentConfig;
     private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> transactionalAccountFetcher;
 
     public UkOpenBankingESSBaseAgent(
             CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
-            URL wellKnownURL) {
-        this(request, context, signatureKeyPair, wellKnownURL, false);
+            UkOpenBankingAisConfig aisConfig) {
+        this(request, context, signatureKeyPair, aisConfig, false);
     }
 
     public UkOpenBankingESSBaseAgent(
             CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
-            URL wellKnownURL,
+            UkOpenBankingAisConfig aisConfig,
             boolean disableSslVerification) {
 
         super(request, context, signatureKeyPair);
@@ -94,7 +95,8 @@ public abstract class UkOpenBankingESSBaseAgent extends NextGenerationAgent
                         signatureKeyPair,
                         request.getProvider());
         tinkProvider = request.getProvider();
-        this.wellKnownURL = wellKnownURL;
+        this.wellKnownURL = aisConfig.getWellKnownURL();
+        this.agentConfig = aisConfig;
     }
 
     // Different part between UkOpenBankingBaseAgent and this class
@@ -177,7 +179,11 @@ public abstract class UkOpenBankingESSBaseAgent extends NextGenerationAgent
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration) {
         return new UkOpenBankingApiClient(
-                httpClient, softwareStatement, providerConfiguration, wellKnownURL);
+                httpClient,
+                softwareStatement,
+                providerConfiguration,
+                wellKnownURL,
+                persistentStorage);
     }
 
     @Override
