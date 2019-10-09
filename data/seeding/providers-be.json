@@ -3,6 +3,7 @@
     "market": "BE",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.be.creditcards.amex.AmericanExpressBEAgent",
             "credentialsType": "PASSWORD",
             "currency": "EUR",
@@ -159,6 +160,7 @@
             "backgroundRefreshEnabled": true
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -293,6 +295,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "name": "be-belfius-oauth2",
             "financialInstitutionId": "60cdc3bd42aa43a9ab2e6eeef116bebd",
             "className": "nxgen.be.openbanking.belfius.BelfiusAgent",
@@ -309,6 +312,7 @@
             "payload": "tink"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.be.banks.beobank.BeobankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Beobank",
@@ -340,6 +344,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.be.banks.bnppf.BnpPfAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BNP Paribas Fortis",
@@ -384,6 +389,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [],
             "className": "nxgen.be.banks.fortis.FortisAgent",
             "credentialsType": "PASSWORD",
@@ -453,6 +459,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [],
             "className": "nxgen.be.banks.fortis.FortisAgent",
             "credentialsType": "PASSWORD",
@@ -516,6 +523,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -581,6 +589,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -673,6 +682,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",
             "credentialsType": "PASSWORD",
             "displayName": "N26",
@@ -702,6 +712,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Revolut",
