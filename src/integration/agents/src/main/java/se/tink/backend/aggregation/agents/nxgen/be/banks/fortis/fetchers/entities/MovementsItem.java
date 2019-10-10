@@ -97,7 +97,7 @@ public class MovementsItem {
 
     private Date getDate() {
         try {
-            return FortisConstants.DATE.TRANSACTION_FORMAT.parse(executionDate);
+            return FortisConstants.TRANSACTION_FORMAT.parse(executionDate);
         } catch (ParseException e) {
             throw new IllegalStateException(
                     "Cannot parse amount in transaction: " + e.toString(), e);
@@ -133,7 +133,7 @@ public class MovementsItem {
         } catch (Exception e) {
             LOGGER.errorExtraLong(
                     "Cannot parse transactions: ",
-                    FortisConstants.LOGTAG.TRANSACTION_VALIDATION_ERROR,
+                    FortisConstants.LoggingTag.TRANSACTION_VALIDATION_ERROR,
                     e);
             return false;
         }

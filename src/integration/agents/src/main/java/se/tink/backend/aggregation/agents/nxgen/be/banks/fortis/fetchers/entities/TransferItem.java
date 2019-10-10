@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entiti
 import com.google.common.base.Strings;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -48,9 +47,9 @@ public class TransferItem {
         }
     }
 
-    private Date getDate() {
+    private java.util.Date getDate() {
         try {
-            return FortisConstants.DATE.TRANSACTION_FORMAT.parse(executionDate);
+            return FortisConstants.TRANSACTION_FORMAT.parse(executionDate);
         } catch (ParseException e) {
             throw new IllegalStateException(
                     "Cannot parse amount in transaction: " + e.toString(), e);
@@ -82,7 +81,7 @@ public class TransferItem {
         } catch (Exception e) {
             LOGGER.errorExtraLong(
                     "Cannot parse transactions: ",
-                    FortisConstants.LOGTAG.TRANSACTION_VALIDATION_ERROR,
+                    FortisConstants.LoggingTag.TRANSACTION_VALIDATION_ERROR,
                     e);
             return false;
         }

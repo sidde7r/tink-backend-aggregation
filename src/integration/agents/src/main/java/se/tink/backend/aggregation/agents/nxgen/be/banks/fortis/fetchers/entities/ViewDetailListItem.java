@@ -73,7 +73,7 @@ public class ViewDetailListItem {
         } catch (Exception e) {
             LOGGER.errorExtraLong(
                     "error validating transaction!",
-                    FortisConstants.LOGTAG.TRANSACTION_VALIDATION_ERR,
+                    FortisConstants.LoggingTag.TRANSACTION_VALIDATION_ERR,
                     e);
             return false;
         }
@@ -98,7 +98,7 @@ public class ViewDetailListItem {
                 .setName(getAccountName())
                 .addIdentifier(getIbanIdentifier())
                 .putInTemporaryStorage(
-                        FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID, account.getProductId())
+                        FortisConstants.Storage.ACCOUNT_PRODUCT_ID, account.getProductId())
                 .build();
     }
 }
