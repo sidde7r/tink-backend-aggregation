@@ -4,10 +4,12 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class VolksbankUrlFactory {
 
+    private final String host;
     private final String bankPath;
     private final boolean isSandbox;
 
-    VolksbankUrlFactory(final String bankPath, final boolean isSandbox) {
+    VolksbankUrlFactory(final String host, final String bankPath, final boolean isSandbox) {
+        this.host = host;
         this.bankPath = bankPath;
         this.isSandbox = isSandbox;
     }
@@ -15,7 +17,7 @@ public final class VolksbankUrlFactory {
     public URL buildURL(final String uri) {
 
         StringBuilder s = new StringBuilder();
-        s.append(VolksbankConstants.Urls.HOST);
+        s.append(host);
         s.append(VolksbankConstants.Urls.BASE_PATH);
         s.append(bankPath);
 
