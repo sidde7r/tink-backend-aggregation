@@ -133,7 +133,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         if (!Strings.isNullOrEmpty(responseBody)
                 && responseBody.contains(FortisConstants.ERRORCODE.ERROR_CODE)) {
             if (responseBody.contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE)) {
-                throw new IllegalStateException("Invalid signature");
+                throw LoginError.PASSWORD_CHANGED.exception();
             }
             if (responseBody.contains(FortisConstants.ERRORCODE.MAXIMUM_NUMBER_OF_TRIES)) {
                 throw AuthorizationError.REACH_MAXIMUM_TRIES.exception();
