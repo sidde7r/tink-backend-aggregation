@@ -4,14 +4,16 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class SantanderConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String redirectUrl;
+    @Secret private String clientId;
+    @SensitiveSecret private String clientSecret;
+    @Secret private String redirectUrl;
     private String iban;
     private String currency;
 

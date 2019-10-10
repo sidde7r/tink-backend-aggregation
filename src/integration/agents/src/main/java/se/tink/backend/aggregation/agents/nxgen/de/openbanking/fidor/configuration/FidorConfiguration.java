@@ -4,20 +4,22 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class FidorConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String clientKeyPath;
-    private String clientCertificatePath;
-    private String clientKeyStorePath;
-    private String clinetKeyStorePassword;
+    @Secret private String clientId;
+    @SensitiveSecret private String clientSecret;
+    @Secret private String clientKeyPath;
+    @Secret private String clientCertificatePath;
+    @Secret private String clientKeyStorePath;
+    @SensitiveSecret private String clinetKeyStorePassword;
     private String baseUrl;
     private String certificateId;
-    private String redirectUrl;
+    @Secret private String redirectUrl;
 
     public String getClientKeyStorePath() {
         Preconditions.checkNotNull(

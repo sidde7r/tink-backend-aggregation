@@ -4,19 +4,21 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class CbiGlobeConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String redirectUrl;
-    private String keystorePath;
-    private String keystorePassword;
+    @Secret private String clientId;
+    @SensitiveSecret private String clientSecret;
+    @Secret private String redirectUrl;
+    @Secret private String keystorePath;
+    @SensitiveSecret private String keystorePassword;
     private String aspspCode;
     private String aspspProductCode;
-    private String eidasQwac;
+    @Secret private String eidasQwac;
     private String environment;
 
     public String getClientId() {
