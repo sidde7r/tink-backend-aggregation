@@ -82,6 +82,9 @@ public class IngAuthenticator implements Authenticator, AuthenticationController
                 if (errorResponse.hasErrorCode(ErrorCodes.MOBILE_VALIDATION_ENROLLMENT_REQUIRED)) {
                     // mobile validation enrollment required
                     throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(hre);
+                } else if (errorResponse.hasErrorCode(ErrorCodes.GENERIC_LOCK)) {
+                    // account blocked
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(hre);
                 }
             }
             throw hre;
