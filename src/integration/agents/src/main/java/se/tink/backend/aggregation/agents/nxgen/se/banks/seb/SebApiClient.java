@@ -174,4 +174,17 @@ public class SebApiClient {
 
         return post(Urls.LIST_BOOKED_CREDIT_CARD_TRANSACTIONS, request);
     }
+
+    public Response fetchInvestmentAccounts() {
+        final Request request = new Request.Builder().build();
+        return post(Urls.LIST_INVESTMENT_ACCOUNTS, request);
+    }
+
+    public Response fetchInvestmentDetails(String handle) {
+        final Request request =
+                new Request.Builder()
+                        .addServiceInput(ServiceInputKeys.INVESTMENT_DETAIL_HANDLE, handle)
+                        .build();
+        return post(Urls.FETCH_INTESTMENT_ACCOUNT_DETAILS, request);
+    }
 }
