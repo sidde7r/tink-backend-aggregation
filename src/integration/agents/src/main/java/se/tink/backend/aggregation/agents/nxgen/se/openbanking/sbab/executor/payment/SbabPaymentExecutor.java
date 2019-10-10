@@ -49,15 +49,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                             .put(
                                     PaymentType.DOMESTIC,
                                     new TypePair(
-                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.SE),
-                                    new TypePair(
-                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.IBAN),
-                                    new TypePair(
-                                            AccountIdentifier.Type.SE,
-                                            AccountIdentifier.Type.SE_BG),
-                                    new TypePair(
-                                            AccountIdentifier.Type.SE,
-                                            AccountIdentifier.Type.SE_PG))
+                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.SE))
                             .build();
 
     public SbabPaymentExecutor(
