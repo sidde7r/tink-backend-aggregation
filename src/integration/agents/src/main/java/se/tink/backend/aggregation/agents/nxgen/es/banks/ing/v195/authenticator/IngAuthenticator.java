@@ -28,12 +28,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.ErrorRespo
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.countries.EsIdentityDocumentType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class IngAuthenticator implements Authenticator {
+public class IngAuthenticator implements Authenticator, AuthenticationControllerType {
     private static final AggregationLogger LOGGER = new AggregationLogger(IngAuthenticator.class);
 
     private static final Pattern NIF_PATTERN = Pattern.compile("^[0-9]{8}[a-zA-Z]$");
@@ -225,5 +227,10 @@ public class IngAuthenticator implements Authenticator {
             default:
                 throw hre;
         }
+    }
+
+    @Override
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        return request.isUpdate() || request.isCreate();
     }
 }
