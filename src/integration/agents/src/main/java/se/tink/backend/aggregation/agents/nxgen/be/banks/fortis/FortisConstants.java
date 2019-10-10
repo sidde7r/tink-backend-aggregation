@@ -72,6 +72,7 @@ public class FortisConstants {
         public static final String TCFLAG = "0";
         public static final String UCR = "UCR";
         public static final String DIDAP = "DIDAP";
+        public static final String PASSWORD = "tinktink";
     }
 
     public static class COOKIE {
