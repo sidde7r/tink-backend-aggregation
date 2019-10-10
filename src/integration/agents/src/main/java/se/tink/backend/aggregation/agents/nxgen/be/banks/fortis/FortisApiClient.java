@@ -68,21 +68,21 @@ public class FortisApiClient {
 
     private void checkForcedUpgrade(String distributorId) {
         CheckForcedUpgradeRequest request = new CheckForcedUpgradeRequest(distributorId);
-        getRequestBuilderWithCookies(FortisConstants.URLS.CHECK_FORCED_UPGRADE)
+        getRequestBuilderWithCookies(FortisConstants.Urls.CHECK_FORCED_UPGRADE)
                 .post(HttpResponse.class, SerializationUtils.serializeToString(request));
     }
 
     private RequestBuilder getRequestBuilderWithCookies(String resource) {
         return client.request(getUrl(resource))
-                .cookie(FortisConstants.COOKIE.CSRF, CSRF)
-                .cookie(FortisConstants.COOKIE.AXES, FortisUtils.generateAxes())
+                .cookie(FortisConstants.Cookie.CSRF, CSRF)
+                .cookie(FortisConstants.Cookie.AXES, FortisUtils.generateAxes())
                 .cookie(
-                        FortisConstants.COOKIE.DEVICE_FEATURES,
-                        FortisConstants.HEADER_VALUES.DEVICE_FEATURES_VALUE)
-                .cookie(FortisConstants.COOKIE.DISTRIBUTOR_ID, distributorId)
-                .cookie(FortisConstants.COOKIE.EUROPOLICY, FortisConstants.COOKIE.EUROPOLICY_OPTIN)
-                .header(FortisConstants.HEADERS.CSRF, CSRF)
-                .header(FortisConstants.HEADERS.USER_AGENT, getUserAgent())
+                        FortisConstants.Cookie.DEVICE_FEATURES,
+                        FortisConstants.HeaderValues.DEVICE_FEATURES_VALUE)
+                .cookie(FortisConstants.Cookie.DISTRIBUTOR_ID, distributorId)
+                .cookie(FortisConstants.Cookie.EUROPOLICY, FortisConstants.Cookie.EUROPOLICY_OPTIN)
+                .header(FortisConstants.Headers.CSRF, CSRF)
+                .header(FortisConstants.Headers.USER_AGENT, getUserAgent())
                 .type(MediaType.APPLICATION_JSON_TYPE);
     }
 
@@ -95,7 +95,7 @@ public class FortisApiClient {
         checkForcedUpgrade(eBankingUsersRequest.getDistributorId());
         getDistributorAuthenticationMeans();
 
-        return getRequestBuilderWithCookies(FortisConstants.URLS.GET_E_BANKING_USERS)
+        return getRequestBuilderWithCookies(FortisConstants.Urls.GET_E_BANKING_USERS)
                 .post(
                         EbankingUsersResponse.class,
                         SerializationUtils.serializeToString(eBankingUsersRequest));
@@ -103,14 +103,14 @@ public class FortisApiClient {
 
     public AuthenticationProcessResponse createAuthenticationProcess(
             AuthenticationProcessRequest authenticationProcessRequest) {
-        return getRequestBuilderWithCookies(FortisConstants.URLS.CREATE_AUTHENTICATION_PROCESS)
+        return getRequestBuilderWithCookies(FortisConstants.Urls.CREATE_AUTHENTICATION_PROCESS)
                 .post(
                         AuthenticationProcessResponse.class,
                         SerializationUtils.serializeToString(authenticationProcessRequest));
     }
 
     public AccountsResponse fetchAccounts() {
-        return getRequestBuilderWithCookies(FortisConstants.URLS.GET_VIEW_ACCOUNT_LIST)
+        return getRequestBuilderWithCookies(FortisConstants.Urls.GET_VIEW_ACCOUNT_LIST)
                 .post(
                         AccountsResponse.class,
                         SerializationUtils.serializeToString(new AccountsRequest()));
@@ -118,14 +118,14 @@ public class FortisApiClient {
 
     public TransactionsResponse fetchTransactions(int page, String accountProductId) {
         TransactionsRequest request = new TransactionsRequest(accountProductId, page);
-        return getRequestBuilderWithCookies(FortisConstants.URLS.TRANSACTIONS)
+        return getRequestBuilderWithCookies(FortisConstants.Urls.TRANSACTIONS)
                 .post(TransactionsResponse.class, SerializationUtils.serializeToString(request));
     }
 
     public UpcomingTransactionsResponse fetchUpcomingTransactions(
             int page, String accountProductId) {
         TransactionsRequest request = new TransactionsRequest(accountProductId, page);
-        return getRequestBuilderWithCookies(FortisConstants.URLS.UPCOMING_TRANSACTIONS)
+        return getRequestBuilderWithCookies(FortisConstants.Urls.UPCOMING_TRANSACTIONS)
                 .post(
                         UpcomingTransactionsResponse.class,
                         SerializationUtils.serializeToString(request));
@@ -133,7 +133,7 @@ public class FortisApiClient {
 
     public String fetchChallenges(GenerateChallangeRequest challangeRequest) {
         List<String> challenges =
-                getRequestBuilderWithCookies(FortisConstants.URLS.GENERATE_CHALLENGES)
+                getRequestBuilderWithCookies(FortisConstants.Urls.GENERATE_CHALLENGES)
                         .post(
                                 ChallengeResponse.class,
                                 SerializationUtils.serializeToString(challangeRequest))
@@ -143,7 +143,7 @@ public class FortisApiClient {
         if (challenges.size() > 1) {
             LOGGER.warnExtraLong(
                     String.format("Multiple challanges: %s", challenges.toString()),
-                    FortisConstants.LOGTAG.MULTIPLE_CHALLENGES);
+                    FortisConstants.LoggingTag.MULTIPLE_CHALLENGES);
         }
 
         return challenges.get(0);
@@ -151,7 +151,7 @@ public class FortisApiClient {
 
     public PrepareContractUpdateResponse prepareContractUpdate(
             PrepareContractUpdateRequest contractUpdateRequest) {
-        return getRequestBuilderWithCookies(FortisConstants.URLS.PREPARE_CONTRACT_UPDATE)
+        return getRequestBuilderWithCookies(FortisConstants.Urls.PREPARE_CONTRACT_UPDATE)
                 .post(
                         PrepareContractUpdateResponse.class,
                         SerializationUtils.serializeToString(contractUpdateRequest));
@@ -159,38 +159,38 @@ public class FortisApiClient {
 
     public ExecuteContractUpdateResponse executeContractUpdate(
             ExecuteContractUpdateRequest request) {
-        return getRequestBuilderWithCookies(FortisConstants.URLS.EXECUTE_CONTRACT_UPDATE)
+        return getRequestBuilderWithCookies(FortisConstants.Urls.EXECUTE_CONTRACT_UPDATE)
                 .post(
                         ExecuteContractUpdateResponse.class,
                         SerializationUtils.serializeToString(request));
     }
 
     public UserInfoResponse getUserInfo() {
-        return getRequestBuilderWithCookies(FortisConstants.URLS.GET_USER_INFO)
+        return getRequestBuilderWithCookies(FortisConstants.Urls.GET_USER_INFO)
                 .post(UserInfoResponse.class);
     }
 
     public HttpResponse authenticationRequest(String loginChallenge) {
-        return getRequestBuilderWithCookies(FortisConstants.URLS.AUTHENTICATION_URL)
+        return getRequestBuilderWithCookies(FortisConstants.Urls.AUTHENTICATION_URL)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(HttpResponse.class, loginChallenge);
     }
 
     public void logout() {
-        client.request(getUrl(FortisConstants.URLS.LOGOUT))
+        client.request(getUrl(FortisConstants.Urls.LOGOUT))
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .header(FortisConstants.HEADERS.CSRF, CSRF);
+                .header(FortisConstants.Headers.CSRF, CSRF);
     }
 
     public void getDistributorAuthenticationMeans() {
         DistributorAuthenticationRequest request =
                 new DistributorAuthenticationRequest(
                         "",
-                        FortisConstants.AUTHENTICATION_MEANS.DISTRIBUTION_CHANNEL_ID,
-                        FortisConstants.AUTHENTICATION_MEANS.MINIMUM_DAC_LEVEL,
+                        FortisConstants.AuthenticationMeans.DISTRIBUTION_CHANNEL_ID,
+                        FortisConstants.AuthenticationMeans.MINIMUM_DAC_LEVEL,
                         distributorId);
 
-        getRequestBuilderWithCookies(FortisConstants.URLS.GET_DISTRIBUTOR_AUTHENTICATION_MEANS)
+        getRequestBuilderWithCookies(FortisConstants.Urls.GET_DISTRIBUTOR_AUTHENTICATION_MEANS)
                 .post(SerializationUtils.serializeToString(request));
     }
 }

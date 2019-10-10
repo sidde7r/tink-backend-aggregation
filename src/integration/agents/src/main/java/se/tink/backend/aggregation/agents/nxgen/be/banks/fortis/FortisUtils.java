@@ -15,26 +15,26 @@ import org.bouncycastle.asn1.eac.CertificateBody;
 public class FortisUtils {
 
     public static String generateCSRF() {
-        return RandomStringUtils.random(128, FortisConstants.SECURITY.CSRF_CHARS);
+        return RandomStringUtils.random(128, FortisConstants.Security.CSRF_CHARS);
     }
 
     public static String generateAxes() {
-        return FortisConstants.SECURITY.AXES + generateAxeUID() + "|";
+        return FortisConstants.Security.AXES + generateAxeUID() + "|";
     }
 
     private static String generateAxeUID() {
-        return RandomStringUtils.random(32, FortisConstants.SECURITY.AXES_CHARS);
+        return RandomStringUtils.random(32, FortisConstants.Security.AXES_CHARS);
     }
 
     public static String calculateDeviceFingerPrint() {
-        return RandomStringUtils.random(36, FortisConstants.SECURITY.A_TO_F);
+        return RandomStringUtils.random(36, FortisConstants.Security.A_TO_F);
     }
 
     public static String calculateChallenge(
             String muid, String password, String agreementId, String challenge, String processId) {
 
         return m3274(
-                FortisConstants.ENCRYPTION.OCRA,
+                FortisConstants.Encryption.OCRA,
                 m3277(muid, "4"),
                 null,
                 challenge,

@@ -11,6 +11,7 @@ public class FortisConstants {
     public static final String APP_VERSION = "24.1.2";
     public static final String NEGATIVE_TRANSACTION_TYPE = "F";
     public static final String CARD_FRAME_ID = "010119659";
+    public static final DateFormat TRANSACTION_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
@@ -18,7 +19,7 @@ public class FortisConstants {
                     .put(AccountTypes.SAVINGS, "CPTE EPARGNE", "SPAARREKENING", "ster spaarrek.")
                     .build();
 
-    public static class URLS {
+    public static class Urls {
         public static final String GET_DISTRIBUTOR_AUTHENTICATION_MEANS =
                 "/EBIA-pr01/rpc/means/getDistributorAuthenticationMeans";
         public static final String CREATE_AUTHENTICATION_PROCESS =
@@ -43,7 +44,7 @@ public class FortisConstants {
                 "/DBPL-pr01/rpc/transaction/getUpcomingList";
     }
 
-    public static class ERRORCODE {
+    public static class ErrorCode {
         public static String ERROR_CODE = "ErrCode";
         public static String INVALID_SIGNATURE = "EEBA0028";
         public static String WRONG_PASSWORD = "EEBA0028";
@@ -52,30 +53,30 @@ public class FortisConstants {
         public static String MUID_OK = "EBW0000";
     }
 
-    public static class HEADERS {
+    public static class Headers {
         public static final String USER_AGENT = "User-Agent";
         public static final String CONTENT_TYPE = "Content-Type";
         public static final String CSRF = "CSRF";
     }
 
-    public static class HEADER_VALUES {
+    public static class HeaderValues {
         public static final String DEVICE_FEATURES_VALUE = "0|1|0|0|0|1|1|0|0|1|0|0|0|1|1|1242";
         public static final String AUTHENTICATION_DEVICE_PINNING = "08";
         public static final String AUTHENTICATION_PASSWORD = "15";
     }
 
-    public static class FIELD {
+    public static class Field {
         public static final String CLIENTNUMBER = "clientnumber";
     }
 
-    public static class VALUES {
+    public static class Values {
         public static final String TCFLAG = "0";
         public static final String UCR = "UCR";
         public static final String DIDAP = "DIDAP";
         public static final String PASSWORD = "tinktink";
     }
 
-    public static class COOKIE {
+    public static class Cookie {
         public static final String CSRF = "CSRF";
         public static final String AXES = "axes";
         public static final String DEVICE_FEATURES = "deviceFeatures";
@@ -84,12 +85,12 @@ public class FortisConstants {
         public static final String EUROPOLICY_OPTIN = "optin";
     }
 
-    public static class AUTHENTICATION_MEANS {
+    public static class AuthenticationMeans {
         public static final String DISTRIBUTION_CHANNEL_ID = "49";
         public static final String MINIMUM_DAC_LEVEL = "3";
     }
 
-    public static class SECURITY {
+    public static class Security {
         public static final String CSRF_CHARS =
                 "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
         public static final String AXES = "en|TAB|fb|priv|TAB|";
@@ -97,11 +98,11 @@ public class FortisConstants {
         public static final String A_TO_F = "0123456789ABCDEF";
     }
 
-    public static class ENCRYPTION {
+    public static class Encryption {
         public static final String OCRA = "OCRA-1:HOTP-SHA256-8:QH64-PSHA1-S064";
     }
 
-    public static class STORAGE {
+    public static class Storage {
         public static final String ACCOUNT_PRODUCT_ID = "accountProductId";
         public static final String PASSWORD = "password";
         public static final String SMID = "smid";
@@ -113,11 +114,7 @@ public class FortisConstants {
         public static final String CHALLENGE = "challenge";
     }
 
-    public static class DATE {
-        public static final DateFormat TRANSACTION_FORMAT = new SimpleDateFormat("yyyyMMdd");
-    }
-
-    public static class LOGTAG {
+    public static class LoggingTag {
         public static final LogTag NO_USER_DATA_FOUND = LogTag.from("NO_USER_DATA_FOUND");
         public static final LogTag LOGIN_ERROR = LogTag.from("FORTIS_LOGIN_ERROR");
         public static final LogTag TRANSACTION_VALIDATION_ERROR =

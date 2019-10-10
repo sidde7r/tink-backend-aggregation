@@ -20,7 +20,7 @@ public class FortisSessionHandler implements SessionHandler {
     }
 
     private boolean calculcatedChallengeExists() {
-        return persistentStorage.containsKey(FortisConstants.STORAGE.CALCULATED_CHALLENGE);
+        return persistentStorage.containsKey(FortisConstants.Storage.CALCULATED_CHALLENGE);
     }
 
     @Override

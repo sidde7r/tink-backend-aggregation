@@ -44,7 +44,7 @@ public class FortisTransactionalAccountFetcher
         ArrayList<UpcomingTransaction> upcomingTransactions = Lists.newArrayList();
         try {
             String accountProductId =
-                    account.getFromTemporaryStorage(FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID);
+                    account.getFromTemporaryStorage(FortisConstants.Storage.ACCOUNT_PRODUCT_ID);
 
             verifyProductId(accountProductId);
             UpcomingTransactionsResponse upcomingTransactionsResponse;
@@ -72,7 +72,7 @@ public class FortisTransactionalAccountFetcher
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
         try {
             String accountProductId =
-                    account.getFromTemporaryStorage(FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID);
+                    account.getFromTemporaryStorage(FortisConstants.Storage.ACCOUNT_PRODUCT_ID);
 
             verifyProductId(accountProductId);
 
