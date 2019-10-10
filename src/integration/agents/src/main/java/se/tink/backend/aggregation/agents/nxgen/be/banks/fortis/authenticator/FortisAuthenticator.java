@@ -355,70 +355,79 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                 persistentStorage.get(FortisConstants.STORAGE.DEVICE_FINGERPRINT);
         final String muid = persistentStorage.get(FortisConstants.STORAGE.MUID);
 
-        EbankingUsersResponse ebankingUsersResponse =
-                getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
-
-        Optional<EBankingUserId> eBankingUserId =
-                Optional.ofNullable(
-                        ebankingUsersResponse
-                                .getValue()
-                                .getEBankingUsers()
-                                .get(0)
-                                .getEBankingUser()
-                                .getEBankingUserId());
-
         if (Strings.isNullOrEmpty(password)) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
-        AuthenticationProcessResponse res =
-                createAuthenticationProcess(
-                        eBankingUserId.get(),
-                        apiClient.getDistributorId(),
-                        FortisConstants.HEADER_VALUES.AUTHENTICATION_PASSWORD);
+        EbankingUsersResponse ebankingUsersResponse =
+                getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
 
-        final String authenticationProcessId = res.getValue().getAuthenticationProcessId();
+        if (ebankingUsersResponse.getValue().getEBankingUsers().size() != 0) {
+            Optional<EBankingUserId> eBankingUserId =
+                    Optional.ofNullable(
+                            ebankingUsersResponse
+                                    .getValue()
+                                    .getEBankingUsers()
+                                    .get(0)
+                                    .getEBankingUser()
+                                    .getEBankingUserId());
 
-        GenerateChallangeRequest challengeRequest =
-                new GenerateChallangeRequest(apiClient.getDistributorId(), authenticationProcessId);
+            AuthenticationProcessResponse res =
+                    createAuthenticationProcess(
+                            eBankingUserId.get(),
+                            apiClient.getDistributorId(),
+                            FortisConstants.HEADER_VALUES.AUTHENTICATION_PASSWORD);
 
-        final String challenge = apiClient.fetchChallenges(challengeRequest);
+            final String authenticationProcessId = res.getValue().getAuthenticationProcessId();
 
-        final String calculateChallenge =
-                FortisUtils.calculateChallenge(
-                        muid,
-                        password,
-                        agreementId,
-                        challenge,
-                        res.getValue().getAuthenticationProcessId());
-        persistentStorage.put(FortisConstants.STORAGE.CALCULATED_CHALLENGE, calculateChallenge);
+            GenerateChallangeRequest challengeRequest =
+                    new GenerateChallangeRequest(
+                            apiClient.getDistributorId(), authenticationProcessId);
 
-        AuthResponse authResponse =
-                AuthResponse.builder()
-                        .withAuthProcId(authenticationProcessId)
-                        .withAgreementId(agreementId)
-                        .withAuthenticationMeanId(
-                                FortisConstants.HEADER_VALUES.AUTHENTICATION_PASSWORD)
-                        .withCardNumber(maskingCardNumber(authenticatorFactorId))
-                        .withDistId(apiClient.getDistributorId())
-                        .withSmid(smid)
-                        .withChallenge(challenge)
-                        .withResponse(calculateChallenge)
-                        .withDeviceFingerprint(deviceFingerprint)
-                        .withMeanId(FortisConstants.VALUES.DIDAP)
-                        .build();
+            final String challenge = apiClient.fetchChallenges(challengeRequest);
 
-        UserInfoResponse userInfoResponse;
-        try {
-            sendChallenges(authResponse);
-            userInfoResponse = apiClient.getUserInfo();
-            validateMuid(userInfoResponse);
+            final String calculateChallenge =
+                    FortisUtils.calculateChallenge(
+                            muid,
+                            password,
+                            agreementId,
+                            challenge,
+                            res.getValue().getAuthenticationProcessId());
+            persistentStorage.put(FortisConstants.STORAGE.CALCULATED_CHALLENGE, calculateChallenge);
 
-        } catch (HttpClientException | LoginException e) {
-            throw new IllegalStateException("Incorrect challenge in autoAuthenticate", e);
+            AuthResponse authResponse =
+                    AuthResponse.builder()
+                            .withAuthProcId(authenticationProcessId)
+                            .withAgreementId(agreementId)
+                            .withAuthenticationMeanId(
+                                    FortisConstants.HEADER_VALUES.AUTHENTICATION_PASSWORD)
+                            .withCardNumber(maskingCardNumber(authenticatorFactorId))
+                            .withDistId(apiClient.getDistributorId())
+                            .withSmid(smid)
+                            .withChallenge(challenge)
+                            .withResponse(calculateChallenge)
+                            .withDeviceFingerprint(deviceFingerprint)
+                            .withMeanId(FortisConstants.VALUES.DIDAP)
+                            .build();
+
+            UserInfoResponse userInfoResponse;
+            try {
+                sendChallenges(authResponse);
+                userInfoResponse = apiClient.getUserInfo();
+                validateMuid(userInfoResponse);
+
+            } catch (HttpClientException | LoginException e) {
+                throw new IllegalStateException("Incorrect challenge in autoAuthenticate", e);
+            }
+            persistentStorage.put(
+                    FortisConstants.STORAGE.MUID,
+                    userInfoResponse.getValue().getUserData().getMuid());
+        } else {
+            LOGGER.warnExtraLong(
+                    String.format("authenticate, no user data found: %s", ""),
+                    FortisConstants.LOGTAG.NO_USER_DATA_FOUND);
+            throw SessionError.SESSION_EXPIRED.exception();
         }
-        persistentStorage.put(
-                FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());
     }
 
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
