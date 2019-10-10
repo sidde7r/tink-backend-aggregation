@@ -38,7 +38,6 @@ public final class SbabAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshTransferDestinationExecutor {
 
-    private final String clientName;
     private final SbabApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -47,8 +46,6 @@ public final class SbabAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         apiClient = new SbabApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
