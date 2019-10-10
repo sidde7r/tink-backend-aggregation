@@ -229,7 +229,8 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                         persistentStorage.get(FortisConstants.STORAGE.PASSWORD)));
     }
 
-    private Optional<EBankingUserId> getEbankingUserId(String authenticatorFactorId, String smid) {
+    private Optional<EBankingUserId> getEbankingUserId(String authenticatorFactorId, String smid)
+            throws LoginException {
         EbankingUsersResponse eBankingUserIdEntity =
                 getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
 
@@ -243,19 +244,20 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                     FortisConstants.LOGTAG.MULTIPLE_USER_ENTITIES);
         }
 
-        if (eBankingUserIdEntity.getValue().getEBankingUsers().size() == 0) {
+        if (eBankingUserIdEntity.getValue().getEBankingUsers().size() != 0) {
+            return Optional.ofNullable(
+                    eBankingUserIdEntity
+                            .getValue()
+                            .getEBankingUsers()
+                            .get(0)
+                            .getEBankingUser()
+                            .getEBankingUserId());
+        } else {
             LOGGER.warnExtraLong(
                     String.format("authenticate, no user data found: %s", ""),
                     FortisConstants.LOGTAG.NO_USER_DATA_FOUND);
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-
-        return Optional.ofNullable(
-                eBankingUserIdEntity
-                        .getValue()
-                        .getEBankingUsers()
-                        .get(0)
-                        .getEBankingUser()
-                        .getEBankingUserId());
     }
 
     private void getUserInfoAndPersistMuid() throws LoginException, AuthorizationException {
@@ -292,7 +294,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         }
     }
 
-    private boolean isCredentialsCorrect() {
+    private boolean isCredentialsCorrect() throws LoginException {
         String muid =
                 checkNotNullOrEmpty(
                         persistentStorage.get(FortisConstants.STORAGE.MUID),
@@ -350,16 +352,25 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                 persistentStorage.get(FortisConstants.STORAGE.DEVICE_FINGERPRINT);
         final String muid = persistentStorage.get(FortisConstants.STORAGE.MUID);
 
-        Optional<EBankingUserId> ebankingUsersResponse =
-                getEbankingUserId(authenticatorFactorId, smid);
+        EbankingUsersResponse ebankingUsersResponse =
+                getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
 
-        if (Strings.isNullOrEmpty(password) || !ebankingUsersResponse.isPresent()) {
+        Optional<EBankingUserId> eBankingUserId =
+                Optional.ofNullable(
+                        ebankingUsersResponse
+                                .getValue()
+                                .getEBankingUsers()
+                                .get(0)
+                                .getEBankingUser()
+                                .getEBankingUserId());
+
+        if (Strings.isNullOrEmpty(password)) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
         AuthenticationProcessResponse res =
                 createAuthenticationProcess(
-                        ebankingUsersResponse.get(),
+                        eBankingUserId.get(),
                         apiClient.getDistributorId(),
                         FortisConstants.HEADER_VALUES.AUTHENTICATION_PASSWORD);
 
