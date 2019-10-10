@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.entities.AcrEntity;
@@ -61,16 +62,15 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
                                 new AcrEntity(true, ImmutableList.of("urn:openbanking:psd2:sca"))));
 
         TokenBodyEntity tokenBody = new TokenBodyEntity();
-        tokenBody.setAud("https://mtls.apis.op.fi");
+        tokenBody.setAud(OpBankConstants.Urls.BASE_URL);
         tokenBody.setIss(configuration.getClientId());
-        tokenBody.setResponse_type("code");
-        tokenBody.setClient_id(configuration.getClientId());
-        tokenBody.setRedirect_uri(
-                "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback");
-        tokenBody.setScope("openid accounts");
+        tokenBody.setResponseType(OpBankConstants.TokenValues.RESPONSE_TYPE);
+        tokenBody.setClientId(configuration.getClientId());
+        tokenBody.setRedirectUri(configuration.getRedirectUrl());
+        tokenBody.setScope(OpBankConstants.TokenValues.SCOPE);
         tokenBody.setState(state);
         tokenBody.setNonce(UUID.randomUUID().toString());
-        tokenBody.setMax_age(86400);
+        tokenBody.setMaxAge(OpBankConstants.TokenValues.MAX_AGE);
         tokenBody.setIat(OffsetDateTime.now().toEpochSecond());
         tokenBody.setExp(OffsetDateTime.now().plusHours(1).toEpochSecond());
         tokenBody.setClaims(claims);
@@ -92,12 +92,13 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
 
         String authorizationURL =
                 String.format(
-                                "https://authorize.op.fi/oauth/authorize"
-                                        + "?request=%s"
-                                        + "&response_type=code"
-                                        + "&client_id=%s"
-                                        + "&scope=openid accounts",
-                                fullToken, configuration.getClientId())
+                                OpBankConstants.Urls.AUTHORIZATION_URL
+                                        .concat("?request=%s")
+                                        .concat("&response_type=code")
+                                        .concat("&client_id=%s")
+                                        .concat("&scope=openid accounts"),
+                                fullToken,
+                                configuration.getClientId())
                         .replace(" ", "%20");
 
         return new URL(authorizationURL);

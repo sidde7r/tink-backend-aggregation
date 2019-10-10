@@ -31,6 +31,8 @@ public final class OpBankConstants {
                 BASE_URL + "/accounts-psd2/v1/authorizations";
         public static final String GET_ACCOUNTS = BASE_URL + "/accounts-psd2/v1/accounts";
         public static final String GET_TRANSACTIONS = GET_ACCOUNTS + "/{accountId}/transactions";
+
+        public static final String AUTHORIZATION_URL = "https://authorize.op.fi/oauth/authorize";
     }
 
     public static class StorageKeys {
@@ -54,5 +56,11 @@ public final class OpBankConstants {
     public static class HeaderValues {
         public static final String TINK = "tink";
         public static final String CUSTOMER_IP_ADRESS = "127.0.0.1";
+    }
+
+    public static class TokenValues {
+        public static final String RESPONSE_TYPE = "code";
+        public static final String SCOPE = "openid accounts";
+        public static final int MAX_AGE = 86400;
     }
 }
