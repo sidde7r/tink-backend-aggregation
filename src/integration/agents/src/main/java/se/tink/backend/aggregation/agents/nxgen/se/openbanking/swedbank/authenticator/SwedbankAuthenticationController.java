@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.ErrorType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -98,7 +99,7 @@ public class SwedbankAuthenticationController
     public void autoAuthenticate() throws SessionException, BankServiceException {
         OAuth2Token accessToken =
                 persistentStorage
-                        .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                        .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         if (accessToken.hasAccessExpired()) {
@@ -106,7 +107,7 @@ public class SwedbankAuthenticationController
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            persistentStorage.remove(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN);
+            persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
 
             // Refresh token is not always present, if it's absent we fall back to the manual
             // authentication.
@@ -121,7 +122,7 @@ public class SwedbankAuthenticationController
             }
 
             // Store the new access token on the persistent storage again.
-            persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+            persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
 
             // Fall through.
         }
@@ -176,7 +177,7 @@ public class SwedbankAuthenticationController
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                         accessToken, tokenLifetime, tokenLifetimeUnit));
 
-        persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
 
         // Tell the authenticator which access token it can use.
         authenticator.useAccessToken(accessToken);

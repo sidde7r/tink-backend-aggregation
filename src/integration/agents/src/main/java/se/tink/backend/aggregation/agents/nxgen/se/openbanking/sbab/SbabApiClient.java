@@ -66,7 +66,7 @@ public final class SbabApiClient {
 
     private OAuth2Token getToken() {
         return persistentStorage
-                .get(PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException("Expected token to be present"));
     }
 
