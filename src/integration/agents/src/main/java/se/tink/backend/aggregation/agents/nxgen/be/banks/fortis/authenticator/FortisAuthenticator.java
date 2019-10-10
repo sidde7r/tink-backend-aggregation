@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator;
 
 import com.google.common.base.Strings;
 import java.util.Optional;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -153,7 +152,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
 
         final String authenticatorFactorId = credentials.getField(Field.Key.USERNAME);
         final String smid = credentials.getField(FortisConstants.FIELD.CLIENTNUMBER);
-        final String password = RandomStringUtils.randomAlphanumeric(16);
+        final String password = credentials.getField(Field.Key.PASSWORD);
         final String deviceFingerprint = FortisUtils.calculateDeviceFingerPrint();
 
         persistentStorage.put(FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID, authenticatorFactorId);
@@ -201,19 +200,22 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         persistentStorage.put(FortisConstants.STORAGE.CALCULATED_CHALLENGE, calculateChallenge);
 
         PrepareContractUpdateResponse prepareContractUpdateResponse = prepareContractUpdate();
-        final String signChallenge =
-                prepareContractUpdateResponse.getValue().getChallenge().getChallenges().get(0);
-        final String token = prepareContractUpdateResponse.getValue().getChallenge().getToken();
 
-        String signCode = waitForSignCode(signChallenge);
-        if (Strings.isNullOrEmpty(signCode) || !StringUtils.isNumeric(signCode)) {
-            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+        if (!(prepareContractUpdateResponse.getValue().getChallenge().getChallenges().size()
+                == 0)) {
+            final String signChallenge =
+                    prepareContractUpdateResponse.getValue().getChallenge().getChallenges().get(0);
+            final String token = prepareContractUpdateResponse.getValue().getChallenge().getToken();
+
+            String signCode = waitForSignCode(signChallenge);
+            if (Strings.isNullOrEmpty(signCode) || !StringUtils.isNumeric(signCode)) {
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            }
+
+            ExecuteContractUpdateResponse executeContractUpdateResponse =
+                    apiClient.executeContractUpdate(
+                            new ExecuteContractUpdateRequest(new SignatureEntity(token, signCode)));
         }
-
-        ExecuteContractUpdateResponse executeContractUpdateResponse =
-                apiClient.executeContractUpdate(
-                        new ExecuteContractUpdateRequest(new SignatureEntity(token, signCode)));
-
         if (!isCredentialsCorrect()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
@@ -221,10 +223,10 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     }
 
     private PrepareContractUpdateResponse prepareContractUpdate() {
-        String password = RandomStringUtils.randomAlphanumeric(16);
-        persistentStorage.put(FortisConstants.STORAGE.PASSWORD, password);
         return apiClient.prepareContractUpdate(
-                new PrepareContractUpdateRequest(FortisConstants.VALUES.TCFLAG, password));
+                new PrepareContractUpdateRequest(
+                        FortisConstants.VALUES.TCFLAG,
+                        persistentStorage.get(FortisConstants.STORAGE.PASSWORD)));
     }
 
     private Optional<EBankingUserId> getEbankingUserId(String authenticatorFactorId, String smid) {
@@ -240,6 +242,13 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                     String.format("authenticate, multiple users found: %s", ""),
                     FortisConstants.LOGTAG.MULTIPLE_USER_ENTITIES);
         }
+
+        if (eBankingUserIdEntity.getValue().getEBankingUsers().size() == 0) {
+            LOGGER.warnExtraLong(
+                    String.format("authenticate, no user data found: %s", ""),
+                    FortisConstants.LOGTAG.NO_USER_DATA_FOUND);
+        }
+
         return Optional.ofNullable(
                 eBankingUserIdEntity
                         .getValue()
@@ -341,12 +350,12 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                 persistentStorage.get(FortisConstants.STORAGE.DEVICE_FINGERPRINT);
         final String muid = persistentStorage.get(FortisConstants.STORAGE.MUID);
 
-        if (Strings.isNullOrEmpty(password)) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-
         Optional<EBankingUserId> ebankingUsersResponse =
                 getEbankingUserId(authenticatorFactorId, smid);
+
+        if (Strings.isNullOrEmpty(password) || !ebankingUsersResponse.isPresent()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
 
         AuthenticationProcessResponse res =
                 createAuthenticationProcess(

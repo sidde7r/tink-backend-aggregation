@@ -38,9 +38,13 @@ public class AccountEntity implements IdentifiableAccount {
     private List<AccountIdentifierEntity> identifierEntity;
 
     public static TransactionalAccount toTransactionalAccount(
-            AccountEntity account, AccountBalanceEntity balance) {
+            AccountEntity account, AccountBalanceEntity balance, String partyName) {
         String accountNumber = account.getUniqueIdentifier();
         String accountName = account.getDisplayName();
+        String holder = account.getDefaultIdentifier().getName();
+
+        HolderName holderName =
+                Objects.nonNull(holder) ? new HolderName(holder) : new HolderName(partyName);
 
         /*
         TODO: We need to remove this ugly fix that has been done to make Revolut work without
@@ -60,11 +64,6 @@ public class AccountEntity implements IdentifiableAccount {
         String uniqueIdentifier =
                 revolutAccount.isPresent() ? account.getAccountId() : accountNumber;
 
-        HolderName holderName =
-                Objects.nonNull(account.getDefaultIdentifier().getName())
-                        ? new HolderName(account.getDefaultIdentifier().getName())
-                        : null;
-
         TransactionalAccount.Builder accountBuilder =
                 TransactionalAccount.builder(
                                 account.getAccountType(), uniqueIdentifier, balance.getBalance())
@@ -79,7 +78,11 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     public static CreditCardAccount toCreditCardAccount(
-            AccountEntity account, AccountBalanceEntity balance) {
+            AccountEntity account, AccountBalanceEntity balance, String partyName) {
+        String holder = account.getDefaultIdentifier().getName();
+
+        HolderName creditCardHolderName =
+                Objects.nonNull(holder) ? new HolderName(holder) : new HolderName(partyName);
 
         return CreditCardAccount.builder(
                         account.getUniqueIdentifier(),
@@ -92,6 +95,7 @@ public class AccountEntity implements IdentifiableAccount {
                 .setAccountNumber(account.getUniqueIdentifier())
                 .setBankIdentifier(account.getAccountId())
                 .setName(account.getDisplayName())
+                .setHolderName(creditCardHolderName)
                 .build();
     }
 
@@ -99,7 +103,7 @@ public class AccountEntity implements IdentifiableAccount {
         return accountId;
     }
 
-    private AccountIdentifierEntity getDefaultIdentifier() {
+    public AccountIdentifierEntity getDefaultIdentifier() {
         return identifierEntity.stream()
                 .filter(
                         e ->

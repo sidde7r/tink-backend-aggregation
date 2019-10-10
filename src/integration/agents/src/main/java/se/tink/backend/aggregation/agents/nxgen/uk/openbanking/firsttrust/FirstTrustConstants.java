@@ -5,12 +5,8 @@ public class FirstTrustConstants {
     class Urls {
 
         class V31 {
-            public static final String AIS_AUTH_URL =
-                    "https://apis.firsttrustbank.co.uk/api/open-banking/v3.1/aisp";
             public static final String AIS_API_URL =
                     "https://apis.firsttrustbank.co.uk/api/open-banking/v3.1/aisp";
-            public static final String PIS_AUTH_URL =
-                    "https://apis.firsttrustbank.co.uk/api/open-banking/v3.1/pisp";
             public static final String PIS_API_URL =
                     "https://apis.firsttrustbank.co.uk/api/open-banking/v3.1/pisp";
             public static final String WELL_KNOWN_URL =

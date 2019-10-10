@@ -32,12 +32,8 @@ public class MonzoConstants {
         public static final String AIS_TRANSACTIONS = API_MONZO_COM + "ais/transactions";
 
         class V31 {
-            public static final String AIS_AUTH_URL =
-                    "https://openbanking.monzo.com/open-banking/v3.1/aisp";
             public static final String AIS_API_URL =
                     "https://openbanking.monzo.com/open-banking/v3.1/aisp";
-            public static final String PIS_AUTH_URL =
-                    "https://openbanking.monzo.com/open-banking/v3.1/pisp";
             public static final String PIS_API_URL =
                     "https://openbanking.monzo.com/open-banking/v3.1/pisp";
             public static final String WELL_KNOWN_URL =

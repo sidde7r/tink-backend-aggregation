@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +22,7 @@ public class BaseV31Response<T> {
     }
 
     @JsonProperty("Data")
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private void setData(Map<String, T> dataWrapper) {
         data = dataWrapper.entrySet().stream().findAny().map(Map.Entry::getValue).orElse(null);
     }

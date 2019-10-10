@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -113,6 +114,18 @@ public class OpenIdAuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
+
+        // added to force users to relogin to fetch IdentityData for UKOB
+        persistentStorage
+                .get(PersistentStorageKeys.AIS_ACCOUNT_PERMISSIONS_GRANTED, List.class)
+                .orElseThrow(
+                        () -> {
+                            logger.warn(
+                                    "Failed to retrieve identity data permission from "
+                                            + "persistent storage. So forcing user to authenticate again");
+                            return SessionError.SESSION_EXPIRED.exception();
+                        });
+
         OAuth2Token accessToken =
                 persistentStorage
                         .get(

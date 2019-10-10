@@ -8,20 +8,24 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.session.UkOpenBankingSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.identity.IdentityDataV31Response;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -46,7 +50,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                RefreshIdentityDataExecutor {
 
     private final Provider tinkProvider;
     private final URL wellKnownURL;
@@ -57,6 +62,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected SoftwareStatement softwareStatement;
     protected ProviderConfiguration providerConfiguration;
     private boolean disableSslVerification;
+    private final UkOpenBankingAisConfig agentConfig;
 
     private TransferDestinationRefreshController transferDestinationRefreshController;
     private CreditCardRefreshController creditCardRefreshController;
@@ -70,15 +76,15 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
-            URL wellKnownURL) {
-        this(request, context, signatureKeyPair, wellKnownURL, false);
+            UkOpenBankingAisConfig aisConfig) {
+        this(request, context, signatureKeyPair, aisConfig, false);
     }
 
     public UkOpenBankingBaseAgent(
             CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
-            URL wellKnownURL,
+            UkOpenBankingAisConfig aisConfig,
             boolean disableSslVerification) {
 
         super(request, context, signatureKeyPair);
@@ -92,7 +98,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         signatureKeyPair,
                         request.getProvider());
         tinkProvider = request.getProvider();
-        this.wellKnownURL = wellKnownURL;
+        this.agentConfig = aisConfig;
+        this.wellKnownURL = aisConfig.getWellKnownURL();
     }
 
     private String getSoftwareStatementName() {
@@ -183,7 +190,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration) {
         return new UkOpenBankingApiClient(
-                httpClient, softwareStatement, providerConfiguration, wellKnownURL);
+                httpClient,
+                softwareStatement,
+                providerConfiguration,
+                wellKnownURL,
+                persistentStorage);
     }
 
     @Override
@@ -192,14 +203,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator(UkOpenBankingAisConfig aisConfig) {
         UkOpenBankingAisAuthenticator authenticator =
                 new UkOpenBankingAisAuthenticator(apiClient, aisConfig);
-        return createOpenIdFlowWithAuthenticator(authenticator, null);
-    }
-
-    protected Authenticator constructAuthenticator(
-            UkOpenBankingAisConfig aisConfig, URL appToAppRedirectURL) {
-        UkOpenBankingAisAuthenticator authenticator =
-                new UkOpenBankingAisAuthenticator(apiClient, aisConfig);
-        return createOpenIdFlowWithAuthenticator(authenticator, appToAppRedirectURL);
+        return createOpenIdFlowWithAuthenticator(authenticator, aisConfig.getAppToAppURL());
     }
 
     protected final Authenticator createOpenIdFlowWithAuthenticator(
@@ -289,6 +293,14 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        UkOpenBankingIdentityDataFetcher fetcher =
+                new UkOpenBankingIdentityDataFetcher(
+                        apiClient, agentConfig, IdentityDataV31Response.class);
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 
     private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount>

@@ -303,4 +303,17 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
     }
+
+    public enum PartyType {
+        DELEGATE,
+        JOINT,
+        SOLE;
+
+        @JsonCreator
+        private static PartyType fromString(String key) {
+            return (key != null)
+                    ? PartyType.valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
+        }
+    }
 }

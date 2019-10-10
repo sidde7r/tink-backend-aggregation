@@ -16,19 +16,26 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LloydsV31Agent extends UkOpenBankingESSBaseAgent {
 
-    private final UkOpenBankingAisConfig aisConfig;
+    private static final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingPisConfig pisConfig;
+
+    static {
+        aisConfig =
+                new UkOpenBankingV31AisConfiguration.Builder()
+                        .withApiBaseURL(V31.AIS_API_URL)
+                        .withWellKnownURL(V31.WELL_KNOWN_URL)
+                        .withAppToAppURL(V31.APP_TO_APP_AUTH_URL)
+                        .build();
+    }
 
     public LloydsV31Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new URL(V31.WELL_KNOWN_URL));
-        aisConfig = new UkOpenBankingV31AisConfiguration(V31.AIS_API_URL, V31.AIS_AUTH_URL);
-        pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL, V31.PIS_AUTH_URL);
+        super(request, context, signatureKeyPair, aisConfig);
+        pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
     }
 
     @Override
@@ -45,7 +52,7 @@ public class LloydsV31Agent extends UkOpenBankingESSBaseAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         LloydsAuthenticator authenticator = new LloydsAuthenticator(apiClient, aisConfig);
-        return createOpenIdFlowWithAuthenticator(authenticator, new URL(V31.APP_TO_APP_AUTH_URL));
+        return createOpenIdFlowWithAuthenticator(authenticator, aisConfig.getAppToAppURL());
     }
 
     @Override
@@ -59,7 +66,7 @@ public class LloydsV31Agent extends UkOpenBankingESSBaseAgent {
                         supplementalInformationHelper,
                         credentials,
                         strongAuthenticationState,
-                        new URL(V31.APP_TO_APP_AUTH_URL));
+                        aisConfig.getAppToAppURL());
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }

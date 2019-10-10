@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
+import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
@@ -30,7 +31,8 @@ public class DomesticPaymentResponseInitiation {
                         .withReference(remittanceInformation.createTinkReference())
                         .withCreditor(creditorAccount.toCreditor())
                         .withAmount(instructedAmount.toTinkAmount())
-                        .withDebtor(debtorAccount.toDebtor())
+                        .withDebtor(
+                                Objects.nonNull(debtorAccount) ? debtorAccount.toDebtor() : null)
                         .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))
                         .build();
 

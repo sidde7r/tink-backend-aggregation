@@ -11,7 +11,7 @@ public final class AgentsCanBeFoundTest {
      */
     @Test
     public void testAgentsPackageClassIsFound() throws ClassNotFoundException {
-        AgentClassFactory.getAgentClass("nxgen.uk.openbanking.aib.AibAgent");
+        AgentClassFactory.getAgentClass("nxgen.uk.openbanking.aib.AibV31Agent");
     }
 
     /**
