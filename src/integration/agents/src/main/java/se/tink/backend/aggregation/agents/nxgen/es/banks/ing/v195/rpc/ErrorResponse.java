@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -9,12 +10,19 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.entities.Error
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonDeserialize(using = ErrorResponseDeserializer.class)
 public class ErrorResponse {
     @JsonProperty("message")
     private List<ErrorMessage> messages;
 
     public List<ErrorMessage> getMessages() {
         return messages;
+    }
+
+    public ErrorResponse() {}
+
+    public ErrorResponse(List<ErrorMessage> messages) {
+        this.messages = messages;
     }
 
     @JsonIgnore

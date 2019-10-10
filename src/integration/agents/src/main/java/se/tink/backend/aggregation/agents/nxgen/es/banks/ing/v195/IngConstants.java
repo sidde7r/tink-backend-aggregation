@@ -147,5 +147,6 @@ public class IngConstants {
 
     public static class ErrorCodes {
         public static final String LOGIN_DOCUMENT_FIELD = "loginDocument";
+        public static final String MOBILE_VALIDATION_ENROLLMENT_REQUIRED = "19902";
     }
 }
