@@ -296,6 +296,23 @@
         },
         {
             "accessType": "OPEN_BANKING",
+            "name": "be-kbc-ob",
+            "className": "nxgen.be.openbanking.kbc.KbcAgent",
+            "displayName": "KBC",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "passwordHelpText": null,
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink",
+            "financialInstitutionId": "7802078d8a7049398f9668e5478934ea"
+        },
+        {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.be.openbanking.belfius.BelfiusAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Belfius (Sandbox)",
