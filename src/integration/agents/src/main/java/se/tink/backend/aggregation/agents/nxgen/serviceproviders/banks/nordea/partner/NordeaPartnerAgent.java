@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.encryption.NordeaPartnerKeystore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.configuration.NordeaPartnerConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.NordeaPartnerTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter.NordeaHttpRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.session.NordeaPartnerSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -20,6 +21,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordeaPartnerAgent extends NextGenerationAgent
@@ -39,15 +42,29 @@ public class NordeaPartnerAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
+        configureHttpClient(configuration);
+
         NordeaPartnerConfiguration nordeaConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(NordeaPartnerConfiguration.class);
         NordeaPartnerKeystore keystore = new NordeaPartnerKeystore(nordeaConfiguration);
         jweHelper = new NordeaPartnerJweHelper(keystore, nordeaConfiguration);
 
-        client.setEidasProxy(configuration.getEidasProxy(), null);
         apiClient.setConfiguration(nordeaConfiguration);
         apiClient.setJweHelper(jweHelper);
+    }
+
+    private void configureHttpClient(AgentsServiceConfiguration configuration) {
+        client.setEidasProxy(configuration.getEidasProxy(), null);
+        client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        NordeaPartnerConstants.HttpFilters.MAX_NUM_RETRIES,
+                        NordeaPartnerConstants.HttpFilters.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new NordeaHttpRetryFilter(
+                        NordeaPartnerConstants.HttpFilters.MAX_NUM_RETRIES,
+                        NordeaPartnerConstants.HttpFilters.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override

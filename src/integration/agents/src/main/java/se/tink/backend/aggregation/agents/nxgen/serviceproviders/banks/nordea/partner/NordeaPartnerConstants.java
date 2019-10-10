@@ -57,4 +57,9 @@ public class NordeaPartnerConstants {
                         .description("Nordea JWE token")
                         .build();
     }
+
+    public static class HttpFilters {
+        public static final int RETRY_SLEEP_MILLISECONDS = 5000;
+        public static final int MAX_NUM_RETRIES = 3;
+    }
 }
