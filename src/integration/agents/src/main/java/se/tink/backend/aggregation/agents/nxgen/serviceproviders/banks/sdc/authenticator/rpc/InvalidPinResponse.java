@@ -28,8 +28,9 @@ public class InvalidPinResponse {
         return pin != null;
     }
 
-    public AuthenticationException exception() {
+    public AuthenticationException exception(HttpResponseException e) {
         return LoginError.INCORRECT_CREDENTIALS.exception(
-                new LocalizableKey(String.format(SdcConstants.Session.INVALID_LOGIN_MESSAGE, pin)));
+                new LocalizableKey(String.format(SdcConstants.Session.INVALID_LOGIN_MESSAGE, pin)),
+                e);
     }
 }

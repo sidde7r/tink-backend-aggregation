@@ -33,8 +33,8 @@ public class DataItemEntity {
             return BbvaMxConstants.DATE.TRANSACTION_DATE_FORAMT.parse(
                     operationDate.substring(0, 23));
         } catch (ParseException e) {
-            logger.error("{} {}", BbvaMxConstants.LOGGING.DATE_PARSING_ERROR, e.toString());
-            throw new IllegalStateException("Date is invalid");
+            logger.error("{} {}", BbvaMxConstants.LOGGING.DATE_PARSING_ERROR, e.toString(), e);
+            throw new IllegalStateException("Date is invalid", e);
         }
     }
 
@@ -63,7 +63,8 @@ public class DataItemEntity {
                             .setDescription(getDescription())
                             .build());
         } catch (Exception e) {
-            logger.error("{} {}", BbvaMxConstants.LOGGING.TRANSACTION_PARSING_ERROR, e.toString());
+            logger.error(
+                    "{} {}", BbvaMxConstants.LOGGING.TRANSACTION_PARSING_ERROR, e.toString(), e);
             return Optional.empty();
         }
     }

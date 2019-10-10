@@ -204,7 +204,7 @@ public class SwedbankDefaultApiClient {
 
         if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
             if (attempt <= Retry.MAX_RETRY_ATTEMPTS) {
-                log.info("Retrying fetching {}", responseClass);
+                log.info("Retrying fetching {}", responseClass, hre);
                 return makeRequest(linkEntity, requestObject, responseClass, true, ++attempt);
             }
         }
@@ -221,7 +221,7 @@ public class SwedbankDefaultApiClient {
         } catch (HttpClientException hce) {
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
             if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hce);
             }
 
             throw hce;
@@ -246,7 +246,7 @@ public class SwedbankDefaultApiClient {
             profileResponse = makeRequest(linkEntity, ProfileResponse.class, false);
         } catch (HttpResponseException hre) {
             if (SwedbankApiErrors.isUserNotACustomer(hre)) {
-                throw LoginError.NOT_CUSTOMER.exception();
+                throw LoginError.NOT_CUSTOMER.exception(hre);
             }
             // unknown error: rethrow
             throw hre;
@@ -359,6 +359,7 @@ public class SwedbankDefaultApiClient {
                         .setEndUserMessage(
                                 TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
                         .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
+                        .setException(hre)
                         .build();
             }
 
@@ -480,7 +481,7 @@ public class SwedbankDefaultApiClient {
             byte[] bytes = IOUtils.toByteArray(response.getBodyInputStream());
             return Base64.encodeBase64String(bytes);
         } catch (IOException e) {
-            log.warn("Could not download QR code.");
+            log.warn("Could not download QR code.", e);
             throw new IllegalStateException(e);
         }
     }
@@ -674,7 +675,7 @@ public class SwedbankDefaultApiClient {
         } catch (HttpClientException hce) {
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
             if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hce);
             }
 
             throw hce;
@@ -697,7 +698,7 @@ public class SwedbankDefaultApiClient {
         } catch (HttpClientException hce) {
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
             if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hce);
             }
             throw hce;
         }
@@ -719,7 +720,7 @@ public class SwedbankDefaultApiClient {
         } catch (HttpClientException hce) {
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
             if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hce);
             }
 
             throw hce;
@@ -742,7 +743,7 @@ public class SwedbankDefaultApiClient {
         } catch (HttpClientException hce) {
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
             if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hce);
             }
 
             throw hce;

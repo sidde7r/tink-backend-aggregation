@@ -508,7 +508,7 @@ public class SEBApiAgent extends AbstractAgent
             log.infoExtraLong(response, LogTag.from("SEB insurance account instruments response"));
 
         } catch (Exception e) {
-            log.warn("SEB insurance account instruments: Fetching of instruments failed.");
+            log.warn("SEB insurance account instruments: Fetching of instruments failed.", e);
         }
     }
 
@@ -1195,13 +1195,13 @@ public class SEBApiAgent extends AbstractAgent
             SocialSecurityNumber.Sweden ssn =
                     new SocialSecurityNumber.Sweden(credentials.getField(Field.Key.USERNAME));
             if (!ssn.isValid()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
 
             if (e.getResponse().getStatus() == 403
                     && ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < 18) {
                 throw AuthorizationError.UNAUTHORIZED.exception(
-                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey());
+                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey(), e);
             }
 
             throw e;
@@ -1283,7 +1283,7 @@ public class SEBApiAgent extends AbstractAgent
                     transaction.setPayload(TransactionPayloadTypes.SUB_ACCOUNT, subAccount);
                 }
             } catch (Exception e) {
-                log.warn("Unable to parse credit card transaction");
+                log.warn("Unable to parse credit card transaction", e);
                 continue;
             }
             transactions.add(transaction);
@@ -1356,7 +1356,7 @@ public class SEBApiAgent extends AbstractAgent
                                     String.valueOf(foreignParser.getExchangeRate()));
                             date = foreignParser.getDate();
                         } catch (Exception e) {
-                            log.error("Could not parse foreign transaction");
+                            log.error("Could not parse foreign transaction", e);
                         }
                     }
                 }
@@ -1910,6 +1910,7 @@ public class SEBApiAgent extends AbstractAgent
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage(
                             "Could not parse the due date of the eInvoice. This should never happen.")
+                    .setException(e)
                     .build();
         }
 
@@ -2176,7 +2177,7 @@ public class SEBApiAgent extends AbstractAgent
             TransferListEntity transferQueuedUp, Exception initialException) throws Exception {
         try {
             if (!deleteTransferFromOutbox(transferQueuedUp)) {
-                log.error("Could not clean up transfer!");
+                log.error("Could not clean up transfer!", initialException);
             }
         } catch (Exception deleteException) {
             log.warn(

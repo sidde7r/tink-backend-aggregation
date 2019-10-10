@@ -166,7 +166,7 @@ public final class IngAtApiClient {
                             .get(HttpResponse.class);
             updateCurrentUrl(response, IngAtConstants.Url.LOGOUT);
         } catch (HttpResponseException e) {
-            logger.warn("Failed to log out: {}", e);
+            logger.warn("Failed to log out", e);
         }
     }
 
@@ -353,7 +353,7 @@ public final class IngAtApiClient {
         try {
             return dateFormatter.parse(dateString);
         } catch (ParseException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
     }
 

@@ -51,7 +51,8 @@ public class SabadellLoanFetcher implements AccountFetcher<LoanAccount> {
                             "%s: Loan fetching failed with error code: %s, error message: %s",
                             SabadellConstants.Tags.LOAN_ERROR,
                             response.getErrorCode(),
-                            response.getErrorMessage()));
+                            response.getErrorMessage()),
+                    e);
         }
 
         return Collections.emptyList();

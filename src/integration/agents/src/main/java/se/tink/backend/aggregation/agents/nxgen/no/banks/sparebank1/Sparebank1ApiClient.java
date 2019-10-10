@@ -272,7 +272,7 @@ public class Sparebank1ApiClient {
                             .findFirst();
 
             if (serviceUnavailableMessage.isPresent()) {
-                throw BankServiceError.NO_BANK_SERVICE.exception();
+                throw BankServiceError.NO_BANK_SERVICE.exception(e);
             }
 
             throw e;
@@ -293,7 +293,7 @@ public class Sparebank1ApiClient {
                             .findFirst();
 
             if (badCredentialsMessage.isPresent()) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(e);
             }
 
             throw e;

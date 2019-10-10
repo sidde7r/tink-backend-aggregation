@@ -27,7 +27,7 @@ public class ArgentaSessionHandler implements SessionHandler {
             }
             apiClient.keepAlive(deviceId);
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

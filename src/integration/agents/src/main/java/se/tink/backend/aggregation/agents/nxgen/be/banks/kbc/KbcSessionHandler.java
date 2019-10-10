@@ -35,7 +35,7 @@ public final class KbcSessionHandler implements SessionHandler {
 
             apiClient.fetchAccounts(KbcConstants.DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS, cipherKey);
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

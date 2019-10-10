@@ -67,7 +67,7 @@ public class LoanData {
                         interestTermEnds.substring(0, 10));
             }
         } catch (ParseException e) {
-            log.warn("Failed to parse end date of interest terms");
+            log.warn("Failed to parse end date of interest terms", e);
         }
 
         return null;

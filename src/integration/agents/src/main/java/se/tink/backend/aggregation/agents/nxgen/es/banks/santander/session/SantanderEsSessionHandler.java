@@ -20,7 +20,7 @@ public class SantanderEsSessionHandler implements SessionHandler {
         try {
             apiClient.login();
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

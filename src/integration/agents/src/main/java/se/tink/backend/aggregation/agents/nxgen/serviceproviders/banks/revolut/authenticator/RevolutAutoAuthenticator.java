@@ -26,13 +26,14 @@ public class RevolutAutoAuthenticator implements AutoAuthenticator {
             apiClient.fetchUser();
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(e);
             }
 
             log.error(
                     "%s: Authorization failed with message \"%s\"",
                     RevolutConstants.Tags.AUTHORIZATION_ERROR,
-                    e.getResponse().getBody(ErrorResponse.class).getMessage());
+                    e.getResponse().getBody(ErrorResponse.class).getMessage(),
+                    e);
 
             throw e;
         }

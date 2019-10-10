@@ -41,7 +41,7 @@ public class RaiffeisenSessionHandler implements SessionHandler {
                 logger.warn("Unexpected HTTP Status code {}:{}", e.getResponse().getStatus(), e);
             }
             logout();
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

@@ -25,16 +25,17 @@ public class NemIdErrorEntity {
         NemIdErrorEntity error = e.getResponse().getBody(NemIdErrorEntity.class);
         switch (Integer.valueOf(error.getErrorCode())) {
             case ErrorCode.INVALID_CREDENTIAL:
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             case ErrorCode.NOT_SIGNED_UP_FOR_MOBILE_BANK:
-                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(e);
             case ErrorCode.INROLL_BAD_REQUEST:
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
             default:
                 throw new IllegalStateException(
                         String.format(
                                 "ErrorCode: %s, errorMsg: %s.",
-                                error.getErrorCode(), error.getErrorMessage()));
+                                error.getErrorCode(), error.getErrorMessage()),
+                        e);
         }
     }
 }

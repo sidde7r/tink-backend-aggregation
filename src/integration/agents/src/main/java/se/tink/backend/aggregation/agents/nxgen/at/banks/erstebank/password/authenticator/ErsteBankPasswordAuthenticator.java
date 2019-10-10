@@ -44,7 +44,7 @@ public class ErsteBankPasswordAuthenticator implements PasswordAuthenticator {
                     encryptionValuesEntity.getModulus(),
                     password);
         } catch (Exception e) {
-            throw new IllegalStateException("Encryption error: " + e.toString());
+            throw new IllegalStateException("Encryption error: " + e.toString(), e);
         }
     }
 

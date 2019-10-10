@@ -318,7 +318,7 @@ public class NordnetApiClient {
             ClientResponse response = e.getResponse();
 
             if (response != null && response.getStatus() == HttpStatus.FORBIDDEN_403) {
-                throw LoginError.NOT_CUSTOMER.exception();
+                throw LoginError.NOT_CUSTOMER.exception(e);
             }
 
             throw e;

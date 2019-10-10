@@ -191,6 +191,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         } catch (AuthenticationException | AuthorizationException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage("Authentication error.")
+                    .setException(e)
                     .build();
         }
 

@@ -54,7 +54,8 @@ public class DanskeBankLoanFetcher implements AccountFetcher<LoanAccount> {
             LOG.warn(
                     DanskeBankConstants.LogTags.LOAN_ACCOUNT
                             + " - Failed to fetch loans "
-                            + e.getMessage());
+                            + e.getMessage(),
+                    e);
 
             return Collections.emptyList();
         }

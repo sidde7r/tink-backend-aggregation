@@ -167,8 +167,8 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
                 } catch (Exception e) {
                     loanDetails = null;
                     log.warn(
-                            String.format(
-                                    "CrossKeyApi/getLoanDetails exception: %s", e.toString()));
+                            String.format("CrossKeyApi/getLoanDetails exception: %s", e.toString()),
+                            e);
                 }
                 if (loanDetails == null) {
                     // something went wrong when we tried to fetch loanDetails

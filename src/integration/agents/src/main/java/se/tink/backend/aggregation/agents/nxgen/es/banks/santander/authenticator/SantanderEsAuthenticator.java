@@ -47,7 +47,7 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
 
             if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
                     .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
-                throw new LoginException(LoginError.INCORRECT_CREDENTIALS);
+                throw new LoginException(LoginError.INCORRECT_CREDENTIALS, e);
             } else {
                 throw e;
             }
@@ -82,6 +82,6 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .filter(fault -> !fault.matchesErrorMessage(SoapErrorMessages.NOT_CUSTOMER))
-                .orElseThrow(LoginError.NOT_CUSTOMER::exception);
+                .orElseThrow(() -> LoginError.NOT_CUSTOMER.exception(e));
     }
 }

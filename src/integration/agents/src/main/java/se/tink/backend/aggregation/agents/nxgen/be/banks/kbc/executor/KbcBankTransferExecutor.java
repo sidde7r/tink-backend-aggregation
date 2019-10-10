@@ -92,6 +92,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
                     .setEndUserMessage(
                             catalog.getString(
                                     TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED))
+                    .setException(e)
                     .build();
         }
     }

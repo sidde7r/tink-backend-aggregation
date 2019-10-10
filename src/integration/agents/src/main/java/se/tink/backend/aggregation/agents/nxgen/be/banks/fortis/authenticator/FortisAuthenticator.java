@@ -125,7 +125,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         try {
             httpResponse = apiClient.authenticationRequest(response.getUrlEncodedFormat());
         } catch (Exception e) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(e);
         }
 
         String responseBody = httpResponse.getBody(String.class);
@@ -264,7 +264,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
             userInfoResponse = apiClient.getUserInfo();
             validateMuid(userInfoResponse);
         } catch (HttpClientException hce) {
-            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(hce);
         }
         persistentStorage.put(
                 FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());
@@ -400,8 +400,8 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
             userInfoResponse = apiClient.getUserInfo();
             validateMuid(userInfoResponse);
 
-        } catch (HttpClientException | LoginException hce) {
-            throw new IllegalStateException("Incorrect challenge in autoAuthenticate");
+        } catch (HttpClientException | LoginException e) {
+            throw new IllegalStateException("Incorrect challenge in autoAuthenticate", e);
         }
         persistentStorage.put(
                 FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());

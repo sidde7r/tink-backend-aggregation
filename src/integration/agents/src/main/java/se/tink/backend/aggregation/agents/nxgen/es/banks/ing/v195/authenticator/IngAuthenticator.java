@@ -60,7 +60,7 @@ public class IngAuthenticator implements Authenticator {
             Preconditions.checkArgument(!isNullOrEmpty(dob), "DOB is null or empty");
             Preconditions.checkArgument(!isNullOrEmpty(password), "Password is null or empty");
         } catch (IllegalArgumentException ex) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
 
         final CreateSessionResponse response;
@@ -73,7 +73,7 @@ public class IngAuthenticator implements Authenticator {
                 final ErrorResponse errorResponse = hre.getResponse().getBody(ErrorResponse.class);
                 if (errorResponse.hasErrorField(ErrorCodes.LOGIN_DOCUMENT_FIELD)) {
                     // login document didn't pass server-side validation
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
                 }
             }
             throw hre;
@@ -143,7 +143,7 @@ public class IngAuthenticator implements Authenticator {
                     SerializationUtils.serializeToString(pinPadNumbers),
                     Logging.INVALID_PINPAD_NUMBERS,
                     ex);
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
 
         // then, lookup the required indexes in the map
@@ -156,7 +156,7 @@ public class IngAuthenticator implements Authenticator {
                     SerializationUtils.serializeToString(pinPositions),
                     Logging.MISSING_PINPAD_POSITION,
                     ex);
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
     }
 
@@ -173,7 +173,7 @@ public class IngAuthenticator implements Authenticator {
                     "Non numeric character encountered in password",
                     Logging.NON_NUMERIC_PASSWORD,
                     ex);
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
     }
 
@@ -219,9 +219,9 @@ public class IngAuthenticator implements Authenticator {
     private void handleErrors(HttpResponseException hre) throws LoginException {
         switch (hre.getResponse().getStatus()) {
             case HttpStatus.SC_FORBIDDEN:
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
             case HttpStatus.SC_CONFLICT:
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hre);
             default:
                 throw hre;
         }

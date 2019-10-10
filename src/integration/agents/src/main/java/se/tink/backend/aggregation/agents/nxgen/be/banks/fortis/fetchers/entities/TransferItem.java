@@ -43,7 +43,8 @@ public class TransferItem {
             }
             return result;
         } catch (ParseException e) {
-            throw new IllegalStateException("Cannot parse amount in transaction: " + e.toString());
+            throw new IllegalStateException(
+                    "Cannot parse amount in transaction: " + e.toString(), e);
         }
     }
 
@@ -51,7 +52,8 @@ public class TransferItem {
         try {
             return FortisConstants.DATE.TRANSACTION_FORMAT.parse(executionDate);
         } catch (ParseException e) {
-            throw new IllegalStateException("Cannot parse amount in transaction: " + e.toString());
+            throw new IllegalStateException(
+                    "Cannot parse amount in transaction: " + e.toString(), e);
         }
     }
 

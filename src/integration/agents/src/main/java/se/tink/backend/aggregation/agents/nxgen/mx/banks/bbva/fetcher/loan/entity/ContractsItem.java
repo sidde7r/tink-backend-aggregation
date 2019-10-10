@@ -40,7 +40,7 @@ public class ContractsItem {
                                 .setBalance(detail.getBalance())
                                 .build());
             } catch (Exception e) {
-                logger.error("{} {}", BbvaMxConstants.LOGGING.LOAN_PARSING_ERROR, e.toString());
+                logger.error("{} {}", BbvaMxConstants.LOGGING.LOAN_PARSING_ERROR, e.toString(), e);
                 return Optional.empty();
             }
         return Optional.empty();

@@ -132,7 +132,7 @@ public class DanskeBankChallengeAuthenticator
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
-                throw new IllegalStateException();
+                throw new IllegalStateException(e);
             }
 
             bindDeviceResponse = response.getBody(BindDeviceResponse.class);
@@ -199,14 +199,15 @@ public class DanskeBankChallengeAuthenticator
             switch (e.getError()) {
                 case CANCELLED:
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                            UserMessage.CODE_APP_REJECTED_ERROR.getKey());
+                            UserMessage.CODE_APP_REJECTED_ERROR.getKey(), e);
                 case TIMED_OUT:
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                            UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
+                            UserMessage.CODE_APP_TIMEOUT_ERROR.getKey(), e);
                 default:
                     throw new IllegalStateException(
                             String.format(
-                                    "Unknown third party app exception error: %s.", e.getError()));
+                                    "Unknown third party app exception error: %s.", e.getError()),
+                            e);
             }
         }
 
@@ -242,7 +243,7 @@ public class DanskeBankChallengeAuthenticator
                 HttpResponse response = hre.getResponse();
                 if (response.getStatus() == 401) {
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                            UserMessage.CREDENTIALS_VERIFICATION_ERROR.getKey());
+                            UserMessage.CREDENTIALS_VERIFICATION_ERROR.getKey(), hre);
                 }
                 throw hre;
             }
@@ -274,7 +275,7 @@ public class DanskeBankChallengeAuthenticator
                     this.credentials.getField(Field.Key.USERNAME),
                     this.credentials.getField(Field.Key.PASSWORD));
         } catch (AuthenticationException | AuthorizationException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
 
         // Check device
@@ -390,7 +391,7 @@ public class DanskeBankChallengeAuthenticator
                     throw SessionError.SESSION_EXPIRED.exception();
                 }
             } catch (HttpResponseException e) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(e);
             }
         } finally {
             if (driver != null) {
@@ -522,7 +523,7 @@ public class DanskeBankChallengeAuthenticator
                     this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SECRET));
             generateResponseJson.put("challenge", challenge);
         } catch (JSONException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
 
         return generateResponseJson.toString();
@@ -536,7 +537,7 @@ public class DanskeBankChallengeAuthenticator
                     "devSerialNo",
                     this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER));
         } catch (JSONException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
 
         return validateStepUpTrustedDeviceJson.toString();

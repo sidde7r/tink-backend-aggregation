@@ -25,7 +25,7 @@ public class ErsteBankSessionHandler implements SessionHandler {
         try {
             ersteBankApiClient.fetchAccounts();
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

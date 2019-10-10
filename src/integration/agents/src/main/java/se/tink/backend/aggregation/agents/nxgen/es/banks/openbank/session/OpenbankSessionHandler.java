@@ -20,6 +20,6 @@ public final class OpenbankSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        Try.of(apiClient::keepAlive).getOrElseThrow(e -> SessionError.SESSION_EXPIRED.exception());
+        Try.of(apiClient::keepAlive).getOrElseThrow(e -> SessionError.SESSION_EXPIRED.exception(e));
     }
 }

@@ -42,9 +42,9 @@ public class SamlinkAuthenticatorBase {
             ErrorResponse errorResponse = ErrorResponse.fromHttpResponseException(e);
 
             if (errorResponse.hasError(SamlinkConstants.ServerError.LOGIN_FAILED)) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(e);
             } else {
-                log.warn(formatErrorMessage("loginRequest", errorResponse));
+                log.warn(formatErrorMessage("loginRequest", errorResponse), e);
             }
         }
         throw e;
@@ -66,7 +66,7 @@ public class SamlinkAuthenticatorBase {
                 throw (AuthorizationException) exception;
             }
         }
-        log.warn(formatErrorMessage(action, errorResponse));
+        log.warn(formatErrorMessage(action, errorResponse), e);
         throw e;
     }
 

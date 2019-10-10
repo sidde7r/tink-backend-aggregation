@@ -24,7 +24,7 @@ public class SabadellSessionHandler implements SessionHandler {
         try {
             apiClient.fetchCreditCards();
         } catch (HttpResponseException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

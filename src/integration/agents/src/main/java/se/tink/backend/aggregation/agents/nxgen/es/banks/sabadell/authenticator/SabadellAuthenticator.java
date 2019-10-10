@@ -32,7 +32,7 @@ public class SabadellAuthenticator implements PasswordAuthenticator {
             String errorCode = response.getErrorCode();
 
             if (SabadellConstants.ErrorCodes.INCORRECT_CREDENTIALS.equalsIgnoreCase(errorCode)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
 
             throw new IllegalStateException(
@@ -40,7 +40,8 @@ public class SabadellAuthenticator implements PasswordAuthenticator {
                             "%s: Login failed with error code: %s, error message: %s",
                             SabadellConstants.Tags.LOGIN_ERROR,
                             response.getErrorCode(),
-                            response.getErrorMessage()));
+                            response.getErrorMessage()),
+                    e);
         }
     }
 }

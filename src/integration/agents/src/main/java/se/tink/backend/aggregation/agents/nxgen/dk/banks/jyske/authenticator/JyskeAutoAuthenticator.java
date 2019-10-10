@@ -43,7 +43,7 @@ public class JyskeAutoAuthenticator implements PasswordAuthenticator, AutoAuthen
             authenticationController.authenticate(credentials);
         } catch (AuthorizationException
                 | AuthenticationException e) { // AuthorizationException never thrown...
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 

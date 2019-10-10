@@ -52,7 +52,7 @@ public class AuthResponse {
         try {
             right = URLEncoder.encode(URLEncoder.encode(right, "UTF-8"), "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Unable to encode: " + e.toString());
+            throw new IllegalStateException("Unable to encode: " + e.toString(), e);
         }
         return "AUTH=" + right;
     }

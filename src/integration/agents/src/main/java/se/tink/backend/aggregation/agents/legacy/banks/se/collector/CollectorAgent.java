@@ -96,7 +96,8 @@ public class CollectorAgent extends AbstractAgent
                             throw BankIdError.CANCELLED.exception(
                                     new LocalizableKey(
                                             "Because of repeated attempts the authentication request has been"
-                                                    + " cancelled. Please try again later."));
+                                                    + " cancelled. Please try again later."),
+                                    e);
                         }
                     }
 
@@ -136,7 +137,7 @@ public class CollectorAgent extends AbstractAgent
 
             log.warn("Invalid response: " + response);
         } catch (IllegalArgumentException | UniformInterfaceException e) {
-            log.info(String.format("Invalid refreshToken, message=%s", e.getMessage()));
+            log.info(String.format("Invalid refreshToken, message=%s", e.getMessage()), e);
         }
 
         // Couldn't authenticate automatically, reset credentials

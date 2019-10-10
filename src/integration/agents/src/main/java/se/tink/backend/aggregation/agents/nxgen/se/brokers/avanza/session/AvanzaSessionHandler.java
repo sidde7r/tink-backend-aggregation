@@ -35,7 +35,7 @@ public class AvanzaSessionHandler implements SessionHandler {
 
             apiClient.fetchAccounts(firstSession);
         } catch (Exception e) {
-            throw new SessionException(SessionError.SESSION_EXPIRED);
+            throw new SessionException(SessionError.SESSION_EXPIRED, e);
         }
     }
 }

@@ -411,7 +411,7 @@ public final class VolksbankCryptoHelper {
             Invocable inv = (Invocable) engine;
             return (String) inv.invokeFunction(VolksbankConstants.Crypto.OTP_ALGO, secret);
         } catch (Exception e) {
-            throw new IllegalStateException("javascript parsing failed");
+            throw new IllegalStateException("javascript parsing failed", e);
         }
     }
 }

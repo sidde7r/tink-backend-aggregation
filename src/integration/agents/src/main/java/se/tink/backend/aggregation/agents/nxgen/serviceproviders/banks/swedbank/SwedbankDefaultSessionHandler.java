@@ -34,7 +34,7 @@ public class SwedbankDefaultSessionHandler implements SessionHandler {
                 return;
             }
         } catch (Exception e) {
-            log.warn("Keep alive call (touch) failed: {}", e.getMessage());
+            log.warn("Keep alive call (touch) failed: {}", e.getMessage(), e);
         }
 
         throw SessionError.SESSION_EXPIRED.exception();

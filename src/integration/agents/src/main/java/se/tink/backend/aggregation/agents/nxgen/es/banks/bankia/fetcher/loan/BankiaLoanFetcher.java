@@ -33,7 +33,7 @@ public class BankiaLoanFetcher implements AccountFetcher<LoanAccount> {
                     .map(this::toLoanAccount)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            LOG.warn("Failed to fetch loan data " + e.getMessage());
+            LOG.warn("Failed to fetch loan data " + e.getMessage(), e);
         }
 
         return Collections.emptyList();

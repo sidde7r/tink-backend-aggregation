@@ -148,7 +148,7 @@ public class StarlingApiClient {
             int status = e.getResponse().getStatus();
 
             if (status == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
             }
 
             if (status == HttpStatus.SC_BAD_REQUEST) {

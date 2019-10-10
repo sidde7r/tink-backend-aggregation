@@ -107,7 +107,7 @@ public class BankiaApiClient {
                         exception.getResponse().getBody(RsaKeyResponse.class);
                 if (!Objects.isNull(rsaKeyResponse)
                         && !Strings.isNullOrEmpty(rsaKeyResponse.getResponseUrl())) {
-                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception(exception);
                 }
             }
             throw exception;

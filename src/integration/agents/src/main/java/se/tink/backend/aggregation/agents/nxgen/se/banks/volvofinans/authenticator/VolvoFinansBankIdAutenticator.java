@@ -52,7 +52,7 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
                 ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
 
                 if (errorResponse.isBankIdAlreadyInProgressError()) {
-                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                    throw BankIdError.ALREADY_IN_PROGRESS.exception(hre);
                 }
             }
 
@@ -72,7 +72,7 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
                 }
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
-                    throw LoginError.NOT_CUSTOMER.exception();
+                    throw LoginError.NOT_CUSTOMER.exception(e);
                 }
                 throw e;
             }
@@ -169,7 +169,7 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
             if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
                 if (response.hasBody()
                         && response.getBody(ErrorStatusResponse.class).isBankServiceClosed()) {
-                    throw BankServiceError.NO_BANK_SERVICE.exception();
+                    throw BankServiceError.NO_BANK_SERVICE.exception(hre);
                 }
             }
         }

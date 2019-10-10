@@ -71,7 +71,7 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
                     BunqBaseConstants.LogTags.AUTO_AUTHENTICATION_FAILED,
                     e);
 
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 

@@ -182,7 +182,7 @@ public final class RabobankApiClient {
                     buildRequest(url, uuid, digest, signatureHeader, date)
                             .get(ConsentDetailsResponse.class);
         } catch (HttpResponseException e) {
-            logger.warn(String.valueOf(e.getResponse()));
+            logger.warn(String.valueOf(e.getResponse()), e);
         }
         consentStatus = response.getStatus();
     }
@@ -251,14 +251,14 @@ public final class RabobankApiClient {
             } catch (HttpResponseException e) {
                 final String message = e.getResponse().getBody(String.class);
                 if (message.toLowerCase().contains(ErrorMessages.BOOKING_STATUS_INVALID)) {
-                    logger.warn("Could not request with booking status \"{}\"", bookingStatus);
+                    logger.warn("Could not request with booking status \"{}\"", bookingStatus, e);
                     continue; // Try with some other booking status
                 } else if (message.toLowerCase().contains(ErrorMessages.UNAVAILABLE_TRX_HISTORY)) {
-                    logger.warn(message);
+                    logger.warn(message, e);
                     return new EmptyFinalPaginatorResponse();
                 }
 
-                throw new IllegalStateException(String.format("Unexpected error: %s", message));
+                throw new IllegalStateException(String.format("Unexpected error: %s", message), e);
             }
         }
         throw new IllegalStateException("Failed to fetch transactions");

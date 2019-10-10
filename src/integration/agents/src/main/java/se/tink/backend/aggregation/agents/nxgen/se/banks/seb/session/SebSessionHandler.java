@@ -25,7 +25,7 @@ public class SebSessionHandler implements SessionHandler {
             apiClient.fetchAccounts(
                     sebSessionStorage.getCustomerNumber(), ServiceInputValues.DEFAULT_ACCOUNT_TYPE);
         } catch (Exception e) {
-            throw new SessionException(SessionError.SESSION_EXPIRED);
+            throw new SessionException(SessionError.SESSION_EXPIRED, e);
         }
     }
 }

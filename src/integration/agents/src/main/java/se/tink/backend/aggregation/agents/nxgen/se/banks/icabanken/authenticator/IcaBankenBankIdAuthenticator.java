@@ -50,11 +50,11 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
             return response.getRequestId();
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                throw BankIdError.ALREADY_IN_PROGRESS.exception(e);
             } else if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
             } else if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                handleKnownErrors(e.getResponse());
+                handleKnownErrors(e);
             }
 
             throw e;
@@ -111,15 +111,16 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
             HttpResponse response = e.getResponse();
 
             if (response != null && response.getStatus() == HttpStatus.SC_CONFLICT) {
-                handleKnownErrors(response);
+                handleKnownErrors(e);
             }
 
             throw e;
         }
     }
 
-    private void handleKnownErrors(HttpResponse response)
+    private void handleKnownErrors(HttpResponseException e)
             throws AuthenticationException, AuthorizationException {
+        HttpResponse response = e.getResponse();
 
         BankIdResponse bankIdResponse = response.getBody(BankIdResponse.class);
 
@@ -131,24 +132,24 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
             if (Objects.isNull(bankIdBodyEntity.getStatus()) && Objects.nonNull(responseStatus)) {
 
                 if (responseStatus.isNotACustomer()) {
-                    throw LoginError.NOT_CUSTOMER.exception();
+                    throw LoginError.NOT_CUSTOMER.exception(e);
                 }
 
                 if (responseStatus.isInterrupted()) {
-                    throw BankIdError.INTERRUPTED.exception();
+                    throw BankIdError.INTERRUPTED.exception(e);
                 }
 
                 if (responseStatus.isNotVerified()) {
-                    throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
                 }
 
                 if (responseStatus.isInvalidCustomer()) {
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(e);
                 }
             }
 
             if (bankIdBodyEntity.isTimeOut()) {
-                throw BankIdError.TIMEOUT.exception();
+                throw BankIdError.TIMEOUT.exception(e);
             }
 
             // We sometimes see these temporary errors from Icabanken that we have deemed to be on
@@ -161,7 +162,7 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
             if (bankIdBodyEntity.isFailed()
                     && responseStatus.isSomethingWentWrong()
                     && pollCounter > 0) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
             }
         }
     }

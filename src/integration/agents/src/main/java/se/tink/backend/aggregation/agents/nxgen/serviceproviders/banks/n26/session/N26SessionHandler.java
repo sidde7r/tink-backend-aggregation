@@ -29,7 +29,7 @@ public class N26SessionHandler implements SessionHandler {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

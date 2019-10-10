@@ -53,7 +53,7 @@ public class DanskeBankUrl {
         try {
             return String.format(PORTFOLIO_PAPERS, URLEncoder.encode(portfolioId, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            throw new AssertionError("This never happens when the encoding is correct");
+            throw new AssertionError("This never happens when the encoding is correct", e);
         }
     }
 

@@ -26,7 +26,7 @@ public class SamlinkSessionHandler implements SessionHandler {
         try {
             apiClient.keepAlive();
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

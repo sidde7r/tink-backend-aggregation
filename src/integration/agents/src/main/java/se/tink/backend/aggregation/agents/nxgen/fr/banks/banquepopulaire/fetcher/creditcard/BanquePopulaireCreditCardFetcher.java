@@ -35,7 +35,7 @@ public class BanquePopulaireCreditCardFetcher
                     SerializationUtils.serializeToString(cardsResponse),
                     BanquePopulaireConstants.LogTags.CREDIT_CARD);
         } catch (Exception e) {
-            LOGGER.info("Failed to fetch cards");
+            LOGGER.info("Failed to fetch cards", e);
         }
 
         return cards;

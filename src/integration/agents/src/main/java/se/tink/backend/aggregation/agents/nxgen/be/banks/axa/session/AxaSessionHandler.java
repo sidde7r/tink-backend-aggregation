@@ -33,13 +33,13 @@ public class AxaSessionHandler implements SessionHandler {
             apiClient.postPendingRequests(customerId, accessToken);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(e);
             } else {
                 throw e;
             }
         } catch (HttpClientException e) {
             if (e.getMessage().contains("failed to respond")) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(e);
             }
         }
     }

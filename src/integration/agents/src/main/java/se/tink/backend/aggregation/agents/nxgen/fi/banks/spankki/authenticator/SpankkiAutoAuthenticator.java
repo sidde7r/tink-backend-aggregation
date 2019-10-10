@@ -67,7 +67,7 @@ public class SpankkiAutoAuthenticator implements AutoAuthenticator {
         } catch (BankServiceException e) {
             throw e;
         } catch (AuthenticationException | AuthorizationException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
 
         // Update device token

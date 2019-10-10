@@ -118,14 +118,14 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
         } catch (HttpResponseException e) {
             SocialSecurityNumber.Sweden ssn = new SocialSecurityNumber.Sweden(this.ssn);
             if (!ssn.isValid()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
 
             // Check if the user is younger than 18 and then throw unauthorized exception.
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
                     && ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < SebConstants.AGE_LIMIT) {
                 throw AuthorizationError.UNAUTHORIZED.exception(
-                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey());
+                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey(), e);
             }
 
             throw e;

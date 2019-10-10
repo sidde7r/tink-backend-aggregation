@@ -189,7 +189,8 @@ public class AvanzaApiClient {
                                 "avanza - cannot fetch MarketInfo for portfolio - type: {}, orderbookId: {}, reseponse: {}",
                                 instrumentType,
                                 orderbookId,
-                                exception.getLocalizedMessage());
+                                exception.getLocalizedMessage(),
+                                exception);
                     }
                 }
                 return null;

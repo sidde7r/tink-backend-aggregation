@@ -45,7 +45,7 @@ public class BunqSessionHandler implements SessionHandler {
                     sessionStorage, persistentStorage, temporaryStorage);
             apiClient.listAccounts(sessionStorage.get(BunqBaseConstants.StorageKeys.USER_ID));
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

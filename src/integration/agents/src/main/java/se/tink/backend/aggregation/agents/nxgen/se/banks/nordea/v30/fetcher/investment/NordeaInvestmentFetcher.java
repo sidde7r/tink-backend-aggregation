@@ -37,19 +37,19 @@ public class NordeaInvestmentFetcher implements AccountFetcher<InvestmentAccount
         ErrorResponse errorResponse = ErrorResponse.of(hre);
         // user not having agreement for investments could spoil the refresh
         if (errorResponse.hasNoAgreement()) {
-            LOG.debug(NordeaSEConstants.LogMessages.NO_INVESTMENTS);
+            LOG.debug(NordeaSEConstants.LogMessages.NO_INVESTMENTS, hre);
             return true;
         }
         // user not having confirmed classification for investments could spoil the refresh
         if (errorResponse.hasNoClassification()) {
-            LOG.debug(NordeaSEConstants.LogMessages.NO_CONFIRMED_INVESTMENTS);
+            LOG.debug(NordeaSEConstants.LogMessages.NO_CONFIRMED_INVESTMENTS, hre);
             return true;
         }
         // custody account is missing care account
         // Your custody account is missing a care account. It blocks access to the investment
         // section.
         if (errorResponse.hasNoConnectedAccount()) {
-            LOG.debug(NordeaSEConstants.LogMessages.NO_CUSTODY_ACCOUNT);
+            LOG.debug(NordeaSEConstants.LogMessages.NO_CUSTODY_ACCOUNT, hre);
             return true;
         }
         return false;

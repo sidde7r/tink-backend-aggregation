@@ -56,10 +56,10 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         } catch (HttpResponseException e) {
             final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
             if (errorResponse.isDuplicatePayment()) {
-                throw executorHelper.duplicatePaymentError();
+                throw executorHelper.duplicatePaymentError(e);
             }
             log.warn("Transfer execution failed", e);
-            throw executorHelper.transferFailedError();
+            throw executorHelper.transferFailedError(e);
         }
         return Optional.empty();
     }
@@ -119,7 +119,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                 apiClient.executeInternalBankTransfer(transferRequest);
 
         if (!transferResponse.isTransferAccepted()) {
-            throw executorHelper.transferFailedError();
+            throw executorHelper.transferFailedError(null);
         }
     }
 

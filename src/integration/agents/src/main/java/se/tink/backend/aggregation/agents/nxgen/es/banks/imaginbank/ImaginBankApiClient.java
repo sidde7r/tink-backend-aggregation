@@ -59,7 +59,7 @@ public class ImaginBankApiClient {
             int statusCode = e.getResponse().getStatus();
 
             if (statusCode == ImaginBankConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
 
             throw e;

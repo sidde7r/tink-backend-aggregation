@@ -40,14 +40,14 @@ public class BawagPskPasswordAuthenticator implements PasswordAuthenticator {
         } catch (HttpResponseException e) {
             final Envelope errorResponse = e.getResponse().getBody(Envelope.class);
             if (errorResponse.credentialsAreIncorrect()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             } else {
                 // Unknown reason
                 final String message =
                         String.format(
                                 "Failed to login because: %s",
                                 errorResponse.getErrorMessage().orElse("Unknown reason"));
-                throw new IllegalStateException(message);
+                throw new IllegalStateException(message, e);
             }
         }
     }

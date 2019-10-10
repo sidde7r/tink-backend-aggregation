@@ -42,7 +42,8 @@ public class ErsteBankCreditCardFetcher
                     String.format(
                             "%s: %s",
                             ErsteBankConstants.LOGTAG.CREDIT_TRANSACTIONS_ERROR.toString(),
-                            e.toString()));
+                            e.toString()),
+                    e);
             return PaginatorResponseImpl.createEmpty(false);
         }
     }

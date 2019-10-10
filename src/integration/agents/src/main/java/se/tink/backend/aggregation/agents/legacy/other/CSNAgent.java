@@ -171,7 +171,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
             // time out CSN is having problems
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
             if (errorMessage.contains(CONNECT_TIMEOUT) || errorMessage.contains(READ_TIMEOUT)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hce);
             }
 
             throw hce;
@@ -188,7 +188,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
             // time out CSN is having problems
             String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
             if (errorMessage.contains(CONNECT_TIMEOUT) || errorMessage.contains(READ_TIMEOUT)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hce);
             }
 
             throw hce;

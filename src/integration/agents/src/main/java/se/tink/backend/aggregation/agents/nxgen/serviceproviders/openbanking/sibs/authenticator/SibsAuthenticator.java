@@ -101,7 +101,7 @@ public class SibsAuthenticator {
         final String message = rethrowIfNotConsentProblems.getResponse().getBody(String.class);
         if (isConsentsProblem(message)) {
             apiClient.removeConsentFromPersistentStorage();
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(rethrowIfNotConsentProblems);
         }
         throw rethrowIfNotConsentProblems;
     }

@@ -55,7 +55,7 @@ public class BawagPskSessionHandler implements SessionHandler {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
         } catch (NoSuchElementException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

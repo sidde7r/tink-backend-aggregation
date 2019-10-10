@@ -50,7 +50,8 @@ public class NordeaTransactionFetcher
                 LOG.debug(
                         String.format(
                                 "Retry [%d] fetch transactions account[%s] after backoff ",
-                                attempt, account.getAccountNumber()));
+                                attempt, account.getAccountNumber()),
+                        hre);
 
                 return fetchTransactions(account, key, ++attempt);
             }
@@ -63,7 +64,7 @@ public class NordeaTransactionFetcher
         try {
             Thread.sleep(TRANSACTION_FETCHER_BACKOFF);
         } catch (InterruptedException e) {
-            LOG.debug("Woke up early");
+            LOG.debug("Woke up early", e);
         }
     }
 }

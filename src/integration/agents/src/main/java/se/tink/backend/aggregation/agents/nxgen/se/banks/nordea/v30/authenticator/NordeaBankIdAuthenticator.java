@@ -46,7 +46,7 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
     private BankIdResponse handleBankIdInitErrors(final HttpResponseException responseException)
             throws BankIdException, HttpResponseException {
         if (isAlreadyInProgressException(responseException)) {
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            throw BankIdError.ALREADY_IN_PROGRESS.exception(responseException);
         }
         if (shouldKeepPolling(responseException)) {
             return responseException.getResponse().getBody(BankIdResponse.class);
@@ -83,7 +83,7 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
         } catch (HttpResponseException e) {
             final BankIdResponse resp = e.getResponse().getBody(BankIdResponse.class);
             if (NordeaBankIdStatus.AGREEMENTS_UNAVAILABLE.equalsIgnoreCase(resp.getError())) {
-                throw LoginError.NOT_CUSTOMER.exception();
+                throw LoginError.NOT_CUSTOMER.exception(e);
             }
             return e.getResponse().getBody(BankIdResponse.class).getBankIdStatus();
         }
@@ -111,7 +111,7 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
             return apiClient.formPollBankIdLogin(reference, sessionStorage.get(StorageKeys.SSN));
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                throw BankIdError.INTERRUPTED.exception();
+                throw BankIdError.INTERRUPTED.exception(e);
             }
 
             throw e;

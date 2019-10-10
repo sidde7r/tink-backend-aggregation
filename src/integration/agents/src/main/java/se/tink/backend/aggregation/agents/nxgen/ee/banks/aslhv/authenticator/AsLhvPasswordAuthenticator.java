@@ -56,9 +56,9 @@ public class AsLhvPasswordAuthenticator implements PasswordAuthenticator {
                 sessionStorage.setIsAuthenticatedResponseData(isAuthenticatedResponse);
             }
         } catch (HttpResponseException e) {
-            throw new IllegalStateException("Http request failed: " + e);
+            throw new IllegalStateException("Http request failed: " + e, e);
         } catch (HttpClientException e) {
-            throw new IllegalStateException("Http client failed: " + e);
+            throw new IllegalStateException("Http client failed: " + e, e);
         }
     }
 }

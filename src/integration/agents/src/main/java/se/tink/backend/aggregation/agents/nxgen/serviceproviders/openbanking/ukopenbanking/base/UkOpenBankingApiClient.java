@@ -188,7 +188,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             LOGGER.error(
                     "Not able to parse algorithm from Software Statement so defaulting to RS256. "
                             + "This should never happen. "
-                            + Arrays.toString(e.getStackTrace()));
+                            + Arrays.toString(e.getStackTrace()),
+                    e);
             jwsAlgorithm = SIGNING_ALGORITHM.RS256.name();
         }
 

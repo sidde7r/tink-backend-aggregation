@@ -45,7 +45,7 @@ public class CrossKeyAutoAuthenticator implements PasswordAuthenticator, AutoAut
         try {
             authenticationController.authenticate(credentials);
         } catch (AuthenticationException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 

@@ -44,7 +44,7 @@ public final class CSVTransactionsPage implements PaginatorResponse {
         try {
             date = dateFormatter.parse(valueDate);
         } catch (ParseException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
 
         // One of these should be zero, and the other should be a positive amount
@@ -68,7 +68,7 @@ public final class CSVTransactionsPage implements PaginatorResponse {
         try {
             parser = CSVParser.parse(csvBody, CSVFormat.DEFAULT.withHeader().withDelimiter(';'));
         } catch (IOException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
 
         try {
@@ -76,7 +76,7 @@ public final class CSVTransactionsPage implements PaginatorResponse {
                     .map(CSVTransactionsPage::recordToTransaction)
                     .collect(Collectors.toSet());
         } catch (IOException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
     }
 

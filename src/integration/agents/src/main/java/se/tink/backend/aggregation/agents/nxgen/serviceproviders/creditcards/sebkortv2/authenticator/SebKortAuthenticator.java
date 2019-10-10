@@ -88,7 +88,7 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
             return bankIdStatus;
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                throw BankIdError.INTERRUPTED.exception();
+                throw BankIdError.INTERRUPTED.exception(e);
             }
             throw e;
         }
@@ -103,7 +103,7 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
             HttpResponse response = e.getResponse();
 
             if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                throw LoginError.NOT_CUSTOMER.exception();
+                throw LoginError.NOT_CUSTOMER.exception(e);
             }
 
             throw e;

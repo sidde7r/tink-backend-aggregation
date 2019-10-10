@@ -22,7 +22,7 @@ public class CreditAgricoleSessionHandler implements SessionHandler {
                 throw new SessionException(SessionError.SESSION_EXPIRED);
             }
         } catch (IllegalStateException e) {
-            throw new SessionException(SessionError.SESSION_EXPIRED);
+            throw new SessionException(SessionError.SESSION_EXPIRED, e);
         }
     }
 }

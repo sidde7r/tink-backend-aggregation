@@ -93,7 +93,7 @@ public class RaiffeisenApiClient {
                     .toTinkToken();
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(e);
             }
             throw e;
         }

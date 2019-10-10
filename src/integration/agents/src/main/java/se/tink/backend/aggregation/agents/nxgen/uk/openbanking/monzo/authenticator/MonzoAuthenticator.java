@@ -78,7 +78,7 @@ public class MonzoAuthenticator implements OAuth2Authenticator {
         try {
             return apiClient.refreshAccessToken(request).toTinkToken();
         } catch (HttpResponseException x) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(x);
         }
     }
 
