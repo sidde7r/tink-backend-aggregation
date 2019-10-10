@@ -2478,8 +2478,8 @@ load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
 
 grpc_java_repositories(omit_com_google_protobuf = True)
 
-
 RULES_JVM_EXTERNAL_TAG = "2.8"
+
 RULES_JVM_EXTERNAL_SHA = "79c9850690d7614ecdb72d68394f994fef7534b292c4867ce5e7dec0aa7bdfad"
 
 http_archive(
@@ -2497,7 +2497,12 @@ maven_install(
         "com.fasterxml.uuid:java-uuid-generator:3.2.0",
     ],
     fetch_sources = True,
+    maven_install_json = "//third_party:maven_install.json",
     repositories = [
         "https://repo.maven.apache.org/maven2/",
     ],
 )
+
+load("@maven//:defs.bzl", "pinned_maven_install")
+
+pinned_maven_install()
