@@ -199,7 +199,8 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                         res.getValue().getAuthenticationProcessId());
         persistentStorage.put(FortisConstants.STORAGE.CALCULATED_CHALLENGE, calculateChallenge);
 
-        PrepareContractUpdateResponse prepareContractUpdateResponse = prepareContractUpdate();
+        PrepareContractUpdateResponse prepareContractUpdateResponse =
+                prepareContractUpdate(password);
 
         if (!(prepareContractUpdateResponse.getValue().getChallenge().getChallenges().size()
                 == 0)) {
@@ -222,11 +223,13 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         getUserInfoAndPersistMuid();
     }
 
-    private PrepareContractUpdateResponse prepareContractUpdate() {
+    private PrepareContractUpdateResponse prepareContractUpdate(String password) {
+
+        if (Strings.isNullOrEmpty(password)) {
+            password = FortisConstants.VALUES.PASSWORD;
+        }
         return apiClient.prepareContractUpdate(
-                new PrepareContractUpdateRequest(
-                        FortisConstants.VALUES.TCFLAG,
-                        persistentStorage.get(FortisConstants.STORAGE.PASSWORD)));
+                new PrepareContractUpdateRequest(FortisConstants.VALUES.TCFLAG, password));
     }
 
     private Optional<EBankingUserId> getEbankingUserId(String authenticatorFactorId, String smid)
