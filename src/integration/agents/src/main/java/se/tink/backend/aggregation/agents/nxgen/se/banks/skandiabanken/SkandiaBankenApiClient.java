@@ -280,12 +280,12 @@ public class SkandiaBankenApiClient {
     private OAuth2Token getValidOAuth2Token() {
         OAuth2Token oAuth2Token =
                 persistentStorage
-                        .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                        .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                         .get();
 
         if (oAuth2Token.hasAccessExpired()) {
             oAuth2Token = refreshToken(oAuth2Token.getRefreshToken().get()).toOAuth2Token();
-            persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, oAuth2Token);
+            persistentStorage.put(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
         }
 
         return oAuth2Token;

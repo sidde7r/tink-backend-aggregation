@@ -175,42 +175,41 @@ public class BankIdAuthenticationController<T>
     @Override
     public void autoAuthenticate()
             throws SessionException, BankServiceException, AuthorizationException {
-        OAuth2Token accessToken =
+        OAuth2Token oAuth2Token =
                 persistentStorage
-                        .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                        .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (accessToken.hasAccessExpired()) {
-            if (!accessToken.canRefresh()) {
+        if (oAuth2Token.hasAccessExpired()) {
+            if (!oAuth2Token.canRefresh()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
-
-            persistentStorage.remove(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN);
 
             // Refresh token is not always present, if it's absent we fall back to the manual
             // authentication.
             String refreshToken =
-                    accessToken
+                    oAuth2Token
                             .getRefreshToken()
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-            accessToken =
+            oAuth2Token =
                     authenticator
                             .refreshAccessToken(refreshToken)
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-            if (!accessToken.isValid()) {
+            if (!oAuth2Token.isValid()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
             // Store the new access token on the persistent storage again.
-            persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+            persistentStorage.rotateStorageValue(
+                    OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
         }
     }
 
-    private void storeAccessToken(OAuth2Token token, Credentials credentials) {
-        persistentStorage.put(PersistentStorageKeys.ACCESS_TOKEN, token);
+    private void storeAccessToken(OAuth2Token oAuth2Token, Credentials credentials) {
+        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
         credentials.setSessionExpiryDate(
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                        token, tokenLifetime, tokenLifetimeUnit));
+                        oAuth2Token, tokenLifetime, tokenLifetimeUnit));
     }
 
     @Override

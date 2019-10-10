@@ -31,11 +31,11 @@ public class SkandiaBankenSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
         OAuth2Token oAuth2Token =
                 persistentStorage
-                        .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                        .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         if (oAuth2Token.hasAccessExpired()) {
-            persistentStorage.remove(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN);
+            persistentStorage.remove(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN);
 
             String refreshToken =
                     oAuth2Token
@@ -47,7 +47,7 @@ public class SkandiaBankenSessionHandler implements SessionHandler {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, oAuth2Token);
+            persistentStorage.put(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
         }
     }
 

@@ -28,7 +28,8 @@ public class RabobankConstants {
     }
 
     public static class StorageKey {
-        public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
+        public static final String OAUTH_TOKEN =
+                OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String RESOURCE_ID = "resource_id";
         public static final String CONSENT_ID = "consentId";
     }

@@ -1,7 +1,13 @@
 package se.tink.backend.aggregation.workers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import java.util.Collection;
 import java.util.List;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMasker;
+import se.tink.backend.aggregation.utils.CredentialsStringMasker;
+import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.libraries.metrics.MetricId;
 
 public abstract class AgentWorkerCommand {
@@ -24,5 +30,21 @@ public abstract class AgentWorkerCommand {
 
     public List<MetricId.MetricLabels> getCommandTimerName(AgentWorkerOperationMetricType type) {
         return Lists.newArrayList();
+    }
+
+    protected static Iterable<StringMasker> createLogMaskers(
+            Credentials credentials, Collection<String> sensitiveValuesToMask) {
+        StringMasker credentialsStringMasker =
+                new CredentialsStringMasker(
+                        credentials,
+                        ImmutableList.of(
+                                CredentialsStringMasker.CredentialsProperty.PASSWORD,
+                                CredentialsStringMasker.CredentialsProperty.SECRET_KEY,
+                                CredentialsStringMasker.CredentialsProperty.SENSITIVE_PAYLOAD,
+                                CredentialsStringMasker.CredentialsProperty.USERNAME));
+        StringMasker clientConfigurationStringMasker =
+                new ClientConfigurationStringMasker(sensitiveValuesToMask);
+
+        return ImmutableList.of(credentialsStringMasker, clientConfigurationStringMasker);
     }
 }

@@ -10,6 +10,7 @@ import com.google.gson.JsonSyntaxException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -253,5 +254,9 @@ public final class AgentConfigurationController {
                                                 + " is missing"
                                                 + getSecretsServiceParamsString()
                                                 + ". In the development.yml file."));
+    }
+
+    public Collection<String> getSecretValues() {
+        return allSecrets.values();
     }
 }

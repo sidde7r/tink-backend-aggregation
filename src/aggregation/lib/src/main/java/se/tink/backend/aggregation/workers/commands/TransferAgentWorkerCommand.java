@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.utils.CredentialsStringMasker;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -64,22 +63,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     private static ClientFilterFactory createHttpLoggingFilterFactory(
             String logTag,
             Class<? extends HttpLoggableExecutor> agentClass,
-            Credentials credentials) {
-        Iterable<StringMasker> stringMaskers = createHttpLogMaskers(credentials);
+            Credentials credentials,
+            Collection<String> sensitiveValuesToMask) {
+        Iterable<StringMasker> stringMaskers = createLogMaskers(credentials, sensitiveValuesToMask);
         return new HttpLoggingFilterFactory(log, logTag, stringMaskers, agentClass);
-    }
-
-    private static Iterable<StringMasker> createHttpLogMaskers(Credentials credentials) {
-        StringMasker stringMasker =
-                new CredentialsStringMasker(
-                        credentials,
-                        ImmutableList.of(
-                                CredentialsStringMasker.CredentialsProperty.PASSWORD,
-                                CredentialsStringMasker.CredentialsProperty.SECRET_KEY,
-                                CredentialsStringMasker.CredentialsProperty.SENSITIVE_PAYLOAD,
-                                CredentialsStringMasker.CredentialsProperty.USERNAME));
-
-        return ImmutableList.of(stringMasker);
     }
 
     private static String getLogTagTransfer(Transfer transfer) {
@@ -115,7 +102,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         HttpLoggableExecutor httpLoggableExecutor = (HttpLoggableExecutor) agent;
         ClientFilterFactory loggingFilterFactory =
                 createHttpLoggingFilterFactory(
-                        getLogTagTransfer(transfer), httpLoggableExecutor.getClass(), credentials);
+                        getLogTagTransfer(transfer),
+                        httpLoggableExecutor.getClass(),
+                        credentials,
+                        context.getAgentConfigurationController().getSecretValues());
 
         Optional<String> operationStatusMessage = Optional.empty();
         try {

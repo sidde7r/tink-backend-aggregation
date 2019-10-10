@@ -6,10 +6,11 @@ import java.util.Optional;
 import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 
 @JsonObject
-public class UkOpenBankingConfiguration {
+public class UkOpenBankingConfiguration implements ClientConfiguration {
     private String rootCAData;
     private String rootCAPassword;
 
