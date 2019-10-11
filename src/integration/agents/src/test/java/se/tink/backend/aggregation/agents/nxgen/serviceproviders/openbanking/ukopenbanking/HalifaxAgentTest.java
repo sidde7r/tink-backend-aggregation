@@ -26,6 +26,8 @@ public class HalifaxAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setAppId("tink")
+                .setFinancialInstitutionId("halifax")
                 .build()
                 .testRefresh();
     }

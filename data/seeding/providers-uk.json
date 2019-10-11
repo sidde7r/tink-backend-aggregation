@@ -233,11 +233,12 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-halifax-oauth2",
             "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink:halifax",
+            "payload": "halifax",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
