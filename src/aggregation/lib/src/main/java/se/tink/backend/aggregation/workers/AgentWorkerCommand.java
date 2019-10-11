@@ -1,13 +1,7 @@
 package se.tink.backend.aggregation.workers;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import java.util.Collection;
 import java.util.List;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMasker;
-import se.tink.backend.aggregation.utils.CredentialsStringMasker;
-import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.libraries.metrics.MetricId;
 
 public abstract class AgentWorkerCommand {

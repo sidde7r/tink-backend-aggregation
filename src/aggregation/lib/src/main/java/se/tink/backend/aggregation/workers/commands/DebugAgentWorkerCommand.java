@@ -96,15 +96,20 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             User user = context.getRequest().getUser();
 
             // Debug output for non-transfers such as refresh commands and delete.
-            if (credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR
-                    || credentials.getStatus() == CredentialsStatus.TEMPORARY_ERROR
-                    || credentials.getStatus() == CredentialsStatus.UNCHANGED
-                    || credentials.isDebug()
-                    || user.isDebug()
-                    || shouldPrintDebugLogRegardless()) {
+            if (shouldPrintDebugLog(credentials, user)
+                    && context.getRequest().getProvider().isOpenBanking()) {
                 writeToDebugFile(credentials, null);
             }
         }
+    }
+
+    private boolean shouldPrintDebugLog(Credentials credentials, User user) {
+        return credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR
+                || credentials.getStatus() == CredentialsStatus.TEMPORARY_ERROR
+                || credentials.getStatus() == CredentialsStatus.UNCHANGED
+                || credentials.isDebug()
+                || user.isDebug()
+                || shouldPrintDebugLogRegardless();
     }
 
     private String maskSensitiveOutputLog(String logContent, Credentials credentials) {

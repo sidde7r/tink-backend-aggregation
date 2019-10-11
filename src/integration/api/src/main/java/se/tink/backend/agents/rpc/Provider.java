@@ -17,6 +17,10 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Provider implements Cloneable {
 
+    public boolean isOpenBanking() {
+        return accessType == AccessType.OPEN_BANKING;
+    }
+
     public enum AccessType {
         OPEN_BANKING,
         OTHER
