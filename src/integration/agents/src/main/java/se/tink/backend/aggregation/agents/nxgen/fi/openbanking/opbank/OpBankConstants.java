@@ -63,4 +63,16 @@ public final class OpBankConstants {
         public static final String SCOPE = "openid accounts";
         public static final int MAX_AGE = 86400;
     }
+
+    public static class AuthorizationKeys {
+        public static final String REQUEST = "request";
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String CLIENT_ID = "client_id";
+        public static final String SCOPE = "scope";
+    }
+
+    public static class AuthorizationValues {
+        public static final String CODE = "code";
+        public static final String OPENID_ACCOUNTS = "openid accounts";
+    }
 }

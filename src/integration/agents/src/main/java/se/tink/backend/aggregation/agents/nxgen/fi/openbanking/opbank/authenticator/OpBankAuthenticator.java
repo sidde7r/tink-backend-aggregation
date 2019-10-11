@@ -84,24 +84,22 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
                         + Base64.getUrlEncoder()
                                 .encodeToString(tokenBodyJson.getBytes())
                                 .replaceAll("=", "");
-
         String signature = apiClient.fetchSignature(baseTokenString);
-
         String fullToken = baseTokenString + "." + signature;
         fullToken = fullToken.replaceAll("=", "");
-
-        String authorizationURL =
-                String.format(
-                                OpBankConstants.Urls.AUTHORIZATION_URL
-                                        .concat("?request=%s")
-                                        .concat("&response_type=code")
-                                        .concat("&client_id=%s")
-                                        .concat("&scope=openid accounts"),
-                                fullToken,
+        URL authorizationURL =
+                new URL(OpBankConstants.Urls.AUTHORIZATION_URL)
+                        .queryParam(OpBankConstants.AuthorizationKeys.REQUEST, fullToken)
+                        .queryParam(
+                                OpBankConstants.AuthorizationKeys.RESPONSE_TYPE,
+                                OpBankConstants.AuthorizationValues.CODE)
+                        .queryParam(
+                                OpBankConstants.AuthorizationKeys.CLIENT_ID,
                                 configuration.getClientId())
-                        .replace(" ", "%20");
-
-        return new URL(authorizationURL);
+                        .queryParam(
+                                OpBankConstants.AuthorizationKeys.SCOPE,
+                                OpBankConstants.AuthorizationValues.OPENID_ACCOUNTS);
+        return authorizationURL;
     }
 
     @Override
