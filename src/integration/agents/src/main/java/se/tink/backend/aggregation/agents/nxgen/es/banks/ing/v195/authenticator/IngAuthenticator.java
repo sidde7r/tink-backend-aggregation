@@ -77,6 +77,15 @@ public class IngAuthenticator implements Authenticator, AuthenticationController
                     // login document didn't pass server-side validation
                     throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
                 }
+            } else if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                final ErrorResponse errorResponse = hre.getResponse().getBody(ErrorResponse.class);
+                if (errorResponse.hasErrorCode(ErrorCodes.MOBILE_VALIDATION_ENROLLMENT_REQUIRED)) {
+                    // mobile validation enrollment required
+                    throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(hre);
+                } else if (errorResponse.hasErrorCode(ErrorCodes.GENERIC_LOCK)) {
+                    // account blocked
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(hre);
+                }
             }
             throw hre;
         }

@@ -9,6 +9,12 @@ public class ErrorMessage {
     @JsonProperty private String message;
     @JsonProperty private String errorCode;
 
+    public ErrorMessage(String field, String message, String errorCode) {
+        this.field = field;
+        this.message = message;
+        this.errorCode = errorCode;
+    }
+
     public String getField() {
         return field;
     }
