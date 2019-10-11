@@ -29,19 +29,16 @@ public class ArgentaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     private ArgentaApiClient apiClient;
     private final Credentials credentials;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final String aggregator;
 
     public ArgentaAuthenticator(
             ArgentaPersistentStorage persistentStorage,
             ArgentaApiClient apiClient,
             Credentials credentials,
-            final SupplementalInformationHelper supplementalInformationHelper,
-            final String aggregator) {
+            final SupplementalInformationHelper supplementalInformationHelper) {
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
         this.credentials = credentials;
         this.supplementalInformationHelper = supplementalInformationHelper;
-        this.aggregator = aggregator;
     }
 
     @Override
@@ -94,8 +91,7 @@ public class ArgentaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
 
     private StartAuthResponse startAuth(String username, String deviceId, boolean registered)
             throws LoginException, AuthorizationException {
-        StartAuthRequest registrationRequest =
-                new StartAuthRequest(username, registered, aggregator);
+        StartAuthRequest registrationRequest = new StartAuthRequest(username, registered);
         return apiClient.startAuth(ArgentaConstants.Url.AUTH_START, registrationRequest, deviceId);
     }
 

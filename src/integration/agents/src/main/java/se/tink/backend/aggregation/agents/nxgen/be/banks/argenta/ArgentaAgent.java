@@ -55,8 +55,7 @@ public class ArgentaAgent extends NextGenerationAgent
                         argentaPersistentStorage,
                         apiClient,
                         credentials,
-                        supplementalInformationHelper,
-                        context.getAggregatorInfo().getAggregatorIdentifier());
+                        supplementalInformationHelper);
 
         return new AutoAuthenticationController(
                 request, systemUpdater, argentaAuthenticator, argentaAuthenticator);
