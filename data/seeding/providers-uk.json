@@ -635,6 +635,30 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
+        },
+        {
+            "className": "nxgen.uk.openbanking.tsb.TsbV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "TSB Bank",
+            "fields": [
+                {
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true,
+                    "name": "info",
+                    "value": "Connecting your bank"
+                }
+            ],
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "name": "uk-tsb-oauth2",
+            "passwordhelptext": "Authentication is done on external page",
+            "payload": "tink4:tsb",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         }
     ]
 }
