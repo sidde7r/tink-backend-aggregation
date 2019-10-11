@@ -638,6 +638,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.uk.openbanking.tsb.TsbV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "TSB Bank",
@@ -653,7 +654,7 @@
             "multiFactor": false,
             "name": "uk-tsb-oauth2",
             "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink4:tsb",
+            "payload": "tsb",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,

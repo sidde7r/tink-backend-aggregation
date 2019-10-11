@@ -26,6 +26,8 @@ public class TsbAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setAppId("tink")
+                .setFinancialInstitutionId("tsb")
                 .build()
                 .testRefresh();
     }
