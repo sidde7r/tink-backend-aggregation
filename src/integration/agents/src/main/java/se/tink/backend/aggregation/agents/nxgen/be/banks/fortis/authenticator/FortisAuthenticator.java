@@ -413,12 +413,11 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
             UserInfoResponse userInfoResponse;
             try {
                 sendChallenges(authResponse);
-                userInfoResponse = apiClient.getUserInfo();
-                validateMuid(userInfoResponse);
-
-            } catch (HttpClientException | LoginException e) {
-                throw new IllegalStateException("Incorrect challenge in autoAuthenticate", e);
+            } catch (LoginException l) {
+                throw SessionError.SESSION_EXPIRED.exception();
             }
+            userInfoResponse = apiClient.getUserInfo();
+            validateMuid(userInfoResponse);
             persistentStorage.put(
                     FortisConstants.Storage.MUID,
                     userInfoResponse.getValue().getUserData().getMuid());
