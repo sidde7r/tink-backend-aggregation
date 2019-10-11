@@ -43,7 +43,8 @@ public class BelfiusTest {
                 credentials,
                 persistentStorage,
                 sessionStorage,
-                new SupplementalInformationHelper(provider, supplementalInformation));
+                new SupplementalInformationHelper(provider, supplementalInformation),
+                "Tink");
     }
 
     // TODO Move this out to test helper.
