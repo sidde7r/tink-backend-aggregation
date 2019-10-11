@@ -6,7 +6,6 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class ErstebankConstants {
 
-    public static final String INTEGRATION_NAME = "erstebank-at";
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
             TypeMapper.<PaymentStatus>builder().put(PaymentStatus.PENDING, "RCVD", "ACCP").build();
 

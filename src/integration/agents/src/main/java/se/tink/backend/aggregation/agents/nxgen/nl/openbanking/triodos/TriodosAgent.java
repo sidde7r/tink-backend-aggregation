@@ -40,11 +40,6 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
     }
 
     @Override
-    protected String getIntegrationName() {
-        return TriodosConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected Class<TriodosConfiguration> getConfigurationClassDescription() {
         return TriodosConfiguration.class;
     }

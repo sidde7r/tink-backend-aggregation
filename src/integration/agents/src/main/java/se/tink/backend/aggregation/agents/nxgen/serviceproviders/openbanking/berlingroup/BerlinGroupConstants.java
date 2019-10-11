@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public abstract class BerlinGroupConstants {
 
+    public static final String DEFAULT_IP = "0.0.0.0";
     public static final String CLIENT_NAME = "tink";
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()

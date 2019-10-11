@@ -49,8 +49,6 @@ public abstract class BerlinGroupAgent<
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    protected abstract String getIntegrationName();
-
     protected abstract Class<TConfiguration> getConfigurationClassDescription();
 
     protected BerlinGroupAccountFetcher getAccountFetcher() {

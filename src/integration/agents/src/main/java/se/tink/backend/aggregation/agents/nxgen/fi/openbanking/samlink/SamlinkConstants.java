@@ -5,7 +5,6 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class SamlinkConstants {
 
-    public static final String INTEGRATION_NAME = "samlink";
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
             TypeMapper.<PaymentStatus>builder().put(PaymentStatus.PENDING, "RCVD").build();
 
