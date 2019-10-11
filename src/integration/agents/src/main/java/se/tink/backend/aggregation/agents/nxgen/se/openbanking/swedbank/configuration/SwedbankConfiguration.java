@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.configu
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
@@ -16,8 +15,6 @@ public class SwedbankConfiguration implements ClientConfiguration {
     @SensitiveSecret private String clientSecret;
     @Secret private String redirectUrl;
     private String eidasQwac;
-    @Secret private boolean bypassTransactionConsent;
-    @Secret private int monthsToFetch;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -45,16 +42,5 @@ public class SwedbankConfiguration implements ClientConfiguration {
 
     public String getEidasQwac() {
         return eidasQwac;
-    }
-
-    public boolean getBypassConsent() {
-        return bypassTransactionConsent;
-    }
-
-    public int getMonthsToFetch() {
-        return (monthsToFetch > SwedbankConstants.TimeValues.MONTHS_TO_FETCH_MAX
-                        || monthsToFetch < SwedbankConstants.TimeValues.MONTHS_TO_FETCH_MIN)
-                ? SwedbankConstants.TimeValues.MONTHS_TO_FETCH_MAX
-                : monthsToFetch;
     }
 }

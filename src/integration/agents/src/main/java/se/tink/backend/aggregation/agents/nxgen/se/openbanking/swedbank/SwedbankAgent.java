@@ -78,8 +78,7 @@ public final class SwedbankAgent extends NextGenerationAgent
                         authenticator,
                         credentials,
                         strongAuthenticationState,
-                        transactionFetcher,
-                        getClientConfiguration());
+                        transactionFetcher);
 
         return new AutoAuthenticationController(
                 request,

@@ -44,7 +44,7 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
                     account.getApiIdentifier(),
                     Timestamp.valueOf(
                             LocalDateTime.now()
-                                    .minusMonths(apiClient.getConfiguration().getMonthsToFetch())),
+                                    .minusMonths(SwedbankConstants.TimeValues.MONTHS_TO_FETCH_MAX)),
                     toDate);
 
         } catch (HttpResponseException e) {
@@ -79,12 +79,9 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
                     apiClient.startScaTransactionRequest(
                             account.getApiIdentifier(), fromDate, toDate);
 
-            if (!apiClient.getConfiguration().getBypassConsent()) {
-                poll(
-                        response,
-                        apiClient.startAuthorization(
-                                response.getLinks().getHrefEntity().getHref()));
-            }
+            poll(
+                    response,
+                    apiClient.startAuthorization(response.getLinks().getHrefEntity().getHref()));
         } catch (HttpResponseException e) {
             if (checkIfScaIsAlreadyDone(e)) {
                 throw new HttpResponseException(
@@ -101,12 +98,9 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
         try {
             Response response = apiClient.startScaTransactionRequest(account, fromDate, toDate);
 
-            if (!apiClient.getConfiguration().getBypassConsent()) {
-                poll(
-                        response,
-                        apiClient.startAuthorization(
-                                response.getLinks().getHrefEntity().getHref()));
-            }
+            poll(
+                    response,
+                    apiClient.startAuthorization(response.getLinks().getHrefEntity().getHref()));
         } catch (HttpResponseException e) {
             if (checkIfScaIsAlreadyDone(e)) {
                 logger.info(
