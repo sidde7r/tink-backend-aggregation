@@ -15,7 +15,6 @@ public class IngBaseConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String clientCertificateSerial;
     @JsonProperty @Secret private String clientCertificate;
     @JsonProperty @Secret private String redirectUrl;
-    @JsonProperty @Secret private String certificateId;
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(
@@ -43,12 +42,5 @@ public class IngBaseConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(redirectUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
         return redirectUrl;
-    }
-
-    public String getCertificateId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
-        return certificateId;
     }
 }

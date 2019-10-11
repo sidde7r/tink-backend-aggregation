@@ -304,7 +304,7 @@ public class IngBaseApiClient {
                         eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
                         eidasIdentity,
-                        configuration.getCertificateId());
+                        null);
 
         return proxySigner.getSignatureBase64(signatureEntity.toString().getBytes());
     }

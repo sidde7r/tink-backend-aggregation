@@ -61,8 +61,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
 
         apiClient.setConfiguration(
                 ingBaseConfiguration, configuration.getEidasProxy(), eidasIdentity);
-        client.setEidasProxy(
-                configuration.getEidasProxy(), ingBaseConfiguration.getCertificateId());
+        client.setEidasProxy(configuration.getEidasProxy(), null);
     }
 
     protected IngBaseConfiguration getClientConfiguration() {
