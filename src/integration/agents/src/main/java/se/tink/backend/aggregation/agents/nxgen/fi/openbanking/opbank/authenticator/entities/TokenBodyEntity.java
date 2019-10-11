@@ -25,15 +25,15 @@ public class TokenBodyEntity {
         this.iss = iss;
     }
 
-    public void setResponse_type(String response_type) {
+    public void setResponseType(String response_type) {
         this.response_type = response_type;
     }
 
-    public void setClient_id(String client_id) {
+    public void setClientId(String client_id) {
         this.client_id = client_id;
     }
 
-    public void setRedirect_uri(String redirect_uri) {
+    public void setRedirectUri(String redirect_uri) {
         this.redirect_uri = redirect_uri;
     }
 
@@ -49,7 +49,7 @@ public class TokenBodyEntity {
         this.nonce = nonce;
     }
 
-    public void setMax_age(long max_age) {
+    public void setMaxAge(long max_age) {
         this.max_age = max_age;
     }
 
