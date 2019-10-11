@@ -57,11 +57,6 @@ public class BelfiusConstants {
         public static final String CODE = "code";
     }
 
-    public static final class Device {
-        public static final String DEVICE_BRAND = "Apple iPhone 6S";
-        public static final String DEVICE_NAME = "iPhone6S";
-    }
-
     public static final class Widget {
         // LoginRequest
         public static final String VERSION_KIND_APP = "Container@reuse_LoginPw@minp_VersionKindApp";

@@ -25,18 +25,21 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     private final PersistentStorage persistentStorage;
     private final BelfiusSessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final String aggregator;
 
     public BelfiusAuthenticator(
-            BelfiusApiClient apiClient,
-            Credentials credentials,
-            PersistentStorage persistentStorage,
-            BelfiusSessionStorage sessionStorage,
-            final SupplementalInformationHelper supplementalInformationHelper) {
+            final BelfiusApiClient apiClient,
+            final Credentials credentials,
+            final PersistentStorage persistentStorage,
+            final BelfiusSessionStorage sessionStorage,
+            final SupplementalInformationHelper supplementalInformationHelper,
+            final String aggregator) {
         this.apiClient = apiClient;
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
+        this.aggregator = aggregator;
     }
 
     @Override
@@ -91,8 +94,8 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         String code = supplementalInformationHelper.waitForLoginChallengeResponse(challenge);
         apiClient.authenticateWithCode(code);
 
-        String deviceBrand = BelfiusConstants.Device.DEVICE_BRAND;
-        String deviceName = BelfiusConstants.Device.DEVICE_NAME;
+        final String deviceBrand = aggregator;
+        final String deviceName = aggregator;
 
         challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
         String sign = supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);

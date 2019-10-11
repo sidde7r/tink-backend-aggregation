@@ -67,7 +67,8 @@ public class BelfiusAgent extends NextGenerationAgent
                         credentials,
                         persistentStorage,
                         belfiusSessionStorage,
-                        supplementalInformationHelper);
+                        supplementalInformationHelper,
+                        context.getAggregatorInfo().getAggregatorIdentifier());
 
         return new AutoAuthenticationController(
                 request,
