@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentic
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -16,6 +17,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.ErrorMessage;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities.FailuresItem;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeResponse;
@@ -33,11 +36,14 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     private final NordeaSeApiClient apiClient;
     private static final Logger log = LoggerFactory.getLogger(NordeaSeBankIdAuthenticator.class);
     private final String language;
+    private final String scopeFromPayload;
     private OAuth2Token oAuth2Token;
 
-    public NordeaSeBankIdAuthenticator(NordeaSeApiClient apiClient, String language) {
+    public NordeaSeBankIdAuthenticator(
+            NordeaSeApiClient apiClient, String language, String scopeFromPayload) {
         this.apiClient = apiClient;
         this.language = language;
+        this.scopeFromPayload = scopeFromPayload;
     }
 
     @Override
@@ -154,13 +160,35 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
                 ssn,
                 apiClient.getConfiguration().getRedirectUrl(),
                 NordeaSeConstants.FormValues.RESPONSE_TYPE,
-                Arrays.asList(
-                        NordeaSeConstants.FormValues.ACCOUNTS_BALANCES,
-                        NordeaSeConstants.FormValues.ACCOUNTS_BASIC,
-                        NordeaSeConstants.FormValues.ACCOUNTS_DETAILS,
-                        NordeaSeConstants.FormValues.ACCOUNTS_TRANSACTIONS,
-                        NordeaSeConstants.FormValues.PAYMENTS_MULTIPLE),
+                getScopesBasedOnPayload(),
                 NordeaSeConstants.FormValues.STATE);
+    }
+
+    /**
+     * Considers the payload of the provider to determine the scopes we should send to the bank.
+     * This is a hacky fix for Kirkby staging where the payload will be AIS, in all other cases
+     * we'll ask for full scope.
+     *
+     * @return List of scopes based on provider payload.
+     */
+    private List<String> getScopesBasedOnPayload() {
+
+        // Return only AIS scopes
+        if (Scopes.AIS.equalsIgnoreCase(scopeFromPayload)) {
+            return Arrays.asList(
+                    FormValues.ACCOUNTS_BALANCES,
+                    FormValues.ACCOUNTS_BASIC,
+                    FormValues.ACCOUNTS_DETAILS,
+                    FormValues.ACCOUNTS_TRANSACTIONS);
+        }
+
+        // Return AIS + PIS scopes
+        return Arrays.asList(
+                FormValues.ACCOUNTS_BALANCES,
+                FormValues.ACCOUNTS_BASIC,
+                FormValues.ACCOUNTS_DETAILS,
+                FormValues.ACCOUNTS_TRANSACTIONS,
+                FormValues.PAYMENTS_MULTIPLE);
     }
 
     public BankIdStatus getBankIdErrorStatus(ErrorResponse errorResponse) throws BankIdException {
