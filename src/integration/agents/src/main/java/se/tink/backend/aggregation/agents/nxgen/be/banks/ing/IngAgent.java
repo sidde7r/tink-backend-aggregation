@@ -61,7 +61,8 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
-        this.apiClient = new IngApiClient(client);
+        this.apiClient =
+                new IngApiClient(client, context.getAggregatorInfo().getAggregatorIdentifier());
         this.ingHelper = new IngHelper(sessionStorage);
         this.ingTransferHelper = new IngTransferHelper(catalog);
 

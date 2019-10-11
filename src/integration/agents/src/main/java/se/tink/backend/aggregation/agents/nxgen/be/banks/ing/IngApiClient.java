@@ -47,9 +47,11 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class IngApiClient {
     private final TinkHttpClient client;
+    private final String aggregator;
 
-    public IngApiClient(TinkHttpClient client) {
+    public IngApiClient(final TinkHttpClient client, final String aggregator) {
         this.client = client;
+        this.aggregator = aggregator;
     }
 
     public MobileHelloResponseEntity mobileHello() {
@@ -91,7 +93,7 @@ public class IngApiClient {
     public HttpResponse initEnroll(
             String url, String username, String cardNumber, String deviceId) {
         InitEnrollRequestBody initEnrollRequestBody =
-                new InitEnrollRequestBody(username, cardNumber, deviceId);
+                new InitEnrollRequestBody(username, cardNumber, deviceId, aggregator);
         URL initEnrollUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
         return this.client.request(initEnrollUrl).post(HttpResponse.class, initEnrollRequestBody);
@@ -125,7 +127,12 @@ public class IngApiClient {
             String deviceId) {
         ConfirmEnrollRequestBody confirmEnrollRequestBody =
                 new ConfirmEnrollRequestBody(
-                        ingId, signingId, challengeResponse, Integer.toString(otpSystem), deviceId);
+                        ingId,
+                        signingId,
+                        challengeResponse,
+                        Integer.toString(otpSystem),
+                        deviceId,
+                        aggregator);
         URL confirmEnrollUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
         return this.client

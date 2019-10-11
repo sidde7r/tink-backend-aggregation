@@ -100,6 +100,8 @@ public class IngConstants {
         public static final String OTP_VALUE = "otpValue";
         public static final String OTP_SYSTEM = "otpSystem";
         public static final String MAC_ADDRESS = "macAddress";
+        public static final String DEVICE_NAME = "deviceName";
+        public static final String PROFILE_NAME = "profileName";
 
         public enum ValuePairs {
             USER_LANG_CODE("userLanguageCode", "EN"),
@@ -115,8 +117,6 @@ public class IngConstants {
             OS_TYPE("osType", "1"),
             OS_VERSION("osVersion", "10.3.1"),
             DEVICE_IS_JAILBROKEN("deviceJailBroken", "0"),
-            DEVICE_NAME("deviceName", "Tink Mobile"),
-            PROFILE_NAME("profileName", "Tink"),
             IP_ADDRESS("ipAddress", "127.0.0.1"),
             BROWSER_APP_VERSION("browserAppVersion", Headers.USER_AGENT),
             LOGON_TYPE("logonType", "01"),
