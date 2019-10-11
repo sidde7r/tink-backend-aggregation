@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -57,7 +56,6 @@ public class SwedbankAuthenticationController
     private final TemporalUnit tokenLifetimeUnit;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SwedbankTransactionFetcher swedbankTransactionFetcher;
-    private final SwedbankConfiguration swedbankConfiguration;
 
     public SwedbankAuthenticationController(
             PersistentStorage persistentStorage,
@@ -65,8 +63,7 @@ public class SwedbankAuthenticationController
             SwedbankAuthenticator authenticator,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
-            SwedbankTransactionFetcher swedbankTransactionFetcher,
-            SwedbankConfiguration swedbankConfiguration) {
+            SwedbankTransactionFetcher swedbankTransactionFetcher) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -75,8 +72,7 @@ public class SwedbankAuthenticationController
                 strongAuthenticationState,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT,
-                swedbankTransactionFetcher,
-                swedbankConfiguration);
+                swedbankTransactionFetcher);
     }
 
     public SwedbankAuthenticationController(
@@ -87,8 +83,7 @@ public class SwedbankAuthenticationController
             StrongAuthenticationState strongAuthenticationState,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit,
-            SwedbankTransactionFetcher swedbankTransactionFetcher,
-            SwedbankConfiguration swedbankConfiguration) {
+            SwedbankTransactionFetcher swedbankTransactionFetcher) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
@@ -97,7 +92,6 @@ public class SwedbankAuthenticationController
         this.tokenLifetimeUnit = tokenLifetimeUnit;
         this.strongAuthenticationState = strongAuthenticationState;
         this.swedbankTransactionFetcher = swedbankTransactionFetcher;
-        this.swedbankConfiguration = swedbankConfiguration;
     }
 
     @Override
@@ -215,7 +209,7 @@ public class SwedbankAuthenticationController
                     iban,
                     Timestamp.valueOf(
                             LocalDateTime.now()
-                                    .minusMonths(swedbankConfiguration.getMonthsToFetch())),
+                                    .minusMonths(SwedbankConstants.TimeValues.MONTHS_TO_FETCH_MAX)),
                     Timestamp.valueOf(LocalDateTime.now()));
         }
     }
