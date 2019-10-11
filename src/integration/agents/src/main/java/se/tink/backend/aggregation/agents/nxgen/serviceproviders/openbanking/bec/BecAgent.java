@@ -108,7 +108,7 @@ public class BecAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController<>(accountFetcher, 6)));
     }
 
     @Override
