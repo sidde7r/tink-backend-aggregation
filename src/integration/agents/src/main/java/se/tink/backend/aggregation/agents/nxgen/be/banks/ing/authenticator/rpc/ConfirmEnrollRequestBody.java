@@ -6,7 +6,12 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 public class ConfirmEnrollRequestBody extends MultivaluedMapImpl {
 
     public ConfirmEnrollRequestBody(
-            String ingId, String signingId, String otpValue, String otpSystem, String deviceId) {
+            final String ingId,
+            final String signingId,
+            final String otpValue,
+            final String otpSystem,
+            final String deviceId,
+            final String aggregator) {
 
         add(IngConstants.Storage.ING_ID, ingId);
         add(IngConstants.Session.SIGNING_ID, signingId);
@@ -21,12 +26,8 @@ public class ConfirmEnrollRequestBody extends MultivaluedMapImpl {
         add(
                 IngConstants.Session.ValuePairs.FLAG_SIGN_BY_TWO.getKey(),
                 IngConstants.Session.ValuePairs.FLAG_SIGN_BY_TWO.getValue());
-        add(
-                IngConstants.Session.ValuePairs.PROFILE_NAME.getKey(),
-                IngConstants.Session.ValuePairs.PROFILE_NAME.getValue());
-        add(
-                IngConstants.Session.ValuePairs.DEVICE_NAME.getKey(),
-                IngConstants.Session.ValuePairs.DEVICE_NAME.getValue());
+        add(IngConstants.Session.PROFILE_NAME, aggregator);
+        add(IngConstants.Session.DEVICE_NAME, aggregator);
         add(
                 IngConstants.Session.ValuePairs.PROFILE_RENEWAL.getKey(),
                 IngConstants.Session.ValuePairs.PROFILE_RENEWAL.getValue());
