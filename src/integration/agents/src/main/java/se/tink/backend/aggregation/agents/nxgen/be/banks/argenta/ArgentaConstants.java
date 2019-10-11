@@ -65,11 +65,9 @@ public class ArgentaConstants {
     }
 
     public static class Device {
-        public static final String VENDOR = "Apple";
-        public static final String NAME = "Tink";
-        public static final String MODEL = "iPhone9,4";
-        public static final String OS_VERSION = "12.3.1";
-        public static final String OS = "iOS";
+        public static final String MODEL = "N/A";
+        public static final String OS_VERSION = "N/A";
+        public static final String OS = "N/A";
     }
 
     public static final class Api {
