@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.CredentialsKeys;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.QueryValues;
@@ -181,7 +182,7 @@ public final class DnbApiClient {
         return createRequestWithoutRedirectHeader(
                         new URL(DnbConstants.BASE_URL.concat(Urls.PAYMENTS))
                                 .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString()))
-                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
@@ -190,7 +191,7 @@ public final class DnbApiClient {
                         new URL(DnbConstants.BASE_URL.concat(Urls.GET_PAYMENT))
                                 .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString())
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .get(GetPaymentResponse.class);
     }
 }

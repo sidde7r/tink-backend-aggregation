@@ -47,6 +47,10 @@ public final class DnbConstants {
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
+    public static class HeaderValues {
+        public static final String PSU_IP_ADDRESS = "0.0.0.0";
+    }
+
     public static class CredentialsKeys {
         public static final String PSU_ID = "PSU-ID";
     }

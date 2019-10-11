@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class DnbConfiguration implements ClientConfiguration {
 
     private String redirectUrl;
-    private String psuIpAddress;
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
@@ -18,13 +17,5 @@ public class DnbConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
-    }
-
-    public String getPsuIpAddress() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(psuIpAddress),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
-
-        return psuIpAddress;
     }
 }
