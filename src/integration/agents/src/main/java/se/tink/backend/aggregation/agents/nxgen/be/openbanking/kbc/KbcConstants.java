@@ -1,24 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
 
-public abstract class KbcConstants {
-
-    public static final String INTEGRATION_NAME = "kbc";
-
-    public static final String DEFAULT_IP = "0.0.0.0";
-
-    public static String getPsuIpAddress() {
-        try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            return KbcConstants.DEFAULT_IP;
-        }
-    }
+public final class KbcConstants {
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()

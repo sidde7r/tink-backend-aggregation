@@ -35,11 +35,6 @@ public final class LaBanquePostaleAgent
     }
 
     @Override
-    public String getIntegrationName() {
-        return LaBanquePostaleConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected Class<LaBanquePostaleConfiguration> getConfigurationClassDescription() {
         return LaBanquePostaleConfiguration.class;
     }

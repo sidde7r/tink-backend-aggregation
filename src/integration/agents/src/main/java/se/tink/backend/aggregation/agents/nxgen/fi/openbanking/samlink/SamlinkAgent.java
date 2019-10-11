@@ -42,11 +42,6 @@ public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, Samli
     }
 
     @Override
-    protected String getIntegrationName() {
-        return SamlinkConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected Class<SamlinkConfiguration> getConfigurationClassDescription() {
         return SamlinkConfiguration.class;
     }

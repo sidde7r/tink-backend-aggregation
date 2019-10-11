@@ -45,11 +45,6 @@ public final class ErstebankAgent
     }
 
     @Override
-    protected String getIntegrationName() {
-        return ErstebankConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected Class<ErstebankConfiguration> getConfigurationClassDescription() {
         return ErstebankConfiguration.class;
     }

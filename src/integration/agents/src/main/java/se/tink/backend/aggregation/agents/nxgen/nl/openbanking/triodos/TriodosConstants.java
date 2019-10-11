@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
 
 public final class TriodosConstants {
 
-    public static final String INTEGRATION_NAME = "triodos";
-
     private TriodosConstants() {
         throw new AssertionError();
     }

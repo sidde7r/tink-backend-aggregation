@@ -47,11 +47,6 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
     }
 
     @Override
-    protected String getIntegrationName() {
-        return KbcConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected Class<BerlinGroupConfiguration> getConfigurationClassDescription() {
         return BerlinGroupConfiguration.class;
     }

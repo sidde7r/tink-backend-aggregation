@@ -66,7 +66,7 @@ public final class KbcApiClient extends BerlinGroupApiClient<BerlinGroupConfigur
                         BerlinGroupUtils.getRequestId())
                 .header(
                         BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        KbcConstants.getPsuIpAddress())
+                        getConfiguration().getPsuIpAddress())
                 .get(AccountResponse.class);
     }
 
@@ -99,7 +99,7 @@ public final class KbcApiClient extends BerlinGroupApiClient<BerlinGroupConfigur
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
                 .header(
                         BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        KbcConstants.getPsuIpAddress())
+                        getConfiguration().getPsuIpAddress())
                 .header(
                         BerlinGroupConstants.HeaderKeys.CONSENT_ID,
                         persistentStorage.get(StorageKeys.CONSENT_ID));
@@ -135,7 +135,7 @@ public final class KbcApiClient extends BerlinGroupApiClient<BerlinGroupConfigur
                 .body(tokenRequest.toData(), MediaType.APPLICATION_FORM_URLENCODED)
                 .header(
                         BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        KbcConstants.getPsuIpAddress())
+                        getConfiguration().getPsuIpAddress())
                 .post(TokenBaseResponse.class)
                 .toTinkToken();
     }
@@ -154,7 +154,7 @@ public final class KbcApiClient extends BerlinGroupApiClient<BerlinGroupConfigur
                         getConfiguration().getClientId(), getConfiguration().getClientSecret())
                 .header(
                         BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        KbcConstants.getPsuIpAddress())
+                        getConfiguration().getPsuIpAddress())
                 .body(refreshTokenRequest.toData(), MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenBaseResponse.class)
                 .toTinkToken();
@@ -186,7 +186,7 @@ public final class KbcApiClient extends BerlinGroupApiClient<BerlinGroupConfigur
                         getConfiguration().getRedirectUrl())
                 .header(
                         BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        KbcConstants.getPsuIpAddress())
+                        getConfiguration().getPsuIpAddress())
                 .post(ConsentBaseResponse.class)
                 .getConsentId();
     }

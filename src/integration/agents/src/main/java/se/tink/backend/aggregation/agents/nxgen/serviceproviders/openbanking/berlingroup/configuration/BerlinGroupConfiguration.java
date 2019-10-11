@@ -1,19 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Objects;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class BerlinGroupConfiguration implements ClientConfiguration {
-    private String baseUrl;
-    private String clientId;
-    private String clientSecret;
-    private String redirectUrl;
-    private String psuIpAddress;
-    private String eidasQwac;
+    @JsonProperty @Secret private String baseUrl;
+    @JsonProperty @Secret private String clientId;
+    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String psuIpAddress;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -48,18 +54,14 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
     }
 
     public String getPsuIpAddress() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(psuIpAddress),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
+        if (Objects.nonNull(psuIpAddress)) {
+            return psuIpAddress;
+        }
 
-        return psuIpAddress;
-    }
-
-    public String getEidasQwac() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasQwac),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
-
-        return eidasQwac;
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            return BerlinGroupConstants.DEFAULT_IP;
+        }
     }
 }
