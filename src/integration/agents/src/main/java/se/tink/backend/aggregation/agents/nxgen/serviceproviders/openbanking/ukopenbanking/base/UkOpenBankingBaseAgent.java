@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.identity.IdentityDataV31Response;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
@@ -96,7 +97,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         metricContext.getMetricRegistry(),
                         context.getLogOutputStream(),
                         signatureKeyPair,
-                        request.getProvider());
+                        request.getProvider(),
+                        new LogMasker(
+                                request.getCredentials(),
+                                context.getAgentConfigurationController().getSecretValues()));
         tinkProvider = request.getProvider();
         this.agentConfig = aisConfig;
         this.wellKnownURL = aisConfig.getWellKnownURL();

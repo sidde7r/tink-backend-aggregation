@@ -13,9 +13,9 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
-import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -34,7 +34,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     private DebugAgentWorkerCommandState state;
     private AgentWorkerCommandContext context;
     private AgentDebugStorageHandler agentDebugStorage;
-    private Iterable<StringMasker> stringMaskers;
+    private final LogMasker logMasker;
 
     public DebugAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -43,8 +43,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         this.context = context;
         this.state = state;
         this.agentDebugStorage = agentDebugStorage;
-        this.stringMaskers =
-                createLogMaskers(
+        this.logMasker =
+                new LogMasker(
                         context.getRequest().getCredentials(),
                         context.getAgentConfigurationController().getSecretValues());
     }
@@ -118,7 +118,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             }
         }
 
-        return mask(logContent);
+        return logMasker.mask(logContent);
     }
 
     private static String getFormattedSize(String str) {
@@ -193,19 +193,5 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private boolean shouldPrintDebugLogRegardless() {
         return state.getDebugFrequencyPercent() > RandomUtils.randomInt(100);
-    }
-
-    private String mask(String string) {
-        if (string == null) {
-            return null;
-        }
-
-        String masked = string;
-
-        for (StringMasker masker : stringMaskers) {
-            masked = masker.getMasked(masked);
-        }
-
-        return masked;
     }
 }

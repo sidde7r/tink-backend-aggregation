@@ -7,7 +7,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.google.common.collect.ImmutableList;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.util.Arrays;
+import java.util.Collections;
 import javax.ws.rs.core.MediaType;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -23,7 +23,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.utils.StringMasker;
+import se.tink.backend.aggregation.log.LogMasker;
 
 @Ignore
 public class HttpLoggingFilterTest {
@@ -253,8 +253,8 @@ public class HttpLoggingFilterTest {
         return credentials;
     }
 
-    private static ImmutableList<StringMasker> createMaskStub() {
-        return ImmutableList.<StringMasker>of(string -> "***MAAAAASK***" + string);
+    private static LogMasker createMaskStub() {
+        return new LogMasker(new Credentials(), Collections.emptyList());
     }
 
     private static int findFreePort() {

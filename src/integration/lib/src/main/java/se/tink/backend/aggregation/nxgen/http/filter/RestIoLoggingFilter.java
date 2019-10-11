@@ -18,6 +18,7 @@ import java.util.Set;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -76,6 +77,7 @@ public class RestIoLoggingFilter extends Filter {
                     "X-Powered-By");
 
     private final PrintStream loggingStream;
+    private final LogMasker logMasker;
 
     private long _id = 0;
 
@@ -83,13 +85,15 @@ public class RestIoLoggingFilter extends Filter {
     private static final int MAX_SIZE = 500 * 1024;
     private boolean censorSensitiveHeaders;
 
-    public RestIoLoggingFilter(PrintStream loggingStream) {
-        this(loggingStream, true);
+    public RestIoLoggingFilter(PrintStream loggingStream, LogMasker logMasker) {
+        this(loggingStream, logMasker, true);
     }
 
-    public RestIoLoggingFilter(PrintStream loggingStream, boolean censorSensitiveHeaders) {
+    public RestIoLoggingFilter(
+            PrintStream loggingStream, LogMasker logMasker, boolean censorSensitiveHeaders) {
         this.censorSensitiveHeaders = censorSensitiveHeaders;
         this.loggingStream = loggingStream;
+        this.logMasker = logMasker;
     }
 
     public void setCensorSensitiveHeaders(boolean censorSensitiveHeaders) {
@@ -111,7 +115,7 @@ public class RestIoLoggingFilter extends Filter {
     }
 
     private void log(StringBuilder b) {
-        loggingStream.print(b);
+        loggingStream.print(logMasker.mask(b.toString()));
     }
 
     private static String censorHeaderValue(String key, String value) {

@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -29,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
@@ -65,8 +65,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             Class<? extends HttpLoggableExecutor> agentClass,
             Credentials credentials,
             Collection<String> sensitiveValuesToMask) {
-        Iterable<StringMasker> stringMaskers = createLogMaskers(credentials, sensitiveValuesToMask);
-        return new HttpLoggingFilterFactory(log, logTag, stringMaskers, agentClass);
+        return new HttpLoggingFilterFactory(
+                log, logTag, new LogMasker(credentials, sensitiveValuesToMask), agentClass);
     }
 
     private static String getLogTagTransfer(Transfer transfer) {

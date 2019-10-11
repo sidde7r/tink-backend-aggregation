@@ -22,6 +22,7 @@ import java.util.Set;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
@@ -78,6 +79,7 @@ public class LoggingFilter extends ClientFilter {
                     "x-forwarded-for",
                     "x-forwarded-host",
                     "x-powered-by");
+    private final LogMasker logMasker;
 
     private final class Adapter extends AbstractClientRequestAdapter {
         private final StringBuilder b;
@@ -143,17 +145,20 @@ public class LoggingFilter extends ClientFilter {
      *
      * @param loggingStream the print stream to log requests and responses.
      */
-    public LoggingFilter(PrintStream loggingStream) {
+    public LoggingFilter(PrintStream loggingStream, LogMasker logMasker) {
         this.loggingStream = loggingStream;
+        this.logMasker = logMasker;
     }
 
-    public LoggingFilter(PrintStream loggingStream, boolean censorSensitiveHeaders) {
+    public LoggingFilter(
+            PrintStream loggingStream, LogMasker logMasker, boolean censorSensitiveHeaders) {
         this.loggingStream = loggingStream;
         this.censorSensitiveHeaders = censorSensitiveHeaders;
+        this.logMasker = logMasker;
     }
 
     private void log(StringBuilder b) {
-        loggingStream.print(b);
+        loggingStream.print(logMasker.mask(b.toString()));
     }
 
     private static String censorHeaderValue(String key, String value) {

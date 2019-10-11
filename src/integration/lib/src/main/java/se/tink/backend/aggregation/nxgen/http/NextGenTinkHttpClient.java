@@ -68,6 +68,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -95,6 +96,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         implements TinkHttpClient {
+
+    private final LogMasker logMasker;
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -197,7 +200,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         }
     }
 
-    private NextGenTinkHttpClient(final Builder builder) {
+    private NextGenTinkHttpClient(final Builder builder, LogMasker logMasker) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(builder.getSignatureKeyPair());
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
@@ -238,12 +241,13 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         registerJacksonModule(new VavrModule());
         responseStatusHandler = new DefaultResponseStatusHandler();
-        debugOutputLoggingFilter = new RestIoLoggingFilter(printStream);
+        this.logMasker = logMasker;
+        debugOutputLoggingFilter = new RestIoLoggingFilter(printStream, this.logMasker);
         addFilter(new SendRequestFilter());
     }
 
-    public static NextGenTinkHttpClient.Builder builder() {
-        return new Builder();
+    public static NextGenTinkHttpClient.Builder builder(LogMasker logMasker) {
+        return new Builder(logMasker);
     }
 
     public static final class Builder {
@@ -254,9 +258,14 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
         private PrintStream printStream;
+        private LogMasker logMasker;
+
+        public Builder(LogMasker logMasker) {
+            this.logMasker = logMasker;
+        }
 
         public NextGenTinkHttpClient build() {
-            return new NextGenTinkHttpClient(this);
+            return new NextGenTinkHttpClient(this, logMasker);
         }
 
         public AggregatorInfo getAggregatorInfo() {
@@ -403,7 +412,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         try {
             if (this.logOutputStream != null) {
                 this.internalClient.addFilter(
-                        new LoggingFilter(new PrintStream(logOutputStream, true, "UTF-8")));
+                        new LoggingFilter(
+                                new PrintStream(logOutputStream, true, "UTF-8"), logMasker));
             }
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);

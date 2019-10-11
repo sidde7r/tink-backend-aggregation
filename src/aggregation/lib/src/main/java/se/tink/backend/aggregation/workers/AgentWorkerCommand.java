@@ -31,20 +31,4 @@ public abstract class AgentWorkerCommand {
     public List<MetricId.MetricLabels> getCommandTimerName(AgentWorkerOperationMetricType type) {
         return Lists.newArrayList();
     }
-
-    protected static Iterable<StringMasker> createLogMaskers(
-            Credentials credentials, Collection<String> sensitiveValuesToMask) {
-        StringMasker credentialsStringMasker =
-                new CredentialsStringMasker(
-                        credentials,
-                        ImmutableList.of(
-                                CredentialsStringMasker.CredentialsProperty.PASSWORD,
-                                CredentialsStringMasker.CredentialsProperty.SECRET_KEY,
-                                CredentialsStringMasker.CredentialsProperty.SENSITIVE_PAYLOAD,
-                                CredentialsStringMasker.CredentialsProperty.USERNAME));
-        StringMasker clientConfigurationStringMasker =
-                new ClientConfigurationStringMasker(sensitiveValuesToMask);
-
-        return ImmutableList.of(credentialsStringMasker, clientConfigurationStringMasker);
-    }
 }

@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPinAuthenticator;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -38,7 +39,10 @@ public class BankdataTransactionFetcherTest {
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
                         null,
-                        null);
+                        null,
+                        new LogMasker(
+                                credentials,
+                                context.getAgentConfigurationController().getSecretValues()));
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();
         provider.setPayload(bankNo);

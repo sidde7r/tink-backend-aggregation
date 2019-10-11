@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStor
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.mocks.ResultCaptor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
@@ -74,7 +75,10 @@ public class OpBankAuthenticatorTest {
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
                         null,
-                        null);
+                        null,
+                        new LogMasker(
+                                credentials,
+                                context.getAgentConfigurationController().getSecretValues()));
         // tinkHttpClient.setDebugOutput(true);
         // tinkHttpClient.setProxy("http://127.0.0.1:8888");
 
@@ -206,7 +210,11 @@ public class OpBankAuthenticatorTest {
                                         context.getMetricRegistry(),
                                         context.getLogOutputStream(),
                                         null,
-                                        null)));
+                                        null,
+                                        new LogMasker(
+                                                credentials,
+                                                context.getAgentConfigurationController()
+                                                        .getSecretValues()))));
         loginResultCaptor = new ResultCaptor<>();
         doAnswer(loginResultCaptor).when(bankClient).login(any());
         doReturn(new OpBankMobileConfigurationsEntity())

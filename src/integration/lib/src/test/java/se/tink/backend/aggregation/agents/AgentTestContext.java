@@ -6,6 +6,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -51,7 +53,10 @@ public class AgentTestContext extends AgentContext {
     private Credentials credentials;
 
     public AgentTestContext(Credentials credentials) {
-        supplementalClient = NextGenTinkHttpClient.builder().build();
+        supplementalClient =
+                NextGenTinkHttpClient.builder(
+                                new LogMasker(new Credentials(), Collections.emptyList()))
+                        .build();
         log = LoggerFactory.getLogger(AgentTestContext.class);
         mapper = new ObjectMapper();
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"));

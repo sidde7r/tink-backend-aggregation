@@ -6,6 +6,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.StringMasker;
 
@@ -17,25 +18,25 @@ import se.tink.backend.aggregation.utils.StringMasker;
 public class HttpLoggingFilterFactory implements ClientFilterFactory {
     private final AggregationLogger log;
     private final String logTag;
-    private final Iterable<StringMasker> stringMaskers;
+    private final LogMasker logMasker;
     private final Class<? extends HttpLoggableExecutor> agentClass;
     private final Multimap<Client, ClientFilter> createdFilters;
 
     public HttpLoggingFilterFactory(
             AggregationLogger log,
             String logTag,
-            Iterable<StringMasker> stringMaskers,
+            LogMasker logMasker,
             Class<? extends HttpLoggableExecutor> agentClass) {
         this.log = log;
         this.logTag = logTag;
-        this.stringMaskers = stringMaskers;
+        this.logMasker = logMasker;
         this.agentClass = agentClass;
         this.createdFilters = MultimapBuilder.hashKeys().arrayListValues().build();
     }
 
     @Override
     public ClientFilter addClientFilter(Client client) {
-        HttpLoggingFilter filter = new HttpLoggingFilter(log, logTag, stringMaskers, agentClass);
+        HttpLoggingFilter filter = new HttpLoggingFilter(log, logTag, logMasker, agentClass);
 
         client.addFilter(filter);
         createdFilters.put(client, filter);

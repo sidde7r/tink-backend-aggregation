@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.S
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
@@ -55,7 +56,10 @@ public class SpKeyCardAuthenticatorTest extends NextGenerationAgentTest {
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
                         null,
-                        null);
+                        null,
+                        new LogMasker(
+                                credentials,
+                                context.getAgentConfigurationController().getSecretValues()));
         client.setDebugOutput(true);
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());
         SamlinkApiClient bankClient =
