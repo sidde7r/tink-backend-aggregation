@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.security.cert.CertificateException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -49,6 +50,7 @@ public class IngBaseApiClient {
     private IngBaseConfiguration configuration;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private final boolean manualRequest;
+    private String certificateSerial;
 
     public IngBaseApiClient(
             TinkHttpClient client,
@@ -74,6 +76,12 @@ public class IngBaseApiClient {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
+        try {
+            this.certificateSerial =
+                    IngBaseUtils.getCertificateSerial(configuration.getClientCertificate());
+        } catch (CertificateException e) {
+            throw new IllegalStateException("Could not get certificate serial", e);
+        }
     }
 
     public FetchAccountsResponse fetchAccounts() {
@@ -182,7 +190,7 @@ public class IngBaseApiClient {
                 Signature.SIGNATURE
                         + StringUtils.SPACE
                         + getAuthorization(
-                                getConfiguration().getClientCertificateSerial(),
+                                certificateSerial,
                                 Signature.HTTP_METHOD_POST,
                                 Urls.TOKEN,
                                 reqId,
@@ -304,7 +312,7 @@ public class IngBaseApiClient {
                         eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
                         eidasIdentity,
-                        configuration.getCertificateId());
+                        null);
 
         return proxySigner.getSignatureBase64(signatureEntity.toString().getBytes());
     }

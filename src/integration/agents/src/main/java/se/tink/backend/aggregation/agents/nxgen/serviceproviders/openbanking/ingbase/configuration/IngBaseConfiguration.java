@@ -12,23 +12,14 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class IngBaseConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String baseUrl;
-    @JsonProperty @Secret private String clientCertificateSerial;
     @JsonProperty @Secret private String clientCertificate;
     @JsonProperty @Secret private String redirectUrl;
-    @JsonProperty @Secret private String certificateId;
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
         return baseUrl;
-    }
-
-    public String getClientCertificateSerial() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client certificate serial"));
-        return clientCertificateSerial;
     }
 
     public String getClientCertificate() {
@@ -43,12 +34,5 @@ public class IngBaseConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(redirectUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
         return redirectUrl;
-    }
-
-    public String getCertificateId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
-        return certificateId;
     }
 }
