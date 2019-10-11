@@ -43,6 +43,10 @@ public final class NordeaSeConstants {
         public static final String TOKEN_TYPE = "Bearer";
     }
 
+    public class Scopes {
+        public static final String AIS = "AIS";
+    }
+
     public static class ErrorCode {
         public static final String SERVER_ERROR = "error.server";
         public static final String VALIDATION_ERROR = "error.validation";

@@ -38,6 +38,7 @@ public final class NordeaSeAgent extends NordeaBaseAgent
                 RefreshTransferDestinationExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final String scopeFromPayload;
 
     public NordeaSeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -45,6 +46,7 @@ public final class NordeaSeAgent extends NordeaBaseAgent
 
         apiClient = new NordeaSeApiClient(client, sessionStorage, persistentStorage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        scopeFromPayload = request.getProvider().getPayload();
     }
 
     @Override
@@ -53,7 +55,8 @@ public final class NordeaSeAgent extends NordeaBaseAgent
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalRequester,
-                        new NordeaSeBankIdAuthenticator((NordeaSeApiClient) apiClient, language),
+                        new NordeaSeBankIdAuthenticator(
+                                (NordeaSeApiClient) apiClient, language, scopeFromPayload),
                         persistentStorage,
                         credentials);
 
