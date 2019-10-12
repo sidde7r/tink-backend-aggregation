@@ -19,6 +19,7 @@ junit_test(
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
