@@ -1,6 +1,6 @@
 steps:
 
-  - name: ':white_check_mark: Test'
+  - name: ':junit: Test'
     branches: '!master'
     command: .buildkite/run-unit-tests.sh
     timeout_in_minutes: 30
