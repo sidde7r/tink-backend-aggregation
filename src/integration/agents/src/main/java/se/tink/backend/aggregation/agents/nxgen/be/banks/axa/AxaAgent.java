@@ -41,7 +41,7 @@ public final class AxaAgent
 
     public AxaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
         this.apiClient = new AxaApiClient(client);
         this.storage = makeStorage();
