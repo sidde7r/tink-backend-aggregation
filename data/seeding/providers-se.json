@@ -2424,8 +2424,7 @@
                     "patternError": "Please enter eight digits.",
                     "immutable": true,
                     "masked": false,
-                    "name": "signcodeinput",
-                    "numeric": true
+                    "name": "signcodeinput"
                 }
             ],
             "groupDisplayName": "Swedbank och Sparbankerna",
@@ -2541,8 +2540,7 @@
                     "patternError": "Please enter eight digits.",
                     "immutable": true,
                     "masked": false,
-                    "name": "signcodeinput",
-                    "numeric": true
+                    "name": "signcodeinput"
                 }
             ],
             "groupDisplayName": "Swedbank och Sparbankerna",
