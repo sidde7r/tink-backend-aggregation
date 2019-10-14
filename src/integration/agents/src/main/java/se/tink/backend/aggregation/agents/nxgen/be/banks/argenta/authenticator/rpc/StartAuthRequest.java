@@ -20,4 +20,16 @@ public class StartAuthRequest {
                         ArgentaConstants.Device.UNKNOWN,
                         ArgentaConstants.Device.UNKNOWN);
     }
+
+    public StartAuthRequest(String cardNumber, boolean registered) {
+        this.cardNumber = cardNumber;
+        this.device =
+                new Device(
+                        ArgentaConstants.Device.VENDOR,
+                        registered,
+                        ArgentaConstants.Device.NAME,
+                        ArgentaConstants.Device.MODEL,
+                        ArgentaConstants.Device.OS_VERSION,
+                        ArgentaConstants.Device.OS);
+    }
 }

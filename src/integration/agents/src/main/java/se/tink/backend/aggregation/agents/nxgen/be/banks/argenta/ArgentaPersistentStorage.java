@@ -32,4 +32,14 @@ public class ArgentaPersistentStorage {
     public String getUak() {
         return persistentStorage.get(ArgentaConstants.Storage.UAK);
     }
+
+    public void setNewCredential(boolean isNewCredential) {
+        persistentStorage.put(
+                ArgentaConstants.Storage.IS_NEW_CREDENTIAL, String.valueOf(isNewCredential));
+    }
+
+    public boolean isNewCredential() {
+        return Boolean.parseBoolean(
+                persistentStorage.get(ArgentaConstants.Storage.IS_NEW_CREDENTIAL));
+    }
 }
