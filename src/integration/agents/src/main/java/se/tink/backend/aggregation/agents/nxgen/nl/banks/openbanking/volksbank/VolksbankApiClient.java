@@ -136,6 +136,17 @@ public class VolksbankApiClient {
                 .toOauthToken();
     }
 
+    public String consentStatusRequest(final String clientId, final String consentId) {
+        final URL url = urlFactory.buildURL(Paths.CONSENT + "/" + consentId + "/status");
+
+        return client.request(url)
+                .header(HeaderKeys.CONSENT_ID, consentId)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON_TYPE)
+                .header(HeaderKeys.REQUEST_ID, getRequestId())
+                .header(HeaderKeys.AUTHORIZATION, clientId)
+                .get(String.class);
+    }
+
     private static String getRequestId() {
         return java.util.UUID.randomUUID().toString();
     }

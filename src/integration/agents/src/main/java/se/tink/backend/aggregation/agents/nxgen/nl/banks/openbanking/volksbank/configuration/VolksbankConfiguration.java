@@ -9,10 +9,14 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class VolksbankConfiguration implements ClientConfiguration {
 
-    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String certificateId;
     @JsonProperty @Secret private String clientId;
     @JsonProperty @SensitiveSecret private String clientSecret;
-    @JsonProperty @Secret private String certificateId;
+    @JsonProperty @Secret private String redirectUrl;
+
+    public String getCertificateId() {
+        return certificateId;
+    }
 
     public String getClientId() {
         return clientId;
@@ -20,10 +24,6 @@ public class VolksbankConfiguration implements ClientConfiguration {
 
     public String getClientSecret() {
         return clientSecret;
-    }
-
-    public String getCertificateId() {
-        return certificateId;
     }
 
     public String getRedirectUrl() {
