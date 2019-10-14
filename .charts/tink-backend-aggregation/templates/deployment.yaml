@@ -337,20 +337,6 @@ spec:
               key: sibs-certificate-serial-number-cgd
               optional: true
         {{- end }}
-        {{- if $agentsConfig.cbi }}
-        - name: CBI_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: cbi-client-id-tink
-              optional: true
-        - name: CBI_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: cbi-client-secret-tink
-              optional: true
-        {{- end }}
         {{- if $agentsConfig.finecobank }}
         - name: FINECOBANK_CLIENT_ID
           valueFrom:
