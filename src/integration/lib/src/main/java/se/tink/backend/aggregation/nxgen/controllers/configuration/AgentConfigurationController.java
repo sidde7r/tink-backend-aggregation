@@ -11,8 +11,10 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -257,6 +259,9 @@ public final class AgentConfigurationController {
     }
 
     public Collection<String> getSecretValues() {
+        if (Objects.isNull(allSecrets)) {
+            return Collections.emptyList();
+        }
         return allSecrets.values();
     }
 }
