@@ -14,7 +14,6 @@ public class SwedbankConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
     @Secret private String redirectUrl;
-    private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -38,9 +37,5 @@ public class SwedbankConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
-    }
-
-    public String getEidasQwac() {
-        return eidasQwac;
     }
 }
