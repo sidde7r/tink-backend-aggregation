@@ -98,6 +98,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         implements TinkHttpClient {
 
     private final LogMasker logMasker;
+    private final boolean shouldLog;
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -200,7 +201,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         }
     }
 
-    private NextGenTinkHttpClient(final Builder builder, LogMasker logMasker) {
+    private NextGenTinkHttpClient(final Builder builder, LogMasker logMasker, boolean shouldLog) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(builder.getSignatureKeyPair());
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
@@ -242,16 +243,19 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         registerJacksonModule(new VavrModule());
         responseStatusHandler = new DefaultResponseStatusHandler();
         this.logMasker = logMasker;
-        debugOutputLoggingFilter = new RestIoLoggingFilter(printStream, this.logMasker);
+        this.shouldLog = shouldLog;
+        debugOutputLoggingFilter =
+                new RestIoLoggingFilter(printStream, this.logMasker, this.shouldLog);
         addFilter(new SendRequestFilter());
     }
 
-    public static NextGenTinkHttpClient.Builder builder(LogMasker logMasker) {
-        return new Builder(logMasker);
+    public static NextGenTinkHttpClient.Builder builder(LogMasker logMasker, boolean shouldLog) {
+        return new Builder(logMasker, shouldLog);
     }
 
     public static final class Builder {
 
+        private final boolean shouldLog;
         private AggregatorInfo aggregatorInfo;
         private MetricRegistry metricRegistry;
         private ByteArrayOutputStream logOutputStream;
@@ -260,12 +264,13 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private PrintStream printStream;
         private LogMasker logMasker;
 
-        public Builder(LogMasker logMasker) {
+        public Builder(LogMasker logMasker, boolean shouldLog) {
             this.logMasker = logMasker;
+            this.shouldLog = shouldLog;
         }
 
         public NextGenTinkHttpClient build() {
-            return new NextGenTinkHttpClient(this, logMasker);
+            return new NextGenTinkHttpClient(this, logMasker, shouldLog);
         }
 
         public AggregatorInfo getAggregatorInfo() {
@@ -413,7 +418,9 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             if (this.logOutputStream != null) {
                 this.internalClient.addFilter(
                         new LoggingFilter(
-                                new PrintStream(logOutputStream, true, "UTF-8"), logMasker));
+                                new PrintStream(logOutputStream, true, "UTF-8"),
+                                logMasker,
+                                shouldLog));
             }
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);

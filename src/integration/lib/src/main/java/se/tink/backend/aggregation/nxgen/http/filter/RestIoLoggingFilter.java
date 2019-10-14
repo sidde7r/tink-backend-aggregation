@@ -78,6 +78,7 @@ public class RestIoLoggingFilter extends Filter {
 
     private final PrintStream loggingStream;
     private final LogMasker logMasker;
+    private final boolean shouldLog;
 
     private long _id = 0;
 
@@ -85,15 +86,19 @@ public class RestIoLoggingFilter extends Filter {
     private static final int MAX_SIZE = 500 * 1024;
     private boolean censorSensitiveHeaders;
 
-    public RestIoLoggingFilter(PrintStream loggingStream, LogMasker logMasker) {
-        this(loggingStream, logMasker, true);
+    public RestIoLoggingFilter(PrintStream loggingStream, LogMasker logMasker, boolean shouldLog) {
+        this(loggingStream, logMasker, true, shouldLog);
     }
 
     public RestIoLoggingFilter(
-            PrintStream loggingStream, LogMasker logMasker, boolean censorSensitiveHeaders) {
+            PrintStream loggingStream,
+            LogMasker logMasker,
+            boolean censorSensitiveHeaders,
+            boolean shouldLog) {
         this.censorSensitiveHeaders = censorSensitiveHeaders;
         this.loggingStream = loggingStream;
         this.logMasker = logMasker;
+        this.shouldLog = shouldLog;
     }
 
     public void setCensorSensitiveHeaders(boolean censorSensitiveHeaders) {
@@ -115,7 +120,9 @@ public class RestIoLoggingFilter extends Filter {
     }
 
     private void log(StringBuilder b) {
-        loggingStream.print(logMasker.mask(b.toString()));
+        if (shouldLog) {
+            loggingStream.print(logMasker.mask(b.toString()));
+        }
     }
 
     private static String censorHeaderValue(String key, String value) {

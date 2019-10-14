@@ -652,6 +652,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                 log,
                 "TRANSFER",
                 new LogMasker(new Credentials(), Collections.emptyList()),
-                transferExecutor.getClass());
+                transferExecutor.getClass(),
+                true);
     }
 }

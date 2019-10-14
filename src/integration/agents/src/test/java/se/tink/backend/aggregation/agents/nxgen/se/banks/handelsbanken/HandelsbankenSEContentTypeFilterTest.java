@@ -36,7 +36,8 @@ public class HandelsbankenSEContentTypeFilterTest {
                         null,
                         new LogMasker(
                                 credentials,
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        true);
         client.setDebugOutput(true);
         client.addFilter(new HandelsbankenSEContentTypeFilter());
 

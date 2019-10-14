@@ -52,7 +52,8 @@ public class OpBankSessionHandlerTest {
                                 new LogMasker(
                                         credentials,
                                         context.getAgentConfigurationController()
-                                                .getSecretValues())));
+                                                .getSecretValues()),
+                                true));
         sessionStorage = new SessionStorage();
         OpBankPersistentStorage persistentStorage =
                 new OpBankPersistentStorage(credentials, new PersistentStorage());

@@ -44,7 +44,8 @@ public class NordeaTestBase {
                                 new LogMasker(
                                         credentials,
                                         context.getAgentConfigurationController()
-                                                .getSecretValues())));
+                                                .getSecretValues()),
+                                true));
         tinkHttpClient.setDebugOutput(TestConfig.CLIENT_DEBUG_OUTPUT);
         tinkHttpClient.addFilter(new NordeaDkFilter());
 

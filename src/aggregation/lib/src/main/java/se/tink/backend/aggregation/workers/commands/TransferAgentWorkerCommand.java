@@ -64,9 +64,14 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             String logTag,
             Class<? extends HttpLoggableExecutor> agentClass,
             Credentials credentials,
-            Collection<String> sensitiveValuesToMask) {
+            Collection<String> sensitiveValuesToMask,
+            boolean shouldLog) {
         return new HttpLoggingFilterFactory(
-                log, logTag, new LogMasker(credentials, sensitiveValuesToMask), agentClass);
+                log,
+                logTag,
+                new LogMasker(credentials, sensitiveValuesToMask),
+                agentClass,
+                shouldLog);
     }
 
     private static String getLogTagTransfer(Transfer transfer) {
@@ -105,7 +110,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                         getLogTagTransfer(transfer),
                         httpLoggableExecutor.getClass(),
                         credentials,
-                        context.getAgentConfigurationController().getSecretValues());
+                        context.getAgentConfigurationController().getSecretValues(),
+                        transferRequest.getProvider().isOpenBanking());
 
         Optional<String> operationStatusMessage = Optional.empty();
         try {

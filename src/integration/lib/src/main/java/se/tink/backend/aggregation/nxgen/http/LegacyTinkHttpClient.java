@@ -95,6 +95,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         implements TinkHttpClient {
 
     private final LogMasker logMasker;
+    private final boolean shouldLog;
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -209,7 +210,8 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
             @Nullable ByteArrayOutputStream logOutPutStream,
             @Nullable SignatureKeyPair signatureKeyPair,
             @Nullable Provider provider,
-            @Nullable LogMasker logMasker) {
+            @Nullable LogMasker logMasker,
+            boolean shouldLog) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
@@ -231,7 +233,9 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         this.metricRegistry = metricRegistry;
         this.provider = provider;
         this.logMasker = logMasker;
-        this.debugOutputLoggingFilter = new LoggingFilter(new PrintStream(System.out), logMasker);
+        this.shouldLog = shouldLog;
+        this.debugOutputLoggingFilter =
+                new LoggingFilter(new PrintStream(System.out), this.logMasker, this.shouldLog);
 
         // Add an initial redirect handler to fix any illegal location paths
         addRedirectHandler(new FixRedirectHandler());
@@ -251,7 +255,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     }
 
     public LegacyTinkHttpClient() {
-        this(null, null, null, null, null, null);
+        this(null, null, null, null, null, null, false);
     }
 
     public void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler) {
@@ -344,7 +348,9 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
             if (this.logOutputStream != null && this.logMasker != null) {
                 this.internalClient.addFilter(
                         new LoggingFilter(
-                                new PrintStream(logOutputStream, true, "UTF-8"), logMasker));
+                                new PrintStream(logOutputStream, true, "UTF-8"),
+                                logMasker,
+                                shouldLog));
             }
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);

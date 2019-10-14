@@ -72,7 +72,8 @@ public final class BawagPskTransactionalAccountFetcherTest {
                                 new LogMasker(
                                         credentials,
                                         context.getAgentConfigurationController()
-                                                .getSecretValues())),
+                                                .getSecretValues()),
+                                true),
                         new SessionStorage(),
                         new PersistentStorage(),
                         provider);

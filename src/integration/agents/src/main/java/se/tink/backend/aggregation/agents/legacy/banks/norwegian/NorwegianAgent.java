@@ -139,7 +139,8 @@ public class NorwegianAgent extends AbstractAgent
                         request.getProvider(),
                         new LogMasker(
                                 request.getCredentials(),
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        request.getProvider().isOpenBanking());
     }
 
     @Override

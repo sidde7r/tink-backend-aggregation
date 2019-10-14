@@ -45,7 +45,8 @@ public class HttpLoggingFilterTest {
                         createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
-                        createLoggedClass());
+                        createLoggedClass(),
+                        true);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the
@@ -99,7 +100,8 @@ public class HttpLoggingFilterTest {
                         createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
-                        createLoggedClass());
+                        createLoggedClass(),
+                        true);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the
@@ -127,7 +129,8 @@ public class HttpLoggingFilterTest {
                         createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
-                        createLoggedClass());
+                        createLoggedClass(),
+                        true);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the
@@ -154,7 +157,8 @@ public class HttpLoggingFilterTest {
                         createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
-                        createLoggedClass());
+                        createLoggedClass(),
+                        true);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the

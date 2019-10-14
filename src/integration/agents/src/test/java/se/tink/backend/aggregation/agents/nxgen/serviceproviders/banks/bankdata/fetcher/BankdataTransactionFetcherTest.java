@@ -42,7 +42,8 @@ public class BankdataTransactionFetcherTest {
                         null,
                         new LogMasker(
                                 credentials,
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        true);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();
         provider.setPayload(bankNo);

@@ -17,10 +17,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Provider implements Cloneable {
 
-    public boolean isOpenBanking() {
-        return accessType == AccessType.OPEN_BANKING;
-    }
-
     public enum AccessType {
         OPEN_BANKING,
         OTHER
@@ -167,5 +163,10 @@ public class Provider implements Cloneable {
     @JsonIgnore
     public String getMetricTypeName() {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_UNDERSCORE, getType().name());
+    }
+
+    @JsonIgnore
+    public boolean isOpenBanking() {
+        return accessType == AccessType.OPEN_BANKING;
     }
 }

@@ -71,7 +71,8 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
                         request.getProvider(),
                         new LogMasker(
                                 credentials,
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        request.getProvider().isOpenBanking());
         // When Java trusted certificates are updated this is probably no longer necessary:
         this.client.loadTrustMaterial(loadCustomTrustStore(), null);
         this.client.addMessageReader(

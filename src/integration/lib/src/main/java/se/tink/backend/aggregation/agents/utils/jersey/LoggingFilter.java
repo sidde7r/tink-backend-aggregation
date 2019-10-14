@@ -80,6 +80,7 @@ public class LoggingFilter extends ClientFilter {
                     "x-forwarded-host",
                     "x-powered-by");
     private final LogMasker logMasker;
+    private final boolean shouldLog;
 
     private final class Adapter extends AbstractClientRequestAdapter {
         private final StringBuilder b;
@@ -145,20 +146,27 @@ public class LoggingFilter extends ClientFilter {
      *
      * @param loggingStream the print stream to log requests and responses.
      */
-    public LoggingFilter(PrintStream loggingStream, LogMasker logMasker) {
+    public LoggingFilter(PrintStream loggingStream, LogMasker logMasker, boolean shouldLog) {
         this.loggingStream = loggingStream;
         this.logMasker = logMasker;
+        this.shouldLog = shouldLog;
     }
 
     public LoggingFilter(
-            PrintStream loggingStream, LogMasker logMasker, boolean censorSensitiveHeaders) {
+            PrintStream loggingStream,
+            LogMasker logMasker,
+            boolean censorSensitiveHeaders,
+            boolean shouldLog) {
         this.loggingStream = loggingStream;
         this.censorSensitiveHeaders = censorSensitiveHeaders;
         this.logMasker = logMasker;
+        this.shouldLog = shouldLog;
     }
 
     private void log(StringBuilder b) {
-        loggingStream.print(logMasker.mask(b.toString()));
+        if (shouldLog) {
+            loggingStream.print(logMasker.mask(b.toString()));
+        }
     }
 
     private static String censorHeaderValue(String key, String value) {

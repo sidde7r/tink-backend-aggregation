@@ -84,7 +84,8 @@ public class PopPankkiKeyCardAuthenticatorTest extends NextGenerationAgentTest {
                         null,
                         new LogMasker(
                                 credentials,
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        true);
         client.setDebugOutput(true);
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());
         SamlinkApiClient bankClient =

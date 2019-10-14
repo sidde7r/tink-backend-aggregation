@@ -46,7 +46,8 @@ public class EncapClient {
                         request.getProvider(),
                         new LogMasker(
                                 request.getCredentials(),
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        request.getProvider().isOpenBanking());
 
         // Encap does not like it when we send our signature header.
         this.httpClient.disableSignatureRequestHeader();

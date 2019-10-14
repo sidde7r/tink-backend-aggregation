@@ -25,7 +25,7 @@ public class LoggingFilterTest {
 
         TinkHttpClient client =
                 NextGenTinkHttpClient.builder(
-                                new LogMasker(new Credentials(), Collections.emptyList()))
+                                new LogMasker(new Credentials(), Collections.emptyList()), true)
                         .setPrintStream(printStream)
                         .build();
 

@@ -20,26 +20,28 @@ public class HttpLoggingFilterFactory implements ClientFilterFactory {
     private final LogMasker logMasker;
     private final Class<? extends HttpLoggableExecutor> agentClass;
     private final Multimap<Client, ClientFilter> createdFilters;
+    private final boolean shouldLog;
 
     public HttpLoggingFilterFactory(
             AggregationLogger log,
             String logTag,
             LogMasker logMasker,
-            Class<? extends HttpLoggableExecutor> agentClass) {
+            Class<? extends HttpLoggableExecutor> agentClass,
+            boolean shouldLog) {
         this.log = log;
         this.logTag = logTag;
         this.logMasker = logMasker;
         this.agentClass = agentClass;
         this.createdFilters = MultimapBuilder.hashKeys().arrayListValues().build();
+        this.shouldLog = shouldLog;
     }
 
     @Override
     public ClientFilter addClientFilter(Client client) {
-        HttpLoggingFilter filter = new HttpLoggingFilter(log, logTag, logMasker, agentClass);
-
+        HttpLoggingFilter filter =
+                new HttpLoggingFilter(log, logTag, logMasker, agentClass, shouldLog);
         client.addFilter(filter);
         createdFilters.put(client, filter);
-
         return filter;
     }
 

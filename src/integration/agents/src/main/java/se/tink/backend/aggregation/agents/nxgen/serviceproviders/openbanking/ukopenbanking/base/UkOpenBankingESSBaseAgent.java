@@ -97,7 +97,8 @@ public abstract class UkOpenBankingESSBaseAgent extends NextGenerationAgent
                         request.getProvider(),
                         new LogMasker(
                                 request.getCredentials(),
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        request.getProvider().isOpenBanking());
         tinkProvider = request.getProvider();
         this.wellKnownURL = aisConfig.getWellKnownURL();
         this.agentConfig = aisConfig;

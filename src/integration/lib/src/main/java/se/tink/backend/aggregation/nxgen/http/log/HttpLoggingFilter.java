@@ -39,6 +39,7 @@ public class HttpLoggingFilter extends ClientFilter {
     private final MapValueMasker headerMasker;
     private static final String LOG_FORMAT = "HTTP(%s) %s@{%d:%d}=%s";
     private final LogMasker logMasker;
+    private final boolean shouldLog;
     private long requestCount;
     private static final LogTag GENERIC_HTTP_LOGGER = LogTag.from("http_logging_filter");
 
@@ -84,22 +85,29 @@ public class HttpLoggingFilter extends ClientFilter {
             AggregationLogger log,
             String logTag,
             LogMasker logMasker,
-            Class<? extends HttpLoggableExecutor> agentClass) {
+            Class<? extends HttpLoggableExecutor> agentClass,
+            boolean shouldLog) {
         this.log = log;
         this.logTag = logTag;
         this.logMasker = logMasker;
         this.headerMasker = new MapValueMaskerImpl(Optional.of(NON_SENSITIVE_HEADER_FIELDS));
         this.agentClass = agentClass;
         this.requestCount = 0;
+        this.shouldLog = shouldLog;
     }
 
     @Override
     public ClientResponse handle(ClientRequest clientRequest) throws ClientHandlerException {
         requestCount++;
 
-        log(requestCount, createRequestLogEntry(clientRequest));
+        if (shouldLog) {
+            log(requestCount, createRequestLogEntry(clientRequest));
+        }
+
         ClientResponse clientResponse = getNext().handle(clientRequest);
-        log(requestCount, createResponseLogEntry(clientResponse));
+        if (shouldLog) {
+            log(requestCount, createResponseLogEntry(clientResponse));
+        }
 
         return clientResponse;
     }

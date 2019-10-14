@@ -100,7 +100,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         request.getProvider(),
                         new LogMasker(
                                 request.getCredentials(),
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        request.getProvider().isOpenBanking());
         tinkProvider = request.getProvider();
         this.agentConfig = aisConfig;
         this.wellKnownURL = aisConfig.getWellKnownURL();

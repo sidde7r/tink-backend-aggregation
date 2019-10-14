@@ -36,7 +36,8 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
                 new JerseyClientFactory(
                         new LogMasker(
                                 request.getCredentials(),
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        request.getProvider().isOpenBanking());
 
         this.log = new AggregationLogger(getAgentClass());
     }

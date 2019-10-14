@@ -36,7 +36,8 @@ public class BancoPopularTestBase {
                         null,
                         new LogMasker(
                                 credentials,
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        true);
         client.setDebugOutput(true);
 
         persistentStorage = new BancoPopularPersistentStorage(new PersistentStorage());

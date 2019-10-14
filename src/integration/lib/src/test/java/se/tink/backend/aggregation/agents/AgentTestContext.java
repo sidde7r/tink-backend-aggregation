@@ -55,7 +55,7 @@ public class AgentTestContext extends AgentContext {
     public AgentTestContext(Credentials credentials) {
         supplementalClient =
                 NextGenTinkHttpClient.builder(
-                                new LogMasker(new Credentials(), Collections.emptyList()))
+                                new LogMasker(new Credentials(), Collections.emptyList()), true)
                         .build();
         log = LoggerFactory.getLogger(AgentTestContext.class);
         mapper = new ObjectMapper();

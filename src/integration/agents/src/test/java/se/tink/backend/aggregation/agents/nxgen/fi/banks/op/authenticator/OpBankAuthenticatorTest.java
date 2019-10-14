@@ -78,7 +78,8 @@ public class OpBankAuthenticatorTest {
                         null,
                         new LogMasker(
                                 credentials,
-                                context.getAgentConfigurationController().getSecretValues()));
+                                context.getAgentConfigurationController().getSecretValues()),
+                        true);
         // tinkHttpClient.setDebugOutput(true);
         // tinkHttpClient.setProxy("http://127.0.0.1:8888");
 
@@ -214,7 +215,8 @@ public class OpBankAuthenticatorTest {
                                         new LogMasker(
                                                 credentials,
                                                 context.getAgentConfigurationController()
-                                                        .getSecretValues()))));
+                                                        .getSecretValues()),
+                                        true)));
         loginResultCaptor = new ResultCaptor<>();
         doAnswer(loginResultCaptor).when(bankClient).login(any());
         doReturn(new OpBankMobileConfigurationsEntity())
