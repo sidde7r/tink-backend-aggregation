@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -90,6 +91,7 @@ public class AccountEntity {
                 .setBankIdentifier(accountId)
                 .setApiIdentifier(accountId)
                 .addHolderName(owner)
+                .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .build();
     }
 
