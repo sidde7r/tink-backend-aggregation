@@ -31,7 +31,7 @@ public class ArgentaAgent extends NextGenerationAgent
 
     public ArgentaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
         this.apiClient =
                 new ArgentaApiClient(this.client, new ArgentaSessionStorage(this.sessionStorage));

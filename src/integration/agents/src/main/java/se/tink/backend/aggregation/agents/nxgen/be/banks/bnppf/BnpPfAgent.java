@@ -30,7 +30,7 @@ public class BnpPfAgent extends NextGenerationAgent
 
     public BnpPfAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
         apiClient = new BnpPfApiClient(client);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
