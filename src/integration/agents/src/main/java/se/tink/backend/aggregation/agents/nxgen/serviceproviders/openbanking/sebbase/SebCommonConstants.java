@@ -84,5 +84,6 @@ public class SebCommonConstants {
         public static final String PAGINATING_ERROR_CODE = "301";
         public static final String PAGINATING_ERROR_MESSAGE =
                 "Unhandeled HostRC code: 2000 Error message is available.";
+        public static final String INVALID_GRANT_ERROR = "invalid_grant";
     }
 }
