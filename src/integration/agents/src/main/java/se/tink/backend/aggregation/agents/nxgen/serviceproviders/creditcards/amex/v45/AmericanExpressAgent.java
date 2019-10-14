@@ -33,7 +33,7 @@ public class AmericanExpressAgent extends NextGenerationAgent
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
             AmericanExpressConfiguration config) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         generateDeviceId();
         this.apiClient = new AmericanExpressApiClient(client, sessionStorage, config);
         this.config = config;
