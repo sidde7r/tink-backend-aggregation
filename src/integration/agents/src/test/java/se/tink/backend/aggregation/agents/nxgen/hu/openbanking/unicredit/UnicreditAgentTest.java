@@ -17,6 +17,8 @@ public class UnicreditAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("hu", "hu-unicredit-oauth2")
+                        .setFinancialInstitutionId("unicredit-hu")
+                        .setAppId("tink")
                         .addCredentialField(Key.LOGIN_INPUT, TEST_IBAN)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
