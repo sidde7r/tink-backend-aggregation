@@ -1,0 +1,20 @@
+java_library(
+    name = "santander",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/amount",
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/account_identifier",
+        "//src/libraries/serialization",
+        "//src/libraries/uuid",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_sun_jersey_jersey_core",
+        "@tink_httpcore_4_4_9",
+    ],
+)
