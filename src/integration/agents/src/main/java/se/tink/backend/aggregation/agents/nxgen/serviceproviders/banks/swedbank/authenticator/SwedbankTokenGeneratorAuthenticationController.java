@@ -12,14 +12,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.SecurityTokenChallengeResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 public class SwedbankTokenGeneratorAuthenticationController
-        implements MultiFactorAuthenticator, AuthenticationControllerType {
+        implements TypedAuthenticator, AuthenticationControllerType {
     private final SwedbankDefaultApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Catalog catalog;

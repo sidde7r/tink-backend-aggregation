@@ -8,9 +8,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 
-public class VolksbankPasswordAuthenticator implements MultiFactorAuthenticator {
+public class VolksbankPasswordAuthenticator implements TypedAuthenticator {
 
     private final VolksbankApiClient apiClient;
 

@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -27,7 +27,7 @@ import se.tink.libraries.i18n.LocalizableKey;
  *
  * @param <T>
  */
-public class PasswordExternalAppAuthenticationController<T> implements MultiFactorAuthenticator {
+public class PasswordExternalAppAuthenticationController<T> implements TypedAuthenticator {
 
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
     private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.onetimecode;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 
@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
  * and an AutoAuthenticator.
  */
 public class OneTimeActivationCodeAuthenticationController extends PasswordAuthenticationController
-        implements MultiFactorAuthenticator {
+        implements TypedAuthenticator {
 
     public OneTimeActivationCodeAuthenticationController(PasswordAuthenticator authenticator) {
         super(authenticator);

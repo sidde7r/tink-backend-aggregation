@@ -11,11 +11,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.Catalog;
 
-public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenticator {
+public class MultiSupplementalManualAuthenticator implements TypedAuthenticator {
     private static final String loginDesciptionField = "loginDescriptionField";
     private static final String loginInputField = "loginInputField";
     private static final String loginChallengeField = "loginChallengeField";

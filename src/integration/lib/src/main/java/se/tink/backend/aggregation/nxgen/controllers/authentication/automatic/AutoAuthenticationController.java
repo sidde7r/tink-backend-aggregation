@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
@@ -22,14 +21,14 @@ public class AutoAuthenticationController
     private static final Logger log = LoggerFactory.getLogger(AutoAuthenticationController.class);
     private final CredentialsRequest request;
     private final SystemUpdater systemUpdater;
-    private final MultiFactorAuthenticator manualAuthenticator;
+    private final TypedAuthenticator manualAuthenticator;
     private final AutoAuthenticator autoAuthenticator;
     private final boolean isDebugEnabled;
 
     public AutoAuthenticationController(
             CredentialsRequest request,
             SystemUpdater systemUpdater,
-            MultiFactorAuthenticator manualAuthenticator,
+            TypedAuthenticator manualAuthenticator,
             AutoAuthenticator autoAuthenticator) {
         this.request = Preconditions.checkNotNull(request);
         this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
@@ -41,7 +40,7 @@ public class AutoAuthenticationController
     public AutoAuthenticationController(
             CredentialsRequest request,
             SystemUpdater systemUpdater,
-            MultiFactorAuthenticator manualAuthenticator,
+            TypedAuthenticator manualAuthenticator,
             AutoAuthenticator autoAuthenticator,
             boolean isDebugEnabled) {
         this.request = Preconditions.checkNotNull(request);
