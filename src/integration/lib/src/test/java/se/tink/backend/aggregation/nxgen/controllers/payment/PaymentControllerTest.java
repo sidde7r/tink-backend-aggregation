@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;
@@ -25,7 +26,7 @@ public class PaymentControllerTest {
     private final String SOURCE_IDENTIFIER_IBAN_GB = "GB33BUKB20201555555555";
 
     @Test
-    public void testGetPaymentProductTypeForBbanToBban() {
+    public void testGetPaymentProductTypeForBbanToBbanIsDomestic() {
 
         Payment payment =
                 new Payment.Builder()
@@ -46,19 +47,14 @@ public class PaymentControllerTest {
                         .withReference(new Reference("Transfer", "random"))
                         .build();
 
-        PaymentRequest paymentRequest = new PaymentRequest(payment);
-
         paymentController = new PaymentController(mock(PaymentExecutor.class));
-        PaymentType paymentType = paymentController.getPaymentProductType(paymentRequest);
-        if (paymentType.equals(PaymentType.DOMESTIC)) {
-            System.out.println("It works as intended!");
-        } else {
-            System.out.println("ERROR: wrong PaymentType: " + paymentType);
-        }
+        PaymentType paymentType = paymentController.getPaymentProductType(payment);
+
+        assertEquals(paymentType, PaymentType.DOMESTIC);
     }
 
     @Test
-    public void testGetPaymentProductTypeForBbanToIbanFuture() {
+    public void testGetPaymentProductTypeForBbanToIbanisDomesticFuture() {
 
         Payment payment =
                 new Payment.Builder()
@@ -79,19 +75,14 @@ public class PaymentControllerTest {
                         .withReference(new Reference("Transfer", "random"))
                         .build();
 
-        PaymentRequest paymentRequest = new PaymentRequest(payment);
-
         paymentController = new PaymentController(mock(PaymentExecutor.class));
-        PaymentType paymentType = paymentController.getPaymentProductType(paymentRequest);
-        if (paymentType.equals(PaymentType.DOMESTIC_FUTURE)) {
-            System.out.println("It works as intended! PaymentType is " + paymentType);
-        } else {
-            System.out.println("ERROR: wrong PaymentType: " + paymentType);
-        }
+        PaymentType paymentType = paymentController.getPaymentProductType(payment);
+
+        assertEquals(paymentType, PaymentType.DOMESTIC_FUTURE);
     }
 
     @Test
-    public void testGetPaymentProductTypeForIbanToIbanSE() {
+    public void testGetPaymentProductTypeForIbanToIbanSEisDomesticFuture() {
 
         Payment payment =
                 new Payment.Builder()
@@ -112,19 +103,14 @@ public class PaymentControllerTest {
                         .withReference(new Reference("Transfer", "random"))
                         .build();
 
-        PaymentRequest paymentRequest = new PaymentRequest(payment);
-
         paymentController = new PaymentController(mock(PaymentExecutor.class));
-        PaymentType paymentType = paymentController.getPaymentProductType(paymentRequest);
-        if (paymentType.equals(PaymentType.DOMESTIC)) {
-            System.out.println("It works as intended! PaymentType is " + paymentType);
-        } else {
-            System.out.println("ERROR: wrong PaymentType: " + paymentType);
-        }
+        PaymentType paymentType = paymentController.getPaymentProductType(payment);
+
+        assertEquals(paymentType, PaymentType.DOMESTIC_FUTURE);
     }
 
     @Test
-    public void testGetPaymentProductTypeForIbanToIbanGB() {
+    public void testGetPaymentProductTypeForIbanToIbanGBisInternational() {
 
         Payment payment =
                 new Payment.Builder()
@@ -145,15 +131,38 @@ public class PaymentControllerTest {
                         .withReference(new Reference("Transfer", "random"))
                         .build();
 
-        PaymentRequest paymentRequest = new PaymentRequest(payment);
+        paymentController = new PaymentController(mock(PaymentExecutor.class));
+        PaymentType paymentType = paymentController.getPaymentProductType(payment);
+
+        assertEquals(paymentType, PaymentType.INTERNATIONAL);
+    }
+
+    @Test
+    public void testGetPaymentProductTypeForUnmappedCombination() {
+
+        Payment payment =
+                new Payment.Builder()
+                        .withAmount(Amount.inEUR(1.0))
+                        .withCreditor(
+                                new Creditor(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.IBAN,
+                                                DESTINATION_IDENTIFIER),
+                                        "Test Person"))
+                        .withDebtor(
+                                new Debtor(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.BE,
+                                                SOURCE_IDENTIFIER_IBAN_GB)))
+                        .withCurrency("£")
+                        .withExecutionDate(LocalDate.now())
+                        .withReference(new Reference("Transfer", "random"))
+                        .build();
 
         paymentController = new PaymentController(mock(PaymentExecutor.class));
-        PaymentType paymentType = paymentController.getPaymentProductType(paymentRequest);
-        if (paymentType.equals(PaymentType.INTERNATIONAL)) {
-            System.out.println("It works as intended! PaymentType is " + paymentType);
-        } else {
-            System.out.println("ERROR: wrong PaymentType: " + paymentType);
-        }
+        PaymentType paymentType = paymentController.getPaymentProductType(payment);
+
+        assertEquals(paymentType, PaymentType.UNDEFINED);
     }
 
     @Test
@@ -177,14 +186,7 @@ public class PaymentControllerTest {
                         .withReference(new Reference("Transfer", "random"))
                         .build();
 
-        PaymentRequest paymentRequest = new PaymentRequest(payment);
-
         paymentController = new PaymentController(mock(PaymentExecutor.class));
-        PaymentType paymentType = paymentController.getPaymentProductType(paymentRequest);
-        if (paymentType.equals(PaymentType.DOMESTIC)) {
-            System.out.println("It works as intended!");
-        } else {
-            System.out.println("ERROR: wrong PaymentType: " + paymentType);
-        }
+        paymentController.getPaymentProductType(payment);
     }
 }
