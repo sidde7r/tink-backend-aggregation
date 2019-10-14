@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -74,5 +76,15 @@ public final class OpBankConstants {
     public static class AuthorizationValues {
         public static final String CODE = "code";
         public static final String OPENID_ACCOUNTS = "openid accounts";
+    }
+
+    public static class RefreshTokenFormKeys {
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String CLIENT_ID = "client_id";
+        public static final String CLIENT_SECRET = "client_secret";
+        public static final String OAUTH2_ACCESS_TOKEN = "oauth2_access_token";
+        public static final int DEFAULT_TOKEN_LIFETIME = 45;
+        public static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
     }
 }

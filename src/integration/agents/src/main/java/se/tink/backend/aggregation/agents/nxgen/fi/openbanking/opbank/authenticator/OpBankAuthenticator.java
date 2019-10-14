@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants;
@@ -20,6 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -30,14 +33,18 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
     private final OpBankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final OpBankConfiguration configuration;
+    private final Credentials credentials;
+    private String refreshToken;
 
     public OpBankAuthenticator(
             OpBankApiClient apiClient,
             PersistentStorage persistentStorage,
+            Credentials credentials,
             OpBankConfiguration configuration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;
+        this.credentials = credentials;
     }
 
     private OpBankConfiguration getConfiguration() {
@@ -48,9 +55,20 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
     @Override
     public URL buildAuthorizeUrl(String state) {
         TokenResponse newToken = this.apiClient.fetchNewToken();
-
         AuthorizationResponse authorization =
                 this.apiClient.createNewAuthorization(newToken.getAccessToken());
+
+        refreshToken = newToken.getRefreshToken();
+
+        credentials.setSessionExpiryDate(
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                        newToken.toTinkToken(),
+                        OpBankConstants.RefreshTokenFormKeys.DEFAULT_TOKEN_LIFETIME,
+                        OpBankConstants.RefreshTokenFormKeys.DEFAULT_TOKEN_LIFETIME_UNIT));
+        persistentStorage.put(
+                OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, newToken.toTinkToken());
+        // Tell the authenticator which access token it can use.
+        useAccessToken(newToken.toTinkToken());
 
         ClaimsEntity claims =
                 new ClaimsEntity(
@@ -99,6 +117,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
                         .queryParam(
                                 OpBankConstants.AuthorizationKeys.SCOPE,
                                 OpBankConstants.AuthorizationValues.OPENID_ACCOUNTS);
+
         return authorizationURL;
     }
 
@@ -109,7 +128,9 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
-        return null;
+        OAuth2Token newToken = this.apiClient.fetchRefreshToken(refreshToken);
+        persistentStorage.put(OpBankConstants.RefreshTokenFormKeys.OAUTH2_ACCESS_TOKEN, newToken);
+        return newToken;
     }
 
     @Override

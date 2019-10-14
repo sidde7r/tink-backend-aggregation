@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.ExchangeTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.ExchangeTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
@@ -79,6 +80,23 @@ public final class OpBankApiClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public OAuth2Token fetchRefreshToken(String refreshToken) {
+        final String clientId = configuration.getClientId();
+        final String clientSecret = configuration.getClientSecret();
+        RefreshTokenForm refreshTokenForm =
+                RefreshTokenForm.builder()
+                        .setClientId(clientId)
+                        .setClientSecret(clientSecret)
+                        .setGrantType(OpBankConstants.RefreshTokenFormKeys.REFRESH_TOKEN)
+                        .setRefreshToken(refreshToken)
+                        .build();
+        return client.request(Urls.OAUTH_TOKEN)
+                .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
+                .body(refreshTokenForm, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .post(TokenResponse.class)
+                .toTinkToken();
     }
 
     public AuthorizationResponse createNewAuthorization(String bearerToken) {
