@@ -31,7 +31,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class SwedbankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final SwedbankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private SwedbankTransactionFetcher transactionFetcher;
@@ -41,7 +40,6 @@ public final class SwedbankAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         apiClient = new SwedbankApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
