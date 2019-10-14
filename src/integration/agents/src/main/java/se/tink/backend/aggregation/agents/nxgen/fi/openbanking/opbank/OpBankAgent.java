@@ -33,18 +33,16 @@ public final class OpBankAgent extends NextGenerationAgent
     public OpBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
         apiClient = new OpBankApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
-        OpBankConfiguration opBankConfiguration = getClientConfiguration();
+        final OpBankConfiguration opBankConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(OpBankConfiguration.class);
         apiClient.setConfiguration(
                 opBankConfiguration, configuration.getEidasProxy(), getEidasIdentity());
     }
