@@ -23,12 +23,12 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.Postbank
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.utils.RangeRegexUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.i18n.Catalog;
 
-public class PostbankAuthenticationController implements MultiFactorAuthenticator {
+public class PostbankAuthenticationController implements TypedAuthenticator {
     private static final String OTP_VALUE_FIELD_KEY = "otpValue";
     private static final String CHOSEN_SCA_METHOD = "chosenScaMethod";
     private final Catalog catalog;

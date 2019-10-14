@@ -16,13 +16,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class DeutscheBankMultifactorAuthenticator
-        implements MultiFactorAuthenticator, AutoAuthenticator {
+public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator, AutoAuthenticator {
 
     private final DeutscheBankApiClient apiClient;
     private final SessionStorage sessionStorage;
