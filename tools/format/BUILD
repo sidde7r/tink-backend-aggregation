@@ -14,3 +14,10 @@ sh_binary(
     data = [":google-java-format"],
     visibility = ["//:__pkg__"],
 )
+
+sh_binary(
+    name = "format-json-diff",
+    srcs = [":format-json-diff.sh"],
+    data = [":jsonformat.py"],
+    visibility = ["//:__pkg__"],
+)
