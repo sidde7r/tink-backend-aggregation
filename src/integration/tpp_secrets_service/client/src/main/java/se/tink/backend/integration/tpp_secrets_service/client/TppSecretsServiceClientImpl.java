@@ -2,8 +2,6 @@ package se.tink.backend.integration.tpp_secrets_service.client;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import io.grpc.ManagedChannel;
@@ -53,30 +51,6 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
     private ManagedChannel channel;
     private final boolean enabled;
 
-    private static Map<String, ?> getServiceConfig() {
-        return ImmutableMap.of(
-                "methodConfig",
-                ImmutableList.of(
-                        ImmutableMap.of(
-                                "name",
-                                ImmutableList.of(
-                                        ImmutableMap.of(
-                                                "service", "InternalSecretsService",
-                                                "method", "GetAllSecrets")),
-                                "retryPolicy",
-                                ImmutableMap.of(
-                                        "maxAttempts",
-                                        5.0,
-                                        "initialBackoff",
-                                        "0.1s",
-                                        "maxBackoff",
-                                        "1s",
-                                        "backoffMultiplier",
-                                        1.2,
-                                        "retryableStatusCodes",
-                                        ImmutableList.of("UNAVAILABLE")))));
-    }
-
     @Inject
     public TppSecretsServiceClientImpl(
             TppSecretsServiceConfiguration tppSecretsServiceConfiguration) {
@@ -98,9 +72,6 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
                                     tppSecretsServiceConfiguration.getPort())
                             .useTransportSecurity()
                             .sslContext(sslContext)
-                            .enableRetry()
-                            .maxRetryAttempts(5)
-                            .defaultServiceConfig(TppSecretsServiceClientImpl.getServiceConfig())
                             .build();
 
             internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
