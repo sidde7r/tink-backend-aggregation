@@ -48,7 +48,8 @@ public final class BawagAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        BawagConfiguration clientConfiguration = getClientConfiguration();
+        BawagConfiguration clientConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(BawagConfiguration.class);
         apiClient.setConfiguration(clientConfiguration);
 
         client.setSslClientCertificate(
