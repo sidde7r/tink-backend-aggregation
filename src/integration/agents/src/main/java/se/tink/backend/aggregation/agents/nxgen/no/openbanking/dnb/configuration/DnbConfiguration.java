@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class DnbConfiguration implements ClientConfiguration {
 
-    private String redirectUrl;
-    private String psuIpAddress;
+    @JsonProperty @Secret private String redirectUrl;
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
@@ -18,13 +19,5 @@ public class DnbConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
-    }
-
-    public String getPsuIpAddress() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(psuIpAddress),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "PSU IP Address"));
-
-        return psuIpAddress;
     }
 }
