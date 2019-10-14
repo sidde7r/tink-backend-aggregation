@@ -14,6 +14,8 @@ public class BuddybankAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-buddybank-oauth2")
+                        .setFinancialInstitutionId("buddybank-it")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
