@@ -6,8 +6,20 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class StartAuthRequest {
-    Device device;
-    String cardNumber;
+    private Device device;
+    private String cardNumber;
+
+    public StartAuthRequest(String cardNumber, boolean registered, final String aggregator) {
+        this.cardNumber = cardNumber;
+        this.device =
+                new Device(
+                        ArgentaConstants.Device.UNKNOWN,
+                        registered,
+                        aggregator,
+                        ArgentaConstants.Device.UNKNOWN,
+                        ArgentaConstants.Device.UNKNOWN,
+                        ArgentaConstants.Device.UNKNOWN);
+    }
 
     public StartAuthRequest(String cardNumber, boolean registered) {
         this.cardNumber = cardNumber;

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator;
 
-import com.google.api.client.repackaged.com.google.common.base.Strings;
+import com.google.common.base.Strings;
 import java.util.UUID;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -29,16 +29,19 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
     private ArgentaApiClient apiClient;
     private final Credentials credentials;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final String aggregator;
 
     public ArgentaAuthenticator(
             ArgentaPersistentStorage persistentStorage,
             ArgentaApiClient apiClient,
             Credentials credentials,
-            final SupplementalInformationHelper supplementalInformationHelper) {
+            final SupplementalInformationHelper supplementalInformationHelper,
+            final String aggregator) {
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
         this.credentials = credentials;
         this.supplementalInformationHelper = supplementalInformationHelper;
+        this.aggregator = aggregator;
     }
 
     @Override
@@ -91,7 +94,14 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
 
     private StartAuthResponse startAuth(String username, String deviceId, boolean registered)
             throws LoginException, AuthorizationException {
-        StartAuthRequest registrationRequest = new StartAuthRequest(username, registered);
+
+        StartAuthRequest registrationRequest;
+
+        if (persistentStorage.isNewCredential()) {
+            registrationRequest = new StartAuthRequest(username, registered, aggregator);
+        } else {
+            registrationRequest = new StartAuthRequest(username, registered);
+        }
         return apiClient.startAuth(ArgentaConstants.Url.AUTH_START, registrationRequest, deviceId);
     }
 
@@ -129,6 +139,7 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         String deviceToken = generateRandomDeviceID();
         StartAuthResponse startAuthResponse = startAuth(cardNumber, deviceToken, false);
         persistentStorage.storeDeviceId(deviceToken);
+        persistentStorage.setNewCredential(true);
         ValidateAuthResponse validateAuthResponse = validateDevice(startAuthResponse, cardNumber);
         return validateAuthResponse;
     }

@@ -48,6 +48,7 @@ public class ArgentaConstants {
         public static final String DEVICE_ID = "DEVICE_ID";
         public static final String HOME_OFFICE = "HOME_OFFICE";
         public static final String UAK = "UAK";
+        public static final String IS_NEW_CREDENTIAL = "IS_NEW_CREDENTIAL";
     }
 
     public static class Fetcher {
@@ -65,6 +66,7 @@ public class ArgentaConstants {
     }
 
     public static class Device {
+        public static final String UNKNOWN = "N/A";
         public static final String VENDOR = "Apple";
         public static final String NAME = "Tink";
         public static final String MODEL = "iPhone9,4";
