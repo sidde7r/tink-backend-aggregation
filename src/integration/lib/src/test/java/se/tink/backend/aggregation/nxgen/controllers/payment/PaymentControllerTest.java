@@ -106,7 +106,7 @@ public class PaymentControllerTest {
         paymentController = new PaymentController(mock(PaymentExecutor.class));
         PaymentType paymentType = paymentController.getPaymentProductType(payment);
 
-        assertEquals(paymentType, PaymentType.DOMESTIC_FUTURE);
+        assertEquals(paymentType, PaymentType.DOMESTIC);
     }
 
     @Test
@@ -139,6 +139,7 @@ public class PaymentControllerTest {
 
     @Test
     public void testGetPaymentProductTypeForUnmappedCombination() {
+        exception.expect(IllegalStateException.class);
 
         Payment payment =
                 new Payment.Builder()
@@ -160,9 +161,7 @@ public class PaymentControllerTest {
                         .build();
 
         paymentController = new PaymentController(mock(PaymentExecutor.class));
-        PaymentType paymentType = paymentController.getPaymentProductType(payment);
-
-        assertEquals(paymentType, PaymentType.UNDEFINED);
+        paymentController.getPaymentProductType(payment);
     }
 
     @Test
