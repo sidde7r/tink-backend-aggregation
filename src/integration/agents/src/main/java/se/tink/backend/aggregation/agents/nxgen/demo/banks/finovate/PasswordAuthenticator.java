@@ -9,12 +9,12 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 
 /*
 This is a temporary solution and should be deleted as soon as the demo is done
  */
-public class PasswordAuthenticator implements MultiFactorAuthenticator {
+public class PasswordAuthenticator implements TypedAuthenticator {
 
     private static final Map<String, String> TEST_CREDENTIALS =
             ImmutableMap.of(

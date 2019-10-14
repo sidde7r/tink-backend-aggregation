@@ -27,14 +27,14 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticat
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ErrorEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ErrorMessageEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class CommerzbankQrCodeAuthenticator implements MultiFactorAuthenticator {
+public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Catalog catalog;
     private final PersistentStorage persistentStorage;

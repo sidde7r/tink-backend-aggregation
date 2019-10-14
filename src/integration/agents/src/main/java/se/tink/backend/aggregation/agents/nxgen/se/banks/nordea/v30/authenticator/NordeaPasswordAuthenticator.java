@@ -41,8 +41,8 @@ import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -51,7 +51,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.strings.StringUtils;
 
-public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
+public class NordeaPasswordAuthenticator implements TypedAuthenticator, AutoAuthenticator {
 
     private static final Logger log = LoggerFactory.getLogger(NordeaPasswordAuthenticator.class);
     private final NordeaSEApiClient apiClient;
