@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
@@ -53,16 +52,11 @@ public final class SwedbankAgent extends NextGenerationAgent
 
         apiClient.setConfiguration(getClientConfiguration());
         client.setFollowRedirects(false);
-        client.setEidasProxy(
-                configuration.getEidasProxy(), getClientConfiguration().getEidasQwac());
+        client.setEidasProxy(configuration.getEidasProxy(), null);
     }
 
     private SwedbankConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        SwedbankConstants.INTEGRATION_NAME, clientName, SwedbankConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController().getAgentConfiguration(SwedbankConfiguration.class);
     }
 
     @Override
