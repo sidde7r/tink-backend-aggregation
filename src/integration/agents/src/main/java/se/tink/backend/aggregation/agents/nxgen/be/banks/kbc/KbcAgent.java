@@ -56,7 +56,7 @@ public final class KbcAgent
 
     public KbcAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
         kbcLanguage = getKbcLanguage(request.getUser().getLocale());
         this.apiClient = new KbcApiClient(client);
