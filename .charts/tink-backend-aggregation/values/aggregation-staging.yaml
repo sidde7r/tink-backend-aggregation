@@ -37,12 +37,6 @@ agents:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
       eidasQwac: Tink
-  swedbank:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
-      bypassTransactionConsent: false
-      monthsToFetch: 25
   cbi:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
