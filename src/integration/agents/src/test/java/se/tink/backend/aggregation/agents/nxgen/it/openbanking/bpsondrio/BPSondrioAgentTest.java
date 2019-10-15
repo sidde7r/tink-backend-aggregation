@@ -16,7 +16,9 @@ public class BPSondrioAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-bpsondrio-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("bpsondrio")
+                        .setAppId("tink");
     }
 
     @Test

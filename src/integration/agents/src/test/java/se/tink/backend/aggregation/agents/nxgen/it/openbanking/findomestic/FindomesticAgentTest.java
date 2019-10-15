@@ -16,7 +16,9 @@ public class FindomesticAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-findomestic-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("findomestic")
+                        .setAppId("tink");
     }
 
     @Test

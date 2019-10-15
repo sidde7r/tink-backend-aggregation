@@ -16,7 +16,9 @@ public class IspAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-isp-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("isp")
+                        .setAppId("tink");
     }
 
     @Test

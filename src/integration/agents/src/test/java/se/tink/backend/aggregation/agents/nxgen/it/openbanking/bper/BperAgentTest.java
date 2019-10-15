@@ -16,7 +16,9 @@ public class BperAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-bper-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("bper")
+                        .setAppId("tink");
     }
 
     @Test
