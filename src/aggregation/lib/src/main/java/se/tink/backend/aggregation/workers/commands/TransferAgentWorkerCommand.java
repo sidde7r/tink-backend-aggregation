@@ -245,7 +245,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     private void handlePayment(PaymentController paymentController, TransferRequest transferRequest)
             throws PaymentException {
         PaymentResponse createPaymentResponse =
-                paymentController.create(PaymentRequest.of(transferRequest));
+                paymentController.create(
+                        PaymentRequest.of(
+                                transferRequest.getTransfer(), transferRequest.isSkipRefresh()));
         PaymentMultiStepResponse signPaymentMultiStepResponse =
                 paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 

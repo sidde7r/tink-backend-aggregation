@@ -21,7 +21,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "annotations",
-        "//src/aggregation/api",
         "//src/integration/account:enums",
         "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client",

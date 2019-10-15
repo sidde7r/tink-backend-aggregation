@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -31,9 +30,7 @@ public class PaymentRequest {
     }
 
     @Deprecated
-    public static PaymentRequest of(TransferRequest transferRequest) {
-        Transfer transfer = transferRequest.getTransfer();
-
+    public static PaymentRequest of(final Transfer transfer, final boolean isSkipRefresh) {
         Creditor creditorInRequest =
                 new Creditor(
                         transfer.getDestination(),
@@ -56,7 +53,7 @@ public class PaymentRequest {
                         .withReference(referenceInRequest)
                         .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()));
 
-        if (!transferRequest.isSkipRefresh()) {
+        if (!isSkipRefresh) {
             paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
         }
 
