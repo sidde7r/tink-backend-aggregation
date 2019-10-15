@@ -31,8 +31,8 @@ PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus.svc.cluster.local
 
 # Queries
 PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
-FAILING_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='failed',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
-UNAVAILABLE_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='unavailable',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
+FAILING_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='failed',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
+UNAVAILABLE_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='unavailable',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
 
 # LOGGING
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
