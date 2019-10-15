@@ -44,6 +44,7 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/skandiabanken
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/ics
   -//deb:all
   -//third_party:all
 
