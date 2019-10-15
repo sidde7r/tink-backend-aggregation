@@ -14,6 +14,8 @@ public class UnicreditAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("at", "at-unicredit-ob")
+                        .setFinancialInstitutionId("unicredit-at")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
