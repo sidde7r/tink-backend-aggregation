@@ -61,7 +61,6 @@ public class SebCommonConstants {
         public static final String CLIENT_ID = "CLIENT_ID";
         public static final String CLIENT_SECRET = "CLIENT_SECRET";
         public static final String REDIRECT_URI = "REDIRECT_URI";
-        public static final String TOKEN = "TOKEN";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
     }
 
@@ -84,5 +83,6 @@ public class SebCommonConstants {
         public static final String PAGINATING_ERROR_CODE = "301";
         public static final String PAGINATING_ERROR_MESSAGE =
                 "Unhandeled HostRC code: 2000 Error message is available.";
+        public static final String INVALID_GRANT_ERROR = "invalid_grant";
     }
 }

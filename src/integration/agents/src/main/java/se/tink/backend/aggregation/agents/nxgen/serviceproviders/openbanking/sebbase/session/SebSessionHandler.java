@@ -3,19 +3,19 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public final class SebSessionHandler implements SessionHandler {
     private final SebBaseApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
 
-    public SebSessionHandler(SebBaseApiClient apiClient, SessionStorage sessionStorage) {
+    public SebSessionHandler(SebBaseApiClient apiClient, PersistentStorage persistentStorage) {
 
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
@@ -23,8 +23,8 @@ public final class SebSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        sessionStorage
-                .get(SebCommonConstants.StorageKeys.TOKEN, OAuth2Token.class)
+        persistentStorage
+                .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
                 .filter(t -> !t.hasAccessExpired())
                 .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
     }

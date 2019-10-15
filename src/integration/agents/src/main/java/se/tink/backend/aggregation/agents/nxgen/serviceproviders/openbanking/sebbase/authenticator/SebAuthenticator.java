@@ -1,28 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator;
 
+import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SebAuthenticator implements OAuth2Authenticator {
+    private static final Logger log = LoggerFactory.getLogger(NordeaSeBankIdAuthenticator.class);
+
     private final SebBaseApiClient client;
-    private final SessionStorage sessionStorage;
     private final SebConfiguration configuration;
 
-    public SebAuthenticator(
-            SebBaseApiClient client,
-            SessionStorage sessionStorage,
-            SebConfiguration configuration) {
+    public SebAuthenticator(SebBaseApiClient client, SebConfiguration configuration) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
         this.configuration = configuration;
     }
 
@@ -67,15 +70,24 @@ public class SebAuthenticator implements OAuth2Authenticator {
                         configuration.getRedirectUrl(),
                         SebCommonConstants.QueryValues.REFRESH_TOKEN_GRANT);
 
-        OAuth2Token token =
-                client.refreshToken(
-                        SebCommonConstants.Urls.BASE_URL.concat(SebCommonConstants.Urls.TOKEN),
-                        request);
-        return token;
+        try {
+            return client.refreshToken(
+                    SebCommonConstants.Urls.BASE_URL.concat(SebCommonConstants.Urls.TOKEN),
+                    request);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse error = e.getResponse().getBody(ErrorResponse.class);
+                if (error.isInvalidGrant()) {
+                    log.warn("Invalid refresh token.");
+                    throw SessionError.SESSION_EXPIRED.exception();
+                }
+            }
+            throw e;
+        }
     }
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        sessionStorage.put(SebCommonConstants.StorageKeys.TOKEN, accessToken);
+        // will use the tokens from the persistent storage
     }
 }

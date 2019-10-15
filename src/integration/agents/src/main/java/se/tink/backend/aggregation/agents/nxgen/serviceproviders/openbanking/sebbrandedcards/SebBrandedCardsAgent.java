@@ -21,7 +21,7 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
             SignatureKeyPair signatureKeyPair,
             String brandId) {
         super(request, context, signatureKeyPair);
-        apiClient = new SebBrandedCardsApiClient(client, sessionStorage, brandId);
+        apiClient = new SebBrandedCardsApiClient(client, persistentStorage, brandId);
         creditCardRefreshController = getCreditCardRefreshController();
     }
 
