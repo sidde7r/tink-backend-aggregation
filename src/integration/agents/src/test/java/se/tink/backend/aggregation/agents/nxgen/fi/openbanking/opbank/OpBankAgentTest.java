@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
 public class OpBankAgentTest {
-
     private final ArgumentManager<OpBankAgentTest.Arg> manager =
             new ArgumentManager<>(OpBankAgentTest.Arg.values());
     private AgentIntegrationTest.Builder builder;
@@ -26,7 +25,7 @@ public class OpBankAgentTest {
                 new AgentIntegrationTest.Builder("fi", "fi-opbank-openbanking")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
-                        .setFinancialInstitutionId("c758d66003e5493489b9c314d09e86bc")
+                        .setFinancialInstitutionId("opbank")
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
