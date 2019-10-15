@@ -3,6 +3,7 @@
     "market": "NL",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "abnamro.AbnAmroAgent",
             "credentialsType": "PASSWORD",
             "displayName": "ABN AMRO",
@@ -52,6 +53,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.nl.banks.bunq.BunqAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Bunq API Key",
@@ -132,6 +134,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.nl.creditcards.ICS.ICSAgent",
             "credentialsType": "PASSWORD",
             "displayName": "ICS",
