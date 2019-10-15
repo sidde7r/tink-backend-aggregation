@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.AddDeviceRequest;
@@ -40,28 +41,44 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CrossKeyApiClient {
+
     private final TinkHttpClient client;
     private final CrossKeyConfiguration agentConfiguration;
+    private final SessionStorage sessionStorage;
 
-    public CrossKeyApiClient(TinkHttpClient client, CrossKeyConfiguration agentConfiguration) {
+    public CrossKeyApiClient(
+            TinkHttpClient client,
+            CrossKeyConfiguration agentConfiguration,
+            SessionStorage sessionStorage) {
         this.client = client;
         this.agentConfiguration = agentConfiguration;
+        this.sessionStorage = sessionStorage;
     }
 
     public CrossKeyResponse initSession() {
-        return get(
-                buildRequest(CrossKeyConstants.Url.SYSTEM_STATUS_URI)
-                        .queryParam(
-                                CrossKeyConstants.Query.APP_ID,
-                                CrossKeyConstants.AutoAuthentication.APP_VERSION)
-                        .queryParam(
-                                CrossKeyConstants.Query.LANGUAGE,
-                                CrossKeyConstants.AutoAuthentication.LANGUAGE),
-                CrossKeyResponse.class);
+        CrossKeyResponse sessionResponse =
+                get(
+                        buildRequest(CrossKeyConstants.Url.SYSTEM_STATUS_URI)
+                                .queryParam(
+                                        CrossKeyConstants.Query.APP_ID,
+                                        CrossKeyConstants.AutoAuthentication.APP_VERSION)
+                                .queryParam(
+                                        CrossKeyConstants.Query.LANGUAGE,
+                                        CrossKeyConstants.AutoAuthentication.LANGUAGE),
+                        CrossKeyResponse.class);
+
+        if (Objects.nonNull(sessionResponse.getStatus())) {
+            // store jsession-id in session Id so that it will be masked
+            sessionStorage.put(
+                    CrossKeyConstants.Storage.JSESSION_ID,
+                    sessionResponse.getStatus().getjSessionId());
+        }
+        return sessionResponse;
     }
 
     public BankIdAutostartTokenResponse initBankId() {

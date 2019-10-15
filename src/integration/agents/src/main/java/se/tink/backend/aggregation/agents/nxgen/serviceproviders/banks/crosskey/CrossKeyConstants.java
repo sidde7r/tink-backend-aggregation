@@ -75,6 +75,7 @@ public class CrossKeyConstants {
     public static final class Storage {
         public static final String DEVICE_ID = "deviceId";
         public static final String DEVICE_TOKEN = "deviceToken";
+        public static final String JSESSION_ID = "jsessionId";
     }
 
     public static final class Query {

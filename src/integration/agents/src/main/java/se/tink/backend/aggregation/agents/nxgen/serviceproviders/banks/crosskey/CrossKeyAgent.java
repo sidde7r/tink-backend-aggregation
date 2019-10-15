@@ -56,7 +56,7 @@ public abstract class CrossKeyAgent extends NextGenerationAgent
             CrossKeyConfiguration agentConfiguration) {
         super(request, context, signatureKeyPair);
         this.agentConfiguration = agentConfiguration;
-        this.apiClient = new CrossKeyApiClient(this.client, agentConfiguration);
+        this.apiClient = new CrossKeyApiClient(this.client, agentConfiguration, sessionStorage);
         agentPersistentStorage = new CrossKeyPersistentStorage(this.persistentStorage);
 
         this.investmentRefreshController =
