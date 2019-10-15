@@ -14,8 +14,6 @@ public class EuroBicAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-eurobic-oauth2")
-                        .setFinancialInstitutionId("eurobic-pt")
-                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

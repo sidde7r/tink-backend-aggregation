@@ -14,8 +14,6 @@ public class BancoMontepioAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-bancomontepio-oauth2")
-                        .setFinancialInstitutionId("bancomontepio")
-                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

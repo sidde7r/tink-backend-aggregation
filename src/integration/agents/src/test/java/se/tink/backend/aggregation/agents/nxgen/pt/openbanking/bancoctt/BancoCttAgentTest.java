@@ -14,8 +14,6 @@ public class BancoCttAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-bancoctt-oauth2")
-                        .setFinancialInstitutionId("bancoctt")
-                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

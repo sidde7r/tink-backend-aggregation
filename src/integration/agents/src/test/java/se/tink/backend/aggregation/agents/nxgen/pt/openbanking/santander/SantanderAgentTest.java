@@ -14,8 +14,6 @@ public class SantanderAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-santander-oauth2")
-                        .setFinancialInstitutionId("santander-pt")
-                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

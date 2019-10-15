@@ -14,8 +14,6 @@ public class AtlanticoEuropaAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-atlanticoeuropa-oauth2")
-                        .setFinancialInstitutionId("atlanticoeuropa")
-                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

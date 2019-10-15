@@ -14,8 +14,6 @@ public class CreditoAgricolaAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-creditoagricola-oauth2")
-                        .setFinancialInstitutionId("creditoagricola")
-                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
