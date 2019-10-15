@@ -49,10 +49,6 @@ agents:
     cgd:
       redirectUrl: https://main.production.cardiff.tink.se:8443/api/v1/credentials/third-party/callback
       certificateId: cgd
-  unicredit:
-    tink:
-      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
   belfius:
     tink:
       baseUrl: https://psd2.b2b.belfius.be:8443
