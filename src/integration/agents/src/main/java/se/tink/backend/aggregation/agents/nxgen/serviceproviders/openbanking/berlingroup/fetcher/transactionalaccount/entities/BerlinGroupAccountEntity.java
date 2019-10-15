@@ -24,6 +24,4 @@ public interface BerlinGroupAccountEntity {
     AccountIdentifier getIdentifier();
 
     String getAccountNumber();
-
-    AccountIdentifier getAccountIdentifier();
 }

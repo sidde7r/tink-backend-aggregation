@@ -101,11 +101,6 @@ public class AccountEntityBaseEntityWithHref implements BerlinGroupAccountEntity
     }
 
     @Override
-    public AccountIdentifier getAccountIdentifier() {
-        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
-    }
-
-    @Override
     public String getBalancesLink() {
         return Optional.ofNullable(links)
                 .map(AccountLinksWithHrefEntity::getBalanceLink)
