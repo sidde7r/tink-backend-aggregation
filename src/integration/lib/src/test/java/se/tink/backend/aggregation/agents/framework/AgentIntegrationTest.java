@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.framework;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.io.File;
@@ -67,6 +68,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
 
+    public static final String TEST_CLUSTERID = "oxford-staging";
+    public static final String TEST_APPID = "5f98e87106384b2981c0354a33b51590";
+
     private final Provider provider;
     private final User user;
     private final boolean loadCredentialsBefore;
@@ -79,6 +83,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private final NewAgentTestContext context;
     private final SupplementalInformationController supplementalInformationController;
     private final String redirectUrl;
+    private final String clusterIdForSecretsService;
     private Credentials credential;
     // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
@@ -98,6 +103,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
+        this.clusterIdForSecretsService =
+                MoreObjects.firstNonNull(builder.getClusterIdForSecretsService(), TEST_CLUSTERID);
 
         this.context =
                 new NewAgentTestContext(
@@ -168,7 +175,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             configuration.getIntegrations(),
                             provider,
                             context.getAppId(),
-                            context.getClusterId(),
+                            clusterIdForSecretsService,
                             credentialsRequest.getCallbackUri());
             if (!agentConfigurationController.init()) {
                 throw new IllegalStateException(
@@ -654,6 +661,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String appId = null;
         private String clusterId = null;
         private String redirectUrl;
+        private String clusterIdForSecretsService = null;
 
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
@@ -863,6 +871,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Builder setClusterId(String clusterId) {
             this.clusterId = clusterId;
+            return this;
+        }
+
+        public String getClusterIdForSecretsService() {
+            return clusterIdForSecretsService;
+        }
+
+        public Builder setClusterIdForSecretsService(String clusterIdForSecretsService) {
+            this.clusterIdForSecretsService = clusterIdForSecretsService;
             return this;
         }
 
