@@ -68,9 +68,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
 
-    public static final String TEST_CLUSTERID = "oxford-staging";
-    public static final String TEST_APPID = "5f98e87106384b2981c0354a33b51590";
-
     private final Provider provider;
     private final User user;
     private final boolean loadCredentialsBefore;
@@ -104,7 +101,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
         this.clusterIdForSecretsService =
-                MoreObjects.firstNonNull(builder.getClusterIdForSecretsService(), TEST_CLUSTERID);
+                MoreObjects.firstNonNull(
+                        builder.getClusterIdForSecretsService(),
+                        NewAgentTestContext.TEST_CLUSTERID);
 
         this.context =
                 new NewAgentTestContext(
