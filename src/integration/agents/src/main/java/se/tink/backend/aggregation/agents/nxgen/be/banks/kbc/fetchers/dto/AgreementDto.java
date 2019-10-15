@@ -205,14 +205,21 @@ public class AgreementDto implements GeneralAccountEntity {
 
     public TransactionalAccount toTransactionalAccount() {
         AccountTypes accountType = getAccountType().orElseThrow(IllegalArgumentException::new);
-        return TransactionalAccount.builder(accountType, agreementNo.getValue(), getAmount())
-                .setName(agreementMakeUp.getName().getValue())
-                .setHolderName(new HolderName(agreementName.getValue()))
-                .setBankIdentifier(agreementNo.getValue())
-                .setAccountNumber(agreementNo.getValue())
-                .addIdentifier(generalGetAccountIdentifier())
-                .addAccountFlags(getAccountFlags())
-                .build();
+
+        TransactionalAccount.Builder builder =
+                TransactionalAccount.builder(accountType, agreementNo.getValue(), getAmount())
+                        .setName(agreementMakeUp.getName().getValue())
+                        .setHolderName(new HolderName(agreementName.getValue()))
+                        .setBankIdentifier(agreementNo.getValue())
+                        .setAccountNumber(agreementNo.getValue())
+                        .addIdentifier(generalGetAccountIdentifier())
+                        .addAccountFlags(getAccountFlags());
+
+        if (accountType == AccountTypes.CHECKING) {
+            builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        }
+
+        return builder.build();
     }
 
     private Collection<AccountFlag> getAccountFlags() {
