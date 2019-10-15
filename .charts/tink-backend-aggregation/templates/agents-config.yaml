@@ -1,5 +1,5 @@
 {{- $agentsConfig := .Values.agents | default dict }}
-{{- $tppSecretsServiceConfig := .Values.tppSecretsServiceConfiguration | default dict }}
+  {{- $tppSecretsServiceConfig := .Values.tppSecretsServiceConfiguration | default dict }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -510,12 +510,6 @@ data:
             eidasQwac: "{{ $agentsConfig.unicredit.tink.eidasQwac }}"
             redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
             psuIdType: "BUSINESSNET"
-        unicredit-de:
-          tink:
-            baseUrl: "https://api.unicredit.de"
-            eidasQwac: "{{ $agentsConfig.unicredit.tink.eidasQwac }}"
-            redirectUrl: "{{ $agentsConfig.unicredit.tink.redirectUrl }}"
-            psuIdType: "HVB_ONLINEBANKING"
         unicredit-hu:
           tink:
             baseUrl: "https://api.unicreditbank.hu"
