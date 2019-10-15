@@ -1,21 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class OpBankConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String redirectUrl;
-    private String apiKey;
-
-    private String eidasQwac;
-    private String eidasQsealc;
+    @JsonProperty @Secret private String clientId;
+    @JsonProperty @Secret private String clientSecret;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String apiKey;
+    @JsonProperty @Secret private String eidasQwac;
+    @JsonProperty @Secret private String eidasQsealc;
 
     public String getClientId() {
         Preconditions.checkNotNull(
