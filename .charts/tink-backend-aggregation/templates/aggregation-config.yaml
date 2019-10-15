@@ -36,7 +36,7 @@ data:
     logging:
       level: INFO
       loggers:
-        se.tink: DEBUG
+        se.tink: INFO
         se.tink.org.eclipse: INFO
         org.hibernate: WARN
         org.apache.http.client.protocol.ResponseProcessCookies: ERROR
