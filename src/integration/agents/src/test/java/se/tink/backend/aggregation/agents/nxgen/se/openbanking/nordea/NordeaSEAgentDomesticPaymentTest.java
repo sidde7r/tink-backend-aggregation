@@ -21,7 +21,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-// DISCLAIMER! Actual money being transferred, run under own responsability
+// DISCLAIMER! Actual money being transferred, run under own responsibility
 public class NordeaSEAgentDomesticPaymentTest {
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
