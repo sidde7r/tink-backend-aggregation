@@ -14,8 +14,6 @@ public class CaixaCrlAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-caixacrl-oauth2")
-                        .setFinancialInstitutionId("caixacrl-pt")
-                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
