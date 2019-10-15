@@ -14,6 +14,8 @@ public class CaixaRedirectAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-caixa-ob")
+                        .setFinancialInstitutionId("caixa-redirect-pt")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
