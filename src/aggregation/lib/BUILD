@@ -129,7 +129,6 @@ java_library(
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_mozilla_rhino",
-        "//third_party:org_seleniumhq_selenium_selenium_java",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:org_springframework_data_spring_data_jpa",
         "//third_party:org_springframework_spring_core",
