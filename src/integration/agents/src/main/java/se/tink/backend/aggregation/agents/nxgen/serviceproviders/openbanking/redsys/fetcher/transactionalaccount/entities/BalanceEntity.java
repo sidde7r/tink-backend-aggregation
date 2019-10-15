@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,7 @@ public class BalanceEntity {
     private static List<BalanceEntity> getBalancesOfType(
             List<BalanceEntity> balances, String balanceType) {
         return balances.stream()
+                .filter(balanceEntity -> !Objects.isNull(balanceEntity.getBalanceType()))
                 .filter(
                         balanceEntity ->
                                 balanceEntity.getBalanceType().equalsIgnoreCase(balanceType))
