@@ -6,6 +6,7 @@
             "className": "nxgen.fi.banks.aktia.AktiaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Aktia",
+            "accessType": "OTHER",
             "fields": [
                 {
                     "description": "Username",
