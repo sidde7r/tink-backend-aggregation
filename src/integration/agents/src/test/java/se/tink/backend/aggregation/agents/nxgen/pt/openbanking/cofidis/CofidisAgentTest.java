@@ -14,6 +14,8 @@ public class CofidisAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-cofidis-oauth2")
+                        .setFinancialInstitutionId("cofidis")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

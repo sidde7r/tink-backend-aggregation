@@ -14,6 +14,8 @@ public class BankinterAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-bankinter-oauth2")
+                        .setFinancialInstitutionId("bankinter")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

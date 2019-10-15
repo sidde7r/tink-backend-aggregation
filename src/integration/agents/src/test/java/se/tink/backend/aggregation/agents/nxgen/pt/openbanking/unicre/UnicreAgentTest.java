@@ -14,6 +14,8 @@ public class UnicreAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-unicre-oauth2")
+                        .setFinancialInstitutionId("unicre-pt")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

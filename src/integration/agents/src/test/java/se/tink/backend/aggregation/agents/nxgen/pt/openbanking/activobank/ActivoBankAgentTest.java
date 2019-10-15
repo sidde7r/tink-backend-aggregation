@@ -14,6 +14,8 @@ public class ActivoBankAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-activobank-oauth2")
+                        .setFinancialInstitutionId("activobank")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
