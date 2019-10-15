@@ -1,0 +1,12 @@
+java_library(
+    name = "nemid",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//third_party:com_github_detro_ghostdriver_phantomjsdriver",
+        "//third_party:org_seleniumhq_selenium_selenium_htmlunit_driver",
+        "//third_party:org_seleniumhq_selenium_selenium_java",
+    ],
+)
