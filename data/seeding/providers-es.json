@@ -130,7 +130,9 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "accessType": "OTHER",
+            "financialInstitutionId": "none"
         },
         {
             "className": "nxgen.es.banks.bbva.BbvaAgent",

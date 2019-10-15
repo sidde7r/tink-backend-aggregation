@@ -2406,7 +2406,7 @@
             "transactional": "true",
             "tutorialUrl": null,
             "type": "BANK",
-            "financialInstitutionId":"dummy"
+            "financialInstitutionId": "dummy"
         },
         {
             "name": "fr-monabanq-oauth2",
@@ -2423,7 +2423,7 @@
             "tutorialUrl": null,
             "fields": [],
             "accessType": "OPEN_BANKING",
-            "financialInstitutionId":"dummy"
+            "financialInstitutionId": "dummy"
         },
         {
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",
