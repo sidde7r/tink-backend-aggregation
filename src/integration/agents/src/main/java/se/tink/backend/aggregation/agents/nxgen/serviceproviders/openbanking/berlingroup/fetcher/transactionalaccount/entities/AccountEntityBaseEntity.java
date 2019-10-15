@@ -65,7 +65,6 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
                                 .withUniqueIdentifier(getUniqueIdentifier())
                                 .withAccountNumber(getAccountNumber())
                                 .withAccountName(cashAccountType)
-                                .addIdentifier(getAccountIdentifier())
                                 .addIdentifier(getIdentifier())
                                 .build())
                 .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
@@ -116,11 +115,6 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
     @Override
     public String getAccountNumber() {
         return iban;
-    }
-
-    @Override
-    public AccountIdentifier getAccountIdentifier() {
-        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
     }
 
     @Override
