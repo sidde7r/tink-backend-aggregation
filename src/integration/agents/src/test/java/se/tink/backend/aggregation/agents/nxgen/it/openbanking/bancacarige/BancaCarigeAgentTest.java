@@ -16,7 +16,9 @@ public class BancaCarigeAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-bancacarige-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("bancacarige")
+                        .setAppId("tink");
     }
 
     @Test

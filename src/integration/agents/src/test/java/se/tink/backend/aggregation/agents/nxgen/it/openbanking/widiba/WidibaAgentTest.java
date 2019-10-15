@@ -16,7 +16,9 @@ public class WidibaAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-widiba-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("widiba")
+                        .setAppId("tink");
     }
 
     @Test

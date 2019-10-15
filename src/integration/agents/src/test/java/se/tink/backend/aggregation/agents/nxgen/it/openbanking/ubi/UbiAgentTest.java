@@ -16,7 +16,9 @@ public class UbiAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-ubi-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("ubi")
+                        .setAppId("tink");
     }
 
     @Test

@@ -16,7 +16,9 @@ public class BpmAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-bpm-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("bpm")
+                        .setAppId("tink");
     }
 
     @Test

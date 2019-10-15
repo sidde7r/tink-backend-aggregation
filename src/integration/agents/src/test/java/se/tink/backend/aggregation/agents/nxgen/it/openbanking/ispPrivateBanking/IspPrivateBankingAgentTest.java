@@ -16,7 +16,9 @@ public class IspPrivateBankingAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-ispprivatebanking-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("ispprivatebanking")
+                        .setAppId("tink");
     }
 
     @Test

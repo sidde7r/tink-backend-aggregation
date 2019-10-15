@@ -16,7 +16,9 @@ public class MpsAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-mps-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("mps")
+                        .setAppId("tink");
     }
 
     @Test

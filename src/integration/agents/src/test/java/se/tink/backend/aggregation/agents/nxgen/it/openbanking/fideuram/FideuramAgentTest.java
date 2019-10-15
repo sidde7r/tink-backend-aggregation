@@ -16,7 +16,9 @@ public class FideuramAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-fideuram-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("fideuram")
+                        .setAppId("tink");
     }
 
     @Test
