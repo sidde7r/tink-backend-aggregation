@@ -11,6 +11,8 @@ branch=$(git remote -v | grep -m 1 "tink-ab" | awk '{print $1"/master"}')
 
 target_dir="data/seeding"
 
-git diff --name-only --diff-filter=ACMR "${branch:-origin/master}" "$target_dir" \
-    | grep "\.json$" \
-    | xargs -n1000 python "$formatter"
+files_to_format=$(git diff --name-only --diff-filter=ACMR "${branch:-origin/master}" "$target_dir" | grep "\.json")
+
+if [ ! -z "$files_to_format" ]; then
+    python "$formatter" $files_to_format
+fi
