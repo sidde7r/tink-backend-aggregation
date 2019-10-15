@@ -14,5 +14,5 @@ target_dir="data/seeding"
 files_to_format=$(git diff --name-only --diff-filter=ACMR "${branch:-origin/master}" "$target_dir" | grep "\.json")
 
 if [ ! -z "$files_to_format" ]; then
-    python "$formatter" $files_to_format
+    python3 "$formatter" $files_to_format
 fi
