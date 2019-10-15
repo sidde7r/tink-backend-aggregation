@@ -18,7 +18,7 @@ public class AktiaConstants {
         public static final String BASIC_AUTH_PASSWORD = "zvn5vHAXlL2W99epdEejBVypJJujBVVgRBSU5hb4";
 
         public static final String USER_AGENT =
-                "MobileBank/2.0.1 (com.aktia.mobilebank; build:174; iOS 10.3.1) Alamofire/4.5.1";
+                "MobileBank/2.5.1 (com.aktia.mobilebank; build 207; iOS 12.4.0)";
     }
 
     public static class Oauth2Scopes {
@@ -85,7 +85,7 @@ public class AktiaConstants {
 
     public static class Avain {
         public static final String SOFTWARE_NAME = "Avain";
-        public static final String SOFTWARE_VERSION = "2.0.1";
+        public static final String SOFTWARE_VERSION = "2.5.1";
         public static final String PUSH_NOTIFICATION_TOKEN = "dummy-token";
         public static final String CONSENT = "AVAIN_TERMS";
         public static final String AUTHENTICATION_ID_TYPE = "com.evry.sam.appcontext";
