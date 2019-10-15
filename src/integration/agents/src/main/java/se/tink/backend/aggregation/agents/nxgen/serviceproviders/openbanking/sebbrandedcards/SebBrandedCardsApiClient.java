@@ -12,15 +12,15 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class SebBrandedCardsApiClient extends SebBaseApiClient {
 
     private String brandId;
 
     public SebBrandedCardsApiClient(
-            TinkHttpClient client, SessionStorage sessionStorage, String brandId) {
-        super(client, sessionStorage);
+            TinkHttpClient client, PersistentStorage persistentStorage, String brandId) {
+        super(client, persistentStorage);
         this.brandId = brandId;
     }
 

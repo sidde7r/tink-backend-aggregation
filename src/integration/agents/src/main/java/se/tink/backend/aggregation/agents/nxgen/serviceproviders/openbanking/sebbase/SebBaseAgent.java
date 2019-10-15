@@ -44,8 +44,7 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
 
     @Override
     protected Authenticator constructAuthenticator() {
-        SebAuthenticator authenticator =
-                new SebAuthenticator(apiClient, sessionStorage, sebConfiguration);
+        SebAuthenticator authenticator = new SebAuthenticator(apiClient, sebConfiguration);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
@@ -63,6 +62,6 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SebSessionHandler(apiClient, sessionStorage);
+        return new SebSessionHandler(apiClient, persistentStorage);
     }
 }

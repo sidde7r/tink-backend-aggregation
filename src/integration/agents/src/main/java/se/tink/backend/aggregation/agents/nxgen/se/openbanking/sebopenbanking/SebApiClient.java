@@ -21,12 +21,12 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class SebApiClient extends SebBaseApiClient {
 
-    public SebApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
-        super(client, sessionStorage);
+    public SebApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+        super(client, persistentStorage);
     }
 
     @Override

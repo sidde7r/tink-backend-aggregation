@@ -14,22 +14,23 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountsTransactions;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public abstract class SebBaseApiClient {
 
     protected final TinkHttpClient client;
-    protected final SessionStorage sessionStorage;
+    protected final PersistentStorage persistentStorage;
     protected SebConfiguration configuration;
 
-    public SebBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public SebBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
     }
 
     public void setConfiguration(SebConfiguration configuration) {
@@ -44,9 +45,9 @@ public abstract class SebBaseApiClient {
         return configuration;
     }
 
-    protected OAuth2Token getTokenFromSession() {
-        return sessionStorage
-                .get(SebCommonConstants.StorageKeys.TOKEN, OAuth2Token.class)
+    protected OAuth2Token getTokenFromStorage() {
+        return persistentStorage
+                .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
     }
 
@@ -78,7 +79,7 @@ public abstract class SebBaseApiClient {
                 .header(
                         SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
                         SebCommonConstants.getPsuIpAddress())
-                .addBearerToken(getTokenFromSession());
+                .addBearerToken(getTokenFromStorage());
     }
 
     protected RequestBuilder createRequest(URL url) {

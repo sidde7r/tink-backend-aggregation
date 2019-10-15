@@ -17,21 +17,15 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SebAuthenticator implements OAuth2Authenticator {
     private static final Logger log = LoggerFactory.getLogger(NordeaSeBankIdAuthenticator.class);
 
     private final SebBaseApiClient client;
-    private final SessionStorage sessionStorage;
     private final SebConfiguration configuration;
 
-    public SebAuthenticator(
-            SebBaseApiClient client,
-            SessionStorage sessionStorage,
-            SebConfiguration configuration) {
+    public SebAuthenticator(SebBaseApiClient client, SebConfiguration configuration) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
         this.configuration = configuration;
     }
 
@@ -94,6 +88,6 @@ public class SebAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        sessionStorage.put(SebCommonConstants.StorageKeys.TOKEN, accessToken);
+        // will use the tokens from the persistent storage
     }
 }
