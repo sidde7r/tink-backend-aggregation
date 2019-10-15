@@ -42,8 +42,7 @@ public class NettyVersionsGrpcForTlsMaTest {
     private final Logger rootLogger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
     private final Level originalLevel = rootLogger.getLevel();
 
-    @Rule
-    public NettyGrpcServerRule grpcServerRule;
+    @Rule public NettyGrpcServerRule grpcServerRule;
 
     public NettyVersionsGrpcForTlsMaTest() {
         // The default DEBUG level prints a lot of unuseful information that might confuse the user
