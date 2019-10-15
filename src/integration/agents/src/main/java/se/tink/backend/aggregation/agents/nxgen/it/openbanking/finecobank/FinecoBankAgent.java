@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankAuthenticationHelper;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.configuration.FinecoBankConfiguration;
@@ -50,16 +49,8 @@ public final class FinecoBankAgent extends NextGenerationAgent
         this.clientName = request.getProvider().getPayload();
 
         this.finecoBankConfiguration =
-                agentsServiceConfiguration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                FinecoBankConstants.INTEGRATION_NAME,
-                                clientName,
-                                FinecoBankConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+                getAgentConfigurationController()
+                        .getAgentConfiguration(FinecoBankConfiguration.class);
 
         super.setConfiguration(agentsServiceConfiguration);
         this.apiClient =

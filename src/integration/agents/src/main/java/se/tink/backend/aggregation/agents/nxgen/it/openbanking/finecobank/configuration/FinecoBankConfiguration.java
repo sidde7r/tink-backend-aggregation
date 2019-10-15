@@ -12,8 +12,8 @@ public class FinecoBankConfiguration implements ClientConfiguration {
 
     @Secret private String clientId;
     @Secret private String redirectUrl;
-    private String certificateId;
-    private String psuIpAddress;
+    @Secret private String certificateId;
+    @Secret private String psuIpAddress;
 
     public String getClientId() {
         Preconditions.checkNotNull(

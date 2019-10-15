@@ -32,6 +32,8 @@ public class FinecoBankAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("it", "it-finecobank-oauth2")
+                        .setFinancialInstitutionId("finecobank")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .setUser(user)
                         .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
