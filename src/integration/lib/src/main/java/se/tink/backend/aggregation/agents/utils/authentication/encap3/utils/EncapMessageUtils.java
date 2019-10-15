@@ -254,6 +254,8 @@ public class EncapMessageUtils {
                                 HttpHeaders.EVRY_REQUESTID,
                                 RandomUtils.generateRandomHexEncoded(4).toUpperCase())
                         .header(HttpHeaders.USER_AGENT_KEY, HttpHeaders.USER_AGENT_VALUE)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.WILDCARD)
                         .acceptLanguage(Locale.US)
                         .post(EncryptedSoapResponse.class, body);
 
