@@ -137,9 +137,9 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
     private ValidateAuthResponse registerNewDevice(String cardNumber)
             throws SupplementalInfoException, LoginException, AuthorizationException {
         String deviceToken = generateRandomDeviceID();
+        persistentStorage.setNewCredential(true);
         StartAuthResponse startAuthResponse = startAuth(cardNumber, deviceToken, false);
         persistentStorage.storeDeviceId(deviceToken);
-        persistentStorage.setNewCredential(true);
         ValidateAuthResponse validateAuthResponse = validateDevice(startAuthResponse, cardNumber);
         return validateAuthResponse;
     }
