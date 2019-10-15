@@ -4,6 +4,8 @@ set -e
 handle_result()
 {
     if [ $? -ne 0 ]; then
+        git status | grep "\.json$"
+
         echo "-->"
         echo "--> JSON file(s) listed above are incorrectly formatted. Execute the following bazel command:"
         echo "--> bazel run :formatjson"
