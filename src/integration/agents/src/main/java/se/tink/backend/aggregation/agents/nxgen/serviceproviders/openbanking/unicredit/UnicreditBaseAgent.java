@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.UnicreditAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.UnicreditAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditConfiguration;
@@ -47,19 +46,13 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        UnicreditConfiguration unicreditConfiguration = getClientConfiguration();
+        UnicreditConfiguration unicreditConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(UnicreditConfiguration.class);
 
         apiClient.setConfiguration(unicreditConfiguration);
 
         client.setEidasProxy(configuration.getEidasProxy(), unicreditConfiguration.getEidasQwac());
-    }
-
-    protected UnicreditConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        getIntegrationName(), clientName, UnicreditConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
