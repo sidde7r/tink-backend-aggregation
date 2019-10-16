@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.RunConfigurationKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.RunConfigurationValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.authenticator.PayPalAuthenticator;
@@ -53,11 +52,7 @@ public final class PayPalAgent extends NextGenerationAgent
     }
 
     protected PayPalConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        PayPalConstants.INTEGRATION_NAME, clientName, PayPalConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController().getAgentConfiguration(PayPalConfiguration.class);
     }
 
     @Override
