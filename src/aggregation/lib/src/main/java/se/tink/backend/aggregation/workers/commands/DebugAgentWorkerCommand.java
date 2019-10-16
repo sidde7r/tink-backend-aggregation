@@ -34,7 +34,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     private DebugAgentWorkerCommandState state;
     private AgentWorkerCommandContext context;
     private AgentDebugStorageHandler agentDebugStorage;
-    private final LogMasker logMasker;
+    private LogMasker logMasker;
 
     public DebugAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -43,14 +43,14 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         this.context = context;
         this.state = state;
         this.agentDebugStorage = agentDebugStorage;
-        this.logMasker =
-                new LogMasker(
-                        context.getRequest().getCredentials(),
-                        context.getAgentConfigurationController().getSecretValues());
     }
 
     @Override
     public AgentWorkerCommandResult execute() {
+        this.logMasker =
+                new LogMasker(
+                        context.getRequest().getCredentials(),
+                        context.getAgentConfigurationController().getSecretValues());
         return AgentWorkerCommandResult.CONTINUE;
     }
 
@@ -123,6 +123,10 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             }
         }
 
+        // If we have no masker, log nothing.
+        if (Objects.isNull(logMasker)) {
+            return "";
+        }
         return logMasker.mask(logContent);
     }
 

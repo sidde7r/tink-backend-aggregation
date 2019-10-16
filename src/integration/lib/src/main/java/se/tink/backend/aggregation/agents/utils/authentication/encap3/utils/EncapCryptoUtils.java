@@ -49,7 +49,7 @@ public class EncapCryptoUtils {
     public static String computeRsaEMK(String rsaPubKeyB64, byte[] data) {
         RSAPublicKey rsaPublicKey =
                 RSA.getPubKeyFromBytes(Base64.getDecoder().decode(rsaPubKeyB64));
-        byte[] emk = RSA.encryptEcbOaepSha256Mgf1(rsaPublicKey, data);
+        byte[] emk = RSA.encryptEcbOaepMgf1(rsaPublicKey, data);
 
         return Base64.getEncoder().encodeToString(emk);
     }
